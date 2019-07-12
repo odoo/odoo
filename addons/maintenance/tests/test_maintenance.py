@@ -39,7 +39,7 @@ class TestEquipment(TransactionCase):
     def test_10_equipment_request_category(self):
 
         # Create a new equipment
-        equipment_01 = self.equipment.sudo(self.manager).create({
+        equipment_01 = self.equipment.with_user(self.manager).create({
             'name': 'Samsung Monitor "15',
             'category_id': self.ref('maintenance.equipment_monitor'),
             'technician_user_id': self.ref('base.user_root'),
@@ -54,7 +54,7 @@ class TestEquipment(TransactionCase):
         assert equipment_01, "Equipment not created"
 
         # Create new maintenance request
-        maintenance_request_01 = self.maintenance_request.sudo(self.user).create({
+        maintenance_request_01 = self.maintenance_request.with_user(self.user).create({
             'name': 'Resolution is bad',
             'user_id': self.user.id,
             'owner_user_id': self.user.id,
@@ -71,7 +71,7 @@ class TestEquipment(TransactionCase):
         self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_0'))
 
         # I check that change the maintenance_request stage on click statusbar
-        maintenance_request_01.sudo(self.user).write({'stage_id': self.ref('maintenance.stage_1')})
+        maintenance_request_01.with_user(self.user).write({'stage_id': self.ref('maintenance.stage_1')})
 
         # I check that maintenance request is in the "In Progress" stage
         self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_1'))

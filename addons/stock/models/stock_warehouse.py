@@ -6,7 +6,6 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.osv import expression
@@ -19,6 +18,7 @@ _logger = logging.getLogger(__name__)
 class Warehouse(models.Model):
     _name = "stock.warehouse"
     _description = "Warehouse"
+    _order = 'sequence,id'
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
 
@@ -69,6 +69,8 @@ class Warehouse(models.Model):
         'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
     show_resupply = fields.Boolean(compute="_compute_show_resupply")
+    sequence = fields.Integer(default=10,
+        help="Gives the sequence of this line when displaying the warehouses.")
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
@@ -338,7 +340,7 @@ class Warehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'propagate': True,
+                    'delay_alert': True,
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
                 },
                 'update_values': {
@@ -434,7 +436,8 @@ class Warehouse(models.Model):
                 },
                 'rules_values': {
                     'active': True,
-                    'procure_method': 'make_to_order'
+                    'procure_method': 'make_to_order',
+                    'propagate_cancel': True,
                 }
             },
             'delivery_route_id': {
@@ -675,11 +678,22 @@ class Warehouse(models.Model):
                 'procure_method': first_rule and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,
-                'propagate': routing.picking_type != self.pick_type_id,
+                'delay_alert': routing.picking_type.code == 'outgoing',
             }
             route_rule_values.update(values or {})
             rules_list.append(route_rule_values)
             first_rule = False
+        if values and values.get('propagate_cancel') and rules_list:
+            # In case of rules chain with cancel propagation set, we need to stop
+            # the cancellation for the last step in order to avoid cancelling
+            # any other move after the chain.
+            # Example: In the following flow:
+            # Input -> Quality check -> Stock -> Customer
+            # We want that cancelling I->GC cancel QC -> S but not S -> C
+            # which means:
+            # Input -> Quality check should have propagate_cancel = True
+            # Quality check -> Stock should have propagate_cancel = False
+            rules_list[-1]['propagate_cancel'] = False
         return rules_list
 
     def _get_supply_pull_rules_values(self, route_values, values=None):
@@ -908,7 +922,6 @@ class Warehouse(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
-            'view_type': 'form',
             'limit': 20
         }
 
@@ -949,15 +962,15 @@ class Orderpoint(models.Model):
         readonly=True, required=True,
         default=lambda self: self._context.get('product_uom', False))
     product_min_qty = fields.Float(
-        'Minimum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
+        'Minimum Quantity', digits='Product Unit of Measure', required=True,
         help="When the virtual stock equals to or goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity to the Max Quantity.")
     product_max_qty = fields.Float(
-        'Maximum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
+        'Maximum Quantity', digits='Product Unit of Measure', required=True,
         help="When the virtual stock goes below the Min Quantity, Odoo generates "
              "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity.")
     qty_multiple = fields.Float(
-        'Qty Multiple', digits=dp.get_precision('Product Unit of Measure'),
+        'Qty Multiple', digits='Product Unit of Measure',
         default=1, required=True,
         help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.")
     group_id = fields.Many2one(

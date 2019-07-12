@@ -13,7 +13,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_access_rights_manager(self):
         """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_manager))
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_manager))
         man_order_form.product_id = self.product_4
         man_order_form.product_qty = 5.0
         man_order_form.bom_id = self.bom_1
@@ -27,7 +27,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_access_rights_user(self):
         """ Checks an MRP user can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_user))
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.product_qty = 5.0
         man_order_form.bom_id = self.bom_1
@@ -64,7 +64,7 @@ class TestMrpOrder(TestMrpCommon):
         test_date_planned = Dt.now() - timedelta(days=1)
         test_quantity = 2.0
         self.bom_1.routing_id = False
-        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_user))
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.bom_id = self.bom_1
         man_order_form.product_uom_id = self.product_4.uom_id
@@ -989,3 +989,36 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(product_produce.raw_workorder_line_ids[0].product_uom_id, unit, 'Should be the product uom so "unit"')
         self.assertEqual(product_produce.raw_workorder_line_ids[1].qty_to_consume, 1, 'Should be 1 unit since the tracking is serial and quantity 2.')
         self.assertEqual(product_produce.raw_workorder_line_ids[1].product_uom_id, unit, 'should be the product uom so "unit"')
+
+    def test_product_type_service_1(self):
+        # Create finished product
+        finished_product = self.env['product.product'].create({
+            'name': 'Geyser',
+            'type': 'product',
+        })
+
+        # Create service type product
+        product_raw = self.env['product.product'].create({
+            'name': 'raw Geyser',
+            'type': 'service',
+        })
+
+        # Create bom for finish product
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        mo_form.bom_id = bom
+        mo_form.product_uom_id = self.env.ref('uom.product_uom_unit')
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+
+        # Check Mo is created or not
+        self.assertTrue(mo, "Mo is created")

@@ -34,8 +34,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
 
         # Give access rights of Purchase Requisition User to open requisition
         # Set tender state to choose tendering line.
-        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_in_progress()
-        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_open()
+        self.requisition1.with_user(self.user_purchase_requisition_user).action_in_progress()
+        self.requisition1.with_user(self.user_purchase_requisition_user).action_open()
 
         # Vendor send one RFQ so I create a RfQ of that agreement.
         PurchaseOrder = self.env['purchase.order']

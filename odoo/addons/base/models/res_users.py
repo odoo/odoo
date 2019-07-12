@@ -437,7 +437,7 @@ class Users(models.Model):
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        if self._uid != SUPERUSER_ID and args:
+        if not self.env.su and args:
             domain_fields = {term[0] for term in args if isinstance(term, (tuple, list))}
             if domain_fields.intersection(USER_PRIVATE_FIELDS):
                 raise AccessError(_('Invalid search criterion'))
@@ -579,7 +579,7 @@ class Users(models.Model):
                     user = self.search(self._get_login_domain(login))
                     if not user:
                         raise AccessDenied()
-                    user = user.sudo(user.id)
+                    user = user.with_user(user)
                     user._check_credentials(password)
                     user._update_last_login()
         except AccessDenied:
@@ -700,7 +700,7 @@ class Users(models.Model):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
         uid = self.id or self._uid
-        return self.sudo(user=uid)._has_group(group_ext_id)
+        return self.with_user(uid)._has_group(group_ext_id)
 
     @api.model
     @tools.ormcache('self._uid', 'group_ext_id')
@@ -726,7 +726,6 @@ class Users(models.Model):
         self.ensure_one()
         return {
             'name': _('Groups'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'res.groups',
             'type': 'ir.actions.act_window',
@@ -739,7 +738,6 @@ class Users(models.Model):
         self.ensure_one()
         return {
             'name': _('Access Rights'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.model.access',
             'type': 'ir.actions.act_window',
@@ -752,7 +750,6 @@ class Users(models.Model):
         self.ensure_one()
         return {
             'name': _('Record Rules'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.rule',
             'type': 'ir.actions.act_window',
@@ -1194,6 +1191,18 @@ class UsersView(models.Model):
                 elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
                     user.write({'groups_id': [(4, group_multi_company.id)]})
         return res
+
+    @api.model
+    def new(self, values={}, origin=None, ref=None):
+        values = self._remove_reified_groups(values)
+        user = super().new(values=values, origin=origin, ref=ref)
+        group_multi_company = self.env.ref('base.group_multi_company', False)
+        if group_multi_company and 'company_ids' in values:
+            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+                user.update({'groups_id': [(3, group_multi_company.id)]})
+            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+                user.update({'groups_id': [(4, group_multi_company.id)]})
+        return user
 
     def _remove_reified_groups(self, values):
         """ return `values` without reified group fields """

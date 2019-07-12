@@ -561,6 +561,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # These products are in the Test category
         # The bom consists of 2 component1 and 1 component2
         # The invoice policy of the finished product is based on delivered quantities
+        self.env.company.currency_id = self.env.ref('base.USD')
         self.uom_unit = self.UoM.create({
             'name': 'Test-Unit',
             'category_id': self.categ_unit.id,
@@ -571,7 +572,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.company.anglo_saxon_accounting = True
         self.partner = self.env.ref('base.res_partner_1')
         self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
-        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'receivable'})
+        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other'})
         self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
         account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
         account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})
@@ -632,7 +633,13 @@ class TestSaleMrpFlow(common.SavepointCase):
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': self.finished_product.name, 'product_id': self.finished_product.id, 'product_uom_qty': 3, 'product_uom': self.finished_product.uom_id.id, 'price_unit': self.finished_product.list_price})],
+            'order_line': [(0, 0, {
+                'name': self.finished_product.name,
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 3,
+                'product_uom': self.finished_product.uom_id.id,
+                'price_unit': self.finished_product.list_price
+            })],
             'pricelist_id': self.env.ref('product.list0').id,
             'company_id': self.company.id,
         }
@@ -650,11 +657,14 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.so._create_invoices()
         self.invoice = self.so.invoice_ids
         # Changed the invoiced quantity of the finished product to 2
-        self.invoice.invoice_line_ids.write({'quantity': 2.0})
-        self.invoice.action_invoice_open()
-        aml = self.invoice.move_id.line_ids
-        aml_expense = aml.filtered(lambda l: l.account_id.id == account_expense.id)
-        aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 2.0
+        self.invoice = move_form.save()
+        self.invoice.post()
+        aml = self.invoice.line_ids
+        aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
+        aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)
         # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")
@@ -1457,3 +1467,49 @@ class TestSaleMrpFlow(common.SavepointCase):
         move_component_kg = order.picking_ids[0].move_lines - move_component_unit
         self.assertEquals(move_component_unit.product_uom_qty, 0.5)
         self.assertEquals(move_component_kg.product_uom_qty, 0.583)
+
+    def test_product_type_service_1(self):
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # Create finished product
+        finished_product = self.env['product.product'].create({
+            'name': 'Geyser',
+            'type': 'product',
+            'route_ids': [(4, route_mto), (4, route_manufacture)],
+        })
+
+        # Create service type product
+        product_raw = self.env['product.product'].create({
+            'name': 'raw Geyser',
+            'type': 'service',
+        })
+
+        # Create bom for finish product
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+        })
+
+        # Create sale order
+        sale_form = Form(self.env['sale.order'])
+        sale_form.partner_id = self.env.ref('base.res_partner_1')
+        with sale_form.order_line.new() as line:
+            line.name = finished_product.name
+            line.product_id = finished_product
+            line.product_uom_qty = 1.0
+            line.product_uom = self.uom_unit
+            line.price_unit = 10.0
+        sale_order = sale_form.save()
+
+        with self.assertRaises(UserError):
+            sale_order.action_confirm()
+
+        mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
+
+        self.assertTrue(mo, 'Manufacturing order created.')

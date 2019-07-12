@@ -612,7 +612,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     @api.multi
     def execute(self):
         self.ensure_one()
-        if not self.env.user._is_admin() and not self.env.user.has_group('base.group_system'):
+        if not self.env.is_admin():
             raise AccessError(_("Only administrators can change the settings"))
 
         self = self.with_context(active_test=False)
@@ -695,7 +695,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         model_name, field_name = full_field_name.rsplit('.', 1)
         return self.env[model_name].fields_get([field_name])[field_name]['string']
 
-    @api.model_cr_context
+    @api.model
     def get_config_warning(self, msg):
         """
         Helper: return a Warning exception with the given message where the %(field:xxx)s

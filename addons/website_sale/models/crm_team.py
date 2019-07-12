@@ -40,7 +40,6 @@ class CrmTeam(models.Model):
         return {
             'name': _('Abandoned Carts'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'domain': [('is_abandoned_cart', '=', True)],
             'search_view_id': self.env.ref('sale.sale_order_view_search_inherit_sale').id,

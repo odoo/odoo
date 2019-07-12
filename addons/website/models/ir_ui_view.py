@@ -30,6 +30,19 @@ class View(models.Model):
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
 
     @api.multi
+    def name_get(self):
+        if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
+            return super(View, self).name_get()
+
+        res = []
+        for view in self:
+            view_name = view.name
+            if view.website_id:
+                view_name += ' [%s]' % view.website_id.name
+            res.append((view.id, view_name))
+        return res
+
+    @api.multi
     def write(self, vals):
         '''COW for ir.ui.view. This way editing websites does not impact other
         websites. Also this way newly created websites will only
@@ -82,7 +95,8 @@ class View(models.Model):
                     # original tree. Indeed, the order of children 'id' fields
                     # must remain the same so that the inheritance is applied
                     # in the same order in the copied tree.
-                    inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    child = inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    inherit_child.inherit_children_ids.write({'inherit_id': child.id})
                     inherit_child.unlink()
                 else:
                     # Trigger COW on inheriting views
@@ -258,7 +272,7 @@ class View(models.Model):
         return [(view.arch, view.id) for view in inheriting_views]
 
     @api.model
-    @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
+    @tools.ormcache_context('self.env.uid', 'self.env.su', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
         """If a website_id is in the context and the given xml_id is not an int
         then try to get the id of the specific view for that website, but

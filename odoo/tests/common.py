@@ -351,8 +351,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 self.fail(msg + _format_message(records, expected_values))
 
     def shortDescription(self):
-        doc = self._testMethodDoc
-        return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
+        return None
 
     # turns out this thing may not be quite as useful as we thought...
     def assertItemsEqual(self, a, b, msg=None):
@@ -487,7 +486,7 @@ class ChromeBrowser():
                 self.chrome_process.wait()
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
-            shutil.rmtree(self.user_data_dir)
+            shutil.rmtree(self.user_data_dir, ignore_errors=True)
         # Restore previous signal handler
         if self.sigxcpu_handler and os.name == 'posix':
             signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
@@ -707,7 +706,7 @@ class ChromeBrowser():
             if res and res.get('id') == ready_id:
                 if res.get('result') == awaited_result:
                     if has_exceeded:
-                        self._logger.warning('The ready code tooks too much time : %s', tdiff)
+                        self._logger.info('The ready code tooks too much time : %s', tdiff)
                     return True
                 else:
                     last_bad_res = res
@@ -829,12 +828,12 @@ class HttpCase(TransactionCase):
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
 
-    def url_open(self, url, data=None, timeout=10):
+    def url_open(self, url, data=None, timeout=10, headers=None):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
         if data:
-            return self.opener.post(url, data=data, timeout=timeout)
-        return self.opener.get(url, timeout=timeout)
+            return self.opener.post(url, data=data, timeout=timeout, headers=headers)
+        return self.opener.get(url, timeout=timeout, headers=headers)
 
     def _wait_remaining_requests(self):
         t0 = int(time.time())

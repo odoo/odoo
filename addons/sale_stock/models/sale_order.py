@@ -160,7 +160,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
-        invoice_vals['incoterm_id'] = self.incoterm.id or False
+        invoice_vals['invoice_incoterm_id'] = self.incoterm.id
         return invoice_vals
 
     @api.model
@@ -370,6 +370,17 @@ class SaleOrderLine(models.Model):
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         return qty
 
+    def _get_procurement_group(self):
+        return self.order_id.procurement_group_id
+
+    def _prepare_procurement_group_vals(self):
+        return {
+            'name': self.order_id.name,
+            'move_type': self.order_id.picking_policy,
+            'sale_id': self.order_id.id,
+            'partner_id': self.order_id.partner_shipping_id.id,
+        }
+
     @api.multi
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
@@ -386,13 +397,9 @@ class SaleOrderLine(models.Model):
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
-            group_id = line.order_id.procurement_group_id
+            group_id = line._get_procurement_group()
             if not group_id:
-                group_id = self.env['procurement.group'].create({
-                    'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
-                    'sale_id': line.order_id.id,
-                    'partner_id': line.order_id.partner_shipping_id.id,
-                })
+                group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
                 line.order_id.procurement_group_id = group_id
             else:
                 # In case the procurement group is already created and the order was

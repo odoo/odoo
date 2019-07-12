@@ -27,6 +27,12 @@
         <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
+    <record id="website_menu" model="ir.rule">
+        <field name="name">Website menu: group_ids</field>
+        <field name="model_id" ref="model_website_menu"/>
+        <field name="domain_force">['|', ('group_ids', '=', False), ('group_ids', 'in', [g.id for g in user.groups_id])]</field>
+    </record>
+
     <record id="website_designer_edit_qweb" model="ir.rule">
         <field name="name">website_designer: Manage Website and qWeb view</field>
         <field name="model_id" ref="base.model_ir_ui_view"/>

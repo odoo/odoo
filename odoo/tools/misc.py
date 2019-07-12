@@ -9,6 +9,7 @@ from functools import wraps
 import babel
 from contextlib import contextmanager
 import datetime
+import math
 import subprocess
 import io
 import os
@@ -16,6 +17,7 @@ import os
 import collections
 import passlib.utils
 import pickle as pickle_
+import pytz
 import re
 import socket
 import sys
@@ -42,7 +44,7 @@ except ImportError:
 
 from .config import config
 from .cache import *
-from .parse_version import parse_version 
+from .parse_version import parse_version
 from . import pycompat
 
 import odoo
@@ -143,7 +145,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
-    
+
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
 
@@ -289,7 +291,7 @@ def flatten(list):
 
 def reverse_enumerate(l):
     """Like enumerate but in the other direction
-    
+
     Usage::
     >>> a = ['a', 'b', 'c']
     >>> it = reverse_enumerate(a)
@@ -675,10 +677,10 @@ def posix_to_ldml(fmt, locale):
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
-       
+
        :param int n: maximum size of each generated chunk
        :param Iterable iterable: iterable to chunk into pieces
-       :param piece_maker: callable taking an iterable and collecting each 
+       :param piece_maker: callable taking an iterable and collecting each
                            chunk from its slice, *must consume the entire slice*.
     """
     iterator = iter(iterable)
@@ -753,7 +755,7 @@ class unquote(str):
         return self
 
 class UnquoteEvalContext(defaultdict):
-    """Defaultdict-based evaluation context that returns 
+    """Defaultdict-based evaluation context that returns
        an ``unquote`` string for any missing name used during
        the evaluation.
        Mostly useful for evaluating OpenERP domains/contexts that
@@ -1144,10 +1146,6 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             digits = decimal_precision_obj.precision_get(dp)
         elif currency_obj:
             digits = currency_obj.decimal_places
-        elif (hasattr(value, '_field') and getattr(value._field, 'digits', None)):
-                digits = value._field.digits[1]
-                if not digits and digits is not 0:
-                    digits = DEFAULT_DIGITS
 
     if isinstance(value, str) and not value:
         return ''
@@ -1163,6 +1161,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         elif currency_obj and currency_obj.position == 'before':
             res = '%s %s' % (currency_obj.symbol, res)
     return res
+
 
 def format_date(env, value, lang_code=False, date_format=False):
     '''
@@ -1195,6 +1194,96 @@ def format_date(env, value, lang_code=False, date_format=False):
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
     return babel.dates.format_date(value, format=date_format, locale=locale)
+
+
+def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
+    """ Formats the datetime in a given format.
+
+        :param {str, datetime} value: naive datetime to format either in string or in datetime
+        :param {str} tz: name of the timezone  in which the given datetime should be localized
+        :param {str} dt_format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern compatible with `babel` lib
+        :param {str} lang_code: ISO code of the language to use to render the given datetime
+    """
+    if not value:
+        return ''
+    if isinstance(value, str):
+        timestamp = odoo.fields.Datetime.from_string(value)
+    else:
+        timestamp = value
+
+    tz_name = tz or env.user.tz or 'UTC'
+    utc_datetime = pytz.utc.localize(timestamp, is_dst=False)
+    try:
+        context_tz = pytz.timezone(tz_name)
+        localized_datetime = utc_datetime.astimezone(context_tz)
+    except Exception:
+        localized_datetime = utc_datetime
+
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    locale = babel.Locale.parse(lang.code)
+    if not dt_format:
+        date_format = posix_to_ldml(lang.date_format, locale=locale)
+        time_format = posix_to_ldml(lang.time_format, locale=locale)
+        dt_format = '%s %s' % (date_format, time_format)
+
+    # Babel allows to format datetime in a specific language without change locale
+    # So month 1 = January in English, and janvier in French
+    # Be aware that the default value for format is 'medium', instead of 'short'
+    #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
+    #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
+    # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
+    return babel.dates.format_datetime(localized_datetime, dt_format, locale=locale)
+
+
+def format_time(env, value, tz=False, time_format='medium', lang_code=False):
+    """ Format the given time (hour, minute and second) with the current user preference (language, format, ...)
+
+        :param value: the time to format
+        :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format (e.i.: 'full' format)
+        :param format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern
+        :param lang_code: ISO
+
+        :rtype str
+    """
+    if not value:
+        return ''
+
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    locale = babel.Locale.parse(lang.code)
+    if not time_format:
+        time_format = posix_to_ldml(lang.time_format, locale=locale)
+
+    return babel.dates.format_time(value, format=time_format, locale=locale)
+
+
+def format_amount(env, amount, currency, lang_code=False):
+    fmt = "%.{0}f".format(currency.decimal_places)
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+
+    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+        .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+
+    pre = post = u''
+    if currency.position == 'before':
+        pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=currency.symbol or '')
+    else:
+        post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency.symbol or '')
+
+    return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
+
+
+def format_duration(value):
+    """ Format a float: used to display integral or fractional values as
+        human-readable time spans (e.g. 1.5 as "01:30").
+    """
+    sign = math.copysign(1.0, value)
+    hours, minutes = divmod(abs(value) * 60, 60)
+    minutes = round(minutes)
+    if minutes == 60:
+        minutes = 0
+        hours += 1
+    return '%02d:%02d' % (sign * hours, minutes)
+
 
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,

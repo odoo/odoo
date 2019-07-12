@@ -9,13 +9,13 @@
                             <li class="nav-item">
                                 <a t-att-href="'/slides/%s%s' % (slug(forum.slide_channel_id), '/%s' % slug(category) if category else '')"
                                     t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">
-                                    <i class="fa fa-home"/> Home</a>
+                                    <i class="fa fa-home"/> Course</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" t-att-class="'nav-link active o_wprofile_navlink'" style="border-left: 0px">Forum</a>
                             </li>
                             <li class="nav-item">
-                                <a t-att-href="'/slides/%s' % (slug(forum.slide_channel_id))"
+                                <a t-att-href="'/slides/%s?active_tab=review' % (slug(forum.slide_channel_id))"
                                     t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">Review</a>
                             </li>
                         </ul>

@@ -325,7 +325,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                         js.remove();
                     });
                     return Promise.all(defs).then(function () {
-                        $banner.prependTo(self.$('> .o_content'));
+                        $banner.insertBefore(self.$('> .o_content'));
                         self._$banner = $banner;
                     });
                 });

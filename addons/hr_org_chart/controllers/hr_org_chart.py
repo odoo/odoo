@@ -53,7 +53,10 @@ class HrOrgChartController(http.Controller):
 
         employee = self._check_employee(employee_id, **kw)
         if not employee:  # to check
-            return {}
+            return {
+                'managers': [],
+                'children': [],
+            }
 
         # compute employee data for org chart
         ancestors, current = request.env['hr.employee.public'].sudo(), employee.sudo()

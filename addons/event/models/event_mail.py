@@ -76,47 +76,46 @@ class EventMailScheduler(models.Model):
     mail_sent = fields.Boolean('Mail Sent on Event')
     done = fields.Boolean('Sent', compute='_compute_done', store=True)
 
-    @api.one
     @api.depends('mail_sent', 'interval_type', 'event_id.registration_ids', 'mail_registration_ids')
     def _compute_done(self):
-        if self.interval_type in ['before_event', 'after_event']:
-            self.done = self.mail_sent
-        else:
-            self.done = len(self.mail_registration_ids) == len(self.event_id.registration_ids) and all(mail.mail_sent for mail in self.mail_registration_ids)
+        for mail in self:
+            if mail.interval_type in ['before_event', 'after_event']:
+                mail.done = mail.mail_sent
+            else:
+                mail.done = len(mail.mail_registration_ids) == len(mail.event_id.registration_ids) and all(mail.mail_sent for mail in mail.mail_registration_ids)
 
-    @api.one
     @api.depends('event_id.state', 'event_id.date_begin', 'interval_type', 'interval_unit', 'interval_nbr')
     def _compute_scheduled_date(self):
-        if self.event_id.state not in ['confirm', 'done']:
-            self.scheduled_date = False
-        else:
-            if self.interval_type == 'after_sub':
-                date, sign = self.event_id.create_date, 1
-            elif self.interval_type == 'before_event':
-                date, sign = self.event_id.date_begin, -1
+        for mail in self:
+            if mail.event_id.state not in ['confirm', 'done']:
+                mail.scheduled_date = False
             else:
-                date, sign = self.event_id.date_end, 1
+                if mail.interval_type == 'after_sub':
+                    date, sign = mail.event_id.create_date, 1
+                elif mail.interval_type == 'before_event':
+                    date, sign = mail.event_id.date_begin, -1
+                else:
+                    date, sign = mail.event_id.date_end, 1
+                mail.scheduled_date = date + _INTERVALS[mail.interval_unit](sign * mail.interval_nbr)
 
-            self.scheduled_date = date + _INTERVALS[self.interval_unit](sign * self.interval_nbr)
-
-    @api.one
     def execute(self):
-        now = fields.Datetime.now()
-        if self.interval_type == 'after_sub':
-            # update registration lines
-            lines = [
-                (0, 0, {'registration_id': registration.id})
-                for registration in (self.event_id.registration_ids - self.mapped('mail_registration_ids.registration_id'))
-            ]
-            if lines:
-                self.write({'mail_registration_ids': lines})
-            # execute scheduler on registrations
-            self.mail_registration_ids.filtered(lambda reg: reg.scheduled_date and reg.scheduled_date <= now).execute()
-        else:
-            # Do not send emails if the mailing was scheduled before the event but the event is over
-            if not self.mail_sent and (self.interval_type != 'before_event' or self.event_id.date_end > now):
-                self.event_id.mail_attendees(self.template_id.id)
-                self.write({'mail_sent': True})
+        for mail in self:
+            now = fields.Datetime.now()
+            if mail.interval_type == 'after_sub':
+                # update registration lines
+                lines = [
+                    (0, 0, {'registration_id': registration.id})
+                    for registration in (mail.event_id.registration_ids - mail.mapped('mail_registration_ids.registration_id'))
+                ]
+                if lines:
+                    mail.write({'mail_registration_ids': lines})
+                # execute scheduler on registrations
+                mail.mail_registration_ids.filtered(lambda reg: reg.scheduled_date and reg.scheduled_date <= now).execute()
+            else:
+                # Do not send emails if the mailing was scheduled before the event but the event is over
+                if not mail.mail_sent and (mail.interval_type != 'before_event' or mail.event_id.date_end > now):
+                    mail.event_id.mail_attendees(mail.template_id.id)
+                    mail.write({'mail_sent': True})
         return True
 
     @api.model
@@ -179,18 +178,18 @@ class EventMailRegistration(models.Model):
     scheduled_date = fields.Datetime('Scheduled Time', compute='_compute_scheduled_date', store=True)
     mail_sent = fields.Boolean('Mail Sent')
 
-    @api.one
     def execute(self):
-        if self.registration_id.state in ['open', 'done'] and not self.mail_sent:
-            self.scheduler_id.template_id.send_mail(self.registration_id.id)
-            self.write({'mail_sent': True})
+        for mail in self:
+            if mail.registration_id.state in ['open', 'done'] and not mail.mail_sent:
+                mail.scheduler_id.template_id.send_mail(mail.registration_id.id)
+                mail.write({'mail_sent': True})
 
-    @api.one
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
-        if self.registration_id:
-            date_open = self.registration_id.date_open
-            date_open_datetime = date_open or fields.Datetime.now()
-            self.scheduled_date = date_open_datetime + _INTERVALS[self.scheduler_id.interval_unit](self.scheduler_id.interval_nbr)
-        else:
-            self.scheduled_date = False
+        for mail in self:
+            if mail.registration_id:
+                date_open = mail.registration_id.date_open
+                date_open_datetime = date_open or fields.Datetime.now()
+                mail.scheduled_date = date_open_datetime + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
+            else:
+                mail.scheduled_date = False

@@ -155,10 +155,10 @@ class Partner(models.Model):
     lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
                             help="All the emails and documents sent to this contact will be translated in this language.")
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
-                          help="The partner's timezone, used to output proper date and time values "
-                               "inside printed reports. It is important to set a value for this field. "
-                               "You should use the same timezone that is otherwise used to pick and "
-                               "render date and time values: your computer's timezone.")
+                          help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
+                               "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
+                               "Anywhere else, time values are computed according to the time offset of your web client.")
+
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
@@ -193,6 +193,8 @@ class Partner(models.Model):
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    partner_latitude = fields.Float(string='Geo Latitude', digits=(16, 5))
+    partner_longitude = fields.Float(string='Geo Longitude', digits=(16, 5))
     email = fields.Char()
     email_formatted = fields.Char(
         'Formatted Email', compute='_compute_email_formatted',
@@ -223,8 +225,7 @@ class Partner(models.Model):
     company_name = fields.Char('Company Name')
 
     # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Image",
-        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",)
+    image = fields.Binary("Image")
     image_medium = fields.Binary("Medium-sized image",
         help="Medium-sized image of this contact. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
@@ -240,7 +241,6 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
-    @api.model_cr
     def init(self):
         self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_vat_index'""")
         if not self._cr.fetchone():
@@ -278,9 +278,9 @@ class Partner(models.Model):
         for partner in self:
             partner.contact_address = partner._display_address()
 
-    @api.one
     def _compute_get_ids(self):
-        self.self = self.id
+        for partner in self:
+            partner.self = partner.id
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
@@ -578,7 +578,7 @@ class Partner(models.Model):
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
-        if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
+        if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.su:
             result = super(Partner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
@@ -766,7 +766,7 @@ class Partner(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        self = self.sudo(name_get_uid or self.env.uid)
+        self = self.with_user(name_get_uid or self.env.uid)
         if args is None:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -980,12 +980,6 @@ class Partner(models.Model):
     @api.multi
     def _get_country_name(self):
         return self.country_id.name or ''
-
-    @api.multi
-    def get_base_url(self):
-        """Get the base URL for the current partner."""
-        self.ensure_one()
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
 
 class ResPartnerIndustry(models.Model):

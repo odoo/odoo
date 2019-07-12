@@ -29,21 +29,20 @@ class AccountFiscalPosition(models.Model):
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invoicing country match the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
-    zip_from = fields.Integer(string='Zip Range From', default=0)
-    zip_to = fields.Integer(string='Zip Range To', default=0)
+    zip_from = fields.Char(string='Zip Range From')
+    zip_to = fields.Char(string='Zip Range To')
     # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
 
-    @api.one
     def _compute_states_count(self):
-        self.states_count = len(self.country_id.state_ids)
+        for position in self:
+            position.states_count = len(position.country_id.state_ids)
 
-    @api.one
     @api.constrains('zip_from', 'zip_to')
     def _check_zip(self):
-        if self.zip_from > self.zip_to:
-            raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
-        return True
+        for position in self:
+            if self.zip_from and self.zip_to and position.zip_from > position.zip_to:
+                raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
 
     @api.model     # noqa
     def map_tax(self, taxes, product=None, partner=None):
@@ -92,6 +91,32 @@ class AccountFiscalPosition(models.Model):
             self.state_ids = [(5,)]
 
     @api.model
+    def _convert_zip_values(self, zip_from='', zip_to=''):
+        max_length = max(len(zip_from), len(zip_to))
+        if zip_from.isdigit():
+            zip_from = zip_from.rjust(max_length, '0')
+        if zip_to.isdigit():
+            zip_to = zip_to.rjust(max_length, '0')
+        return zip_from, zip_to
+
+    @api.model
+    def create(self, vals):
+        zip_from = vals.get('zip_from')
+        zip_to = vals.get('zip_to')
+        if zip_from and zip_to:
+            vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
+        return super(AccountFiscalPosition, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        zip_from = vals.get('zip_from')
+        zip_to = vals.get('zip_to')
+        if zip_from or zip_to:
+            for rec in self:
+                vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
+        return super(AccountFiscalPosition, self).write(vals)
+
+    @api.model
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
@@ -99,14 +124,11 @@ class AccountFiscalPosition(models.Model):
         if self.env.context.get('force_company'):
             base_domain.append(('company_id', '=', self.env.context.get('force_company')))
         null_state_dom = state_domain = [('state_ids', '=', False)]
-        null_zip_dom = zip_domain = [('zip_from', '=', 0), ('zip_to', '=', 0)]
+        null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
         null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
 
-        if zipcode and zipcode.isdigit():
-            zipcode = int(zipcode)
+        if zipcode:
             zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
-        else:
-            zipcode = 0
 
         if state_id:
             state_domain = [('state_ids', '=', state_id)]
@@ -209,7 +231,7 @@ class ResPartner(models.Model):
         if where_clause:
             where_clause = 'AND ' + where_clause
         self._cr.execute("""SELECT account_move_line.partner_id, act.type, SUM(account_move_line.amount_residual)
-                      FROM account_move_line
+                      FROM """ + tables + """
                       LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
                       WHERE act.type IN ('receivable','payable')
@@ -286,7 +308,7 @@ class ResPartner(models.Model):
 
         # price_total is in the company currency
         query = """
-                  SELECT SUM(price_total) as total, partner_id
+                  SELECT SUM(price_subtotal) as total, partner_id
                     FROM account_invoice_report account_invoice_report
                    WHERE %s
                    GROUP BY partner_id
@@ -323,53 +345,53 @@ class ResPartner(models.Model):
             domain += overdue_domain
         return domain
 
-    @api.one
     def _compute_has_unreconciled_entries(self):
-        # Avoid useless work if has_unreconciled_entries is not relevant for this partner
-        if not self.active or not self.is_company and self.parent_id:
-            return
-        self.env.cr.execute(
-            """ SELECT 1 FROM(
-                    SELECT
-                        p.last_time_entries_checked AS last_time_entries_checked,
-                        MAX(l.write_date) AS max_date
-                    FROM
-                        account_move_line l
-                        RIGHT JOIN account_account a ON (a.id = l.account_id)
-                        RIGHT JOIN res_partner p ON (l.partner_id = p.id)
-                    WHERE
-                        p.id = %s
-                        AND EXISTS (
-                            SELECT 1
-                            FROM account_move_line l
-                            WHERE l.account_id = a.id
-                            AND l.partner_id = p.id
-                            AND l.amount_residual > 0
-                        )
-                        AND EXISTS (
-                            SELECT 1
-                            FROM account_move_line l
-                            WHERE l.account_id = a.id
-                            AND l.partner_id = p.id
-                            AND l.amount_residual < 0
-                        )
-                    GROUP BY p.last_time_entries_checked
-                ) as s
-                WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-            """, (self.id,))
-        self.has_unreconciled_entries = self.env.cr.rowcount == 1
+        for partner in self:
+            # Avoid useless work if has_unreconciled_entries is not relevant for this partner
+            if not partner.active or not partner.is_company and partner.parent_id:
+                continue
+            self.env.cr.execute(
+                """ SELECT 1 FROM(
+                        SELECT
+                            p.last_time_entries_checked AS last_time_entries_checked,
+                            MAX(l.write_date) AS max_date
+                        FROM
+                            account_move_line l
+                            RIGHT JOIN account_account a ON (a.id = l.account_id)
+                            RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+                        WHERE
+                            p.id = %s
+                            AND EXISTS (
+                                SELECT 1
+                                FROM account_move_line l
+                                WHERE l.account_id = a.id
+                                AND l.partner_id = p.id
+                                AND l.amount_residual > 0
+                            )
+                            AND EXISTS (
+                                SELECT 1
+                                FROM account_move_line l
+                                WHERE l.account_id = a.id
+                                AND l.partner_id = p.id
+                                AND l.amount_residual < 0
+                            )
+                        GROUP BY p.last_time_entries_checked
+                    ) as s
+                    WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+                """, (partner.id,))
+            partner.has_unreconciled_entries = self.env.cr.rowcount == 1
 
     @api.multi
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
         return self.sudo().with_context(company_id=self.env.company.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
-    @api.one
     def _get_company_currency(self):
-        if self.company_id:
-            self.currency_id = self.sudo().company_id.currency_id
-        else:
-            self.currency_id = self.env.company.currency_id
+        for partner in self:
+            if partner.company_id:
+                partner.currency_id = partner.sudo().company_id.currency_id
+            else:
+                partner.currency_id = self.env.company.currency_id
 
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
@@ -410,7 +432,7 @@ class ResPartner(models.Model):
         help='Last time the invoices & payments matching was performed for this partner. '
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
              'or if you click the "Done" button.')
-    invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices', readonly=True, copy=False)
+    invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
@@ -437,14 +459,17 @@ class ResPartner(models.Model):
     @api.multi
     def action_view_partner_invoices(self):
         self.ensure_one()
-        action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
-        action['domain'] = literal_eval(action['domain'])
-        action['domain'].append(('partner_id', 'child_of', self.id))
+        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action['domain'] = [
+            ('type', 'in', ('out_invoice', 'out_refund')),
+            ('type', '=', 'posted'),
+            ('partner_id', 'child_of', self.id),
+        ]
+        action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
-        company = self.env['res.company']
         if self.company_id:
             company = self.company_id
         else:
@@ -455,10 +480,9 @@ class ResPartner(models.Model):
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat
-        Invoice = self.env['account.invoice']
-        has_invoice = Invoice.search([
+        has_invoice = self.env['account.move'].search([
             ('type', 'in', ['out_invoice', 'out_refund']),
             ('partner_id', 'child_of', self.commercial_partner_id.id),
-            ('state', 'not in', ['draft', 'cancel'])
+            ('state', '=', 'posted')
         ], limit=1)
         return can_edit_vat and not (bool(has_invoice))

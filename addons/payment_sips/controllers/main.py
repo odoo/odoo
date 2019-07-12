@@ -27,14 +27,14 @@ class SipsController(http.Controller):
 
     @http.route([
         '/payment/sips/ipn/'],
-        type='http', auth='none', methods=['POST'], csrf=False)
+        type='http', auth='public', methods=['POST'], csrf=False)
     def sips_ipn(self, **post):
         """ Sips IPN. """
         self.sips_validate_data(**post)
         return ''
 
     @http.route([
-        '/payment/sips/dpn'], type='http', auth="none", methods=['POST'], csrf=False)
+        '/payment/sips/dpn'], type='http', auth="public", methods=['POST'], csrf=False)
     def sips_dpn(self, **post):
         """ Sips DPN """
         try:

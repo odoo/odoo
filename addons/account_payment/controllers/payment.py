@@ -19,7 +19,7 @@ class PaymentPortal(http.Controller):
 
         :return html: form containing all values related to the acquirer to
                       redirect customers to the acquirer website """
-        invoice_sudo = request.env['account.invoice'].sudo().browse(invoice_id)
+        invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
         if not invoice_sudo:
             return False
 
@@ -63,7 +63,7 @@ class PaymentPortal(http.Controller):
         if access_token:
             params['access_token'] = access_token
 
-        invoice_sudo = request.env['account.invoice'].sudo().browse(invoice_id).exists()
+        invoice_sudo = request.env['account.move'].sudo().browse(invoice_id).exists()
         if not invoice_sudo:
             params['error'] = 'pay_invoice_invalid_doc'
             return request.redirect(_build_url_w_params(error_url, params))

@@ -25,21 +25,25 @@ var SwitchCompanyMenu = Widget.extend({
      * @override
      */
     init: function () {
-        var self = this;
         this._super.apply(this, arguments);
         this.isMobile = config.device.isMobile;
         this._onSwitchCompanyClick = _.debounce(this._onSwitchCompanyClick, 1500, true);
-        this.allowed_company_ids = String(session.user_context.allowed_company_ids).split(',');
-        this.user_companies = session.user_companies.allowed_companies;
+    },
 
-        var hash = $.bbq.getState()
-        if (!hash.cids || hash.cids === undefined) {
-            hash.cids = String(session.user_companies.current_company[0]);
-        }
-        this.current_company = parseInt(hash.cids.split(',')[0]);
+    /**
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        this.allowed_company_ids = String(session.user_context.allowed_company_ids)
+                                    .split(',')
+                                    .map(function (id) {return parseInt(id);});
+        this.user_companies = session.user_companies.allowed_companies;
+        this.current_company = this.allowed_company_ids[0];
         this.current_company_name = _.find(session.user_companies.allowed_companies, function (company) {
             return company[0] === self.current_company;
         })[1];
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -52,11 +56,10 @@ var SwitchCompanyMenu = Widget.extend({
      */
     _onSwitchCompanyClick: function (ev) {
         ev.stopPropagation();
-        var dropdownItem = $(ev.currentTarget).parent()
-        var dropdownMenu = dropdownItem.parent()
+        var dropdownItem = $(ev.currentTarget).parent();
+        var dropdownMenu = dropdownItem.parent();
         var companyID = dropdownItem.data('company-id');
-        var hash = $.bbq.getState()
-        var allowed_company_ids = _.map(hash.cids.split(','), function(company_id) {return parseInt(company_id);});
+        var allowed_company_ids = this.allowed_company_ids;
         if (dropdownItem.find('.fa-square-o').length) {
             // 1 enabled company: Stay in single company mode
             if (this.allowed_company_ids.length === 1) {
@@ -81,11 +84,9 @@ var SwitchCompanyMenu = Widget.extend({
      */
     _onToggleCompanyClick: function (ev) {
         ev.stopPropagation();
-        var dropdownItem = $(ev.currentTarget).parent()
-        var dropdownMenu = dropdownItem.parent()
+        var dropdownItem = $(ev.currentTarget).parent();
         var companyID = dropdownItem.data('company-id');
-        var hash = $.bbq.getState()
-        var allowed_company_ids = _.map(hash.cids.split(','), function(company_id) {return parseInt(company_id);});
+        var allowed_company_ids = this.allowed_company_ids;
         var current_company_id = allowed_company_ids[0];
         if (dropdownItem.find('.fa-square-o').length) {
             allowed_company_ids.push(companyID);

@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
 
     def _get_cheapest_line(self):
         # Unit prices tax included
-        return min(self.order_line.filtered(lambda x: not x.is_reward_line and not x.is_delivery and x.price_unit > 0), key=lambda x: x['price_unit'])
+        return min(self.order_line.filtered(lambda x: not x.is_reward_line and not x.is_delivery and x.price_reduce > 0), key=lambda x: x['price_reduce'])
 
 class SalesOrderLine(models.Model):
     _inherit = "sale.order.line"

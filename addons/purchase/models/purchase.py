@@ -10,7 +10,6 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.misc import formatLang
-from odoo.addons import decimal_precision as dp
 
 
 class PurchaseOrder(models.Model):
@@ -59,12 +58,10 @@ class PurchaseOrder(models.Model):
             else:
                 order.invoice_status = 'no'
 
-    @api.depends('order_line.invoice_lines.invoice_id')
+    @api.depends('order_line.invoice_lines.move_id')
     def _compute_invoice(self):
         for order in self:
-            invoices = self.env['account.invoice']
-            for line in order.order_line:
-                invoices |= line.invoice_lines.mapped('invoice_id')
+            invoices = order.mapped('order_line.invoice_lines.move_id')
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
@@ -104,7 +101,7 @@ class PurchaseOrder(models.Model):
     notes = fields.Text('Terms and Conditions')
 
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)
-    invoice_ids = fields.Many2many('account.invoice', compute="_compute_invoice", string='Bills', copy=False, store=True)
+    invoice_ids = fields.Many2many('account.move', compute="_compute_invoice", string='Bills', copy=False, store=True)
     invoice_status = fields.Selection([
         ('no', 'Nothing to Bill'),
         ('to invoice', 'Waiting Bills'),
@@ -290,7 +287,6 @@ class PurchaseOrder(models.Model):
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'views': [(compose_form_id, 'form')],
@@ -399,22 +395,19 @@ class PurchaseOrder(models.Model):
         This function returns an action that display existing vendor bills of given purchase order ids.
         When only one found, show the vendor bill immediately.
         '''
-        action = self.env.ref('account.action_vendor_bill_template')
+        action = self.env.ref('account.action_move_in_invoice_type')
         result = action.read()[0]
         create_bill = self.env.context.get('create_bill', False)
         # override the context to get rid of the default filtering
         result['context'] = {
-            'type': 'in_invoice',
+            'default_type': 'in_invoice',
             'default_purchase_id': self.id,
-            'default_currency_id': self.currency_id.id,
-            'default_company_id': self.company_id.id,
-            'company_id': self.company_id.id
         }
         # choose the view_mode accordingly
         if len(self.invoice_ids) > 1 and not create_bill:
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
         else:
-            res = self.env.ref('account.invoice_supplier_form', False)
+            res = self.env.ref('account.view_move_form', False)
             result['views'] = [(res and res.id or False, 'form')]
             # Do not set an invoice_id if we want to create a new bill.
             if not create_bill:
@@ -436,7 +429,7 @@ class PurchaseOrderLine(models.Model):
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
-    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
+    product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
@@ -444,7 +437,7 @@ class PurchaseOrderLine(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
     product_type = fields.Selection(related='product_id.type', readonly=True)
-    price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
+    price_unit = fields.Float(string='Unit Price', required=True, digits='Product Price')
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
@@ -456,17 +449,17 @@ class PurchaseOrderLine(models.Model):
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', store=True, readonly=False)
 
-    invoice_lines = fields.One2many('account.invoice.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
+    invoice_lines = fields.One2many('account.move.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
 
     # Replace by invoiced Qty
-    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
+    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits='Product Unit of Measure', store=True)
 
     qty_received_method = fields.Selection([('manual', 'Manual')], string="Received Qty Method", compute='_compute_qty_received_method', store=True,
         help="According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
              "  - Manual: the quantity is set manually on the line\n"
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
-    qty_received = fields.Float("Received Qty", compute='_compute_qty_received', inverse='_inverse_qty_received', compute_sudo=True, store=True, digits=dp.get_precision('Product Unit of Measure'))
-    qty_received_manual = fields.Float("Manual Received Qty", digits=dp.get_precision('Product Unit of Measure'), copy=False)
+    qty_received = fields.Float("Received Qty", compute='_compute_qty_received', inverse='_inverse_qty_received', compute_sudo=True, store=True, digits='Product Unit of Measure')
+    qty_received_manual = fields.Float("Manual Received Qty", digits='Product Unit of Measure', copy=False)
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
@@ -511,16 +504,16 @@ class PurchaseOrderLine(models.Model):
             taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
 
-    @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
     def _compute_qty_invoiced(self):
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                if inv_line.invoice_id.state not in ['cancel']:
-                    if inv_line.invoice_id.type == 'in_invoice':
-                        qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
-                    elif inv_line.invoice_id.type == 'in_refund':
-                        qty -= inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
+                if inv_line.move_id.state not in ['cancel']:
+                    if inv_line.move_id.type == 'in_invoice':
+                        qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
+                    elif inv_line.move_id.type == 'in_refund':
+                        qty -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.multi
@@ -697,3 +690,34 @@ class PurchaseOrderLine(models.Model):
             self.product_uom = seller_min_qty[0].product_uom
         else:
             self.product_qty = 1.0
+
+    @api.multi
+    def _prepare_account_move_line(self, move):
+        self.ensure_one()
+        if self.product_id.purchase_method == 'purchase':
+            qty = self.product_qty - self.qty_invoiced
+        else:
+            qty = self.qty_received - self.qty_invoiced
+        if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) <= 0:
+            qty = 0.0
+
+        if self.currency_id == move.company_id.currency_id:
+            currency = False
+        else:
+            currency = move.currency_id
+
+        return {
+            'name': '%s: %s' % (self.order_id.name, self.name),
+            'move_id': move.id,
+            'currency_id': currency and currency.id or False,
+            'purchase_line_id': self.id,
+            'date_maturity': move.invoice_date_due,
+            'product_uom_id': self.product_uom.id,
+            'product_id': self.product_id.id,
+            'price_unit': self.price_unit,
+            'quantity': qty,
+            'partner_id': move.partner_id.id,
+            'analytic_account_id': self.account_analytic_id.id,
+            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
+            'tax_ids': [(6, 0, self.taxes_id.ids)],
+        }

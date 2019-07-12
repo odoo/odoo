@@ -6,6 +6,14 @@
             <field name="address_home_id" ref="base.res_partner_address_3"/>
         </record>
 
+        <record id="hr_expense_account_journal" model="account.journal">
+            <field name="name">Expense</field>
+            <field name="code">EXP</field>
+            <field name="type">purchase</field>
+            <!-- avoid being selected as default journal -->
+            <field name="sequence">99</field>
+        </record>
+
         <record id="res_partner_address_fp" model="res.partner">
             <field name="name">Pieter Parter's Farm</field>
             <field name="parent_id" eval="ref('base.partner_root')"/>
@@ -18,6 +26,18 @@
         </record>
 
         <record id="hr.employee_admin" model="hr.employee">
+            <field name="address_home_id" ref="res_partner_address_fp"/>
+        </record>
+
+        <record id="hr.employee_qdp" model="hr.employee">
+            <field name="address_home_id" ref="res_partner_address_fp"/>
+        </record>
+
+        <record id="hr.employee_fme" model="hr.employee">
+            <field name="address_home_id" ref="res_partner_address_fp"/>
+        </record>
+
+        <record id="hr.employee_al" model="hr.employee">
             <field name="address_home_id" ref="res_partner_address_fp"/>
         </record>
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sms_composer_view_form" model="ir.ui.view">
+        <field name="name">sms.composer.view.form</field>
+        <field name="model">sms.composer</field>
+        <field name="arch" type="xml">
+            <form string="Send an SMS">
+                <sheet>
+                    <group>
+                        <field name="recipients"/>
+                        <field name="message" widget="sms_widget"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <group>
+                        <span>
+                            <button string="Send" type="object" class="oe_highlight" name="action_send_sms"/>
+                            <button string="Cancel" class="oe_link" special="cancel" />
+                        </span>
+                    </group>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="sms_composer_action_form" model="ir.actions.act_window">
+        <field name="name">Send SMS</field>
+        <field name="res_model">sms.composer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <act_window id="sms_composer_act_window"
+        name="Send SMS"
+        binding_model="res.partner"
+        res_model="sms.composer"
+        binding_views="list"
+        view_mode="form"
+        target="new"/>
+
+</odoo>

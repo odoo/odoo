@@ -56,7 +56,18 @@ var SignatureDialog = Dialog.extend({
         this.nameAndSignature = new NameAndSignature(this, options.nameAndSignatureOptions);
     },
     /**
-     * Inserts the name and signature.
+     * Start the nameAndSignature widget and wait for it.
+     *
+     * @override
+     */
+    willStart: function () {
+        return Promise.all([
+            this.nameAndSignature.appendTo($('<div>')),
+            this._super.apply(this, arguments)
+        ]);
+    },
+    /**
+     * Initialize the name and signature widget when the modal is opened.
      *
      * @override
      */
@@ -65,7 +76,9 @@ var SignatureDialog = Dialog.extend({
         this.$primaryButton = this.$footer.find('.btn-primary');
 
         this.opened().then(function () {
-            self.nameAndSignature.replace(self.$('.o_web_sign_name_and_signature'));
+            self.$('.o_web_sign_name_and_signature').replaceWith(self.nameAndSignature.$el);
+            // initialize the signature area
+            self.nameAndSignature.resetSignature();
         });
 
         return this._super.apply(this, arguments);

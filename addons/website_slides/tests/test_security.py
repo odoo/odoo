@@ -16,52 +16,52 @@ class TestAccess(common.SlidesCase):
         """ Invite channels don't give enroll if not member """
         self.channel.write({'enroll': 'invite'})
 
-        self.channel.sudo(self.user_publisher).read(['name'])
-        self.channel.sudo(self.user_emp).read(['name'])
-        self.channel.sudo(self.user_portal).read(['name'])
-        self.channel.sudo(self.user_public).read(['name'])
+        self.channel.with_user(self.user_publisher).read(['name'])
+        self.channel.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_portal).read(['name'])
+        self.channel.with_user(self.user_public).read(['name'])
 
-        self.slide.sudo(self.user_publisher).read(['name'])
+        self.slide.with_user(self.user_publisher).read(['name'])
 
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).read(['name'])
 
         # if member -> can read
         membership = self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
             'partner_id': self.user_emp.partner_id.id,
         })
-        self.channel.sudo(self.user_emp).read(['name'])
-        self.slide.sudo(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).read(['name'])
+        self.slide.with_user(self.user_emp).read(['name'])
 
         # not member anymore -> cannot read
         membership.unlink()
-        self.channel.sudo(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).read(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_public(self):
         """ Public channels don't give enroll if not member """
         self.channel.write({'enroll': 'public'})
 
-        self.channel.sudo(self.user_publisher).read(['name'])
-        self.channel.sudo(self.user_emp).read(['name'])
-        self.channel.sudo(self.user_portal).read(['name'])
-        self.channel.sudo(self.user_public).read(['name'])
+        self.channel.with_user(self.user_publisher).read(['name'])
+        self.channel.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_portal).read(['name'])
+        self.channel.with_user(self.user_public).read(['name'])
 
-        self.slide.sudo(self.user_publisher).read(['name'])
+        self.slide.with_user(self.user_publisher).read(['name'])
 
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).read(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_publish(self):
@@ -69,22 +69,22 @@ class TestAccess(common.SlidesCase):
         self.channel.write({'website_published': False, 'enroll': 'public'})
 
         # channel available only to website
-        self.channel.sudo(self.user_publisher).read(['name'])
+        self.channel.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
-            self.channel.sudo(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.channel.sudo(self.user_portal).read(['name'])
+            self.channel.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.channel.sudo(self.user_public).read(['name'])
+            self.channel.with_user(self.user_public).read(['name'])
 
         # slide available only to website
-        self.slide.sudo(self.user_publisher).read(['name'])
+        self.slide.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).read(['name'])
 
         # even members cannot see unpublished content
         self.env['slide.channel.partner'].create({
@@ -92,9 +92,9 @@ class TestAccess(common.SlidesCase):
             'partner_id': self.user_emp.partner_id.id,
         })
         with self.assertRaises(AccessError):
-            self.channel.sudo(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).read(['name'])
 
         # publish channel but content unpublished (even if can be previewed) still unavailable
         self.channel.write({'website_published': True})
@@ -103,13 +103,13 @@ class TestAccess(common.SlidesCase):
             'website_published': False,
         })
 
-        self.slide.sudo(self.user_publisher).read(['name'])
+        self.slide.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).read(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_slide_preview(self):
@@ -117,10 +117,10 @@ class TestAccess(common.SlidesCase):
         self.channel.write({'enroll': 'invite'})
         self.slide.write({'is_preview': True})
 
-        self.slide.sudo(self.user_publisher).read(['name'])
-        self.slide.sudo(self.user_emp).read(['name'])
-        self.slide.sudo(self.user_portal).read(['name'])
-        self.slide.sudo(self.user_public).read(['name'])
+        self.slide.with_user(self.user_publisher).read(['name'])
+        self.slide.with_user(self.user_emp).read(['name'])
+        self.slide.with_user(self.user_portal).read(['name'])
+        self.slide.with_user(self.user_public).read(['name'])
 
 
 @tagged('functional')
@@ -130,7 +130,7 @@ class TestAccessFeatures(common.SlidesCase):
     def test_channel_auto_subscription(self):
         user_employees = self.env['res.users'].search([('groups_id', 'in', self.ref('base.group_user'))])
 
-        with self.sudo(self.user_publisher):
+        with self.with_user(self.user_publisher):
             channel = self.env['slide.channel'].create({
                 'name': 'Test',
                 'enroll': 'invite',
@@ -172,7 +172,7 @@ class TestAccessFeatures(common.SlidesCase):
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_channel_features(self):
-        channel_publisher = self.channel.sudo(self.user_publisher)
+        channel_publisher = self.channel.with_user(self.user_publisher)
         self.assertEqual(channel_publisher.user_id, self.user_publisher)
         self.assertTrue(channel_publisher.can_upload)
         self.assertTrue(channel_publisher.can_publish)
@@ -190,12 +190,12 @@ class TestAccessFeatures(common.SlidesCase):
 
         # share people cannot upload / publish if limited to employees
         channel_publisher.write({'upload_group_ids': [(4, self.ref('base.group_user'))]})
-        channel_portal = self.channel.sudo(self.user_portal)
+        channel_portal = self.channel.with_user(self.user_portal)
         self.assertFalse(channel_portal.can_upload)
         self.assertFalse(channel_portal.can_publish)
 
         # standard people can upload if groups are ok but not publish
-        channel_emp = self.channel.sudo(self.user_emp)
+        channel_emp = self.channel.with_user(self.user_emp)
         self.assertTrue(channel_emp.can_upload)
         self.assertFalse(channel_emp.can_publish)
 

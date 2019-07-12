@@ -21,7 +21,7 @@ class BuckarooController(http.Controller):
         '/payment/buckaroo/cancel',
         '/payment/buckaroo/error',
         '/payment/buckaroo/reject',
-    ], type='http', auth='none', csrf=False)
+    ], type='http', auth='public', csrf=False)
     def buckaroo_return(self, **post):
         """ Buckaroo."""
         _logger.info('Buckaroo: entering form_feedback with post data %s', pprint.pformat(post))  # debug

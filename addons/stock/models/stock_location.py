@@ -66,14 +66,14 @@ class Location(models.Model):
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
-    @api.one
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
-        if self.location_id.complete_name:
-            self.complete_name = '%s/%s' % (self.location_id.complete_name, self.name)
-        else:
-            self.complete_name = self.name
+        for location in self:
+            if location.location_id.complete_name:
+                location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
+            else:
+                location.complete_name = location.name
 
     @api.onchange('usage')
     def _onchange_usage(self):
@@ -200,7 +200,7 @@ class Route(models.Model):
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):
         if not self.warehouse_selectable:
-            self.warehouse_ids = []
+            self.warehouse_ids = [(5, 0, 0)]
 
     def toggle_active(self):
         for route in self:
@@ -210,7 +210,6 @@ class Route(models.Model):
     def view_product_ids(self):
         return {
             'name': _('Products'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.template',
             'type': 'ir.actions.act_window',
@@ -220,7 +219,6 @@ class Route(models.Model):
     def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.category',
             'type': 'ir.actions.act_window',

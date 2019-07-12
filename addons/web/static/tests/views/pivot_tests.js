@@ -106,7 +106,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.hasClass(pivot.$el,'o_enable_linking',
+        assert.hasClass(pivot.$('.o_pivot'),'o_enable_linking',
             "root node should have classname 'o_enable_linking'");
         assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(32)').length, 1,
                     "should contain a pivot cell with the sum of all records");
@@ -247,7 +247,6 @@ QUnit.module('Views', {
                         target: 'current',
                         type: 'ir.actions.act_window',
                         view_mode: 'list',
-                        view_type: 'list',
                         views: [[false, 'list'], [2, 'form']],
                     }, "should trigger do_action with the correct args");
                 },
@@ -269,7 +268,7 @@ QUnit.module('Views', {
             }
         });
 
-        assert.hasClass(pivot.$el,'o_enable_linking',
+        assert.hasClass(pivot.$('.o_pivot'),'o_enable_linking',
             "root node should have classname 'o_enable_linking'");
         await testUtils.dom.click(pivot.$('.o_pivot_cell_value:contains(12)')); // should trigger a do_action
 
@@ -293,7 +292,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.doesNotHaveClass(pivot.$el, 'o_enable_linking',
+        assert.doesNotHaveClass(pivot.$('.o_pivot'), 'o_enable_linking',
             "root node should not have classname 'o_enable_linking'");
         assert.containsOnce(pivot, '.o_pivot_cell_value',
             "should have one cell");
@@ -1693,7 +1692,7 @@ QUnit.module('Views', {
         results = [
             "2", "0", "100%", "0", "1", "-100%", "2", "1", "100%" ,
             "1", "0", "100%",                     "1", "0" , "100%"    ,
-            "1" , "0", "100%", "0", "1", "-100%", "1" , "1" , "100%"
+            "1" , "0", "100%", "0", "1", "-100%", "1" , "1" , "0%"
         ];
         checkCellValues(results);
 

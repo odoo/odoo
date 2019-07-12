@@ -46,9 +46,11 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                         <!-- Used by other modules-->
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                         </div>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -67,6 +69,7 @@
                             </group>
                             <group>
                                 <field name="department_id"/>
+                                <field name="job_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
@@ -203,9 +206,9 @@
                        <t t-name="kanban-box">
                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                            <!-- Medium employee's picture -->
-                           <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_medium', record.id.raw_value)})" role="img"/>
+                           <field name="image" widget="image" class="o_kanban_image_fill_left d-none d-md-block" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
                            <!-- Employee's picture optimized for mobile -->
-                           <div class="o_kanban_image d-md-none rounded-circle" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_small', record.id.raw_value)})" role="img"/>
+                           <field name="image_small" widget="image" class="o_kanban_image d-md-none rounded-circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
 
                             <div class="oe_kanban_details">
                                <div class="o_kanban_record_top">
@@ -228,7 +231,6 @@
                    <searchpanel>
                        <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
                        <field name="department_id" icon="fa-users"/>
-                       <field name="category_ids" select="multi" icon="fa-tags"/>
                    </searchpanel>
                </kanban>
 
@@ -257,7 +259,6 @@
         <record id="open_view_employee_list_my" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="domain">[]</field>
             <field name="context">{}</field>
@@ -277,7 +278,6 @@
         <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">tree</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
@@ -287,7 +287,6 @@
         <record id="open_view_employee_list" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
@@ -312,33 +311,9 @@
             </field>
         </record>
 
-        <!-- TODO remove me in master -->
-        <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
-            <field name="name">Subordinate Hierarchy</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.employee</field>
-            <field name="domain">['|', ('id','in',active_ids), ('parent_id', 'in', active_ids)]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_partner_tree2"/>
-            <field name="binding_model_id" ref="hr.model_hr_employee"/>
-        </record>
-
-        <record model="ir.actions.server" id="hr_employee_action_toggle_active">
-            <field name="name">Archive/Restore</field>
-            <field name="model_id" ref="hr.model_hr_employee"/>
-            <field name="binding_model_id" ref="hr.model_hr_employee"/>
-            <field name="state">code</field>
-            <field name="code">
-                if records:
-                    records.toggle_active()
-            </field>
-        </record>
-
         <record id="act_employee_from_department" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,form,tree</field>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="context">{

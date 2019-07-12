@@ -4,14 +4,14 @@
 from odoo import api, models
 
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+class AccountMove(models.Model):
+    _inherit = 'account.move'
 
     @api.multi
     def action_invoice_paid(self):
         """ When an invoice linked to a sales order selling registrations is
         paid confirm attendees. Attendees should indeed not be confirmed before
         full payment. """
-        res = super(AccountInvoice, self).action_invoice_paid()
-        self.mapped('invoice_line_ids.sale_line_ids')._update_registrations(confirm=True)
+        res = super(AccountMove, self).action_invoice_paid()
+        self.mapped('line_ids.sale_line_ids')._update_registrations(confirm=True)
         return res

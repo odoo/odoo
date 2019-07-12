@@ -1047,6 +1047,7 @@ var HelperPlugin = AbstractPlugin.extend({
         var reAllNBSP = /\u00A0/g;
         var reMultipleSpace = /(\s){2,}/;
 
+        var textContent = range.sc.textContent;
         var startBlanks = range.sc.textContent.match(reStartBlanks)[0] || '';
         var endBlanks = range.sc.textContent.match(reEndBlanks)[0] || '';
         var trimmed = range.sc.textContent.replace(reStartBlanks, '').replace(reEndBlanks, '');
@@ -1060,7 +1061,25 @@ var HelperPlugin = AbstractPlugin.extend({
 
         this._removeInvisibleChar(range);
 
-        range.select();
+        try {
+            range.select();
+        } catch (e) {
+            /* Under certain unknown conditions, the range cannot be
+            applied and triggered an error. In order to allow the user to
+            keep editing, we need to prevent the dialog from showing, hence
+            the use of `console.error`.
+            If this error appears, the carret is moved to the beginning
+            of the focused node.*/
+            console.error(e);
+            console.error('Informations for debugging', [
+                ['textContent', textContent],
+                ['trimmed', trimmed],
+                ['cleanContents', cleanContents],
+                ['start', range.sc.outerHTML || range.sc.textContent, range.so],
+                ['end', range.ec.outerHTML || range.ec.textContent, range.eo],
+                ['parent', range.sc.parentNode && range.sc.parentNode.outerHTML],
+            ]);
+        }
         this.context.invoke('editor.saveRange');
     },
     /**

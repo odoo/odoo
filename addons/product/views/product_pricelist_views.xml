@@ -103,6 +103,7 @@
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -207,7 +208,6 @@
             <field name="name">Pricelists</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.pricelist</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_base":'list_price'}</field>

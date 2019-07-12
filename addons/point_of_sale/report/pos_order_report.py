@@ -63,7 +63,7 @@ class PosOrderReport(models.Model):
                 pt.pos_categ_id,
                 s.pricelist_id,
                 s.session_id,
-                s.invoice_id IS NOT NULL AS invoiced
+                s.account_move IS NOT NULL AS invoiced
         """
 
     def _from(self):
@@ -81,7 +81,7 @@ class PosOrderReport(models.Model):
             GROUP BY
                 s.id, s.date_order, s.partner_id,s.state, pt.categ_id,
                 s.user_id, s.location_id, s.company_id, s.sale_journal,
-                s.pricelist_id, s.invoice_id, s.create_date, s.session_id,
+                s.pricelist_id, s.account_move, s.create_date, s.session_id,
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,
                 p.product_tmpl_id,
@@ -94,7 +94,6 @@ class PosOrderReport(models.Model):
                 SUM(l.qty * u.factor) != 0
         """
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""

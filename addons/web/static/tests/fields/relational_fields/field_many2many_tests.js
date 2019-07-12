@@ -350,7 +350,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('many2many list (non editable): edition', async function (assert) {
-            assert.expect(27);
+            assert.expect(29);
 
             this.data.partner.records[0].timmy = [12, 14];
             this.data.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
@@ -386,10 +386,9 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-
-            assert.ok(!form.$('.o_list_record_remove').length,
+            assert.containsNone(form.$('.o_list_record_remove'),
                 'delete icon should not be visible in readonly');
-            assert.ok(!form.$('.o_field_x2many_list_row_add').length,
+            assert.containsNone(form.$('.o_field_x2many_list_row_add'),
                 '"Add an item" should not be visible in readonly');
 
             await testUtils.form.clickEdit(form);
@@ -406,6 +405,9 @@ QUnit.module('fields', {}, function () {
             // edit existing subrecord
             await testUtils.dom.click(form.$('.o_list_view tbody tr:first()'));
 
+            assert.containsNone($('.modal .modal-footer .o_btn_remove'),
+                'there should not be a "Remove" button in the modal footer');
+
             await testUtils.fields.editInput($('.modal .o_form_view input'), 'new name');
             await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
             assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
@@ -413,6 +415,8 @@ QUnit.module('fields', {}, function () {
 
             // add new subrecords
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsNone($('.modal .modal-footer .o_btn_remove'),
+                'there should not be a "Remove" button in the modal footer');
             assert.strictEqual($('.modal .o_list_view').length, 1,
                 "a modal should be open");
             assert.strictEqual($('.modal .o_list_view .o_data_row').length, 1,

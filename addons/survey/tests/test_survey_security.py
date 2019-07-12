@@ -33,23 +33,23 @@ class TestAccess(common.SurveyCase):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).read(['title'])
+            self.survey.with_user(self.env.user).read(['title'])
 
         # Write: nope
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).write({'title': 'New Title'})
+            self.survey.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.page_0.sudo(self.env.user).write({'title': 'New Title'})
+            self.page_0.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.question_ft.sudo(self.env.user).write({'question': 'New Title'})
+            self.question_ft.with_user(self.env.user).write({'question': 'New Title'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).unlink()
+            self.survey.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.page_0.sudo(self.env.user).unlink()
+            self.page_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.question_ft.sudo(self.env.user).unlink()
+            self.question_ft.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_portal')
@@ -66,23 +66,23 @@ class TestAccess(common.SurveyCase):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).read(['title'])
+            self.survey.with_user(self.env.user).read(['title'])
 
         # Write: nope
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).write({'title': 'New Title'})
+            self.survey.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.page_0.sudo(self.env.user).write({'title': 'New Title'})
+            self.page_0.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.question_ft.sudo(self.env.user).write({'question': 'New Title'})
+            self.question_ft.with_user(self.env.user).write({'question': 'New Title'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).unlink()
+            self.survey.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.page_0.sudo(self.env.user).unlink()
+            self.page_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.question_ft.sudo(self.env.user).unlink()
+            self.question_ft.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_public')
@@ -99,23 +99,23 @@ class TestAccess(common.SurveyCase):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).read(['title'])
+            self.survey.with_user(self.env.user).read(['title'])
 
         # Write: nope
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).write({'title': 'New Title'})
+            self.survey.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.page_0.sudo(self.env.user).write({'title': 'New Title'})
+            self.page_0.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.question_ft.sudo(self.env.user).write({'question': 'New Title'})
+            self.question_ft.with_user(self.env.user).write({'question': 'New Title'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).unlink()
+            self.survey.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.page_0.sudo(self.env.user).unlink()
+            self.page_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.question_ft.sudo(self.env.user).unlink()
+            self.question_ft.with_user(self.env.user).unlink()
 
     @users('survey_manager')
     def test_access_survey_survey_manager(self):
@@ -151,12 +151,12 @@ class TestAccess(common.SurveyCase):
         # Write: own only
         survey.write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).write({'title': 'New Title'})
+            self.survey.with_user(self.env.user).write({'title': 'New Title'})
 
         # Unlink: own only
         survey.unlink()
         with self.assertRaises(AccessError):
-            self.survey.sudo(self.env.user).unlink()
+            self.survey.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_emp')
@@ -179,13 +179,13 @@ class TestAccess(common.SurveyCase):
 
         # Write: nope
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).write({'state': 'done'})
+            self.answer_0.with_user(self.env.user).write({'state': 'done'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).unlink()
+            self.answer_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.answer_0_0.sudo(self.env.user).unlink()
+            self.answer_0_0.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_portal')
@@ -208,13 +208,13 @@ class TestAccess(common.SurveyCase):
 
         # Write: nope
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).write({'state': 'done'})
+            self.answer_0.with_user(self.env.user).write({'state': 'done'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).unlink()
+            self.answer_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.answer_0_0.sudo(self.env.user).unlink()
+            self.answer_0_0.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_public')
@@ -237,13 +237,13 @@ class TestAccess(common.SurveyCase):
 
         # Write: nope
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).write({'state': 'done'})
+            self.answer_0.with_user(self.env.user).write({'state': 'done'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).unlink()
+            self.answer_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.answer_0_0.sudo(self.env.user).unlink()
+            self.answer_0_0.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('survey_user')
@@ -278,20 +278,20 @@ class TestAccess(common.SurveyCase):
         # Write: own survey only
         answer_own.write({'state': 'done'})
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).write({'state': 'done'})
+            self.answer_0.with_user(self.env.user).write({'state': 'done'})
 
         # Unlink: own survey only
         answer_own.unlink()
         answer_line_own.unlink()
         with self.assertRaises(AccessError):
-            self.answer_0.sudo(self.env.user).unlink()
+            self.answer_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.answer_0_0.sudo(self.env.user).unlink()
+            self.answer_0_0.with_user(self.env.user).unlink()
 
     @users('survey_manager')
     def test_access_answers_survey_manager(self):
         admin = self.env.ref('base.user_admin')
-        with self.sudo(admin):
+        with self.with_user(admin):
             survey_other = self.env['survey.survey'].create({'title': 'Other'})
             self.env['survey.question'].create({'title': 'Other', 'sequence': 0, 'is_page': True, 'survey_id': survey_other.id})
             question_other = self.env['survey.question'].create({'title': 'Other Question', 'sequence': 1, 'survey_id': survey_other.id})

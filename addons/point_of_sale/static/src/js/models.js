@@ -638,18 +638,23 @@ exports.PosModel = Backbone.Model.extend({
         this.set('cashier', employee);
         this.db.set_cashier(this.get('cashier'));
     },
-    //creates a new empty order and sets it as the current order
+    // creates a new empty order and sets it as the current order
     add_new_order: function(){
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
         this.set('selectedOrder', order);
         return order;
     },
-    // load the locally saved unpaid orders for this session.
+    /**
+     * Load the locally saved unpaid orders for this PoS Config.
+     *
+     * First load all orders belonging to the current session.
+     * Second load all orders belonging to the same config but from other sessions,
+     * Only if tho order has orderlines.
+     */
     load_orders: function(){
         var jsons = this.db.get_unpaid_orders();
         var orders = [];
-        var not_loaded_count = 0;
 
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
@@ -658,13 +663,18 @@ exports.PosModel = Backbone.Model.extend({
                     pos:  this,
                     json: json,
                 }));
-            } else {
-                not_loaded_count += 1;
             }
         }
-
-        if (not_loaded_count) {
-            console.info('There are '+not_loaded_count+' locally saved unpaid orders belonging to another session');
+        for (var i = 0; i < jsons.length; i++) {
+            var json = jsons[i];
+            if (json.pos_session_id !== this.pos_session.id && json.lines.length > 0) {
+                orders.push(new exports.Order({},{
+                    pos:  this,
+                    json: json,
+                }));
+            } else if (json.pos_session_id !== this.pos_session.id) {
+                this.db.remove_unpaid_order(jsons[i]);
+            }
         }
 
         orders = orders.sort(function(a,b){
@@ -1563,6 +1573,7 @@ exports.Orderline = Backbone.Model.extend({
             price_display :     this.get_display_price(),
             price_with_tax :    this.get_price_with_tax(),
             price_without_tax:  this.get_price_without_tax(),
+            price_with_tax_before_discount:  this.get_price_with_tax_before_discount(),
             tax:                this.get_tax(),
             product_description:      this.get_product().description,
             product_description_sale: this.get_product().description_sale,
@@ -1626,9 +1637,9 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_display_price_one: function(){
         var rounding = this.pos.currency.rounding;
-        var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
+        var price_unit = this.get_unit_price();
         if (this.pos.config.iface_tax_included !== 'total') {
-            return round_pr(price_unit, rounding);
+            return round_pr(price_unit * (1.0 - (this.get_discount() / 100.0)), rounding);
         } else {
             var product =  this.get_product();
             var taxes_ids = product.taxes_id;
@@ -1658,6 +1669,9 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_price_with_tax: function(){
         return this.get_all_prices().priceWithTax;
+    },
+    get_price_with_tax_before_discount: function () {
+        return this.get_all_prices().priceWithTaxBeforeDiscount;
     },
     get_tax: function(){
         return this.get_all_prices().tax;
@@ -1904,6 +1918,7 @@ exports.Orderline = Backbone.Model.extend({
         });
 
         var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
+        var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), this.get_quantity(), this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
             taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;
@@ -1913,6 +1928,7 @@ exports.Orderline = Backbone.Model.extend({
             "priceWithTax": all_taxes.total_included,
             "priceWithoutTax": all_taxes.total_excluded,
             "priceSumTaxVoid": all_taxes.total_void,
+            "priceWithTaxBeforeDiscount": all_taxes_before_discount.total_included,
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
@@ -2139,11 +2155,24 @@ exports.Order = Backbone.Model.extend({
             this.pos.db.save_unpaid_order(this);
         }
     },
+    /**
+     * Initialize PoS order from a JSON string.
+     *
+     * If the order was created in another session, the sequence number should be changed so it doesn't conflict
+     * with orders in the current session.
+     * Else, the sequence number of the session should follow on the sequence number of the loaded order.
+     *
+     * @param {object} json JSON representing one PoS order.
+     */
     init_from_JSON: function(json) {
         var client;
-        this.sequence_number = json.sequence_number;
-        this.pos.pos_session.sequence_number = Math.max(this.sequence_number+1,this.pos.pos_session.sequence_number);
-        this.session_id = json.pos_session_id;
+        if (json.pos_session_id !== this.pos.pos_session.id) {
+            this.sequence_number = this.pos.pos_session.sequence_number++;
+        } else {
+            this.sequence_number = json.sequence_number;
+            this.pos.pos_session.sequence_number = Math.max(this.sequence_number+1,this.pos.pos_session.sequence_number);
+        }
+        this.session_id = this.pos.pos_session.id;
         this.uid = json.uid;
         this.name = _t("Order ") + this.uid;
         this.validation_date = json.creation_date;

@@ -66,7 +66,6 @@ class PosMakePayment(models.TransientModel):
     def launch_payment(self):
         return {
             'name': _('Payment'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
             'view_id': False,

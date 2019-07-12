@@ -10,7 +10,7 @@ import re
 from collections import defaultdict
 import uuid
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, MissingError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
@@ -54,7 +54,7 @@ class IrAttachment(models.Model):
     @api.model
     def force_storage(self):
         """Force all attachments to be stored in the currently configured storage"""
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             raise AccessError(_('Only administrators can execute this action.'))
 
         # domain to retrieve the attachments to migrate
@@ -300,26 +300,25 @@ class IrAttachment(models.Model):
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(IrAttachment, self)._auto_init()
         tools.create_index(self._cr, 'ir_attachment_res_idx',
                            self._table, ['res_model', 'res_id'])
         return res
 
-    @api.one
     @api.constrains('type', 'url')
     def _check_serving_attachments(self):
-        # restrict writing on attachments that could be served by the
-        # ir.http's dispatch exception handling
-        # XDO note: this should be done in check(write), constraints for access rights?
-        # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
-        if self.env.user._is_admin():
+        if self.env.is_admin():
             return
-        if self.type == 'binary' and self.url:
-            has_group = self.env.user.has_group
-            if not any([has_group(g) for g in self.get_serving_groups()]):
-                raise ValidationError("Sorry, you are not allowed to write on this document")
+        for attachment in self:
+            # restrict writing on attachments that could be served by the
+            # ir.http's dispatch exception handling
+            # XDO note: this should be done in check(write), constraints for access rights?
+            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
+            if attachment.type == 'binary' and attachment.url:
+                has_group = self.env.user.has_group
+                if not any([has_group(g) for g in attachment.get_serving_groups()]):
+                    raise ValidationError("Sorry, you are not allowed to write on this document")
 
     @api.model
     def check(self, mode, values=None):
@@ -327,7 +326,7 @@ class IrAttachment(models.Model):
         In the 'document' module, it is overriden to relax this hard rule, since
         more complex ones apply there.
         """
-        if self.env.user._is_superuser():
+        if self.env.is_superuser():
             return True
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}
@@ -335,7 +334,7 @@ class IrAttachment(models.Model):
         if self:
             self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
             for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
-                if not self.env.user._is_system() and res_field:
+                if not self.env.is_system() and res_field:
                     raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if public and mode == 'read':
                     continue
@@ -369,7 +368,7 @@ class IrAttachment(models.Model):
             records.check_access_rule(mode)
 
         if require_employee:
-            if not (self.env.user._is_admin() or self.env.user.has_group('base.group_user')):
+            if not (self.env.is_admin() or self.env.user.has_group('base.group_user')):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _read_group_allowed_fields(self):
@@ -387,7 +386,7 @@ class IrAttachment(models.Model):
         groupby = [groupby] if isinstance(groupby, str) else groupby
         allowed_fields = self._read_group_allowed_fields()
         fields_set = set(field.split(':')[0] for field in fields + groupby)
-        if not self.env.user._is_system() and (not fields or fields_set.difference(allowed_fields)):
+        if not self.env.is_system() and (not fields or fields_set.difference(allowed_fields)):
             raise AccessError(_("Sorry, you are not allowed to access these fields on attachments."))
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
@@ -401,7 +400,7 @@ class IrAttachment(models.Model):
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=False, access_rights_uid=access_rights_uid)
 
-        if self.env.user._is_system():
+        if self.env.is_system():
             # rules do not apply for the superuser
             return len(ids) if count else ids
 
@@ -511,13 +510,16 @@ class IrAttachment(models.Model):
     def _post_add_create(self):
         pass
 
-    @api.one
     def generate_access_token(self):
-        if self.access_token:
-            return self.access_token
-        access_token = self._generate_access_token()
-        self.write({'access_token': access_token})
-        return access_token
+        tokens = []
+        for attachment in self:
+            if attachment.access_token:
+                tokens.append(attachment.access_token)
+                continue
+            access_token = self._generate_access_token()
+            attachment.write({'access_token': access_token})
+            tokens.append(access_token)
+        return tokens
 
     def _generate_access_token(self):
         return str(uuid.uuid4())

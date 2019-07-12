@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <record model="ir.ui.view" id="account_invoice_send_wizard_form">
+        <record id="account_invoice_send_wizard_form" model="ir.ui.view">
             <field name="name">account.invoice.send.form</field>
             <field name="model">account.invoice.send</field>
             <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
@@ -12,6 +12,7 @@
                     <field name="composition_mode" invisible="1"/>
                     <field name="composer_id" invisible="1"/>
                     <field name="invoice_ids" invisible="1"/>
+                    <field name="email_from" invisible="1" />
                     <div name="option_print">
                         <field name="is_print" />
                         <b><label for="is_print"/></b>
@@ -22,6 +23,9 @@
                     <div name="option_email">
                         <field name="is_email" />
                         <b><label for="is_email"/></b>
+                    </div>
+                    <div class="text-left d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
+                        <field name="invoice_without_email" class="mr4"/>
                     </div>
                     <div name="mail_form"  attrs="{'invisible': [('is_email', '=', False)]}">
                         <!-- visible wizard -->
@@ -47,7 +51,7 @@
                             </group>
                             <group>
                                 <field name="template_id" options="{'no_create': True, 'no_edit': True}"
-                                    context="{'default_model': 'account.invoice'}"/>
+                                    context="{'default_model': 'account.move'}"/>
                             </group>
                         </group>
                     </div>
@@ -72,10 +76,10 @@
         </record>
 
        <act_window
-            name="Send"
+            name="Send &amp; print"
             id="invoice_send"
             res_model="account.invoice.send"
-            binding_model="account.invoice"
+            binding_model="account.move"
             binding_views="list"
             view_mode="form"
             target="new"

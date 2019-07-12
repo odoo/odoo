@@ -185,7 +185,7 @@ QUnit.module('special_fields', {
     });
 
     QUnit.test('widget timezone_mismatch in a form view', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.partner.fields.tz_offset = {
             string: "tz_offset",
@@ -210,6 +210,10 @@ QUnit.module('special_fields', {
         });
         await testUtils.form.clickEdit(form);
         assert.containsOnce(form, 'select[name=tz]');
+
+        var $timezoneMismatch = form.$('.o_tz_warning');
+        assert.strictEqual($timezoneMismatch.length, 1, "warning class should be there.");
+
         form.destroy();
     });
 

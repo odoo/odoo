@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.tests import common, TransactionCase
 
@@ -15,6 +16,64 @@ class Feedback(TransactionCase):
             'name': "Bob Bobman",
             'groups_id': [(6, 0, self.group2.ids)],
         })
+
+
+class TestSudo(Feedback):
+    """ Test the behavior of method sudo(). """
+    def test_sudo(self):
+        record = self.env['test_access_right.some_obj'].create({'val': 5})
+        user1 = self.user
+        user2 = self.env.ref('base.user_demo')
+
+        # with_user(user)
+        record1 = record.with_user(user1)
+        self.assertEqual(record1.env.uid, user1.id)
+        self.assertFalse(record1.env.su)
+
+        record2 = record1.with_user(user2)
+        self.assertEqual(record2.env.uid, user2.id)
+        self.assertFalse(record2.env.su)
+
+        # the superuser is always in superuser mode
+        record3 = record2.with_user(SUPERUSER_ID)
+        self.assertEqual(record3.env.uid, SUPERUSER_ID)
+        self.assertTrue(record3.env.su)
+
+        # sudo()
+        surecord1 = record1.sudo()
+        self.assertEqual(surecord1.env.uid, user1.id)
+        self.assertTrue(surecord1.env.su)
+
+        surecord2 = record2.sudo()
+        self.assertEqual(surecord2.env.uid, user2.id)
+        self.assertTrue(surecord2.env.su)
+
+        surecord3 = record3.sudo()
+        self.assertEqual(surecord3.env.uid, SUPERUSER_ID)
+        self.assertTrue(surecord3.env.su)
+
+        # sudo().sudo()
+        surecord1 = surecord1.sudo()
+        self.assertEqual(surecord1.env.uid, user1.id)
+        self.assertTrue(surecord1.env.su)
+
+        # sudo(False)
+        record1 = surecord1.sudo(False)
+        self.assertEqual(record1.env.uid, user1.id)
+        self.assertFalse(record1.env.su)
+
+        record2 = surecord2.sudo(False)
+        self.assertEqual(record2.env.uid, user2.id)
+        self.assertFalse(record2.env.su)
+
+        record3 = surecord3.sudo(False)
+        self.assertEqual(record3.env.uid, SUPERUSER_ID)
+        self.assertTrue(record3.env.su)
+
+        # sudo().with_user(user)
+        record2 = surecord1.with_user(user2)
+        self.assertEqual(record2.env.uid, user2.id)
+        self.assertFalse(record2.env.su)
 
 
 class TestACLFeedback(Feedback):
@@ -44,10 +103,10 @@ class TestACLFeedback(Feedback):
         """ Operation is never allowed
         """
         with self.assertRaises(AccessError) as ctx:
-            self.record.sudo(self.user).write({'val': 10})
+            self.record.with_user(self.user).write({'val': 10})
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to modify documents of type 'Object For Test Access Right' (test_access_right.some_obj). No group currently allows this operation."""
+            """Sorry, you are not allowed to modify documents of type 'Object For Test Access Right' (test_access_right.some_obj). No group currently allows this operation. - (Operation: write, User: %d)""" % self.user.id
         )
 
     def test_one_group(self):
@@ -57,15 +116,12 @@ class TestACLFeedback(Feedback):
             })
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:
-	- Group 0"""
+            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0 - (Operation: create, User: %d)""" % self.user.id
         )
 
     def test_two_groups(self):
-        r = self.record.sudo(self.user)
-        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:
-	- Group 0
-	- Group 1"""
+        r = self.record.with_user(self.user)
+        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0\n\t- Group 1 - (Operation: read, User: %d)""" % self.user.id
         with self.assertRaises(AccessError) as ctx:
             # noinspection PyStatementEffect
             r.val
@@ -82,7 +138,7 @@ class TestIRRuleFeedback(Feedback):
         self.model = self.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
         self.record = self.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).sudo(self.user)
+        }).with_user(self.user)
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
         return self.env['ir.rule'].create({
@@ -124,7 +180,7 @@ class TestIRRuleFeedback(Feedback):
         self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            p.sudo(self.user).write, {'val': 1}
+            p.with_user(self.user).write, {'val': 1}
         )
 
     def test_locals(self):
@@ -238,11 +294,11 @@ Note: this might be a multi-company issue.
         )
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        # p.sudo(self.user).val
+        # p.with_user(self.user).val
         self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            lambda: p.sudo(self.user).val
+            lambda: p.with_user(self.user).val
         )
 
 class TestFieldGroupFeedback(Feedback):
@@ -251,7 +307,7 @@ class TestFieldGroupFeedback(Feedback):
         super().setUp()
         self.record = self.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).sudo(self.user)
+        }).with_user(self.user)
 
 
     def test_read(self):
@@ -266,8 +322,10 @@ class TestFieldGroupFeedback(Feedback):
 
 Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: read
+User: %s
 Fields:
 - forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')"""
+    % self.user.id
         )
 
     def test_write(self):
@@ -283,7 +341,9 @@ Fields:
 
 Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: write
+User: %s
 Fields:
 - forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')
 - forbidden2 (allowed for groups 'Test Group')"""
+    % self.user.id
         )

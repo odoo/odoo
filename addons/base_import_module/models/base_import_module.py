@@ -27,7 +27,6 @@ class BaseImportModule(models.TransientModel):
         # Return wizard otherwise it will close wizard and will not show result message to user.
         return {
             'name': 'Import Module',
-            'view_type': 'form',
             'view_mode': 'form',
             'target': 'new',
             'res_id': self.id,
@@ -42,7 +41,6 @@ class BaseImportModule(models.TransientModel):
         return {
             'domain': [('name', 'in', self.env.context.get('module_name', []))],
             'name': 'Modules',
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.module.module',
             'view_id': False,

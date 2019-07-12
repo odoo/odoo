@@ -79,7 +79,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.env.company.write({'po_double_validation': 'two_step','po_double_validation_amount':2000.00})
 
         # Draft purchase order created
-        self.po = self.env['purchase.order'].sudo(self.user_purchase_user).create(self.po_vals)
+        self.po = self.env['purchase.order'].with_user(self.user_purchase_user).create(self.po_vals)
         self.assertTrue(self.po, 'Purchase: no purchase order created')
 
         # Purchase order confirm

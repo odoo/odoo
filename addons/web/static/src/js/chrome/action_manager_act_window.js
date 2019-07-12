@@ -372,7 +372,7 @@ ActionManager.include({
                     Widget: View,
                 });
             } else if (config.isDebug('assets')) {
-                console.error("View type '" + viewType + "' is not present in the view registry.");
+                console.log("View type '" + viewType + "' is not present in the view registry.");
             }
         });
         return views;

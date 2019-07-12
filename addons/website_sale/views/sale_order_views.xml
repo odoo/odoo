@@ -140,13 +140,13 @@
                 action = records.action_recovery_email_send()
         </field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
     </record>
 
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,kanban,form,activity</field>
-        <field name="view_type">form</field>
         <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context" eval="{'show_sale': True, 'create': False}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
@@ -163,7 +163,6 @@
     <record id="action_view_abandoned_tree" model="ir.actions.act_window">
         <field name="name">Abandoned Carts</field>
         <field name="res_model">sale.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('website_id', '!=', False), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
@@ -214,8 +213,6 @@
         action="base.action_partner_customer_form"
         parent="menu_orders" sequence="4"/>
 
-
-    <!-- <menuitem id="menu_orders_invoices" name="Invoices" parent="menu_orders" action="action_invoices_ecommerce" sequence="4"/> -->
 
     <!-- Catalog sub-menus -->
     <menuitem id="menu_catalog_products" name="Products"

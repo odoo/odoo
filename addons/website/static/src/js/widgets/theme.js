@@ -611,11 +611,17 @@ var ThemeCustomizeDialog = Dialog.extend({
             },
         }).then(function (bundles) {
             var $allLinks = $();
-            var defs = _.map(bundles, function (bundleContent, bundleName) {
-                var linkSelector = 'link[href*="' + bundleName + '"]';
-                var $links = $(linkSelector);
+            var defs = _.map(bundles, function (bundleURLs, bundleName) {
+                var $links = $('link[href*="' + bundleName + '"]');
                 $allLinks = $allLinks.add($links);
-                var $newLinks = $(bundleContent).filter(linkSelector);
+                var $newLinks = $();
+                _.each(bundleURLs, function (url) {
+                    $newLinks = $newLinks.add($('<link/>', {
+                        type: 'text/css',
+                        rel: 'stylesheet',
+                        href: url,
+                    }));
+                });
 
                 var linksLoaded = new Promise(function (resolve, reject) {
                     var nbLoaded = 0;

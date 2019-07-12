@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
@@ -69,11 +68,14 @@ class Inventory(models.Model):
         help="Specify Products to focus your inventory on particular Products.")
     start_empty = fields.Boolean('Empty Inventory',
         help="Allows to start with an empty inventory.")
+    prefill_counted_quantity = fields.Boolean('Pre-fill counted quantity',
+        help='Pre-fill the counted quantity with on hand quantity for all the '
+        'products included in the inventory adjustment.', default=True)
 
     def unlink(self):
         for inventory in self:
-            if inventory.state == 'done':
-                raise UserError(_('You cannot delete a validated inventory adjustement.'))
+            if inventory.state not in ('draft', 'cancel'):
+                raise UserError(_('You can only delete a draft inventory adjustment. If the inventory adjustment is not done, you can cancel it.'))
         return super(Inventory, self).unlink()
 
     def action_validate(self):
@@ -231,6 +233,8 @@ class Inventory(models.Model):
             for void_field in [item[0] for item in product_data.items() if item[1] is None]:
                 product_data[void_field] = False
             product_data['theoretical_qty'] = product_data['product_qty']
+            if not self.prefill_counted_quantity:
+                product_data['product_qty'] = 0
             if product_data['product_id']:
                 product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id
                 quant_products |= Product.browse(product_data['product_id'])
@@ -281,7 +285,8 @@ class InventoryLine(models.Model):
         required=True, readonly=True)
     product_qty = fields.Float(
         'Counted Quantity',
-        digits=dp.get_precision('Product Unit of Measure'), default=0)
+        digits='Product Unit of Measure', default=0)
+    categ_id = fields.Many2one(related='product_id.categ_id', store=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
@@ -297,10 +302,10 @@ class InventoryLine(models.Model):
     state = fields.Selection('Status', related='inventory_id.state')
     theoretical_qty = fields.Float(
         'Theoretical Quantity',
-        digits=dp.get_precision('Product Unit of Measure'), readonly=True)
+        digits='Product Unit of Measure', readonly=True)
     difference_qty = fields.Float('Difference', compute='_compute_difference',
         help="Indicates the gap between the product's theoretical quantity and its newest quantity.",
-        readonly=True, digits=dp.get_precision('Product Unit of Measure'))
+        readonly=True, digits='Product Unit of Measure')
     inventory_date = fields.Datetime('Inventory Date', readonly=True,
         default=fields.Datetime.now,
         help="Last date at which the On Hand Quantity has been computed.")
@@ -346,6 +351,7 @@ class InventoryLine(models.Model):
 
     @api.onchange('product_id', 'location_id', 'product_uom_id', 'prod_lot_id', 'partner_id', 'package_id')
     def _onchange_quantity_context(self):
+        product_qty = False
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id
         if self.product_id and self.location_id and self.product_id.uom_id.category_id == self.product_uom_id.category_id:  # TDE FIXME: last part added because crash
@@ -359,9 +365,18 @@ class InventoryLine(models.Model):
             )
         else:
             theoretical_qty = 0
-        # We update `product_qty` only if it equals to `theoretical_qty` to
-        # avoid to reset quantity when user manually set it.
-        if self.product_qty == self.theoretical_qty:
+        # Sanity check on the lot.
+        if self.prod_lot_id:
+            if self.product_id.tracking == 'none' or self.product_id != self.prod_lot_id.product_id:
+                self.prod_lot_id = False
+
+        if self.prod_lot_id and self.product_id.tracking == 'serial':
+            # We force `product_qty` to 1 for SN tracked product because it's
+            # the only relevant value aside 0 for this kind of product.
+            self.product_qty = 1
+        elif self.product_id and float_compare(self.product_qty, self.theoretical_qty, precision_rounding=self.product_uom_id.rounding) == 0:
+            # We update `product_qty` only if it equals to `theoretical_qty` to
+            # avoid to reset quantity when user manually set it.
             self.product_qty = theoretical_qty
         self.theoretical_qty = theoretical_qty
 

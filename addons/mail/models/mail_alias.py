@@ -79,13 +79,13 @@ class Alias(models.Model):
         for record in self:
             record.alias_domain = alias_domain
 
-    @api.one
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
-        try:
-            dict(safe_eval(self.alias_defaults))
-        except Exception:
-            raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+        for alias in self:
+            try:
+                dict(safe_eval(alias.alias_defaults))
+            except Exception:
+                raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
     @api.model
     def create(self, vals):
@@ -159,7 +159,6 @@ class Alias(models.Model):
         if not self.alias_model_id or not self.alias_force_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_model_id.model,
             'res_id': self.alias_force_thread_id,
@@ -171,7 +170,6 @@ class Alias(models.Model):
         if not self.alias_parent_model_id or not self.alias_parent_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_parent_model_id.model,
             'res_id': self.alias_parent_thread_id,
@@ -222,7 +220,6 @@ class AliasMixin(models.AbstractModel):
         aliases.unlink()
         return res
 
-    @api.model_cr_context
     def _init_column(self, name):
         """ Create aliases for existing rows. """
         super(AliasMixin, self)._init_column(name)

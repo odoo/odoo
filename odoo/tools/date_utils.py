@@ -80,6 +80,23 @@ def get_fiscal_year(date, day=31, month=12):
     return date_from, date_to
 
 
+def get_timedelta(qty, granularity):
+    """
+        Helper to get a `relativedelta` object for the given quantity and interval unit.
+        :param qty: the number of unit to apply on the timedelta to return
+        :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
+
+    """
+    switch = {
+        'hour': relativedelta(hours=qty),
+        'day': relativedelta(days=qty),
+        'week': relativedelta(weeks=qty),
+        'month': relativedelta(months=qty),
+        'year': relativedelta(years=qty),
+    }
+    return switch[granularity]
+
+
 def start_of(value, granularity):
     """
     Get start of a time period from a date or a datetime.
@@ -192,6 +209,7 @@ def json_default(obj):
             return fields.Datetime.to_string(obj)
         return fields.Date.to_string(obj)
     return ustr(obj)
+
 
 def date_range(start, end, step=relativedelta(months=1)):
     """Date range generator with a step interval.

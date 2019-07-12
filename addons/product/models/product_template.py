@@ -3,7 +3,6 @@
 
 import itertools
 
-from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
@@ -45,7 +44,7 @@ class ProductTemplate(models.Model):
     description_purchase = fields.Text(
         'Purchase Description', translate=True)
     description_sale = fields.Text(
-        'Customer/Vendor Description', translate=True,
+        'Sales Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
@@ -69,27 +68,27 @@ class ProductTemplate(models.Model):
     # price: total template price, context dependent (partner, pricelist, quantity)
     price = fields.Float(
         'Price', compute='_compute_template_price', inverse='_set_template_price',
-        digits=dp.get_precision('Product Price'))
+        digits='Product Price')
     # list_price: catalog price, user defined
     list_price = fields.Float(
         'Sale Price', default=1.0,
-        digits=dp.get_precision('Product Price'),
+        digits='Product Price',
         help="Price at which the product is sold to customers.")
     # lst_price: catalog price for template, but including extra for variants
     lst_price = fields.Float(
         'Public Price', related='list_price', readonly=False,
-        digits=dp.get_precision('Product Price'))
+        digits='Product Price')
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
-        digits=dp.get_precision('Product Price'), groups="base.group_user",
+        digits='Product Price', groups="base.group_user",
         help = "Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume', digits=dp.get_precision('Volume'), store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
     volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', default=_get_default_volume_uom)
     weight = fields.Float(
-        'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
+        'Weight', compute='_compute_weight', digits='Stock Weight',
         inverse='_set_weight', store=True)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
 
@@ -120,7 +119,7 @@ class ProductTemplate(models.Model):
     color = fields.Integer('Color Index')
 
     is_product_variant = fields.Boolean(string='Is a product variant', compute='_compute_is_product_variant')
-    attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes')
+    attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes', copy=True)
 
     valid_product_template_attribute_line_ids = fields.Many2many('product.template.attribute.line',
         compute="_compute_valid_attributes", string='Valid Product Attribute Lines', help="Technical compute")
@@ -135,12 +134,6 @@ class ProductTemplate(models.Model):
         compute="_compute_valid_attributes", string='Valid Product Attribute Values Without No Variant Attributes', help="Technical compute")
     valid_product_attribute_wnva_ids = fields.Many2many('product.attribute',
         compute="_compute_valid_attributes", string='Valid Product Attributes Without No Variant Attributes', help="Technical compute")
-    # valid_archived_variant_ids deprecated
-    valid_archived_variant_ids = fields.Many2many('product.product',
-        compute="_compute_valid_archived_variant_ids", string='Valid Archived Variants', help="Technical compute")
-    # valid_existing_variant_ids deprecated
-    valid_existing_variant_ids = fields.Many2many('product.product',
-        compute="_compute_valid_existing_variant_ids", string='Valid Existing Variants', help="Technical compute")
 
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
@@ -222,10 +215,10 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.standard_price = 0.0
 
-    @api.one
     def _set_standard_price(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.standard_price = self.standard_price
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.standard_price = template.standard_price
 
     def _search_standard_price(self, operator, value):
         products = self.env['product.product'].search([('standard_price', operator, value)], limit=None)
@@ -239,10 +232,10 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.volume = 0.0
 
-    @api.one
     def _set_volume(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.volume = self.volume
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.volume = template.volume
 
     @api.depends('product_variant_ids', 'product_variant_ids.weight')
     def _compute_weight(self):
@@ -292,16 +285,16 @@ class ProductTemplate(models.Model):
         for template in self:
             template.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
-    @api.one
     def _set_weight(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.weight = self.weight
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.weight = template.weight
 
-    @api.one
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):
-        # do not pollute variants to be prefetched when counting variants
-        self.product_variant_count = len(self.with_prefetch().product_variant_ids)
+        for template in self:
+            # do not pollute variants to be prefetched when counting variants
+            template.product_variant_count = len(template.with_prefetch().product_variant_ids)
 
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
@@ -311,10 +304,10 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.default_code = ''
 
-    @api.one
     def _set_default_code(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.default_code = self.default_code
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.default_code = template.default_code
 
     @api.depends('product_variant_ids', 'product_variant_ids.packaging_ids')
     def _compute_packaging_ids(self):
@@ -354,7 +347,7 @@ class ProductTemplate(models.Model):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
-            templates.with_context(create_from_tmpl=True).create_variant_ids()
+            templates.create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
@@ -482,11 +475,6 @@ class ProductTemplate(models.Model):
 
         return prices
 
-    # compatibility to remove after v10 - DEPRECATED
-    @api.model
-    def _price_get(self, products, ptype='list_price'):
-        return products.price_compute(ptype)
-
     @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
@@ -500,7 +488,7 @@ class ProductTemplate(models.Model):
             variants_to_unlink = self.env['product.product']
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
-            variant_alone = tmpl_id._get_valid_product_template_attribute_lines().filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
+            variant_alone = tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
             for value_id in variant_alone:
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
@@ -557,6 +545,16 @@ class ProductTemplate(models.Model):
             if variants_to_create:
                 Product.create(variants_to_create)
 
+            # Avoid access errors in case the products is shared amongst companies but the underlying
+            # objects are not. If unlink fails because of an AccessError (e.g. while recomputing
+            # fields), the 'write' call will fail as well for the same reason since the field has
+            # been set to recompute.
+            if variants_to_unlink:
+                variants_to_unlink.check_access_rights('unlink')
+                variants_to_unlink.check_access_rule('unlink')
+                variants_to_unlink.check_access_rights('write')
+                variants_to_unlink.check_access_rule('write')
+                variants_to_unlink = variants_to_unlink.sudo()
             # unlink or inactive product
             # try in batch first because it is much faster
             try:
@@ -588,7 +586,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'dynamic' for a in self._get_valid_product_attributes())
+        return any(a.create_variant == 'dynamic' for a in self.valid_product_attribute_ids)
 
     @api.multi
     def _compute_valid_attributes(self):
@@ -621,51 +619,6 @@ class ProductTemplate(models.Model):
 
             record.valid_product_attribute_ids = record.valid_product_template_attribute_line_ids.mapped('attribute_id')
             record.valid_product_attribute_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('attribute_id')
-
-    @api.multi
-    def _compute_valid_archived_variant_ids(self):
-        """This compute is done outside of `_compute_valid_attributes` because
-        it is often not needed, and it can be very bad on performance."""
-        archived_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', False)])
-        for record in self:
-            valid_value_ids = record.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = record.valid_product_attribute_wnva_ids
-
-            record.valid_archived_variant_ids = archived_variants.filtered(
-                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
-            )
-
-    @api.multi
-    def _compute_valid_existing_variant_ids(self):
-        """This compute is done outside of `_compute_valid_attributes` because
-        it is often not needed, and it can be very bad on performance."""
-        existing_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', True)])
-        for record in self:
-
-            valid_value_ids = record.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = record.valid_product_attribute_wnva_ids
-
-            record.valid_existing_variant_ids = existing_variants.filtered(
-                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
-            )
-
-    @api.multi
-    def _get_valid_product_template_attribute_lines(self):
-        """deprecated, use `valid_product_template_attribute_line_ids`"""
-        self.ensure_one()
-        return self.valid_product_template_attribute_line_ids
-
-    @api.multi
-    def _get_valid_product_attributes(self):
-        """deprecated, use `valid_product_attribute_ids`"""
-        self.ensure_one()
-        return self.valid_product_attribute_ids
-
-    @api.multi
-    def _get_valid_product_attribute_values(self):
-        """deprecated, use `valid_product_attribute_value_ids`"""
-        self.ensure_one()
-        return self.valid_product_attribute_value_ids
 
     @api.multi
     def _get_possible_variants(self, parent_combination=None):
@@ -707,10 +660,6 @@ class ProductTemplate(models.Model):
             - exclusions: from this product itself
             - parent_combination: ids of the given parent_combination
             - parent_exclusions: from the parent_combination
-            - archived_combinations: deprecated
-            - existing_combinations: deprecated
-            - has_dynamic_attributes: deprecated
-            - no_variant_product_template_attribute_value_ids: deprecated
            - parent_product_name: the name of the parent product if any, used in the interface
                to explain why some combinations are not available.
                (e.g: Not available with Customizable Desk (Legs: Steel))
@@ -724,10 +673,6 @@ class ProductTemplate(models.Model):
             'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
             'parent_combination': parent_combination.ids,
-            'archived_combinations': [],
-            'has_dynamic_attributes': self.has_dynamic_attributes(),
-            'existing_combinations': [],
-            'no_variant_product_template_attribute_value_ids': [],
             'parent_product_name': parent_name,
             'mapped_attribute_names': self._get_mapped_attribute_names(parent_combination),
         }
@@ -756,7 +701,7 @@ class ProductTemplate(models.Model):
         the value is an array with the other ptav that they exclude (empty if no exclusion).
         """
         self.ensure_one()
-        product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
+        product_template_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
         return {
             ptav.id: [
                 value_id
@@ -794,29 +739,6 @@ class ProductTemplate(models.Model):
         return result
 
     @api.multi
-    def _get_archived_combinations(self):
-        """Deprecated"""
-        self.ensure_one()
-        return [archived_variant.product_template_attribute_value_ids.ids
-            for archived_variant in self.valid_archived_variant_ids]
-
-    @api.multi
-    def _get_existing_combinations(self):
-        """Deprecated"""
-        self.ensure_one()
-        return [variant.product_template_attribute_value_ids.ids
-            for variant in self.valid_existing_variant_ids]
-
-    @api.multi
-    def _get_no_variant_product_template_attribute_values(self):
-        """Deprecated"""
-        self.ensure_one()
-        product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
-        return product_template_attribute_values.filtered(
-            lambda v: v.attribute_id.create_variant == 'no_variant'
-        ).ids
-
-    @api.multi
     def _get_mapped_attribute_names(self, parent_combination=None):
         """ The name of every attribute values based on their id,
         used to explain in the interface why that combination is not available
@@ -826,7 +748,7 @@ class ProductTemplate(models.Model):
         the parent combination if provided.
         """
         self.ensure_one()
-        all_product_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
+        all_product_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
         if parent_combination:
             all_product_attribute_values |= parent_combination
 
@@ -925,7 +847,7 @@ class ProductTemplate(models.Model):
         return self.env['product.product'].browse(self._get_variant_id_for_combination(attribute_values))
 
     @api.multi
-    @tools.ormcache('self', 'attribute_values')
+    @tools.ormcache('self.id', 'attribute_values')
     def _get_variant_id_for_combination(self, attribute_values):
         """See `_get_variant_for_combination`. This method returns an ID
         so it can be cached."""
@@ -947,7 +869,7 @@ class ProductTemplate(models.Model):
         )[:1].id
 
     @api.multi
-    @tools.ormcache('self')
+    @tools.ormcache('self.id')
     def _get_first_possible_variant_id(self):
         """See `_create_first_product_variant`. This method returns an ID
         so it can be cached."""

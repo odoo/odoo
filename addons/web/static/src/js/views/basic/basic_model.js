@@ -1597,7 +1597,7 @@ var BasicModel = AbstractModel.extend({
                             // updating an existing (virtual) record
                             var previousChange = _.find(oldChanges, function (operation) {
                                 var child = self.localData[operation.id];
-                                return child && (child.res_id === command[1]);
+                                return child && (child.ref === command[1]);
                             });
                             recID = previousChange && previousChange.id;
                             rec = self.localData[recID];
@@ -3175,7 +3175,7 @@ var BasicModel = AbstractModel.extend({
                                 commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
                                 continue;
                             }
-                            changes = this._generateChanges(relRecord, options);
+                            changes = this._generateChanges(relRecord, _.extend({}, options, {changesOnly: true}));
                             if (!this.isNew(relRecord.id)) {
                                 // the subrecord already exists in db
                                 commands[fieldName].push(x2ManyCommands.link_to(relRecord.res_id));

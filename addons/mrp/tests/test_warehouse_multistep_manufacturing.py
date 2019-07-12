@@ -203,3 +203,53 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             ('picking_type_id', '=', self.warehouse.pick_type_id.id)
         ]).picking_id
         self.assertEqual(picking_stock_pick.move_lines.move_orig_ids.picking_id, picking_stock_postprod)
+
+    def test_cancel_propagation(self):
+        """ Test cancelling moves in a 'picking before
+        manufacturing' and 'store after manufacturing' process. The propagation of
+        cancel depends on the default values on each rule of the chain.
+        """
+        self.warehouse.manufacture_steps = 'pbm_sam'
+        self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4.0)
+        picking_customer = self.env['stock.picking'].create({
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.env['ir.model.data'].xmlid_to_res_id('base.res_partner_4'),
+            'picking_type_id': self.warehouse.out_type_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.finished_product.name,
+            'product_id': self.finished_product.id,
+            'product_uom_qty': 2,
+            'picking_id': picking_customer.id,
+            'product_uom': self.uom_unit.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location,
+            'procure_method': 'make_to_order',
+        })
+        picking_customer.action_confirm()
+        production_order = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
+        self.assertTrue(production_order)
+
+        move_stock_preprod = self.env['stock.move'].search([
+            ('product_id', '=', self.raw_product.id),
+            ('location_id', '=', self.warehouse.lot_stock_id.id),
+            ('location_dest_id', '=', self.warehouse.pbm_loc_id.id),
+            ('picking_type_id', '=', self.warehouse.pbm_type_id.id)
+        ])
+        move_stock_postprod = self.env['stock.move'].search([
+            ('product_id', '=', self.finished_product.id),
+            ('location_id', '=', self.warehouse.sam_loc_id.id),
+            ('location_dest_id', '=', self.warehouse.lot_stock_id.id),
+            ('picking_type_id', '=', self.warehouse.sam_type_id.id)
+        ])
+
+        self.assertTrue(move_stock_preprod)
+        self.assertTrue(move_stock_postprod)
+        self.assertEqual(move_stock_preprod.state, 'confirmed')
+        self.assertEqual(move_stock_postprod.state, 'waiting')
+
+        move_stock_preprod._action_cancel()
+        self.assertEquals(production_order.state, 'confirmed')
+        production_order.action_cancel()
+        self.assertTrue(move_stock_postprod.state, 'cancel')

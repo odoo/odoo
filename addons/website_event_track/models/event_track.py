@@ -182,7 +182,6 @@ class Track(models.Model):
         return {
             'name': _('Speakers'),
             'domain': [('id', 'in', self.mapped('partner_id').ids)],
-            'view_type': 'form',
             'view_mode': 'kanban,form',
             'res_model': 'res.partner',
             'view_id': False,

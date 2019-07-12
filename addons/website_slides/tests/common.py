@@ -40,7 +40,7 @@ class SlidesCase(common.SavepointCase):
             'customer': True,
         })
 
-        self.channel = self.env['slide.channel'].sudo(self.user_publisher).create({
+        self.channel = self.env['slide.channel'].with_user(self.user_publisher).create({
             'name': 'Test Channel',
             'channel_type': 'documentation',
             'promote_strategy': 'most_voted',
@@ -51,7 +51,7 @@ class SlidesCase(common.SavepointCase):
             'karma_gen_slide_vote': 5,
             'karma_gen_channel_rank': 10,
         })
-        self.slide = self.env['slide.slide'].sudo(self.user_publisher).create({
+        self.slide = self.env['slide.slide'].with_user(self.user_publisher).create({
             'name': 'How To Cook Humans',
             'channel_id': self.channel.id,
             'slide_type': 'presentation',
@@ -60,14 +60,12 @@ class SlidesCase(common.SavepointCase):
         })
 
     @contextmanager
-    def sudo(self, user):
-        """ Quick sudo environment """
+    def with_user(self, user):
+        """ Quick with_user environment """
         old_uid = self.uid
         try:
             self.uid = user.id
-            self.env = self.env(user=self.uid)
             yield
         finally:
             # back
             self.uid = old_uid
-            self.env = self.env(user=self.uid)

@@ -2,9 +2,15 @@
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
+from odoo.exceptions import AccessError
 
 
 class TestWarehouse(TestStockCommon):
+
+    def setUp(self):
+        super(TestWarehouse, self).setUp()
+        self.partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+
     def test_inventory_product(self):
         self.product_1.type = 'product'
         product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -12,7 +18,7 @@ class TestWarehouse(TestStockCommon):
             'inventory_quantity': 50.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
         })
-        inventory = self.env['stock.inventory'].sudo(self.user_stock_manager).create({
+        inventory = self.env['stock.inventory'].with_user(self.user_stock_manager).create({
             'name': 'Starting for product_1',
             'location_ids': [(4, self.warehouse_1.lot_stock_id.id)],
             'product_ids': [(4, self.product_1.id)],
@@ -45,11 +51,51 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.wh_input_stock_loc_id).quantity, 0.0)
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
 
+    def test_inventory_wizard_as_manager(self):
+        """ Using the "Update Quantity" wizard as stock manager.
+        """
+        self.product_1.type = 'product'
+        InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_manager)
+        inventory_wizard = InventoryWizard.create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'new_quantity': 50.0,
+        })
+        inventory_wizard.change_product_qty()
+        # Check quantity was updated
+        self.assertEqual(self.product_1.virtual_available, 50.0)
+        self.assertEqual(self.product_1.qty_available, 50.0)
+
+        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
+        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
+        self.assertEqual(len(quant), 2)
+
+    def test_inventory_wizard_as_user(self):
+        """ Using the "Update Quantity" wizard as stock user.
+        """
+        self.product_1.type = 'product'
+        InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_user)
+        inventory_wizard = InventoryWizard.create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'new_quantity': 50.0,
+        })
+        # User has no right on quant, must raise an AccessError
+        with self.assertRaises(AccessError):
+            inventory_wizard.change_product_qty()
+        # Check quantity wasn't updated
+        self.assertEqual(self.product_1.virtual_available, 0.0)
+        self.assertEqual(self.product_1.qty_available, 0.0)
+
+        # Check associated quants: 0 quant expected
+        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
+        self.assertEqual(len(quant), 0)
+
     def test_basic_move(self):
-        product = self.product_3.sudo(self.user_stock_manager)
+        product = self.product_3.with_user(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': self.warehouse_1.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -110,7 +156,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
@@ -153,7 +199,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
@@ -238,7 +284,7 @@ class TestWarehouse(TestStockCommon):
         })
 
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -318,7 +364,7 @@ class TestWarehouse(TestStockCommon):
         # Create the move for the shop Namur. Should create a resupply from
         # distribution warehouse Namur.
         picking_out_namur = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_namur.lot_stock_id.id,
             'location_dest_id': customer_location.id,
@@ -362,7 +408,7 @@ class TestWarehouse(TestStockCommon):
         # Create the move for the shop Wavre. Should create a resupply from
         # distribution warehouse Wavre.
         picking_out_wavre = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': warehouse_shop_wavre.lot_stock_id.id,
             'location_dest_id': customer_location.id,

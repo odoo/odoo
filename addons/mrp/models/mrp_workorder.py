@@ -8,7 +8,6 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
-from odoo.addons import decimal_precision as dp
 
 
 class MrpWorkorder(models.Model):
@@ -34,11 +33,11 @@ class MrpWorkorder(models.Model):
         related='production_id.state',
         help='Technical: used in views only.')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
-    qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits=dp.get_precision('Product Unit of Measure'))
+    qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits='Product Unit of Measure')
     qty_produced = fields.Float(
         'Quantity', default=0.0,
         readonly=True,
-        digits=dp.get_precision('Product Unit of Measure'),
+        digits='Product Unit of Measure',
         help="The number of products already handled by this work order")
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
@@ -137,8 +136,8 @@ class MrpWorkorder(models.Model):
             workorder.date_planned_finished = workorder.leave_id.date_to
 
     def _set_dates_planned(self):
-        date_from = self.date_planned_start[0]
-        date_to = self.date_planned_finished[0]
+        date_from = self[0].date_planned_start
+        date_to = self[0].date_planned_finished
         self.mapped('leave_id').write({
             'date_from': date_from,
             'date_to': date_to,
@@ -204,21 +203,21 @@ class MrpWorkorder(models.Model):
     def name_get(self):
         return [(wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
 
-    @api.one
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
-        rounding = self.production_id.product_uom_id.rounding
-        self.is_produced = float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0
+        for order in self:
+            rounding = order.production_id.product_uom_id.rounding
+            order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
 
-    @api.one
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
-        self.duration = sum(self.time_ids.mapped('duration'))
-        self.duration_unit = round(self.duration / max(self.qty_produced, 1), 2)  # rounding 2 because it is a time
-        if self.duration_expected:
-            self.duration_percent = 100 * (self.duration_expected - self.duration) / self.duration_expected
-        else:
-            self.duration_percent = 0
+        for order in self:
+            order.duration = sum(order.time_ids.mapped('duration'))
+            order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
+            if order.duration_expected:
+                order.duration_percent = 100 * (order.duration_expected - order.duration) / order.duration_expected
+            else:
+                order.duration_percent = 0
 
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """
@@ -551,13 +550,14 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         return {
             'name': _('Scrap'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_workorder_id': self.id, 'default_production_id': self.production_id.id, 'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids},
-            # 'context': {'product_ids': self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')).mapped('product_id').ids + [self.production_id.product_id.id]},
+            'context': {'default_company_id': self.production_id.company_id.id,
+                        'default_workorder_id': self.id,
+                        'default_production_id': self.production_id.id,
+                        'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids},
             'target': 'new',
         }
 

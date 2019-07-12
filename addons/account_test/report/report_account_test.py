@@ -19,7 +19,7 @@ class ReportAssertAccount(models.AbstractModel):
             """
             returns the list of invoices that are set as reconciled = True
             """
-            return self.env['account.invoice'].search([('reconciled', '=', True)]).ids
+            return self.env['account.move'].search([('reconciled', '=', True)]).ids
 
         def order_columns(item, cols=None):
             """

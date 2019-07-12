@@ -29,9 +29,9 @@ class SaleOrder(models.Model):
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
 
-    @api.one
     def _compute_website_order_line(self):
-        self.website_order_line = self.order_line
+        for order in self:
+            order.website_order_line = order.order_line
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
@@ -315,7 +315,6 @@ class SaleOrder(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'view_id': composer_form_view_id,
@@ -358,13 +357,6 @@ class SaleOrder(models.Model):
                 template.send_mail(order.id)
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
-
-    @api.multi
-    def get_base_url(self):
-        """When using multi-website, we want the user to be redirected to the
-        most appropriate website if possible."""
-        res = super(SaleOrder, self).get_base_url()
-        return self.website_id and self.website_id._get_http_domain() or res
 
 
 class SaleOrderLine(models.Model):

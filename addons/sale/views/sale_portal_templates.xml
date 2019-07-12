@@ -117,7 +117,7 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
                 <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, sale_order.env.ref('sale.action_quotations').id)"/>
+                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, sale_order.env.ref('sale.action_quotations_with_onboarding').id)"/>
                 </t>
             </t>
 
@@ -408,7 +408,7 @@
                                         <a t-att-href="report_url">
                                             <span t-esc="i.number"/>
                                         </a>
-                                        <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.date_invoice"/></div>
+                                        <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                     </div>
                                     <span t-if="i.state == 'paid'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
                                     <span t-else="" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>

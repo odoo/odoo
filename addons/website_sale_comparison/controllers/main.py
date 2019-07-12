@@ -20,7 +20,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
 
         res = {}
         for num, product in enumerate(products):
-            for var in product.product_tmpl_id._get_valid_product_template_attribute_lines():
+            for var in product.product_tmpl_id.valid_product_template_attribute_line_ids:
                 cat_name = var.attribute_id.category_id.name or _('Uncategorized')
                 att_name = var.attribute_id.name
                 if not var.attribute_id.create_variant:

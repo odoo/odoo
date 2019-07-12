@@ -5,8 +5,8 @@ from odoo import api, fields, models
 
 
 class Partner(models.Model):
-
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'phone.validation.mixin']
 
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id')
     opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
@@ -46,6 +46,18 @@ class Partner(models.Model):
     def _compute_meeting_count(self):
         for partner in self:
             partner.meeting_count = len(partner.meeting_ids)
+
+    # Phone Validation
+    # ----------------
+    @api.onchange('phone', 'country_id', 'company_id')
+    def _onchange_phone_validation(self):
+        if self.phone:
+            self.phone = self.phone_format(self.phone)
+
+    @api.onchange('mobile', 'country_id', 'company_id')
+    def _onchange_mobile_validation(self):
+        if self.mobile:
+            self.mobile = self.phone_format(self.mobile)
 
     @api.multi
     def schedule_meeting(self):

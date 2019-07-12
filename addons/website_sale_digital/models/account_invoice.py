@@ -6,14 +6,14 @@ from odoo import models
 
 class AccountInvoiceLine(models.Model):
 
-    _inherit = ['account.invoice.line']
+    _inherit = ['account.move.line']
 
     def get_digital_purchases(self):
         partner = self.env.user.partner_id
 
         # Get paid invoices
         purchases = self.sudo().search_read(
-            domain=[('invoice_id.state', '=', 'paid'), ('invoice_id.partner_id', '=', partner.id)],
+            domain=[('move_id.invoice_payment_state', '=', 'paid'), ('move_id.partner_id', '=', partner.id)],
             fields=['product_id'],
         )
 

@@ -99,7 +99,7 @@ class Website(Home):
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
-                redirect = '/'
+                redirect = '/my'
             return http.redirect_with_hash(redirect)
         return response
 
@@ -158,7 +158,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
+            locs = request.website.with_user(request.website.user_id).enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -354,9 +354,9 @@ class Website(Home):
         if get_bundle:
             context = dict(request.context)
             return {
-                'web.assets_common': request.env["ir.qweb"]._get_asset('web.assets_common', options=context),
-                'web.assets_frontend': request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context),
-                'website.assets_editor': request.env["ir.qweb"]._get_asset('website.assets_editor', options=context),
+                'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', options=context),
+                'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', options=context),
+                'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor', options=context),
             }
 
         return True
@@ -471,3 +471,8 @@ class WebsiteBinary(http.Controller):
             if unique:
                 kw['unique'] = unique
         return Binary().content_image(**kw)
+
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True)
+    def favicon(self, **kw):
+        # when opening a pdf in chrome, chrome tries to open the default favicon url
+        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)

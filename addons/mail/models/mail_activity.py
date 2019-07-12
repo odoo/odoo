@@ -242,7 +242,7 @@ class MailActivity(models.Model):
           * unlink: access rule OR
                     (``mail_post_access`` or write) rights on related documents);
         """
-        if self.env.user._is_superuser():
+        if self.env.is_superuser():
             return self
         if not self.check_access_rights(operation, raise_exception=False):
             return self.env[self._name]
@@ -289,7 +289,7 @@ class MailActivity(models.Model):
         assigned user should be able to at least read the document. We therefore
         raise an UserError if the assigned user has no access to the document. """
         for activity in self:
-            model = self.env[activity.res_model].sudo(activity.user_id.id)
+            model = self.env[activity.res_model].with_user(activity.user_id)
             try:
                 model.check_access_rights('read')
             except exceptions.AccessError:
@@ -429,7 +429,6 @@ class MailActivity(models.Model):
         return {
             'name': _('Schedule an Activity'),
             'context': ctx,
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.activity',
             'views': [(False, 'form')],

@@ -120,30 +120,6 @@
     </ul>
 </t>
 
-<div t-name="CrashManager.warning" class="o_dialog_warning" role="alert">
-    <t t-js="d">
-        var message = (d.message !== undefined) ? d.message : d.error.data.message;
-        d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
-    </t>
-    <t t-raw="html_error"/>
-</div>
-<div t-name="CrashManager.error" class="o_dialog_error">
-    <div class="alert alert-warning clearfix" role="alert">
-        <button class="btn btn-primary float-right ml8 o_clipboard_button">
-            <i class="fa fa-clipboard mr8"/>Copy the full error to clipboard
-        </button>
-        <p><b>An error occurred</b></p>
-        <p>Please use the copy button to report the error to your support service.</p>
-    </div>
-
-    <t t-set="errUID" t-value="_.uniqueId()"/>
-    <button class="btn btn-link" t-att-data-target="'#o_error_detail' + errUID" data-toggle="collapse">See details</button>
-    <div t-att-id="'o_error_detail' + errUID" class="collapse alert alert-danger o_error_detail" role="alert">
-        <pre><t t-esc="error.message"/></pre>
-        <pre><t t-esc="error.data.debug"/></pre>
-    </div>
-</div>
-
 <form t-name="ChangePassword" name="change_password_form" method="POST" aria-atomic="true">
     <div class="o_form_view">
         <table class="o_group o_inner_group o_label_nowrap">
@@ -415,7 +391,7 @@
     </div>
 </div>
 
-<div t-name="PivotView" class="o_pivot">
+<div t-name="PivotView" t-attf-class="o_pivot #{widget.enableLinking ? 'o_enable_linking' : ''}">
     <div class="o_field_selection"/>
 </div>
 <t t-name="PivotView.buttons">
@@ -1469,21 +1445,21 @@
                 <div role="menuitem" href="#" class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
                     <div class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
                         <span style="height: 2rem;">
-                            <t t-if="widget.allowed_company_ids.includes(company[0].toString())">
+                            <t t-if="widget.allowed_company_ids.includes(company[0])">
                                 <i class="fa fa-fw fa-check-square pt-2"></i>
                             </t>
-                            <t t-if="!widget.allowed_company_ids.includes(company[0].toString())">
+                            <t t-if="!widget.allowed_company_ids.includes(company[0])">
                                 <i class="fa fa-fw fa-square-o pt-2"></i>
                             </t>
                         </span>
                     </div>
                     <div class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-att-style="company[0] === widget.current_company ? 'background-color: lightgrey;' : ''">
-                        <t t-if="widget.allowed_company_ids.includes(company[0].toString())">
+                        <t t-if="widget.allowed_company_ids.includes(company[0])">
                             <span class='mr-3 company_label'>
                                 <t t-esc="company[1]"/>
                             </span>
                         </t>
-                        <t t-if="!widget.allowed_company_ids.includes(company[0].toString())">
+                        <t t-if="!widget.allowed_company_ids.includes(company[0])">
                             <span class='mr-3 company_label text-muted'>
                                 <t t-esc="company[1]"/>
                             </span>

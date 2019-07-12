@@ -89,14 +89,12 @@
     <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
         <field name="name">Mail Statistics</field>
         <field name="res_model">mail.mail.statistics</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
         <field name="name">Mail Statistics</field>
         <field name="res_model">mail.mail.statistics</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,tree,form,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_mass_mailing_id': active_id}</field>
@@ -105,7 +103,6 @@
     <record id="action_view_mail_mail_statistics_mailing_list" model="ir.actions.act_window">
         <field name="name">Emails Sent</field>
         <field name="res_model">mail.mail.statistics</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,graph,form,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_mass_mailing_id': active_id}</field>

@@ -206,7 +206,7 @@ def origin_ids(ids):
     """ Return an iterator over the origin ids corresponding to ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
     """
-    return ((id_ or id_.origin) for id_ in ids if (id_ or id_.origin))
+    return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
 
 
 IdType = (int, str, NewId)
@@ -298,7 +298,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         pass
 
-    @api.model_cr_context
     def _reflect(self):
         """ Reflect the model and its fields in the models 'ir.model' and
         'ir.model.fields'. Also create entries in 'ir.model.data' if the key
@@ -1679,7 +1678,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         access_rights_uid = name_get_uid or self._uid
         ids = self._search(args, limit=limit, access_rights_uid=access_rights_uid)
         recs = self.browse(ids)
-        return lazy_name_get(recs.sudo(access_rights_uid))
+        return lazy_name_get(recs.with_user(access_rights_uid))
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -2281,7 +2280,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         else:
             return '"%s"."%s"' % (alias, fname)
 
-    @api.model_cr
     def _parent_store_compute(self):
         """ Compute parent_path field from scratch. """
         if not self._parent_store:
@@ -2320,7 +2318,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.invalidate_cache(['parent_path'])
         return True
 
-    @api.model_cr
     def _check_removed_columns(self, log=False):
         # iterate on the database columns to drop the NOT NULL constraints of
         # fields which were required but have been removed (or will be added by
@@ -2343,7 +2340,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if row['attnotnull']:
                 tools.drop_not_null(cr, self._table, row['attname'])
 
-    @api.model_cr_context
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows. """
         # get the default value; ideally, we should use default_get(), but it
@@ -2375,7 +2371,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.env.cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
         return self.env.cr.rowcount
 
-    @api.model_cr_context
     def _auto_init(self):
         """ Initialize the database schema of ``self``:
             - create the corresponding table,
@@ -2446,14 +2441,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if parent_path_compute:
             self._parent_store_compute()
 
-    @api.model_cr
     def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
         """
         pass
 
-    @api.model_cr
     def _create_parent_columns(self):
         tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
         if 'parent_path' not in self._fields:
@@ -2461,7 +2454,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         elif not self._fields['parent_path'].index:
             _logger.error('parent_path field on model %s must be indexed! Add index=True to the field definition)', self._name)
 
-    @api.model_cr
     def _add_sql_constraints(self):
         """
 
@@ -2489,7 +2481,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             else:
                 process(key, definition)
 
-    @api.model_cr
     def _execute_sql(self):
         """ Execute the SQL code from the _sql attribute (if any)."""
         if hasattr(self, "_sql"):
@@ -2703,7 +2694,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for fname, field in self._fields.items():
             if allfields and fname not in allfields:
                 continue
-            if field.groups and not self.user_has_groups(field.groups):
+            if field.groups and not self.env.su and not self.user_has_groups(field.groups):
                 continue
 
             description = field.get_description(self.env)
@@ -2735,7 +2726,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         fields (as is if the fields is not falsy, or the readable/writable
         fields if fields is falsy).
         """
-        if self._uid == SUPERUSER_ID:
+        if self.env.su:
             return fields or list(self._fields)
 
         def valid(fname):
@@ -2789,11 +2780,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
 Document type: %(document_kind)s (%(document_model)s)
 Operation: %(operation)s
+User: %(user)s
 Fields:
 %(fields_list)s""") % {
                     'document_model': self._name,
                     'document_kind': description or self._name,
                     'operation': operation,
+                    'user': self._uid,
                     'fields_list': '\n'.join(
                         '- %s (%s)' % (f, format_groups(self._fields[f]))
                         for f in sorted(invalid_fields)
@@ -2901,7 +2894,7 @@ Fields:
         if not self.env.cache.contains_value(self, field):
             for values in result:
                 record = self.browse(values.pop('id'))
-                record._cache.update(record._convert_to_cache(values, validate=False))
+                record._update_cache(values, validate=False)
             if not self.env.cache.contains(self, field):
                 exc = AccessError("No value found for %s.%s" % (self, field.name))
                 self.env.cache.set_failed(self, [field], exc)
@@ -2920,7 +2913,7 @@ Fields:
             return
 
         env = self.env
-        cr, user, context = env.args
+        cr, user, context, su = env.args
 
         # make a query object for selecting ids, and apply security rules to it
         param_ids = object()
@@ -3048,6 +3041,21 @@ Fields:
         return res
 
     @api.multi
+    def get_base_url(self):
+        """
+        Returns rooturl for a specific given record.
+
+        By default, it return the ir.config.parameter of base_url
+        but it can be overidden by model.
+
+        :return: the base url for this record
+        :rtype: string
+
+        """
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+    @api.multi
     def _check_concurrency(self):
         if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
             return
@@ -3086,7 +3094,7 @@ Fields:
            :raise UserError: * if current ir.rules do not permit this operation.
            :return: None if the operation is allowed
         """
-        if self._uid == SUPERUSER_ID:
+        if self.env.su:
             return
 
         invalid = self - self._filter_access_rules(operation)
@@ -3108,11 +3116,17 @@ Fields:
             # errors for non-transactional search/read sequences coming from clients.
             return
         _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
-        raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+        raise MissingError(
+            _('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
+            + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
+                _('Document type:'), self._name, _('Operation:'), operation,
+                _('Records:'), invalid.ids[:6], _('User:'), self._uid,
+            )
+        )
 
     def _filter_access_rules(self, operation):
         """ Return the subset of ``self`` for which ``operation`` is allowed. """
-        if self._uid == SUPERUSER_ID:
+        if self.env.su:
             return self
 
         if not self._ids:
@@ -3314,7 +3328,7 @@ Fields:
         bad_names = {'id', 'parent_path'}
         if self._log_access:
             # the superuser can set log_access fields while loading registry
-            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+            if not(self.env.su and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
         # distribute fields into sets for various purposes
@@ -3401,9 +3415,7 @@ Fields:
                     inv_vals = {f.name: inverse_vals[f.name] for f in fields}
                     for records in batches:
                         for record in records:
-                            record._cache.update(
-                                record._convert_to_cache(inv_vals, update=True)
-                            )
+                            record._update_cache(inv_vals)
                         fields[0].determine_inverse(records)
 
                 self.modified(set(inverse_vals) - set(store_vals))
@@ -3473,7 +3485,10 @@ Fields:
             for sub_ids in cr.split_for_in_conditions(set(self.ids)):
                 cr.execute(query, params + [sub_ids])
                 if cr.rowcount != len(sub_ids):
-                    raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
+                    raise MissingError(
+                        _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description
+                        + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
+                    )
 
             for name in updated:
                 field = self._fields[name]
@@ -3555,7 +3570,7 @@ Fields:
         bad_names = {'id', 'parent_path'}
         if self._log_access:
             # the superuser can set log_access fields while loading registry
-            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+            if not(self.env.su and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
         unknown_names = set()
 
@@ -3648,7 +3663,7 @@ Fields:
 
                 for batch in batches:
                     for record, vals in batch:
-                        record._cache.update(record._convert_to_cache(vals))
+                        record._update_cache(vals)
                     batch_recs = self.concat(*(record for record, vals in batch))
                     fields[0].determine_inverse(batch_recs)
 
@@ -3971,7 +3986,7 @@ Fields:
 
            :param query: the current query object
         """
-        if self._uid == SUPERUSER_ID:
+        if self.env.su:
             return
 
         def apply_rule(clauses, params, tables, parent_model=None):
@@ -4152,7 +4167,8 @@ Fields:
                                   (not for ir.rules, this is only for ir.model.access)
         :return: a list of record ids or an integer (if count is True)
         """
-        self.sudo(access_rights_uid or self._uid).check_access_rights('read')
+        model = self.with_user(access_rights_uid) if access_rights_uid else self
+        model.check_access_rights('read')
 
         if expression.is_false(self, args):
             # optimization: no need to query, as no record satisfies the domain
@@ -4375,7 +4391,10 @@ Fields:
         existing = self.browse(ids + new_ids)
         if len(existing) < len(self):
             # mark missing records in cache with a failed value
-            exc = MissingError(_("Record does not exist or has been deleted."))
+            exc = MissingError(
+                _("Record does not exist or has been deleted.")
+                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
+            )
             self.env.cache.set_failed(self - existing, self._fields.values(), exc)
         return existing
 
@@ -4499,7 +4518,6 @@ Fields:
         """
         return cls._transient
 
-    @api.model_cr
     def _transient_clean_rows_older_than(self, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         # Never delete rows used in last 5 minutes
@@ -4511,7 +4529,6 @@ Fields:
         ids = [x[0] for x in self._cr.fetchall()]
         self.sudo().browse(ids).unlink()
 
-    @api.model_cr
     def _transient_clean_old_rows(self, max_count):
         # Check how many rows we have in the table
         self._cr.execute("SELECT count(*) AS row_count FROM " + self._table)
@@ -4654,7 +4671,6 @@ Fields:
         for record in self:
             record.active = not record.active
 
-    @api.model_cr
     def _register_hook(self):
         """ stuff to do right after the registry is built """
         pass
@@ -4686,7 +4702,7 @@ Fields:
         origin = getattr(cls, name)
         method.origin = origin
         # propagate decorators from origin to method, and apply api decorator
-        wrapped = api.guess(api.propagate(origin, method))
+        wrapped = api.propagate(origin, method)
         wrapped.origin = origin
         setattr(cls, name, wrapped)
 
@@ -4786,14 +4802,12 @@ Fields:
         """
         return self._browse(env, self._ids, self._prefetch_ids)
 
-    def sudo(self, user=SUPERUSER_ID):
-        """ sudo([user=SUPERUSER])
+    def sudo(self, flag=True):
+        """ sudo([flag=True])
 
-        Returns a new version of this recordset attached to the provided
-        user.
-
-        By default this returns a ``SUPERUSER`` recordset, where access
-        control and record rules are bypassed.
+        Returns a new version of this recordset with superuser mode enabled or
+        disabled, depending on `flag`. The superuser mode does not change the
+        current user, and simply bypasses access rights checks.
 
         .. note::
 
@@ -4815,7 +4829,19 @@ Fields:
             The returned recordset has the same prefetch object as ``self``.
 
         """
-        return self.with_env(self.env(user=user))
+        if not isinstance(flag, bool):
+            _logger.warning("deprecated use of sudo(user), use with_user(user) instead", stack_info=True)
+            return self.with_user(flag)
+        return self.with_env(self.env(su=flag))
+
+    def with_user(self, user):
+        """ with_user(user)
+
+        Return a new version of this recordset attached to the given user, in
+        non-superuser mode, unless `user` is the superuser (by convention, the
+        superuser is always in superuser mode.)
+        """
+        return self.with_env(self.env(user=user, su=False))
 
     def with_context(self, *args, **kwargs):
         """ with_context([context][, **overrides]) -> records
@@ -4852,20 +4878,30 @@ Fields:
             prefetch_ids = self._ids
         return self._browse(self.env, self._ids, prefetch_ids)
 
-    def _convert_to_cache(self, values, update=False, validate=True):
-        """ Convert the ``values`` dictionary into cached values.
+    def _update_cache(self, values, validate=True):
+        """ Update the cache of ``self`` with ``values``.
 
-            :param update: whether the conversion is made for updating ``self``;
-                this is necessary for interpreting the commands of *2many fields
+            :param values: dict of field values, in any format.
             :param validate: whether values must be checked
         """
+        def is_monetary(pair):
+            return pair[0].type == 'monetary'
+
+        self.ensure_one()
+        cache = self.env.cache
         fields = self._fields
-        target = self if update else self.browse()
-        return {
-            name: fields[name].convert_to_cache(value, target, validate=validate)
-            for name, value in values.items()
-            if name in fields
-        }
+        field_values = [(fields[name], value) for name, value in values.items()]
+
+        # convert monetary fields last in order to ensure proper rounding
+        for field, value in sorted(field_values, key=is_monetary):
+            cache.set(self, field, field.convert_to_cache(value, self, validate))
+
+            # set inverse fields on new records in the comodel
+            if field.relational:
+                inv_recs = self[field.name].filtered(lambda r: not r.id)
+                if inv_recs:
+                    for invf in self._field_inverses[field]:
+                        invf._update(inv_recs, self)
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
@@ -4996,17 +5032,7 @@ Fields:
         if origin is not None:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
-        record._cache.update(record._convert_to_cache(values, update=True))
-
-        # set inverse fields on new records in the comodel
-        for name in values:
-            field = self._fields.get(name)
-            if field and field.relational:
-                inv_recs = record[name].filtered(lambda r: not r.id)
-                if inv_recs:
-                    for invf in self._field_inverses[field]:
-                        invf._update(inv_recs, record)
-
+        record._update_cache(values, validate=False)
         return record
 
     @property
@@ -5015,26 +5041,6 @@ Fields:
         ids = tuple(origin_ids(self._ids))
         prefetch_ids = IterableGenerator(origin_ids, self._prefetch_ids)
         return self._browse(self.env, ids, prefetch_ids)
-
-    #
-    # Dirty flags, to mark record fields modified (in draft mode)
-    #
-
-    def _is_dirty(self):
-        """ Return whether any record in ``self`` is dirty. """
-        dirty = self.env.dirty
-        return any(record in dirty for record in self)
-
-    def _get_dirty(self):
-        """ Return the list of field names for which ``self`` is dirty. """
-        dirty = self.env.dirty
-        return list(dirty.get(self, ()))
-
-    def _set_dirty(self, field_name):
-        """ Mark the records in ``self`` as dirty for the given ``field_name``. """
-        dirty = self.env.dirty
-        for record in self:
-            dirty[record].add(field_name)
 
     #
     # "Dunder" methods
@@ -5469,26 +5475,37 @@ Fields:
             def __init__(self, record, tree):
                 # put record in dict to include it when comparing snapshots
                 super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
-                for name, subnames in tree.items():
-                    field = record._fields[name]
+                for name in tree:
+                    self.fetch(name)
+
+            def fetch(self, name):
+                """ Set the value of field ``name`` from the record's value. """
+                record = self['<record>']
+                tree = self['<tree>']
+                if record._fields[name].type in ('one2many', 'many2many'):
                     # x2many fields are serialized as a list of line snapshots
-                    self[name] = (
-                        [Snapshot(line, subnames) for line in record[name]]
-                        if field.type in ('one2many', 'many2many') else record[name]
-                    )
+                    self[name] = [Snapshot(line, tree[name]) for line in record[name]]
+                else:
+                    self[name] = record[name]
 
             def has_changed(self, name):
                 """ Return whether a field on record has changed. """
                 record = self['<record>']
                 subnames = self['<tree>'][name]
-                if not subnames:
+                if record._fields[name].type not in ('one2many', 'many2many'):
                     return self[name] != record[name]
-                else:
-                    return len(self[name]) != len(record[name]) or any(
+                return (
+                    len(self[name]) != len(record[name])
+                    or (
+                        set(line_snapshot["<record>"].id for line_snapshot in self[name])
+                        != set(record[name]._ids)
+                    )
+                    or any(
                         line_snapshot.has_changed(subname)
                         for line_snapshot in self[name]
                         for subname in subnames
                     )
+                )
 
             def diff(self, other):
                 """ Return the values in ``self`` that differ from ``other``.
@@ -5542,11 +5559,43 @@ Fields:
                 for subname in subnames:
                     new_lines.mapped(subname)
 
-        # create a new record with values, and attach ``self`` to it
-        record = self.new(values, origin=self)
+        # Isolate changed values, to handle inconsistent data sent from the
+        # client side: when a form view contains two one2many fields that
+        # overlap, the lines that appear in both fields may be sent with
+        # different data. Consider, for instance:
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=1, ...]
+        #
+        # If value=2 is set on 'line' in 'bar_ids', the client sends
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=2, ...]
+        #
+        # The idea is to put 'foo_ids' in cache first, so that the snapshot
+        # contains value=1 for line in 'foo_ids'. The snapshot is then updated
+        # with the value of `bar_ids`, which will contain value=2 on line.
+        #
+        # The issue also occurs with other fields. For instance, an onchange on
+        # a move line has a value for the field 'move_id' that contains the
+        # values of the move, among which the one2many that contains the line
+        # itself, with old values!
+        #
+        changed_values = {name: values[name] for name in names}
+        # set changed values to null in initial_values; not setting them
+        # triggers default_get() on the new record when creating snapshot0
+        initial_values = dict(values, **dict.fromkeys(names, False))
+
+        # create a new record with values
+        record = self.new(initial_values, origin=self)
 
         # make a snapshot based on the initial values of record
-        snapshot0 = snapshot1 = Snapshot(record, nametree)
+        snapshot0 = Snapshot(record, nametree)
+
+        # store changed values in cache, and update snapshot0
+        record._update_cache(changed_values, validate=False)
+        for name in names:
+            snapshot0.fetch(name)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names or nametree)
@@ -5579,6 +5628,9 @@ Fields:
                 for name in nametree
                 if name not in done and snapshot0.has_changed(name)
             ]
+
+            if not env.context.get('recursive_onchanges', True):
+                todo = []
 
         # make the snapshot with the final values of record
         snapshot1 = Snapshot(record, nametree)

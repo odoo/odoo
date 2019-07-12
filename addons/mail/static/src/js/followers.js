@@ -174,7 +174,6 @@ var Followers = AbstractField.extend({
             type: 'ir.actions.act_window',
             res_model: 'mail.wizard.invite',
             view_mode: 'form',
-            view_type: 'form',
             views: [[false, 'form']],
             name: _t("Invite Follower"),
             target: 'new',
@@ -401,7 +400,6 @@ var Followers = AbstractField.extend({
         var $target = $(ev.target);
         this.do_action({
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: $target.data('oe-model'),
             views: [[false, 'form']],

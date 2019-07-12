@@ -224,7 +224,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'no_variant' for a in self._get_valid_product_attributes())
+        return any(a.create_variant == 'no_variant' for a in self.valid_product_attribute_ids)
 
     @api.multi
     def _has_is_custom_values(self):
@@ -235,7 +235,7 @@ class ProductTemplate(models.Model):
         :return: True if at least one is_custom attribute value, False otherwise
         :rtype: bool
         """
-        return any(v.is_custom for v in self._get_valid_product_attribute_values())
+        return any(v.is_custom for v in self.valid_product_attribute_value_ids)
 
     @api.multi
     def _get_possible_variants_sorted(self, parent_combination=None):
@@ -446,6 +446,13 @@ class Product(models.Model):
         # res can be the result of write() if not website_publisher
         if type(res) == dict and res.get('type') == 'ir.actions.act_url':
             res['url'] = self.website_url
+        return res
+
+    @api.multi
+    def open_website_url(self):
+        self.ensure_one()
+        res = self.product_tmpl_id.open_website_url()
+        res['url'] = self.website_url
         return res
 
     @api.multi

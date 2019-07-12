@@ -8,28 +8,28 @@ from odoo.exceptions import ValidationError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    @api.one
     @api.depends('outbound_payment_method_ids')
     def _compute_check_printing_payment_method_selected(self):
-        self.check_printing_payment_method_selected = any(pm.code == 'check_printing' for pm in self.outbound_payment_method_ids)
+        for journal in self:
+            journal.check_printing_payment_method_selected = any(pm.code == 'check_printing' for pm in journal.outbound_payment_method_ids)
 
-    @api.one
     @api.depends('check_manual_sequencing')
     def _get_check_next_number(self):
-        if self.check_sequence_id:
-            self.check_next_number = self.check_sequence_id.number_next_actual
-        else:
-            self.check_next_number = 1
+        for journal in self:
+            if journal.check_sequence_id:
+                journal.check_next_number = journal.check_sequence_id.number_next_actual
+            else:
+                journal.check_next_number = 1
 
-    @api.one
     def _set_check_next_number(self):
-        if self.check_next_number and not re.match(r'^[0-9]+$', self.check_next_number):
-            raise ValidationError(_('Next Check Number should only contains numbers.'))
-        if int(self.check_next_number) < self.check_sequence_id.number_next_actual:
-            raise ValidationError(_("The last check number was %s. In order to avoid a check being rejected "
-                "by the bank, you can only use a greater number.") % self.check_sequence_id.number_next_actual)
-        if self.check_sequence_id:
-            self.check_sequence_id.sudo().number_next_actual = int(self.check_next_number)
+        for journal in self:
+            if journal.check_next_number and not re.match(r'^[0-9]+$', journal.check_next_number):
+                raise ValidationError(_('Next Check Number should only contains numbers.'))
+            if int(journal.check_next_number) < journal.check_sequence_id.number_next_actual:
+                raise ValidationError(_("The last check number was %s. In order to avoid a check being rejected "
+                    "by the bank, you can only use a greater number.") % journal.check_sequence_id.number_next_actual)
+            if journal.check_sequence_id:
+                journal.check_sequence_id.sudo().number_next_actual = int(journal.check_next_number)
 
     check_manual_sequencing = fields.Boolean('Manual Numbering', default=False,
         help="Check this option if your pre-printed checks are not numbered.")
@@ -54,16 +54,16 @@ class AccountJournal(models.Model):
         rec._create_check_sequence()
         return rec
 
-    @api.one
     def _create_check_sequence(self):
         """ Create a check sequence for the journal """
-        self.check_sequence_id = self.env['ir.sequence'].sudo().create({
-            'name': self.name + _(" : Check Number Sequence"),
-            'implementation': 'no_gap',
-            'padding': 5,
-            'number_increment': 1,
-            'company_id': self.company_id.id,
-        })
+        for journal in self:
+            journal.check_sequence_id = self.env['ir.sequence'].sudo().create({
+                'name': journal.name + _(" : Check Number Sequence"),
+                'implementation': 'no_gap',
+                'padding': 5,
+                'number_increment': 1,
+                'company_id': journal.company_id.id,
+            })
 
     def _default_outbound_payment_methods(self):
         methods = super(AccountJournal, self)._default_outbound_payment_methods()

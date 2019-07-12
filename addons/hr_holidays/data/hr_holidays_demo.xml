@@ -8,6 +8,7 @@
         <field name="allocation_type">fixed_allocation</field>
         <field name="color_name">blue</field>
         <field name="request_unit">hour</field>
+        <field name="validity_start" eval="False"/>
     </record>
 
     <record id="hr_holiday_status_dv" model="hr.leave.type">
@@ -15,6 +16,7 @@
         <field name="allocation_type">fixed</field>
         <field name="color_name">brown</field>
         <field name="validation_type">both</field>
+        <field name="validity_start" eval="False"/>
     </record>
 
     <record id="holiday_status_cla" model="hr.leave.type">
@@ -334,9 +336,9 @@
         <field name="name">Sick day</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
         <field eval="time.strftime('%Y-%m-1 1:0:0')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-1 23:0:0')" name="date_to"/>
+        <field eval="time.strftime('%Y-%m-3 23:0:0')" name="date_to"/>
         <field eval="time.strftime('%Y-%m-1 1:0:0')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-1 23:0:0')" name="request_date_to"/>
+        <field eval="time.strftime('%Y-%m-3 23:0:0')" name="request_date_to"/>
         <field name="number_of_days">1</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>

@@ -33,14 +33,8 @@
 
 __all__ = [
     'Environment',
-    'Meta', 'guess', 'noguess',
-    'model', 'multi', 'one',
-    'model_cr', 'model_cr_context',
-    'cr', 'cr_context',
-    'cr_uid', 'cr_uid_context',
-    'cr_uid_id', 'cr_uid_id_context',
-    'cr_uid_ids', 'cr_uid_ids_context',
-    'cr_uid_records', 'cr_uid_records_context',
+    'Meta',
+    'model', 'multi',
     'constrains', 'depends', 'onchange', 'returns',
     'call_kw',
 ]
@@ -48,7 +42,7 @@ __all__ = [
 import logging
 from collections import defaultdict, Mapping
 from contextlib import contextmanager
-from inspect import currentframe, getargspec
+from inspect import getargspec
 from pprint import pformat
 from weakref import WeakSet
 
@@ -69,11 +63,7 @@ _logger = logging.getLogger(__name__)
 #
 # On wrapping method only:
 #  - method._api: decorator function, used for re-applying decorator
-#  - method._orig: original method
 #
-
-WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_constrains',
-                 '_depends', '_onchange', '_returns', 'clear_cache')
 
 INHERITED_ATTRS = ('_returns',)
 
@@ -82,6 +72,7 @@ class Params(object):
     def __init__(self, args, kwargs):
         self.args = args
         self.kwargs = kwargs
+
     def __str__(self):
         params = []
         for arg in self.args:
@@ -105,13 +96,6 @@ class Meta(type):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from decorators
                 value = propagate(getattr(parent, key, None), value)
-
-                # guess calling convention if none is given
-                if not hasattr(value, '_api'):
-                    try:
-                        value = guess(value)
-                    except TypeError:
-                        pass
 
                 if (getattr(value, '_api', None) or '').startswith('cr'):
                     _logger.warning("Deprecated method %s.%s in module %s", name, key, attrs.get('__module__'))
@@ -140,11 +124,11 @@ def constrains(*args):
     """ Decorates a constraint checker. Each argument must be a field name
     used in the check::
 
-        @api.one
         @api.constrains('name', 'description')
         def _check_description(self):
-            if self.name == self.description:
-                raise ValidationError("Fields name and description must be different")
+            for record in self:
+                if record.name == record.description:
+                    raise ValidationError("Fields name and description must be different")
 
     Invoked on the records on which one of the named fields has been modified.
 
@@ -206,13 +190,13 @@ def depends(*args):
 
             pname = fields.Char(compute='_compute_pname')
 
-            @api.one
             @api.depends('partner_id.name', 'partner_id.is_company')
             def _compute_pname(self):
-                if self.partner_id.is_company:
-                    self.pname = (self.partner_id.name or "").upper()
-                else:
-                    self.pname = self.partner_id.name
+                for record in self:
+                    if record.partner_id.is_company:
+                        record.pname = (record.partner_id.name or "").upper()
+                    else:
+                        record.pname = record.partner_id.name
 
         One may also pass a single function as argument. In that case, the
         dependencies are given by calling the function with the field's model.
@@ -275,19 +259,6 @@ def downgrade(method, value, self, args, kwargs):
         return value.ids
 
 
-def aggregate(method, value, self):
-    """ Aggregate record-style ``value`` for a method decorated with ``@one``. """
-    spec = getattr(method, '_returns', None)
-    if spec:
-        # value is a list of instances, concatenate them
-        model, _, _ = spec
-        if model == 'self':
-            return sum(value, self.browse())
-        elif model:
-            return sum(value, self.env[model])
-    return value
-
-
 def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
@@ -337,86 +308,6 @@ def multi(method):
     return method
 
 
-def one(method):
-    """ Decorate a record-style method where ``self`` is expected to be a
-        singleton instance. The decorated method automatically loops on records,
-        and makes a list with the results. In case the method is decorated with
-        :func:`returns`, it concatenates the resulting instances. Such a
-        method::
-
-            @api.one
-            def method(self, args):
-                return self.name
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            names = recs.method(args)
-
-            names = model.method(cr, uid, ids, args, context=context)
-
-        .. deprecated:: 9.0
-
-            :func:`~.one` often makes the code less clear and behaves in ways
-            developers and readers may not expect.
-
-            It is strongly recommended to use :func:`~.multi` and either
-            iterate on the ``self`` recordset or ensure that the recordset
-            is a single record with :meth:`~odoo.models.Model.ensure_one`.
-    """
-    def loop(method, self, *args, **kwargs):
-        result = [method(rec, *args, **kwargs) for rec in self]
-        return aggregate(method, result, self)
-
-    wrapper = decorator(loop, method)
-    wrapper._api = 'one'
-    return wrapper
-
-
-def model_cr(method):
-    """ Decorate a record-style method where ``self`` is a recordset, but its
-        contents is not relevant, only the model is. Such a method::
-
-            @api.model_cr
-            def method(self, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, args)
-
-        Notice that no ``uid``, ``ids``, ``context`` are passed to the method in
-        the traditional style.
-    """
-    method._api = 'model_cr'
-    return method
-
-
-def model_cr_context(method):
-    """ Decorate a record-style method where ``self`` is a recordset, but its
-        contents is not relevant, only the model is. Such a method::
-
-            @api.model_cr_context
-            def method(self, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, args, context=context)
-
-        Notice that no ``uid``, ``ids`` are passed to the method in the
-        traditional style.
-    """
-    method._api = 'model_cr_context'
-    return method
-
-
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
@@ -459,252 +350,6 @@ def model_create_multi(method):
     wrapper = decorate(method, _model_create_multi)
     wrapper._api = 'model_create'
     return wrapper
-
-
-def cr(method):
-    """ Decorate a traditional-style method that takes ``cr`` as a parameter.
-        Such a method may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, args)
-    """
-    method._api = 'cr'
-    return method
-
-
-def cr_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``context`` as parameters. """
-    method._api = 'cr_context'
-    return method
-
-
-def cr_uid(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid`` as parameters. """
-    method._api = 'cr_uid'
-    return method
-
-
-def cr_uid_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``context`` as
-        parameters. Such a method may be called in both record and traditional
-        styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, args, context=context)
-    """
-    method._api = 'cr_uid_context'
-    return method
-
-
-def cr_uid_id(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id`` as
-        parameters. Such a method may be called in both record and traditional
-        styles. In the record style, the method automatically loops on records.
-    """
-    method._api = 'cr_uid_id'
-    return method
-
-
-def cr_uid_id_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id``,
-        ``context`` as parameters. Such a method::
-
-            @api.cr_uid_id
-            def method(self, cr, uid, id, args, context=None):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # rec = model.browse(cr, uid, id, context)
-            rec.method(args)
-
-            model.method(cr, uid, id, args, context=context)
-    """
-    method._api = 'cr_uid_id_context'
-    return method
-
-
-def cr_uid_ids(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids`` as
-        parameters. Such a method may be called in both record and traditional
-        styles.
-    """
-    method._api = 'cr_uid_ids'
-    return method
-
-
-def cr_uid_ids_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids``,
-        ``context`` as parameters. Such a method::
-
-            @api.cr_uid_ids_context
-            def method(self, cr, uid, ids, args, context=None):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, ids, args, context=context)
-
-        It is generally not necessary, see :func:`guess`.
-    """
-    method._api = 'cr_uid_ids_context'
-    return method
-
-
-def cr_uid_records(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
-        recordset of model ``self`` as parameters. Such a method::
-
-            @api.cr_uid_records
-            def method(self, cr, uid, records, args):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # records = model.browse(cr, uid, ids, context)
-            records.method(args)
-
-            model.method(cr, uid, records, args)
-    """
-    method._api = 'cr_uid_records'
-    return method
-
-
-def cr_uid_records_context(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
-        recordset of model ``self``, ``context`` as parameters. Such a method::
-
-            @api.cr_uid_records_context
-            def method(self, cr, uid, records, args, context=None):
-                ...
-
-        may be called in both record and traditional styles, like::
-
-            # records = model.browse(cr, uid, ids, context)
-            records.method(args)
-
-            model.method(cr, uid, records, args, context=context)
-    """
-    method._api = 'cr_uid_records_context'
-    return method
-
-
-def v7(method_v7):
-    """ Decorate a method that supports the old-style api only. A new-style api
-        may be provided by redefining a method with the same name and decorated
-        with :func:`~.v8`::
-
-            @api.v7
-            def foo(self, cr, uid, ids, context=None):
-                ...
-
-            @api.v8
-            def foo(self):
-                ...
-
-        Special care must be taken if one method calls the other one, because
-        the method may be overridden! In that case, one should call the method
-        from the current class (say ``MyClass``), for instance::
-
-            @api.v7
-            def foo(self, cr, uid, ids, context=None):
-                # Beware: records.foo() may call an overriding of foo()
-                records = self.browse(cr, uid, ids, context)
-                return MyClass.foo(records)
-
-        Note that the wrapper method uses the docstring of the first method.
-    """
-    # retrieve method_v8 from the caller's frame
-    frame = currentframe().f_back
-    return frame.f_locals.get(method_v7.__name__, method_v7)
-
-
-def v8(method_v8):
-    """ Decorate a method that supports the new-style api only. An old-style api
-        may be provided by redefining a method with the same name and decorated
-        with :func:`~.v7`::
-
-            @api.v8
-            def foo(self):
-                ...
-
-            @api.v7
-            def foo(self, cr, uid, ids, context=None):
-                ...
-
-        Note that the wrapper method uses the docstring of the first method.
-    """
-    if method_v8.__name__ == 'read':
-        return multi(method_v8)
-    method_v8._api = 'v8'
-    return method_v8
-
-
-def noguess(method):
-    """ Decorate a method to prevent any effect from :func:`guess`. """
-    method._api = None
-    return method
-
-
-def guess(method):
-    """ Decorate ``method`` to make it callable in both traditional and record
-        styles. This decorator is applied automatically by the model's
-        metaclass, and has no effect on already-decorated methods.
-
-        The API style is determined by heuristics on the parameter names: ``cr``
-        or ``cursor`` for the cursor, ``uid`` or ``user`` for the user id,
-        ``id`` or ``ids`` for a list of record ids, and ``context`` for the
-        context dictionary. If a traditional API is recognized, one of the
-        decorators :func:`cr`, :func:`cr_context`, :func:`cr_uid`,
-        :func:`cr_uid_context`, :func:`cr_uid_id`, :func:`cr_uid_id_context`,
-        :func:`cr_uid_ids`, :func:`cr_uid_ids_context` is applied on the method.
-
-        Method calls are considered traditional style when their first parameter
-        is a database cursor.
-    """
-    if hasattr(method, '_api'):
-        return method
-
-    # introspection on argument names to determine api style
-    args, vname, kwname, defaults = getargspec(method)
-    names = tuple(args) + (None,) * 4
-
-    if names[0] == 'self':
-        if names[1] in ('cr', 'cursor'):
-            if names[2] in ('uid', 'user'):
-                if names[3] == 'ids':
-                    if 'context' in names or kwname:
-                        return cr_uid_ids_context(method)
-                    else:
-                        return cr_uid_ids(method)
-                elif names[3] == 'id' or names[3] == 'res_id':
-                    if 'context' in names or kwname:
-                        return cr_uid_id_context(method)
-                    else:
-                        return cr_uid_id(method)
-                elif 'context' in names or kwname:
-                    return cr_uid_context(method)
-                else:
-                    return cr_uid(method)
-            elif 'context' in names:
-                return cr_context(method)
-            else:
-                return cr(method)
-
-    # no wrapping by default
-    return noguess(method)
-
-
-def expected(decorator, func):
-    """ Decorate ``func`` with ``decorator`` if ``func`` is not wrapped yet. """
-    return decorator(func) if not hasattr(func, '_api') else func
 
 
 def _call_kw_model(method, self, args, kwargs):
@@ -750,7 +395,8 @@ class Environment(Mapping):
 
         - :attr:`cr`, the current database cursor;
         - :attr:`uid`, the current user id;
-        - :attr:`context`, the current context dictionary.
+        - :attr:`context`, the current context dictionary;
+        - :attr:`su`, whether in superuser mode.
 
         It provides access to the registry by implementing a mapping from model
         names to new api models. It also holds a cache for records, and a data
@@ -782,9 +428,11 @@ class Environment(Mapping):
         """
         cls._local.environments = Environments()
 
-    def __new__(cls, cr, uid, context):
+    def __new__(cls, cr, uid, context, su=False):
+        if uid == SUPERUSER_ID:
+            su = True
         assert context is not None
-        args = (cr, uid, context)
+        args = (cr, uid, context, su)
 
         # if env already exists, return it
         env, envs = None, cls.envs
@@ -794,12 +442,12 @@ class Environment(Mapping):
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
-        self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
+        args = (cr, uid, frozendict(context), su)
+        self.cr, self.uid, self.context, self.su = self.args = args
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
-        self._cache_key = (cr, uid)
+        self._cache_key = (cr, uid, su)
         self._protected = StackMap()                # {field: ids, ...}
-        self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
@@ -833,26 +481,42 @@ class Environment(Mapping):
     def __hash__(self):
         return object.__hash__(self)
 
-    def __call__(self, cr=None, user=None, context=None):
+    def __call__(self, cr=None, user=None, context=None, su=None):
         """ Return an environment based on ``self`` with modified parameters.
 
             :param cr: optional database cursor to change the current cursor
             :param user: optional user/user id to change the current user
             :param context: optional context dictionary to change the current context
+            :param su: optional boolean to change the superuser mode
         """
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
-        return Environment(cr, uid, context)
+        su = (user is None and self.su) if su is None else su
+        return Environment(cr, uid, context, su)
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ return the record corresponding to the given ``xml_id`` """
         return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
 
+    def is_superuser(self):
+        """ Return whether the environment is in superuser mode. """
+        return self.su
+
+    def is_admin(self):
+        """ Return whether the current user has group "Access Rights", or is in
+            superuser mode. """
+        return self.su or self.user._is_admin()
+
+    def is_system(self):
+        """ Return whether the current user has group "Settings", or is in
+            superuser mode. """
+        return self.su or self.user._is_system()
+
     @property
     def user(self):
         """ return the current user (as an instance) """
-        return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
+        return self(su=True)['res.users'].browse(self.uid)
 
     @property
     def company(self):
@@ -905,7 +569,6 @@ class Environment(Mapping):
                 yield
             finally:
                 self.all.in_draft = False
-                self.dirty.clear()
 
     @property
     def in_draft(self):

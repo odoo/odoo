@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, float_round
 
@@ -15,7 +14,7 @@ class ChangeProductionQty(models.TransientModel):
     mo_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True)
     product_qty = fields.Float(
         'Quantity To Produce',
-        digits=dp.get_precision('Product Unit of Measure'), required=True)
+        digits='Product Unit of Measure', required=True)
 
     @api.model
     def default_get(self, fields):
@@ -57,6 +56,9 @@ class ChangeProductionQty(models.TransientModel):
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             documents = {}
             for line, line_data in lines:
+                if line.child_bom_id and line.child_bom_id.type == 'phantom' or\
+                        line.product_id.type not in ['product', 'consu']:
+                    continue
                 move, old_qty, new_qty = production._update_raw_move(line, line_data)
                 iterate_key = production._get_document_iterate_key(move)
                 if iterate_key:

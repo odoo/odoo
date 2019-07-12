@@ -47,7 +47,6 @@ class ResUsers(models.Model):
         current_website = self.env['website'].get_current_website()
         return current_website.auth_signup_uninvited or super(ResUsers, self)._get_signup_invitation_scope()
 
-    @api.model_cr_context
     def _auto_init(self):
         result = super(ResUsers, self)._auto_init()
         # Use unique index to implement unique constraint per website, even if website_id is null

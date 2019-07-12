@@ -33,7 +33,6 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 ACTION_DICT = {
-    'view_type': 'form',
     'view_mode': 'form',
     'res_model': 'base.module.upgrade',
     'target': 'new',
@@ -65,7 +64,7 @@ def assert_log_admin_access(method):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
         log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
             raise AccessDenied()
         _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
@@ -888,7 +887,7 @@ class Module(models.Model):
             for mod in update_mods
         }
         mod_names = topological_sort(mod_dict)
-        self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
+        self.env['ir.translation']._load_module_terms(mod_names, filter_lang)
 
     @api.multi
     def _check(self):
@@ -939,10 +938,10 @@ class ModuleDependency(models.Model):
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
-    @api.one
     @api.depends('depend_id.state')
     def _compute_state(self):
-        self.state = self.depend_id.state or 'unknown'
+        for dependency in self:
+            dependency.state = dependency.depend_id.state or 'unknown'
 
 
 class ModuleExclusion(models.Model):
@@ -971,7 +970,7 @@ class ModuleExclusion(models.Model):
         for excl in self:
             excl.exclusion_id = name_mod.get(excl.name)
 
-    @api.one
     @api.depends('exclusion_id.state')
     def _compute_state(self):
-        self.state = self.exclusion_id.state or 'unknown'
+        for exclusion in self:
+            exclusion.state = exclusion.exclusion_id.state or 'unknown'

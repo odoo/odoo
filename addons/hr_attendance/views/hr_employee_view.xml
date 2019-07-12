@@ -7,7 +7,7 @@
         <field name="priority">10</field>
         <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <xpath expr="//button[@name='toggle_active']" position="before">
                 <field name="attendance_state" invisible="1"/>
                 <button name="%(hr_attendance_action_employee)d"
                     class="oe_stat_button"
@@ -18,8 +18,6 @@
                         <span class="o_stat_text">Attendance</span>
                     </div>
                 </button>
-            </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="%(hr_attendance_action)d"
                         class="oe_stat_button"
                         icon="fa-calendar"
@@ -101,6 +99,7 @@
         <field name="arch" type="xml">
             <kanban class="o_hr_employee_attendance_kanban" create="false">
                 <field name="attendance_state"/>
+                <field name="hours_today"/>
                 <field name="id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -162,6 +161,7 @@
         <field name="res_model">hr.employee</field>
         <field name="view_mode">kanban,tree,activity</field>
         <field name="view_id" ref="hr_employees_view_kanban"/>
+        <field name="target">fullscreen</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new employee

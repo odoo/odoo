@@ -306,7 +306,7 @@ class IrFieldsConverter(models.AbstractModel):
         warnings = []
         error_msg = ''
         action = {'type': 'ir.actions.act_window', 'target': 'new',
-                  'view_mode': 'tree,form', 'view_type': 'form',
+                  'view_mode': 'tree,form',
                   'views': [(False, 'tree'), (False, 'form')],
                   'help': _(u"See all possible values")}
         if subfield is None:

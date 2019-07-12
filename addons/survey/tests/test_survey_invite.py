@@ -32,7 +32,7 @@ class TestSurveyInvite(common.SurveyCase):
             # no questions
             self.env['survey.survey'].create({'title': 'Test survey', 'question_and_page_ids': [(0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1})]}),
             # closed
-            self.env['survey.survey'].sudo(self.survey_manager).create({
+            self.env['survey.survey'].with_user(self.survey_manager).create({
                 'title': 'S0',
                 'state': 'closed',
                 'question_and_page_ids': [

@@ -40,7 +40,7 @@ class TestRecordCache(TransactionCase):
             check1(record, ref, ref_val)
 
         foo1, bar1 = Model.browse([1, 2])
-        foo2, bar2 = Model.sudo(self.env.ref('base.user_demo')).browse([1, 2])
+        foo2, bar2 = Model.with_user(self.env.ref('base.user_demo')).browse([1, 2])
         self.assertNotEqual(foo1.env.uid, foo2.env.uid)
 
         # cache is empty

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -51,9 +50,9 @@ class SaleOrderTemplateLine(models.Model):
         ondelete='cascade', index=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])
-    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
-    discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
-    product_uom_qty = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
+    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
+    discount = fields.Float('Discount (%)', digits='Discount', default=0.0)
+    product_uom_qty = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
 
     display_type = fields.Selection([
@@ -109,10 +108,10 @@ class SaleOrderTemplateOption(models.Model):
         index=True, required=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
-    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
-    discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
+    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
+    discount = fields.Float('Discount (%)', digits='Discount')
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
-    quantity = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
+    quantity = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

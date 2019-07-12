@@ -34,7 +34,7 @@ class TestCrmMailActivity(TestCrmCases):
 
         # I create an opportunity, as salesman
         self.partner_client = self.env.ref("base.res_partner_1")
-        self.lead = self.env['crm.lead'].sudo(self.crm_salesman.id).create({
+        self.lead = self.env['crm.lead'].with_user(self.crm_salesman).create({
             'name': 'Test Opp',
             'type': 'opportunity',
             'partner_id': self.partner_client.id,
@@ -61,7 +61,7 @@ class TestCrmMailActivity(TestCrmCases):
         # Add sale manager as follower of default subtypes
         self.lead.message_subscribe([self.crm_salemanager.partner_id.id], subtype_ids=[self.env.ref('mail.mt_activities').id, self.env.ref('mail.mt_comment').id])
 
-        activity = self.env['mail.activity'].sudo(self.crm_salesman.id).create({
+        activity = self.env['mail.activity'].with_user(self.crm_salesman).create({
             'activity_type_id': self.activity1.id,
             'note': 'Content of the activity to log',
             'res_id': self.lead.id,
@@ -84,7 +84,7 @@ class TestCrmMailActivity(TestCrmCases):
         """ This test case set the next activity on a lead, log another, and schedule a third. """
         # Add the next activity (like we set it from a form view)
         lead_model_id = self.env['ir.model']._get('crm.lead').id
-        activity = self.env['mail.activity'].sudo(self.crm_salesman.id).create({
+        activity = self.env['mail.activity'].with_user(self.crm_salesman).create({
             'activity_type_id': self.activity1.id,
             'summary': 'My Own Summary',
             'res_id': self.lead.id,

@@ -7,17 +7,20 @@ from odoo import fields, models
 class MassMailingList(models.Model):
     _inherit = 'mail.mass_mailing.list'
 
-    def _default_popup_content(self):
-        return """<div class="modal-header text-center">
-    <h3 class="modal-title mt8">Odoo Presents</h3>
-</div>
-<div class="o_popup_message">
-    <font>7</font>
-    <strong>Business Hacks</strong>
-    <span> to<br/>boost your marketing</span>
-</div>
-<p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"""
+    def _default_toast_content(self):
+        return '<p>Thanks for subscribing!</p>'
 
-    popup_content = fields.Html(string="Website Popup Content", translate=True, sanitize_attributes=False,
-                                default=_default_popup_content)
-    popup_redirect_url = fields.Char(string="Website Popup Redirect URL", default='/')
+    website_popup_ids = fields.One2many('website.mass_mailing.popup', 'mailing_list_id', string="Website Popups")
+    toast_content = fields.Html(default=_default_toast_content, translate=True)
+
+
+class MassMailingPopup(models.Model):
+    _name = 'website.mass_mailing.popup'
+    _description = "Mailing list popup"
+
+    def _default_popup_content(self):
+        return self.env['ir.ui.view'].render_template('website_mass_mailing.s_newsletter_block')
+
+    mailing_list_id = fields.Many2one('mail.mass_mailing.list')
+    website_id = fields.Many2one('website')
+    popup_content = fields.Html(string="Website Popup Content", default=_default_popup_content, translate=True, sanitize=False)

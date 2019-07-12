@@ -26,13 +26,20 @@ class Menu(models.Model):
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+    group_ids = fields.Many2many('res.groups', string='Visible Groups',
+                                 help="User need to be at least in one of these groups to see the menu")
 
     @api.multi
     def name_get(self):
+        if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
+            return super(Menu, self).name_get()
+
         res = []
         for menu in self:
-            website_suffix = '%s - %s' % (menu.name, menu.website_id.name)
-            res.append((menu.id, website_suffix if menu.website_id and self.env.user.has_group('website.group_multi_website') else menu.name))
+            menu_name = menu.name
+            if menu.website_id:
+                menu_name += ' [%s]' % menu.website_id.name
+            res.append((menu.id, menu_name))
         return res
 
     @api.model
@@ -77,12 +84,12 @@ class Menu(models.Model):
                                                                 ('id', '!=', menu.id)])
         return super(Menu, menus_to_remove).unlink()
 
-    @api.one
     def _compute_visible(self):
-        visible = True
-        if self.page_id and not self.page_id.sudo().is_visible and not self.user_has_groups('base.group_user'):
-            visible = False
-        self.is_visible = visible
+        for menu in self:
+            visible = True
+            if menu.page_id and not menu.page_id.sudo().is_visible and not menu.user_has_groups('base.group_user'):
+                visible = False
+            menu.is_visible = visible
 
     @api.model
     def clean_url(self):

@@ -17,7 +17,6 @@ class AccountAnalyticLine(models.Model):
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
 
-    @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
         if not self.product_id:

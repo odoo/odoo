@@ -52,7 +52,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml
-@@ -125,11 +125,22 @@
+@@ -124,10 +124,21 @@
              </field>
          </record>
  
@@ -70,7 +70,6 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
          <record model="ir.actions.act_window" id="session_list_action">
              <field name="name">Sessions</field>
              <field name="res_model">openacademy.session</field>
-             <field name="view_type">form</field>
 -            <field name="view_mode">tree,form</field>
 +            <field name="view_mode">tree,form,calendar</field>
          </record>

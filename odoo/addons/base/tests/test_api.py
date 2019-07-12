@@ -185,7 +185,7 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(p.env, self.env)
 
         # create record instances attached to demo_env
-        demo_partners = partners.sudo(demo)
+        demo_partners = partners.with_user(demo)
         self.assertEqual(demo_partners.env, demo_env)
         for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
             self.assertEqual(x.env, demo_env)
@@ -330,7 +330,7 @@ class TestAPI(common.TransactionCase):
 
         # the recordset operations below share the prefetch set
         same_prefetch(partners, partners.browse(partners.ids))
-        same_prefetch(partners, partners.sudo(self.env.ref('base.user_demo')))
+        same_prefetch(partners, partners.with_user(self.env.ref('base.user_demo')))
         same_prefetch(partners, partners.with_context(active_test=False))
         same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch_ids))
 

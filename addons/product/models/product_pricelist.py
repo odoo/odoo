@@ -6,7 +6,6 @@ from itertools import chain
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 
-from odoo.addons import decimal_precision as dp
 
 
 class Pricelist(models.Model):
@@ -290,12 +289,6 @@ class Pricelist(models.Model):
         self.ensure_one()
         return self._compute_price_rule([(product, quantity, partner)], date=date, uom_id=uom_id)[product.id]
 
-    # Compatibility to remove after v10 - DEPRECATED
-    @api.model
-    def _price_rule_get_multi(self, pricelist, products_by_qty_by_partner):
-        """ Low level method computing the result tuple for a given pricelist and multi products - return tuple """
-        return pricelist._compute_price_rule(products_by_qty_by_partner)
-
     @api.multi
     def price_get(self, prod_id, qty, partner=None):
         """ Multi pricelist, mono product - returns price per pricelist """
@@ -317,16 +310,6 @@ class Pricelist(models.Model):
         """ Mono pricelist, multi product - return price per product """
         return pricelist.get_products_price(
             list(zip(**products_by_qty_by_partner)))
-
-    # DEPRECATED (Not used anymore, see d39d583b2) -> Remove me in master (saas12.3)
-    def _get_partner_pricelist(self, partner_id, company_id=None):
-        """ Retrieve the applicable pricelist for a given partner in a given company.
-
-            :param company_id: if passed, used for looking up properties,
-             instead of current user's company
-        """
-        res = self._get_partner_pricelist_multi([partner_id], company_id)
-        return res[partner_id].id
 
     def _get_partner_pricelist_multi_search_domain_hook(self):
         return []
@@ -440,19 +423,19 @@ class PricelistItem(models.Model):
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade')
     price_surcharge = fields.Float(
-        'Price Surcharge', digits=dp.get_precision('Product Price'),
+        'Price Surcharge', digits='Product Price',
         help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')
     price_discount = fields.Float('Price Discount', default=0, digits=(16, 2))
     price_round = fields.Float(
-        'Price Rounding', digits=dp.get_precision('Product Price'),
+        'Price Rounding', digits='Product Price',
         help="Sets the price so that it is a multiple of this value.\n"
              "Rounding is applied after the discount and before the surcharge.\n"
              "To have prices that end in 9.99, set rounding 10, surcharge -0.01")
     price_min_margin = fields.Float(
-        'Min. Price Margin', digits=dp.get_precision('Product Price'),
+        'Min. Price Margin', digits='Product Price',
         help='Specify the minimum amount of margin over the base price.')
     price_max_margin = fields.Float(
-        'Max. Price Margin', digits=dp.get_precision('Product Price'),
+        'Max. Price Margin', digits='Product Price',
         help='Specify the maximum amount of margin over the base price.')
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -466,7 +449,7 @@ class PricelistItem(models.Model):
         ('fixed', 'Fix Price'),
         ('percentage', 'Percentage (discount)'),
         ('formula', 'Formula')], index=True, default='fixed')
-    fixed_price = fields.Float('Fixed Price', digits=dp.get_precision('Product Price'))
+    fixed_price = fields.Float('Fixed Price', digits='Product Price')
     percent_price = fields.Float('Percentage Price')
     # functional fields used for usability purposes
     name = fields.Char(
@@ -488,25 +471,25 @@ class PricelistItem(models.Model):
             raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
         return True
 
-    @api.one
     @api.depends('categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
         'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
     def _get_pricelist_item_name_price(self):
-        if self.categ_id:
-            self.name = _("Category: %s") % (self.categ_id.name)
-        elif self.product_tmpl_id:
-            self.name = self.product_tmpl_id.name
-        elif self.product_id:
-            self.name = self.product_id.display_name.replace('[%s]' % self.product_id.code, '')
-        else:
-            self.name = _("All Products")
+        for item in self:
+            if item.categ_id:
+                item.name = _("Category: %s") % (item.categ_id.name)
+            elif item.product_tmpl_id:
+                item.name = item.product_tmpl_id.name
+            elif item.product_id:
+                item.name = item.product_id.display_name.replace('[%s]' % item.product_id.code, '')
+            else:
+                item.name = _("All Products")
 
-        if self.compute_price == 'fixed':
-            self.price = ("%s %s") % (self.fixed_price, self.pricelist_id.currency_id.name)
-        elif self.compute_price == 'percentage':
-            self.price = _("%s %% discount") % (self.percent_price)
-        else:
-            self.price = _("%s %% discount and %s surcharge") % (self.price_discount, self.price_surcharge)
+            if item.compute_price == 'fixed':
+                item.price = ("%s %s") % (item.fixed_price, item.pricelist_id.currency_id.name)
+            elif item.compute_price == 'percentage':
+                item.price = _("%s %% discount") % (item.percent_price)
+            else:
+                item.price = _("%s %% discount and %s surcharge") % (item.price_discount, item.price_surcharge)
 
     @api.onchange('applied_on')
     def _onchange_applied_on(self):

@@ -10,10 +10,7 @@ class AccountInvoiceReport(models.Model):
     team_id = fields.Many2one('crm.team', string='Sales Team')
 
     def _select(self):
-        return super(AccountInvoiceReport, self)._select() + ", sub.team_id as team_id"
-
-    def _sub_select(self):
-        return super(AccountInvoiceReport, self)._sub_select() + ", ai.team_id as team_id"
+        return super(AccountInvoiceReport, self)._select() + ", move.team_id as team_id"
 
     def _group_by(self):
-        return super(AccountInvoiceReport, self)._group_by() + ", ai.team_id"
+        return super(AccountInvoiceReport, self)._group_by() + ", move.team_id"

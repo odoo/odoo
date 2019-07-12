@@ -56,9 +56,9 @@ class StockRule(models.Model):
         required=True)
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
-    propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
-        help="When ticked, if the move is splitted or cancelled, the next move will be too.")
+    propagate_cancel = fields.Boolean(
+        'Cancel Next Move', default=False, oldname='propagate',
+        help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
@@ -74,14 +74,21 @@ class StockRule(models.Model):
         help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
         help='The change must be higher than this value to be propagated', default=1)
+    delay_alert = fields.Boolean(
+        'Alert if Delay',
+        help='Log an exception on the picking if this move has to be delayed (due to a change in the previous move scheduled date).',
+    )
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
         """ Modify locations to the default picking type's locations source and
         destination.
+        Enable the delay alert if the picking type is a delivery
         """
         self.location_src_id = self.picking_type_id.default_location_src_id.id
         self.location_id = self.picking_type_id.default_location_dest_id.id
+        if self.picking_type_id.code == 'outgoing':
+            self.delay_alert = True
 
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
@@ -170,8 +177,9 @@ class StockRule(models.Model):
             'company_id': self.company_id.id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
+            'delay_alert': self.delay_alert
         }
         return new_move_vals
 
@@ -265,11 +273,12 @@ class StockRule(models.Model):
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_expected,
             'date_expected': date_expected,
-            'propagate': self.propagate,
+            'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
+            'delay_alert': self.delay_alert,
         }
         for field in self._get_custom_move_fields():
             if field in values:
@@ -280,9 +289,9 @@ class StockRule(models.Model):
         existing_activity = self.env['mail.activity'].search([('res_id', '=',  product_id.product_tmpl_id.id), ('res_model_id', '=', self.env.ref('product.model_product_template').id),
                                                               ('note', '=', note)])
         if not existing_activity:
-            # If the user deleted todo activity type.
+            # If the user deleted warning activity type.
             try:
-                activity_type_id = self.env.ref('mail.mail_activity_data_todo').id
+                activity_type_id = self.env.ref('mail.mail_activity_data_warning').id
             except:
                 activity_type_id = False
             self.env['mail.activity'].create({
@@ -348,8 +357,8 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                errors.append(_('No procurement rule found in location "%s" for product "%s".\n Check routes configuration.') %
-                    (procurement.location_id.display_name, procurement.product_id.display_name))
+                errors.append(_('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %
+                    (procurement.product_id.display_name, procurement.location_id.display_name))
             else:
                 action = 'pull' if rule.action == 'pull_push' else rule.action
                 actions_to_run[action].append((procurement, rule))

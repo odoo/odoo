@@ -114,6 +114,7 @@
                 <field name="validation_type"/>
                 <field name="validity_start"/>
                 <field name="validity_stop"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -122,7 +123,6 @@
         <field name="name">Time Off Types</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave.type</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
 

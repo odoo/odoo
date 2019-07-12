@@ -80,7 +80,7 @@ class MassMailController(http.Controller):
                 })
         return request.redirect('/web')
 
-    @http.route('/mail/mailing/unsubscribe', type='json', auth='none')
+    @http.route('/mail/mailing/unsubscribe', type='json', auth='public')
     def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email, res_id, token):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
@@ -91,7 +91,7 @@ class MassMailController(http.Controller):
             return True
         return 'error'
 
-    @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='none')
+    @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='public')
     def track_mail_open(self, mail_id, **post):
         """ Email tracking. """
         request.env['mail.mail.statistics'].sudo().set_opened(mail_mail_ids=[mail_id])
@@ -101,7 +101,7 @@ class MassMailController(http.Controller):
 
         return response
 
-    @http.route('/r/<string:code>/m/<int:stat_id>', type='http', auth="none")
+    @http.route('/r/<string:code>/m/<int:stat_id>', type='http', auth="public")
     def full_url_redirect(self, code, stat_id, **post):
         # don't assume geoip is set, it is part of the website module
         # which mass_mailing doesn't depend on
@@ -115,7 +115,7 @@ class MassMailController(http.Controller):
         )
         return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
 
-    @http.route('/mailing/blacklist/check', type='json', auth='none')
+    @http.route('/mailing/blacklist/check', type='json', auth='public')
     def blacklist_check(self, mailing_id, res_id, email, token):
         if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
             return 'unauthorized'
@@ -126,7 +126,7 @@ class MassMailController(http.Controller):
             return False
         return 'error'
 
-    @http.route('/mailing/blacklist/add', type='json', auth='none')
+    @http.route('/mailing/blacklist/add', type='json', auth='public')
     def blacklist_add(self, mailing_id, res_id, email, token):
         if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
             return 'unauthorized'
@@ -138,7 +138,7 @@ class MassMailController(http.Controller):
             return True
         return 'error'
 
-    @http.route('/mailing/blacklist/remove', type='json', auth='none')
+    @http.route('/mailing/blacklist/remove', type='json', auth='public')
     def blacklist_remove(self, mailing_id, res_id, email, token):
         if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
             return 'unauthorized'
@@ -150,7 +150,7 @@ class MassMailController(http.Controller):
             return True
         return 'error'
 
-    @http.route('/mailing/feedback', type='json', auth='none')
+    @http.route('/mailing/feedback', type='json', auth='public')
     def send_feedback(self, mailing_id, res_id, email, feedback, token):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists() and email:

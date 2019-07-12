@@ -6,7 +6,6 @@
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Recruitment / Applicants Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
-        <field name="view_type">form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="help" type="html">
@@ -43,6 +42,7 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -474,7 +474,6 @@
     <record id="create_job_simple" model="ir.actions.act_window">
         <field name="name">Create a Job Position</field>
         <field name="res_model">hr.job</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="hr_job_simple_form"/>
         <field name="target">new</field>
@@ -532,7 +531,6 @@
          <record model="ir.actions.act_window" id="action_hr_job_config">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('hr.view_hr_job_tree')}),
@@ -648,27 +646,6 @@
             </xpath>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="hr_applicant_resumes">
-        <field name="name">Resumes and Letters</field>
-        <field name="res_model">ir.attachment</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="view_id" ref="mail.view_document_file_kanban"/>
-        <field name="search_view_id" ref="ir_attachment_view_search_inherit_hr_recruitment"/>
-        <field name="domain">[('res_model','=','hr.applicant')]</field>
-        <field name="context">{'create': False}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No document yet
-            </p><p>
-                This menu helps you search through resumes and motivation
-                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
-                files so that you can search keywords from the content of these
-                files.
-            </p>
-        </field>
-    </record>
-    <menuitem name="Resumes and Letters" parent="hr_recruitment.menu_hr_recruitment_root" id="menu_crm_case_categ0_act_job02" action="hr_applicant_resumes" sequence="3"/>
 
     <!-- Stage Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
@@ -749,7 +726,6 @@
     <record id="hr_recruitment_stage_act" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
         <field name="help" type="html">
@@ -790,7 +766,6 @@
     <record id="hr_applicant_category_action" model="ir.actions.act_window">
         <field name="name">Tags</field>
         <field name="res_model">hr.applicant.category</field>
-        <field name="view_type">form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new tag
@@ -836,7 +811,6 @@
     <record id="hr_recruitment_degree_action" model="ir.actions.act_window">
         <field name="name">Degree</field>
         <field name="res_model">hr.recruitment.degree</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="hr_recruitment_degree_tree"/>
     </record>
 
@@ -862,7 +836,6 @@
     <record id="hr_recruitment_source_action" model="ir.actions.act_window">
         <field name="name">Sources of Applicants</field>
         <field name="res_model">hr.recruitment.source</field>
-        <field name="view_type">form</field>
     </record>
 
     <menuitem
@@ -898,7 +871,6 @@
     <record id="hr_employee_action_from_department" model="ir.actions.act_window">
         <field name="name">Newly Hired Employees</field>
         <field name="res_model">hr.employee</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{
             'search_default_newly_hired_employee': 1,
@@ -971,7 +943,6 @@
     <record id="hr_applicant_action_analysis" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="hr_applicant_view_search"/>
         <field name="view_ids" eval="[
@@ -980,12 +951,13 @@
             (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')})]"/>
         <field name="context">{}</field>  <!-- force empty -->
     </record>
-    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
-    sequence="99" action="hr_applicant_action_analysis"/>
+    <menuitem name="Reporting" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
+    sequence="99"/>
+    <menuitem name="Recruitment Analysis" id="hr_applicant_report_menu" parent="report_hr_recruitment"
+    sequence="50" action="hr_applicant_action_analysis"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="hr_applicant_view_search"/>
         <field name="context">{
@@ -997,7 +969,6 @@
     <record id="action_hr_recruitment_report_filtered_job" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="hr_applicant_view_search"/>
         <field name="context">{

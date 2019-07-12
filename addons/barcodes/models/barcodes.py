@@ -188,17 +188,17 @@ class BarcodeRule(models.Model):
     pattern = fields.Char(string='Barcode Pattern', size=32, help="The barcode matching pattern", required=True, default='.*')
     alias = fields.Char(string='Alias', size=32, default='0', help='The matched pattern will alias to this barcode', required=True)
 
-    @api.one
     @api.constrains('pattern')
     def _check_pattern(self):
-        p = self.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
-        findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
-        if len(findall) == 2: 
-            if not re.search("[{][N]*[D]*[}]", p):
-                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": braces can only contain N's followed by D's."))
-            elif re.search("[{][}]", p):
-                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": empty braces."))
-        elif len(findall) != 0:
-            raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": a rule can only contain one pair of braces."))
-        elif p == '*':
-            raise ValidationError(_(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"))
+        for rule in self:
+            p = rule.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
+            findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
+            if len(findall) == 2:
+                if not re.search("[{][N]*[D]*[}]", p):
+                    raise ValidationError(_("There is a syntax error in the barcode pattern ") + rule.pattern + _(": braces can only contain N's followed by D's."))
+                elif re.search("[{][}]", p):
+                    raise ValidationError(_("There is a syntax error in the barcode pattern ") + rule.pattern + _(": empty braces."))
+            elif len(findall) != 0:
+                raise ValidationError(_("There is a syntax error in the barcode pattern ") + rule.pattern + _(": a rule can only contain one pair of braces."))
+            elif p == '*':
+                raise ValidationError(_(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"))

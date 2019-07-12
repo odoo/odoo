@@ -129,10 +129,10 @@ class Channel(models.Model):
     moderation_guidelines = fields.Boolean(string="Send guidelines to new subscribers", help="Newcomers on this moderated channel will automatically receive the guidelines.")
     moderation_guidelines_msg = fields.Text(string="Guidelines")
 
-    @api.one
     @api.depends('channel_partner_ids')
     def _compute_is_subscribed(self):
-        self.is_subscribed = self.env.user.partner_id in self.channel_partner_ids
+        for channel in self:
+            channel.is_subscribed = self.env.user.partner_id in channel.channel_partner_ids
 
     @api.multi
     @api.depends('moderator_ids')
@@ -187,9 +187,7 @@ class Channel(models.Model):
 
     @api.onchange('public')
     def _onchange_public(self):
-        if self.public == 'public':
-            self.alias_contact = 'everyone'
-        else:
+        if self.public != 'public' and self.alias_contact == 'everyone':
             self.alias_contact = 'followers'
 
     @api.onchange('moderator_ids')
@@ -412,7 +410,6 @@ class Channel(models.Model):
             return True
         return super(Channel, self)._alias_check_contact(message, message_dict, alias)
 
-    @api.model_cr
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
         if not self._cr.fetchone():
@@ -502,7 +499,7 @@ class Channel(models.Model):
         for partner in self.env['res.partner'].browse(partner_ids):
             user_id = partner.user_ids and partner.user_ids[0] or False
             if user_id:
-                for channel_info in self.sudo(user_id).channel_info():
+                for channel_info in self.with_user(user_id).channel_info():
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
 

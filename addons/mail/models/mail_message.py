@@ -9,7 +9,7 @@ from operator import itemgetter
 from email.utils import formataddr
 from openerp.http import request
 
-from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
+from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools import groupby
@@ -352,7 +352,7 @@ class Message(models.Model):
         tracking_tree = dict.fromkeys(tracking_values.ids, False)
         for tracking in tracking_values:
             groups = tracking.field_groups
-            if not groups or self.user_has_groups(groups):
+            if not groups or self.env.is_superuser() or self.user_has_groups(groups):
                 message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
                 tracking_tree[tracking.id] = {
                     'id': tracking.id,
@@ -585,7 +585,6 @@ class Message(models.Model):
     # mail_message internals
     #------------------------------------------------------
 
-    @api.model_cr
     def init(self):
         self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not self._cr.fetchone():
@@ -637,7 +636,7 @@ class Message(models.Model):
         - otherwise: remove the id
         """
         # Rules do not apply to administrator
-        if self._uid == SUPERUSER_ID:
+        if self.env.is_superuser():
             return super(Message, self)._search(
                 args, offset=offset, limit=limit, order=order,
                 count=count, access_rights_uid=access_rights_uid)
@@ -658,7 +657,7 @@ class Message(models.Model):
         model_ids = {}
 
         # check read access rights before checking the actual rules on the given ids
-        super(Message, self.sudo(access_rights_uid or self._uid)).check_access_rights('read')
+        super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
         self._cr.execute("""
             SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
@@ -739,7 +738,7 @@ class Message(models.Model):
                     model_record_ids.setdefault(vals['model'], set()).add(vals['res_id'])
             return model_record_ids
 
-        if self._uid == SUPERUSER_ID:
+        if self.env.is_superuser():
             return
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env['res.users'].has_group('base.group_user'):
@@ -750,8 +749,9 @@ class Message(models.Model):
                                 WHERE message.message_type = %%s AND (message.subtype_id IS NULL OR subtype.internal IS TRUE) AND message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
             if self._cr.fetchall():
                 raise AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-                    (self._description, operation))
+                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
+                    + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
+                )
 
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
@@ -956,8 +956,9 @@ class Message(models.Model):
         if not self.browse(messages_to_check).exists():
             return
         raise AccessError(
-            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-            (self._description, operation))
+            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
+            + ' - ({} {}, {} {})'.format(_('Records:'), list(messages_to_check)[:6], _('User:'), self._uid)
+        )
 
     @api.model
     def _get_record_name(self, values):

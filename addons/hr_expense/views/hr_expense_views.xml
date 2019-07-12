@@ -36,6 +36,7 @@
                     <field name="sheet_id" invisible="not context.get('show_report', False)"/>
                     <field name="payment_mode"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <button name="action_get_attachment_view" string="View Attached Documents" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
@@ -76,6 +77,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="is_editable" invisible="1"/>
+                            <field name="is_ref_editable" invisible="1"/>
                             <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"
                                    widget="many2one_barcode"
                             />
@@ -85,16 +88,16 @@
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
-                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user"/>
+                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                         </group><group>
-                            <field name="reference"/>
+                            <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
                             <field name="date"/>
-                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group><group>
                             <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -367,7 +370,6 @@
         <record id="hr_expense_product" model="ir.actions.act_window">
             <field name="name">Expense Products</field>
             <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service'}</field>
@@ -403,7 +405,6 @@
         <record id="action_approved_expense" model="ir.actions.act_window">
             <field name="name">Employee Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="domain">[]</field>
@@ -420,7 +421,6 @@
         <record id="action_unsubmitted_expense" model="ir.actions.act_window">
             <field name="name">Unreported Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="domain">[]</field>
@@ -437,7 +437,6 @@
         <record id="hr_expense_action" model="ir.actions.act_window">
             <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_approved': 1,
@@ -458,6 +457,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -506,7 +506,7 @@
                     </group>
                      <notebook>
                         <page name="expenses" string="Expense">
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'expense_adding_line': True}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'expense_adding_line': True}">
                             <tree decoration-danger="is_refused">
                                 <field name="date"/>
                                 <field name="name"/>
@@ -761,7 +761,6 @@
         <record id="action_request_approve_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_submitted': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -778,7 +777,6 @@
         <record id="action_request_to_post_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Post</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_to_post': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -795,7 +793,6 @@
         <record id="action_request_to_pay_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Pay</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -812,7 +809,6 @@
         <record id="action_hr_expense_sheet_department_to_approve" model="ir.actions.act_window">
             <field name="name">Expense Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="context">{
@@ -826,7 +822,6 @@
         <record id="action_hr_expense_sheet_department_filtered" model="ir.actions.act_window">
             <field name="name">Expense Reports Analysis</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_department_id': [active_id],
@@ -839,6 +834,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_expense"/>
             <field name="binding_model_id" ref="model_hr_expense"/>
+            <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
 if records:

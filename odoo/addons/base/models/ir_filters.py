@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ast
+import datetime
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 
 
 class IrFilters(models.Model):
@@ -41,7 +42,10 @@ class IrFilters(models.Model):
     @api.multi
     def _get_eval_domain(self):
         self.ensure_one()
-        return ast.literal_eval(self.domain)
+        return safe_eval(self.domain, {
+            'datetime': datetime,
+            'context_today': datetime.datetime.now,
+        })
 
     @api.model
     def _get_action_domain(self, action_id=None):
@@ -146,7 +150,6 @@ class IrFilters(models.Model):
         ('name_model_uid_unique', 'unique (name, model_id, user_id, action_id)', 'Filter names must be unique'),
     ]
 
-    @api.model_cr_context
     def _auto_init(self):
         result = super(IrFilters, self)._auto_init()
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)

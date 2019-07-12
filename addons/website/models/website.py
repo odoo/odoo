@@ -154,7 +154,7 @@ class Website(models.Model):
 
         self._get_languages.clear_cache(self)
         if 'company_id' in values and 'user_id' not in values:
-            public_user_to_change_websites = self.filtered(lambda w: w.user_id.company_id.id != values['company_id'])
+            public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
             if public_user_to_change_websites:
                 company = self.env['res.company'].browse(values['company_id'])
                 super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
@@ -820,3 +820,24 @@ class Website(models.Model):
             return ''
         res = urls.url_parse(self.domain)
         return 'http://' + self.domain if not res.scheme else self.domain
+
+
+class BaseModel(models.AbstractModel):
+    _inherit = 'base'
+
+    @api.multi
+    def get_base_url(self):
+        """
+        Returns baseurl about one given record.
+        If a website_id field exists in the current record we use the url
+        from this website as base url.
+
+        :return: the base url for this record
+        :rtype: string
+
+        """
+        self.ensure_one()
+        if 'website_id' in self and self.website_id.domain:
+            return self.website_id._get_http_domain()
+        else:
+            return super(BaseModel, self).get_base_url()

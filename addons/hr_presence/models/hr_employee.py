@@ -133,7 +133,7 @@ Please, take appropriate measures in order to carry out this work absence.
 Do not hesitate to contact your manager or the human resource department.""")
         return {
             "type": "ir.actions.act_window",
-            "res_model": "sms.send_sms",
+            "res_model": "sms.composer",
             "view_mode": 'form',
             "context": {
                 'active_id': self.id,
@@ -164,7 +164,6 @@ Do not hesitate to contact your manager or the human resource department.""")
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'views': [(compose_form.id, 'form')],

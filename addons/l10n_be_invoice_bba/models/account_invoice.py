@@ -10,12 +10,12 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 """
-account.invoice object: add support for Belgian structured communication
+account.move object: add support for Belgian structured communication
 """
 
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+class AccountMove(models.Model):
+    _inherit = 'account.move'
 
     @api.multi
     def _get_reference_be_partner(self):

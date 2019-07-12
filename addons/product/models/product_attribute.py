@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
@@ -76,7 +75,15 @@ class ProductAttributeValue(models.Model):
 
     @api.multi
     def name_get(self):
-        if not self._context.get('show_attribute', True):  # TDE FIXME: not used
+        """Override because in general the name of the value is confusing if it
+        is displayed without the name of the corresponding attribute.
+        Eg. on product list & kanban views, on BOM form view
+
+        However during variant set up (on the product template form) the name of
+        the attribute is already on each line so there is no need to repeat it
+        on every value.
+        """
+        if not self._context.get('show_attribute', True):
             return super(ProductAttributeValue, self).name_get()
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
@@ -136,7 +143,7 @@ class ProductTemplateAttributeLine(models.Model):
             raise ValidationError(_('You cannot use this attribute with the following value.'))
         return True
 
-    @api.model
+    @api.model_create_multi
     def create(self, values):
         res = super(ProductTemplateAttributeLine, self).create(values)
         res._update_product_template_attribute_values()
@@ -235,7 +242,7 @@ class ProductTemplateAttributeValue(models.Model):
     price_extra = fields.Float(
         string='Attribute Price Extra',
         default=0.0,
-        digits=dp.get_precision('Product Price'),
+        digits='Product Price',
         help="""Price Extra: Extra price for the variant with
         this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.""")
     exclude_for = fields.One2many(
@@ -248,8 +255,10 @@ class ProductTemplateAttributeValue(models.Model):
 
     @api.multi
     def name_get(self):
-        if not self._context.get('show_attribute', True):  # TDE FIXME: not used
-            return super(ProductTemplateAttributeValue, self).name_get()
+        """Override because in general the name of the value is confusing if it
+        is displayed without the name of the corresponding attribute.
+        Eg. on exclusion rules form
+        """
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
     @api.multi

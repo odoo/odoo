@@ -11,13 +11,13 @@
                     </span>
                     <h1>Bill Printing</h1>
                     <span class='button next'>
-                        Ok 
+                        Ok
                         <i class='fa fa-angle-double-right'></i>
                     </span>
                 </div>
                 <div class="centered-content">
                     <div class="button print">
-                        <i class='fa fa-print'></i> Print 
+                        <i class='fa fa-print'></i> Print
                     </div>
                     <div class="pos-receipt-container">
                     </div>
@@ -44,9 +44,6 @@
                 <br/>
             </t>
             <div font='b'>
-                <t t-if='receipt.shop.name'>
-                    <div><t t-esc='receipt.shop.name' /></div>
-                </t>
                 <t t-if='receipt.company.contact_address'>
                     <div><t t-esc='receipt.company.contact_address' /></div>
                 </t>
@@ -96,9 +93,9 @@
                                     <t t-esc='line.quantity' />
                                 </value>
                                 <t t-if='line.unit_name !== "Unit(s)"'>
-                                    <t t-esc='line.unit_name' /> 
+                                    <t t-esc='line.unit_name' />
                                 </t>
-                                x 
+                                x
                                 <value value-decimals='2'>
                                     <t t-esc='line.price' />
                                 </value>

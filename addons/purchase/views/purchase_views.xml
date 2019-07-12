@@ -45,7 +45,7 @@
     <!--Invoice control-->
     <menuitem
          id="menu_procurement_management_pending_invoice"
-         action="action_invoice_pending"
+         action="account.action_move_in_invoice_type"
          parent="menu_purchase_control"
          sequence="13"/>
 
@@ -56,7 +56,6 @@
         <field name="name">Products</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field>
         <field name="search_view_id" ref="product.product_template_search_view"/>
@@ -79,7 +78,6 @@
             <field name="name">Product Variants</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">tree,kanban,form,activity</field>
-            <field name="view_type">form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"search_default_filter_to_purchase": 1}</field>
             <field name="help" type="html">
@@ -386,7 +384,7 @@
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                    <field name="invoice_status" invisible="1"/>
                 </tree>
             </field>
         </record>

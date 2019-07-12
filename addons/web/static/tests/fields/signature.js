@@ -65,6 +65,8 @@ QUnit.module('signature', {
             "should have a valid signature widget");
         // Click on the widget to open signature modal
         await testUtils.dom.click(form.$('div[name=sign] div.o_signature'));
+        await testUtils.nextTick(); // dialog xmlDependencies load
+-       await testUtils.nextTick(); // name_and_signature xmlDependencies load
         assert.strictEqual($('.modal .modal-body a.o_web_sign_auto_button').length, 1,
             'should open a modal with "Auto" button');
         assert.strictEqual($('.modal .modal-body .o_web_sign_name_input').val(), "Pop's Chock'lit",
@@ -99,6 +101,8 @@ QUnit.module('signature', {
             "should have a valid signature widget");
         // Click on the widget to open signature modal
         await testUtils.dom.click(form.$('div[name=sign] div.o_signature'));
+        await testUtils.nextTick(); // dialog xmlDependencies load
+-       await testUtils.nextTick(); // name_and_signature xmlDependencies load
         assert.strictEqual($('.modal .modal-body a.o_web_sign_auto_button').length, 1,
             'should open a modal with "Auto" button');
         assert.strictEqual($('.modal .modal-body .o_web_sign_name_input').val(), "Veggie Burger",

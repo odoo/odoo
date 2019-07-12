@@ -3,7 +3,6 @@
     <record id="fleet_costs_reporting_action" model="ir.actions.act_window">
       <field name="name">Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_type">form</field>
       <field name="view_mode">graph,pivot</field>
       <field name="view_id"></field>  <!-- force empty -->
       <field name="context">{"search_default_parent_false" : True,}</field>
@@ -35,7 +34,6 @@
     <record id="fleet_costs_reporting_non_effective_action" model="ir.actions.act_window">
       <field name="name">Indicative Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_type">form</field>
       <field name="view_mode">graph,pivot</field>
      <field name="view_id"></field>  <!-- force empty -->
       <field name="context">{"search_default_parent_true" : True,}</field>

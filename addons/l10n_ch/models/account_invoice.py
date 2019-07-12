@@ -12,8 +12,8 @@ from odoo.tools.misc import mod10r
 l10n_ch_ISR_NUMBER_LENGTH = 27
 l10n_ch_ISR_NUMBER_ISSUER_LENGTH = 12
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+class AccountMove(models.Model):
+    _inherit = 'account.move'
 
     l10n_ch_isr_postal = fields.Char(compute='_compute_l10n_ch_isr_postal', help='The postal reference identifying the bank managing this ISR.')
     l10n_ch_isr_postal_formatted = fields.Char(compute='_compute_l10n_ch_isr_postal', help="Postal reference of the bank, formated with '-' and without the padding zeros, to generate ISR report.")
@@ -28,7 +28,7 @@ class AccountInvoice(models.Model):
     l10n_ch_isr_sent = fields.Boolean(defaut=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
     l10n_ch_currency_name = fields.Char(related='currency_id.name', readonly=False, string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
 
-    @api.depends('partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
+    @api.depends('invoice_partner_bank_id.bank_id.l10n_ch_postal_eur', 'invoice_partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_postal(self):
         """ Computes the postal reference identifying the bank managing this ISR and formats it accordingly"""
         def _format_isr_postal(isr_postal):
@@ -44,12 +44,11 @@ class AccountInvoice(models.Model):
             return isr_postal[:2] + isr_postal[2:-1].rjust(6, '0') + isr_postal[-1:]
 
         for record in self:
-            if record.partner_bank_id and record.partner_bank_id.bank_id:
-                isr_postal = False
+            if record.invoice_partner_bank_id and record.invoice_partner_bank_id.bank_id:
                 if record.currency_id.name == 'EUR':
-                    isr_postal = record.partner_bank_id.bank_id.l10n_ch_postal_eur
+                    isr_postal = record.invoice_partner_bank_id.bank_id.l10n_ch_postal_eur
                 elif record.currency_id.name == 'CHF':
-                    isr_postal = record.partner_bank_id.bank_id.l10n_ch_postal_chf
+                    isr_postal = record.invoice_partner_bank_id.bank_id.l10n_ch_postal_chf
                 else:
                     #we don't format if in another currency as EUR or CHF
                     continue
@@ -58,7 +57,7 @@ class AccountInvoice(models.Model):
                     record.l10n_ch_isr_postal = _format_isr_postal_scanline(isr_postal)
                     record.l10n_ch_isr_postal_formatted = _format_isr_postal(isr_postal)
 
-    @api.depends('number', 'partner_bank_id.l10n_ch_postal')
+    @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal')
     def _compute_l10n_ch_isr_number(self):
         """ The ISR reference number is 27 characters long. The first 12 of them
         contain the postal account number of this ISR's issuer, removing the zeros
@@ -80,10 +79,10 @@ class AccountInvoice(models.Model):
             return res
 
         for record in self:
-            if record.number and record.partner_bank_id and record.partner_bank_id.l10n_ch_postal:
-                invoice_issuer_ref = re.sub('^0*', '', record.partner_bank_id.l10n_ch_postal)
+            if record.name and record.invoice_partner_bank_id and record.invoice_partner_bank_id.l10n_ch_postal:
+                invoice_issuer_ref = re.sub('^0*', '', record.invoice_partner_bank_id.l10n_ch_postal)
                 invoice_issuer_ref = invoice_issuer_ref.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
-                invoice_ref = re.sub('[^\d]', '', record.number)
+                invoice_ref = re.sub('[^\d]', '', record.name)
                 #We only keep the last digits of the sequence number if it is too long
                 invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
                 internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH - 1) # -1 for mod10r check character
@@ -91,7 +90,11 @@ class AccountInvoice(models.Model):
                 record.l10n_ch_isr_number = mod10r(invoice_issuer_ref + internal_ref)
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
 
-    @api.depends('currency_id.name', 'amount_total', 'partner_bank_id.bank_id', 'number', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
+    @api.depends(
+        'currency_id.name', 'amount_total', 'name',
+        'invoice_partner_bank_id.l10n_ch_postal',
+        'invoice_partner_bank_id.bank_id.l10n_ch_postal_eur',
+        'invoice_partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_optical_line(self):
         """ The optical reading line of the ISR looks like this :
                 left>isr_ref+ bank_ref>
@@ -125,15 +128,18 @@ class AccountInvoice(models.Model):
                 #Final assembly (the space after the '+' is no typo, it stands in the specs.)
                 record.l10n_ch_isr_optical_line = left + '>' + record.l10n_ch_isr_number + '+ ' + record.l10n_ch_isr_postal + '>'
 
-    @api.depends('type', 'number', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.bank_id', 'currency_id.name', 'partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
+    @api.depends(
+        'type', 'name', 'currency_id.name',
+        'invoice_partner_bank_id.l10n_ch_postal',
+        'invoice_partner_bank_id.bank_id.l10n_ch_postal_eur',
+        'invoice_partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_valid(self):
         """Returns True if all the data required to generate the ISR are present"""
         for record in self:
             record.l10n_ch_isr_valid = record.type == 'out_invoice' and\
-                record.number and \
+                record.name and \
                 record.l10n_ch_isr_postal and \
-                record.partner_bank_id and \
-                record.partner_bank_id.l10n_ch_postal and \
+                record.invoice_partner_bank_id.l10n_ch_postal and \
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
     def split_total_amount(self):
@@ -169,10 +175,10 @@ class AccountInvoice(models.Model):
                                    - associate this bank with a postal reference for the currency used in this invoice\n
                                    - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
 
+    @api.multi
     def action_invoice_sent(self):
-        """ Overridden. Triggered by the 'send by mail' button.
-        """
-        rslt = super(AccountInvoice, self).action_invoice_sent()
+        # OVERRIDE
+        rslt = super(AccountMove, self).action_invoice_sent()
 
         if self.l10n_ch_isr_valid:
             rslt['context']['l10n_ch_mark_isr_as_sent'] = True
@@ -184,4 +190,4 @@ class AccountInvoice(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('l10n_ch_mark_isr_as_sent'):
             self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
-        return super(AccountInvoice, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+        return super(AccountMove, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)

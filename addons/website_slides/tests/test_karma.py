@@ -13,7 +13,7 @@ class TestKarmaGain(common.SlidesCase):
     def setUp(self):
         super(TestKarmaGain, self).setUp()
 
-        self.channel_2 = self.env['slide.channel'].sudo(self.user_publisher).create({
+        self.channel_2 = self.env['slide.channel'].with_user(self.user_publisher).create({
             'name': 'Test Channel 2',
             'channel_type': 'training',
             'promote_strategy': 'most_voted',
@@ -25,14 +25,14 @@ class TestKarmaGain(common.SlidesCase):
             'karma_gen_channel_rank': 10,
         })
 
-        self.slide_2_0 = self.env['slide.slide'].sudo(self.user_publisher).create({
+        self.slide_2_0 = self.env['slide.slide'].with_user(self.user_publisher).create({
             'name': 'How to travel through space and time',
             'channel_id': self.channel_2.id,
             'slide_type': 'presentation',
             'website_published': True,
             'completion_time': 2.0,
         })
-        self.slide_2_1 = self.env['slide.slide'].sudo(self.user_publisher).create({
+        self.slide_2_1 = self.env['slide.slide'].with_user(self.user_publisher).create({
             'name': 'How to duplicate yourself',
             'channel_id': self.channel_2.id,
             'slide_type': 'presentation',
@@ -52,23 +52,23 @@ class TestKarmaGain(common.SlidesCase):
         self.assertEqual(user.karma, 0)
 
         # Finish the Course
-        self.slide.sudo(user).action_set_completed()
-        self.assertTrue(self.channel.sudo(user).completed)
+        self.slide.with_user(user).action_set_completed()
+        self.assertTrue(self.channel.with_user(user).completed)
         computed_karma += self.channel.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)
 
         # Begin then finish the second Course
-        self.slide_2_0.sudo(user).action_set_completed()
-        self.assertFalse(self.channel_2.sudo(user).completed)
+        self.slide_2_0.with_user(user).action_set_completed()
+        self.assertFalse(self.channel_2.with_user(user).completed)
         self.assertEqual(user.karma, computed_karma)
 
-        self.slide_2_1.sudo(user).action_set_completed()
-        self.assertTrue(self.channel_2.sudo(user).completed)
+        self.slide_2_1.with_user(user).action_set_completed()
+        self.assertTrue(self.channel_2.with_user(user).completed)
         computed_karma += self.channel_2.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)
 
         # Vote for a slide
-        slide_user = self.slide.sudo(user)
+        slide_user = self.slide.with_user(user)
         slide_user.action_like()
         computed_karma += self.channel.karma_gen_slide_vote
         self.assertEqual(user.karma, computed_karma)
@@ -93,6 +93,6 @@ class TestKarmaGain(common.SlidesCase):
         # Finish two course at the same time (should not ever happen but hey, we never know)
         (self.channel | self.channel_2)._action_add_members(user.partner_id)
 
-        (self.slide | self.slide_2_0 | self.slide_2_1).sudo(user).action_set_completed()
+        (self.slide | self.slide_2_0 | self.slide_2_1).with_user(user).action_set_completed()
         computed_karma += self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)

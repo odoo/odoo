@@ -28,7 +28,7 @@ class TestDefaultTeam(common.SavepointCase):
 
     def test_01_user_team(self):
         """Get default team, when user belongs to one."""
-        team = self.CrmTeam.sudo(self.user)._get_default_team_id()
+        team = self.CrmTeam.with_user(self.user)._get_default_team_id()
         self.assertEqual(team, self.team_1)
 
     def test_02_fallback_team(self):
@@ -40,9 +40,9 @@ class TestDefaultTeam(common.SavepointCase):
         # Clear users from team.
         self.team_1.member_ids = [(5,)]
         # Case 1.
-        team = self.CrmTeam.sudo(self.user)._get_default_team_id()
+        team = self.CrmTeam.with_user(self.user)._get_default_team_id()
         self.assertEqual(team, self.team_2)
         # Case 2.
         self.team_2.active = False
-        team = self.CrmTeam.sudo(self.user)._get_default_team_id()
+        team = self.CrmTeam.with_user(self.user)._get_default_team_id()
         self.assertEqual(team, self.CrmTeam)

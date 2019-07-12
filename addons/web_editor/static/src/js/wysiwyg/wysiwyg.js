@@ -188,13 +188,14 @@ var Wysiwyg = Widget.extend({
      *
      * @param {object} [options]
      * @param {Boolean} [options.keepPopover]
+     * @param {jQueryElement} [options.$layout]
      * @returns {String}
      */
     getValue: function (options) {
         if (!options || !options.keepPopover) {
             this._summernote.invoke('editor.hidePopover');
         }
-        var $editable = this.getEditable().clone();
+        var $editable = options && options.$layout || this.getEditable().clone();
         $editable.find('.o_wysiwyg_to_remove').remove();
         $editable.find('[contenteditable]').removeAttr('contenteditable');
         $editable.find('.o_fake_not_editable').removeClass('o_fake_not_editable');

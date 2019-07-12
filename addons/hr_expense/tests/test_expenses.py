@@ -195,7 +195,7 @@ class TestExpenseRights(TestExpenseCommon):
 
     def test_expense_create(self):
         # Employee should be able to create an Expense
-        self.env['hr.expense'].sudo(self.user_employee.id).create({
+        self.env['hr.expense'].with_user(self.user_employee).create({
             'name': 'Batmobile repair',
             'employee_id': self.employee.id,
             'product_id': self.product_1.id,
@@ -205,7 +205,7 @@ class TestExpenseRights(TestExpenseCommon):
 
         # Employee should not be able to create an Expense for someone else
         with self.assertRaises(AccessError):
-            self.env['hr.expense'].sudo(self.user_employee.id).create({
+            self.env['hr.expense'].with_user(self.user_employee).create({
                 'name': 'Superboy costume washing',
                 'employee_id': self.emp_emp2.id,
                 'product_id': self.product_2.id,
@@ -231,19 +231,19 @@ class TestExpenseRights(TestExpenseCommon):
 
         # Employee should not be able to approve expense sheet
         with self.assertRaises(UserError):
-            sheet.sudo(self.user_officer).approve_expense_sheets()
+            sheet.with_user(self.user_officer).approve_expense_sheets()
         # Officer should not be able to approve own expense sheet
         with self.assertRaises(UserError):
-            sheet.sudo(self.user_officer).approve_expense_sheets()
-        sheet.sudo(self.user_manager).approve_expense_sheets()
+            sheet.with_user(self.user_officer).approve_expense_sheets()
+        sheet.with_user(self.user_manager).approve_expense_sheets()
 
         # Officer should be able to approve expense from his department
-        sheet_2.sudo(self.user_officer).approve_expense_sheets()
+        sheet_2.with_user(self.user_officer).approve_expense_sheets()
 
         # Officer should not be able to approve expense sheet from another department
         with self.assertRaises(AccessError):
-            sheet_3.sudo(self.user_officer).approve_expense_sheets()
-        sheet_3.sudo(self.user_manager).approve_expense_sheets()
+            sheet_3.with_user(self.user_officer).approve_expense_sheets()
+        sheet_3.with_user(self.user_manager).approve_expense_sheets()
 
     def test_expense_refuse(self):
         sheet = self.env['hr.expense.sheet'].create({
@@ -261,22 +261,22 @@ class TestExpenseRights(TestExpenseCommon):
             'employee_id': self.emp_emp2.id,
         })
 
-        sheet.sudo(self.user_manager).approve_expense_sheets()
-        sheet_2.sudo(self.user_manager).approve_expense_sheets()
-        sheet_3.sudo(self.user_manager).approve_expense_sheets()
+        sheet.with_user(self.user_manager).approve_expense_sheets()
+        sheet_2.with_user(self.user_manager).approve_expense_sheets()
+        sheet_3.with_user(self.user_manager).approve_expense_sheets()
 
         # Employee should not be able to refuse expense sheet
         with self.assertRaises(UserError):
-            sheet.sudo(self.user_employee).refuse_sheet('')
+            sheet.with_user(self.user_employee).refuse_sheet('')
         # Officer should not be able to refuse own expense sheet
         with self.assertRaises(UserError):
-            sheet.sudo(self.user_officer).refuse_sheet('')
-        sheet.sudo(self.user_manager).refuse_sheet('')
+            sheet.with_user(self.user_officer).refuse_sheet('')
+        sheet.with_user(self.user_manager).refuse_sheet('')
 
         # Officer should be able to refuse expense from his department
-        sheet_2.sudo(self.user_officer).refuse_sheet('')
+        sheet_2.with_user(self.user_officer).refuse_sheet('')
 
         # Officer should not be able to refuse expense sheet from another department
         with self.assertRaises(AccessError):
-            sheet_3.sudo(self.user_officer).refuse_sheet('')
-        sheet_3.sudo(self.user_manager).refuse_sheet('')
+            sheet_3.with_user(self.user_officer).refuse_sheet('')
+        sheet_3.with_user(self.user_manager).refuse_sheet('')

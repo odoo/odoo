@@ -91,4 +91,4 @@ def _configure_journals(cr, registry):
                 'value': 'account.account,'+str(account_id),
                 'company_id': env.ref('base.main_company').id,
             }
-            env['ir.property']._load_records([dict(xml_id=xml_id, values=vals)])
+            env['ir.property']._load_records([dict(xml_id=xml_id, values=vals, noupdate=True)])

@@ -15,7 +15,6 @@ Validate contact (phone,mobile) numbers and normalize them on leads and contacts
         """,
     'data': [],
     'depends': [
-        'crm_phone_validation',
         'website_crm',
         'website_form',
     ],

@@ -189,12 +189,24 @@ class GoogleService(models.TransientModel):
                 status = error.response.status_code
                 response = ""
             else:
-                req = json.loads(error.request.body or 'null')
-                res = error.response.json()
-                _logger.exception("Error while requesting Google Services\nRequest:\n%s\nResponse:\n%s", pformat(req), pformat(res))
+                try:
+                    exception_req = pformat(json.loads(error.request.body))
+                except:
+                    exception_req = error.request.body
+
+                try:
+                    exception_res = pformat(error.response.json())
+                    error_msg = _("Error while requesting Google Services: %s") % res['error']['message']
+                    warning_msg = _("Something went wrong with your request to google: %s") % res['error']['message']
+                except:
+                    exception_res = error.response.text
+                    error_msg = _("Error while requesting Google Services")
+                    warning_msg = _("Something went wrong with your request to google")
+
+                _logger.exception("Error while requesting Google Services\nRequest:\n%s\nResponse:\n%s", exception_req, exception_res)
                 if error.response.status_code in (400, 401, 410):
-                    raise UserError(_("Error while requesting Google Services: %s") % res['error']['message'])
-                raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google: %s") % res['error']['message'])
+                    raise UserError(error_msg)
+                raise self.env['res.config.settings'].get_config_warning(warning_msg)
         return (status, response, ask_time)
 
     # TODO : remove me, it is only used in google calendar. Make google_calendar use the constants

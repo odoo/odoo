@@ -4,15 +4,8 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
-from odoo.addons import decimal_precision as dp
 from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
-
-
-class StockMove(models.Model):
-    _inherit = 'stock.move'
-
-    landed_cost_value = fields.Float('Landed Cost')
 
 
 class LandedCost(models.Model):
@@ -53,11 +46,12 @@ class LandedCost(models.Model):
         required=True, states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string="Company",
         related='account_journal_id.company_id', readonly=False)
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
 
-    @api.one
     @api.depends('cost_lines.price_unit')
     def _compute_total_amount(self):
-        self.amount_total = sum(line.price_unit for line in self.cost_lines)
+        for cost in self:
+            cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
 
     @api.model
     def create(self, vals):
@@ -101,25 +95,33 @@ class LandedCost(models.Model):
                 'line_ids': [],
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                # Prorate the value at what's still in stock
-                cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
+                linked_layer = line.move_id.stock_valuation_layer_ids[-1]  # Maybe the LC layer should be linked to multiple IN layer?
 
-                new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
-                line.move_id.write({
-                    'landed_cost_value': new_landed_cost_value,
-                    'value': line.move_id.value + line.additional_landed_cost,
-                    'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + line.additional_landed_cost) / line.move_id.product_qty,
+                # Prorate the value at what's still in stock
+                cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                valuation_layer = self.env['stock.valuation.layer'].create({
+                    'value': cost_to_add,
+                    'unit_cost': 0,
+                    'quantity': 0,
+                    'remaining_qty': 0,
+                    'stock_valuation_layer_id': linked_layer.id,
+                    'description': cost.name,
+                    'stock_move_id': line.move_id.id,
+                    'product_id': line.move_id.product_id.id,
+                    'stock_landed_cost_id': self.id,
+                    'company_id': self.company_id.id,
                 })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
                 if line.move_id._is_in():
-                    qty_out = line.move_id.product_qty - line.move_id.remaining_qty
+                    qty_out = line.move_id.product_qty - remaining_qty
                 elif line.move_id._is_out():
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
+            move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -153,7 +155,7 @@ class LandedCost(models.Model):
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': move.product_qty,
-                'former_cost': move.value,
+                'former_cost': sum(move.stock_valuation_layer_ids.mapped('value')),
                 'weight': move.product_id.weight * move.product_qty,
                 'volume': move.product_id.volume * move.product_qty
             }
@@ -168,7 +170,7 @@ class LandedCost(models.Model):
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
-        digits = dp.get_precision('Product Price')(self._cr)
+        digits = self.env['decimal.precision'].precision_get('Product Price')
         towrite_dict = {}
         for cost in self.filtered(lambda cost: cost.picking_ids):
             total_qty = 0.0
@@ -187,7 +189,7 @@ class LandedCost(models.Model):
 
                 former_cost = val_line_values.get('former_cost', 0.0)
                 # round this because former_cost on the valuation lines is also rounded
-                total_cost += tools.float_round(former_cost, precision_digits=digits[1]) if digits else former_cost
+                total_cost += tools.float_round(former_cost, precision_digits=digits) if digits else former_cost
 
                 total_line += 1
 
@@ -214,7 +216,7 @@ class LandedCost(models.Model):
                             value = (line.price_unit / total_line)
 
                         if digits:
-                            value = tools.float_round(value, precision_digits=digits[1], rounding_method='UP')
+                            value = tools.float_round(value, precision_digits=digits, rounding_method='UP')
                             fnc = min if line.price_unit > 0 else max
                             value = fnc(value, line.price_unit - value_split)
                             value_split += value
@@ -227,6 +229,12 @@ class LandedCost(models.Model):
             AdjustementLines.browse(key).write({'additional_landed_cost': value})
         return True
 
+    def action_view_stock_valuation_layers(self):
+        self.ensure_one()
+        domain = [('id', 'in', self.stock_valuation_layer_ids.ids)]
+        action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
+        return dict(action, domain=domain)
+
 
 class LandedCostLine(models.Model):
     _name = 'stock.landed.cost.lines'
@@ -237,7 +245,7 @@ class LandedCostLine(models.Model):
         'stock.landed.cost', 'Landed Cost',
         required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
-    price_unit = fields.Float('Cost', digits=dp.get_precision('Product Price'), required=True)
+    price_unit = fields.Float('Cost', digits='Product Price', required=True)
     split_method = fields.Selection(product.SPLIT_METHOD, string='Split Method', required=True)
     account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
 
@@ -269,36 +277,36 @@ class AdjustmentLines(models.Model):
         digits=0, required=True)
     weight = fields.Float(
         'Weight', default=1.0,
-        digits=dp.get_precision('Stock Weight'))
+        digits='Stock Weight')
     volume = fields.Float(
         'Volume', default=1.0)
     former_cost = fields.Float(
-        'Former Cost', digits=dp.get_precision('Product Price'))
+        'Former Cost', digits='Product Price')
     former_cost_per_unit = fields.Float(
         'Former Cost(Per Unit)', compute='_compute_former_cost_per_unit',
         digits=0, store=True)
     additional_landed_cost = fields.Float(
         'Additional Landed Cost',
-        digits=dp.get_precision('Product Price'))
+        digits='Product Price')
     final_cost = fields.Float(
         'Final Cost', compute='_compute_final_cost',
         digits=0, store=True)
 
-    @api.one
     @api.depends('cost_line_id.name', 'product_id.code', 'product_id.name')
     def _compute_name(self):
-        name = '%s - ' % (self.cost_line_id.name if self.cost_line_id else '')
-        self.name = name + (self.product_id.code or self.product_id.name or '')
+        for line in self:
+            name = '%s - ' % (line.cost_line_id.name if line.cost_line_id else '')
+            line.name = name + (line.product_id.code or line.product_id.name or '')
 
-    @api.one
     @api.depends('former_cost', 'quantity')
     def _compute_former_cost_per_unit(self):
-        self.former_cost_per_unit = self.former_cost / (self.quantity or 1.0)
+        for line in self:
+            line.former_cost_per_unit = line.former_cost / (line.quantity or 1.0)
 
-    @api.one
     @api.depends('former_cost', 'additional_landed_cost')
     def _compute_final_cost(self):
-        self.final_cost = self.former_cost + self.additional_landed_cost
+        for line in self:
+            line.final_cost = line.former_cost + line.additional_landed_cost
 
     def _create_accounting_entries(self, move, qty_out):
         # TDE CLEANME: product chosen for computation ?

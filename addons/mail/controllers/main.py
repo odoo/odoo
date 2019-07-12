@@ -68,7 +68,7 @@ class MailController(http.Controller):
 
         # the record has a window redirection: check access rights
         if uid is not None:
-            if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
+            if not RecordModel.with_user(uid).check_access_rights('read', raise_exception=False):
                 return cls._redirect_to_messaging()
             try:
                 # We need here to extend the "allowed_company_ids" to allow a redirection
@@ -77,7 +77,7 @@ class MailController(http.Controller):
                 cids = request.httprequest.cookies.get('cids', str(user.company_id.id))
                 cids = [int(cid) for cid in cids.split(',')]
                 try:
-                    record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
+                    record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
                 except AccessError:
                     # In case the allowed_company_ids from the cookies (i.e. the last user configuration
                     # on his browser) is not sufficient to avoid an ir.rule access error, try to following
@@ -92,7 +92,7 @@ class MailController(http.Controller):
                     if not suggested_company:
                         raise AccessError()
                     cids += [suggested_company.id]
-                    record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
+                    record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
             else:
@@ -111,7 +111,6 @@ class MailController(http.Controller):
             return cls._redirect_to_messaging()
 
         url_params = {
-            'view_type': record_action['view_type'],
             'model': model,
             'id': res_id,
             'active_id': res_id,
@@ -190,7 +189,7 @@ class MailController(http.Controller):
         subtypes_list = sorted(subtypes_list, key=lambda it: (it['parent_model'] or '', it['res_model'] or '', it['internal'], it['sequence']))
         return subtypes_list
 
-    @http.route('/mail/view', type='http', auth='none')
+    @http.route('/mail/view', type='http', auth='public')
     def mail_action_view(self, model=None, res_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
             choose where to redirect the user is the following :

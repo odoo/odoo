@@ -17,7 +17,6 @@ from functools import partial
 from difflib import HtmlDiff
 from operator import itemgetter
 
-import json
 import werkzeug
 from lxml import etree
 from lxml.etree import LxmlError
@@ -30,7 +29,7 @@ from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.osv import orm
 from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES, pycompat
 from odoo.tools.convert import _fix_multiple_roots
-from odoo.tools.parse_version import parse_version
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
@@ -102,7 +101,6 @@ class ViewCustom(models.Model):
             return self.browse(view_ids).name_get()
         return super(ViewCustom, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(ViewCustom, self)._auto_init()
         tools.create_index(self._cr, 'ir_ui_view_custom_user_id_ref_id',
@@ -409,7 +407,6 @@ actual arch.
          "Invalid key: QWeb view should have a key"),
     ]
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(View, self)._auto_init()
         tools.create_index(self._cr, 'ir_ui_view_model_type_inherit_id',
@@ -1357,7 +1354,8 @@ actual arch.
             keep_query=keep_query,
             request=request,  # might be unbound if we're not in an httprequest context
             debug=request.session.debug if request else '',
-            json=json,
+            test_mode_enabled=bool(config['test_enable'] or config['test_file']),
+            json=json_scriptsafe,
             quote_plus=werkzeug.url_quote_plus,
             time=time,
             datetime=datetime,
@@ -1521,7 +1519,6 @@ class ResetViewArchWizard(models.TransientModel):
         ('hard', 'Reset to file version (hard reset).')
     ], string='Reset Mode', default='soft', required=True, help="You might want to try a soft reset first.")
 
-    @api.one
     @api.depends('reset_mode', 'view_id')
     def _compute_arch_diff(self):
         ''' Return the differences between the current view arch and either its
@@ -1553,24 +1550,25 @@ class ResetViewArchWizard(models.TransientModel):
             '''
             return html_diff
 
-        soft = self.reset_mode == 'soft'
-        arch_to_compare = False
-        if soft:
-            arch_to_compare = self.view_id.arch_prev
-        elif not soft and self.view_id.arch_fs:
-            arch_to_compare = self.view_id.with_context(read_arch_from_file=True).arch
+        for view in self:
+            soft = view.reset_mode == 'soft'
+            arch_to_compare = False
+            if soft:
+                arch_to_compare = view.view_id.arch_prev
+            elif not soft and view.view_id.arch_fs:
+                arch_to_compare = view.view_id.with_context(read_arch_from_file=True).arch
 
-        diff = False
-        if arch_to_compare:
-            diff = HtmlDiff(tabsize=2).make_table(
-                arch_to_compare.splitlines(),
-                self.view_id.arch.splitlines(),
-                _("Previous Arch") if soft else _("File Arch"),
-                _("Current Arch"),
-                context=True,  # Show only diff lines, not all the code
-            )
-            diff = handle_style(diff)
-        self.arch_diff = diff
+            diff = False
+            if arch_to_compare:
+                diff = HtmlDiff(tabsize=2).make_table(
+                    arch_to_compare.splitlines(),
+                    view.view_id.arch.splitlines(),
+                    _("Previous Arch") if soft else _("File Arch"),
+                    _("Current Arch"),
+                    context=True,  # Show only diff lines, not all the code
+                )
+                diff = handle_style(diff)
+            view.arch_diff = diff
 
     @api.multi
     def reset_view_button(self):

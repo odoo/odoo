@@ -216,7 +216,13 @@ class IrTranslation(models.Model):
                 continue
             if not callable(field.translate):
                 # Pass context without lang, need to read real stored field, not translation
-                result = model.browse(record.res_id).with_context(lang=None).read([field_name])
+                try:
+                    result = model.browse(record.res_id).with_context(lang=None).read([field_name])
+                except AccessError:
+                    # because we can read self but not the record,
+                    # that means we would get an access error when accessing the translations
+                    # so instead we defer the access right to the "check" method
+                    result = [{field_name: _("Cannot be translated; record not accessible.")}]
                 record.source = result[0][field_name] if result else False
 
     def _inverse_source(self):
@@ -241,7 +247,6 @@ class IrTranslation(models.Model):
         ''' the source term is stored on 'src' field '''
         return [('src', operator, value)]
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(IrTranslation, self)._auto_init()
         # Add separate md5 index on src (no size limit on values, and good performance).
@@ -508,7 +513,7 @@ class IrTranslation(models.Model):
         """ Check access rights of operation ``mode`` on ``self`` for the
         current user. Raise an AccessError in case conditions are not met.
         """
-        if self.env.user._is_admin():
+        if self.env.is_superuser():
             return
 
         # collect translated field records (model_ids) and other translations
@@ -590,8 +595,8 @@ class IrTranslation(models.Model):
         external_ids = records.get_external_id()  # if no xml_id, empty string
         if callable(field.translate):
             # insert missing translations for each term in src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, module, state)
-                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, %(module)s, 'to_translate'
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
+                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -611,10 +616,10 @@ class IrTranslation(models.Model):
                     })
         else:
             # insert missing translations for src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, module, state)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(module)s, 'to_translate'
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
                         FROM res_lang l
-                        WHERE l.active AND l.translatable AND l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
@@ -740,6 +745,12 @@ class IrTranslation(models.Model):
                 except AccessError:
                     pass
 
+            action['target'] = 'new'
+            if callable(fld.translate):
+                action['view_id'] = self.env.ref('base.view_translation_lang_src_value_tree').id,
+            else:
+                action['view_id'] = self.env.ref('base.view_translation_lang_value_tree').id,
+
         return action
 
     @api.model
@@ -747,8 +758,7 @@ class IrTranslation(models.Model):
         """ Return a cursor-like object for fast inserting translations """
         return IrTranslationImport(self)
 
-    @api.model_cr_context
-    def load_module_terms(self, modules, langs):
+    def _load_module_terms(self, modules, langs):
         """ Load PO files of the given modules for the given languages. """
         # make sure the given languages are active
         res_lang = self.env['res.lang'].sudo()

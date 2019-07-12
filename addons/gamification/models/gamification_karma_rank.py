@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from werkzeug.exceptions import Forbidden
-
-from odoo import api, tools, fields, models
+from odoo import api, tools, fields, models, exceptions, http
 from odoo.tools.translate import html_translate
 
 
-class KarmaError(Forbidden):
+class KarmaError(exceptions.except_orm):
     """ Karma-related error, used for forum and posts. """
-    pass
+    def __init__(self, msg):
+        super(KarmaError, self).__init__(msg)
+
+
+class Http(models.AbstractModel):
+    _inherit = 'ir.http'
+
+    @classmethod
+    def serialize_exception(self, e):
+        res = super(Http, self).serialize_exception(e)
+        if isinstance(e, KarmaError):
+            res["exception_type"] = "karma_error"
+        return res
 
 
 class KarmaRank(models.Model):

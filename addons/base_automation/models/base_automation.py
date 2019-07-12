@@ -231,7 +231,6 @@ class BaseAutomation(models.Model):
             )
         return any(differ(field.name) for field in self.trigger_field_ids)
 
-    @api.model_cr
     def _register_hook(self):
         """ Patch models that should trigger action rules based on creation,
             modification, deletion of records and form onchanges.

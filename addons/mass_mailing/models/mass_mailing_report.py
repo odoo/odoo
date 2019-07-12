@@ -22,7 +22,6 @@ class MassMailingReport(models.Model):
         string='Status', readonly=True)
     email_from = fields.Char('From', readonly=True)
 
-    @api.model_cr
     def init(self):
         """Mass Mail Statistical Report: based on mail.mail.statistics that models the various
         statistics collected for each mailing, and mail.mass_mailing model that models the

@@ -86,7 +86,7 @@ class PaypalController(http.Controller):
             tx.sudo()._set_transaction_error('Unrecognized error from Paypal. Please contact your administrator.')
         return res
 
-    @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'], csrf=False)
+    @http.route('/payment/paypal/ipn/', type='http', auth='public', methods=['POST'], csrf=False)
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
@@ -96,7 +96,7 @@ class PaypalController(http.Controller):
             _logger.exception('Unable to validate the Paypal payment')
         return ''
 
-    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST', 'GET'], csrf=False)
+    @http.route('/payment/paypal/dpn', type='http', auth="public", methods=['POST', 'GET'], csrf=False)
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
@@ -106,7 +106,7 @@ class PaypalController(http.Controller):
             _logger.exception('Unable to validate the Paypal payment')
         return werkzeug.utils.redirect('/payment/process')
 
-    @http.route('/payment/paypal/cancel', type='http', auth="none", csrf=False)
+    @http.route('/payment/paypal/cancel', type='http', auth="public", csrf=False)
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug

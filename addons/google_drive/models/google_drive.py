@@ -52,7 +52,7 @@ class GoogleDrive(models.Model):
     def get_access_token(self, scope=None):
         Config = self.env['ir.config_parameter'].sudo()
         google_drive_refresh_token = Config.get_param('google_drive_refresh_token')
-        user_is_admin = self.env['res.users'].browse(self.env.user.id)._is_admin()
+        user_is_admin = self.env.is_admin()
         if not google_drive_refresh_token:
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')

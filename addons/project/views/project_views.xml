@@ -151,15 +151,12 @@
                                     <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
                                     <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
                                     <field name="subtask_project_id" groups="project.group_subtask_project"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
                                 </group>
                             </group>
                             <group name="misc">
-                                <group string="Configuration" groups="base.group_no_one" name="configuration">
-                                    <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="company_id" groups="base.group_multi_company"/>
-                                </group>
                                 <group string="Time Scheduling">
                                     <field name="resource_calendar_id"/>
                                 </group>
@@ -220,6 +217,7 @@
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -282,7 +280,6 @@
         <record id="open_create_project" model="ir.actions.act_window">
             <field name="name">Create a Project</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="project_project_view_form_simplified"/>
             <field name="target">new</field>
@@ -384,7 +381,6 @@
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="view_project_kanban"/>
@@ -402,7 +398,6 @@
         <record id="open_view_project_all_config" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
@@ -518,8 +513,7 @@
             name="Share"
             res_model="portal.share"
             binding_model="project.task"
-            binding_views="form"
-            view_type="form"
+            view_mode="form"
             target="new"
         />
 
@@ -545,7 +539,7 @@
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="stage_id" options='{"group_by_tooltip": {"legend_priority": "Use of stars"}}'/>
+                    <field name="stage_id"/>
                     <field name="user_id"/>
                     <field name="user_email"/>
                     <field name="partner_id"/>
@@ -635,6 +629,7 @@
                     <field name="name"/>
                     <field name="project_id" invisible="context.get('user_invisible', False)"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
                 </tree>
@@ -747,7 +742,6 @@
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d'))]</field>
             <field name="filter" eval="True"/>
@@ -758,7 +752,6 @@
         <record id="dblc_proj" model="ir.actions.act_window">
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{'project_id':active_id}</field>
@@ -814,12 +807,6 @@
                             <field name="legend_done" nolabel="1"/>
 
                             <p class="text-muted" colspan="2">
-                                You can also give a tooltip about the use of the stars available in the kanban and form views.
-                            </p>
-                            <label for="legend_priority" string=" " class="fa fa-star fa-lg o_star_on oe_project_kanban_legend" aria-label="Legend priority" title="Legend priority" role="img"/>
-                            <field name="legend_priority" nolabel="1"/>
-
-                            <p class="text-muted" colspan="2">
                                 You can also add a description to help your coworkers understand the meaning and purpose of the stage.
                             </p>
                             <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
@@ -872,7 +859,6 @@
         <record id="open_task_type_form" model="ir.actions.act_window">
             <field name="name">Stages</field>
             <field name="res_model">project.task.type</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
             <field name="help" type="html">
@@ -897,7 +883,7 @@
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
                     id="act_res_users_2_project_task_opened" name="Assigned Tasks"
-                    res_model="project.task" view_mode="tree,form,calendar,graph" view_type="form"
+                    res_model="project.task" view_mode="tree,form,calendar,graph"
                     binding_model="res.users" binding_views="form"/>
 
         <!-- Tags -->
@@ -928,7 +914,6 @@
         <record id="project_tags_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">project.tags</field>
-            <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new tag

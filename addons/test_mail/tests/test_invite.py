@@ -16,7 +16,7 @@ class TestInvite(common.BaseFunctionalTest, common.MockEmails):
         mail_invite = self.env['mail.wizard.invite'].with_context({
             'default_res_model': 'mail.test.simple',
             'default_res_id': self.test_record.id
-        }).sudo(self.user_employee.id).create({
+        }).with_user(self.user_employee).create({
             'partner_ids': [(4, test_partner.id), (4, self.user_admin.partner_id.id)],
             'send_mail': True})
         mail_invite.add_followers()

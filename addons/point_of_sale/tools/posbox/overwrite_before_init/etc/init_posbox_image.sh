@@ -114,6 +114,7 @@ PIP_TO_INSTALL="
     evdev \
     gatt \
     v4l2 \
+    polib \
     pycups"
 
 pip3 install ${PIP_TO_INSTALL}

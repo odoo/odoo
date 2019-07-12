@@ -50,12 +50,12 @@ class StockMove(models.Model):
             return price_unit
         return super(StockMove, self)._get_price_unit()
 
-    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
         """
         self.ensure_one()
 
-        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id)
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description)
         if self.purchase_line_id:
             purchase_currency = self.purchase_line_id.currency_id
             if purchase_currency != self.company_id.currency_id:
@@ -97,7 +97,7 @@ class StockMove(models.Model):
         """ Overridden to return the vendor bills related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
+        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
 
@@ -119,12 +119,14 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.in_type_id.id,
                     'group_propagation_option': 'none',
                     'company_id': self.company_id.id,
-                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id
+                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
+                    'propagate_cancel': self.reception_steps != 'one_step',
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,
                     'name': self._format_rulename(location_id, False, 'Buy'),
                     'location_id': location_id.id,
+                    'propagate_cancel': self.reception_steps != 'one_step',
                 }
             }
         })

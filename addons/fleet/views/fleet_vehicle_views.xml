@@ -153,6 +153,7 @@
                 <field name="vin_sn"/>
                 <field name="acquisition_date"/>
                 <field name="state_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="contract_renewal_total" invisible="1"/>
@@ -292,7 +293,6 @@
     <record id='fleet_vehicle_action' model='ir.actions.act_window'>
         <field name="name">Vehicles</field>
         <field name="res_model">fleet.vehicle</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="context">{'search_default_groupby_status': 1}</field>
         <field name="help" type="html">
@@ -394,7 +394,6 @@
     <record id='fleet_vehicle_odometer_action' model='ir.actions.act_window'>
         <field name="name">Vehicles Odometer</field>
         <field name="res_model">fleet.vehicle.odometer</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{"search_default_groupby_vehicle" : True}</field>
         <field name="help" type="html">
@@ -422,7 +421,6 @@
     <record id='fleet_vehicle_service_types_action' model='ir.actions.act_window'>
         <field name="name">Service Types</field>
         <field name="res_model">fleet.service.type</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('category','=','service')]</field>
         <field name="context">{'default_category':'service'}</field>
@@ -439,7 +437,6 @@
     <record id='fleet_vehicle_contract_types_action' model='ir.actions.act_window'>
         <field name="name">Contract Types</field>
         <field name="res_model">fleet.service.type</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('category','=','contract')]</field>
         <field name="context">{'default_category':'contract'}</field>
@@ -466,7 +463,6 @@
     <record id='fleet_vehicle_state_action' model='ir.actions.act_window'>
         <field name="name">Vehicle Status</field>
         <field name="res_model">fleet.vehicle.state</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -497,7 +493,6 @@
     <record id="fleet_vehicle_tag_action" model="ir.actions.act_window">
         <field name="name">Vehicle Tags</field>
         <field name="res_model">fleet.vehicle.tag</field>
-        <field name="view_type">form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new tag

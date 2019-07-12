@@ -803,8 +803,8 @@
                             <left><t t-esc='line.product_name_wrapped[0]' /></left>
                             <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
                         </line>
+                        <t t-call="XmlReceiptWrappedProductNameLines"/>
                     </t>
-                    <t t-call="XmlReceiptWrappedProductNameLines"/>
                     <t t-if='!simple'>
                         <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
                         <t t-call="XmlReceiptWrappedProductNameLines"/>
@@ -824,7 +824,12 @@
                             <line indent='1'>
                                 <left>
                                     <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                        <t t-esc="line.price_lst" />
+                                        <t t-if="pos.config.iface_tax_included === 'total'">
+                                            <t t-esc="line.price_with_tax_before_discount" />
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="line.price_lst" />
+                                        </t>
                                     </value>
                                 </left>
                             </line>

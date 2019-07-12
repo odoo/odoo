@@ -76,6 +76,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/colorpicker.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/name_and_signature.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web.zoomodoo.scss"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
 
@@ -152,6 +153,7 @@
         <script type="text/javascript" src="/web/static/src/js/services/core.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/notification_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session_storage_service.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/tools/debug_manager.js"></script>
@@ -159,6 +161,8 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/libs/zoomodoo.js"></script>
     </template>
 
     <template id="assets_common_lazy" inherit_id="web.assets_common" primary="True">
@@ -244,7 +248,6 @@
         <script type="text/javascript" src="/web/static/src/js/core/context.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/data_comparison_utils.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/services/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/report_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
@@ -394,7 +397,7 @@
     </template>
 
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
-        <t t-call-assets="web.assets_tests" t-if="'tests' in debug" defer_load="True" />
+        <t t-call-assets="web.assets_tests" t-if="'tests' in debug or test_mode_enabled" defer_load="True" />
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
@@ -686,6 +689,7 @@
                 <script type="text/javascript" src="/web/static/tests/chrome/user_menu_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/systray_tests.js"></script>
 
+                <script type="text/javascript" src="/web/static/tests/widgets/company_switcher_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/data_export_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/domain_selector_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/model_field_selector_tests.js"/>
@@ -833,7 +837,7 @@
         <t t-call="web.layout">
             <t t-set="head_web">
                 <script type="text/javascript">
-                    odoo.session_info = <t t-raw="session_info"/>;
+                    odoo.session_info = <t t-raw="json.dumps(session_info)"/>;
                     odoo.reloadMenus = function () {
                         return new Promise(function(resolve, reject) {
                             function onLoaded() {

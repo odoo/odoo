@@ -32,6 +32,7 @@
                     <field name="author_id"/>
                     <field name="mail_activity_type_id"/>
                     <field name="body" string="Activity Description"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -52,7 +53,7 @@
                     <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity" groups="crm.group_use_lead"/>
                     <separator/>
                     <filter string="Won" name="won"
-                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                            domain="[('stage_id.is_won', '=', True)]"/>
                     <separator/>
                     <filter string="Completion Date" name="completion_date" date="date" default_period="last_365_days"/>
                     <group expand="1" string="Group By">
@@ -76,7 +77,6 @@
        <record id="crm_activity_report_action" model="ir.actions.act_window">
            <field name="name">Pipeline Activities</field>
            <field name="res_model">crm.activity.report</field>
-           <field name="view_type">form</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{
                 'search_default_activities_my': 1,
@@ -100,7 +100,6 @@
        <record id="crm_activity_report_action_team" model="ir.actions.act_window">
            <field name="name">Pipeline Activities</field>
            <field name="res_model">crm.activity.report</field>
-           <field name="view_type">form</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{'search_default_team_id': active_id}</field>
            <field name="domain">[]</field>

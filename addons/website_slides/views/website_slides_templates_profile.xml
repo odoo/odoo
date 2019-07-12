@@ -51,12 +51,6 @@
                                 <t t-foreach="course.channel_id.tag_ids" t-as="tag">
                                     <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
                                 </t>
-                                <t t-foreach="course.channel_id.tag_ids" t-as="tag">
-                                    <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
-                                </t>
-                                <t t-foreach="course.channel_id.tag_ids" t-as="tag">
-                                    <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
-                                </t>
                             </div>
 
                             <div class="d-flex align-items-center">

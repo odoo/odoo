@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <act_window
-        id="act_pos_session_orders"
-        name="Orders"
-        binding_model="pos.session"
-        binding_views="form"
-        res_model="pos.order"
-        context="{'search_default_session_id': active_id, 'default_session_id' : active_id }"/>
-
     <record id="view_pos_session_form" model="ir.ui.view">
         <field name="name">pos.session.form.view</field>
         <field name="model">pos.session</field>
@@ -120,7 +112,7 @@
                         </div>
                     </group>
                     <separator string="Summary by Payment Methods" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                    <field name="statement_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                    <field name="statement_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}" context="{'form_view_ref': 'point_of_sale.view_bank_statement_pos_session'}">
                         <tree string="Statements">
                             <field name="name" />
                             <field name="journal_id" />
@@ -217,7 +209,6 @@
         <field name="name">Sessions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.session</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="view_pos_session_search" />
         <field name="help" type="html">

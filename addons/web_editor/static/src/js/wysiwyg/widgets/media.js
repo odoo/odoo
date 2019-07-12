@@ -141,7 +141,7 @@ var FileWidget = SearchableMediaWidget.extend({
         this.options = _.extend({
             firstFilters: [],
             lastFilters: [],
-            showQuickUpload: config.debug,
+            showQuickUpload: config.isDebug(),
         }, options || {});
 
         this.attachments = [];
@@ -390,7 +390,11 @@ var FileWidget = SearchableMediaWidget.extend({
             });
             optimizeDialog.on('closed', self, function () {
                 self.noSave = true;
-                resolve(attachment);
+                if (isExisting) {
+                    reject();
+                } else {
+                    resolve(attachment);
+                }
             });
         });
         var always = function () {
@@ -418,7 +422,7 @@ var FileWidget = SearchableMediaWidget.extend({
         var attachments = this.attachments.slice(0, this.numberOfAttachmentsToDisplay);
 
         // Render menu & content
-        this.$('.existing-attachments').replaceWith(
+        this.$('.o_we_existing_attachments').replaceWith(
             this._renderExisting(attachments)
         );
 
@@ -539,7 +543,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @param {boolean} isURL
      * @param {boolean} isImage
      */
-    _updateAddUrlUi(emptyValue, isURL, isImage) {
+    _updateAddUrlUi: function (emptyValue, isURL, isImage) {
         this.$addUrlButton.toggleClass('btn-secondary', emptyValue)
             .toggleClass('btn-primary', !emptyValue)
             .prop('disabled', !isURL);

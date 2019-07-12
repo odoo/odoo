@@ -168,9 +168,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(task_serv2.timesheet_ids.mapped('so_line'), so_line_deliver_global_project, "Old timesheet are not modified when changing the task SO line")
 
         # invoice SO, and validate invoice
-        invoice_id = self.sale_order._create_invoices()[0]
-        invoice = self.env['account.invoice'].browse(invoice_id)
-        invoice.action_invoice_open()
+        invoice = self.sale_order._create_invoices()[0]
+        invoice.post()
 
         # try to update timesheets, catch error 'You cannot modify invoiced timesheet'
         with self.assertRaises(UserError):
@@ -363,8 +362,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         # check each line has or no generate something
         self.assertTrue(so_line1.project_id, "Line1 should have create a project based on template A")
         self.assertTrue(so_line2.project_id, "Line2 should have create an empty project")
-        self.assertFalse(so_line3.project_id, "Line3 should not have create a project, since line1 already create a project based on template A")
-        self.assertFalse(so_line4.project_id, "Line4 should not have create a project, since line1 already create an empty project")
+        self.assertEqual(so_line3.project_id, so_line1.project_id, "Line3 should reuse project of line1")
+        self.assertEqual(so_line4.project_id, so_line2.project_id, "Line4 should reuse project of line2")
         self.assertTrue(so_line4.task_id, "Line4 should have create a new task, even if no project created.")
         self.assertTrue(so_line5.project_id, "Line5 should have create a project based on template B")
 

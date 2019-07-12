@@ -156,7 +156,7 @@ class TestProductAttributeValueSetup(TransactionCase):
         """
         if not model:
             model = self.computer
-        return model._get_valid_product_template_attribute_lines().filtered(
+        return model.valid_product_template_attribute_line_ids.filtered(
             lambda l: l.attribute_id == product_attribute_value.attribute_id
         ).product_template_value_ids.filtered(
             lambda v: v.product_attribute_value_id == product_attribute_value

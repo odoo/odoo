@@ -11,7 +11,7 @@
                 <field name="product_id" />
                 <field name="partner_id"/>
                 <field name="address_id"/>
-                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
             </tree>
@@ -78,6 +78,7 @@
                             <form string="Operations">
                                 <group>
                                     <group>
+                                        <field name="type"/>
                                         <field name="product_id"/>
                                         <field name="name"/>
                                         <field name="product_uom_category_id" invisible="1"/>
@@ -86,7 +87,6 @@
                                             <field name="product_uom_qty"/>
                                             <field name="product_uom" groups="uom.group_uom"/>
                                         </div>
-                                        <field name="type" invisible="1"/>
                                         <field name="price_unit"/>
                                         <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                         <field name="invoiced" invisible="1"/>
@@ -135,7 +135,7 @@
                         <field name="fees_lines">
                             <form string="Fees">
                                 <group>
-                                    <field name="product_id"/>
+                                    <field name="product_id" domain="[('type','=','service')]" required="True"/>
                                     <field name="name"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <label for="product_uom_qty"/>
@@ -271,7 +271,6 @@
             <field name="name">Repair Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">repair.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">

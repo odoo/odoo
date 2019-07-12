@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" name="report timesheet assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet_portal.scss"/>
+        </xpath>
+    </template>
+
+    <template id="portal_invoice_page_inherit_timesheet" inherit_id="account.portal_invoice_page">
+        <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="after">
+            <li t-if="timesheets" class="list-group-item flex-grow-1" >
+                <a href="#accordion">Timesheets</a>
+            </li>
+        </xpath>
+
+        <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="after">
+            <div t-if="timesheets" class="container">
+                <div id="accordion" class="o_timesheet_accordion mt-4">
+                    <div class="card mb-0">
+                        <div class="card-header">
+                            <h5 class="mb0">
+                                <a class="card-title" data-toggle="collapse" href="#collapseTimesheet">
+                                    Timesheets
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseTimesheet" class="card-body show" data-parent="#accordion">
+                            <t t-call="hr_timesheet.portal_timesheet_table"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

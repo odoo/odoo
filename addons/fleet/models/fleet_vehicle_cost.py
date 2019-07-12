@@ -211,7 +211,6 @@ class FleetVehicleLogContract(models.Model):
             'name': _("Renew Contract"),
             'view_mode': 'form',
             'view_id': self.env.ref('fleet.fleet_vehicle_log_contract_view_form').id,
-            'view_type': 'tree,form',
             'res_model': 'fleet.vehicle.log.contract',
             'type': 'ir.actions.act_window',
             'domain': '[]',

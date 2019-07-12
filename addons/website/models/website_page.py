@@ -28,23 +28,25 @@ class Page(models.Model):
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
 
-    @api.one
     def _compute_homepage(self):
-        self.is_homepage = self == self.env['website'].get_current_website().homepage_id
+        for page in self:
+            page.is_homepage = page == self.env['website'].get_current_website().homepage_id
 
-    @api.one
     def _set_homepage(self):
-        website = self.env['website'].get_current_website()
-        if self.is_homepage:
-            if website.homepage_id != self:
-                website.write({'homepage_id': self.id})
-        else:
-            if website.homepage_id == self:
-                website.write({'homepage_id': None})
+        for page in self:
+            website = self.env['website'].get_current_website()
+            if page.is_homepage:
+                if website.homepage_id != page:
+                    website.write({'homepage_id': page.id})
+            else:
+                if website.homepage_id == page:
+                    website.write({'homepage_id': None})
 
-    @api.one
     def _compute_visible(self):
-        self.is_visible = self.website_published and (not self.date_publish or self.date_publish < fields.Datetime.now())
+        for page in self:
+            page.is_visible = page.website_published and (
+                not page.date_publish or page.date_publish < fields.Datetime.now()
+            )
 
     @api.multi
     def _is_most_specific_page(self, page_to_test):

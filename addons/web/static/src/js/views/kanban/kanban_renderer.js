@@ -13,6 +13,7 @@ var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 
 var qweb = core.qweb;
+var _t = core._t;
 
 function findInNode(node, predicate) {
     if (predicate(node)) {
@@ -282,13 +283,27 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Returns the default columns for the kanban view example background.
+     * You can override this method to easily customize the column names.
+     *
+     * @private
+     */
+    _getGhostColumns: function () {
+        if (this.examples && this.examples.ghostColumns) {
+            return this.examples.ghostColumns;
+        }
+        return _.map(_.range(1, 5), function (num) {
+            return _.str.sprintf(_t("Column %s"), num);
+        });
+    },
+    /**
      * Render the Example Ghost Kanban card on the background
      *
      * @private
      * @param {DocumentFragment} fragment
      */
     _renderExampleBackground: function (fragment) {
-        var $background = $(qweb.render('KanbanView.ExamplesBackground'));
+        var $background = $(qweb.render('KanbanView.ExamplesBackground', {ghostColumns: this._getGhostColumns()}));
         $background.appendTo(fragment);
     },
     /**
@@ -358,10 +373,9 @@ var KanbanRenderer = BasicRenderer.extend({
                 },
             });
 
-            // Enable column quickcreate
             if (this.createColumnEnabled) {
                 this.quickCreate = new ColumnQuickCreate(this, {
-                    examples: this.examples,
+                    examples: this.examples && this.examples.examples,
                 });
                 this.defs.push(this.quickCreate.appendTo(fragment).then(function () {
                     // Open it directly if there is no column yet

@@ -17,15 +17,15 @@
 
         <!--Report containing an ISR corrresponding to an invoice.-->
         <report id="l10n_ch_isr_report"
-            model="account.invoice"
+            model="account.move"
             report_type="qweb-pdf"
             string="ISR"
             name="l10n_ch.isr_report_main"
             file="l10n_ch.isr_report_main"
             attachment_use="True"
-            attachment="'ISR-' + object.number + '.pdf'"
+            attachment="'ISR-' + object.name + '.pdf'"
             menu="False"
-            print_report_name="'ISR-%s' % object.number"
+            print_report_name="'ISR-%s' % object.name"
             paperformat="paperformat_euro_no_margin"/>
         <!--No additional condition in report name on invoice state or type as this
             report is only available to be printed for out invoices after
@@ -48,7 +48,7 @@
                 <!-- since the body content take the whole page we need a way to add margin
                      back on content outside the ISR so it does not overlap with the header -->
                 <div id="content_outside_isr">
-                    <h1>ISR for invoice <t t-esc="invoice.number"/></h1>
+                    <h1>ISR for invoice <t t-esc="invoice.name"/></h1>
                 </div>
 
                 <div id="isr" t-att-class="'isr-print-bank' if print_bank else None">
@@ -62,9 +62,9 @@
                         <t t-if="print_bank">
                             <div id="voucher-for-bank">
                                 <p t-if="not invoice.company_id.l10n_ch_isr_preprinted_bank">
-                                    <t t-esc="invoice.partner_bank_id.bank_id.name"/><br />
-                                    <t t-esc="invoice.partner_bank_id.bank_id.zip"/>
-                                    <t t-esc="invoice.partner_bank_id.bank_id.city"/>
+                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.name"/><br />
+                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.zip"/>
+                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.city"/>
                                 </p>
                             </div>
                             <!--Zugunsten von/En faveur de/A favore di-->
@@ -103,9 +103,9 @@
                         <t t-if="print_bank">
                             <div id="slip-for-bank">
                                 <p t-if="not invoice.company_id.l10n_ch_isr_preprinted_bank">
-                                    <t t-esc="invoice.partner_bank_id.bank_id.name"/><br />
-                                    <t t-esc="invoice.partner_bank_id.bank_id.zip"/>
-                                    <t t-esc="invoice.partner_bank_id.bank_id.city"/>
+                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.name"/><br />
+                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.zip"/>
+                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.city"/>
                                 </p>
                             </div>
                             <!--Zugunsten von/En faveur de/A favore di-->

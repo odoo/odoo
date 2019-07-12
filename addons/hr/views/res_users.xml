@@ -40,7 +40,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                        <field name="image" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -73,7 +73,7 @@
                                             <field name="work_location"/>
                                         </group>
                                         <group name="managers" string="Managers">
-                                            <field name="parent_id"/>
+                                            <field name="employee_parent_id"/>
                                             <field name="coach_id"/>
                                         </group>
                                     </div>
@@ -160,7 +160,6 @@
         <record id="res_users_action_my" model="ir.actions.act_window">
             <field name="name">Change my Preferences</field>
             <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="hr.res_users_view_form_profile"/>
         </record>
@@ -168,7 +167,6 @@
         <record id="hr_employee_action_from_user" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('user_id', '=', active_id)]</field>
         </record>

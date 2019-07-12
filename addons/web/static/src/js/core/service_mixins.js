@@ -225,15 +225,24 @@ var ServicesMixin = {
     /**
      * Displays a notification.
      *
-     * @param {string} title
-     * @param {string} [message]
-     * @param {string} [type='warning'] 'info', 'success', 'warning', 'danger' or ''
-     * @param {boolean} [sticky=false]
-     * @param {string} [className]
+     * @param {Object} options
+     * @param {string} options.title
+     * @param {string} [options.subtitle]
+     * @param {string} [options.message]
+     * @param {string} [options.type='warning'] 'info', 'success', 'warning', 'danger' or ''
+     * @param {boolean} [options.sticky=false]
+     * @param {string} [options.className]
      */
-    displayNotification: function (title, message, type, sticky, className) {
-        return this.call('notification', 'notify', {
-            type: type,
+    displayNotification: function (options) {
+        return this.call('notification', 'notify', options);
+    },
+    /**
+     * @deprecated will be removed as soon as the notification system is reviewed
+     * @see displayNotification
+     */
+    do_notify: function (title, message, sticky, className) {
+        return this.displayNotification({
+            type: 'warning',
             title: title,
             message: message,
             sticky: sticky,
@@ -244,15 +253,14 @@ var ServicesMixin = {
      * @deprecated will be removed as soon as the notification system is reviewed
      * @see displayNotification
      */
-    do_notify: function (title, message, sticky, className) {
-        return this.displayNotification(title, message, 'warning', sticky, className);
-    },
-    /**
-     * @deprecated will be removed as soon as the notification system is reviewed
-     * @see displayNotification
-     */
     do_warn: function (title, message, sticky, className) {
-        return this.displayNotification(title, message, 'danger', sticky, className);
+        return this.displayNotification({
+            type: 'danger',
+            title: title,
+            message: message,
+            sticky: sticky,
+            className: className,
+        });
     },
 };
 

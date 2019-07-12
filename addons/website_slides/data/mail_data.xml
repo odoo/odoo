@@ -9,7 +9,7 @@
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
                         Hello<br/><br/>
-                        A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}
+                        A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_datetime(object.write_date, tz=user.tz)}
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}">
                                 <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; margin: 16px;"/>

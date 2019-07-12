@@ -22,7 +22,7 @@ class PosController(http.Controller):
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         pos_sessions.login()
         context = {
-            'session_info': json.dumps(request.env['ir.http'].session_info())
+            'session_info': request.env['ir.http'].session_info()
         }
         return request.render('point_of_sale.index', qcontext=context)
 

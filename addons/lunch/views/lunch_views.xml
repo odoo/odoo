@@ -22,13 +22,4 @@
         <menuitem name="Product Categories" parent="menu_lunch_config" id="lunch_product_category_menu" action="lunch_product_category_action" sequence="5"/>
         <menuitem name="Alerts" parent="menu_lunch_config" id="lunch_alert_menu" action="lunch_alert_action" sequence="6"/>
 
-
-        <record id="action_server_lunch_archive_product" model="ir.actions.server">
-            <field name="name">Lunch: Archive/Restore products</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_lunch_product" />
-            <field name="binding_model_id" ref="model_lunch_product" />
-            <field name="state">code</field>
-            <field name="code">records.toggle_active()</field>
-        </record>
 </odoo>

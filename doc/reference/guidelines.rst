@@ -1036,9 +1036,11 @@ The convention is to organize the code according to the following structure:
 - *static/src/fonts*
 - *static/src/img*
 - *static/src/js*
+- *static/src/js/tours*: end user tour files (tutorials, not tests)
 - *static/src/scss*: scss files
 - *static/src/xml*: all qweb templates that will be rendered in JS
-- *static/tests*: this is where we put all test related files.
+- *static/tests*: this is where we put all test related files (QUnit).
+- *static/tests/tours*: this is where we put all tour test files (not tutorials).
 
 Javascript coding guidelines
 ----------------------------

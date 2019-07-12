@@ -1478,6 +1478,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
+
             assert.containsOnce(form, '.o_data_row',
                 "the onchange should have created one record in the relation");
 
@@ -1532,7 +1533,7 @@ QUnit.module('fields', {}, function () {
                 "there should be two records in the one2many in the dialog");
 
             // click on 'Discard'
-            await testUtils.dom.clickFirst($('.modal-footer .btn-secondary'));
+            await testUtils.dom.click($('.modal-footer .btn-secondary'));
 
             assert.strictEqual($('.modal').length, 0, "dialog should be closed");
 
@@ -2140,7 +2141,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('one2many list: unlink two records', async function (assert) {
-            assert.expect(9);
+            assert.expect(8);
             this.data.partner.records[0].p = [1, 2, 4];
             var form = await createView({
                 View: FormView,
@@ -2159,12 +2160,12 @@ QUnit.module('fields', {}, function () {
                         var commands = args.args[1].p;
                         assert.strictEqual(commands.length, 3,
                             'should have generated three commands');
-                        assert.ok(commands[0][0] === 4 && commands[0][1] === 4,
+                        assert.ok(commands[0][0] === 4 && commands[0][1] === 2,
                             'should have generated the command 4 (LINK_TO) with id 4');
-                        assert.ok(commands[1][0] === 3 && commands[1][1] === 1,
+                        assert.ok(commands[1][0] === 4 && commands[1][1] === 4,
+                            'should have generated the command 4 (LINK_TO) with id 4');
+                        assert.ok(commands[2][0] === 3 && commands[2][1] === 1,
                             'should have generated the command 3 (UNLINK) with id 1');
-                        assert.ok(commands[2][0] === 3 && commands[2][1] === 2,
-                            'should have generated the command 3 (UNLINK) with id 2');
                     }
                     return this._super.apply(this, arguments);
                 },
@@ -2187,20 +2188,16 @@ QUnit.module('fields', {}, function () {
                 "should have 2 remove buttons (a record is supposed to have been unlinked)");
 
             await testUtils.dom.click(form.$('tr.o_data_row').first());
-            assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
-                'there should be a modal having Remove Button');
-            await testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
+            assert.containsNone($('.modal .modal-footer .o_btn_remove'),
+                'there should not be a modal having Remove Button');
 
-            assert.containsOnce(form, 'td.o_list_record_remove button',
-                "should have 1 delete button (another record is supposed to have been unlinked)");
-
-            // save and check that the correct command has been generated
+            await testUtils.dom.click($('.modal .btn-secondary'))
             await testUtils.form.clickSave(form);
             form.destroy();
         });
 
-        QUnit.test('one2many list: deleting two records', async function (assert) {
-            assert.expect(9);
+        QUnit.test('one2many list: deleting one records', async function (assert) {
+            assert.expect(7);
             this.data.partner.records[0].p = [1, 2, 4];
             var form = await createView({
                 View: FormView,
@@ -2219,11 +2216,11 @@ QUnit.module('fields', {}, function () {
                         var commands = args.args[1].p;
                         assert.strictEqual(commands.length, 3,
                             'should have generated three commands');
-                        assert.ok(commands[0][0] === 4 && commands[0][1] === 4,
-                            'should have generated the command 4 (LINK_TO) with id 4');
-                        assert.ok(commands[1][0] === 2 && commands[1][1] === 1,
-                            'should have generated the command 2 (DELETE) with id 1');
-                        assert.ok(commands[2][0] === 2 && commands[2][1] === 2,
+                        assert.ok(commands[0][0] === 4 && commands[0][1] === 2,
+                            'should have generated the command 4 (LINK_TO) with id 2');
+                        assert.ok(commands[1][0] === 4 && commands[1][1] === 4,
+                            'should have generated the command 2 (LINK_TO) with id 1');
+                        assert.ok(commands[2][0] === 2 && commands[2][1] === 1,
                             'should have generated the command 2 (DELETE) with id 2');
                     }
                     return this._super.apply(this, arguments);
@@ -2244,15 +2241,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('td.o_list_record_remove button').first());
 
             assert.containsN(form, 'td.o_list_record_remove button', 2,
-                "should have 2 remove buttons (a record is supposed to have been deleted)");
-
-            await testUtils.dom.click(form.$('tr.o_data_row').first());
-            assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
-                'there should be a modal having Remove Button');
-            await testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
-
-            assert.containsOnce(form, 'td.o_list_record_remove button',
-                "should have 1 remove button (another record is supposed to have been deleted)");
+                "should have 2 remove buttons");
 
             // save and check that the correct command has been generated
             await testUtils.form.clickSave(form);
@@ -5674,6 +5663,41 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('one2many list edition, no "Remove" button in modal', async function (assert) {
+            assert.expect(2);
+
+            this.data.partner.fields.foo.default = false;
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partners">' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="foo"/>' +
+                            '</tree>' +
+                            '<form string="Partners">' +
+                                '<field name="display_name"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</form>',
+                res_id: 1,
+            });
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
+            assert.containsOnce($(document), $('.modal'), 'there should be a modal opened');
+            assert.containsNone($('.modal .modal-footer .o_btn_remove'),
+            'modal should not contain a "Remove" button');
+
+            // Discard a modal
+            await testUtils.dom.click($('.modal-footer .btn-secondary'));
+
+            await testUtils.form.clickDiscard(form);
+            form.destroy();
+        });
+
         QUnit.test('x2many fields use their "mode" attribute', async function (assert) {
             assert.expect(1);
 
@@ -5933,12 +5957,12 @@ QUnit.module('fields', {}, function () {
                 View: FormView,
                 model: 'partner',
                 data: this.data,
-                arch: '<form string="Partners">' +
-                    '<field name="turtles">' +
-                    '<tree editable="bottom">' +
-                    '<field name="turtle_trululu" required="1"/>' +
-                    '</tree>' +
-                    '</field>' +
+                arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_trululu" required="1"/>' +
+                            '</tree>' +
+                        '</field>' +
                     '</form>',
                 mockRPC: function (route, args) {
                     var result = this._super.apply(this, arguments);
@@ -7873,7 +7897,7 @@ QUnit.module('fields', {}, function () {
                 data: this.data,
                 arch: '<form string="Partners">' +
                     '<header>' +
-                    '<button name="action_invoice_open" type="object" string="Validate" class="oe_highlight"/>' +
+                    '<button name="post" type="object" string="Validate" class="oe_highlight"/>' +
                     '</header>' +
                     '<field name="turtles">' +
                     '<tree editable="bottom">' +
@@ -7891,7 +7915,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            await testUtils.dom.click($('button[name="action_invoice_open"]'));
+            await testUtils.dom.click($('button[name="post"]'));
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             form.destroy();
         });
@@ -8397,6 +8421,75 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('two one2many fields with same relation and onchanges', async function (assert) {
+            // this test simulates the presence of two one2many fields with onchanges, such that
+            // changes to the first o2m are repercuted on the second one
+            assert.expect(6);
+
+            this.data.partner.fields.turtles2 = {
+                string: "Turtles 2",
+                type: "one2many",
+                relation: 'turtle',
+                relation_field: 'turtle_trululu',
+            };
+            this.data.partner.onchanges = {
+                turtles: function (obj) {
+                    // when we add a line to turtles, add same line to turtles2
+                    if (obj.turtles.length) {
+                        obj.turtles = [[5]].concat(obj.turtles);
+                        obj.turtles2 = obj.turtles;
+                    }
+                },
+                turtles2: function (obj) {
+                    // simulate an onchange on turtles2 as well
+                    if (obj.turtles2.length) {
+                        obj.turtles2 = [[5]].concat(obj.turtles2);
+                    }
+                }
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom"><field name="name" required="1"/></tree>' +
+                        '</field>' +
+                        '<field name="turtles2">' +
+                            '<tree editable="bottom"><field name="name" required="1"/></tree>' +
+                        '</field>' +
+                    '</form>',
+            });
+
+            // trigger first onchange by adding a line in turtles field (should add a line in turtles2)
+            await testUtils.dom.click(form.$('.o_field_widget[name="turtles"] .o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_field_widget[name="turtles"] .o_field_widget[name="name"]'), 'ABC');
+
+            assert.containsOnce(form, '.o_field_widget[name="turtles"] .o_data_row',
+                'line of first o2m should have been created');
+            assert.containsOnce(form, '.o_field_widget[name="turtles2"] .o_data_row',
+                'line of second o2m should have been created');
+
+            // add a line in turtles2
+            await testUtils.dom.click(form.$('.o_field_widget[name="turtles2"] .o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_field_widget[name="turtles2"] .o_field_widget[name="name"]'), 'DEF');
+
+            assert.containsOnce(form, '.o_field_widget[name="turtles"] .o_data_row',
+                'we should still have 1 line in turtles');
+            assert.containsN(form, '.o_field_widget[name="turtles2"] .o_data_row', 2,
+                'we should have 2 lines in turtles2');
+            assert.hasClass(form.$('.o_field_widget[name="turtles2"] .o_data_row:nth(1)'), 'o_selected_row',
+                'second row should be in edition');
+
+            await testUtils.form.clickSave(form);
+
+            assert.strictEqual(form.$('.o_field_widget[name="turtles2"] .o_data_row').text(), 'ABCDEF');
+
+            form.destroy();
+        });
+
     });
 });
 });

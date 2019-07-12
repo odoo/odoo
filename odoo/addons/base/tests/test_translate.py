@@ -251,7 +251,7 @@ class TestTranslation(TransactionCase):
 
     def setUp(self):
         super(TestTranslation, self).setUp()
-        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR'])
+        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
         self.customers = self.env['res.partner.category'].create({'name': 'Customers'})
         self.env['ir.translation'].create({
             'type': 'model',
@@ -327,7 +327,7 @@ class TestTranslation(TransactionCase):
                 })
         self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
         translations = self.env['ir.translation'].search([
-            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
+            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name'), ('lang', '=', 'fr_FR'),
         ])
         self.assertEqual(len(translations), 1, "Translations were not duplicated after `translate_fields` call")
         self.assertEqual(translations.value, "Apprenti", "The first translation must stay")
@@ -336,7 +336,7 @@ class TestTranslation(TransactionCase):
 class TestXMLTranslation(TransactionCase):
     def setUp(self):
         super(TestXMLTranslation, self).setUp()
-        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
 
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({

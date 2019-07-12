@@ -32,6 +32,7 @@
             <field name="name">Share</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_view_types">form</field>
             <field name="state">code</field>
             <field name="code">action = records.action_share()</field>
         </record>

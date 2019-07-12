@@ -190,7 +190,6 @@ class StockPackageLevel(models.Model):
         return {
             'name': _('Package Content'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.package_level',
             'views': [(view.id, 'form')],

@@ -60,6 +60,14 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
             'taxes_id': [(6, 0, [self.tax_15pc_excl.id])],
         })
 
+        self.product_C = self.env['product.product'].create({
+            'name': 'Product C',
+            'list_price': 100,
+            'sale_ok': True,
+            'taxes_id': [(6, 0, [])],
+
+        })
+
         # Immediate Program By A + B: get B free
         # No Conditions
         self.immediate_promotion_program = self.env['sale.coupon.program'].create({
@@ -78,4 +86,15 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
             'reward_product_id': self.product_A.id,
             'rule_products_domain': "[('id', 'in', [%s])]" % (self.product_A.id),
             'active': True,
+        })
+
+        self.code_promotion_program_with_discount = self.env['sale.coupon.program'].create({
+            'name': 'Buy 1 C + Enter code, 10 percent discount on C',
+            'promo_code_usage': 'code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 10,
+            'rule_products_domain': "[('id', 'in', [%s])]" % (self.product_C.id),
+            'active': True,
+            'discount_apply_on': 'on_order',
         })

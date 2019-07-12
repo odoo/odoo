@@ -123,7 +123,7 @@ var config = require('web.config');
 var concurrency = require('web.concurrency');
 var publicWidget = require('web.public.widget');
 var VariantMixin = require('sale.VariantMixin');
-require("website.content.zoomodoo");
+require("web.zoomodoo");
 
 var qweb = core.qweb;
 
@@ -698,6 +698,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     _toggleDisable: function ($parent, isCombinationPossible) {
         VariantMixin._toggleDisable.apply(this, arguments);
         $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
+        $parent.find("#buy_now").toggleClass('disabled', !isCombinationPossible);
     },
     /**
      * Write the properties of the form elements in the DOM to prevent the

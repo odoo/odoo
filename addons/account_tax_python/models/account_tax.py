@@ -36,7 +36,7 @@ class AccountTaxPython(models.Model):
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
 
     @api.multi
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True):
         taxes = self.filtered(lambda r: r.amount_type != 'code')
         company = self.env.company
         for tax in self.filtered(lambda r: r.amount_type == 'code'):
@@ -45,7 +45,7 @@ class AccountTaxPython(models.Model):
             safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
                 taxes += tax
-        return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund)
+        return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund, handle_price_include=handle_price_include)
 
 
 class AccountTaxTemplatePython(models.Model):

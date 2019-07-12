@@ -39,7 +39,6 @@ class IrConfigParameter(models.Model):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
-    @api.model_cr
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
         """
@@ -64,7 +63,7 @@ class IrConfigParameter(models.Model):
         return self._get_param(key) or default
 
     @api.model
-    @ormcache('self._uid', 'key')
+    @ormcache('self.env.uid', 'self.env.su', 'key')
     def _get_param(self, key):
         params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
         return params[0]['value'] if params else None

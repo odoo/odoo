@@ -17,6 +17,7 @@
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="state"/>
                     <field name="reservation_state"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -25,6 +26,7 @@
             <field name="name">Mrp: Plan Production Orders</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">list</field>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_routings'))]"/>
             <field name="state">code</field>
             <field name="code">records.button_plan()</field>
@@ -311,7 +313,6 @@
             <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
@@ -328,7 +329,6 @@
             <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
@@ -346,7 +346,6 @@
         <field name="name">Manufacturing Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot,form</field>
         <field name="target">current</field>
     </record>
@@ -381,7 +380,6 @@
         <field name="name">Manufacturing Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
     </record>
     </data>

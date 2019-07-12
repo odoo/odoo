@@ -224,10 +224,11 @@ class PosSession(models.Model):
             st_values = {
                 'journal_id': journal.id,
                 'user_id': self.env.user.id,
-                'name': pos_name
+                'name': pos_name,
+                'balance_start': self.env["account.bank.statement"]._get_opening_balance(journal.id)
             }
 
-            statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
+            statements.append(ABS.with_context(ctx).with_user(uid).create(st_values).id)
 
         values.update({
             'name': pos_name,
@@ -235,7 +236,7 @@ class PosSession(models.Model):
             'config_id': config_id
         })
 
-        res = super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
+        res = super(PosSession, self.with_context(ctx).with_user(uid)).create(values)
         if not pos_config.cash_control:
             res.action_pos_session_open()
 
@@ -336,7 +337,6 @@ class PosSession(models.Model):
 
         action = {
             'name': _('Cash Control'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.bank.statement.cashbox',
             'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,

@@ -8,7 +8,7 @@ class TestCourseCertificationFailureFlow(SurveyCase):
     def test_course_certification_failure_flow(self):
         # Step 1: create a simple certification
         # --------------------------------------------------
-        with self.sudo(self.survey_user):
+        with self.with_user(self.survey_user):
             certification = self.env['survey.survey'].create({
                 'title': 'Small course certification',
                 'access_mode': 'public',
@@ -61,7 +61,7 @@ class TestCourseCertificationFailureFlow(SurveyCase):
         # forces recompute of partner_ids as we create directly in relation
         self.channel.invalidate_cache()
         slide_partner = self.slide_certification._action_set_viewed(self.user_public.partner_id)
-        self.slide_certification.sudo(self.user_public)._generate_certification_url()
+        self.slide_certification.with_user(self.user_public)._generate_certification_url()
 
         self.assertEqual(1, len(slide_partner.user_input_ids), 'A user input should have been automatically created upon slide view')
 
@@ -95,7 +95,7 @@ class TestCourseCertificationFailureFlow(SurveyCase):
 
         self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should be a member of the course once again')
         new_slide_partner = self.slide_certification._action_set_viewed(self.user_public.partner_id)
-        self.slide_certification.sudo(self.user_public)._generate_certification_url()
+        self.slide_certification.with_user(self.user_public)._generate_certification_url()
         self.assertEqual(1, len(new_slide_partner.user_input_ids.filtered(lambda user_input: user_input.state != 'done')), 'A new user input should have been automatically created upon slide view')
 
         # Step 8: fill in the created user_input with correct answers this time

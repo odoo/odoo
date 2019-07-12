@@ -4,11 +4,14 @@
 import base64
 from random import choice
 from string import digits
+import itertools
 from werkzeug import url_encode
+import pytz
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
+from odoo.addons.resource.models.resource_mixin import timezone_datetime
 
 
 class HrEmployeePrivate(models.Model):
@@ -92,18 +95,11 @@ class HrEmployeePrivate(models.Model):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
-        "Photo", default=_default_image,
-        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
+        "Photo", default=_default_image)
     image_medium = fields.Binary(
-        "Medium-sized photo",
-        help="Medium-sized photo of the employee. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
+        "Medium-sized photo")
     image_small = fields.Binary(
-        "Small-sized photo",
-        help="Small-sized photo of the employee. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+        "Small-sized photo")
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     parent_id = fields.Many2one('hr.employee', 'Manager')
@@ -111,7 +107,7 @@ class HrEmployeePrivate(models.Model):
     coach_id = fields.Many2one('hr.employee', 'Coach')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'emp_id', 'category_id',
+        'emp_id', 'category_id', groups="hr.group_hr_user",
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")
@@ -155,7 +151,7 @@ class HrEmployeePrivate(models.Model):
             search on an hr.employee returns a hr.employee recordset, even if you don't have access
             to this model, as the result of _search (the ids of the public employees) is to be
             browsed on the hr.employee model. This can be trusted as the ids of the public
-            employees exactly match the ids of the related hr.employee. 
+            employees exactly match the ids of the related hr.employee.
         """
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
@@ -165,7 +161,7 @@ class HrEmployeePrivate(models.Model):
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         if access_uid:
-            self_sudo = self.sudo(access_uid)
+            self_sudo = self.with_user(access_uid)
         else:
             self_sudo = self
 
@@ -179,7 +175,7 @@ class HrEmployeePrivate(models.Model):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
         if access_uid:
-            self_sudo = self.sudo(access_uid)
+            self_sudo = self.with_user(access_uid)
         else:
             self_sudo = self
 
@@ -292,7 +288,6 @@ class HrEmployeePrivate(models.Model):
                 'type': 'ir.actions.act_window',
                 'name': _('Register Departure'),
                 'res_model': 'hr.departure.wizard',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {'active_id': self.id},
@@ -314,6 +309,10 @@ class HrEmployeePrivate(models.Model):
             except AccessError:
                 employee.is_address_home_a_company = False
 
+    # ---------------------------------------------------------
+    # Business Methods
+    # ---------------------------------------------------------
+
     @api.model
     def get_import_templates(self):
         return [{
@@ -330,9 +329,58 @@ class HrEmployeePrivate(models.Model):
         to post messages as the correct user.
         """
         real_user = self.env.context.get('binary_field_real_user')
-        if self.env.user.id == SUPERUSER_ID and real_user:
-            self = self.sudo(real_user)
+        if self.env.is_superuser() and real_user:
+            self = self.with_user(real_user)
         return self
+
+    def _get_work_interval(self, start, end):
+        """ Return interval's start datetime for interval closest to start. And interval's end datetime for interval closest to end.
+            If none is found return None
+            Note: this method is used in enterprise (forecast and planning)
+
+            :start: datetime
+            :end: datetime
+            :return: (datetime|None, datetime|None)
+        """
+        start_datetime = timezone_datetime(start)
+        end_datetime = timezone_datetime(end)
+        employee_mapping = {}
+        for employee in self:
+            work_intervals = sorted(
+                employee.resource_calendar_id._work_intervals(start_datetime, end_datetime, employee.resource_id),
+                key=lambda x: x[0]
+            )
+            if work_intervals:
+                employee_mapping[employee.id] = (work_intervals[0][0].astimezone(pytz.utc), work_intervals[-1][1].astimezone(pytz.utc))
+            else:
+                employee_mapping[employee.id] = (None, None)
+        return employee_mapping
+
+    def _get_unavailable_intervals(self, start, end):
+        """ Compute the intervals during which employee is unavailable with hour granularity between start and end
+            Note: this method is used in enterprise (forecast and planning)
+
+        """
+        start_datetime = timezone_datetime(start)
+        end_datetime = timezone_datetime(end)
+        employee_mapping = {}
+        for employee in self:
+            calendar = employee.resource_calendar_id
+            resource = employee.resource_id
+            employee_work_intervals = calendar._work_intervals(start_datetime, end_datetime, resource)
+            employee_work_intervals = [(start, stop) for start, stop, meta in employee_work_intervals]
+            # start + flatten(intervals) + end
+            employee_work_intervals = [start_datetime] + list(itertools.chain.from_iterable(employee_work_intervals)) + [end_datetime]
+            # put it back to UTC
+            employee_work_intervals = list(map(lambda dt: dt.astimezone(pytz.utc), employee_work_intervals))
+            # pick groups of two
+            employee_work_intervals = list(zip(employee_work_intervals[0::2], employee_work_intervals[1::2]))
+            employee_mapping[employee.id] = employee_work_intervals
+        return employee_mapping
+
+    # ---------------------------------------------------------
+    # Messaging
+    # ---------------------------------------------------------
 
     def _message_log(self, **kwargs):
         return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)

@@ -50,7 +50,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_w_template(self):
-        composer = self.env['mail.compose.message'].sudo(self.user_employee).with_context({
+        composer = self.env['mail.compose.message'].with_user(self.user_employee).with_context({
             'default_composition_mode': 'comment',
             'default_model': 'mail.test.simple',
             'default_res_id': self.test_record.id,
@@ -89,15 +89,14 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
         attachments_onchange = [composer.attachment_ids]
         # template_1 has two static attachments and one dynamically generated report,
         # template_2 only has the report, so we should get 3, 1, 3 attachments
-        attachment_numbers = [0, 3, 1, 3, 3]
+        attachment_numbers = [0, 3, 1, 3, 0]
 
         for template in onchange_templates:
             onchange = composer.onchange_template_id(
                 template.id if template else False, 'comment', self.test_record._name, self.test_record.id
             )
-            values = composer._convert_to_record(composer._convert_to_cache(onchange['value']))
-            attachments_onchange.append(values['attachment_ids'])
             composer.update(onchange['value'])
+            attachments_onchange.append(composer.attachment_ids)
 
         self.assertEqual(
             [len(attachments) for attachments in attachments_onchange],
@@ -111,7 +110,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_post_w_template(self):
-        self.test_record.sudo(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='comment')
+        self.test_record.with_user(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='comment')
 
         new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
         self.assertEmails(
@@ -125,7 +124,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
     def test_composer_w_template_mass_mailing(self):
         test_record_2 = self.env['mail.test.simple'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test2', 'email_from': 'laurie.poiret@example.com'})
 
-        composer = self.env['mail.compose.message'].sudo(self.user_employee).with_context({
+        composer = self.env['mail.compose.message'].with_user(self.user_employee).with_context({
             'default_composition_mode': 'mass_mail',
             # 'default_notify': True,
             'default_notify': False,

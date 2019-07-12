@@ -16,14 +16,18 @@ class Digest(models.Model):
             raise AccessError(_("Do not have access, skip this data for user's digest email"))
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
-            account_moves = self.env['account.move'].read_group([
-                ('journal_id.type', '=', 'sale'),
-                ('company_id', '=', company.id),
-                ('date', '>=', start),
-                ('date', '<', end)], ['journal_id', 'amount'], ['journal_id'])
-            record.kpi_account_total_revenue_value = sum([account_move['amount'] for account_move in account_moves])
+            self._cr.execute('''
+                SELECT SUM(line.debit)
+                FROM account_move_line line
+                JOIN account_move move ON move.id = line.move_id
+                JOIN account_journal journal ON journal.id = move.journal_id
+                WHERE line.company_id = %s AND line.date >= %s AND line.date < %s
+                AND journal.type = 'sale'
+            ''', [company.id, start, end])
+            query_res = self._cr.fetchone()
+            record.kpi_account_total_revenue_value = query_res and query_res[0] or 0.0
 
     def compute_kpis_actions(self, company, user):
         res = super(Digest, self).compute_kpis_actions(company, user)
-        res['kpi_account_total_revenue'] = 'account.action_invoice_tree1&menu_id=%s' % self.env.ref('account.menu_finance').id
+        res['kpi_account_total_revenue'] = 'account.action_move_out_invoice_type&menu_id=%s' % self.env.ref('account.menu_finance').id
         return res

@@ -81,7 +81,7 @@ class GoalDefinition(models.Model):
             Obj = self.env[definition.model_id.model]
             try:
                 domain = safe_eval(definition.domain, {
-                    'user': self.env.user.sudo(self.env.user)
+                    'user': self.env.user.with_user(self.env.user)
                 })
                 # dummy search to make sure the domain is valid
                 Obj.search_count(domain)
@@ -429,7 +429,7 @@ class Goal(models.Model):
             action = self.definition_id.action_id.read()[0]
 
             if self.definition_id.res_id_field:
-                current_user = self.env.user.sudo(self.env.user)
+                current_user = self.env.user.with_user(self.env.user)
                 action['res_id'] = safe_eval(self.definition_id.res_id_field, {
                     'user': current_user
                 })

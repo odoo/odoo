@@ -71,7 +71,6 @@ class AccountBankStatementImport(models.TransientModel):
             'name': _('Journal Creation'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.import.journal.creation',
-            'view_type': 'form',
             'view_mode': 'form',
             'target': 'new',
             'context': {

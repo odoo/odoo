@@ -362,16 +362,18 @@ class TestVariantsNoCreate(common.TestProductCommon):
             'attribute_line_ids': [
                 (0, 0, { # one variant for this one
                     'attribute_id': self.prod_att_1.id,
-                    'value_ids': [(4, self.prod_attr1_v1.id)],
+                    'value_ids': [(6, 0, self.prod_attr1_v1.ids)],
                 }),
             ],
         })
         self.assertEqual(len(template.product_variant_ids), 1)
-
-        for variant_id in template.product_variant_ids:
-            variant_id.attribute_value_ids += self.size_S
-        template.attribute_line_ids += template.attribute_line_ids.browse()
+        template.attribute_line_ids = [(0, 0, {
+            'attribute_id': self.size.id,
+            'value_ids': [(6, 0, self.size_S.ids)],
+        })]
         self.assertEqual(len(template.product_variant_ids), 1)
+        # no_variant attribute should not appear on the variant
+        self.assertNotIn(self.size_S, template.product_variant_ids.attribute_value_ids)
 
 
 class TestVariantsManyAttributes(common.TestAttributesCommon):
@@ -481,12 +483,18 @@ class TestVariantsImages(common.TestProductCommon):
             'name': 'template',
         })
 
-        for color in self.colors:
-            attr = self.env['product.attribute.value'].create({
-                'name': color,
-                'attribute_id': product_attribute.id,
-            })
+        color_values = self.env['product.attribute.value'].create([{
+            'name': color,
+            'attribute_id': product_attribute.id,
+        } for color in self.colors])
 
+        self.env['product.template.attribute.line'].create({
+            'attribute_id': product_attribute.id,
+            'product_tmpl_id': self.template.id,
+            'value_ids': [(6, 0, color_values.ids)],
+        })
+
+        for color, color_value in zip(self.colors, color_values):
             f = io.BytesIO()
             Image.new('RGB', (800, 500), self.colors[color]).save(f, 'PNG')
             f.seek(0)
@@ -494,7 +502,7 @@ class TestVariantsImages(common.TestProductCommon):
 
             self.env['product.product'].create({
                 'image_raw_original': self.images[color],
-                'attribute_value_ids': [(6, 0, [attr.id])],
+                'attribute_value_ids': [(6, 0, [color_value.id])],
                 'product_tmpl_id': self.template.id,
             })
         # the first one has no image, no color

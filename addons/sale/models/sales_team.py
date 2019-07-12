@@ -57,7 +57,7 @@ class CrmTeam(models.Model):
     def _compute_sales_to_invoice(self):
         sale_order_data = self.env['sale.order'].read_group([
             ('team_id', 'in', self.ids),
-            ('order_line.qty_to_invoice', '>', 0),
+            ('invoice_status','=','to invoice'),
         ], ['team_id'], ['team_id'])
         data_map = {datum['team_id'][0]: datum['team_id_count'] for datum in sale_order_data }
         for team in self:
@@ -65,16 +65,32 @@ class CrmTeam(models.Model):
 
     @api.multi
     def _compute_invoiced(self):
-        invoice_data = self.env['account.invoice'].read_group([
-            ('state', 'in', ['open', 'in_payment', 'paid']),
-            ('team_id', 'in', self.ids),
-            ('date', '<=', date.today()),
-            ('date', '>=', date.today().replace(day=1)),
-            ('type', 'in', ['out_invoice', 'out_refund']),
-        ], ['amount_untaxed_signed', 'team_id'], ['team_id'])
-        data_map = { datum['team_id'][0]: datum['amount_untaxed_signed'] for datum in invoice_data}
+        if not self:
+            return
+
+        query = '''
+            SELECT
+                move.team_id         AS team_id,
+                SUM(line.balance)    AS amount_untaxed_signed
+            FROM account_move move
+            LEFT JOIN account_move_line line ON line.move_id = move.id
+            WHERE move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
+            AND move.invoice_payment_state IN ('in_payment', 'paid')
+            AND move.state = 'posted'
+            AND move.team_id IN %s
+            AND move.date BETWEEN %s AND %s
+            AND line.tax_line_id IS NULL
+            AND line.display_type IS NULL
+            AND line.account_internal_type NOT IN ('receivable', 'payable')
+            GROUP BY move.team_id
+        '''
+        today = fields.Date.today()
+        params = [tuple(self.ids), fields.Date.to_string(today), fields.Date.to_string(today.replace(day=1))]
+        self._cr.execute(query, params)
+
+        data_map = dict((v[0], v[1]) for v in self._cr.fetchall())
         for team in self:
-            team.invoiced = data_map.get(team.id,0.0)
+            team.invoiced = data_map.get(team.id, 0.0)
     
     def _graph_get_model(self):
         if self._context.get('in_sales_app'):

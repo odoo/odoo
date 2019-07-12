@@ -33,6 +33,8 @@ class SurveyUserInput(models.Model):
     # description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
     scoring_type = fields.Selection(string="Scoring", related="survey_id.scoring_type")
+    is_attempts_limited = fields.Boolean("Limited number of attempts", related='survey_id.is_attempts_limited')
+    attempts_limit = fields.Integer("Number of attempts", related='survey_id.attempts_limit')
     start_datetime = fields.Datetime('Start date and time', readonly=True)
     is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
     input_type = fields.Selection([
@@ -50,6 +52,7 @@ class SurveyUserInput(models.Model):
     invite_token = fields.Char('Invite token', readonly=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('E-mail', readonly=True)
+    attempt_number = fields.Integer("Attempt n°", compute='_compute_attempt_number')
 
     # Displaying data
     last_displayed_page_id = fields.Many2one('survey.question', string='Last displayed question/page')
@@ -135,6 +138,40 @@ class SurveyUserInput(models.Model):
         for user_input in self:
             user_input.is_time_limit_reached = user_input.survey_id.is_time_limited and fields.Datetime.now() \
                 > user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
+
+    @api.depends('state', 'test_entry', 'survey_id.is_attempts_limited', 'partner_id', 'email', 'invite_token')
+    def _compute_attempt_number(self):
+        attempts_to_compute = self.filtered(
+            lambda user_input: user_input.state == 'done' and not user_input.test_entry and user_input.survey_id.is_attempts_limited
+        )
+
+        for user_input in (self - attempts_to_compute):
+            user_input.attempt_number = 1
+
+        if attempts_to_compute:
+            self.env.cr.execute("""SELECT user_input.id, (COUNT(previous_user_input.id) + 1) AS attempt_number
+                FROM survey_user_input user_input
+                LEFT OUTER JOIN survey_user_input previous_user_input
+                ON user_input.survey_id = previous_user_input.survey_id
+                AND previous_user_input.state = 'done'
+                AND previous_user_input.test_entry = False
+                AND previous_user_input.id < user_input.id
+                AND (user_input.invite_token IS NULL OR user_input.invite_token = previous_user_input.invite_token)
+                AND (user_input.partner_id = previous_user_input.partner_id OR user_input.email = previous_user_input.email)
+                WHERE user_input.id IN %s
+                GROUP BY user_input.id;
+            """, (tuple(attempts_to_compute.ids),))
+
+            attempts_count_results = self.env.cr.dictfetchall()
+
+            for user_input in attempts_to_compute:
+                attempt_number = 1
+                for attempts_count_result in attempts_count_results:
+                    if attempts_count_result['id'] == user_input.id:
+                        attempt_number = attempts_count_result['attempt_number']
+                        break
+
+                user_input.attempt_number = attempt_number
 
     @api.multi
     def _mark_done(self):

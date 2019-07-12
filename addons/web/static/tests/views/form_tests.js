@@ -468,7 +468,6 @@ QUnit.module('Views', {
                         target: 'current',
                         res_model: args.model,
                         context: args.kwargs.context,
-                        'view_type': 'form',
                         'view_mode': 'form',
                         'views': [[false, 'form']],
                     });
@@ -7017,6 +7016,54 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('autoresize of text fields is done on notebook page show', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.text_field = { string: 'Text field', type: 'text' };
+        this.data.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+        this.data.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+        this.data.partner.fields.text_field_empty = { string: 'Text field', type: 'text' };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="First Page">' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                            '<page string="Second Page">' +
+                                '<field name="text_field"/>' +
+                            '</page>' +
+                            '<page string="Third Page">' +
+                                '<field name="text_field_empty"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        assert.hasClass(form.$('.o_notebook .nav .nav-link:first()'), 'active');
+
+        await testUtils.dom.click(form.$('.o_notebook .nav .nav-link:nth(1)'));
+        assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(1)'), 'active');
+
+        var height = form.$('.o_field_widget[name=text_field]').height();
+        assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+        await testUtils.dom.click(form.$('.o_notebook .nav .nav-link:nth(2)'));
+        assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(2)'), 'active');
+
+        var height = form.$('.o_field_widget[name=text_field_empty]').css('height');
+        assert.strictEqual(height, '50px', "empty textarea should have height of 50px");
+
+        form.destroy();
+    });
+
     QUnit.test('check if the view destroys all widgets and instances', async function (assert) {
         assert.expect(1);
 
@@ -7324,99 +7371,6 @@ QUnit.module('Views', {
             'reload currencies',
             'read',
         ]);
-
-        form.destroy();
-    });
-
-    QUnit.test('a popup window should automatically close after a do_action event', async function (assert) {
-        // Having clicked on a one2many in a form view and clicked on a many2one
-        // field in the resulting popup window that popup window should automatically close.
-
-        assert.expect(2);
-
-        this.data.partner.records[0].product_ids = [37];
-        this.data.product.records[0].partner_type_id = 12;
-
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch:'<form>' +
-                    '<field name="product_ids">' +
-                        '<tree><field name="partner_type_id"/></tree>' +
-                        '<form><field name="partner_type_id"/></form>' +
-                    '</field>' +
-                '</form>',
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'get_formview_action' && args.model === 'partner_type') {
-                    return Promise.resolve();
-                }
-                return this._super(route, args);
-            },
-            intercepts: {
-                do_action: function (event) {
-                    event.data.on_success();
-                }
-            },
-        });
-        // Open one2many
-        await testUtils.dom.click(form.$('.o_data_row'));
-        assert.strictEqual($('.modal-content').length, 1, "a popup window should have opened");
-        // Click on many2one and trigger do_action
-        await testUtils.dom.click($('.modal-content a[name="partner_type_id"]'));
-        assert.strictEqual($('.modal-content').length, 0, "the popup window should have closed");
-
-        form.destroy();
-    });
-
-    QUnit.test('all popup windows should automatically close after a do_action event', async function (assert) {
-
-        // Having clicked successively on two different one2many in form views
-        // and clicked on a many2one in the last popup window all popup
-        // windows should automatically close.
-
-        assert.expect(2);
-
-        this.data.partner.records[0].p = [2];
-        this.data.partner.records[1].product_ids = [37];
-        this.data.product.records[0].partner_type_id = 12;
-
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch:'<form>' +
-                        '<field name="p">' +
-                            '<tree><field name="display_name"/></tree>' +
-                        '</field>' +
-                '</form>',
-            archs: {
-                'partner,false,form': '<form><field name="product_ids">' +
-                                            '<tree><field name="partner_type_id"/></tree>' +
-                                            '<form><field name="partner_type_id"/></form>' +
-                                        '</field></form>',
-            },
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'get_formview_action' && args.model === 'partner_type') {
-                    return Promise.resolve();
-                }
-                return this._super(route, args);
-            },
-            intercepts: {
-                do_action: function (event) {
-                    event.data.on_success();
-                }
-            },
-        });
-        // Open two one2manys
-        await testUtils.dom.click(form.$('.o_data_row'));
-        await testUtils.dom.click($('.modal-content .o_data_row'));
-        assert.strictEqual($('.modal-content').length, 2, "Two popup windows should have opened.");
-        // Click on many2one and trigger do_action
-        await testUtils.dom.click($('.modal-content a[name="partner_type_id"]'));
-        assert.strictEqual($('.modal-content').length, 0, "All popup windows should have closed.");
 
         form.destroy();
     });

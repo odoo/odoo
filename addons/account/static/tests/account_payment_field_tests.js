@@ -9,7 +9,7 @@ var createView = testUtils.createView;
 QUnit.module('account', {
     beforeEach: function () {
         this.data = {
-            'account.invoice': {
+            'account.move': {
                 fields: {
                     payments_widget: {string: "payments_widget data", type: "char"},
                     outstanding_credits_debits_widget: {string: "outstanding_credits_debits_widget data", type: "char"},
@@ -17,7 +17,7 @@ QUnit.module('account', {
                 records: [{
                     id: 1,
                     payments_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 555.0, "name": "Customer Payment: INV/2017/0004", "date": "2017-04-25", "position": "before", "ref": "BNK1/2017/0003 (INV/2017/0004)", "payment_id": 22, "move_id": 10, "journal_name": "Bank"}], "outstanding": false, "title": "Less Payment"}',
-                    outstanding_credits_debits_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 100.0, "journal_name": "INV/2017/0004", "position": "before", "id": 20}], "invoice_id": 4, "outstanding": true, "title": "Outstanding credits"}',
+                    outstanding_credits_debits_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 100.0, "journal_name": "INV/2017/0004", "position": "before", "id": 20}], "move_id": 4, "outstanding": true, "title": "Outstanding credits"}',
                 }]
             },
         };
@@ -30,7 +30,7 @@ QUnit.module('account', {
 
         var form = await createView({
             View: FormView,
-            model: 'account.invoice',
+            model: 'account.move',
             data: this.data,
             arch: '<form>'+
                 '<field name="outstanding_credits_debits_widget" widget="payment"/>'+
@@ -40,11 +40,11 @@ QUnit.module('account', {
             mockRPC: function (route, args) {
                 if (args.method === 'remove_move_reconcile') {
                     assert.deepEqual(args.args, [22], "should call remove_move_reconcile {warning: required focus}");
-                    assert.deepEqual(args.kwargs, {context: {"invoice_id": 1}}, "should call remove_move_reconcile {warning: required focus}");
+                    assert.deepEqual(args.kwargs, {context: {"move_id": 1}}, "should call remove_move_reconcile {warning: required focus}");
                     return Promise.resolve();
                 }
-                if (args.method === 'assign_outstanding_credit') {
-                    assert.deepEqual(args.args, [4, 20], "should call assign_outstanding_credit {warning: required focus}");
+                if (args.method === 'js_assign_outstanding_line') {
+                    assert.deepEqual(args.args, [4, 20], "should call js_assign_outstanding_line {warning: required focus}");
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);

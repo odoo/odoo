@@ -42,8 +42,7 @@ from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http, tools
-from odoo.http import content_disposition, dispatch_rpc, request, \
-    serialize_exception as _serialize_exception, Response
+from odoo.http import content_disposition, dispatch_rpc, request, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -83,7 +82,7 @@ def serialize_exception(f):
             return f(*args, **kwargs)
         except Exception as e:
             _logger.exception("An exception occured during an http request")
-            se = _serialize_exception(e)
+            se = request.registry['ir.http'].serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
@@ -620,7 +619,7 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="none")
+    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="public")
     def translations(self, unique, mods=None, lang=None):
         """
         Load the translations for the specified language and modules
@@ -1071,7 +1070,7 @@ class Binary(http.Controller):
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
-        if status == 301 or (status != 200 and download):
+        if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
             image_base64 = base64.b64encode(self.placeholder(image=placeholder))
@@ -1694,7 +1693,7 @@ class ReportController(http.Controller):
             else:
                 return
         except Exception as e:
-            se = _serialize_exception(e)
+            se = request.env['ir.http'].serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",

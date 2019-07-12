@@ -22,10 +22,10 @@
                                 <input type="text" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
                             </div>
                         </div>
-                        <div class="form-group row form-field o_website_form_required_custom">
+                        <div class="form-group row form-field">
                             <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Your Company</label>
                             <div class="col-lg-7 col-md-8">
-                                <input type="text" class="form-control o_website_form_input" name="partner_name" required="" t-att-value="request.params.get('partner_name', '')" />
+                                <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="request.params.get('partner_name', '')" />
                             </div>
                         </div>
                         <div class="form-group row form-field o_website_form_required">

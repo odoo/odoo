@@ -35,7 +35,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         # subscribe second employee to the group to test notifications
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
-        msg = self.test_record.sudo(self.user_employee).message_post(
+        msg = self.test_record.with_user(self.user_employee).message_post(
             body=_body, subject=_subject,
             message_type='comment', subtype='mt_comment',
             partner_ids=[self.partner_1.id, self.partner_2.id]
@@ -64,7 +64,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
     def test_post_notifications_keep_emails(self):
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
-        msg = self.test_record.sudo(self.user_employee).message_post(
+        msg = self.test_record.with_user(self.user_employee).message_post(
             body='Test', subject='Test',
             message_type='comment', subtype='mt_comment',
             partner_ids=[self.partner_1.id, self.partner_2.id],
@@ -85,16 +85,16 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
             ('List1', b'My first attachment'),
             ('List2', b'My second attachment')
         ]
-        _attach_1 = self.env['ir.attachment'].sudo(self.user_employee).create({
+        _attach_1 = self.env['ir.attachment'].with_user(self.user_employee).create({
             'name': 'Attach1',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
-        _attach_2 = self.env['ir.attachment'].sudo(self.user_employee).create({
+        _attach_2 = self.env['ir.attachment'].with_user(self.user_employee).create({
             'name': 'Attach2',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
 
-        msg = self.test_record.sudo(self.user_employee).message_post(
+        msg = self.test_record.with_user(self.user_employee).message_post(
             body='Test', subject='Test',
             message_type='comment', subtype='mt_comment',
             attachment_ids=[_attach_1.id, _attach_2.id],
@@ -122,14 +122,14 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_answer(self):
-        parent_msg = self.test_record.sudo(self.user_employee).message_post(
+        parent_msg = self.test_record.with_user(self.user_employee).message_post(
             body='<p>Test</p>', subject='Test Subject',
             message_type='comment', subtype='mt_comment')
 
         self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
         self.assertEmails(self.user_employee.partner_id, [])
 
-        msg = self.test_record.sudo(self.user_employee).message_post(
+        msg = self.test_record.with_user(self.user_employee).message_post(
             body='<p>Test Answer</p>',
             message_type='comment', subtype='mt_comment',
             partner_ids=[self.partner_1.id],
@@ -143,7 +143,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEmails(self.user_employee.partner_id, [[self.partner_1]], ref_content='openerp-%d-mail.test.simple' % self.test_record.id)
         # self.assertTrue(all('openerp-%d-mail.test.simple' % self.test_record.id in m['references'] for m in self._mails))
 
-        new_msg = self.test_record.sudo(self.user_employee).message_post(
+        new_msg = self.test_record.with_user(self.user_employee).message_post(
             body='<p>Test Answer Bis</p>',
             message_type='comment', subtype='mt_comment',
             parent_id=msg.id)
@@ -157,7 +157,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
         with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
-            new_msg = self.test_record.sudo(portal_user).message_post(
+            new_msg = self.test_record.with_user(portal_user).message_post(
                 body='<p>Test</p>', subject='Subject',
                 message_type='comment', subtype='mt_comment')
 
@@ -168,14 +168,14 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         with self.assertRaises(AccessError):
-            self.test_record.sudo(portal_user).message_post(
+            self.test_record.with_user(portal_user).message_post(
                 body='<p>Test</p>', subject='Subject',
                 message_type='comment', subtype='mt_comment')
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_post_internal(self):
         self.test_record.message_subscribe([self.user_admin.partner_id.id])
-        msg = self.test_record.sudo(self.user_employee).message_post(
+        msg = self.test_record.with_user(self.user_employee).message_post(
             body='My Body', subject='My Subject',
             message_type='comment', subtype='mt_note')
         self.assertEqual(msg.partner_ids, self.env['res.partner'])
@@ -193,7 +193,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(reply.parent_id, msg)
 
     def test_post_log(self):
-        new_note = self.test_record.sudo(self.user_employee)._message_log(
+        new_note = self.test_record.with_user(self.user_employee)._message_log(
             body='<p>Labrador</p>',
         )
 
@@ -241,7 +241,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
             'default_composition_mode': 'comment',
             'default_model': self.test_record._name,
             'default_res_id': self.test_record.id,
-        }).sudo(self.user_employee).create({
+        }).with_user(self.user_employee).create({
             'body': '<p>Test Body</p>',
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
@@ -261,7 +261,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
         self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
             'default_parent_id': parent.id
-        }).sudo(self.user_employee).create({
+        }).with_user(self.user_employee).create({
             'body': '<p>Mega</p>',
         }).send_mail()
 
@@ -278,7 +278,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
             'default_model': self.test_record._name,
             'default_res_id': False,
             'active_ids': [self.test_record.id, test_record_2.id]
-        }).sudo(self.user_employee).create({
+        }).with_user(self.user_employee).create({
             'subject': 'Testing ${object.name}',
             'body': '<p>${object.name}</p>',
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
@@ -314,7 +314,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
             'default_use_active_domain': True,
             'active_ids': [self.test_record.id],
             'active_domain': [('name', 'in', ['%s' % self.test_record.name, '%s' % test_record_2.name])],
-        }).sudo(self.user_employee).create({
+        }).with_user(self.user_employee).create({
             'subject': 'From Composer Test',
             'body': '${object.name}',
         }).send_mail()
@@ -332,7 +332,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
             'default_use_active_domain': False,
             'active_ids': [self.test_record.id],
             'active_domain': [('name', 'in', ['%s' % self.test_record.name, '%s' % test_record_2.name])],
-        }).sudo(self.user_employee).create({
+        }).with_user(self.user_employee).create({
             'subject': 'From Composer Test',
             'body': '${object.name}',
         }).send_mail()
@@ -345,7 +345,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
         portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
-            ComposerPortal = self.env['mail.compose.message'].sudo(portal_user)
+            ComposerPortal = self.env['mail.compose.message'].with_user(portal_user)
 
             ComposerPortal.with_context({
                 'default_composition_mode': 'comment',

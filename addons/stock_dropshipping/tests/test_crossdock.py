@@ -29,11 +29,14 @@ class TestCrossdock(common.TransactionCase):
         p_f.type = 'product'
         p_f.categ_id = self.env.ref('product.product_category_1')
         p_f.list_price = 100.0
-        p_f.standard_price = 70.0
         with p_f.seller_ids.new() as seller:
             seller.name = supplier_crossdock
         p_f.route_ids.add(wh_pps.crossdock_route_id)
         cross_shop_product = p_f.save()
+
+        std_price_wiz = Form(self.env['stock.change.standard.price'].with_context(active_id=p_f.id, active_model='product.template'))
+        std_price_wiz.new_price = 70.0
+        std_price_wiz.save()
 
         # Create a sales order with a line of 100 PCE incoming shipment with route_id crossdock shipping
         so_form = Form(self.env['sale.order'])

@@ -45,8 +45,7 @@
                 name="Meetings"
                 res_model="calendar.event"
                 view_mode="tree,form,calendar"
-                context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
-                view_type="form"/>
+                context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"/>
 
         <record id="crm_case_form_view_leads" model="ir.ui.view">
         <field name="name">crm.lead.form.lead</field>
@@ -74,6 +73,23 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                        <h2 class="o_row row no-gutters d-flex">
+                            <div class="col">
+                                <span class="oe_edit_only o_pls_probability">
+                                    <label for="probability"/>
+                                    <button class="btn btn-link" name="action_set_automated_probability" type="object"
+                                            attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                        <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
+                                    </button>
+                                    <small class="oe_grey" attrs="{'invisible': [('is_automated_probability', '=', True)]}"><field name="automated_probability"/> %%</small>
+                                </span>
+                                <div id="probability" class="o_row d-flex">
+                                    <field name="is_automated_probability" invisible="1"/>
+                                    <field name="probability" widget="float" class="oe_inline"/>
+                                    <span class="oe_grey"> %%</span>
+                                </div>
+                            </div>
+                        </h2>
                     </div>
                     <group>
                         <group>
@@ -101,6 +117,8 @@
                                 <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                             </div>
                             <field name="is_blacklisted" invisible="1"/>
+                            <field name="email_state" invisible="1"/>
+                            <field name="phone_state" invisible="1"/>
                             <label for="email_from" class="oe_inline"/>
                             <div class="o_row o_row_readonly">
                                 <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
@@ -299,7 +317,6 @@
         <record id="create_opportunity_simplified" model="ir.actions.act_window">
             <field name="name">Create an Opportunity</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_create_opportunity_simplified"/>
             <field name="target">new</field>
@@ -350,7 +367,7 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
                     archivable="false">
-                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="planned_revenue"/>
@@ -519,9 +536,17 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <label for="probability" class="oe_edit_only"/>
-                                    <div class="o_row d-flex">
-                                        <field name="probability" widget="integer" class="oe_inline"/>
+                                    <span class="oe_edit_only o_pls_probability">
+                                        <label for="probability"/>
+                                        <button class="btn btn-link" name="action_set_automated_probability" type="object"
+                                                attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                            <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
+                                        </button>
+                                        <small class="oe_grey" attrs="{'invisible': [('is_automated_probability', '=', True)]}"><field name="automated_probability"/> %%</small>
+                                    </span>
+                                    <div id="probability" class="o_row d-flex">
+                                        <field name="is_automated_probability" invisible="1"/>
+                                        <field name="probability" widget="float" class="oe_inline"/>
                                         <span class="oe_grey"> %%</span>
                                     </div>
                                 </div>
@@ -555,6 +580,8 @@
                                 />
                                 <field name="is_blacklisted" invisible="1"/>
                                 <field name="partner_is_blacklisted" invisible="1"/>
+                                <field name="email_state" invisible="1"/>
+                                <field name="phone_state" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
@@ -674,6 +701,7 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="write_date" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -743,6 +771,9 @@
                         help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                         domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Open Opportunities" name="open_opportunities"
+                            domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
+                            help="Open Opportunities"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
@@ -753,7 +784,7 @@
                     <filter string="Expected Closing" name="close_this_month" date="date_deadline"/>
                     <filter string="Closed Date" name="close_date" date="date_closed"/>
                     <separator/>
-                    <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.probability', '=', 100)]"/>
+                    <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', True)]"/>
                     <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
                     <separator/>
                     <filter string="Activities Todo" name="activities_my"
@@ -829,7 +860,7 @@
         <!--
             MASS MAILING
         -->
-        <act_window name="Send an email"
+        <act_window name="Send email"
                 res_model="mail.compose.message"
                 binding_model="crm.lead"
                 binding_views="list"
@@ -858,40 +889,13 @@
             <field name="name">Mark as lost</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
 if record:
     action_values = env.ref('crm.crm_lead_lost_action').read()[0]
     action_values.update({'context': env.context})
     action = action_values
-            </field>
-        </record>
-
-        <!--
-            'Mark Late Activities as Done' in action dropdown
-        -->
-        <record id="action_mark_late_activities_done" model="ir.actions.server">
-            <field name="name">Mark Late Activities as Done</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="binding_model_id" ref="crm.model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">
-for rec in records:
-    rec.activity_ids.filtered(lambda a: a.state == 'overdue').action_feedback(feedback='Closed automatically in batch')
-            </field>
-        </record>
-
-        <!--
-            'Mark All Activities as Done' in action dropdown
-        -->
-        <record id="action_mark_activities_done" model="ir.actions.server">
-            <field name="name">Mark All Activities as Done</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="binding_model_id" ref="crm.model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">
-for rec in records:
-    rec.activity_ids.action_feedback(feedback='Closed automatically in batch')
             </field>
         </record>
 
@@ -1141,7 +1145,6 @@ for rec in records:
         <record id="crm_lead_tag_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">crm.lead.tag</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="crm_lead_tag_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -1163,7 +1166,6 @@ for rec in records:
         <record id="crm_lost_reason_action" model="ir.actions.act_window">
             <field name="name">Lost Reasons</field>
             <field name="res_model">crm.lost.reason</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

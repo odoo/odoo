@@ -12,7 +12,6 @@ class RecruitmentSource(models.Model):
 
     url = fields.Char(compute='_compute_url', string='Url Parameters')
 
-    @api.one
     @api.depends('source_id', 'source_id.name', 'job_id')
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')

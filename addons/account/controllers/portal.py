@@ -11,7 +11,9 @@ class PortalAccount(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(PortalAccount, self)._prepare_portal_layout_values()
-        invoice_count = request.env['account.invoice'].search_count([])
+        invoice_count = request.env['account.move'].search_count([
+            ('type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
+        ])
         values['invoice_count'] = invoice_count
         return values
 
@@ -29,13 +31,13 @@ class PortalAccount(CustomerPortal):
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
-        AccountInvoice = request.env['account.invoice']
+        AccountInvoice = request.env['account.move']
 
-        domain = []
+        domain = [('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
 
         searchbar_sortings = {
-            'date': {'label': _('Invoice Date'), 'order': 'date_invoice desc'},
-            'duedate': {'label': _('Due Date'), 'order': 'date_due desc'},
+            'date': {'label': _('Invoice Date'), 'order': 'invoice_date desc'},
+            'duedate': {'label': _('Due Date'), 'order': 'invoice_date_due desc'},
             'name': {'label': _('Reference'), 'order': 'name desc'},
             'state': {'label': _('Status'), 'order': 'state'},
         }
@@ -44,7 +46,7 @@ class PortalAccount(CustomerPortal):
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('account.invoice', domain)
+        archive_groups = self._get_archive_groups('account.move', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -77,7 +79,7 @@ class PortalAccount(CustomerPortal):
     @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="public", website=True)
     def portal_my_invoice_detail(self, invoice_id, access_token=None, report_type=None, download=False, **kw):
         try:
-            invoice_sudo = self._document_check_access('account.invoice', invoice_id, access_token)
+            invoice_sudo = self._document_check_access('account.move', invoice_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
@@ -88,7 +90,7 @@ class PortalAccount(CustomerPortal):
         acquirers = values.get('acquirers')
         if acquirers:
             country_id = values.get('partner_id') and values.get('partner_id')[0].country_id.id
-            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(invoice_sudo.residual, invoice_sudo.currency_id, country_id)
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(invoice_sudo.amount_residual, invoice_sudo.currency_id, country_id)
 
         return request.render("account.portal_invoice_page", values)
 

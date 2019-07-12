@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import itertools
 
 from odoo import api, fields, models
@@ -35,21 +36,25 @@ class Followers(models.Model):
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
 
-    #
-    # Modifying followers change access rights to individual documents. As the
-    # cache may contain accessible/inaccessible data, one has to refresh it.
-    #
     @api.multi
-    def _invalidate_documents(self):
-        """ Invalidate the cache of the documents followed by ``self``. """
-        for record in self:
-            if record.res_id:
-                self.env[record.res_model].invalidate_cache(ids=[record.res_id])
+    def _invalidate_documents(self, vals_list=None):
+        """ Invalidate the cache of the documents followed by ``self``.
+
+        Modifying followers change access rights to individual documents. As the
+        cache may contain accessible/inaccessible data, one has to refresh it.
+        """
+        to_invalidate = defaultdict(list)
+        for record in (vals_list or [{'res_model': rec.res_model, 'res_id': rec.res_id} for rec in self]):
+            if record.get('res_id'):
+                to_invalidate[record.get('res_model')].append(record.get('res_id'))
+        # invalidate in batch for performance
+        for res_model, res_ids in to_invalidate.items():
+            self.env[res_model].invalidate_cache(ids=res_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
         res = super(Followers, self).create(vals_list)
-        res._invalidate_documents()
+        res._invalidate_documents(vals_list)
         return res
 
     @api.multi
@@ -240,11 +245,12 @@ GROUP BY fol.id%s""" % (
             new, upd = self._add_default_followers(res_model, res_ids, partner_ids, channel_ids, customer_ids=customer_ids)
         else:
             new, upd = self._add_followers(res_model, res_ids, partner_ids, partner_subtypes, channel_ids, channel_subtypes, check_existing=check_existing, existing_policy=existing_policy)
-        sudo_self.create([
-            dict(values, res_id=res_id)
-            for res_id, values_list in new.items()
-            for values in values_list
-        ])
+        if new:
+            sudo_self.create([
+                dict(values, res_id=res_id)
+                for res_id, values_list in new.items()
+                for values in values_list
+            ])
         for fol_id, values in upd.items():
             sudo_self.browse(fol_id).write(values)
 

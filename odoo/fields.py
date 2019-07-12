@@ -22,7 +22,6 @@ except ImportError:
 
 import psycopg2
 
-from .sql_db import LazyCursor
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
     ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
@@ -660,7 +659,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if 'force_company' not in context:
             company = records.env.company
             context = dict(context, force_company=company.id)
-        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
+        Property = records.env(context=context, su=True)['ir.property']
         values = Property.get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
@@ -671,7 +670,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if 'force_company' not in context:
             company = records.env.company
             context = dict(context, force_company=company.id)
-        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
+        Property = records.env(context=context, su=True)['ir.property']
         values = {
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
@@ -1030,8 +1029,6 @@ class Field(MetaField('DummyField', (object,), {})):
                     if inv_recs:
                         for invf in record._field_inverses[self]:
                             invf._update(inv_recs, record)
-                # mark field as dirty
-                env.dirty[record].add(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -1100,7 +1097,7 @@ class Field(MetaField('DummyField', (object,), {})):
                         for source, target in zip(recs, recs.with_env(env)):
                             try:
                                 values = {f.name: source[f.name] for f in computed}
-                                target._cache.update(target._convert_to_cache(values, validate=False))
+                                target._update_cache(values, validate=False)
                             except MissingError as exc:
                                 target._cache.set_failed(target._fields, exc)
                     # the result is saved to database by BaseModel.recompute()
@@ -1125,7 +1122,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            if self.compute_sudo and record.env.uid != SUPERUSER_ID:
+            if self.compute_sudo and not record.env.su:
                 record_sudo = record.sudo()
                 copy_cache(record, record_sudo.env)
                 self.compute_value(record_sudo)
@@ -1280,23 +1277,24 @@ class Float(Field):
         # with all significant digits.
         # FLOAT8 type is still the default when there is no precision because it
         # is faster for most operations (sums, etc.)
-        return ('numeric', 'numeric') if self.digits is not None else \
+        return ('numeric', 'numeric') if self._digits is not None else \
                ('float8', 'double precision')
 
-    @property
-    def digits(self):
-        if callable(self._digits):
-            with LazyCursor() as cr:
-                return self._digits(cr)
+    def get_digits(self, env):
+        if isinstance(self._digits, str):
+            precision = env['decimal.precision'].precision_get(self._digits)
+            return 16, precision
         else:
             return self._digits
 
     _related__digits = property(attrgetter('_digits'))
-    _description_digits = property(attrgetter('digits'))
+
+    def _description_digits(self, env):
+        return self.get_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         result = float(value or 0.0)
-        digits = self.digits
+        digits = self.get_digits(record.env)
         if digits:
             precision, scale = digits
             result = float_repr(float_round(result, precision_digits=scale), precision_digits=scale)
@@ -1307,7 +1305,7 @@ class Float(Field):
         value = float(value or 0.0)
         if not validate:
             return value
-        digits = self.digits
+        digits = self.get_digits(record.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
     def convert_to_export(self, value, record):
@@ -1824,7 +1822,7 @@ class Binary(Field):
             decoded_value = base64.b64decode(value)
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
-                    not record.env.user._is_system()):
+                    not record.env.is_system()):
                 raise UserError(_("Only admins can upload SVG files."))
         if isinstance(value, bytes):
             return psycopg2.Binary(value)
@@ -2321,7 +2319,7 @@ class _RelationalMulti(_Relational):
             else:
                 browse = comodel.browse
             # determine the value ids
-            ids = OrderedSet(record[self.name]._ids)
+            ids = OrderedSet(record[self.name]._ids if validate else ())
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
@@ -2329,7 +2327,10 @@ class _RelationalMulti(_Relational):
                         ids.add(comodel.new(command[2], ref=command[1]).id)
                     elif command[0] == 1:
                         line = browse(command[1])
-                        line.update(command[2])
+                        if validate:
+                            line.update(command[2])
+                        else:
+                            line._update_cache(command[2], validate=False)
                         ids.add(line.id)
                     elif command[0] in (2, 3):
                         ids.discard(browse(command[1]).id)
@@ -2360,6 +2361,7 @@ class _RelationalMulti(_Relational):
         return value.ids
 
     def convert_to_write(self, value, record):
+        inv_names = {field.name for field in record._field_inverses[self]}
         # make result with new and existing records
         result = [(6, 0, [])]
         for record in value:
@@ -2368,6 +2370,7 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write({
                     name: record[name]
                     for name in record._cache
+                    if name not in inv_names
                 })
                 result.append((0, 0, values))
             else:
@@ -2376,7 +2379,7 @@ class _RelationalMulti(_Relational):
                     values = record._convert_to_write({
                         name: record[name]
                         for name in record._cache
-                        if record[name] != origin[name]
+                        if name not in inv_names and record[name] != origin[name]
                     })
                     if values:
                         result.append((1, origin.id, values))
@@ -2924,6 +2927,5 @@ def prefetch_value_ids(record, field):
 
 
 # imported here to avoid dependency cycle issues
-from odoo import SUPERUSER_ID
 from .exceptions import AccessError, MissingError, UserError
 from .models import check_pg_name, BaseModel, NewId, IdType

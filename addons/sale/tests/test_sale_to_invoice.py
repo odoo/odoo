@@ -3,6 +3,7 @@
 
 from odoo.tools import float_is_zero
 from .test_sale_common import TestCommonSaleNoChart
+from odoo.tests import Form
 
 
 class TestSaleToInvoice(TestCommonSaleNoChart):
@@ -134,7 +135,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         })
         payment.create_invoices()
         invoice = self.sale_order.invoice_ids[0]
-        invoice.action_invoice_open()
+        invoice.post()
 
         # Check discount appeared on both SO lines and invoice lines
         for line, inv_line in zip(self.sale_order.order_line, invoice.invoice_line_ids):
@@ -172,8 +173,12 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         invoice = self.sale_order.invoice_ids[0]
 
         # Update quantity of an invoice lines
-        invoice.invoice_line_ids[0].write({'quantity': 3.0})  # product ordered: from 5 to 3
-        invoice.invoice_line_ids[1].write({'quantity': 2.0})  # service ordered: from 3 to 2
+        move_form = Form(invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 3.0
+        with move_form.invoice_line_ids.edit(1) as line_form:
+            line_form.quantity = 2.0
+        invoice = move_form.save()
 
         # amount to invoice / invoiced should not have changed (amounts take only confirmed invoice into account)
         for line in self.sale_order.order_line:
@@ -192,7 +197,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                 self.assertEquals(line.untaxed_amount_to_invoice, line.product_uom_qty * line.price_unit, "The amount to invoice should the total of the line, as the line is confirmed (no confirmed invoice)")
                 self.assertEquals(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as no invoice are validated for now")
 
-        invoice.action_invoice_open()
+        invoice.post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:

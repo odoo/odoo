@@ -21,7 +21,7 @@ class User(models.Model):
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_location = fields.Char(related='employee_id.work_location', readonly=False, related_sudo=False)
-    parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
+    employee_parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
     is_address_home_a_company = fields.Boolean(related='employee_id.is_address_home_a_company', readonly=False, related_sudo=False)
@@ -68,7 +68,7 @@ class User(models.Model):
             'child_ids',
             'employee_id',
             'employee_ids',
-            'parent_id',
+            'employee_parent_id',
         ]
 
         hr_writable_fields = [
@@ -96,7 +96,7 @@ class User(models.Model):
             'marital',
             'mobile_phone',
             'notes',
-            'parent_id',
+            'employee_parent_id',
             'passport_id',
             'permit_no',
             'employee_phone',
@@ -130,11 +130,9 @@ class User(models.Model):
         # We make the front-end aware of those fields by sending all field definitions.
         # Note: limit the `sudo` to the only action of "editing own profile" action in order to
         # avoid breaking `groups` mecanism on res.users form view.
-        context_params = self._context.get('params', {})
-        if view_type == 'form' and context_params.get('id') == self.env.user.id and not self.env.user.share:
-            action_id = self.env['ir.model.data'].xmlid_to_res_id('hr.res_users_action_my', raise_if_not_found=False)
-            if action_id and context_params.get('action') == action_id:
-                self = self.sudo()
+        profile_view = self.env.ref("hr.res_users_view_form_profile")
+        if profile_view and view_id == profile_view.id:
+            self = self.sudo()
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.multi

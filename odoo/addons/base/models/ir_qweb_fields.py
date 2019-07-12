@@ -9,7 +9,7 @@ import babel
 from lxml import etree
 import math
 
-from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
+from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, format_duration, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -165,7 +165,7 @@ class FloatConverter(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         if 'decimal_precision' in options:
-            precision = self.env['decimal.precision'].search([('name', '=', options['decimal_precision'])]).digits
+            precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
         else:
             precision = options['precision']
 
@@ -189,7 +189,7 @@ class FloatConverter(models.AbstractModel):
     @api.model
     def record_to_html(self, record, field_name, options):
         if 'precision' not in options and 'decimal_precision' not in options:
-            _, precision = record._fields[field_name].digits or (None, None)
+            _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
         return super(FloatConverter, self).record_to_html(record, field_name, options)
 
@@ -480,13 +480,7 @@ class FloatTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        sign = math.copysign(1.0, value)
-        hours, minutes = divmod(abs(value) * 60, 60)
-        minutes = round(minutes)
-        if minutes == 60:
-            minutes = 0
-            hours += 1
-        return '%02d:%02d' % (sign * hours, minutes)
+        return format_duration(value)
 
 
 class DurationConverter(models.AbstractModel):

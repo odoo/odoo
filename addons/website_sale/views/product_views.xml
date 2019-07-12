@@ -62,7 +62,6 @@
     <record id="product_template_action_website" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="view_id" ref="product_template_view_tree_website_sale"/>
         <field name="search_view_id" ref="product_template_search_view_website"/>
@@ -175,7 +174,6 @@
         <field name="name">eCommerce Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.public.category</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
@@ -218,13 +216,11 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <form string="Product Images">
+                <field name="sequence" invisible="1"/>
                 <div class="row o_website_sale_image_modal">
                     <div class="col-md-6 col-xl-5">
                         <label for="name" string="Image Name"/>
                         <h2><field name="name" placeholder="Image Name"/></h2>
-                        <!-- Unfortunately for now we can't drag and drop kanban o2m, so we have to let the user input the sequence manually.  -->
-                        <label for="sequence" string="Sequence"/><br/>
-                        <field name="sequence"/><br/><br/>
                         <label for="video_url" string="Video URL"/><br/>
                         <field name="video_url"/><br/>
                     </div>
@@ -256,7 +252,7 @@
                 <field name="id"/>
                 <field name="name"/>
                 <field name="image_original"/>
-                <field name="sequence"/>
+                <field name="sequence" widget="handle"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="card oe_kanban_global_click p-0">

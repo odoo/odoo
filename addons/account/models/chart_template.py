@@ -161,12 +161,10 @@ class AccountChartTemplate(models.Model):
             'chart_template_id': self.id,
         }
 
-    @api.one
     def try_loading_for_current_company(self):
         """ Installs this chart of accounts for the current company if not chart
         of accounts had been created for it yet.
         """
-        self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
         if request and hasattr(request, 'allowed_company_ids'):
             company = self.env['res.company'].browse(request.allowed_company_ids[0])
@@ -174,7 +172,8 @@ class AccountChartTemplate(models.Model):
             company = self.env.company
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id and not self.existing_accounting(company):
-            self.load_for_current_company(15.0, 15.0)
+            for template in self:
+                template.load_for_current_company(15.0, 15.0)
 
     def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
         """ Installs this chart of accounts on the current company, replacing
@@ -192,7 +191,7 @@ class AccountChartTemplate(models.Model):
             company = self.env.company
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             raise AccessError(_("Only administrators can load a charf of accounts"))
 
         existing_accounts = self.env['account.account'].search([('company_id', '=', company.id)])
@@ -264,7 +263,7 @@ class AccountChartTemplate(models.Model):
         the provided company (meaning hence that its chart of accounts cannot
         be changed anymore).
         """
-        model_to_check = ['account.move.line', 'account.invoice', 'account.payment', 'account.bank.statement']
+        model_to_check = ['account.move', 'account.payment', 'account.bank.statement']
         for model in model_to_check:
             if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
                 return True

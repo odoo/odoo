@@ -39,7 +39,6 @@ StatementAction.include({
                 type: 'ir.actions.act_window',
                 res_model: 'sale.order',
                 views: [[false, 'list'], [false, 'form']],
-                view_type: "list",
                 view_mode: "list",
                 target: 'current',
                 domain: [['id', 'in', line.sale_order_ids]]

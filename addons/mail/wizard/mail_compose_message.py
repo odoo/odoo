@@ -20,7 +20,6 @@ def _reopen(self, res_id, model, context=None):
     context = dict(context or {}, default_model=model)
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'view_type': 'form',
             'res_id': res_id,
             'res_model': self._name,
             'target': 'new',
@@ -63,11 +62,11 @@ class MailComposer(models.TransientModel):
         # author
         if 'author_id' not in result:
             result['author_id'] = self.env.user.partner_id.id
-            if 'email_from' not in result:
-                result['email_from'] = formataddr((self.env.user.name, self.env.user.email))
-        else:
-            if 'email_from' not in result:
-                author = self.env['res.partner'].browse(result['author_id'])
+            if 'email_from' not in result and self.env.user.email:
+                result['email_from'] = self.env.user.email_formatted
+        elif 'email_from' not in result:
+            author = self.env['res.partner'].browse(result['author_id'])
+            if author.email:
                 result['email_from'] = formataddr((author.name, author.email))
 
         # v6.1 compatibility mode
@@ -431,9 +430,6 @@ class MailComposer(models.TransientModel):
             values['body'] = values.pop('body_html')
 
         # This onchange should return command instead of ids for x2many field.
-        # ORM handle the assignation of command list on new onchange (api.v8),
-        # this force the complete replacement of x2many field with
-        # command and is compatible with onchange api.v7
         values = self._convert_to_write(values)
 
         return {'value': values}

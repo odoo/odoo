@@ -3355,14 +3355,16 @@ QUnit.module('Views', {
     QUnit.test('quick create column and examples', async function (assert) {
         assert.expect(12);
 
-        kanbanExamplesRegistry.add('test', [{
-            name: "A first example",
-            columns: ["Column 1", "Column 2", "Column 3"],
-            description: "Some description",
-        }, {
-            name: "A second example",
-            columns: ["Col 1", "Col 2"],
-        }]);
+        kanbanExamplesRegistry.add('test', {
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "Some description",
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
 
         var kanban = await createView({
             View: KanbanView,
@@ -3413,6 +3415,78 @@ QUnit.module('Views', {
             "column titles should be correct");
         assert.strictEqual($secondPane.find('.o_kanban_examples_description').text().trim(),
             "", "there should be no description for the second example");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create column and examples background with ghostColumns titles', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        kanbanExamplesRegistry.add('test', {
+            ghostColumns: ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "Some description",
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban examples="test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_example_background',
+            "should have ExamplesBackground when no data");
+        assert.strictEqual(kanban.$('.o_kanban_examples_group h6').text(), 'Ghost 1Ghost 2Ghost 3Ghost 4',
+            "ghost title should be correct");
+        assert.containsOnce(kanban, '.o_column_quick_create',
+            "should have a ColumnQuickCreate widget");
+        assert.containsOnce(kanban, '.o_column_quick_create .o_kanban_examples:visible',
+            "should not have a link to see examples as there is no examples registered");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create column and examples background without ghostColumns titles', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_example_background',
+            "should have ExamplesBackground when no data");
+        assert.strictEqual(kanban.$('.o_kanban_examples_group h6').text(), 'Column 1Column 2Column 3Column 4',
+            "ghost title should be correct");
+        assert.containsOnce(kanban, '.o_column_quick_create',
+            "should have a ColumnQuickCreate widget");
+        assert.containsNone(kanban, '.o_column_quick_create .o_kanban_examples:visible',
+            "should not have a link to see examples as there is no examples registered");
 
         kanban.destroy();
     });

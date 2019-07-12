@@ -18,7 +18,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
            and receive notification for future comments. """
 
         # Create a new blog, subscribe the employee to the blog
-        test_blog = self.env['blog.blog'].sudo(self.user_blogmanager).create({
+        test_blog = self.env['blog.blog'].with_user(self.user_blogmanager).create({
             'name': 'New Blog',
         })
         self.assertIn(
@@ -27,7 +27,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         test_blog.message_subscribe([self.user_employee.partner_id.id, self.user_public.partner_id.id])
 
         # Create a new post, blog followers should not follow the post
-        test_blog_post = self.env['blog.post'].sudo(self.user_blogmanager).create({
+        test_blog_post = self.env['blog.post'].with_user(self.user_blogmanager).create({
             'name': 'New Post',
             'blog_id': test_blog.id,
         })

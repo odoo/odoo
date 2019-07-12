@@ -115,6 +115,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -165,7 +166,6 @@
     <record id="sale_coupon_program_action_coupon_program" model="ir.actions.act_window">
         <field name="name">Coupon Program</field>
         <field name="res_model">sale.coupon.program</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="sale_coupon_program_view_search"/>
         <field name="view_ids" eval="[
@@ -267,7 +267,6 @@
     <record id="sale_coupon_program_action_promo_program" model="ir.actions.act_window">
         <field name="name">Promotion Program</field>
         <field name="res_model">sale.coupon.program</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_ids" eval="[
             (5, 0, 0),

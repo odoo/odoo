@@ -418,6 +418,47 @@ QUnit.module('Views', {
         controlPanel.destroy();
     });
 
+    QUnit.test('Favorites Use by Default and Share are exclusive', async function (assert) {
+        assert.expect(11);
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search></search>",
+            data: this.data,
+            searchMenuTypes: ['favorite'],
+        });
+        testUtils.dom.click(controlPanel.$('.o_favorites_menu_button'));
+        testUtils.dom.click(controlPanel.$('button.o_add_favorite'));
+        var $checkboxes = controlPanel.$('input[type="checkbox"]');
+
+        assert.strictEqual($checkboxes.length, 2,
+            '2 checkboxes are present')
+
+        assert.notOk($checkboxes[0].checked, 'Start: None of the checkboxes are checked (1)');
+        assert.notOk($checkboxes[1].checked, 'Start: None of the checkboxes are checked (2)');
+
+        testUtils.dom.click($checkboxes.eq(0));
+        assert.ok($checkboxes[0].checked, 'The first checkbox is checked');
+        assert.notOk($checkboxes[1].checked, 'The second checkbox is not checked');
+
+        testUtils.dom.click($checkboxes.eq(1));
+        assert.notOk($checkboxes[0].checked,
+            'Clicking on the second checkbox checks it, and unchecks the first (1)');
+        assert.ok($checkboxes[1].checked,
+            'Clicking on the second checkbox checks it, and unchecks the first (2)');
+
+        testUtils.dom.click($checkboxes.eq(0));
+        assert.ok($checkboxes[0].checked,
+            'Clicking on the first checkbox checks it, and unchecks the second (1)');
+        assert.notOk($checkboxes[1].checked,
+            'Clicking on the first checkbox checks it, and unchecks the second (2)');
+
+        testUtils.dom.click($checkboxes.eq(0));
+        assert.notOk($checkboxes[0].checked, 'End: None of the checkboxes are checked (1)');
+        assert.notOk($checkboxes[1].checked, 'End: None of the checkboxes are checked (2)');
+
+        controlPanel.destroy();
+    });
+
     QUnit.test('load filter', async function (assert) {
         assert.expect(1);
 

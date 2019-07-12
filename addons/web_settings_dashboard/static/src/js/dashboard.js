@@ -158,7 +158,6 @@ var DashboardInvitations = Widget.extend({
         var user_id = $(e.currentTarget).data('user-id');
         var action = {
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: 'res.users',
             views: [[this.data.user_form_view_id, 'form']],
@@ -174,7 +173,6 @@ var DashboardInvitations = Widget.extend({
         var action = {
             name: _t('Users'),
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'tree,form',
             res_model: 'res.users',
             domain: [['log_ids', '=', false]],
@@ -404,7 +402,6 @@ var DashboardCompany = Widget.extend({
             type: 'ir.actions.act_window',
             res_model: 'res.company',
             view_mode: 'form',
-            view_type: 'form',
             views: [[false, 'form']],
             res_id: this.data.company_id
         };

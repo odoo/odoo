@@ -22,9 +22,6 @@ class ProjectTaskType(models.Model):
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=_get_default_project_ids)
-    legend_priority = fields.Char(
-        string='Starred Explanation', translate=True,
-        help='Explanation text to help users using the star on tasks or issues in this stage.')
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
         help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.')
@@ -111,7 +108,6 @@ class Project(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'kanban,tree,form',
-            'view_type': 'form',
             'help': _('''<p class="o_view_nocontent_smiling_face">
                         Documents are attached to the tasks of your project.</p><p>
                         Send messages or log internal notes with attachments to link
@@ -409,7 +405,7 @@ class Project(models.Model):
     def _create_analytic_account_from_values(self, values):
         analytic_account = self.env['account.analytic.account'].create({
             'name': values.get('name', _('Unknown Analytic Account')),
-            'company_id': values.get('company_id', self.env.user.company_id.id),
+            'company_id': values.get('company_id') or self.env.company.id,
             'partner_id': values.get('partner_id'),
             'active': True,
         })
@@ -520,9 +516,7 @@ class Task(models.Model):
         string='Customer',
         default=lambda self: self._get_default_partner())
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
-    company_id = fields.Many2one('res.company',
-        string='Company',
-        default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     color = fields.Integer(string='Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
@@ -935,7 +929,6 @@ class Task(models.Model):
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
