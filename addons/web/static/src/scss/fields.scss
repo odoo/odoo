@@ -88,6 +88,7 @@
     &.o_field_many2manytags {
         flex-flow: row wrap;
         align-items: baseline;
+        max-width: 100%;
 
         > .o_field_widget {
             flex: 1 0 100px;
@@ -101,6 +102,8 @@
             font-size: 12px;
             cursor: pointer;
             user-select: none;
+            display: flex;
+            max-width: 100%;
 
             a {
                 color: inherit;
@@ -115,6 +118,7 @@
             .o_delete {
                 color: inherit;
                 cursor: pointer;
+                padding-left: 4px;
             }
         }
 

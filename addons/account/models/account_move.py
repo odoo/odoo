@@ -1023,7 +1023,7 @@ class AccountMove(models.Model):
                     vendor_display_name = _('From: ') + move.invoice_source_email
                     move.invoice_vendor_icon = '@'
                 else:
-                    vendor_display_name = ('Created by: ') + move.create_uid.name
+                    vendor_display_name = ('Created by: ') + move.sudo().create_uid.name
                     move.invoice_vendor_icon = '#'
             move.invoice_vendor_display_name = vendor_display_name
 

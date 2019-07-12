@@ -414,6 +414,39 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('group containing both a field and a group', async function (assert) {
+        // The purpose of this test is to check that classnames defined in a
+        // field widget and those added by the form renderer are correctly
+        // combined. For instance, the renderer adds className 'o_group_col_x'
+        // on outer group's children (an outer group being a group that contains
+        // at least a group).
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<group>' +
+                            '<field name="int_field"/>' +
+                        '</group>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_group .o_field_widget[name=foo]');
+        assert.containsOnce(form, '.o_group .o_inner_group .o_field_widget[name=int_field]');
+
+        assert.hasClass(form.$('.o_field_widget[name=foo]'), 'o_field_char');
+        assert.hasClass(form.$('.o_field_widget[name=foo]'), 'o_group_col_6');
+
+        form.destroy();
+    });
+
     QUnit.test('Form and subview with _view_ref contexts', async function (assert) {
         assert.expect(2);
 
@@ -486,6 +519,7 @@ QUnit.module('Views', {
         form.destroy();
         actionManager.destroy();
     });
+
     QUnit.test('invisible fields are properly hidden', async function (assert) {
         assert.expect(4);
 
@@ -6898,7 +6932,6 @@ QUnit.module('Views', {
         form.destroy();
         delete widgetRegistry.map.test;
     });
-
 
     QUnit.test('bounce edit button in readonly mode', async function (assert) {
         assert.expect(3);
