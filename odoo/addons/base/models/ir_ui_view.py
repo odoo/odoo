@@ -3,6 +3,7 @@
 import collections
 import datetime
 import fnmatch
+import json
 import logging
 import re
 import time
@@ -22,7 +23,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
-from odoo.osv import orm
 from odoo.tools import config, graph, ConstantMapping, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -38,6 +38,63 @@ MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpa
 # First sort criterion for inheritance is priority, second is chronological order of installation
 # Note: natural _order has `name`, but only because that makes list browsing easier
 INHERIT_ORDER = 'priority,id'
+
+
+def transfer_field_to_modifiers(field, modifiers):
+    default_values = {}
+    state_exceptions = {}
+    for attr in ('invisible', 'readonly', 'required'):
+        state_exceptions[attr] = []
+        default_values[attr] = bool(field.get(attr))
+    for state, modifs in field.get("states",{}).items():
+        for modif in modifs:
+            if default_values[modif[0]] != modif[1]:
+                state_exceptions[modif[0]].append(state)
+
+    for attr, default_value in default_values.items():
+        if state_exceptions[attr]:
+            modifiers[attr] = [("state", "not in" if default_value else "in", state_exceptions[attr])]
+        else:
+            modifiers[attr] = default_value
+
+
+def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False):
+    # Don't deal with groups, it is done by check_group().
+    # Need the context to evaluate the invisible attribute on tree views.
+    # For non-tree views, the context shouldn't be given.
+    if node.get('attrs'):
+        modifiers.update(safe_eval(node.get('attrs')))
+
+    if node.get('states'):
+        if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
+            # TODO combine with AND or OR, use implicit AND for now.
+            modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+        else:
+            modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
+
+    for a in ('invisible', 'readonly', 'required'):
+        if node.get(a):
+            v = bool(safe_eval(node.get(a), {'context': context or {}}))
+            if in_tree_view and a == 'invisible':
+                # Invisible in a tree view has a specific meaning, make it a
+                # new key in the modifiers attribute.
+                modifiers['column_invisible'] = v
+            elif v or (a not in modifiers or not isinstance(modifiers[a], list)):
+                # Don't set the attribute to False if a dynamic value was
+                # provided (i.e. a domain from attrs or states).
+                modifiers[a] = v
+
+
+def simplify_modifiers(modifiers):
+    for a in ('invisible', 'readonly', 'required'):
+        if a in modifiers and not modifiers[a]:
+            del modifiers[a]
+
+
+def transfer_modifiers_to_node(modifiers, node):
+    if modifiers:
+        simplify_modifiers(modifiers)
+        node.set('modifiers', json.dumps(modifiers))
 
 
 def keep_query(*keep_params, **additional_params):
@@ -742,7 +799,7 @@ actual arch.
 
                 field = model_fields.get(node.get('name'))
                 if field:
-                    orm.transfer_field_to_modifiers(field, modifiers)
+                    transfer_field_to_modifiers(field, modifiers)
 
         elif node.tag == 'groupby':
             # groupby nodes should be considered as nested view because they may
@@ -797,7 +854,7 @@ actual arch.
 
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
-        orm.transfer_node_to_modifiers(node, modifiers, self._context, in_tree_view)
+        transfer_node_to_modifiers(node, modifiers, self._context, in_tree_view)
 
         for f in node:
             if node.tag == 'search' and f.tag == 'searchpanel':
@@ -806,7 +863,7 @@ actual arch.
             if children or (node.tag == 'field' and f.tag in ('filter', 'separator')):
                 fields.update(self.postprocess(model, f, view_id, in_tree_view, model_fields))
 
-        orm.transfer_modifiers_to_node(modifiers, node)
+        transfer_modifiers_to_node(modifiers, node)
         return fields
 
     def add_on_change(self, model_name, arch):
