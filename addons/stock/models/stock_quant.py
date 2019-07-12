@@ -141,6 +141,9 @@ class StockQuant(models.Model):
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
         if self._is_inventory_mode() and 'inventory_quantity' in vals:
+            if any(quant.location_id.usage == 'inventory' for quant in self):
+                # Do nothing when user tries to modify manually a inventory loss
+                return
             allowed_fields = self._get_inventory_fields_write()
             if any([field for field in vals.keys() if field not in allowed_fields]):
                 raise UserError(_("Quant's edition is restricted, you can't do this operation."))
@@ -326,6 +329,18 @@ class StockQuant(models.Model):
 
         if vals:
             self.update(vals)
+
+    @api.onchange('inventory_quantity')
+    def _onchange_inventory_quantity(self):
+        if self.location_id and self.location_id.usage == 'inventory':
+            warning = {
+                'title': _('You cannot modify inventory loss quantity'),
+                'message': _(
+                    'Editing quantities in an Inventory Adjustment location is forbidden,'
+                    'those locations are used as counterpart when correcting the quantities.'
+                )
+            }
+            return {'warning': warning}
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
