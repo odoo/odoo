@@ -255,7 +255,6 @@
                             attrs="{'invisible': [('authorized_transaction_ids', '=', [])]}"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                    <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary o_sale_print"/>
                     <button name="action_confirm" id="action_confirm"
                         string="Confirm" class="btn-primary" type="object"
                         attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
@@ -263,13 +262,9 @@
                         string="Confirm" type="object"
                         attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                    <button name="print_quotation" string="Print" type="object" states="sent,sale" class="o_sale_print"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
                     <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
                     <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
-                    <button name="action_done" type="object" string="Lock" states="sale"
-                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
-                    <button name="action_unlock" type="object" string="Unlock" states="done" groups="sales_team.group_sale_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                 </header>
                 <sheet>
@@ -307,7 +302,7 @@
                             <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])], 'required': [('state', 'in', ['sale', 'done'])]}"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="payment_term_id" options="{'no_create': True}"/>
+                            <field name="payment_term_id" options="{'no_open':True,'no_create': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -592,7 +587,10 @@
                                     </templates>
                                 </kanban>
                             </field>
-                            <group name="note_group">
+                            <group name="note_group" col="6">
+                                <group colspan="4">
+                                    <field name="note" nolabel="1" placeholder="Terms and conditions..."/>
+                                </group>
                                 <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                     <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -601,32 +599,31 @@
                                     </div>
                                     <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 </group>
-                                <field name="note" placeholder="Terms and conditions..."/>
                                 <div class="oe_clear"/>
                             </group>
                         </page>
                         <page string="Other Info" name="other_information">
                             <group>
-                                <group name="sales_person">
-                                    <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" string="Quotation Date"/>
+                                <group name="sales_person" string="Sales">
+                                    <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" string="Quotation Date" groups="base.group_no_one"/>
                                     <field name="user_id"/>
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="require_signature"/>
-                                    <field name="require_payment"/>
+                                    <field name="require_signature" groups="base.group_no_one"/>
+                                    <field name="require_payment" groups="base.group_no_one"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
-                                    <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
-                                </group>
-                                <group name="sale_info">
                                     <field name="client_order_ref"/>
+                                </group>
+                                <group name="sale_info" string="Invoicing">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
+                                    <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
                                     <field name="invoice_status" states="sale,done" invisible="1"/>
                                 </group>
                             </group>
                             <group>
-                                <group string="Shipping Information" name="sale_shipping">
-                                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
-                                    <field name="commitment_date" groups="sale.group_sale_order_dates"/>
+                                <group name="sale_shipping" groups="sale.group_sale_order_dates">
+                                    <field name="expected_date"/>
+                                    <field name="commitment_date"/>
                                 </group>
                                 <group string="Reporting" groups="base.group_no_one">
                                     <group name="technical" colspan="2" class="mb-0">
@@ -659,6 +656,19 @@
             </field>
         </record>
 
+        <record id="view_sales_order_auto_done_setting" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(4, ref('sale.group_auto_done_setting'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form//header//button[@name='action_draft']" position="after">
+                   <button name="action_done" type="object" string="Lock" states="sale"
+                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver." groups="sales_team.group_sale_manager"/>
+                    <button name="action_unlock" type="object" string="Unlock" states="done" groups="sales_team.group_sale_manager"/>
+                </xpath>
+            </field>
+        </record>
         <record id="view_sales_order_filter" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
