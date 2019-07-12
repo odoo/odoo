@@ -48,6 +48,9 @@ class LandedCost(models.Model):
     company_id = fields.Many2one('res.company', string="Company",
         related='account_journal_id.company_id', readonly=False)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
+    vendor_bill_id = fields.Many2one(
+        'account.move', 'Vendor Bill', copy=False, domain=[('type', '=', 'in_invoice')])
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     @api.depends('cost_lines.price_unit')
     def _compute_total_amount(self):
@@ -78,8 +81,11 @@ class LandedCost(models.Model):
     def button_validate(self):
         if any(cost.state != 'draft' for cost in self):
             raise UserError(_('Only draft landed costs can be validated'))
-        if any(not cost.valuation_adjustment_lines for cost in self):
-            raise UserError(_('No valuation adjustments lines. You should maybe recompute the landed costs.'))
+        if not all(cost.picking_ids for cost in self):
+            raise UserError(_('Please define the transfers on which those additional costs should apply.'))
+        cost_without_adjusment_lines = self.filtered(lambda c: not c.valuation_adjustment_lines)
+        if cost_without_adjusment_lines:
+            cost_without_adjusment_lines.compute_landed_cost()
         if not self._check_sum():
             raise UserError(_('Cost and adjustments lines do not match. You should maybe recompute the landed costs.'))
 
@@ -282,27 +288,20 @@ class AdjustmentLines(models.Model):
     volume = fields.Float(
         'Volume', default=1.0)
     former_cost = fields.Float(
-        'Former Cost', digits='Product Price')
-    former_cost_per_unit = fields.Float(
-        'Former Cost(Per Unit)', compute='_compute_former_cost_per_unit',
-        digits=0, store=True)
+        'Original Value', digits='Product Price')
     additional_landed_cost = fields.Float(
         'Additional Landed Cost',
         digits='Product Price')
     final_cost = fields.Float(
-        'Final Cost', compute='_compute_final_cost',
+        'New Value', compute='_compute_final_cost',
         digits=0, store=True)
+    currency_id = fields.Many2one('res.currency', related='cost_id.company_id.currency_id')
 
     @api.depends('cost_line_id.name', 'product_id.code', 'product_id.name')
     def _compute_name(self):
         for line in self:
             name = '%s - ' % (line.cost_line_id.name if line.cost_line_id else '')
             line.name = name + (line.product_id.code or line.product_id.name or '')
-
-    @api.depends('former_cost', 'quantity')
-    def _compute_former_cost_per_unit(self):
-        for line in self:
-            line.former_cost_per_unit = line.former_cost / (line.quantity or 1.0)
 
     @api.depends('former_cost', 'additional_landed_cost')
     def _compute_final_cost(self):
