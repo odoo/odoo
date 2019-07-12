@@ -36,6 +36,7 @@
             <field name="arch" type="xml">
                 <form string="Slide">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="website_publish_button"
                                     type="object" icon="fa-globe">

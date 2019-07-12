@@ -21,6 +21,7 @@
         <field name="arch" type="xml">
             <form string="Time Off Type">
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-archive">
                             <div class="o_stat_info">

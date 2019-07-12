@@ -113,6 +113,7 @@
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Track">
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <field name="website_url" invisible="1"/>
                             <button class="oe_stat_button" name="website_publish_button"

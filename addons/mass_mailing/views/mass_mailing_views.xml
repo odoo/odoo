@@ -303,6 +303,7 @@
             <field name="arch" type="xml">
                 <form string="Contact List">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
                                     type="action" icon="fa-user" class="oe_stat_button">
@@ -532,6 +533,7 @@
                         </strong></p>
                     </div>
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_sent"
                                 type="object"

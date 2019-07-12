@@ -86,12 +86,14 @@
         <field name="arch" type="xml">
             <form string="Meetings">
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                     <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
                     <field name="state" invisible="1"/>
                     <field name="is_attendee" invisible="1"/>
                     <field name="attendee_status" invisible="1"/>
+                    <field name="active" invisible="1"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name"/>

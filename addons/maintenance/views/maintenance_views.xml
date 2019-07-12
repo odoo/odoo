@@ -333,6 +333,7 @@
         <field name="arch" type="xml">
             <form string="Equipments">
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
@@ -753,6 +754,7 @@
         <field name="arch" type="xml">
             <form string="Maintenance Team">
                 <sheet>
+                <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only" string="Team Name"/>
                     <h1>
