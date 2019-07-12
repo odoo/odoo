@@ -121,6 +121,7 @@ class MassMailingCampaign(models.Model):
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing campaign """
+        self.env['mail_mail_statistics'].flush(self.env['mail_mail_statistics']._fields)
         self.env.cr.execute("""
             SELECT
                 c.id as campaign_id,
