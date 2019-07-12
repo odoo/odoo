@@ -798,7 +798,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030203'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -811,7 +811,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030203'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
         </record>
@@ -836,7 +836,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030202'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -849,7 +849,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030202'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
         </record>
