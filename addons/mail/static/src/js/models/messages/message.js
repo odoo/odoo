@@ -800,6 +800,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     _warnMessageModerated: function () {
         var mailBus = this.call('mail_service', 'getMailBus');
         if (this.needsModerationByUser()) {
+            this._setModeratedByUser(false);
             var moderationBox = this.call('mail_service', 'getMailbox', 'moderation');
             moderationBox.decrementMailboxCounter();
             moderationBox.removeMessage(this.getID());

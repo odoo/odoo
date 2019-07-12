@@ -327,7 +327,7 @@ odoo.define('website_slides.quiz', function (require) {
         _extractChannelData: function (slideData){
             return {
                 id: slideData.channelId,
-                channelEnroll: slideData.enroll,
+                channelEnroll: slideData.channelEnroll,
                 signupAllowed: slideData.signupAllowed
             };
         },
