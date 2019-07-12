@@ -1310,26 +1310,6 @@ class AccountMove(models.Model):
                 raise UserError(message)
         return True
 
-    def _check_tax_lock_date(self):
-        if not self:
-            return
-
-        self._cr.execute('''
-            SELECT move.id, company.tax_lock_date
-            FROM account_move move
-            JOIN account_journal journal ON journal.id = move.journal_id
-            JOIN res_company company ON company.id = journal.company_id
-            WHERE move.id IN %s
-            AND move.date < company.tax_lock_date
-        ''', [tuple(self.ids)])
-
-        query_res = self._cr.fetchone()
-        if query_res:
-            raise UserError(_('''
-                The operation is refused as it would impact an already issued tax statement.
-                Please change the journal entry date or the tax lock date set in the settings (%s) to proceed
-            ''' % query_res[1]))
-
     def _check_move_consistency(self):
         for move in self:
             if move.line_ids:
@@ -1861,8 +1841,13 @@ class AccountMove(models.Model):
             if not move.invoice_date and move.is_invoice(include_receipts=True):
                 move.invoice_date = fields.Date.context_today(self)
                 move.with_context(check_move_validity=False)._onchange_invoice_date()
+            if move.company_id.auto_correct_accounting_date \
+                    and move.date < (move.company_id.tax_lock_date or date.min) \
+                    and any(line.tax_ids or line.tax_line_id for line in move.line_ids):
+                move.date = move.company_id.tax_lock_date
+                move._onchange_currency()
 
-        self._check_tax_lock_date()
+        self.line_ids._check_tax_lock_date2()
         self._check_move_consistency()
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         self.mapped('line_ids').create_analytic_lines()
@@ -2780,8 +2765,9 @@ class AccountMoveLine(models.Model):
 
     @api.constrains('tax_ids', 'tax_line_id')
     def _check_tax_lock_date1(self):
+        """Prevent from adding taxes to lines with a date before the tax lock date"""
         for line in self:
-            if line.date <= (line.company_id.tax_lock_date or date.min):
+            if not line.company_id.auto_correct_accounting_date and line.date <= (line.company_id.tax_lock_date or date.min):
                 raise ValidationError(
                     _("The operation is refused as it would impact an already issued tax statement. " +
                       "Please change the journal entry date or the tax lock date set in the settings ({}) to proceed").format(
@@ -2789,8 +2775,13 @@ class AccountMoveLine(models.Model):
 
     @api.constrains('credit', 'debit', 'date')
     def _check_tax_lock_date2(self):
+        """Prevent from changing debit/credit/date from lines with taxes before the tax lock date
+
+           This method is different from _check_tax_lock_date1 because you can still change
+           credit/debit/date if there are no taxes linked to the move.
+        """
         for line in self:
-            if (line.tax_ids or line.tax_line_id) and line.date <= (line.company_id.tax_lock_date or date.min):
+            if not line.company_id.auto_correct_accounting_date and (line.tax_ids or line.tax_line_id) and line.date <= (line.company_id.tax_lock_date or date.min):
                 raise ValidationError(
                     _("The operation is refused as it would impact an already issued tax statement. " +
                       "Please change the journal entry date or the tax lock date set in the settings ({}) to proceed").format(

@@ -111,5 +111,5 @@ class TestAccountMove(InvoiceTestCommon):
         self.test_move.invalidate_cache()
         self.cr.execute('ROLLBACK TO SAVEPOINT test_misc_tax_lock_date_1')
 
-        with self.assertRaises(UserError):
+        with self.assertRaises(ValidationError):
             self.test_move.post()
