@@ -384,14 +384,7 @@ var StatementModel = BasicModel.extend({
         if (context && context.active_model === 'account.journal' && context.active_ids) {
             domainReconcile.push(['journal_id', 'in', [false].concat(context.active_ids)]);
         }
-        var def_reconcileModel = this._rpc({
-                model: 'account.reconcile.model',
-                method: 'search_read',
-                domain: domainReconcile,
-            })
-            .then(function (reconcileModels) {
-                self.reconcileModels = reconcileModels;
-            });
+        var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_account = this._rpc({
                 model: 'account.account',
                 method: 'search_read',
@@ -411,7 +404,59 @@ var StatementModel = BasicModel.extend({
             return self._formatLine(self.statement.lines);
         });
     },
-
+    _readAnalyticTags: function (params) {
+        var self = this;
+        this.analyticTags = {};
+        if (!params || !params.res_ids || !params.res_ids.length) {
+            return $.when();
+        }
+        var fields = (params && params.fields || []).concat(['id', 'display_name']);
+        return this._rpc({
+                model: 'account.analytic.tag',
+                method: 'read',
+                args: [
+                    params.res_ids,
+                    fields,
+                ],
+            }).then(function (tags) {
+                for (var i=0; i<tags.length; i++) {
+                    var tag = tags[i];
+                    self.analyticTags[tag.id] = tag;
+                }
+            });
+    },
+    _loadReconciliationModel: function (params) {
+        var self = this;
+        return this._rpc({
+                model: 'account.reconcile.model',
+                method: 'search_read',
+                domain: params.domainReconcile || [],
+            })
+            .then(function (reconcileModels) {
+               var analyticTagIds = [];
+                for (var i=0; i<reconcileModels.length; i++) {
+                    var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                    for (var j=0; j<modelTags.length; j++) {
+                        if (analyticTagIds.indexOf(modelTags[j]) === -1) {
+                            analyticTagIds.push(modelTags[j]);
+                        }
+                    }
+                }
+                return self._readAnalyticTags({res_ids: analyticTagIds}).then(function () {
+                    for (var i=0; i<reconcileModels.length; i++) {
+                        var recModel = reconcileModels[i];
+                        var analyticTagData = [];
+                        var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                        for (var j=0; j<modelTags.length; j++) {
+                            var tagId = modelTags[j];
+                            analyticTagData.push([tagId, self.analyticTags[tagId].display_name])
+                        }
+                        recModel.analytic_tag_ids = analyticTagData;
+                    }
+                    self.reconcileModels = reconcileModels;
+                });
+            });
+    },
     _loadTaxes: function(){
         var self = this;
         self.taxes = {};
@@ -949,7 +994,7 @@ var StatementModel = BasicModel.extend({
     _formatMany2ManyTags: function (value) {
         var res = [];
         for (var i=0, len=value.length; i<len; i++) {
-            res[i] = {data: {'id': value[i][0], 'display_name': value[i][1]}};
+            res[i] = {'id': value[i][0], 'display_name': value[i][1]};
         }
         return res;
     },
@@ -1290,15 +1335,7 @@ var ManualModel = StatementModel.extend({
         if (company_ids) {
             domainReconcile.push(['company_id', 'in', company_ids]);
         }
-        var def_reconcileModel = this._rpc({
-                model: 'account.reconcile.model',
-                method: 'search_read',
-                domain: domainReconcile,
-            })
-            .then(function (reconcileModels) {
-                self.reconcileModels = reconcileModels;
-            });
-
+        var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_taxes = this._loadTaxes();
 
         return $.when(def_reconcileModel, def_account, def_taxes).then(function () {

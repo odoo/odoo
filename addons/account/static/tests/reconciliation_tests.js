@@ -136,8 +136,14 @@ var db = {
         ]
     },
     'account.analytic.tag': {
-        fields: {},
-        records: []
+        fields: {
+            id: {string: 'id', type: 'integer'},
+            display_name: {string: 'display_name', type: 'char'},
+        },
+        records: [
+            {id: 1, display_name: 'Come together'},
+            {id: 2, display_name: 'Right now'},
+        ],
     },
     'account.bank.statement': {
         fields: {},
@@ -179,7 +185,8 @@ var db = {
             second_amount: {string: "Second Amount", type: 'float', digits:0, help:"Fixed amount will count as a debit if it is negative, as a credit if it is positive.", default:100.0},
             second_tax_id: {string: "Second Tax", type: 'many2one', relation:'account.tax', domain:[('type_tax_use', '=', 'purchase')]},
             second_analytic_account_id: {string: "Second Analytic Account", type: 'many2one', relation:'account.analytic.account'},
-            match_journal_ids: {string: "Journal Ids", type: 'many2many', relation: 'account.journal'}
+            match_journal_ids: {string: "Journal Ids", type: 'many2many', relation: 'account.journal'},
+            analytic_tag_ids: {string: 'Analytic tags', type: 'many2many', relation: 'account.analytic.tag'},
         },
         records: [
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 4, 'analytic_account_id': false, 'display_name': "Int\u00e9rrets", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 282, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "fixed", 'name': "Int\u00e9rrets", 'amount': 0.0, 'second_amount': 100.0, 'match_journal_ids': []},
@@ -187,7 +194,7 @@ var db = {
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 5, 'analytic_account_id': false, 'display_name': "Fs bank", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 284, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Fs bank", 'amount': 100.0, 'second_amount': 100.0},
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 8, 'analytic_account_id': false, 'display_name': "Caisse Sand.", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': "Caisse Sand.", 'second_label': false, 'second_account_id': false, 'account_id': 308, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Caisse Sand.", 'amount': 100.0, 'second_amount': 100.0, 'match_journal_ids': []},
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'rule_type': 'writeoff_button', 'second_tax_id': 7, 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': 6, 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': 2.5},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5, 'match_journal_ids': []},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5, 'match_journal_ids': [], 'analytic_tag_ids': [1,2]},
         ]
     },
     'account.reconciliation.widget': {
@@ -589,6 +596,7 @@ var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var demoData = require('account.reconciliation_tests.data');
 
 var testUtils = require('web.test_utils');
+var testUtilsDom = require('web.test_utils_dom');
 
 QUnit.module('account', {
     beforeEach: function () {
@@ -1765,6 +1773,55 @@ QUnit.module('account', {
         // Reconcile
         widget.$("button.o_reconcile.btn.btn-primary:first").click();
         assert.ok(true, "No error in reconciliation");
+
+        clientAction.destroy();
+    });
+
+    QUnit.test('Reconciliation Models handle analytic tags', function (assert) {
+        assert.expect(6);
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'process_bank_statement_line') {
+                    var new_aml_dicts = args.args[1][0].new_aml_dicts;
+                    assert.strictEqual(new_aml_dicts.length, 2);
+                    // I personnally judge the following use case rotten, since
+                    // the first and the second line wouldn't have the same tags
+                    assert.deepEqual(new_aml_dicts[0].analytic_tag_ids, [[6, null, [1, 2]]]);
+                    assert.deepEqual(new_aml_dicts[1].analytic_tag_ids, [[6, null, [2]]]);
+                }
+                return this._super(route, args);
+            },
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+
+        clientAction.appendTo($('#qunit-fixture'));
+
+        // The first reconciliation "line" is where it happens
+        var widget = clientAction.widgets[0];
+
+        testUtilsDom.click(widget.$('.toggle_create'));
+        testUtilsDom.click(widget.$('.quick_add button:contains("Double")'));
+        assert.containsN(widget, '.create_analytic_tag_ids .o_field_many2manytags .badge', 2,
+            'Two tags are loaded');
+        assert.containsOnce(widget, '.create_analytic_tag_ids .o_field_many2manytags .badge:contains("Come together")',
+            'Tags should have a name');
+        assert.containsOnce(widget, '.create_analytic_tag_ids .o_field_many2manytags .badge:contains("Right now")',
+            'Tags should have a name');
+
+        testUtilsDom.click(widget.$('.create_analytic_tag_ids .o_field_many2manytags .badge a.o_delete:first()'));
+
+        testUtilsDom.click(widget.$('.o_reconcile'));
 
         clientAction.destroy();
     });
