@@ -1075,7 +1075,12 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.compute:
             not_protected = (records - records.env.protected(self))
             if not_protected:
-                not_protected.write({self.name: write_value})
+                # DLE P143: `/home/dle/src/odoo/master-nochange-fp/addons/website/tests/test_views.py`
+                # `test_save`: infinite recursion in `write` of res.partner, because it calls `_fields_sync`
+                # without protecting.
+                # Though, this is a bommer we have to protect records twice, as we do it as well in regular write
+                with records.env.protecting(records._field_computed.get(self, [self]), records):
+                    not_protected.write({self.name: write_value})
             protecteds = (records & records.env.protected(self))
             if protecteds:
                 for record in protecteds:

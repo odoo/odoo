@@ -34,7 +34,10 @@ class Crawler(HttpCase):
         theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
             'name': 'Products Theme Kea',
             'mode': 'extension',
-            'inherit_id': main_view.id,
+            # DLE P141: This is a reference field. Reference field can take either a browse,
+            # either a string with the model/id comma-separated, but not just an id.
+            # See `convert_to_cache` of `Class Reference` in `fields.py`
+            'inherit_id': main_view,
             'arch': '<xpath expr="//p" position="replace"><span>C</span></xpath>',
             'key': '_theme_kea_sale.products',
         })
