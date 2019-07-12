@@ -186,6 +186,7 @@ class Message(models.Model):
         return ['!', ('notification_ids.notification_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
+    @api.depends_context('uid')
     def _get_starred(self):
         """ Compute if the message is starred by the current user. """
         # TDE FIXME: use SQL
@@ -325,6 +326,16 @@ class Message(models.Model):
             self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
         else:
             self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
+        # DLE P109: This is a tricky one. `test_set_star`
+        # `starred` depends on `starred_partner_ids`,
+        # `starred_partner_ids` is written as sudo in `toggle_message_starred`
+        # therefore, the modified is called as sudo, and the `add_todo` as well.
+        # It therefore adds in the todo list the field `starred` for the msg - as sudo -
+        # When reading msg.starred, the field is in the todo list, and it therefore use it,
+        # with the records from the todo list, as sudo, to compute the `starred` field.
+        # The `starred` field is therefore computed as sudo (uid 1) while we asked it for user_admin (uid 2)
+        self.env.remove_todo(self._fields['starred'], self.sudo())
+        self.env.add_todo(self._fields['starred'], self)
 
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)

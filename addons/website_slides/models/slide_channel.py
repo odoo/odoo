@@ -243,6 +243,7 @@ class Channel(models.Model):
             record.completion = round(100.0 * completion / (record.total_slides or 1))
 
     @api.depends('upload_group_ids', 'user_id')
+    @api.depends_context('uid')
     def _compute_can_upload(self):
         for record in self:
             if record.user_id == self.env.user:
