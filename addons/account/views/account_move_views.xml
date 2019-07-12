@@ -350,7 +350,7 @@
             <field name="name">account.invoice.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" string="Invoices" decoration-muted="state == 'cancel'" js_class="account_tree">
+                <tree decoration-info="state == 'draft'" string="Invoices" decoration-muted="state == 'cancel'" js_class="account_tree" banner_route="/account/account_invoice_onboarding">
                     <field name="partner_id" invisible="1"/>
                     <field name="invoice_source_email" invisible="1"/>
                     <field name="invoice_vendor_icon" string=" "/>
