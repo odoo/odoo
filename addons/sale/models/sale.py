@@ -694,7 +694,7 @@ class SaleOrder(models.Model):
             'confirmation_date': fields.Datetime.now()
         })
         self._action_confirm()
-        if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
+        if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_done()
         return True
 

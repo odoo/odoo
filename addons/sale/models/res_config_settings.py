@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
+    group_auto_done_setting = fields.Boolean("Lock Confirmed Sales", implied_group='sale.group_auto_done_setting')
     module_sale_margin = fields.Boolean("Margins")
     quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)", readonly=False)
     use_quotation_validity_days = fields.Boolean("Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
@@ -39,7 +40,6 @@ class ResConfigSettings(models.TransientModel):
         domain="[('type', '=', 'service')]",
         config_parameter='sale.default_deposit_product_id',
         help='Default product used for payment advances')
-    auto_done_setting = fields.Boolean("Lock Confirmed Sales", config_parameter='sale.auto_done_setting')
     module_website_sale_digital = fields.Boolean("Digital Content")
 
     auth_signup_uninvited = fields.Selection([
