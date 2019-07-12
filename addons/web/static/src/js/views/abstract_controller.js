@@ -559,15 +559,19 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         ev.data.callback(state || {});
     },
     /**
-     * Called mainly from the control panel when the focus should be given to
-     * the controller
+     * Called either from the control panel to focus the controller
+     * or from the view to focus the search bar
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
         switch (ev.data.direction) {
-            case 'down' :
+            case 'up':
+                ev.stopPropagation();
+                this._controlPanel.focusSearchBar();
+                break;
+            case 'down':
                 ev.stopPropagation();
                 this.giveFocus();
                 break;
@@ -629,7 +633,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     _onSwitchView: function (ev) {
         ev.data.controllerID = this.controllerID;
     },
-
 });
 
 return AbstractController;

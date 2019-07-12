@@ -1108,6 +1108,9 @@ var ListRenderer = BasicRenderer.extend({
                 $cell.closest('tbody').addClass('o_keyboard_navigation');
                 colIndex = this.currentColIndex || $cell.index();
                 $futureCell = this._findConnectedCell($cell, 'prev', colIndex);
+                if (!$futureCell) {
+                    this.trigger_up('navigation_move', { direction: 'up' });
+                }
                 break;
             case $.ui.keyCode.DOWN:
                 ev.preventDefault();

@@ -1155,6 +1155,10 @@ ListRenderer.include({
      */
     _onNavigationMove: function (ev) {
         var self = this;
+        // Don't stop the propagation when navigating up while not editing any row
+        if (this.currentRow === null && ev.data.direction === 'up') {
+            return;
+        }
         ev.stopPropagation(); // stop the event, the action is done by this renderer
         switch (ev.data.direction) {
             case 'previous':

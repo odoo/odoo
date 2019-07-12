@@ -221,6 +221,14 @@ var SearchBar = Widget.extend({
                 this._focusFollowing();
                 e.preventDefault();
                 break;
+            case $.ui.keyCode.DOWN:
+                // if the searchbar dropdown is closed, try to focus the renderer
+                const $dropdown = this.$('.o_searchview_autocomplete:visible');
+                if (!$dropdown.length) {
+                    this.trigger_up('navigation_move', { direction: 'down' });
+                    e.preventDefault();
+                }
+                break;
             case $.ui.keyCode.BACKSPACE:
                 if (this.$input.val() === '') {
                     this.trigger_up('facet_removed');
