@@ -351,6 +351,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
     _onAcceptAnswerClick: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
+        var $forumAnswer = $('a.accept_answer').closest('.forum_answer.card');
         this._rpc({
             route: $link.data('href'),
         }).then(function (data) {
@@ -368,8 +369,12 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                     $link.parent().append($warning);
                 }
             } else {
+                $('a.accept_answer').removeClass('text-success');
+                $forumAnswer.find('i.fa-check-circle.text-success').remove();
+                $forumAnswer.find('div.bg-success').remove();
                 $link.toggleClass('oe_answer_true', !!data)
-                     .toggleClass('oe_answer_false', !data);
+                     .toggleClass('oe_answer_false', !data)
+                     .toggleClass('text-success', !!data);
             }
         });
         this._onCheckAnswerStatus(ev);
