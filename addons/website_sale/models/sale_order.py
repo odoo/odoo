@@ -43,9 +43,9 @@ class SaleOrder(models.Model):
     @api.multi
     @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
-        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
-        abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
+            abandoned_delay = order.website_id and order.website_id.cart_abandoned_delay or 1.0
+            abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
             domain = order.date_order and order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
 
