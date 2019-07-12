@@ -148,8 +148,6 @@ class PaymentAcquirerOgone(models.Model):
         items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
-        print(sign)
-        print(key)
         shasign = sha1(sign).hexdigest()
         return shasign
 
@@ -378,6 +376,7 @@ class PaymentTxOgone(models.Model):
         # TODO: create tx with s2s type
         print("ogone_s2s_do_transaction")
         account = self.acquirer_id
+        print(account)
         reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
 
         param_plus = {
@@ -417,9 +416,7 @@ class PaymentTxOgone(models.Model):
                     data[key] = val
 
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
-
         direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
-
         logged_data = data.copy()
         logged_data.pop('PSWD')
         _logger.info("ogone_s2s_do_transaction: Sending values to URL %s, values:\n%s", direct_order_url, pformat(logged_data))
@@ -437,9 +434,6 @@ class PaymentTxOgone(models.Model):
             raise
 
         return self._ogone_s2s_validate_tree(tree)
-
-
-
 
     def ogone_s2s_do_refund(self, **kwargs):
         account = self.acquirer_id

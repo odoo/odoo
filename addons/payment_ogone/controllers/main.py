@@ -132,6 +132,27 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/feedback',], type='http', auth='public')
     def ogone_alias_gateway_feedback(self, **post):
+        ################################
+        # For DBO
+        ################################
+        """
+        Salut !
+        C'est ici que je suis arrivé. La fonction est appelée à la suite de l'appel à l'alias gateway.
+        Pour l'instant, la gateway redirige vers http://arj-odoo.agayon.be. Pour que ça marche chez toi, il faut modifier
+        la variable path_url = "payment/ogone/feedback/" dans le fichier payment.py du module payment_ogone.
+        La variable ret permet de construire une page html basique qui montre les arguments reçus.
+
+        La signature est correcte et la variable shasign correspond (elle est bien calculée). Pour
+        Je crée ensuite un token  token = request.env['payment.token'].create(token_parameters, )
+
+        Je suis coincé au moment de rattacher le paiement de la facture.
+        Je lance PaymentProcessing.add_payment_transaction(tx)
+
+        request.env['payment.transaction'].sudo().ogone_s2s_do_transaction(return_url="http://arj-odoo.agayon.be/shop/payment")
+        mais il retourn une 404 (vers http://arj-odoo.agayon.be/payment/false)
+
+
+        """
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: feeback Alias gateway with post data %s', pprint.pformat(post))  # debug)
         # If you have configured an SHA-OUT passphrase for these feedback requests,
@@ -139,14 +160,16 @@ class OgoneController(http.Controller):
         pprint.pformat(post)
         ret = "<h1>FEEDBACK Ingenico Alias gateway</h1>"
         for key, value in post.items():
+            print(key, value)
             ret += "{} : {} </br>".format(key, value)
 
         # We have created the token. We can now make the payment and create the transaction.
         try:
-            ogone_order_id = post['order_id']
+            ogone_order_id = post['OrderID']
         except KeyError:
-            ogone_order_id = None
-            pass
+            ret += "MISSING ogone_order_id"+ "</br>"
+            import time
+            ogone_order_id = time.time()
         cvc_masked = 'XXX'
         card_number_masked = post['CardNo']
         acquirer = request.env['payment.acquirer'].search([('provider', '=', 'ogone')])
@@ -155,21 +178,21 @@ class OgoneController(http.Controller):
         try:
             partner_id = post['partner_id']
         except KeyError:
-            partner_id = None
-            pass
+            ret +=  "</br>" + "MISSING PARTNER ID" + "</br>"
+            return ret
         data_clean = {}
         for key, value in post.items():
             data_clean[key.upper()] = value
+        # TODO do something if the sha is bad. NOTE: IT IS RECHECKED in add_payment_transaction
         shasign = acquirer._ogone_generate_shasign('out', data_clean)
         print(data_clean['SHASIGN'])
-        print(shasign)
+        print(shasign.upper())
         ret += str(data_clean) + '</br>' + data_clean['SHASIGN'] + '</br>' + shasign.upper()
-        # return ret
         if partner_id:
             token_parameters = {
                 'cc_number': card_number_masked,
                 'cc_cvc': cvc_masked,
-                'cc_holder_name': 0,
+                'cc_holder_name': data_clean['CN'],
                 'cc_expiry': data_clean['ED'],
                 'cc_brand': data_clean['BRAND'],
                 'acquirer_id': acquirer.id,
@@ -178,6 +201,7 @@ class OgoneController(http.Controller):
                 'alias': data_clean['ALIAS'],
             }
             token = request.env['payment.token'].create(token_parameters, )
+            print(token)
             baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
             params = {
                 'accept_url': baseurl + '/payment/ogone/validate/accept',
@@ -188,9 +212,21 @@ class OgoneController(http.Controller):
             tx = token.validate(**params)
             if tx and tx.html_3ds:
                 return tx.html_3ds
-            # add the payment transaction into the session to let the page /payment/process to handle it
             PaymentProcessing.add_payment_transaction(tx)
-            #return werkzeug.utils.redirect("/payment/process")
-            return ret
+
+            # I don't know if the following function must be called manually or triggered with a redirection.
+            # request.env['payment.transaction'].sudo().ogone_s2s_do_transaction(return_url="http://arj-odoo.agayon.be/shop/payment")
+            return werkzeug.utils.redirect("/payment/process")
+            # try:
+            #     # request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+            #     # PaymentProcessing.add_payment_transaction(tx)
+            #     # return werkzeug.utils.redirect("/payment/process")
+            # except ValidationError:
+            #     return ret
+
+            # return ret
         else:
             return ret
+
+
+
