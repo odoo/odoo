@@ -30,6 +30,19 @@ class Website(models.Model):
         default=_get_default_website_team)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
+    # DLE P145: `/home/dle/src/odoo/master-nochange-fp/addons/website_sale/tests/test_website_sale_pricelist.py`
+    # SetUp
+    # self.w2_pl = Pricelist.create({
+    #     'name': 'Website 2 Pricelist',
+    #     'website_id': self.website2.id,
+    # })
+    # One can assume that when creating a new pricelist with a `website_id`,
+    # the opposite one2many website.pricelist_ids would update automatically,
+    # except that this is a computed one2many which add no depends.
+    # I create the below technical regular one2many field, so it gets updated when adding a new pricelist with a website_id,
+    # and then the compute pricelist_ids can depends on it.
+    all_pricelist_ids = fields.One2many('product.pricelist', 'website_id', string='All pricelists',
+                                        help='Technical: Used to recompute pricelist_ids')
 
     def _default_recovery_mail_template(self):
         try:
@@ -43,6 +56,8 @@ class Website(models.Model):
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
+    # DLE P145
+    @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
         Pricelist = self.env['product.pricelist']
         for website in self:

@@ -5609,7 +5609,16 @@ Fields:
                         new_records = self.filtered(lambda r: not r.id)
                         existing_records = self - new_records
                         records = model.browse()
-                        if existing_records:
+                        # DLE P144: `website_sale`
+                        # pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
+                        # currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency', readonly=False)
+                        # When changing writing on the currency of a pricelist, we look for the website to which we must change the `currency_id`
+                        # To do so, we have to find the website using the pricelist that has been changed,
+                        # which is not possible with a search as this is a compute field not stored.
+                        # But, to be able to have currency_id in the cache, we must have computed the website pricelist
+                        # and so we can assume that if website.currency_id is in the cache, website.pricelist_id is as well.
+                        # We can therefore just take all websites having that pricelist from the cache
+                        if key.store and existing_records:
                             # DLE P82: `test_event_activity`
                             # `hr.employee` overrides `_search`, and when you don't have the read access to `hr.employee`,
                             # it calls `_search` on `hr.employee.public`, which do not share all the same fields than `hr.employee`
@@ -5617,7 +5626,7 @@ Fields:
                             # which requires for that a search on `hr.employee.activity_ids`, which doesn't exist on `hr.employee.public`
                             # No other way than do this as sudo.
                             records |= model.sudo().search([(key.name, 'in', existing_records.ids)])
-                        if new_records:
+                        if not key.store or new_records:
                             cache_records = self.env.cache.get_records(model, key)
                             records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
                 records._modified_triggers(val)
