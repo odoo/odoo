@@ -5883,14 +5883,15 @@ QUnit.module('Views', {
             },
         });
 
-        assert.ok(document.activeElement.classList.contains('o_searchview_input'), 'default focus should be in search view');
-        // switch focus to the create button in tests while it works on live
-        $('.o_list_button_add').focus();
-        assert.ok(document.activeElement.classList.contains('o_list_button_add'),
-            'focus should now be in create button');
+        assert.ok(document.activeElement.classList.contains('o_searchview_input'),
+            'default focus should be in search view');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
         assert.strictEqual(document.activeElement.tagName, 'INPUT',
             'focus should now be on the record selector');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'up');
+        assert.ok(document.activeElement.classList.contains('o_searchview_input'),
+            'focus should have come back to the search view');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
         assert.strictEqual(document.activeElement.tagName, 'INPUT',
             'focus should now be in first row input');

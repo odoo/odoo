@@ -262,13 +262,17 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Tries to give focus to the previous card, and returns true if successful
+     * 
      * @private
      * @param {DOMElement} currentColumn
+     * @returns {boolean}
      */
     _focusOnPreviousCard: function (currentCardElement) {
         var previousCard = currentCardElement.previousElementSibling;
         if (previousCard && previousCard.classList.contains("o_kanban_record")) { //previous element might be column title
             previousCard.focus();
+            return true;
         }
     },
     /**
@@ -611,7 +615,10 @@ var KanbanRenderer = BasicRenderer.extend({
                 e.preventDefault();
                 break;
             case $.ui.keyCode.UP:
-                this._focusOnPreviousCard(e.currentTarget);
+                const previousFocused = this._focusOnPreviousCard(e.currentTarget);
+                if (!previousFocused) {
+                    this.trigger_up('navigation_move', { direction: 'up' });
+                }
                 e.stopPropagation();
                 e.preventDefault();
                 break;
