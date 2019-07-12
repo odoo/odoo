@@ -62,7 +62,8 @@ class PaymentAcquirerAuthorize(models.Model):
         # The signature key is now '128-character hexadecimal format', while the
         # transaction key was only 16-character.
         if len(values['x_trans_key']) == 128:
-            return hmac.new(values['x_trans_key'].decode("hex").encode('utf-8'), data, hashlib.sha512).hexdigest().upper()
+            key = bytes.fromhex(values['x_trans_key'])
+            return hmac.new(key, data, hashlib.sha512).hexdigest().upper()
         else:
             return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
 
@@ -315,13 +316,14 @@ class TxAuthorize(models.Model):
                     'acquirer_reference': tree.get('x_trans_id'),
                     'date': fields.Datetime.now(),
                 })
-                if init_state != 'authorized':
-                    self.execute_callback()
 
                 if self.payment_token_id:
                     self.payment_token_id.verified = True
 
                 self._set_transaction_done()
+
+                if init_state != 'authorized':
+                    self.execute_callback()
             if tree.get('x_type').lower() == 'auth_only':
                 self.write({'acquirer_reference': tree.get('x_trans_id')})
                 self._set_transaction_authorized()

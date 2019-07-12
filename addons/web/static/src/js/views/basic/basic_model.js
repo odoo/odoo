@@ -155,6 +155,10 @@ var BasicModel = AbstractModel.extend({
         // save is performed.
         this.mutex = new concurrency.Mutex();
 
+        // this array is used to accumulate RPC requests done in the same call
+        // stack, so that they can be batched in the minimum number of RPCs
+        this.batchedRPCsRequests = [];
+
         this.localData = Object.create(null);
         this._super.apply(this, arguments);
     },
@@ -3999,6 +4003,86 @@ var BasicModel = AbstractModel.extend({
             });
     },
     /**
+     * This function accumulates RPC requests done in the same call stack, and
+     * performs them in the next micro task tick so that similar requests can be
+     * batched in a single RPC.
+     *
+     * For now, only 'read' calls are supported.
+     *
+     * @private
+     * @param {Object} params
+     * @returns {Promise}
+     */
+    _performRPC: function (params) {
+        var self = this;
+
+        // save the RPC request
+        var request = _.extend({}, params);
+        var prom = new Promise(function (resolve, reject) {
+            request.resolve = resolve;
+            request.reject = reject;
+        });
+        this.batchedRPCsRequests.push(request);
+
+        // empty the pool of RPC requests in the next micro tick
+        Promise.resolve().then(function () {
+            if (!self.batchedRPCsRequests.length) {
+                // pool has already been processed
+                return;
+            }
+
+            // reset pool of RPC requests
+            var batchedRPCsRequests = self.batchedRPCsRequests;
+            self.batchedRPCsRequests = [];
+
+            // batch similar requests
+            var batches = {};
+            var key;
+            for (var i = 0; i < batchedRPCsRequests.length; i++) {
+                var request = batchedRPCsRequests[i];
+                key = request.model + ',' + JSON.stringify(request.context);
+                if (!batches[key]) {
+                    batches[key] = _.extend({}, request, {requests: [request]});
+                } else {
+                    batches[key].ids = _.uniq(batches[key].ids.concat(request.ids));
+                    batches[key].fieldNames = _.uniq(batches[key].fieldNames.concat(request.fieldNames));
+                    batches[key].requests.push(request);
+                }
+            }
+
+            // perform batched RPCs
+            function onSuccess(batch, results) {
+                for (var i = 0; i < batch.requests.length; i++) {
+                    var request = batch.requests[i];
+                    var fieldNames = request.fieldNames.concat(['id']);
+                    var filteredResults = results.filter(function (record) {
+                        return request.ids.indexOf(record.id) >= 0;
+                    }).map(function (record) {
+                        return _.pick(record, fieldNames);
+                    });
+                    request.resolve(filteredResults);
+                }
+            }
+            function onFailure(batch, error) {
+                for (var i = 0; i < batch.requests.length; i++) {
+                    var request = batch.requests[i];
+                    request.reject(error);
+                }
+            }
+            for (key in batches) {
+                var batch = batches[key];
+                self._rpc({
+                    model: batch.model,
+                    method: 'read',
+                    args: [batch.ids, batch.fieldNames],
+                    context: batch.context,
+                }).then(onSuccess.bind(null, batch)).guardedCatch(onFailure.bind(null, batch));
+            }
+        });
+
+        return prom;
+    },
+    /**
      * Once a record is created and some data has been fetched, we need to do
      * quite a lot of computations to determine what needs to be fetched. This
      * method is doing that.
@@ -4205,11 +4289,12 @@ var BasicModel = AbstractModel.extend({
 
         var def;
         if (missingIDs.length && fieldNames.length) {
-            def = self._rpc({
-                model: list.model,
-                method: 'read',
-                args: [missingIDs, fieldNames],
+            def = self._performRPC({
                 context: list.getContext(),
+                fieldNames: fieldNames,
+                ids: missingIDs,
+                method: 'read',
+                model: list.model,
             });
         } else {
             def = Promise.resolve(_.map(missingIDs, function (id) {

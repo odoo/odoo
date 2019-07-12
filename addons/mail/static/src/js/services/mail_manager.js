@@ -94,9 +94,7 @@ var MailManager =  AbstractService.extend({
                     additionalThreadIDs: data.channel_ids
                 });
             }
-            if (options.domain && options.domain !== []) {
-                this._addMessageToThreads(message, options);
-            }
+            this._addMessageToThreads(message, options);
         }
         return prom;
     },
