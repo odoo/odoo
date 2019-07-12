@@ -27,13 +27,13 @@ def _configure_journals(cr, registry):
                 ('company_id', '=', company_id.id),
                 ('type', '=', 'general')], limit=1).id
             if not journal_id:
-              journal_id = env['account.journal'].create({
-                'name': _('Inventory Valuation'),
-                'type': 'general',
-                'code': 'STJ',
-                'company_id': company_id.id,
-                'show_on_dashboard': False
-              }).id
+                journal_id = env['account.journal'].create({
+                    'name': _('Inventory Valuation'),
+                    'type': 'general',
+                    'code': 'STJ',
+                    'company_id': company_id.id,
+                    'show_on_dashboard': False
+                }).id
             vals = {
                 'name': 'property_stock_journal',
                 'fields_id': env['ir.model.fields'].search([
