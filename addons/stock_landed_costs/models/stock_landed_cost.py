@@ -14,6 +14,20 @@ class LandedCost(models.Model):
     _description = 'Stock Landed Cost'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    def _default_account_journal_id(self):
+        """Take the journal configured in the company, else fallback on the stock journal."""
+        lc_journal = self.env['account.journal']
+        if self.env.company.lc_journal_id:
+            lc_journal = self.env.company.lc_journal_id
+        else:
+            ir_property = self.env['ir.property'].search([
+                ('name', '=', 'property_stock_journal'),
+                ('company_id', '=', self.env.company.id)
+            ], limit=1)
+            if ir_property:
+                lc_journal = ir_property.get_by_record()
+        return lc_journal
+
     name = fields.Char(
         'Name', default=lambda self: _('New'),
         copy=False, readonly=True, tracking=True)
@@ -44,7 +58,7 @@ class LandedCost(models.Model):
         copy=False, readonly=True)
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
-        required=True, states={'done': [('readonly', True)]})
+        required=True, states={'done': [('readonly', True)]}, default=lambda self: self._default_account_journal_id())
     company_id = fields.Many2one('res.company', string="Company",
         related='account_journal_id.company_id', readonly=False)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
