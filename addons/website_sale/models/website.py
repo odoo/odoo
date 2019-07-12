@@ -65,6 +65,7 @@ class Website(models.Model):
                 Pricelist._get_website_pricelists_domain(website.id)
             )
 
+    @api.depends_context('website_id')
     def _compute_pricelist_id(self):
         for website in self:
             if website._context.get('website_id') != website.id:
