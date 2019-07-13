@@ -187,9 +187,7 @@ class Channel(models.Model):
 
     @api.onchange('public')
     def _onchange_public(self):
-        if self.public == 'public':
-            self.alias_contact = 'everyone'
-        else:
+        if self.public != 'public' and self.alias_contact == 'everyone':
             self.alias_contact = 'followers'
 
     @api.onchange('moderator_ids')
@@ -352,7 +350,7 @@ class Channel(models.Model):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
-                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist),
+                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist if partner.email),
                 'recipient_ids': [],
             }
         return super(Channel, self)._notify_email_recipients(message, whitelist.ids)

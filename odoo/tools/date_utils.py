@@ -73,6 +73,10 @@ def get_fiscal_year(date, day=31, month=12):
         date_from = date_to + relativedelta(days=1)
         max_day = calendar.monthrange(date_to.year + 1, date_to.month)[1]
         date_to = type(date)(date.year + 1, month, min(day, max_day))
+
+        # Force at 29 February instead of 28 in case of leap year.
+        if date_to.month == 2 and date_to.day == 28 and max_day == 29:
+            date_to += relativedelta(days=1)
     return date_from, date_to
 
 

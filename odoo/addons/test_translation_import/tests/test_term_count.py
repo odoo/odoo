@@ -5,7 +5,7 @@ import base64
 import io
 
 import odoo
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
 from odoo.tools.translate import _
 
@@ -22,6 +22,18 @@ class TestTermCount(common.TransactionCase):
             ('src', '=', '1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB'),
         ])
         self.assertEqual(len(ids), 2)
+
+    def test_count_term_module(self):
+        """
+        Just make sure we have as many translation entries as we wanted and module deducted from file content
+        """
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        translations = self.env['ir.translation'].search([
+            ('lang', '=', 'fr_FR'),
+            ('src', '=', 'Ijkl'),
+            ('module', '=', 'test_translation_import'),
+        ])
+        self.assertEqual(len(translations), 1)
 
     def test_noupdate(self):
         """
@@ -167,3 +179,49 @@ class TestTermCount(common.TransactionCase):
 
         self.env.context = dict(self.env.context, lang="dot")
         self.assertEqual(_("Accounting"), "samva", "The code translation was not applied")
+
+@tagged('post_install', '-at_install')
+class TestTranslationFlow(common.TransactionCase):
+
+    def test_export_import(self):
+        """ Ensure export+import gives the same result as loading a language """
+        # load language and generate missing terms to create missing empty terms
+        with mute_logger('odoo.addons.base.models.ir_translation'):
+            self.env["base.language.install"].create({'lang': 'fr_FR'}).lang_install()
+        self.env["base.update.translations"].create({'lang': 'fr_FR'}).act_update()
+
+        translations = self.env["ir.translation"].search([
+            ('lang', '=', 'fr_FR'),
+            ('module', '=', 'test_translation_import')
+        ])
+
+        # minus 3 as the original fr.po contains 3 fake code translations (cf
+        # test_no_duplicate test) which are not found by babel_extract_terms
+        init_translation_count = len(translations) - 3
+
+        module = self.env.ref('base.module_test_translation_import')
+        export = self.env["base.language.export"].create({
+            'lang': 'fr_FR',
+            'format': 'po',
+            'modules': [(6, 0, [module.id])]
+        })
+        export.act_getfile()
+        po_file = export.data
+        self.assertIsNotNone(po_file)
+
+        translations.unlink()
+
+        import_fr = self.env["base.language.import"].create({
+            'name': 'French',
+            'code': 'fr_FR',
+            'data': export.data,
+            'filename': export.name,
+        })
+        with mute_logger('odoo.addons.base.models.res_lang'):
+            import_fr.with_context(create_empty_translation=True).import_lang()
+
+        import_translation = self.env["ir.translation"].search([
+            ('lang', '=', 'fr_FR'),
+            ('module', '=', 'test_translation_import')
+        ])
+        self.assertEqual(init_translation_count, len(import_translation))

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import itertools
 from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.exceptions import AccessError, UserError
+from odoo.tools import float_compare, float_round, float_is_zero
 
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
@@ -30,6 +30,10 @@ class MrpProduction(models.Model):
             location = self.env['stock.picking.type'].browse(self.env.context['default_picking_type_id']).default_location_src_id
         if not location:
             location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+            try:
+                location.check_access_rule('read')
+            except (AttributeError, AccessError):
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     @api.model
@@ -39,6 +43,10 @@ class MrpProduction(models.Model):
             location = self.env['stock.picking.type'].browse(self.env.context['default_picking_type_id']).default_location_dest_id
         if not location:
             location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+            try:
+                location.check_access_rule('read')
+            except (AttributeError, AccessError):
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     name = fields.Char(
@@ -336,6 +344,10 @@ class MrpProduction(models.Model):
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
         location = self.env.ref('stock.stock_location_stock')
+        try:
+            location.check_access_rule('read')
+        except (AttributeError, AccessError):
+            location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
@@ -412,19 +424,26 @@ class MrpProduction(models.Model):
 
     def _generate_raw_moves(self, exploded_lines):
         self.ensure_one()
-        moves = self.env['stock.move']
-        for bom_line, line_data in exploded_lines:
-            moves += self._generate_raw_move(bom_line, line_data)
+        moves = self.env['stock.move'].create([
+            d for d in itertools.starmap(self._get_raw_move_data, exploded_lines)
+            if d
+        ])
         return moves
 
     def _generate_raw_move(self, bom_line, line_data):
+        v = self._get_raw_move_data(bom_line, line_data)
+        if not v:
+            return self.env['stock.move']
+        return self.env['stock.move'].create(v)
+
+    def _get_raw_move_data(self, bom_line, line_data):
         quantity = line_data['qty']
         # alt_op needed for the case when you explode phantom bom and all the lines will be consumed in the operation given by the parent bom line
         alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
         if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
-            return self.env['stock.move']
+            return
         if bom_line.product_id.type not in ['product', 'consu']:
-            return self.env['stock.move']
+            return
         if self.routing_id:
             routing = self.routing_id
         else:
@@ -434,7 +453,7 @@ class MrpProduction(models.Model):
         else:
             source_location = self.location_src_id
         original_quantity = (self.product_qty - self.qty_produced) or 1.0
-        data = {
+        return {
             'sequence': bom_line.sequence,
             'name': self.name,
             'date': self.date_planned_start,
@@ -457,7 +476,6 @@ class MrpProduction(models.Model):
             'propagate': self.propagate,
             'unit_factor': quantity / original_quantity,
         }
-        return self.env['stock.move'].create(data)
 
     @api.multi
     def _adjust_procure_method(self):
@@ -490,7 +508,7 @@ class MrpProduction(models.Model):
                 move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
                 move[0]._recompute_state()
                 move[0]._action_assign()
-                move.unit_factor = quantity / move.raw_material_production_id.product_qty
+                move[0].unit_factor = quantity / move[0].raw_material_production_id.product_qty
             elif quantity < 0:  # Do not remove 0 lines
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
@@ -571,6 +589,7 @@ class MrpProduction(models.Model):
             })
             if workorders:
                 workorders[-1].next_work_order_id = workorder.id
+                workorders[-1]._start_nextworkorder()
             workorders += workorder
 
             # assign moves; last operation receive all unassigned moves (which case ?)
@@ -674,9 +693,15 @@ class MrpProduction(models.Model):
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 raise UserError(_('Work order %s is still running') % wo.name)
         self._check_lots()
+
         self.post_inventory()
-        moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
-        moves_to_cancel._action_cancel()
+        # Moves without quantity done are not posted => set them as done instead of canceling. In
+        # case the user edits the MO later on and sets some consumed quantity on those, we do not
+        # want the move lines to be canceled.
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
+            'state': 'done',
+            'product_uom_qty': 0.0,
+        })
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         return self.write({'state': 'done'})
 

@@ -81,16 +81,10 @@
 
     .o_form_uri {
         display: inline-block;
+        color: $link-color;
 
-        color: $o-main-text-color;
-        &:first-line {
-            color: $link-color;
-        }
         &:hover {
-            color: darken($o-main-text-color, 1%); // hack required on chrome
-            &:first-line {
-                color: darken($link-color, 15%);
-            }
+            color: darken($link-color, 15%);
         }
     }
 
@@ -378,8 +372,8 @@
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
 
-        .nav-tabs > .tab-pane {
-            min-height: 100px;
+        .tab-content > .tab-pane {
+            padding: $o-horizontal-padding 0;
         }
     }
 
@@ -576,6 +570,9 @@
     &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
         display: none;  // Hide the handler in non-edit mode
     }
+    .o_field_widget.o_readonly_modifier .o_list_view .o_row_handle {
+        display: none;  // Hide the handler on readonly fields
+    }
 
     // Attachments
     .oe_attachment {
@@ -743,6 +740,11 @@
             }
             .o_field_widget {
                 width: 50%;
+                flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
             }
             button.btn-link:first-child {
                 padding-left: 0;

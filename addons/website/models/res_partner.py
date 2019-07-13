@@ -53,3 +53,10 @@ class Partner(models.Model):
         # onchange uses the cache to retrieve value, we need to copy computed_value into the initial env
         for record, record2 in izip(self, self2):
             record.display_name = record2.display_name
+
+    @api.multi
+    def get_base_url(self):
+        """When using multi-website, we want the user to be redirected to the
+        most appropriate website if possible."""
+        res = super(Partner, self).get_base_url()
+        return self.website_id and self.website_id._get_http_domain() or res

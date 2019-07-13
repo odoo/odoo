@@ -5,24 +5,26 @@
 # Translators:
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # Marko Carević <marko.carevic@live.com>, 2019
 # Jasmina Otročak <jasmina@uvid.hr>, 2019
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Stjepan Lovasić <stjepan.lovasic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2019
 # Tina Milas, 2019
+# Ivan Marijanović <ivanm101@yahoo.com>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"Last-Translator: Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +42,13 @@ msgstr "%s (kopija)"
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Upravljaj\" "
+"title=\"Upravljaj\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -77,6 +86,18 @@ msgstr "<i>Samostalno i brzo učite</i>"
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
 msgstr "<i>Možete jednostavno upravljati njima</i>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Ovdje postavljene vrijedonsti"
+" su specifične za pojedinui tvrtku.\" role=\"img\" aria-label=\"Ovdje "
+"postavljene vrijedonsti su specifične za pojedinui tvrtku.\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -183,15 +204,18 @@ msgstr "Status aktivnosti"
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "Dodaj novog djelatnika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 msgid "Additional Note"
-msgstr ""
+msgstr "Dodatna napomena"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Alias kontakt za osiguranje"
 
@@ -211,7 +235,7 @@ msgstr "Arhivirano"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Broj priloga"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -290,7 +314,7 @@ msgstr "Rođenje"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "Nivo certifikacije"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -363,7 +387,7 @@ msgstr "Puni naziv"
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Postavke"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -395,12 +419,12 @@ msgstr "Doprinos na open source projektima"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "Država rođenja"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr ""
+msgstr "Kreiraj novi odjel"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -468,7 +492,7 @@ msgstr "Odjeli"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr "Kanal rasprave"
 
 #. module: hr
@@ -611,7 +635,7 @@ msgstr "Žensko"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "Područje školovanja"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -643,6 +667,11 @@ msgstr "Pratitelji (Partneri)"
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
 msgstr "Samo sljedbenici"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Buduće aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -703,7 +732,7 @@ msgstr "Odjel ljudskih resursa"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "Odjeli"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -898,6 +927,11 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Posljednje aktivnosti"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Launch new marketing campaigns and offers"
 msgstr "Pokretanje novih marketinških kampanja"
@@ -927,7 +961,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Glavni prilog"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -995,7 +1029,7 @@ msgstr "Članovi"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška pri isporuci poruke"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -1028,7 +1062,7 @@ msgstr "Nacionalnost (Država)"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Krajnji rok slijedeće aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
@@ -1038,7 +1072,7 @@ msgstr "Sažetak sljedeće aktivnosti"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip sljedeće aktivnosti"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1088,7 +1122,7 @@ msgstr "Broj radnika koji su trenutno na ovom radnom mjestu."
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -1109,7 +1143,7 @@ msgstr "Broj poruka koje zahtijevaju aktivnost"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -1204,7 +1238,10 @@ msgid "Planned"
 msgstr "Planirano"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1236,7 +1273,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "Privatne informacije"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1329,7 +1366,7 @@ msgstr "Skala naših događaja organiziranih diljem svijeta"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
-msgstr ""
+msgstr "Škola"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1413,7 +1450,7 @@ msgstr "OIB"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "Datum rođenja bračnog druga"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
@@ -1523,6 +1560,11 @@ msgstr "Vremenska zona"
 #: selection:hr.employee,activity_state:0
 msgid "Today"
 msgstr "Danas"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Današnje aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -1645,6 +1687,20 @@ msgstr ""
 " svladati ih "
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1708,7 +1764,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Adresa rada"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email

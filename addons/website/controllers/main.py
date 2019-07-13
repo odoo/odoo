@@ -98,7 +98,7 @@ class Website(Home):
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
-                redirect = '/'
+                redirect = '/my'
             return http.redirect_with_hash(redirect)
         return response
 
@@ -286,24 +286,36 @@ class Website(Home):
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
-    @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
+    @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True, csrf=False)
     def reset_template(self, templates, redirect='/', **kwargs):
+        """ This method will try to reset a list of broken views ids.
+        It will read the original `arch` from the view's XML file (arch_fs).
+        Views without an `arch_fs` can't be reset, except views created when
+        dropping a snippet in specific oe_structure that create an inherited
+        view doing an xpath.
+        Note: The `arch_fs` field is automatically erased when there is a
+              write on the `arch` field.
+
+        This method is typically useful to reset specific views. In that case we
+        read the XML file from the generic view.
+        """
         templates = request.httprequest.form.getlist('templates')
-        modules_to_update = []
         for temp_id in templates:
             view = request.env['ir.ui.view'].browse(int(temp_id))
-            if view.page:
+            if 'oe_structure' in view.key:
+                # Particular xpathing view created in edit mode
+                view.unlink()
                 continue
-            view.model_data_id.write({
-                'noupdate': False
-            })
-            if view.model_data_id.module not in modules_to_update:
-                modules_to_update.append(view.model_data_id.module)
+            xml_view = view._get_original_view()  # view might already be the xml_view
+            if xml_view.arch_fs:
+                view_file_arch = xml_view.with_context(read_arch_from_file=True).arch
+                # Deactivate COW to not fix a generic view by creating a specific
+                view.with_context(website_id=None).arch_db = view_file_arch
+                if view == xml_view:
+                    view.model_data_id.write({
+                        'noupdate': False
+                    })
 
-        if modules_to_update:
-            modules = request.env['ir.module.module'].sudo().search([('name', 'in', modules_to_update)])
-            if modules:
-                modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
@@ -457,3 +469,8 @@ class WebsiteBinary(http.Controller):
             if unique:
                 kw['unique'] = unique
         return Binary().content_image(**kw)
+
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True)
+    def favicon(self, **kw):
+        # when opening a pdf in chrome, chrome tries to open the default favicon url
+        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)

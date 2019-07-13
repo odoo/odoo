@@ -78,6 +78,73 @@ class TestAccountEntry(TestExpenseCommon):
         self.assertAlmostEquals(self.analytic_account.line_ids[0].amount, -636.36, "Amount on the only AAL is wrong")
         self.assertEquals(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
 
+    def test_account_entry_multi_currency(self):
+        """ Checking accounting move entries and analytic entries when submitting expense. With
+            multi-currency. And taxes. """
+
+        # Clean-up the rates
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.user.company_id.id])
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'currency_id': self.env.ref('base.EUR').id,
+            'company_id': self.env.user.company_id.id,
+            'rate': 2.0,
+            'name': '2010-01-01',
+        })
+
+        expense = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for Dick Tracy',
+            'employee_id': self.employee.id,
+        })
+        expense_line = self.env['hr.expense'].create({
+            'name': 'Choucroute Saucisse',
+            'employee_id': self.employee.id,
+            'product_id': self.product_expense.id,
+            'unit_amount': 700.00,
+            'tax_ids': [(6, 0, [self.tax.id])],
+            'sheet_id': expense.id,
+            'analytic_account_id': self.analytic_account.id,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+        expense_line._onchange_product_id()
+        # State should default to draft
+        self.assertEquals(expense.state, 'draft', 'Expense should be created in Draft state')
+        # Submitted to Manager
+        expense.action_submit_sheet()
+        self.assertEquals(expense.state, 'submit', 'Expense is not in Reported state')
+        # Approve
+        expense.approve_expense_sheets()
+        self.assertEquals(expense.state, 'approve', 'Expense is not in Approved state')
+        # Create Expense Entries
+        expense.action_sheet_move_create()
+        self.assertEquals(expense.state, 'post', 'Expense is not in Waiting Payment state')
+        self.assertTrue(expense.account_move_id.id, 'Expense Journal Entry is not created')
+
+        # Should get this result [(0.0, 350.0, -700.0), (318.18, 0.0, 636.36), (31.82, 0.0, 63.64)]
+        for line in expense.account_move_id.line_ids:
+            if line.credit:
+                self.assertAlmostEquals(line.credit, 350.0)
+                self.assertAlmostEquals(line.amount_currency, -700.0)
+                self.assertEquals(len(line.analytic_line_ids), 0, "The credit move line should not have analytic lines")
+                self.assertFalse(line.product_id, "Product of credit move line should be false")
+            else:
+                if not line.tax_line_id == self.tax:
+                    self.assertAlmostEquals(line.debit, 318.18)
+                    self.assertAlmostEquals(line.amount_currency, 636.36)
+                    self.assertEquals(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
+                    self.assertEquals(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
+                else:
+                    self.assertAlmostEquals(line.debit, 31.82)
+                    self.assertAlmostEquals(line.amount_currency, 63.64)
+                    self.assertEquals(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
+                    self.assertFalse(line.product_id, "Product of tax move line should be false")
+
+        self.assertEquals(self.analytic_account.line_ids, expense.account_move_id.mapped('line_ids.analytic_line_ids'))
+        self.assertEquals(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
+        self.assertAlmostEquals(self.analytic_account.line_ids[0].amount, -318.18, "Amount on the only AAL is wrong")
+        self.assertAlmostEquals(self.analytic_account.line_ids[0].currency_id, self.env.user.company_id.currency_id, "Currency on the only AAL is wrong")
+        self.assertEquals(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
+
     def test_expense_from_email(self):
         user_demo = self.env.ref('base.user_demo')
         self.tax.price_include = False

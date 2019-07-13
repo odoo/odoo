@@ -83,7 +83,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 self.$welcomeMessage.remove();
             }
             var $wrapwrap = $('#wrapwrap'); // TODO find this element another way
-            $wrapwrap.find('.oe_structure.oe_empty, [data-oe-type="html"]').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+            self.$editorMessageElements = $wrapwrap.find('.oe_structure.oe_empty, [data-oe-type="html"]')
+                .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             var def = $.Deferred();
             self.trigger_up('animation_start_demand', {
                 editableMode: true,
@@ -102,10 +103,19 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * expects that the save action is performed. So, this empty action is
      * defined here so that all users have an 'on_save' related action.
      *
+     * As explained above, that action should always be defined in the current
+     * implementation (even an empty one) but in fact it is also needed to
+     * remove the data-editor-message attributes which are added when entering
+     * edition.
+     *
      * @private
      * @todo improve the system to somehow declare required/optional actions
      */
-    _onSave: function () {},
+    _onSave: function () {
+        if (this.$editorMessageElements) {
+            this.$editorMessageElements.removeAttr('data-editor-message');
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers

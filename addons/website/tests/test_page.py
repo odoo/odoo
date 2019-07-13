@@ -1,7 +1,8 @@
 # coding: utf-8
-from odoo.tests import common, HttpCase
+from odoo.tests import common, HttpCase, tagged
 
 
+@tagged('-at_install', 'post_install')
 class TestPage(common.TransactionCase):
     def setUp(self):
         super(TestPage, self).setUp()

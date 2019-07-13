@@ -11,8 +11,10 @@
 # Martin Trigaux, 2018
 # Miku Laitinen <miku.laitinen@gmail.com>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Janne Rättyä <janne.rattya@web-veistamo.fi>, 2019
+# Simo Suurla <simo@suurla.fi>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2018\n"
+"Last-Translator: Simo Suurla <simo@suurla.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,17 +135,17 @@ msgstr "Vastuuta"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_task_action_multi_assign_so_line
 msgid "Assign Sale Order Item"
-msgstr ""
+msgstr "Liitä myyntitilauksen rivi"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_assign_sale
 msgid "Assign Sale Order line to tasks"
-msgstr ""
+msgstr "Liitä myyntitilausrivi tehtävään"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_assign_so_line_view_form
 msgid "Assign sale line to Tasks"
-msgstr ""
+msgstr "Liitä tilausrivi tehtävään"
 
 #. module: sale_timesheet
 #: selection:project.create.sale.order,billable_type:0
@@ -167,13 +169,13 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:60
 #, python-format
 msgid "At least one line should be filled."
-msgstr ""
+msgstr "Vähintään yksi rivi pitää täytää."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "Ennen"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -229,7 +231,7 @@ msgstr "Laskutusaste"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__billable_type
 msgid "Billing Type"
-msgstr ""
+msgstr "Laskutustyyppi"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -247,7 +249,7 @@ msgstr "Peruuta"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr ""
+msgstr "Valitse laskutettava myyntitilaus"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -271,17 +273,17 @@ msgstr "Luo lasku"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr ""
+msgstr "Luo lasku projektista"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr ""
+msgstr "Luo myyntitilausrivi projektista"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
 msgid "Create SO from project"
-msgstr ""
+msgstr "Luo myyntitilaus projektista"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:102
@@ -289,12 +291,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #, python-format
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Luo myyntitilaus"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr ""
+msgstr "Luo myyntitilas projektista"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:344
@@ -302,7 +304,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 #, python-format
 msgid "Create a Sales Order"
-msgstr ""
+msgstr "Luo myyntitilaus"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
@@ -394,12 +396,12 @@ msgstr "Työntekijä"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
 msgid "Employee that has timesheets on the project."
-msgstr ""
+msgstr "Työntekijä jolla on tuntikortteja projektissa."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_search
 msgid "Exact name"
-msgstr ""
+msgstr "Tarkka nimi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -415,12 +417,12 @@ msgstr "Kiinteähintaiset projektit"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__project_id
 msgid "Generated Project"
-msgstr ""
+msgstr "Generoitu projekti"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr ""
+msgstr "Generoitu tehtävä"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -576,7 +578,7 @@ msgstr "Virstanpylväät (aseta manuaalisesti toteutuneet määrät tilaukselle)
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "My Project"
-msgstr ""
+msgstr "Oma projekti"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
@@ -593,13 +595,13 @@ msgstr "Toiminnallista tai teknistä tukea tarvitaan"
 #: selection:project.project,billable_type:0
 #: selection:project.task,billable_type:0
 msgid "No Billable"
-msgstr ""
+msgstr "Ei-laskutettava"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:208
 #, python-format
 msgid "No Sales Order"
-msgstr ""
+msgstr "Ei myyntitilaus"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:170
@@ -607,7 +609,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:190
 #, python-format
 msgid "No Sales Order Line"
-msgstr ""
+msgstr "Ei myyntitilasrivi"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -630,7 +632,7 @@ msgstr "Ei-laskutettavat tunnit"
 #: code:addons/sale_timesheet/static/src/js/timesheet_plan.js:266
 #, python-format
 msgid "Non Billable Tasks"
-msgstr ""
+msgstr "Ei-laskutettavat tehtävät"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -662,12 +664,12 @@ msgstr "Tilatut määrät"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
 msgid "Other Cost"
-msgstr ""
+msgstr "Muu kustannus"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other costs"
-msgstr ""
+msgstr "Muut kustannukset"
 
 #. module: sale_timesheet
 #. openerp-web
@@ -690,7 +692,7 @@ msgstr "Tuotemalli"
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_manager_and_product
 msgid "Product by Customer"
-msgstr ""
+msgstr "Tuoteet asiakkaiden mukaan"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__product_id
@@ -699,6 +701,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
+"Myyntitilauksen tuote pitää olla palvelu-tyyppinen, jotta voidaan laskuttaa "
+"kirjattujen tuntikorttien mukaan."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_fixed
@@ -717,7 +721,7 @@ msgstr "Kannattavuus"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Profitability Analysis"
-msgstr ""
+msgstr "Kannatavuusanalyysi"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:373
@@ -736,18 +740,18 @@ msgstr "Projektit"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__company_id
 msgid "Project Company"
-msgstr ""
+msgstr "Projektin yritys"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_profitability_report_action
 #: model:ir.ui.menu,name:sale_timesheet.menu_project_profitability_analysis
 msgid "Project Costs and Revenues"
-msgstr ""
+msgstr "Projektin kulut ja tuotot"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
 msgid "Project Currency"
-msgstr ""
+msgstr "Projektin valuutta"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
@@ -758,7 +762,7 @@ msgstr "Projektipäällikkö"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
 msgid "Project Profitability Report"
-msgstr ""
+msgstr "Projektin kannatavuusraportti"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
@@ -768,7 +772,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "Projektipohja"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
@@ -778,7 +782,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__project_id
 msgid "Project generated by the sales order item"
-msgstr ""
+msgstr "Projekti on luotu myyntitilauksen rivistä"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
@@ -800,7 +804,7 @@ msgstr "Projektit"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "Projekti jota käytetään tässä myyntitilauksessa."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -810,7 +814,7 @@ msgstr "Kurssit"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Re-invoiced costs"
-msgstr ""
+msgstr "Uudelleenlaskutetut kulut"
 
 #. module: sale_timesheet
 #: model:project.task,legend_done:sale_timesheet.project_task_internal
@@ -832,7 +836,7 @@ msgstr "Myyntitilaus"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
 msgid "Sale Order Item"
-msgstr ""
+msgstr "Myyntitilausrivi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
@@ -850,11 +854,13 @@ msgid ""
 "Sale order line from which the project has been created. Used for "
 "tracability."
 msgstr ""
+"Myyntitilauksen rivi, jonka perusteella projekti on luotu. Käytetään "
+"jäljitettävyyden vuoksi."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__sale_line_id
 msgid "Sale order line to link to selected tasks"
-msgstr ""
+msgstr "Myyntitilausrivi joka liitetään valittuun tehtävään"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_order_id
@@ -866,7 +872,7 @@ msgstr "Myyntitilaus"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
 msgid "Sales Order Confirmation Date"
-msgstr ""
+msgstr "Myyntitilauksen vahvistuspäivä"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_id
@@ -874,7 +880,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Myyntitilausrivi"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -887,6 +893,8 @@ msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
 msgstr ""
+"Myyntitilausrivin tulisi luoda tehtävä ja/tai projekti riippuen tuotteen "
+"asetuksista."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:395
@@ -943,7 +951,7 @@ msgstr "Palvelu"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "Palvelun laskutustapa"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_tracking
@@ -953,23 +961,23 @@ msgstr "Palvelun seuranta"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your fixed price services"
-msgstr ""
+msgstr "Aseta kiinteähiset palvelut"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your milestone services"
-msgstr ""
+msgstr "Aseta osissa laskutettavat palvelut"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your time-based services"
-msgstr ""
+msgstr "Aseta tuntilaskutettavat palvelut"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Myyty"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1021,6 +1029,8 @@ msgstr "Tähän myyntiin liittyvät tehtävät"
 msgid ""
 "The Project should be linked to a Sale Order to select an Sale Order Items."
 msgstr ""
+"Projekti pitää olla liitetty myyntitilaukseen, jotta voit valita "
+"myyntitilauksen rivin."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:67
@@ -1058,13 +1068,13 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:25
 #, python-format
 msgid "The project is already billable."
-msgstr ""
+msgstr "Projekti on ennestään jo laskutettava."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:55
 #, python-format
 msgid "The project is already linked to a sales order item."
-msgstr ""
+msgstr "Projekti on jo liitetty myyntitilauksen riviin."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:72
@@ -1078,12 +1088,12 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:51
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr ""
+msgstr "Valitussa myyntitilauksessa pitäisi olla jotain laskutettavaa."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There is no timesheet for now."
-msgstr ""
+msgstr "Ei yhtään tuntikorttia."
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
@@ -1136,7 +1146,7 @@ msgstr "Tuntikortin kulu"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Unit Amount"
-msgstr ""
+msgstr "Tuntikirjausten yksikkömäärä"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
@@ -1151,7 +1161,7 @@ msgstr "Tähän myyntitilaukseen kytkeytyvät tuntikortit"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Timesheet costs"
-msgstr ""
+msgstr "Tuntikortin kustannukset"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:379
@@ -1210,7 +1220,7 @@ msgstr "Yksikköhinta"
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__price_unit
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 msgid "Unit price of the sales order item."
-msgstr ""
+msgstr "Myyntitilausrivin yksikköhinta."
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
@@ -1221,22 +1231,22 @@ msgstr "Kpl"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Laskutettu veroton summa"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Laskutettava veroton summa"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
 msgid "Untaxed Amount to Re-invoiced"
-msgstr ""
+msgstr "Uudelleenlaskutettava veroton summa"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
 msgid "Untaxed Re-invoiced Amount"
-msgstr ""
+msgstr "Uudelleenlaskutettu veroton summa"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:258
@@ -1245,6 +1255,8 @@ msgid ""
 "What is still to deliver based on sold hours and hours already done. Equals "
 "to sold hours - done hours."
 msgstr ""
+"Paljon toimitettavaa on jäljellä perustuen myyntyihin tunteihin ja tehtyihin"
+" tunteihin. On yhtä paljon kuin: \"myydyt tunnit - tehdyt tunnit\"."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id

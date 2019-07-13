@@ -7,6 +7,7 @@ from odoo.tools.misc import find_in_path
 from odoo.tools import config
 from odoo.sql_db import TestCursor
 from odoo.http import request
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
 import time
 import base64
@@ -23,6 +24,8 @@ from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
+from collections import OrderedDict
+from collections.abc import Iterable
 
 
 _logger = logging.getLogger(__name__)
@@ -84,7 +87,8 @@ class IrActionsReport(models.Model):
     name = fields.Char(translate=True)
     type = fields.Char(default='ir.actions.report')
     binding_type = fields.Selection(default='report')
-    model = fields.Char(required=True)
+    model = fields.Char(required=True, string='Model Name')
+    model_id = fields.Many2one('ir.model', string='Model', compute='_compute_model_id', search='_search_model_id')
 
     report_type = fields.Selection([
         ('qweb-html', 'HTML'),
@@ -109,6 +113,32 @@ class IrActionsReport(models.Model):
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
+
+    @api.depends('model')
+    def _compute_model_id(self):
+        for action in self:
+            action.model_id = self.env['ir.model']._get(action.model).id
+
+    def _search_model_id(self, operator, value):
+        ir_model_ids = None
+        if isinstance(value, str):
+            names = self.env['ir.model'].name_search(value, operator=operator)
+            ir_model_ids = [n[0] for n in names]
+
+        elif isinstance(value, Iterable):
+            ir_model_ids = value
+
+        elif isinstance(value, int) and not isinstance(value, bool):
+            ir_model_ids = [value]
+
+        if ir_model_ids:
+            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+            ir_model = self.env['ir.model'].browse(ir_model_ids)
+            return [('model', operator, ir_model.mapped('model'))]
+        elif isinstance(value, bool) or value is None:
+            return [('model', operator, value)]
+        else:
+            return FALSE_DOMAIN
 
     @api.multi
     def associated_view(self):
@@ -466,7 +496,10 @@ class IrActionsReport(models.Model):
             )
             return barcode.asString('png')
         except (ValueError, AttributeError):
-            raise ValueError("Cannot convert into barcode.")
+            if barcode_type == 'Code128':
+                raise ValueError("Cannot convert into barcode.")
+            else:
+                return self.barcode('Code128', value, width=width, height=height, humanreadable=humanreadable)
 
     @api.multi
     def render_template(self, template, values=None):
@@ -643,7 +676,7 @@ class IrActionsReport(models.Model):
         if isinstance(self.env.cr, TestCursor):
             return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-        save_in_attachment = {}
+        save_in_attachment = OrderedDict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
@@ -718,11 +751,15 @@ class IrActionsReport(models.Model):
         return self.render_template(self.report_name, data), 'html'
 
     @api.model
+    def _get_rendering_context_model(self):
+        report_model_name = 'report.%s' % self.report_name
+        return self.env.get(report_model_name)
+
+    @api.model
     def _get_rendering_context(self, docids, data):
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        report_model_name = 'report.%s' % self.report_name
-        report_model = self.env.get(report_model_name)
+        report_model = self._get_rendering_context_model()
 
         data = data and dict(data) or {}
 
@@ -753,7 +790,7 @@ class IrActionsReport(models.Model):
         :param report_name: Name of the template to generate an action for
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
-        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
+        if (self.env.user._is_admin()) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
             template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),

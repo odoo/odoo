@@ -243,7 +243,11 @@ class Pricelist(models.Model):
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                price = product.currency_id._convert(price, self.currency_id, self.env.user.company_id, date, round=False)
+                if suitable_rule.base == 'standard_price':
+                    cur = product.cost_currency_id
+                else:
+                    cur = product.currency_id
+                price = cur._convert(price, self.currency_id, self.env.user.company_id, date, round=False)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
 
@@ -301,6 +305,7 @@ class Pricelist(models.Model):
         return pricelist.get_products_price(
             list(pycompat.izip(**products_by_qty_by_partner)))
 
+    # DEPRECATED (Not used anymore, see d39d583b2) -> Remove me in master (saas12.3)
     def _get_partner_pricelist(self, partner_id, company_id=None):
         """ Retrieve the applicable pricelist for a given partner in a given company.
 
@@ -310,34 +315,53 @@ class Pricelist(models.Model):
         res = self._get_partner_pricelist_multi([partner_id], company_id)
         return res[partner_id].id
 
+    def _get_partner_pricelist_multi_search_domain_hook(self):
+        return []
+
+    def _get_partner_pricelist_multi_filter_hook(self):
+        return self
+
     def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
         """ Retrieve the applicable pricelist for given partners in a given company.
+
+            It will return the first found pricelist in this order:
+            First, the pricelist of the specific property (res_id set), this one
+                   is created when saving a pricelist on the partner form view.
+            Else, it will return the pricelist of the partner country group
+            Else, it will return the generic property (res_id not set), this one
+                  is created on the company creation.
+            Else, it will return the first available pricelist
 
             :param company_id: if passed, used for looking up properties,
                 instead of current user's company
             :return: a dict {partner_id: pricelist}
         """
-        Partner = self.env['res.partner']
+        # `partner_ids` might be ID from inactive uers. We should use active_test
+        # as we will do a search() later (real case for website public user).
+        Partner = self.env['res.partner'].with_context(active_test=False)
+
         Property = self.env['ir.property'].with_context(force_company=company_id or self.env.user.company_id.id)
         Pricelist = self.env['product.pricelist']
+        pl_domain = self._get_partner_pricelist_multi_search_domain_hook()
 
-        # retrieve values of property
+        # if no specific property, try to find a fitting pricelist
         result = Property.get_multi('property_product_pricelist', Partner._name, partner_ids)
 
-        remaining_partner_ids = [pid for pid, val in result.items() if not val]
+        remaining_partner_ids = [pid for pid, val in result.items() if not val or
+                                 not val._get_partner_pricelist_multi_filter_hook()]
         if remaining_partner_ids:
             # get fallback pricelist when no pricelist for a given country
             pl_fallback = (
-                Pricelist.search([('country_group_ids', '=', False)], limit=1) or
+                Pricelist.search(pl_domain + [('country_group_ids', '=', False)], limit=1) or
                 Property.get('property_product_pricelist', 'res.partner') or
-                Pricelist.search([], limit=1)
+                Pricelist.search(pl_domain, limit=1)
             )
             # group partners by country, and find a pricelist for each country
             domain = [('id', 'in', remaining_partner_ids)]
             groups = Partner.read_group(domain, ['country_id'], ['country_id'])
             for group in groups:
                 country_id = group['country_id'] and group['country_id'][0]
-                pl = Pricelist.search([('country_group_ids.country_ids', '=', country_id)], limit=1)
+                pl = Pricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country_id)], limit=1)
                 pl = pl or pl_fallback
                 for pid in Partner.search(group['__domain']).ids:
                     result[pid] = pl
@@ -491,3 +515,11 @@ class PricelistItem(models.Model):
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
             })
+
+    @api.multi
+    def write(self, values):
+        res = super(PricelistItem, self).write(values)
+        # When the pricelist changes we need the product.template price
+        # to be invalided and recomputed.
+        self.invalidate_cache()
+        return res

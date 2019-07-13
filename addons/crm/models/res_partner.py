@@ -19,20 +19,21 @@ class Partner(models.Model):
         rec = super(Partner, self).default_get(fields)
         active_model = self.env.context.get('active_model')
         if active_model == 'crm.lead':
-            lead = self.env[active_model].browse(self.env.context.get('active_id'))
-            rec.update(
-                phone=lead.phone,
-                mobile=lead.mobile,
-                function=lead.function,
-                title=lead.title.id,
-                website=lead.website,
-                street=lead.street,
-                street2=lead.street2,
-                city=lead.city,
-                state_id=lead.state_id.id,
-                country_id=lead.country_id.id,
-                zip=lead.zip,
-            )
+            lead = self.env[active_model].browse(self.env.context.get('active_id')).exists()
+            if lead:
+                rec.update(
+                    phone=lead.phone,
+                    mobile=lead.mobile,
+                    function=lead.function,
+                    title=lead.title.id,
+                    website=lead.website,
+                    street=lead.street,
+                    street2=lead.street2,
+                    city=lead.city,
+                    state_id=lead.state_id.id,
+                    country_id=lead.country_id.id,
+                    zip=lead.zip,
+                )
         return rec
 
     @api.multi

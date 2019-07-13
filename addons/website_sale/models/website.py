@@ -6,6 +6,7 @@ import logging
 from odoo import api, fields, models, tools
 
 from odoo.http import request
+from odoo.addons.website.models import ir_http
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +32,12 @@ class Website(models.Model):
 
     @api.one
     def _compute_pricelist_ids(self):
-        self.pricelist_ids = self.env["product.pricelist"].search([("website_id", "=", self.id)])
+        """ Return the pricelists that can be used directly or indirectly on
+        the website.
+        """
+        Pricelist = self.env["product.pricelist"]
+        domain = Pricelist._get_website_pricelists_domain(self.id)
+        self.pricelist_ids = Pricelist.search(domain)
 
     @api.multi
     def _compute_pricelist_id(self):
@@ -54,56 +60,76 @@ class Website(models.Model):
         :param int order_pl: the current cart pricelist
         :returns: list of pricelist ids
         """
+        def _check_show_visible(pl):
+            """ If `show_visible` is True, we will only show the pricelist if
+            one of this condition is met:
+            - The pricelist is `selectable`.
+            - The pricelist is either the currently used pricelist or the
+            current cart pricelist, we should consider it as available even if
+            it might not be website compliant (eg: it is not selectable anymore,
+            it is a backend pricelist, it is not active anymore..).
+            """
+            return (not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
+
+        # Note: 1. pricelists from all_pl are already website compliant (went through
+        #          `_get_website_pricelists_domain`)
+        #       2. do not read `property_product_pricelist` here as `_get_pl_partner_order`
+        #          is cached and the result of this method will be impacted by that field value.
+        #          Pass it through `partner_pl` parameter instead to invalidate the cache.
+
+        # If there is a GeoIP country, find a pricelist for it
+        self.ensure_one()
         pricelists = self.env['product.pricelist']
         if country_code:
             for cgroup in self.env['res.country.group'].search([('country_ids.code', '=', country_code)]):
-                for group_pricelists in cgroup.pricelist_ids:
-                    if not show_visible or group_pricelists.selectable or group_pricelists.id in (current_pl, order_pl):
-                        pricelists |= group_pricelists
+                pricelists |= cgroup.pricelist_ids.filtered(
+                    lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl)
+                )
 
-        partner = self.env.user.partner_id
+        # no GeoIP or no pricelist for this country
+        if not country_code or not pricelists:
+            pricelists |= all_pl.filtered(lambda pl: _check_show_visible(pl))
+
+        # if logged in, add partner pl (which is `property_product_pricelist`, might not be website compliant)
         is_public = self.user_id.id == self.env.user.id
-        if not is_public and (not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl):
-            if partner.property_product_pricelist.website_id:
-                pricelists |= partner.property_product_pricelist
-
-        if not pricelists:  # no pricelist for this country, or no GeoIP
-            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
-        if not show_visible and not country_code:
-            pricelists |= all_pl.filtered(lambda pl: pl.sudo().code)
+        if not is_public:
+            pricelists |= pricelists.browse(partner_pl).filtered(lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl))
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
 
+    # DEPRECATED (Not used anymore) -> Remove me in master (saas12.3)
     def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
         pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
         return self.env['product.pricelist'].browse(pl_ids)
 
-    def get_pricelist_available(self, show_visible=False):
-
+    def _get_pricelist_available(self, req, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
         Country restrictions will be detected with GeoIP (if installed).
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request and hasattr(request, 'website') and request.website or None
+        website = ir_http.get_request_website()
         if not website:
             if self.env.context.get('website_id'):
                 website = self.browse(self.env.context['website_id'])
             else:
                 # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
                 website = len(self) == 1 and self or self.search([], limit=1)
-        isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
+        isocountry = req and req.session.geoip and req.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         last_order_pl = partner.last_website_so_id.pricelist_id
-        partner_pl = partner.property_product_pricelist
+        partner_pl = partner.sudo(user=self.env.user).property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
-                                                   request and request.session.get('website_sale_current_pl') or None,
+                                                   req and req.session.get('website_sale_current_pl') or None,
                                                    website.pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
                                                    order_pl=last_order_pl and last_order_pl.id or None)
         return self.env['product.pricelist'].browse(pricelists)
+
+    def get_pricelist_available(self, show_visible=False):
+        return self._get_pricelist_available(request, show_visible)
 
     def is_pricelist_available(self, pl_id):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
@@ -227,7 +253,7 @@ class Website(models.Model):
             # TODO cache partner_id session
             pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
             so_data = self._prepare_sale_order_values(partner, pricelist)
-            sale_order = self.env['sale.order'].sudo().create(so_data)
+            sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().create(so_data)
 
             # set fiscal position
             if request.website.partner_id.id != partner.id:
@@ -236,7 +262,7 @@ class Website(models.Model):
                 country_code = request.session['geoip'].get('country_code')
                 if country_code:
                     country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1).id
-                    fp_id = request.env['account.fiscal.position'].sudo()._get_fpos_by_region(country_id)
+                    fp_id = request.env['account.fiscal.position'].sudo().with_context(force_company=request.website.company_id.id)._get_fpos_by_region(country_id)
                     sale_order.fiscal_position_id = fp_id
                 else:
                     # if no geolocation, use the public user fp

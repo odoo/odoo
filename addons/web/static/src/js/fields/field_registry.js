@@ -44,8 +44,9 @@ registry
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
     .add('label_selection', basic_fields.LabelSelection)
+    .add('kanban_label_selection', basic_fields.LabelSelection) // deprecated, use label_selection
     .add('state_selection', basic_fields.StateSelectionWidget)
-    .add('kanban_state_selection', basic_fields.StateSelectionWidget)
+    .add('kanban_state_selection', basic_fields.StateSelectionWidget) // deprecated, use state_selection
     .add('boolean_favorite', basic_fields.FavoriteWidget)
     .add('boolean_button', basic_fields.FieldBooleanButton)
     .add('boolean_toggle', basic_fields.BooleanToggle)

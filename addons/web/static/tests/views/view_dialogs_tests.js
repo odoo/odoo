@@ -446,7 +446,7 @@ QUnit.module('Views', {
             intercepts: {
                 create_filter: function (event) {
                     var filter = event.data.filter;
-                    assert.deepEqual(filter.domain, "[('bar', '=', True)]",
+                    assert.deepEqual(filter.domain, `[("bar", "=", True)]`,
                         "should save the correct domain");
                     assert.deepEqual(filter.context, {shouldBeInFilterContext: true},
                         "should save the correct context");

@@ -3,24 +3,36 @@
 # * base_vat
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Osoul <baruni@osoul.ly>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -43,6 +55,8 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"إذا تم تحديد هذا المربع، لن تتمكن من حفظ جهة اتصال إن لم يمكن التحقق من رقم "
+"قيمة الضريبة المضافة الخاصة بها بخدمة VIES الأوروبية."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:154
@@ -51,7 +65,7 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"رقم ضريبة القيمة المضافة [%s] للشريك [%s] لا يبدو أنه صالح.\n"
+"يبدو أن رقم ضريبة القيمة المضافة [%s] للشريك [%s] غير صالح.\n"
 "ملاحظة: الصيغة المتوقعة هي %s"
 
 #. module: base_vat
@@ -61,8 +75,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
-"إما أنه قد فشل فحص VIES VAT لرقم ضريبة القيمة المضافة [%s] للشريك [%s] أو "
-"أنه لم يراعي الصيغة المتوقعة %s."
+"رقم ضريبة القيمة المضافة [%s] للشريك [%s] قد يكون فشل في تجاوز اختبار التحقق"
+" VIES أو لم يُكتب بالصيغة المتوقعة %s."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -75,9 +89,9 @@ msgstr "ضريبة القيمة المضافة"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "التحقق من أرقام قيمة الضريبة المضافة"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "التحقق من أرقام قيمة الضريبة المضافة بخدمة VIES الأوروبية"

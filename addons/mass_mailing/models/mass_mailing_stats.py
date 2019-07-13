@@ -66,14 +66,14 @@ class MailMailStats(models.Model):
                 stat.state = 'ignored'
             elif stat.exception:
                 stat.state = 'exception'
-            elif stat.sent:
-                stat.state = 'sent'
             elif stat.opened or stat.clicked:
                 stat.state = 'opened'
             elif stat.replied:
                 stat.state = 'replied'
             elif stat.bounced:
                 stat.state = 'bounced'
+            elif stat.sent:
+                stat.state = 'sent'
             else:
                 stat.state = 'outgoing'
 

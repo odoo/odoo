@@ -117,8 +117,8 @@
                         </page>
                         <page name="extra" string="Extra Info">
                             <group>
-                                <group string="Email">
-                                    <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
+                                <group string="Email" groups="base.group_no_one">
+                                    <field name="message_bounce" readonly="1"/>
                                 </group>
                                 <group string="Tracking" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                     <field name="company_id"
@@ -711,6 +711,9 @@
                         help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                         domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Open Opportunities" name="open_opportunities"
+                            domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
+                            help="Open Opportunities"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
@@ -865,6 +868,7 @@ for rec in records:
         <menuitem id="sales_team_menu_team_pipeline"
             name="Team Pipelines"
             parent="crm_menu_sales"
+            groups="sales_team.group_sale_manager"
             action="sales_team.crm_team_salesteams_act"
             sequence="4"/>
 
@@ -946,7 +950,6 @@ for rec in records:
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
-                    'default_user_id': uid
                 }
             </field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
@@ -1008,7 +1011,6 @@ for rec in records:
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
-                    'default_user_id': uid,
                     'search_default_assigned_to_me': 1
             }</field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>

@@ -3,17 +3,20 @@
 # * auth_ldap
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Johan Bergquist <johan.bergquist@netip.se>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Johan Bergquist <johan.bergquist@netip.se>, 2019
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# Kim Asplund <kim.asplund@gmail.com>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Johan Bergquist <johan.bergquist@netip.se>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +36,22 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
 msgid "Companies"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
 msgstr "Bolag"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurations Inställningar"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -133,6 +146,12 @@ msgid "Login Information"
 msgstr "Inloggningsuppgifter"
 
 #. module: auth_ldap
+#: code:addons/auth_ldap/models/res_company_ldap.py:201
+#, python-format
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr ""
+
+#. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
 msgstr "Processparameter"
@@ -205,13 +224,3 @@ msgstr "Användare att kopiera när nya användare skapas."
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Användare"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.company.ldap"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""

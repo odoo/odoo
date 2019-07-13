@@ -223,6 +223,59 @@ QUnit.test('basic rendering', function (assert) {
     form.destroy();
 });
 
+QUnit.test('basic rendering: message_attachment_count can be in view standalone', function (assert) {
+    assert.expect(1);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<group>' +
+                        '<field name="message_attachment_count" string="I\'m here"/>' +
+                    '</group>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 2,
+    });
+
+    assert.strictEqual(form.$('.o_form_label').text(), "I'm here",
+        "The field message_attachment_count must be present according to the view's specs");
+
+    form.destroy();
+});
+
+QUnit.test('basic rendering: message_attachment_count can be in view with chatter', function (assert) {
+    assert.expect(1);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<group>' +
+                        '<field name="message_attachment_count" string="I\'m here"/>' +
+                    '</group>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+    });
+
+    assert.strictEqual(form.$('.o_form_label').text(), "I'm here",
+        "The field message_attachment_count must be present according to the view's specs");
+
+    form.destroy();
+});
+
 QUnit.test('Activity Done keep feedback on blur', function (assert) {
     assert.expect(3);
     var done = assert.async();

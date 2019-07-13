@@ -7,15 +7,15 @@
 # Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
 # Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-13 17:53+0000\n"
+"POT-Creation-Date: 2019-02-13 07:03+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -179,17 +179,10 @@ msgstr "'%s' не перетворюється в дату, дату і час, 
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/menu.xml:101
-#, python-format
-msgid "(Enterprise Edition)"
-msgstr "(Версія Enterprise)"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:298
 #, python-format
 msgid "(change)"
-msgstr ""
+msgstr "(змінити)"
 
 #. module: web
 #. openerp-web
@@ -197,7 +190,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:537
 #, python-format
 msgid "(count)"
-msgstr ""
+msgstr "(підрахунок)"
 
 #. module: web
 #. openerp-web
@@ -221,13 +214,35 @@ msgid "1 record"
 msgstr "1 запис"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_background
+msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+
+#. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome/action_manager.js:577
+#: code:addons/web/static/src/js/chrome/action_manager.js:574
 #, python-format
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
 msgstr ""
+"Спливаюче вікно було заблоковано. Можливо, вам знадобиться змінити "
+"налаштування веб-переглядача, щоби дозволити спливаючі вікна цієї сторінки."
 
 #. module: web
 #. openerp-web
@@ -237,6 +252,9 @@ msgid ""
 "A popup window with your report was blocked. You may need to change your "
 "browser settings to allow popup windows for this page."
 msgstr ""
+"Спливаюче вікно з вашим звітом було заблоковано. Можливо, вам знадобиться "
+"змінити налаштування веб-переглядача, щоби дозволити спливаючі вікна цієї "
+"сторінки."
 
 #. module: web
 #. openerp-web
@@ -325,7 +343,7 @@ msgstr "Додати"
 #: code:addons/web/static/src/js/views/calendar/calendar_renderer.js:82
 #, python-format
 msgid "Add %s"
-msgstr ""
+msgstr "Додати %s"
 
 #. module: web
 #. openerp-web
@@ -339,14 +357,14 @@ msgstr "Додати фільтр користувача"
 #: code:addons/web/static/src/xml/base.xml:1111
 #, python-format
 msgid "Add Custom Group"
-msgstr ""
+msgstr "Додати спеціальну групу"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:49
 #, python-format
 msgid "Add a Column"
-msgstr ""
+msgstr "Додати колонку"
 
 #. module: web
 #. openerp-web
@@ -360,21 +378,21 @@ msgstr "Додати умову"
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:78
 #, python-format
 msgid "Add a line"
-msgstr ""
+msgstr "Додати рядок"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:616
 #, python-format
 msgid "Add branch"
-msgstr ""
+msgstr "Додати гілку"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:48
 #, python-format
 msgid "Add column"
-msgstr ""
+msgstr "Додати колонку"
 
 #. module: web
 #. openerp-web
@@ -395,14 +413,14 @@ msgstr "Додати нове значення"
 #: code:addons/web/static/src/xml/base.xml:615
 #, python-format
 msgid "Add node"
-msgstr ""
+msgstr "Додати вузол"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:701
 #, python-format
 msgid "Add tag"
-msgstr ""
+msgstr "Додати тег"
 
 #. module: web
 #. openerp-web
@@ -500,6 +518,9 @@ msgid ""
 "JavaScript file served from a different origin. (Opening your browser "
 "console might give you a hint on the error.)"
 msgstr ""
+"Виникла невідома помилка CORS. Помилка, ймовірно, походить від файлу "
+"JavaScript, який подається з іншого походження. (Відкриття консолі веб-"
+"переглядача може дати вам підказку про помилку.)"
 
 #. module: web
 #. openerp-web
@@ -538,7 +559,7 @@ msgstr "Архів"
 #: code:addons/web/static/src/xml/kanban.xml:27
 #, python-format
 msgid "Archive All"
-msgstr ""
+msgstr "Архівувати все"
 
 #. module: web
 #. openerp-web
@@ -553,14 +574,14 @@ msgstr "Заархівовано"
 #, python-format
 msgid ""
 "Are you sure that you want to archive all the records from this column?"
-msgstr ""
+msgstr "Ви впевнені, що хочете архівувати усі записи з цієї колонки?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_controller.js:156
 #, python-format
 msgid "Are you sure that you want to archive all the selected records?"
-msgstr ""
+msgstr "Ви впевнені, що хочете архівувати усі вибрані записи?"
 
 #. module: web
 #. openerp-web
@@ -589,7 +610,7 @@ msgstr "Ви впевнені, що хочете видалити цей зап�
 #: code:addons/web/static/src/xml/base.xml:1028
 #, python-format
 msgid "Attach"
-msgstr ""
+msgstr "Прикріплення"
 
 #. module: web
 #. openerp-web
@@ -632,14 +653,14 @@ msgstr "База"
 #: code:addons/web/static/src/xml/base.xml:1143
 #, python-format
 msgid "Based On"
-msgstr ""
+msgstr "На основі"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:250
 #, python-format
 msgid "Become Superuser"
-msgstr ""
+msgstr "Станьте суперкористувачем"
 
 #. module: web
 #: code:addons/web/controllers/main.py:1538
@@ -691,14 +712,14 @@ msgstr "Тип кнопки:"
 #: code:addons/web/static/src/js/core/utils.js:131
 #, python-format
 msgid "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
-msgstr "Байт,кБ,МБ,ГБ,ТБ,ПБ,ЕБ,ЗБ,ЙБ"
+msgstr "Байти,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1222
 #, python-format
 msgid "CLEAR"
-msgstr ""
+msgstr "ОЧИСТИТИ"
 
 #. module: web
 #. openerp-web
@@ -712,7 +733,7 @@ msgstr "Календар"
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:44
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
-msgstr "Вигляд календаря не має визначеного атрибута 'date_start'."
+msgstr "Перегляд календаря не має визначеного атрибута 'date_start'."
 
 #. module: web
 #. openerp-web
@@ -741,7 +762,7 @@ msgstr "Не вдається відобразити графік за допо�
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:414
 #, python-format
 msgid "Card color: %s"
-msgstr ""
+msgstr "Колір картки: %s"
 
 #. module: web
 #. openerp-web
@@ -816,7 +837,7 @@ msgstr "Заголовок колонки"
 #: code:addons/web/static/src/xml/base.xml:1185
 #, python-format
 msgid "Compare To"
-msgstr ""
+msgstr "Порівняти з"
 
 #. module: web
 #. openerp-web
@@ -904,7 +925,7 @@ msgstr "Скопіюйте повну помилку в буфер обміну"
 #: code:addons/web/static/src/js/core/ajax.js:372
 #, python-format
 msgid "Could not connect to the server"
-msgstr ""
+msgstr "Не можливо з'єднатися із сервером"
 
 #. module: web
 #. openerp-web
@@ -999,7 +1020,7 @@ msgstr "Створити:"
 #: code:addons/web/static/src/js/views/calendar/calendar_controller.js:245
 #, python-format
 msgid "Create: %s"
-msgstr ""
+msgstr "Створити: %s"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__create_uid
@@ -1037,7 +1058,7 @@ msgstr "Створив:"
 #: code:addons/web/static/src/xml/base.xml:919
 #, python-format
 msgid "Current state"
-msgstr ""
+msgstr "Поточний стан"
 
 #. module: web
 #. openerp-web
@@ -1053,7 +1074,7 @@ msgstr "Фільтр користувача"
 #: code:addons/web/static/src/xml/kanban.xml:88
 #, python-format
 msgid "Dark blue"
-msgstr ""
+msgstr "Темно-синій"
 
 #. module: web
 #. openerp-web
@@ -1062,19 +1083,12 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:85
 #, python-format
 msgid "Dark purple"
-msgstr ""
+msgstr "Темно-фіолетовий"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Database"
 msgstr "База даних"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/menu.xml:107
-#, python-format
-msgid "Database expiration:"
-msgstr "Термін дії бази даних:"
 
 #. module: web
 #. openerp-web
@@ -1117,7 +1131,7 @@ msgstr "Видалити"
 #: code:addons/web/static/src/xml/base.xml:614
 #, python-format
 msgid "Delete node"
-msgstr ""
+msgstr "Видалити вузол"
 
 #. module: web
 #. openerp-web
@@ -1301,7 +1315,7 @@ msgstr "Редагувати етап"
 #: code:addons/web/static/src/xml/base.xml:276
 #, python-format
 msgid "Edit View:"
-msgstr ""
+msgstr "Редагувати перегляд:"
 
 #. module: web
 #. openerp-web
@@ -1340,7 +1354,7 @@ msgstr "Помилка, пароль не змінено !"
 #: code:addons/web/static/src/xml/kanban.xml:62
 #, python-format
 msgid "Esc to discard"
-msgstr ""
+msgstr "Esc для відхилення"
 
 #. module: web
 #. openerp-web
@@ -1375,7 +1389,7 @@ msgstr "Розгорнути всі"
 #: code:addons/web/static/src/xml/base.xml:1433
 #, python-format
 msgid "Expand parents"
-msgstr ""
+msgstr "Розкрийте батьківські"
 
 #. module: web
 #. openerp-web
@@ -1396,7 +1410,7 @@ msgstr "Експорт даних"
 #: code:addons/web/static/src/xml/base.xml:1400
 #, python-format
 msgid "Export Format:"
-msgstr ""
+msgstr "Експортувати формат:"
 
 #. module: web
 #. openerp-web
@@ -1419,14 +1433,14 @@ msgstr "Зовнішній ID"
 #: code:addons/web/static/src/xml/base.xml:826
 #, python-format
 msgid "External link"
-msgstr ""
+msgstr "Зовнішнє посилання"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1220
 #, python-format
 msgid "FILTER"
-msgstr ""
+msgstr "ФІЛЬТР"
 
 #. module: web
 #. openerp-web
@@ -1540,7 +1554,7 @@ msgstr "Згорнути"
 #: code:addons/web/static/src/xml/base.xml:756
 #, python-format
 msgid "Followed by"
-msgstr ""
+msgstr "Підписаний"
 
 #. module: web
 #. openerp-web
@@ -1567,7 +1581,7 @@ msgstr "Вікно"
 #: code:addons/web/static/src/js/views/search/filters_menu.js:179
 #, python-format
 msgid "From %s To %s"
-msgstr ""
+msgstr "Від %s до %s"
 
 #. module: web
 #. openerp-web
@@ -1576,7 +1590,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:89
 #, python-format
 msgid "Fushia"
-msgstr ""
+msgstr "Fushia"
 
 #. module: web
 #. openerp-web
@@ -1597,7 +1611,7 @@ msgstr "Глобальна помилка бізнес-логіки"
 #: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:189
 #, python-format
 msgid "Got it"
-msgstr ""
+msgstr "Зрозумів"
 
 #. module: web
 #. openerp-web
@@ -1632,6 +1646,13 @@ msgid "Group by: %s"
 msgstr "Групувати за: %s"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_renderer.js:214
+#, python-format
+msgid "Grouped"
+msgstr "Згруповано"
+
+#. module: web
 #: model:ir.model,name:web.model_ir_http
 msgid "HTTP Routing"
 msgstr "Маршрутизація HTTP"
@@ -1641,49 +1662,49 @@ msgstr "Маршрутизація HTTP"
 #: code:addons/web/static/src/xml/base.xml:877
 #, python-format
 msgid "Hide in Kanban"
-msgstr ""
+msgstr "Сховати в канбані"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:432
 #, python-format
 msgid "Hit DOWN to navigate to the list below"
-msgstr ""
+msgstr "Натисніть ВНИЗ, щоб перейти до списку нижче"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:439
 #, python-format
 msgid "Hit ENTER to"
-msgstr ""
+msgstr "Натисніть ENTER, щоб"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:431
 #, python-format
 msgid "Hit ENTER to CREATE"
-msgstr ""
+msgstr "Натисніть ENTER для СТВОРЕННЯ"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:423
 #, python-format
 msgid "Hit ENTER to SAVE"
-msgstr ""
+msgstr "Натисніть ENTER для ЗБЕРЕЖЕННЯ"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:424
 #, python-format
 msgid "Hit ESCAPE to DISCARD"
-msgstr ""
+msgstr "Натисніть ESCAPE для ВІДМІНИ"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker.xml:41
 #, python-format
 msgid "Hue"
-msgstr ""
+msgstr "Відтінок"
 
 #. module: web
 #. openerp-web
@@ -1799,21 +1820,21 @@ msgstr "Мови"
 #: code:addons/web/static/src/js/views/search/time_range_menu_options.js:9
 #, python-format
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Останні 30 днів"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search/time_range_menu_options.js:10
 #, python-format
 msgid "Last 365 Days"
-msgstr ""
+msgstr "Останні 365 днів"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search/time_range_menu_options.js:8
 #, python-format
 msgid "Last 7 Days"
-msgstr ""
+msgstr "Останні 7 днів"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout____last_update
@@ -1886,14 +1907,14 @@ msgstr "Вийти з інструментів розробника"
 #: code:addons/web/static/src/xml/kanban.xml:84
 #, python-format
 msgid "Light blue"
-msgstr ""
+msgstr "Блакитний"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker.xml:49
 #, python-format
 msgid "Lightness %"
-msgstr ""
+msgstr "Освітленість %"
 
 #. module: web
 #. openerp-web
@@ -1936,7 +1957,7 @@ msgstr "Завантаження (%d)"
 #: code:addons/web/static/src/xml/base.xml:1466
 #, python-format
 msgid "Loading, please wait..."
-msgstr ""
+msgstr "Завантаження, будь ласка, зачекайте..."
 
 #. module: web
 #. openerp-web
@@ -1956,7 +1977,7 @@ msgstr "Вхід"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Log in as superuser"
-msgstr ""
+msgstr "Увійдіть як суперкористувач"
 
 #. module: web
 #. openerp-web
@@ -2000,7 +2021,7 @@ msgstr "Пошта:"
 #: code:addons/web/static/src/xml/base.xml:271
 #, python-format
 msgid "Manage Attachments"
-msgstr ""
+msgstr "Керувати прикріпленнями"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -2041,7 +2062,7 @@ msgstr "Об'єднати записи із наступним правилом:
 #: code:addons/web/static/src/js/core/misc.js:19
 #, python-format
 msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr "Можливо вам слід перезавантажити програму, натиснувши клавішу F5..."
+msgstr "Можливо вам слід перезавантажити додаток, натиснувши клавішу F5..."
 
 #. module: web
 #. openerp-web
@@ -2058,7 +2079,7 @@ msgstr "Вимірювання"
 #: code:addons/web/static/src/xml/kanban.xml:87
 #, python-format
 msgid "Medium blue"
-msgstr ""
+msgstr "Середній синій"
 
 #. module: web
 #. openerp-web
@@ -2204,7 +2225,7 @@ msgstr "Немає оновлень:"
 #: code:addons/web/static/src/js/tools/debug_manager.js:359
 #, python-format
 msgid "No attachment available"
-msgstr ""
+msgstr "Немає доступних прикріплень"
 
 #. module: web
 #. openerp-web
@@ -2212,7 +2233,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:80
 #, python-format
 msgid "No color"
-msgstr ""
+msgstr "Немає кольору"
 
 #. module: web
 #. openerp-web
@@ -2256,14 +2277,14 @@ msgstr "Немає"
 #: code:addons/web/static/src/xml/base.xml:923
 #, python-format
 msgid "Not active state"
-msgstr ""
+msgstr "Неактивний стан"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:927
 #, python-format
 msgid "Not active state, click to change it"
-msgstr ""
+msgstr "Неактивний стан, натисніть, щоб змінити його"
 
 #. module: web
 #. openerp-web
@@ -2276,7 +2297,6 @@ msgstr "Об'єкт:"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:59
-#: code:addons/web/static/src/xml/menu.xml:100
 #, python-format
 msgid "Odoo"
 msgstr "Odoo"
@@ -2394,7 +2414,7 @@ msgstr "Тільки ви"
 #: code:addons/web/static/src/xml/colorpicker.xml:55
 #, python-format
 msgid "Opacity %"
-msgstr ""
+msgstr "Непрозорість %"
 
 #. module: web
 #. openerp-web
@@ -2415,7 +2435,7 @@ msgstr "Відкрийте інструменти розробника"
 #: code:addons/web/static/src/xml/base.xml:241
 #, python-format
 msgid "Open View"
-msgstr "Відкритий перегляд"
+msgstr "Відкрити перегляд"
 
 #. module: web
 #. openerp-web
@@ -2462,7 +2482,7 @@ msgstr "Відкрито:"
 #: code:addons/web/static/src/xml/kanban.xml:82
 #, python-format
 msgid "Orange"
-msgstr ""
+msgstr "Помаранчевий"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
@@ -2498,7 +2518,7 @@ msgstr "Телефон:"
 #: code:addons/web/static/src/js/widgets/colorpicker.js:33
 #, python-format
 msgid "Pick a color"
-msgstr ""
+msgstr "Виберіть колір"
 
 #. module: web
 #. openerp-web
@@ -2541,7 +2561,7 @@ msgstr "Зведена таблиця"
 #: code:addons/web/static/src/js/views/list/list_renderer.js:352
 #, python-format
 msgid "Please click on the \"save\" button first."
-msgstr ""
+msgstr "Будь ласка, натисніть спочатку на кнопку \"зберегти\"."
 
 #. module: web
 #. openerp-web
@@ -2562,14 +2582,14 @@ msgstr "Будь ласка, виділіть поля для експорту�
 #: code:addons/web/static/src/js/widgets/data_export.js:464
 #, python-format
 msgid "Please select fields to save export list..."
-msgstr "Виділіть поля для збереження списку ексорту…"
+msgstr "Виділіть поля для збереження списку експорту…"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1525
 #, python-format
 msgid "Please update translations of :"
-msgstr ""
+msgstr "Будь ласка, оновіть переклад:"
 
 #. module: web
 #. openerp-web
@@ -2606,16 +2626,17 @@ msgstr "Попередній перегляд внутрішнього звіт�
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__image
 msgid "Preview image src"
-msgstr ""
+msgstr "Попередній перегляд зображення src"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__pdf
 msgid "Preview pdf src"
-msgstr ""
+msgstr "Попередній перегляд pdf src"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:741
+#: code:addons/web/static/src/xml/base.xml:1505
 #: code:addons/web/static/src/xml/web_calendar.xml:75
 #, python-format
 msgid "Previous"
@@ -2665,12 +2686,12 @@ msgstr "Чверть"
 #: code:addons/web/static/src/xml/kanban.xml:32
 #, python-format
 msgid "Quick add"
-msgstr ""
+msgstr "Швидке додавання"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Зображення поля Qweb "
 
 #. module: web
 #. openerp-web
@@ -2694,7 +2715,7 @@ msgstr "Червоний"
 #: code:addons/web/static/src/xml/base.xml:249
 #, python-format
 msgid "Regenerate Assets Bundles"
-msgstr ""
+msgstr "Відновлення зв'язків активів"
 
 #. module: web
 #. openerp-web
@@ -2708,7 +2729,7 @@ msgstr "Зв'язок не дозволено"
 #: code:addons/web/static/src/xml/base.xml:771
 #, python-format
 msgid "Relation to follow"
-msgstr ""
+msgstr "Відношення для наслідування"
 
 #. module: web
 #. openerp-web
@@ -2745,7 +2766,7 @@ msgstr "Видалити з вибраного"
 #: code:addons/web/static/src/xml/base.xml:696
 #, python-format
 msgid "Remove tag"
-msgstr ""
+msgstr "Видалити тег"
 
 #. module: web
 #. openerp-web
@@ -2764,14 +2785,14 @@ msgstr "Звіт"
 #. module: web
 #: model:ir.model,name:web.model_report_layout
 msgid "Report Layout"
-msgstr ""
+msgstr "Макет звіту"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:223
 #, python-format
 msgid "Request timeout"
-msgstr ""
+msgstr "Час очікування запиту минув"
 
 #. module: web
 #. openerp-web
@@ -2785,7 +2806,7 @@ msgstr "Відновлення"
 #: code:addons/web/static/src/xml/base.xml:240
 #, python-format
 msgid "Run Click Everywhere Test"
-msgstr ""
+msgstr "Тест натискання запуску усюди"
 
 #. module: web
 #. openerp-web
@@ -2806,7 +2827,7 @@ msgstr "Запустіть тести JS"
 #: code:addons/web/static/src/xml/base.xml:1226
 #, python-format
 msgid "SEE RESULT"
-msgstr ""
+msgstr "ПЕРЕГЛЯНУТИ РЕЗУЛЬТАТ"
 
 #. module: web
 #. openerp-web
@@ -2815,14 +2836,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:86
 #, python-format
 msgid "Salmon pink"
-msgstr ""
+msgstr "Лососевий рожевий"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker.xml:45
 #, python-format
 msgid "Saturation %"
-msgstr ""
+msgstr "Насиченість %"
 
 #. module: web
 #. openerp-web
@@ -2841,7 +2862,7 @@ msgstr "Зберегти"
 #: code:addons/web/static/src/js/views/view_dialogs.js:137
 #, python-format
 msgid "Save & Close"
-msgstr ""
+msgstr "Зберегти та закрити"
 
 #. module: web
 #. openerp-web
@@ -2967,6 +2988,8 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
+"Вибрати <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/>"
 
 #. module: web
 #. openerp-web
@@ -3057,6 +3080,13 @@ msgstr "Сталося щось жахливе"
 #, python-format
 msgid "Special:"
 msgstr "Спеціальний:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_renderer.js:215
+#, python-format
+msgid "Stacked"
+msgstr "Укладений"
 
 #. module: web
 #. openerp-web
@@ -3189,6 +3219,8 @@ msgid ""
 "The operation was interrupted. This usually means that the current operation"
 " is taking too much time."
 msgstr ""
+"Операція була перервана. Зазвичай це означає, що поточна операція займає "
+"надто багато часу."
 
 #. module: web
 #. openerp-web
@@ -3225,15 +3257,15 @@ msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
 "(.xls) format. Consider splitting the export."
 msgstr ""
-"Надто багато рядків (%s рядків, ліміт: 65535) експортувати як формат Excel "
-"97-2003 (.xls). Розгляньте розрив експорту."
+"Надто багато рядків (%s рядків, ліміт: 65535), щоб експортувати як формат "
+"Excel 97-2003 (.xls). Розглянемо розрив експорту."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:1416
 #, python-format
 msgid "There was a problem while uploading your file"
-msgstr "Виникла проблема при вивантаженні файлу"
+msgstr "Виникла проблема при завантаженні файлу"
 
 #. module: web
 #. openerp-web
@@ -3268,7 +3300,7 @@ msgstr "Цей рік"
 #: code:addons/web/static/src/js/widgets/date_picker.js:181
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
-msgstr ""
+msgstr "Ця дата на майбутнє. Переконайтеся, що це те, що ви очікували."
 
 #. module: web
 #. openerp-web
@@ -3283,7 +3315,7 @@ msgstr "Цей домен не підтримується."
 #, python-format
 msgid ""
 "This filter is global and will be removed for everybody if you continue."
-msgstr "Це загальний фільтр. Якщо продовжити, його буде видалено для всіх, ."
+msgstr "Це загальний фільтр. Якщо продовжити, його буде видалено для всіх."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.preview_externalreport
@@ -3308,7 +3340,7 @@ msgstr "Часовий діапазон"
 #: code:addons/web/static/src/xml/base.xml:1139
 #, python-format
 msgid "Time Ranges"
-msgstr ""
+msgstr "Часові діапазони"
 
 #. module: web
 #. openerp-web
@@ -3319,6 +3351,9 @@ msgid ""
 "one. The time in Odoo is displayed according to the timezone set on your "
 "user's preferences."
 msgstr ""
+"Невідповідність часового поясу: часовий пояс вашого браузера не відповідає "
+"вибраному. Час в Odoo відображається відповідно до встановленого часового "
+"поясу в налаштуваннях користувача."
 
 #. module: web
 #. openerp-web
@@ -3334,7 +3369,7 @@ msgstr "Сьогодні"
 #: code:addons/web/static/src/xml/base.xml:244
 #, python-format
 msgid "Toggle Timelines"
-msgstr "Графіки перемикання"
+msgstr "Перемкнути терміни"
 
 #. module: web
 #. openerp-web
@@ -3366,6 +3401,8 @@ msgid ""
 "Try to add some records, or make sure\n"
 "                that there is at least one measure and no active filter in the search bar."
 msgstr ""
+"Спробуйте додати кілька записів або переконайтеся,\n"
+" що в панелі пошуку є щонайменше один захід і активний фільтр."
 
 #. module: web
 #. openerp-web
@@ -3375,6 +3412,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Спробуйте додати кілька записів або переконайтеся, що в панелі пошуку немає "
+"активного фільтра."
 
 #. module: web
 #. openerp-web
@@ -3397,6 +3436,7 @@ msgstr "Тип:"
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
 msgstr ""
+"Неможливо знайти Wkhtmltopdf у цій системі. Звіт буде показано у html."
 
 #. module: web
 #. openerp-web
@@ -3410,7 +3450,7 @@ msgstr "Розархівувати"
 #: code:addons/web/static/src/xml/kanban.xml:28
 #, python-format
 msgid "Unarchive All"
-msgstr ""
+msgstr "Розархівувати все"
 
 #. module: web
 #. openerp-web
@@ -3452,7 +3492,7 @@ msgstr "Невідомий незнаковий тип"
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:556
 #, python-format
 msgid "Unlink row "
-msgstr ""
+msgstr "Роз'єднати рядок"
 
 #. module: web
 #. openerp-web
@@ -3473,7 +3513,7 @@ msgstr "Без назви"
 #: code:addons/web/static/src/xml/base.xml:1393
 #, python-format
 msgid "Update data (import-compatible export)"
-msgstr ""
+msgstr "Оновити дані (імпорт-сумісний експорт)"
 
 #. module: web
 #. openerp-web
@@ -3533,7 +3573,7 @@ msgstr "Використати за замовчуванням"
 #: code:addons/web/static/src/xml/base.xml:1387
 #, python-format
 msgid "Use data in a spreadsheet (export all data)"
-msgstr ""
+msgstr "Використовувати дані в електронній таблиці (експортувати всі дані)"
 
 #. module: web
 #. openerp-web
@@ -3548,6 +3588,14 @@ msgstr "Користувачі"
 #, python-format
 msgid "Validation Error"
 msgstr "Помилка затвердження"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/pivot/pivot_model.js:240
+#: code:addons/web/static/src/js/views/pivot/pivot_renderer.js:174
+#, python-format
+msgid "Variation"
+msgstr "Варіації"
 
 #. module: web
 #. openerp-web
@@ -3582,7 +3630,7 @@ msgstr "Попередження"
 #: code:addons/web/static/src/js/widgets/attach_document.js:87
 #, python-format
 msgid "Warning : You have to save first before attaching a file."
-msgstr ""
+msgstr "Попередження: Перш ніж додати файл, потрібно зберегти його."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
@@ -3737,6 +3785,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
+"Вам потрібно запустити Odoo з принаймні двома працівниками, щоб надрукувати "
+"PDF-версію звітів."
 
 #. module: web
 #. openerp-web
@@ -3747,6 +3797,9 @@ msgid ""
 "to get a correct display of headers and footers as well as support for "
 "table-breaking between pages."
 msgstr ""
+"Ви повинні оновити вашу версію Wkhtmltopdf принаймні до 0.12.0, щоб отримати"
+" правильне відображення колонтитулів, а також підтримку розбиття таблиць між"
+" сторінками."
 
 #. module: web
 #. openerp-web
@@ -3764,6 +3817,8 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html."
 msgstr ""
+"Ваше встановлення Wkhtmltopdf, здається, порушене. Звіт буде показано у "
+"html."
 
 #. module: web
 #. openerp-web
@@ -3834,7 +3889,7 @@ msgstr "містить"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:24
 #, python-format
 msgid "does not contain"
-msgstr ""
+msgstr "не містить"
 
 #. module: web
 #. openerp-web
@@ -3849,7 +3904,7 @@ msgstr "не містить"
 #: code:addons/web/static/src/js/views/search/search_filters.js:304
 #, python-format
 msgid "greater than"
-msgstr "більше"
+msgstr "більше ніж"
 
 #. module: web
 #. openerp-web
@@ -3885,10 +3940,24 @@ msgstr "є після"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/search/search_filters.js:190
+#, python-format
+msgid "is after or equal to"
+msgstr "після або дорівнює"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/search/search_filters.js:189
 #, python-format
 msgid "is before"
 msgstr "є перед"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search/search_filters.js:191
+#, python-format
+msgid "is before or equal to"
+msgstr "до або дорівнює"
 
 #. module: web
 #. openerp-web
@@ -3927,7 +3996,7 @@ msgstr "не"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:18
 #, python-format
 msgid "is not ="
-msgstr ""
+msgstr "не ="
 
 #. module: web
 #. openerp-web

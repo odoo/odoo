@@ -7,22 +7,32 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -168,7 +178,7 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
-msgstr ""
+msgstr "Sledující"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -178,12 +188,12 @@ msgstr "Sledující"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Sledující (Kanály)"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledující (Partneři)"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -286,17 +296,17 @@ msgstr "Nové"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Termín další aktivity"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Souhrn další aktivity"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Další typ aktivity"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -341,6 +351,8 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
+"Poznámky jsou soukromé, pokud je nesdílíte pozváním sledujícího na poznámku.\n"
+"(Užitečné pro zápisy z jednání)."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -403,7 +415,7 @@ msgstr ""
 #: code:addons/note/static/src/xml/systray.xml:23
 #, python-format
 msgid "Remember..."
-msgstr ""
+msgstr "Pamatovat..."
 
 #. module: note
 #: selection:mail.activity.type,category:0
@@ -421,7 +433,7 @@ msgstr "Zodpovědný uživatel"
 #: code:addons/note/static/src/xml/systray.xml:25
 #, python-format
 msgid "SAVE"
-msgstr ""
+msgstr "ULOŽIT"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -434,7 +446,7 @@ msgstr "Číselná řada"
 #: code:addons/note/static/src/xml/systray.xml:18
 #, python-format
 msgid "Set date and time"
-msgstr ""
+msgstr "Nastavit datum a čas"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -473,7 +485,7 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
-msgstr ""
+msgstr "Fáze uživatelů"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_state
@@ -483,6 +495,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stav na základě aktivit\n"
+"Vypršeno: Datum již uplynulo\n"
+"Dnes: Datum aktivity je dnes\n"
+"Plánováno: Budoucí aktivity."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
@@ -492,7 +508,7 @@ msgstr "Název značky"
 #. module: note
 #: sql_constraint:note.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Název značky již existuje!"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action

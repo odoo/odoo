@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import collections
 import datetime
 import hashlib
 import pytz
@@ -191,7 +192,7 @@ class Partner(models.Model):
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
     city = fields.Char()
-    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     email = fields.Char()
     email_formatted = fields.Char(
@@ -248,7 +249,7 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None)
+        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=False)
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
@@ -274,8 +275,32 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
+        self.env.cr.execute("""
+        WITH RECURSIVE cpid(id, parent_id, commercial_partner_id, final) AS (
+            SELECT
+                id, parent_id, id,
+                (coalesce(is_company, false) OR parent_id IS NULL) as final
+            FROM res_partner
+            WHERE id = ANY(%s)
+        UNION
+            SELECT
+                cpid.id, p.parent_id, p.id,
+                (coalesce(is_company, false) OR p.parent_id IS NULL) as final
+            FROM res_partner p
+            JOIN cpid ON (cpid.parent_id = p.id)
+            WHERE NOT cpid.final
+        )
+        SELECT cpid.id, cpid.commercial_partner_id
+        FROM cpid
+        WHERE final AND id = ANY(%s);
+        """, [self.ids, self.ids])
+
+        d = dict(self.env.cr.fetchall())
         for partner in self:
-            if partner.is_company or not partner.parent_id:
+            fetched = d.get(partner.id)
+            if fetched is not None:
+                partner.commercial_partner_id = fetched
+            elif partner.is_company or not partner.parent_id:
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
@@ -364,10 +389,13 @@ class Partner(models.Model):
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
-        if self.country_id:
-            return {'domain': {'state_id': [('country_id', '=', self.country_id.id)]}}
-        else:
-            return {'domain': {'state_id': []}}
+        if self.country_id and self.country_id != self.state_id.country_id:
+            self.state_id = False
+
+    @api.onchange('state_id')
+    def _onchange_state(self):
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     @api.onchange('email')
     def onchange_email(self):
@@ -416,6 +444,11 @@ class Partner(models.Model):
         """Returns the list of address fields that are synced from the parent."""
         return list(ADDRESS_FIELDS)
 
+    @api.model
+    def _formatting_address_fields(self):
+        """Returns the list of address fields usable to format addresses."""
+        return self._address_fields()
+
     @api.multi
     def update_address(self, vals):
         addr_vals = {key: vals[key] for key in self._address_fields() if key in vals}
@@ -437,7 +470,7 @@ class Partner(models.Model):
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
+            sync_vals = commercial_partner.with_prefetch()._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
 
     @api.multi
@@ -466,21 +499,25 @@ class Partner(models.Model):
                 self.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children
-        if self.child_ids:
-            # 2a. Commercial Fields: sync if commercial entity
-            if self.commercial_partner_id == self:
-                commercial_fields = self._commercial_fields()
-                if any(field in values for field in commercial_fields):
-                    self._commercial_sync_to_children()
-            for child in self.child_ids.filtered(lambda c: not c.is_company):
-                if child.commercial_partner_id != self.commercial_partner_id :
-                    self._commercial_sync_to_children()
-                    break
-            # 2b. Address fields: sync if address changed
-            address_fields = self._address_fields()
-            if any(field in values for field in address_fields):
-                contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
-                contacts.update_address(values)
+        self._children_sync(values)
+
+    def _children_sync(self, values):
+        if not self.child_ids:
+            return
+        # 2a. Commercial Fields: sync if commercial entity
+        if self.commercial_partner_id == self:
+            commercial_fields = self._commercial_fields()
+            if any(field in values for field in commercial_fields):
+                self._commercial_sync_to_children()
+        for child in self.child_ids.filtered(lambda c: not c.is_company):
+            if child.commercial_partner_id != self.commercial_partner_id:
+                self._commercial_sync_to_children()
+                break
+        # 2b. Address fields: sync if address changed
+        address_fields = self._address_fields()
+        if any(field in values for field in address_fields):
+            contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
+            contacts.update_address(values)
 
     @api.multi
     def _handle_first_contact_creation(self):
@@ -540,6 +577,8 @@ class Partner(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.context.get('import_file'):
+            self._check_import_consistency(vals_list)
         for vals in vals_list:
             if vals.get('website'):
                 vals['website'] = self._clean_website(vals['website'])
@@ -551,8 +590,50 @@ class Partner(models.Model):
                 vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
             tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partners = super(Partner, self).create(vals_list)
+
+        if self.env.context.get('_partners_skip_fields_sync'):
+            return partners
+
         for partner, vals in pycompat.izip(partners, vals_list):
             partner._fields_sync(vals)
+            partner._handle_first_contact_creation()
+        return partners
+
+    def _load_records_create(self, vals_list):
+        partners = super(Partner, self.with_context(_partners_skip_fields_sync=True))._load_records_create(vals_list)
+
+        # batch up first part of _fields_sync
+        # group partners by commercial_partner_id (if not self) and parent_id (if type == contact)
+        groups = collections.defaultdict(list)
+        for partner, vals in pycompat.izip(partners, vals_list):
+            cp_id = None
+            if vals.get('parent_id') and partner.commercial_partner_id != partner:
+                cp_id = partner.commercial_partner_id.id
+
+            add_id = None
+            if partner.parent_id and partner.type == 'contact':
+                add_id = partner.parent_id.id
+            groups[(cp_id, add_id)].append(partner.id)
+
+        for (cp_id, add_id), children in groups.items():
+            # values from parents (commercial, regular) written to their common children
+            to_write = {} 
+            # commercial fields from commercial partner
+            if cp_id:
+                to_write = self.browse(cp_id)._update_fields_values(self._commercial_fields())
+            # address fields from parent
+            if add_id:
+                parent = self.browse(add_id)
+                for f in self._address_fields():
+                    v = parent[f]
+                    if v:
+                        to_write[f] = v.id if isinstance(v, models.BaseModel) else v
+            if to_write:
+                self.browse(children).write(to_write)
+
+        # do the second half of _fields_sync the "normal" way
+        for partner, vals in pycompat.izip(partners, vals_list):
+            partner._children_sync(vals)
             partner._handle_first_contact_creation()
         return partners
 
@@ -709,7 +790,7 @@ class Partner(models.Model):
                                vat=unaccent('res_partner.vat'),)
 
             where_clause_params += [search_name]*3  # for email / display_name, reference
-            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name)]  # for vat
+            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name) or None]  # for vat
             where_clause_params += [search_name]  # for order by
             if limit:
                 query += ' limit %s'
@@ -839,7 +920,7 @@ class Partner(models.Model):
             'country_name': self._get_country_name(),
             'company_name': self.commercial_company_name or '',
         }
-        for field in self._address_fields():
+        for field in self._formatting_address_fields():
             args[field] = getattr(self, field) or ''
         if without_company:
             args['company_name'] = ''
@@ -849,7 +930,7 @@ class Partner(models.Model):
 
     def _display_address_depends(self):
         # field dependencies of method _display_address()
-        return self._address_fields() + [
+        return self._formatting_address_fields() + [
             'country_id.address_format', 'country_id.code', 'country_id.name',
             'company_name', 'state_id.code', 'state_id.name',
         ]
@@ -861,9 +942,35 @@ class Partner(models.Model):
             'template': '/base/static/xls/res_partner.xls'
         }]
 
+    @api.model
+    def _check_import_consistency(self, vals_list):
+        """
+        The values created by an import are generated by a name search, field by field.
+        As a result there is no check that the field values are consistent with each others.
+        We check that if the state is given a value, it does belong to the given country, or we remove it.
+        """
+        States = self.env['res.country.state']
+        states_ids = {vals['state_id'] for vals in vals_list if vals.get('state_id')}
+        state_to_country = States.search([('id', 'in', list(states_ids))]).read(['country_id'])
+        for vals in vals_list:
+            if vals.get('state_id'):
+                country_id = next(c['country_id'][0] for c in state_to_country if c['id'] == vals.get('state_id'))
+                state = States.browse(vals['state_id'])
+                if state.country_id.id != country_id:
+                    state_domain = [('code', '=', state.code),
+                                    ('country_id', '=', country_id)]
+                    state = States.search(state_domain, limit=1)
+                    vals['state_id'] = state.id  # replace state or remove it if not found
+
     @api.multi
     def _get_country_name(self):
         return self.country_id.name or ''
+
+    @api.multi
+    def get_base_url(self):
+        """Get the base URL for the current partner."""
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
 
 class ResPartnerIndustry(models.Model):

@@ -3,18 +3,20 @@
 # * website_blog
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2018
 # ExcaliberX <excaliberx@gmail.com>, 2018
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
+# Martin Trigaux, 2018
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -171,8 +173,40 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Post date\" title=\"Post date\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.tag_category
+msgid ""
+"<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Tag category\" title=\"Tag "
+"category\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid ""
+"<span class=\"fa fa-calendar mr8\" role=\"img\" aria-label=\"Post date\" "
+"title=\"Post date\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid ""
+"<span class=\"fa fa-exclamation-triangle ml8\" title=\"Unpublished\" "
+"role=\"img\" aria-label=\"Unpublished\"/>"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "<span class=\"fa fa-folder-open\"/> In"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "<span class=\"fa fa-tags\" role=\"img\" aria-label=\"Tags\" title=\"Tags\"/>"
 msgstr ""
 
 #. module: website_blog
@@ -268,7 +302,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_attachment_count
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ספירת קבצים מצורפים"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_id
@@ -279,7 +313,7 @@ msgstr "מחבר"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_avatar
 msgid "Avatar"
-msgstr ""
+msgstr "אווטר"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
@@ -536,13 +570,13 @@ msgstr "עוקבים"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_channel_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "עוקבים (ערוצים)"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_partner_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "עוקבים (שותפים)"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
@@ -630,13 +664,13 @@ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "אם סומן, הודעות חדשות דורשות את תשומת הלב שלך."
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "אם סומן, לחלק מההודעות יש שגיאת משלוח."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
@@ -652,12 +686,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_is_follower
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "האם עוקב"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__is_published
 msgid "Is published"
-msgstr ""
+msgstr "מתפרסם"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_1
@@ -728,7 +762,7 @@ msgstr "נמוך"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "קובץ מצורף ראשי"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
@@ -739,7 +773,7 @@ msgstr "בינוני"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_error
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "הודעת שגיאת משלוח"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_ids
@@ -821,7 +855,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__visits
 msgid "No of Views"
-msgstr ""
+msgstr "לא של תצוגה"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -843,7 +877,7 @@ msgstr "מספר הפעולות"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_error_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "מספר שגיאה"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
@@ -855,7 +889,7 @@ msgstr "מספר ההודעות שדורשות פעולה"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "מספר הודעות עם שגיאת משלוח"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
@@ -996,7 +1030,7 @@ msgstr "אדום"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_id
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "הגבל פרסום באתר זה."
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__is_seo_optimized
@@ -1038,6 +1072,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"תמונה בגודל קטן של איש קשר זה. הוא משתנה באופן אוטומטי כתמונה 64x64px, עם "
+"יחס היבט נשמר. השתמש בשדה זה בכל מקום נדרש תמונה קטנה."
 
 #. module: website_blog
 #. openerp-web
@@ -1148,7 +1184,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "כתובת האתר המלאה כדי לגשת למסמך דרך האתר."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -1212,7 +1248,7 @@ msgstr "הודעות שלא נקראו"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_unread_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "מונה הודעות שלא נקראו"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1234,7 +1270,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "גלוי באתר הנוכחי"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website

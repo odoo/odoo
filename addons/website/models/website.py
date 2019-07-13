@@ -140,12 +140,15 @@ class Website(models.Model):
 
     @api.multi
     def write(self, values):
+        public_user_to_change_websites = self.env['website']
         self._get_languages.clear_cache(self)
         if 'company_id' in values and 'user_id' not in values:
-            company = self.env['res.company'].browse(values['company_id'])
-            values['user_id'] = company._get_public_user().id
+            public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
+            if public_user_to_change_websites:
+                company = self.env['res.company'].browse(values['company_id'])
+                super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
 
-        result = super(Website, self).write(values)
+        result = super(Website, self - public_user_to_change_websites).write(values)
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
             self.env['ir.qweb'].clear_caches()
@@ -169,6 +172,8 @@ class Website(models.Model):
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
+        # prevent /-1 as homepage URL
+        self.homepage_id.url = '/'
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
@@ -456,7 +461,8 @@ class Website(models.Model):
         if website_id:
             return self.browse(website_id)
 
-        domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
+        # The format of `httprequest.host` is `domain:port`
+        domain_name = request and request.httprequest.host or ''
 
         country = request.session.geoip.get('country_code') if request and request.session.geoip else False
         country_id = False
@@ -467,9 +473,64 @@ class Website(models.Model):
         return self.browse(website_id)
 
     @tools.cache('domain_name', 'country_id', 'fallback')
+    @api.model
     def _get_current_website_id(self, domain_name, country_id, fallback=True):
-        # sort on country_group_ids so that we fall back on a generic website (empty country_group_ids)
-        websites = self.search([('domain', '=', domain_name)]).sorted('country_group_ids')
+        """Get the current website id.
+
+        First find all the websites for which the configured `domain` (after
+        ignoring a potential scheme) is equal to the given
+        `domain_name`. If there is only one result, return it immediately.
+
+        If there are no website found for the given `domain_name`, either
+        fallback to the first found website (no matter its `domain`) or return
+        False depending on the `fallback` parameter.
+
+        If there are multiple websites for the same `domain_name`, we need to
+        filter them out by country. We return the first found website matching
+        the given `country_id`. If no found website matching `domain_name`
+        corresponds to the given `country_id`, the first found website for
+        `domain_name` will be returned (no matter its country).
+
+        :param domain_name: the domain for which we want the website.
+            In regard to the `url_parse` method, only the `netloc` part should
+            be given here, no `scheme`.
+        :type domain_name: string
+
+        :param country_id: id of the country for which we want the website
+        :type country_id: int
+
+        :param fallback: if True and no website is found for the specificed
+            `domain_name`, return the first website (without filtering them)
+        :type fallback: bool
+
+        :return: id of the found website, or False if no website is found and
+            `fallback` is False
+        :rtype: int or False
+
+        :raises: if `fallback` is True but no website at all is found
+        """
+        def _remove_port(domain_name):
+            return (domain_name or '').split(':')[0]
+
+        def _filter_domain(website, domain_name, ignore_port=False):
+            """Ignore `scheme` from the `domain`, just match the `netloc` which
+            is host:port in the version of `url_parse` we use."""
+            # Here we add http:// to the domain if it's not set because
+            # `url_parse` expects it to be set to correctly return the `netloc`.
+            website_domain = urls.url_parse(website._get_http_domain()).netloc
+            if ignore_port:
+                website_domain = _remove_port(website_domain)
+                domain_name = _remove_port(domain_name)
+            return website_domain.lower() == (domain_name or '').lower()
+
+        # Sort on country_group_ids so that we fall back on a generic website:
+        # websites with empty country_group_ids will be first.
+        found_websites = self.search([('domain', 'ilike', _remove_port(domain_name))]).sorted('country_group_ids')
+        # Filter for the exact domain (to filter out potential subdomains) due
+        # to the use of ilike.
+        websites = found_websites.filtered(lambda w: _filter_domain(w, domain_name))
+        # If there is no domain matching for the given port, ignore the port.
+        websites = websites or found_websites.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
 
         if not websites:
             if not fallback:
@@ -731,6 +792,19 @@ class Website(models.Model):
             'target': 'self',
         }
 
+    @api.multi
+    def _get_http_domain(self):
+        """Get the domain of the current website, prefixed by http if no
+        scheme is specified.
+
+        Empty string if no domain is specified on the website.
+        """
+        self.ensure_one()
+        if not self.domain:
+            return ''
+        res = urls.url_parse(self.domain)
+        return 'http://' + self.domain if not res.scheme else self.domain
+
 
 class SeoMetadata(models.AbstractModel):
 
@@ -840,7 +914,7 @@ class WebsitePublishedMixin(models.AbstractModel):
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is published')
+    is_published = fields.Boolean('Is published', copy=False)
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
     @api.multi

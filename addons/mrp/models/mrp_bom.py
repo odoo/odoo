@@ -94,6 +94,8 @@ class MrpBom(models.Model):
             self.product_uom_id = self.product_tmpl_id.uom_id.id
             if self.product_id.product_tmpl_id != self.product_tmpl_id:
                 self.product_id = False
+            for line in self.bom_line_ids:
+                line.attribute_value_ids = False
 
     @api.onchange('routing_id')
     def onchange_routing_id(self):
@@ -228,6 +230,7 @@ class MrpBomLine(models.Model):
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
     parent_product_tmpl_id = fields.Many2one('product.template', 'Parent Product Template', related='bom_id.product_tmpl_id')
+    valid_product_attribute_value_ids = fields.Many2many('product.attribute.value', related='bom_id.product_tmpl_id.valid_product_attribute_value_ids')
     attribute_value_ids = fields.Many2many(
         'product.attribute.value', string='Apply on Variants',
         help="BOM Product Variants needed form apply this line.")
@@ -290,6 +293,8 @@ class MrpBomLine(models.Model):
 
     @api.onchange('parent_product_tmpl_id')
     def onchange_parent_product(self):
+        if not self.parent_product_tmpl_id:
+            return {}
         return {'domain': {'attribute_value_ids': [
             ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
             ('attribute_id.create_variant', '!=', 'no_variant')

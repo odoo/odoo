@@ -15,6 +15,7 @@
 
         <xpath expr="//section[@id='details']//table[@id='sales_order_table']/thead/tr" position="inside">
             <th t-if="display_remove">
+                <!-- TODO: remove in master -->
                 <t t-set="colspan" t-value="colspan+1"/>
             </th>
         </xpath>

@@ -7,13 +7,16 @@
 # Mathias Neef <mn@copado.de>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # darenkster <inactive+darenkster@transifex.com>, 2018
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: darenkster <inactive+darenkster@transifex.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +32,12 @@ msgstr "Aktiv"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "Eine neue Mengeneinheit hinzufügen"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "Fügen Sie eine neue Maßeinheitenkategorie hinzu"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -205,12 +208,12 @@ msgstr "Der Umrechnungsfaktor einer Mengeneinheit kann nicht 0 sein!"
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "Die Referenzeinheit muss einen Umrechnungsfaktor von 1 haben."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "Die Rundungsgenauigkeit muss unbedingt positiv sein."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -221,6 +224,11 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"Die Maßeinheit %s defeniert in der Bestellposition festgelegte Menge, die "
+"nicht zur selben Kategorie wie die Maßeinheit gehört  %s die auf dem Produkt"
+" definiert ist. Bitte korrigieren Sie die in der Bestellposition oder auf "
+"dem Produkt festgelegte Maßeinheit, sie sollte derselben Kategorie "
+"angehören."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -235,12 +243,12 @@ msgstr "Typ"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr ""
+msgstr "Art der Maßnahme"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr ""
+msgstr "Art der Messkategorie"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -278,7 +286,7 @@ msgstr "Einheit(en)"
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Units"
-msgstr ""
+msgstr "Einheiten"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -310,12 +318,15 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"UoM Kategorie %s sollte eine Bezugseinheit haben. Wenn Sie gerade eine neue "
+"Kategorie erstellt haben, notieren Sie sich bitte zuerst die "
+"'Referenz'-Einheit."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
+msgstr "UoM Kategorie %s sollte nur eine Referenzmaßeinheit haben."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -337,13 +348,15 @@ msgstr "Arbeitszeit"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr ""
+msgstr "Sie können nur eine Kategorie pro Messtyp festlegen."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
 msgstr ""
+"Sie können diese UoM-Kategorie nicht löschen, da sie vom System verwendet "
+"wird."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:115
@@ -352,6 +365,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"Sie können diese UoM nicht löschen, da sie vom System verwendet wird. Sie "
+"sollten es lieber archivieren."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -425,4 +440,4 @@ msgstr "Unze(n)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt"
-msgstr "Stk"
+msgstr "Quart"

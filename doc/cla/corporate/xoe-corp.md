@@ -13,3 +13,4 @@ David Arnold dar@xoe.solutions https://github.com/blaggacao
 List of contributors:
 
 David Arnold dar@devco.co https://github.com/blaggacao
+Deiber Rincon dri@xoe.solutions https://github.com/deiber

@@ -61,34 +61,31 @@ class Event(models.Model):
         for event in self:
             event.sponsor_count = result.get(event.id, 0)
 
-    @api.multi
-    def write(self, vals):
-        res = super(Event, self).write(vals)
+    def _toggle_create_website_menus(self, vals):
+        super(Event, self)._toggle_create_website_menus(vals)
         for event in self:
             if 'website_track' in vals:
                 if vals['website_track']:
-                    for sequence, (name, url, xml_id, menu_type) in enumerate(self._get_track_menu_entries()):
-                        menu = super(Event, self)._create_menu(sequence, name, url, xml_id)
-                        self.env['website.event.menu'].create({
-                            'menu_id':menu.id,
-                            'event_id':self.id,
-                            'menu_type':menu_type,
+                    for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_menu_entries()):
+                        menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
+                        event.env['website.event.menu'].create({
+                            'menu_id': menu.id,
+                            'event_id': event.id,
+                            'menu_type': menu_type,
                         })
                 else:
-                    self.track_menu_ids.mapped('menu_id').unlink()
+                    event.track_menu_ids.mapped('menu_id').unlink()
             if 'website_track_proposal' in vals:
                 if vals['website_track_proposal']:
-                    for sequence, (name, url, xml_id, menu_type) in enumerate(self._get_track_proposal_menu_entries()):
-                        menu = super(Event, self)._create_menu(sequence, name, url, xml_id)
-                        self.env['website.event.menu'].create({
-                            'menu_id':menu.id,
-                            'event_id':self.id,
-                            'menu_type':menu_type,
+                    for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_proposal_menu_entries()):
+                        menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
+                        event.env['website.event.menu'].create({
+                            'menu_id': menu.id,
+                            'event_id': event.id,
+                            'menu_type': menu_type,
                         })
                 else:
-                    self.track_proposal_menu_ids.mapped('menu_id').unlink()
-        return res
-
+                    event.track_proposal_menu_ids.mapped('menu_id').unlink()
 
     def _get_track_menu_entries(self):
         self.ensure_one()

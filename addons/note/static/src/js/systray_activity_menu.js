@@ -118,7 +118,7 @@ ActivityMenu.include({
     _onNoteDateTimeSetClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.noteDateTimeWidget.$input.click();
+        this.noteDateTimeWidget.$input.select();
     },
     /**
      * Saving note (quick create) and updating activity preview

@@ -85,7 +85,7 @@ server {
        root /var/www/;
        index index.html;
 #
-#       location / {
-#               try_files $uri $uri/ =404;
-#       }
+       location /hw_drivers/ {
+            proxy_pass http://127.0.0.1:8069;
+       }
 }

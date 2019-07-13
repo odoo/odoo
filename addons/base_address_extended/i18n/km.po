@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +26,7 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"ត្រូវប្តូវប្រព័ន្ឋកុំព្បូទ័រដោយបំពេញក្នុងទម្រង់ឯកសារគោលនៅក្នុងឯកសារតូចៗផ្សេងពីគ្នា"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -44,14 +47,14 @@ msgstr "ប្រទេស"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
-msgstr ""
+msgstr "ច្រកចូល"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "លេខផ្លូវ"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
@@ -63,47 +66,52 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"ទ្រង់ទ្រាយដើម្បីប្រើសម្រាប់ផ្លូវដែលជាកម្មសិទ្ធិរបស់ប្រទេសនេះ។ "
+"%(street_name)sអ្នកអាចប្រើលំនាំខ្សែអក្សររចនាប័ទ្ម python "
+"ជា%(street_number)sមួយវាលទាំងអស់នៃផ្លូវ (ឧទាហរណ៍ប្រើ ',' "
+"%(street_name)sប្រសិនបើអ្នកចង់បង្ហាញឈ្មោះផ្លូវដែលអម%(street_number)sដោយសញ្ញាក្បៀសនិងលេខផ្ទះ)"
+" : ឈ្មោះផ្លូវ : %(street_number2)sលេខផ្ទះ : លេខទ្វារ"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
 msgid "House"
-msgstr ""
+msgstr "ផ្ទះ"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
-msgstr ""
+msgstr "លេខផ្ទះ"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
-msgstr ""
+msgstr "ទ្រង់ទ្រាយផ្លូវ"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "ឈ្មោះផ្លូវ"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "ឈ្មោះផ្លូវ"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "ទម្រង់ផ្លូវ"
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/base_address_extended.py:65
 #: code:addons/base_address_extended/models/base_address_extended.py:113
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "ឯកសារមិនមានរបៀបរៀបរយល្អ%sទ្រង់ទ្រាយផ្លូវ"

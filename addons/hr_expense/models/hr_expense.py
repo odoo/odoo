@@ -54,10 +54,10 @@ class HrExpense(models.Model):
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
     untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', digits=dp.get_precision('Account'))
+    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
-    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=_default_account_id, help="An expense account is expected")
@@ -147,14 +147,14 @@ class HrExpense(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        if help_message and "oe_view_nocontent_smiling_face" not in help_message:
+        if help_message and "o_view_nocontent_smiling_face" not in help_message:
             use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
             alias_record = use_mailgateway and self.env.ref('hr_expense.mail_alias_expense') or False
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 link = "<a id='o_mail_test' href='mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32'>%(email)s</a>" % {
                     'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
                 }
-                return '<p class="oe_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (
+                return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (
                     _('Add a new expense,'),
                     _('or send receipts by email to %s.') % (link),)
         return super(HrExpense, self).get_empty_list_help(help_message)
@@ -208,6 +208,25 @@ class HrExpense(models.Model):
     # ----------------------------------------
 
     @api.multi
+    def _prepare_move_values(self):
+        """
+        This function prepares move values related to an expense
+        """
+        self.ensure_one()
+        journal = self.sheet_id.bank_journal_id if self.payment_mode == 'company_account' else self.sheet_id.journal_id
+        account_date = self.sheet_id.accounting_date or self.date
+        move_values = {
+            'journal_id': journal.id,
+            'company_id': self.env.user.company_id.id,
+            'date': account_date,
+            'ref': self.sheet_id.name,
+            # force the name to the default value, to avoid an eventual 'default_name' in the context
+            # to set it to '' which cause no number to be given to the account.move when posted.
+            'name': '/',
+        }
+        return move_values
+
+    @api.multi
     def _get_account_move_by_sheet(self):
         """ Return a mapping between the expense sheet of current expense and its account move
             :returns dict where key is a sheet id, and value is an account move record
@@ -215,18 +234,8 @@ class HrExpense(models.Model):
         move_grouped_by_sheet = {}
         for expense in self:
             # create the move that will contain the accounting entries
-            account_date = expense.sheet_id.accounting_date or expense.date
             if expense.sheet_id.id not in move_grouped_by_sheet:
-                journal = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
-                move = self.env['account.move'].create({
-                    'journal_id': journal.id,
-                    'company_id': self.env.user.company_id.id,
-                    'date': account_date,
-                    'ref': expense.sheet_id.name,
-                    # force the name to the default value, to avoid an eventual 'default_name' in the context
-                    # to set it to '' which cause no number to be given to the account.move when posted.
-                    'name': '/',
-                })
+                move = self.env['account.move'].create(expense._prepare_move_values())
                 move_grouped_by_sheet[expense.sheet_id.id] = move
             else:
                 move = move_grouped_by_sheet[expense.sheet_id.id]
@@ -272,7 +281,7 @@ class HrExpense(models.Model):
             account_date = expense.sheet_id.accounting_date or expense.date or fields.Date.context_today(expense)
 
             company_currency = expense.company_id.currency_id
-            different_currency = expense.currency_id != company_currency
+            different_currency = expense.currency_id and expense.currency_id != company_currency
 
             move_line_values = []
             taxes = expense.tax_ids.with_context(round=True).compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
@@ -281,13 +290,17 @@ class HrExpense(models.Model):
             partner_id = expense.employee_id.address_home_id.commercial_partner_id.id
 
             # source move line
-            amount_currency = expense.total_amount if different_currency else False
+            amount = taxes['total_excluded']
+            amount_currency = False
+            if different_currency:
+                amount = expense.currency_id._convert(amount, company_currency, expense.company_id, account_date)
+                amount_currency = taxes['total_excluded']
             move_line_src = {
                 'name': move_line_name,
                 'quantity': expense.quantity or 1,
-                'debit': taxes['total_excluded'] > 0 and taxes['total_excluded'],
-                'credit': taxes['total_excluded'] < 0 and -taxes['total_excluded'],
-                'amount_currency': taxes['total_excluded'] > 0 and abs(amount_currency) or -abs(amount_currency),
+                'debit': amount if amount > 0 else 0,
+                'credit': -amount if amount < 0 else 0,
+                'amount_currency': amount_currency if different_currency else 0.0,
                 'account_id': account_src.id,
                 'product_id': expense.product_id.id,
                 'product_uom_id': expense.product_uom_id.id,
@@ -304,23 +317,25 @@ class HrExpense(models.Model):
 
             # taxes move lines
             for tax in taxes['taxes']:
-                price = expense.currency_id._convert(
-                    tax['amount'], company_currency, expense.company_id, account_date)
-                amount_currency = price if different_currency else False
+                amount = tax['amount']
+                amount_currency = False
+                if different_currency:
+                    amount = expense.currency_id._convert(amount, company_currency, expense.company_id, account_date)
+                    amount_currency = tax['amount']
                 move_line_tax_values = {
                     'name': tax['name'],
                     'quantity': 1,
-                    'debit': price > 0 and price,
-                    'credit': price < 0 and -price,
-                    'amount_currency': price > 0 and abs(amount_currency) or -abs(amount_currency),
+                    'debit': amount if amount > 0 else 0,
+                    'credit': -amount if amount < 0 else 0,
+                    'amount_currency': amount_currency if different_currency else 0.0,
                     'account_id': tax['account_id'] or move_line_src['account_id'],
                     'tax_line_id': tax['id'],
                     'expense_id': expense.id,
                     'partner_id': partner_id,
-                    'currency_id': expense.currency_id if different_currency else False,
+                    'currency_id': expense.currency_id.id if different_currency else False,
                 }
-                total_amount -= price
-                total_amount_currency -= move_line_tax_values['amount_currency'] or price
+                total_amount -= amount
+                total_amount_currency -= move_line_tax_values['amount_currency'] or amount
                 move_line_values.append(move_line_tax_values)
 
             # destination move line
@@ -330,7 +345,7 @@ class HrExpense(models.Model):
                 'credit': total_amount < 0 and -total_amount,
                 'account_id': account_dst,
                 'date_maturity': account_date,
-                'amount_currency': total_amount > 0 and abs(amount_currency) or -abs(amount_currency),
+                'amount_currency': total_amount_currency if different_currency else 0.0,
                 'currency_id': expense.currency_id.id if different_currency else False,
                 'expense_id': expense.id,
                 'partner_id': partner_id,
@@ -359,7 +374,7 @@ class HrExpense(models.Model):
             # get move line values
             move_line_values = move_line_values_by_expense.get(expense.id)
             move_line_dst = move_line_values[-1]
-            total_amount = abs(move_line_dst['debit'])
+            total_amount = move_line_dst['debit'] or -move_line_dst['credit']
             total_amount_currency = move_line_dst['amount_currency']
 
             # create one more move line, a counterline for the total on payable account
@@ -717,12 +732,12 @@ class HrExpenseSheet(models.Model):
             return self.employee_id.parent_id.user_id
         elif self.employee_id.department_id.manager_id.user_id:
             return self.employee_id.department_id.manager_id.user_id
-        return self.env.user
+        return self.env['res.users']
 
     def activity_update(self):
         for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
             self.activity_schedule(
                 'hr_expense.mail_act_expense_approval',
-                user_id=expense_report.sudo()._get_responsible_for_approval().id)
+                user_id=expense_report.sudo()._get_responsible_for_approval().id or self.env.user.id)
         self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
         self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])

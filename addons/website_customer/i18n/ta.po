@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
-# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2016
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Abul Hassan M I <miabulhassan@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-05 10:06+0000\n"
-"Last-Translator: Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_customer
@@ -24,53 +27,76 @@ msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> முழுவதும்"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
-msgid "Active"
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
 msgstr ""
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
+msgid "Active"
+msgstr "செயலில்"
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:100
 #, python-format
 msgid "All Countries"
 msgstr "அனைத்து நாடுகள்"
 
 #. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
+#: code:addons/website_customer/controllers/main.py:81
+#, python-format
+msgid "All Sectors of Activity"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
 msgid "Category Name"
 msgstr "வகை பெயர்"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
 msgstr "வகுப்பு"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid "Close"
+msgstr "நெருக்கமான"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr "தொடர்பு"
+
+#. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Click to create a new partner tag."
+msgid "Create a new contact tag"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
 msgstr "உருவாக்கியவர்"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
 msgstr "உருவாக்கப்பட்ட தேதி"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
 msgid "ID"
 msgstr "ID"
 
@@ -80,26 +106,30 @@ msgid "Implemented By"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டவர்"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
-"Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
 msgstr ""
 
 #. module: website_customer
@@ -109,15 +139,9 @@ msgstr "பலன் இல்லை"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.details
-#: model_terms:ir.ui.view,arch_db:website_customer.footer_custom
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
 msgstr "எங்கள் குறிப்புகள்"
-
-#. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "கூட்டாளி"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_form
@@ -128,16 +152,17 @@ msgstr "கூட்டாளி மேற்கோள்"
 #: model:ir.model,name:website_customer.model_res_partner_tag
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
-"sector, or ... "
+"sector, or ..."
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
 msgstr "கூட்டாளிகள்"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
+#: model:website.menu,name:website_customer.menu_customers
 msgid "References"
 msgstr "குறிப்புகள்"
 
@@ -145,6 +170,11 @@ msgstr "குறிப்புகள்"
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
 msgstr "நாடு மூலம் குறிப்புகள்"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -157,8 +187,18 @@ msgid "Search"
 msgstr "தேடு"
 
 #. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
+msgid "Visible on current website"
 msgstr ""
 
 #. module: website_customer
@@ -170,7 +210,13 @@ msgid "Website Tags"
 msgstr "இணையத்தளம் குறிச்சொற்களை"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
+msgid "Website URL"
+msgstr "வலைத்தள URL"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
 msgstr "இணையத்தளம் குறிச்சொற்களை"
 
@@ -183,15 +229,3 @@ msgstr "உலக வரைபடம்"
 #: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
 msgstr "குறிப்பு(கள்))"
-
-#~ msgid "Partner Tags"
-#~ msgstr "கூட்டாளி மேற்கோள்கள்"
-
-#~ msgid "Tags"
-#~ msgstr "மேற்கோள்கள்"
-
-#~ msgid "Visible in Website"
-#~ msgstr "இணையத்தளம் தெரிபவை"
-
-#~ msgid "Website URL"
-#~ msgstr "வலைத்தள URL"

@@ -4,23 +4,23 @@
 # 
 # Translators:
 # heejun lee <tkm01b@gmail.com>, 2018
-# nle_odoo, 2018
 # Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
 # Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2018
 # 종현 엄 <whd5367@naver.com>, 2018
 # 방상우 <mrroom@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# nle_odoo, 2018
+# Linkup <link-up@naver.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +81,11 @@ msgstr "&times;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "' did not match any pages."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.500
+msgid "(!!! This view will be removed )"
 msgstr ""
 
 #. module: website
@@ -577,6 +582,28 @@ msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
 msgstr "<i class=\"fa fa-trash-o\"></i>슬라이드를 제거"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page SEO optimized?\" class=\"fa fa-search\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid ""
+"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
+"tack\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<i>Instant setup, satisfied or reimbursed.</i>"
 msgstr "<i> 즉시 설정, 만족 또는 상환. </i>"
@@ -622,6 +649,20 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.company_description
+msgid ""
+"<span class=\"fa fa-map-marker fa-fw mt16\" role=\"img\" aria-"
+"label=\"Address\" title=\"Address\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil\"/>Edit"
 msgstr "<span class=\"fa fa-pencil\"/>편집</span>"
@@ -629,7 +670,12 @@ msgstr "<span class=\"fa fa-pencil\"/>편집</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-plus\"/>New"
-msgstr "<span class = \"fa fa-plus\"/> 새로운"
+msgstr "<span class = \"fa fa-plus\"/> 신규"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Sort\" title=\"Sort\"/>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page
@@ -673,6 +719,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"sr-only\">Toggle Dropdown</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.user_navbar
+msgid ""
+"<span title=\"Mobile preview\" role=\"img\" aria-label=\"Mobile preview\" "
+"class=\"fa fa-mobile\"/>"
 msgstr ""
 
 #. module: website
@@ -738,7 +791,7 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
-"전용 제어기를 사용하여 코드 서버 조치를 웹 사이트에서 실행할 수 있습니다. 주소는 <base> / website / action / "
+"전용 제어기를 사용하여 코드 서버 작업을 웹 사이트에서 실행할 수 있습니다. 주소는 <base> / website / action / "
 "<website_path>입니다. 이 필드를 True로 설정하면 사용자가 이 작업을 실행할 수 있습니다. False로 설정하면 웹 "
 "사이트를 통해 작업을 실행할 수 없습니다."
 
@@ -788,7 +841,7 @@ msgstr "계정 &amp; 영업 관리"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
-msgstr "조치"
+msgstr "추가 작업"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__active
@@ -914,12 +967,12 @@ msgstr "앱"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "보관용 파일명"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__specific_user_account
@@ -980,7 +1033,7 @@ msgstr "뱃지"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "기본 구조 보기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1235,7 +1288,7 @@ msgstr "구성 요소"
 #. module: website
 #: model:ir.model,name:website.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
@@ -1326,7 +1379,7 @@ msgstr "페이지 작성"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
 msgid "Create a"
-msgstr ""
+msgstr "작성"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1360,7 +1413,7 @@ msgstr "맞춤"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
 #: model:ir.model.fields,field_description:website.field_website__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "고객 계정"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -1420,7 +1473,7 @@ msgstr "기본"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "기본 사용 권한"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__default_lang_id
@@ -1516,7 +1569,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Disabled"
-msgstr ""
+msgstr "장애가 있음"
 
 #. module: website
 #. openerp-web
@@ -1546,7 +1599,7 @@ msgstr "토론 그룹"
 #: model:ir.model.fields,field_description:website.field_website_redirect__display_name
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "제목"
 
 #. module: website
 #: code:addons/website/models/ir_qweb_fields.py:16
@@ -1649,7 +1702,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:7
 #, python-format
 msgid "Dropdown menu"
-msgstr ""
+msgstr "드롭 다운 메뉴"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -2039,7 +2092,7 @@ msgstr "구글 고객 비밀키"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
 #: model_terms:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
-msgstr ""
+msgstr "구글 맵"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
@@ -2050,7 +2103,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Google Plus"
-msgstr ""
+msgstr "구글플러스"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_googleplus
@@ -2107,7 +2160,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP 라우팅"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -2242,12 +2295,12 @@ msgstr "ID"
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr ""
+msgstr "XML 파일에 정의된 작업의 ID입니다."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__xml_id
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "xml 파일에 정의된 보기의 ID"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2279,7 +2332,7 @@ msgstr ""
 msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
-msgstr ""
+msgstr "이 필드가 비어 있으면 보기가 모든 사용자에게 적용됩니다. 그렇지 않으면 보기가 해당 그룹의 사용자에게만 적용됩니다."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__active
@@ -2289,6 +2342,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"이 보기를 상속하면 다음과 같습니다.\n"
+"* True면 보기는 항상 상위 항목을 확장합니다.\n"
+"* False면 보기가 현재 상위 항목을 확장하지 않지만 활성화할 수 있습니다.\n"
+"         "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -2308,7 +2365,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #, python-format
 msgid "Indexed"
-msgstr ""
+msgstr "색인화"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -2329,14 +2386,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_instagram
 #: model:ir.model.fields,field_description:website.field_website__social_instagram
 msgid "Instagram Account"
-msgstr ""
+msgstr "인스타그램 계정"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/new_content.js:240
 #, python-format
 msgid "Install"
-msgstr ""
+msgstr "설치"
 
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
@@ -2401,7 +2458,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__is_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__is_published
 msgid "Is published"
-msgstr ""
+msgstr "게시됨"
 
 #. module: website
 #. openerp-web
@@ -2527,7 +2584,7 @@ msgstr "지난 해"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Layout"
-msgstr ""
+msgstr "배치"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -2595,7 +2652,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "LinkedIn"
-msgstr ""
+msgstr "링크드인"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_linkedin
@@ -2698,7 +2755,7 @@ msgstr "메뉴 이름표"
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
 msgid "Menus"
-msgstr ""
+msgstr "메뉴"
 
 #. module: website
 #. openerp-web
@@ -2740,7 +2797,7 @@ msgstr "모델"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__model_data_id
 msgid "Model Data"
-msgstr ""
+msgstr "모델 데이터"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__model_ids
@@ -2834,7 +2891,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
-msgstr "새로운"
+msgstr "신규"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -2910,7 +2967,7 @@ msgstr "다음"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "No customization"
-msgstr "사용자화 없음"
+msgstr "사용자 정의 없음"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3037,6 +3094,12 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"이 보기가 다른 보기에서 상속된 경우에만 적용됩니다(inherit_id는 False/Null이 아님).\n"
+"\n"
+"* 확장자(기본값)가 요청된 경우, 이 보기가 가장 가까운 주 보기를 조회할 경우(상속자_id를 통해), 이 보기에서 상속하는 모든 보기가 적용됩니다.\n"
+"* 기본 보기가 완전히 해결된 경우(이 보기와 다른 모형을 사용하더라도) \n"
+"이 보기의 상속 사양(<xpath/>)이 적용되고\n"
+" 결과는 이 보기의 실제 아치인 것처럼 사용됩니다.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -3194,12 +3257,12 @@ msgstr "상위 메뉴"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "상위 경로"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "사용자의 협력사 관련 데이터"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -3238,7 +3301,7 @@ msgstr "미리보기"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "이전"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3310,17 +3373,17 @@ msgstr "QWeb"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating
 msgid "Quality"
-msgstr ""
+msgstr "품질"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Qweb 연락처 필드"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
@@ -3330,7 +3393,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_rule
 msgid "Record Rule"
-msgstr ""
+msgstr "기록 규칙"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__url_from
@@ -3415,7 +3478,7 @@ msgstr "서식 초기화"
 #: model:ir.model.fields,help:website.field_website_page__website_id
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "이 웹 사이트로의 게시를 제한하십시오."
 
 #. module: website
 #: model:res.groups,name:website.group_website_publisher
@@ -3453,7 +3516,7 @@ msgstr "검색 엔진 최적화 메타 데이터"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__is_seo_optimized
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO 최적화"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -3726,7 +3789,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "TRANSLATE"
-msgstr ""
+msgstr "번역"
 
 #. module: website
 #. openerp-web
@@ -3889,7 +3952,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__theme_id
 msgid "Theme"
-msgstr ""
+msgstr "테마"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -3933,7 +3996,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
 #: model:ir.model.fields,help:website.field_website__default_lang_code
 msgid "This field is used to set/get locales for user"
-msgstr ""
+msgstr "이 필드는 사용자에 대한 로컬 설정을 설정하거나 가져 오는 데 사용됩니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -4001,6 +4064,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"B2B 모드로 초대장을 보내려면 연락처보기를 열거 나 목록보기에서 연락처를 선택하고 드롭 다운 메뉴 *작업*에서 '포탈 사용 권한 관리'"
+" 옵션을 클릭하십시오."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -4272,39 +4337,39 @@ msgstr "보기"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch
 msgid "View Architecture"
-msgstr ""
+msgstr "구조 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__name
 msgid "View Name"
-msgstr ""
+msgstr "보기 이름"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__type
 msgid "View Type"
-msgstr ""
+msgstr "유형 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "상속 모드 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "이것을 상속한 보기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Visible"
-msgstr ""
+msgstr "표시가능"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_published
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__website_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "현재 웹 사이트에 공개"
 
 #. module: website
 #. openerp-web
@@ -4408,7 +4473,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:website.action_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Website Pages"
-msgstr ""
+msgstr "웹사이트 페이지"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
@@ -4457,7 +4522,7 @@ msgstr "웹 사이트 URL"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 msgid "Website Url"
-msgstr ""
+msgstr "웹사이트 URL"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -4498,7 +4563,7 @@ msgstr "웹사이트 메타 제목"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "웹사이트 오픈그래프 이미지"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
@@ -4700,7 +4765,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
 msgid "free website"
-msgstr ""
+msgstr "무료 웹사이트"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info

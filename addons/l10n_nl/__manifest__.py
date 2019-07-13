@@ -18,7 +18,8 @@
     'data': [
         'data/account_account_tag.xml',
         'data/account_chart_template.xml',
-        'data/account.account.template.xml',
+        'data/account.account.template.csv',
+        'data/account_chart_template_post_data.xml',
         'data/res.country.state.csv',
         'data/account_data.xml',
         'data/account_tax_template.xml',

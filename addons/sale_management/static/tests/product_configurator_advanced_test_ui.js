@@ -3,6 +3,8 @@ odoo.define('sale.sale_product_configurator_advanced_tour', function (require) {
 
 var tour = require('web_tour.tour');
 
+var optionVariantImage;
+
 tour.register('sale_product_configurator_advanced_tour', {
     url: "/web",
     test: true,
@@ -95,6 +97,25 @@ tour.register('sale_product_configurator_advanced_tour', {
     trigger: '.main_product div:contains("PA8: PAV1")',
     extra_trigger: '.oe_optional_products_modal',
     run: function () {} //check
+}, {
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Steel)")',
+    run: function () {
+        optionVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
+    }
+}, {
+    trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
+}, {
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Aluminium)")',
+    run: function () {
+        var newVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
+        if (newVariantImage !== optionVariantImage) {
+            $('<p>').text('image variant option src changed').insertAfter('.oe_optional_products_modal .js_product:eq(1) .product-name');
+        }
+
+    }
+}, {
+    extra_trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("image variant option src changed")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Steel"]',
 }, {
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_optional_products_modal',

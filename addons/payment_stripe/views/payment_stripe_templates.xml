@@ -21,7 +21,12 @@
             <input type="hidden" name='email' t-att-value='email'/>
             <input id="acquirer_stripe" type="hidden" name="acquirer" t-att-value="acquirer.id"/>
             <input type="hidden" name="stripe_key" t-att-value="acquirer.stripe_publishable_key"/>
-            <script type="text/javascript" src="/payment_stripe/static/src/js/stripe.js"></script>
+            <script type="text/javascript">
+                odoo.define(function (require) {
+                    var ajax = require('web.ajax');
+                    ajax.loadJS("/payment_stripe/static/src/js/stripe.js");
+                });
+            </script>
         </template>
 
         <template id="stripe_s2s_form">

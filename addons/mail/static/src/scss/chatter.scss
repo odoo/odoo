@@ -4,6 +4,11 @@
     width: 100%;
     padding-top: 0!important;
 
+    .o_attachment_delete_cross {
+        @include o-position-absolute($right: 6px, $top:7px);
+        cursor: pointer;
+    }
+
     .o_spinner {
         text-align: center;
         font-size: large;
@@ -21,9 +26,16 @@
             position: relative;
             float: right;
             flex: 1 1 auto;
+
             .o_chatter_button_attachment {
-                height: 2.3em;
+                height: $o-statusbar-height - 2px;
                 float: right;
+                padding: 0px;
+                margin-right: 25px;
+
+                .fa-paperclip, .o_chatter_attachment_button_count {
+                    font-weight: bold;
+                }
             }
             .o_followers {
                 height: $o-statusbar-height + 1;

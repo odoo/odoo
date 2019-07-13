@@ -180,7 +180,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     # remove results containing cite="mid:email_like@address" (ex: blockquote cite)
     # cite_except = re.compile(r"^((?!cite[\s]*=['\"]).)*$", re.IGNORECASE)
-    src = part.sub(lambda m: (u'cite=' not in m.group(1) and u'alt=' not in m.group(1)) and misc.html_escape(m.group(1)) or m.group(1), src)
+    src = part.sub(lambda m: (u'cite=' not in m.group(1) and u'alt=' not in m.group(1) and u'src=' not in m.group(1)) and misc.html_escape(m.group(1)) or m.group(1), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
     src = src.replace(u'<%', misc.html_escape(u'<%'))
     src = src.replace(u'%>', misc.html_escape(u'%>'))

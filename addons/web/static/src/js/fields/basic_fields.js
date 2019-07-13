@@ -805,7 +805,7 @@ var FieldBoolean = AbstractField.extend({
      * @returns {jQuery} the focusable checkbox input
      */
     getFocusableElement: function () {
-        return this.$input || $();
+        return this.mode === 'readonly' ? $() : this.$input;
     },
     /**
      * A boolean field is always set since false is a valid value.
@@ -1035,7 +1035,13 @@ var FieldFloatToggle = AbstractField.extend({
      * @returns {float} The current formatted value
      */
     _getDisplayedValue: function () {
-        return parseFloat(this._formatValue(this.value));
+        // this.value is a plain float
+        // Matches what is in Database
+        var usrFormatValue = this._formatValue(this.value);
+        // usrFormatValue is string
+        // contains a float represented in a user specific format
+        // the float is the fraction by [this.factor] of this.value
+        return field_utils.parse['float'](usrFormatValue);
     },
     /**
      * Formats the HTML input tag for edit mode and stores selection status.
@@ -1062,7 +1068,7 @@ var FieldFloatToggle = AbstractField.extend({
      * one is not in the range, the next value of the closest one will be chosen.
      *
      * @private
-     * @returns {number} The next formatted value in the range
+     * @returns {number} The next value in the range
      */
     _nextValue: function () {
         var range = this.nodeOptions.range;
@@ -1091,7 +1097,8 @@ var FieldFloatToggle = AbstractField.extend({
         if (this.mode === 'edit') {
             ev.stopPropagation(); // only stop propagation in edit mode
             var next_val = this._nextValue();
-            this._setValue(next_val.toString()); // will be parsed in _setValue
+            next_val = field_utils.format['float'](next_val);
+            this._setValue(next_val); // will be parsed in _setValue
         }
     },
 
@@ -1331,7 +1338,9 @@ var CopyClipboard = {
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this.clipboard.destroy();
+        if (this.clipboard) {
+            this.clipboard.destroy();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1346,8 +1355,8 @@ var CopyClipboard = {
         var $clipboardBtn = this.$('.o_clipboard_button');
         $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
         this.clipboard = new ClipboardJS($clipboardBtn[0], {
-            text: function (_) {
-               return self.value.trim();
+            text: function () {
+                return self.value.trim();
             },
             // Container added because of Bootstrap modal that give the focus to another element.
             // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
@@ -1363,40 +1372,31 @@ var CopyClipboard = {
             });
         });
     },
+    /**
+     * @override
+     */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+    },
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            this.$el.append($(qweb.render(this.clipboardTemplate)));
+            this._initClipboard();
+        }
+    }
 };
 
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _render: function() {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardText')));
-        this._initClipboard();
-    }
+    clipboardTemplate: 'CopyClipboardText',
 });
 
 var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _render: function() {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardChar')));
-        this._initClipboard();
-    }
+    clipboardTemplate: 'CopyClipboardChar',
 });
 
 var AbstractFieldBinary = AbstractField.extend({
@@ -1501,6 +1501,7 @@ var AbstractFieldBinary = AbstractField.extend({
      * @private
      */
     _clearFile: function (){
+        this.$('.o_input_file').val('');
         this.set_filename('');
         this._setValue(false);
         this._render();
@@ -1651,7 +1652,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'id': this.res_id,
                     'field': this.name,
                     'filename_field': filename_fieldname,
-                    'filename': this.recordData[filename_fieldname] || null,
+                    'filename': this.recordData[filename_fieldname] || "",
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
@@ -2908,6 +2909,7 @@ var AceEditor = DebouncedField.extend({
         if (this.aceEditor) {
             this.aceEditor.destroy();
         }
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

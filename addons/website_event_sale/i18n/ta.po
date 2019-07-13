@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_sale
-#
+# 
 # Translators:
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-11 10:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
@@ -33,9 +36,30 @@ msgid "<span>left</span>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Intrastat குறியீடு"
+#: code:addons/website_event_sale/models/product_pricelist.py:16
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:13
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "N/A"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -43,8 +67,8 @@ msgid "Only"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Item"
 msgstr ""
 
 #. module: website_event_sale
@@ -53,18 +77,28 @@ msgid "Product"
 msgstr "தயாரிப்பு"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:63
+#, python-format
+msgid "Registration"
+msgstr ""
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
 msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sales Order"
+msgid "Sale Order"
 msgstr ""
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "விற்பனை வரிசை வரிசை"
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
 msgstr ""
 
@@ -78,23 +112,28 @@ msgstr ""
 #: code:addons/website_event_sale/models/sale_order.py:77
 #, python-format
 msgid ""
-"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
-"ticket for the %(event)s event."
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr ""
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr ""
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "Ticket"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:20
+#, python-format
+msgid "Warning"
+msgstr "எச்சரிக்கை"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr ""
+msgstr "இணையதளம்"

@@ -4,7 +4,7 @@
 <template id="report_repairorder">
         <t t-set="o" t-value="doc"/>
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
                 <t t-set="information_block">
                     <strong t-if="o.address_id == o.partner_invoice_id">Invoice and shipping address:</strong>
                     <div t-if="o.partner_invoice_id">

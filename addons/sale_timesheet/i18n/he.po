@@ -6,16 +6,19 @@
 # Martin Trigaux, 2018
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2018
 # Moshe Flam <pashute@gmail.com>, 2018
-# ExcaliberX <excaliberx@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
 # שהאב חוסיין <shhab89@gmail.com>, 2018
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# hed shefetr <hed@laylinetech.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: שהאב חוסיין <shhab89@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: hed shefetr <hed@laylinetech.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +89,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"על פי תצורת המוצר,  הכמות הנשלחת יכולה להיות מחושבת באופן אוטומטי על ידי מנגנון:\n"
+"  - ידני: הכמות נקבעת ידנית על הקו\n"
+"  - אנליטית מהוצאות: הכמות היא הסכום הכמותי מהוצאות שנרשמו\n"
+"  - גליון זמנים: הכמות היא מספר השעות שנרשמו במשימות הקשורות לקו מכירה זה\n"
+"  - תנועות מלאי: הכמות מגיעה מליקוטים שאושרו\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -108,7 +116,7 @@ msgstr "חשבון אנליטי"
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "ניתוח אנליסטי מתוך הוצאות "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -561,7 +569,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "שיטה לעדכון כמות הנמסרת"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -670,7 +678,7 @@ msgstr ""
 #: model:ir.actions.client,name:sale_timesheet.project_timesheet_action_client_timesheet_plan
 #, python-format
 msgid "Overview"
-msgstr ""
+msgstr "סקירה כללית"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__product_id
@@ -974,7 +982,7 @@ msgstr "סטטיסטיקה"
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "תנועות מלאי"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -1155,7 +1163,7 @@ msgstr ""
 #: selection:sale.order.line,qty_delivered_method:0
 #, python-format
 msgid "Timesheets"
-msgstr ""
+msgstr "גיליונות זמנים"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:64

@@ -3,24 +3,26 @@
 # * repair
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Abdullah Onur Uğur <aonurugur@outlook.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,12 +33,13 @@ msgstr ""
 #. module: repair
 #: model:mail.template,report_name:repair.mail_template_repair_quotation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.partner_id.name} Onarım Siparişi (Ref ${object.name or 'n/a' })"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -113,7 +116,7 @@ msgstr "<strong>Operasyonlar</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
-msgstr ""
+msgstr "<strong>Parçalar</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -143,7 +146,7 @@ msgstr "<strong>Toplam</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong>Garanti:</strong>"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -426,7 +429,7 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -664,7 +667,7 @@ msgstr "Eylem gerektiren mesaj sayısı"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Teslimat hatası olan mesaj sayısı"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
@@ -970,6 +973,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Etkinliklerdeki aşamalar\n"
+"Zamanı Geçmiş: Tarihi geçmiş \n"
+"Bugün: Etkinlik günü bugün\n"
+"Planlanan: Gelecek etkinlikler."
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move

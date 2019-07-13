@@ -1,36 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-#
+# 
 # Translators:
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-02-11 12:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
-msgid "# Issues"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
-msgid "# of Sales Order"
-msgstr ""
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -39,125 +27,29 @@ msgstr ""
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
-msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
+msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
-msgid ""
-"A member with whom you want to associate your membership.It will consider "
-"the membership state of the associated member."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-msgid "Activation"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
-msgid "Associate Member"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
-msgid "Cancel Membership Date"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
-msgid "Current Membership Status"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
-msgid "Customer Location"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
-msgid "Date from which membership becomes active."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
-msgid "Date on which membership has been cancelled"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
-msgid "Date until which membership remains active."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
-msgid "Free Member"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__campaign_id
+msgid "Campaign"
+msgstr "பிரச்சாரம்"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "விலைப்பட்டியல்"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
-msgid ""
-"It indicates the membership state.\n"
-"-Non Member: A partner who has not applied for any membership.\n"
-"-Cancelled Member: A member who has cancelled his membership.\n"
-"-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
-"-Invoiced Member: A member whose invoice has been created.\n"
-"-Paying member: A member who has paid the membership fee."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
-msgid "Latest Partner Review"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
+msgid "Invoiced in Sales Orders Target"
 msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
-msgid "Level"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
-msgid "Level Weight"
-msgstr ""
+msgstr "முன்னணி / வாய்ப்பு"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
@@ -165,23 +57,19 @@ msgid "Log in the chatter from which opportunity the order originates"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
-msgid "Membership"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Marketing"
+msgstr "சந்தைப்படுத்தல்"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
-msgid "Membership Amount"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__medium_id
+msgid "Medium"
+msgstr "நடுத்தரம்"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
-msgid "Membership End Date"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
-msgid "Membership Start Date"
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "My Quotations"
 msgstr ""
 
 #. module: sale_crm
@@ -190,34 +78,25 @@ msgid "New Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_number
 msgid "Number of Quotations"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
 msgid "Opportunity"
-msgstr ""
+msgstr "வாய்ப்பு"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__order_ids
 msgid "Orders"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-msgid "Partnership Date"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
-msgstr ""
+#: code:addons/sale_crm/models/crm_team.py:12
+#, python-format
+msgid "Pipeline"
+msgstr "பைப்லைன்"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -231,64 +110,67 @@ msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
-msgid "Sales Order"
+msgid "Sale Order"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_free_member
-msgid "Select if you want to give free membership."
+#: model:ir.actions.act_window,name:sale_crm.sale_action_orders
+msgid "Sale orders"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channels"
+msgstr "விற்பனை சேனல்கள்"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__source_id
+msgid "Source"
+msgstr "ஆதாரம்"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
 msgid "Tags"
 msgstr "மேற்கோள்கள்"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
-msgid "The price negotiated by the partner"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__campaign_id
 msgid ""
-"This stock location will be used, instead of the default one, as the "
-"destination location for goods you send to this partner"
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"இது உங்கள் வெவ்வேறு பிரச்சார முயற்சிகளை கண்காணிக்க உதவும் ஒரு பெயர், எ.கா. "
+"Fall_Drive, Christmas_Special"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr "இது விநியோக முறை, எ.கா. அஞ்சலட்டை, மின்னஞ்சல் அல்லது பதாகை விளம்பரம்"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__source_id
 msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for goods you receive from the current partner"
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"இது இணைப்புக்கான ஆதாரம், எ.கா. தேடல் பொறி, மற்றொரு டொமைன் அல்லது மின்னஞ்சல் "
+"பட்டியலில் பெயர்"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
+msgid "Untaxed Total of Confirmed Orders"
 msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
 msgid "Users"
 msgstr "பயனர்கள்"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
-msgid "Vendor Location"
-msgstr ""
-
-#~ msgid "Campaign"
-#~ msgstr "பிரச்சாரம்"
-
-#~ msgid "Medium"
-#~ msgstr "நடுத்தரம்"
-
-#~ msgid "Source"
-#~ msgstr "ஆதாரம்"

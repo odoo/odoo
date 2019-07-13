@@ -36,6 +36,7 @@ configuration of their taxes and fiscal positions manually.
     ],
     'data': [
         'data/l10n_fr_chart_data.xml',
+        'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
         'views/l10n_fr_view.xml',
         'data/account_data.xml',

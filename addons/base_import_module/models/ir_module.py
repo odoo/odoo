@@ -38,6 +38,8 @@ class IrModule(models.Model):
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
 
         terp = load_information_from_description_file(module, mod_path=path)
+        if not terp:
+            return False
         values = self.get_values_from_terp(terp)
         if 'version' in terp:
             values['latest_version'] = terp['version']
@@ -133,8 +135,8 @@ class IrModule(models.Model):
                         try:
                             # assert mod_name.startswith('theme_')
                             path = opj(module_dir, mod_name)
-                            self._import_module(mod_name, path, force=force)
-                            success.append(mod_name)
+                            if self._import_module(mod_name, path, force=force):
+                                success.append(mod_name)
                         except Exception as e:
                             _logger.exception('Error while importing module')
                             errors[mod_name] = exception_to_unicode(e)

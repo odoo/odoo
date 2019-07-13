@@ -73,7 +73,7 @@ class View(models.Model):
             website_specific_view = view.copy(copy_vals)
 
             view._create_website_specific_pages_for_view(website_specific_view,
-                                                            view.env['website'].browse(current_website_id))
+                                                         view.env['website'].browse(current_website_id))
 
             for inherit_child in view.inherit_children_ids.filter_duplicate().sorted(key=lambda v: (v.priority, v.id)):
                 if inherit_child.website_id.id == current_website_id:
@@ -83,7 +83,8 @@ class View(models.Model):
                     # original tree. Indeed, the order of children 'id' fields
                     # must remain the same so that the inheritance is applied
                     # in the same order in the copied tree.
-                    inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    child = inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    inherit_child.inherit_children_ids.write({'inherit_id': child.id})
                     inherit_child.unlink()
                 else:
                     # Trigger COW on inheriting views
@@ -158,7 +159,12 @@ class View(models.Model):
                     # care of creating pages and menus.
                     view.with_context(website_id=website.id).write({'name': view.name})
 
-        result = super(View, self).unlink()
+        specific_views = self.env['ir.ui.view']
+        if self and self.pool._init:
+            for view in self:
+                specific_views += view._get_specific_views()
+
+        result = super(View, self + specific_views).unlink()
         self.clear_caches()
         return result
 
@@ -167,6 +173,7 @@ class View(models.Model):
             # create new pages for this view
             page.copy({
                 'view_id': new_view.id,
+                'is_published': page.is_published,
             })
 
     @api.model
@@ -278,6 +285,16 @@ class View(models.Model):
         return super(View, self).get_view_id(xml_id)
 
     @api.multi
+    def _get_original_view(self):
+        """Given a view, retrieve the original view it was COW'd from.
+        The given view might already be the original one. In that case it will
+        (and should) return itself.
+        """
+        self.ensure_one()
+        domain = [('key', '=', self.key), ('model_data_id', '!=', None)]
+        return self.with_context(active_test=False).search(domain, limit=1)  # Useless limit has multiple xmlid should not be possible
+
+    @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         new_context = dict(self._context)
@@ -370,6 +387,15 @@ class View(models.Model):
         res = super(View, self)._save_oe_structure_hook()
         res['website_id'] = self.env['website'].get_current_website().id
         return res
+
+    @api.model
+    def _set_noupdate(self):
+        '''If website is installed, any call to `save` from the frontend will
+        actually write on the specific view (or create it if not exist yet).
+        In that case, we don't want to flag the generic view as noupdate.
+        '''
+        if not self._context.get('website_id'):
+            super(View, self)._set_noupdate()
 
     @api.multi
     def save(self, value, xpath=None):

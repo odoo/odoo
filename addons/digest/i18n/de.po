@@ -7,14 +7,15 @@
 # Wolfgang Taferner, 2018
 # Mathias Markl <mathias.markl@mukit.at>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,8 @@ msgid ""
 "<table style=\"width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;\">\n"
 "    <tr>\n"
 "        <td align=\"center\" valign=\"top\" style=\"border-collapse: collapse; padding: 0\">\n"
-"            % set company, user = ctx['company'], ctx['user']\n"
+"            % set user = ctx.get('user', user)\n"
+"            % set company = user.company_id\n"
 "            % set data = object.compute_kpis(company, user)\n"
 "            % set tips = object.compute_tips(company, user)\n"
 "            % set kpi_actions = object.compute_kpis_actions(company, user)\n"
@@ -155,7 +157,7 @@ msgid ""
 "            <table style=\"margin-top: 5px; border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;\">\n"
 "                <tr>\n"
 "                    <td style=\"border-collapse: collapse; margin: 0; padding: 10px 20px;\">\n"
-"                        % if ctx['user'].has_group('base.group_system'): \n"
+"                        % if user.has_group('base.group_system'):\n"
 "                            <div style=\"margin-top: 20px;\"> \n"
 "                                Want to customize the email?\n"
 "                                <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #875A7B;\">Choose the metrics you care about</a>\n"
@@ -180,7 +182,7 @@ msgstr ""
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid "${', '.join(users.mapped('name'))} signed up. Say hello in the"
-msgstr ""
+msgstr "${', '.join(users.mapped('name'))} angemeldet. Sag Hallo in der"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
@@ -189,6 +191,9 @@ msgid ""
 "    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
 "    <strong style=\"font-size: 16px;\">Did you know...?</strong>"
 msgstr ""
+"% set users = object.env['res.users'].search([], limit=10, order='id desc')\n"
+"    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
+"    <strong style=\"font-size: 16px;\">Wussten Sie schon...?</strong>"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
@@ -467,12 +472,12 @@ msgstr "Abonnieren"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
 msgid "Tip description"
-msgstr ""
+msgstr "Tip description"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
-msgstr ""
+msgstr "Mich abmelden"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
@@ -497,7 +502,7 @@ msgstr "Wöchentlich"
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Weekly Digest"
-msgstr ""
+msgstr "Wöchentliche Verarbeitung"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0

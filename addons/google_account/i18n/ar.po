@@ -3,19 +3,18 @@
 # * google_account
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
-# hoxhe Aits <hoxhe0@gmail.com>, 2018
-# Osoul <baruni@osoul.ly>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,17 +35,29 @@ msgstr "أنشئ في"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:203
+#, python-format
+msgid "Error while requesting Google Services"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:199
+#, python-format
+msgid "Error while requesting Google Services: %s"
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "Google Service"
-msgstr ""
+msgstr "خدمة جوجل"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service__id
 msgid "ID"
-msgstr "المعرف"
+msgstr "المُعرف"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service____last_update
@@ -76,7 +87,8 @@ msgstr ""
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
-msgstr "حدث خلل خلال إنشاء الرمز الخاص بك. ربما رمز الترخيص الخاص بك غير صالح"
+msgstr ""
+"حدث خطأ خلال إنشاء كلمة السر الخاصة بك. ربما يكون كود الترخيص غير صالح"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:56
@@ -85,8 +97,8 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
 msgstr ""
-"حدث خلل خلال إنشاء الرمز الخاص بك. ربما رمز الترخيص الخاص بك غير صالح أو أنه"
-" منتهي الصلاحية"
+"حدث خطأ خلال إنشاء كلمة السر الخاصة بك. ربما يكون كود الترخيص غير صالح أو "
+"منتهي الصلاحية"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:150
@@ -95,17 +107,23 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
 msgstr ""
-"حدث خلل خلال إنشاء الرمز الخاص بك. ربما رمز الترخيص الخاص بك غير صالح أو أنه"
-" منتهي الصلاحية [%s]"
+"حدث خطأ خلال إنشاء كلمة السر الخاصة بك. ربما يكون كود الترخيص غير صالح أو "
+"منتهي الصلاحية [%s]"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:193
+#: code:addons/google_account/models/google_service.py:204
 #, python-format
 msgid "Something went wrong with your request to google"
-msgstr "حدث خطأ ما مع طلبك إلى جوجل"
+msgstr "حدث خطأ ما بطلبك المقدم لجوجل"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:200
+#, python-format
+msgid "Something went wrong with your request to google: %s"
+msgstr ""
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:131
 #, python-format
 msgid "The account for the Google service '%s' is not configured."
-msgstr ""
+msgstr "لم يتم ضبط حساب خدمة جوجل '%s'."

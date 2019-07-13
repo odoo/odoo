@@ -17,7 +17,7 @@ class StockMoveLine(models.Model):
     _order = "result_package_id desc, id"
 
     picking_id = fields.Many2one(
-        'stock.picking', 'Stock Picking',
+        'stock.picking', 'Stock Picking', auto_join=True,
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
@@ -117,11 +117,11 @@ class StockMoveLine(models.Model):
             if self.lot_name or self.lot_id:
                 move_lines_to_check = self._get_similar_move_lines() - self
                 if self.lot_name:
-                    counter = Counter(move_lines_to_check.mapped('lot_name'))
+                    counter = Counter([line.lot_name for line in move_lines_to_check])
                     if counter.get(self.lot_name) and counter[self.lot_name] > 1:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
                 elif self.lot_id:
-                    counter = Counter(move_lines_to_check.mapped('lot_id.id'))
+                    counter = Counter([line.lot_id.id for line in move_lines_to_check])
                     if counter.get(self.lot_id.id) and counter[self.lot_id.id] > 1:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
 
@@ -136,7 +136,7 @@ class StockMoveLine(models.Model):
         """
         res = {}
         if self.qty_done and self.product_id.tracking == 'serial':
-            if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
+            if float_compare(self.qty_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0:
                 message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
@@ -274,7 +274,10 @@ class StockMoveLine(models.Model):
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         next_moves = self.env['stock.move']
         if updates or 'qty_done' in vals:
-            for ml in self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product'):
+            mls = self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product')
+            if not updates:  # we can skip those where qty_done is already good up to UoM rounding
+                mls = mls.filtered(lambda ml: not float_is_zero(ml.qty_done - vals['qty_done'], precision_rounding=ml.product_uom_id.rounding))
+            for ml in mls:
                 # undo the original move line
                 qty_done_orig = ml.move_id.product_uom._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,

@@ -160,7 +160,14 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="Comma separated list of tags to filter which tests to excute. Enable unit tests if set.")
+                         help="""Comma separated list of spec to filter which tests to execute. Enable unit tests if set.
+                         A filter spec has the format: [-][tag][/module][:class][.method]
+                         The '-' specifies if we want to include or exclude tests matching this spec.
+                         The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
+                         given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
+                         The module, class, and method will respectively match the module name, test class name and test method name.
+                         examples: :TestClass.test_func,/test_module,external
+                         """)
 
         parser.add_option_group(group)
 
@@ -220,7 +227,7 @@ class configmanager(object):
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
-                         help="specify the the maximum number of physical connections to PostgreSQL")
+                         help="specify the maximum number of physical connections to PostgreSQL")
         group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)

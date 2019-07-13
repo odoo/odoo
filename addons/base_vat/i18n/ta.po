@@ -1,21 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_vat
-#
+# 
 # Translators:
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-02-11 10:14+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -23,39 +34,58 @@ msgid "Companies"
 msgstr "நிறுவனங்கள்"
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
-msgid ""
-"If checked, Partners VAT numbers will be fully validated against EU's VIES "
-"service rather than via a simple format validation (checksum)."
-msgstr ""
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "Config Settings"
+msgstr "கட்டமைப்பு அமைப்புகள்"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "கூட்டாளி"
+msgid "Contact"
+msgstr "தொடர்பு"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:128
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
+msgstr ""
+"இந்த தேர்வுப்பெட்டியைத் தேர்ந்தெடுத்தால், அதன் VAT எண்ணை ஐரோப்பிய VIES "
+"சேவையால் சரிபார்க்க முடியாவிட்டால், நீங்கள் ஒரு தொடர்பைச் சேமிக்க முடியாது."
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:154
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"கூட்டாளர் [% s] க்கான VAT எண் [% s] செல்லுபடியாகாததாக தெரியவில்லை. \n"
+"குறிப்பு: எதிர்பார்க்கப்படும் வடிவமைப்பு% s"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:127
+#: code:addons/base_vat/models/res_partner.py:153
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"பங்குதாரர் [% s] க்கான VAT எண் [% s] ஆனது, VIES VAT சரிபார்ப்புச் "
+"சரிபார்ப்பை தோல்வியடைந்தது அல்லது எதிர்பார்த்த வடிவமைப்பை மதிக்கவில்லை"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
-msgid "VIES VAT Check"
-msgstr ""
-
-#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "e.g. BE0477472701"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
+msgid "VAT"
+msgstr "வாட்"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr "VAT எண்கள் சரிபார்க்கவும்"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr "ஐரோப்பிய VIES சேவையைப் பயன்படுத்தி VAT எண்களை சரிபார்க்கவும்"

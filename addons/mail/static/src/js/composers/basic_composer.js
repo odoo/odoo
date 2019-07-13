@@ -56,7 +56,7 @@ var BasicComposer = Widget.extend({
         // Attachments
         this._attachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileuploadID = _.uniqueId('o_chat_fileupload');
-        this.set('attachment_ids', []);
+        this.set('attachment_ids', options.attachmentIds || []);
 
         // Mention
         this._mentionManager = new MentionManager(this);
@@ -118,6 +118,7 @@ var BasicComposer = Widget.extend({
         });
 
         // Attachments
+        this._renderAttachments();
         $(window).on(this.fileuploadID, this._onAttachmentLoaded.bind(this));
         this.on('change:attachment_ids', this, this._renderAttachments);
 
@@ -446,6 +447,7 @@ var BasicComposer = Widget.extend({
         });
         attachments = attachments.concat(uploadAttachments);
         this.set('attachment_ids', attachments);
+        ev.target.value = "";
     },
     /**
      * @private

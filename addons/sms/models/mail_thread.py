@@ -39,8 +39,8 @@ class MailThread(models.AbstractModel):
             if not partners:
                 partners = self._get_default_sms_recipients()
 
-                # Collect numbers, we will consider the message to be sent if at least one number can be found
-                numbers = list(set([i.mobile for i in partners if i.mobile]))
+            # Collect numbers, we will consider the message to be sent if at least one number can be found
+            numbers = list(set([i.mobile for i in partners if i.mobile]))
 
         if numbers:
             try:

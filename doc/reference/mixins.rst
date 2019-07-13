@@ -84,7 +84,7 @@ to manage followers on your record:
     
     :param str body: body of the message, usually raw HTML that will
         be sanitized
-    :param str message_type: see mail_message.type field
+    :param str message_type: see mail_message.message_type field
     :param int parent_id: handle reply to a previous message by adding the
         parent partners to the message in case of private discussion
     :param list(tuple(str,str)) attachments: list of attachment tuples in the form

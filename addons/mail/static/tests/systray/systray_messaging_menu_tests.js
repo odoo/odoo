@@ -781,5 +781,62 @@ QUnit.test('global counter with channel previews', function (assert) {
     messagingMenu.destroy();
 });
 
+QUnit.test('messaging menu widget: do not open chat window twice on preview clicked', function (assert) {
+    // This test assumes that a condition for opening chat window is to
+    // successfully fetch messages beforehand.
+    assert.expect(4);
+
+    var self = this;
+    // Used to pause `message_fetch` after opening the messaging menu.
+    // This is necessary `message_fetch` on mailbox_inbox is required to
+    // display the previews.
+    var lockMessageFetch = false;
+    var messageFetchDef = $.Deferred();
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 1 },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_fetch' && lockMessageFetch) {
+                var _super = this._super.bind(this);
+                return messageFetchDef.then(function () {
+                    assert.step('message_fetch');
+                    return _super(route, args);
+                });
+            }
+            if (args.method === 'channel_minimize') {
+                assert.step('channel_minimize');
+                // called to detach thread in chat window
+                // simulate longpolling response with new chat window state
+                var channelInfo = _.extend({}, self.data['mail.channel'].records[0], {
+                    is_minimized: true,
+                    state: 'open',
+                });
+                var notifications = [ [['myDB', 'res.partner'], channelInfo] ];
+                messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    // Opening chat window from messaging menu (pending from `messageFetchDef`)
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    lockMessageFetch = true;
+    testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    messageFetchDef.resolve();
+
+    assert.strictEqual($('.o_thread_window').length, 1,
+        "should only display a single chat window");
+    assert.verifySteps([
+        'channel_minimize',
+        'message_fetch',
+    ], "should have fetched messages only once");
+
+    messagingMenu.destroy();
+});
+
 });
 });

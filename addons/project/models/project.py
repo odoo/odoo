@@ -285,11 +285,18 @@ class Project(models.Model):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
-        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)]).ids
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)], order='parent_id').ids
+        old_to_new_tasks = {}
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task)
-            tasks += task.copy(defaults)
+            if task.parent_id:
+                # set the parent to the duplicated task
+                defaults['parent_id'] = old_to_new_tasks[task.parent_id.id]
+            new_task = task.copy(defaults)
+            old_to_new_tasks[task.id] = new_task.id
+            tasks += new_task
+
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 
     @api.multi
@@ -300,6 +307,8 @@ class Project(models.Model):
         if not default.get('name'):
             default['name'] = _("%s (copy)") % (self.name)
         project = super(Project, self).copy(default)
+        if self.subtask_project_id == self:
+            project.subtask_project_id = project
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
         if 'tasks' not in default:
@@ -469,7 +478,6 @@ class Task(models.Model):
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, track_visibility='onchange')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
-        default=fields.Datetime.now,
         index=True,
         copy=False,
         readonly=True)
@@ -680,15 +688,17 @@ class Task(models.Model):
         # force some parent values, if needed
         if 'parent_id' in vals and vals['parent_id']:
             vals.update(self._subtask_values_from_parent(vals['parent_id']))
+            context.pop('default_parent_id', None)
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
-        # Stage change: Update date_end if folded stage
+        # Stage change: Update date_end if folded stage and date_last_stage_update
         if vals.get('stage_id'):
             vals.update(self.update_date_end(vals['stage_id']))
+            vals['date_last_stage_update'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
         return task
 

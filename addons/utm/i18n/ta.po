@@ -1,43 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * utm
-#
+# 
 # Translators:
-# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2016
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Abul Hassan M I <miabulhassan@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-11 13:03+0000\n"
-"Last-Translator: Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_medium_active
+#: model:ir.model.fields,field_description:utm.field_utm_medium__active
 msgid "Active"
-msgstr ""
+msgstr "செயலில்"
 
 #. module: utm
-#: model:ir.model,name:utm.model_utm_campaign
-#: model:ir.model.fields,field_description:utm.field_account_invoice_campaign_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead_campaign_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant_campaign_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker_campaign_id
-#: model:ir.model.fields,field_description:utm.field_sale_order_campaign_id
-#: model:ir.model.fields,field_description:utm.field_utm_mixin_campaign_id
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_tree
 msgid "Campaign"
 msgstr "பிரச்சாரம்"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign_name
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Name"
 msgstr "பிரச்சார பெயர்"
 
@@ -54,14 +51,9 @@ msgid "Channel"
 msgstr "சேனல்"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_medium_name
+#: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Channel Name"
 msgstr "சேனல் பெயர்"
-
-#. module: utm
-#: model:ir.model,name:utm.model_utm_medium
-msgid "Channels"
-msgstr "சேனல்கள்"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
@@ -69,36 +61,34 @@ msgid "Christmas Special"
 msgstr "கிறிஸ்துமஸ்த்தில் சிறப்பு"
 
 #. module: utm
-#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "Click to define a new medium."
-msgstr ""
-
-#. module: utm
-#: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "Click to define a new source."
-msgstr ""
-
-#. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign_create_uid
-#: model:ir.model.fields,field_description:utm.field_utm_medium_create_uid
-#: model:ir.model.fields,field_description:utm.field_utm_source_create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_medium__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_source__create_uid
 msgid "Created by"
 msgstr "உருவாக்கியவர்"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign_create_date
-#: model:ir.model.fields,field_description:utm.field_utm_medium_create_date
-#: model:ir.model.fields,field_description:utm.field_utm_source_create_date
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_medium__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_source__create_date
 msgid "Created on"
-msgstr ""
-"உருவாக்கப்பட்ட \n"
-"தேதி"
+msgstr "உருவாக்கப்பட்ட தேதி"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign_display_name
-#: model:ir.model.fields,field_description:utm.field_utm_medium_display_name
-#: model:ir.model.fields,field_description:utm.field_utm_mixin_display_name
-#: model:ir.model.fields,field_description:utm.field_utm_source_display_name
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
+msgid "Define a new medium"
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
+msgid "Define a new source"
+msgstr ""
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_medium__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_source__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
@@ -114,38 +104,43 @@ msgstr "பேஸ்புக்"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP ரூட்டிங்"
+msgid "HTTP Routing"
+msgstr "HTTP ரவுட்டிங்"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign_id
-#: model:ir.model.fields,field_description:utm.field_utm_medium_id
-#: model:ir.model.fields,field_description:utm.field_utm_mixin_id
-#: model:ir.model.fields,field_description:utm.field_utm_source_id
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__id
+#: model:ir.model.fields,field_description:utm.field_utm_medium__id
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__id
+#: model:ir.model.fields,field_description:utm.field_utm_source__id
 msgid "ID"
 msgstr "ID"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign___last_update
-#: model:ir.model.fields,field_description:utm.field_utm_medium___last_update
-#: model:ir.model.fields,field_description:utm.field_utm_mixin___last_update
-#: model:ir.model.fields,field_description:utm.field_utm_source___last_update
+#: model:ir.model.fields,field_description:utm.field_utm_campaign____last_update
+#: model:ir.model.fields,field_description:utm.field_utm_medium____last_update
+#: model:ir.model.fields,field_description:utm.field_utm_mixin____last_update
+#: model:ir.model.fields,field_description:utm.field_utm_source____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign_write_uid
-#: model:ir.model.fields,field_description:utm.field_utm_medium_write_uid
-#: model:ir.model.fields,field_description:utm.field_utm_source_write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_medium__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_source__write_uid
 msgid "Last Updated by"
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டவர்"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_medium__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_source__write_date
+msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign_write_date
-#: model:ir.model.fields,field_description:utm.field_utm_medium_write_date
-#: model:ir.model.fields,field_description:utm.field_utm_source_write_date
-msgid "Last Updated on"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+#: model:utm.source,name:utm.utm_source_mailing
+msgid "Lead Newsletter"
+msgstr ""
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
@@ -153,18 +148,8 @@ msgid "Link Tracker"
 msgstr "இணைப்பு தட"
 
 #. module: utm
-#: model:utm.source,name:utm.utm_source_mailing
-msgid "Mailing Partner"
-msgstr "அஞ்சல் பங்குதாரர்"
-
-#. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
-#: model:ir.model.fields,field_description:utm.field_account_invoice_medium_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead_medium_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant_medium_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker_medium_id
-#: model:ir.model.fields,field_description:utm.field_sale_order_medium_id
-#: model:ir.model.fields,field_description:utm.field_utm_mixin_medium_id
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
@@ -188,18 +173,12 @@ msgid "Search engine"
 msgstr "தேடல் இயந்திரம்"
 
 #. module: utm
-#: model:ir.model,name:utm.model_utm_source
-#: model:ir.model.fields,field_description:utm.field_account_invoice_source_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead_source_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant_source_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker_source_id
-#: model:ir.model.fields,field_description:utm.field_sale_order_source_id
-#: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
 msgid "Source"
 msgstr "ஆதாரம்"
 
 #. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_source_name
+#: model:ir.model.fields,field_description:utm.field_utm_source__name
 msgid "Source Name"
 msgstr "மூல பெயர்"
 
@@ -210,38 +189,27 @@ msgid "Sources"
 msgstr "ஆதாரங்கள்"
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
-#: model:ir.model.fields,help:utm.field_crm_lead_campaign_id
-#: model:ir.model.fields,help:utm.field_hr_applicant_campaign_id
-#: model:ir.model.fields,help:utm.field_link_tracker_campaign_id
-#: model:ir.model.fields,help:utm.field_sale_order_campaign_id
-#: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
+#: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"இது உங்கள் வெவ்வேறு பிரச்சார முயற்சிகளை கண்காணிக்க உதவும் ஒரு பெயர், எ.கா. "
+"Fall_Drive, Christmas_Special"
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice_medium_id
-#: model:ir.model.fields,help:utm.field_crm_lead_medium_id
-#: model:ir.model.fields,help:utm.field_hr_applicant_medium_id
-#: model:ir.model.fields,help:utm.field_link_tracker_medium_id
-#: model:ir.model.fields,help:utm.field_sale_order_medium_id
-#: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
-msgstr ""
+#: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr "இது விநியோக முறை, எ.கா. அஞ்சலட்டை, மின்னஞ்சல் அல்லது பதாகை விளம்பரம்"
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice_source_id
-#: model:ir.model.fields,help:utm.field_crm_lead_source_id
-#: model:ir.model.fields,help:utm.field_hr_applicant_source_id
-#: model:ir.model.fields,help:utm.field_link_tracker_source_id
-#: model:ir.model.fields,help:utm.field_sale_order_source_id
-#: model:ir.model.fields,help:utm.field_utm_mixin_source_id
+#: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
-"This is the source of the link Ex:Search Engine, another domain,or name of "
-"email list"
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
 msgstr ""
+"இது இணைப்புக்கான ஆதாரம், எ.கா. தேடல் பொறி, மற்றொரு டொமைன் அல்லது மின்னஞ்சல் "
+"பட்டியலில் பெயர்"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
@@ -249,14 +217,26 @@ msgid "Twitter"
 msgstr "ட்விட்டர்"
 
 #. module: utm
-#: model:ir.ui.menu,name:utm.marketing_utm
-msgid "UTMs"
-msgstr "UTMs"
+#: model:ir.model,name:utm.model_utm_campaign
+msgid "UTM Campaign"
+msgstr ""
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_medium
+msgid "UTM Medium"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
-msgid "utm.mixin"
-msgstr "utm.mixin"
+msgid "UTM Mixin"
+msgstr ""
 
-#~ msgid "Email Campaign - Products"
-#~ msgstr "மின்னஞ்சல் பிரச்சாரம் - பொருட்கள்"
+#. module: utm
+#: model:ir.model,name:utm.model_utm_source
+msgid "UTM Source"
+msgstr ""
+
+#. module: utm
+#: model:ir.ui.menu,name:utm.marketing_utm
+msgid "UTMs"
+msgstr "UTMs"

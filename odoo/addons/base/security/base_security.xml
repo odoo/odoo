@@ -34,37 +34,6 @@
             <field name="perm_write" eval="False"/>
         </record>
 
-        <!-- Security restriction for private addresses -->
-        <record id="res_partner_rule_private_employee" model="ir.rule">
-            <field name="name">res.partner.rule.private.employee</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">
-                [('type', '!=', 'private')]
-            </field>
-            <field name="groups" eval="[
-                (4, ref('base.group_user')),
-            ]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-        <!-- Relex previous rule for group_private_addresses -->
-        <record id="res_partner_rule_private_group" model="ir.rule">
-            <field name="name">res.partner.rule.private.group</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">
-                [('type', '=', 'private')]
-            </field>
-            <field name="groups" eval="[
-                (4, ref('base.group_private_addresses'))
-            ]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
         <record model="ir.rule" id="ir_default_user_rule">
             <field name="name">Defaults: alter personal defaults</field>
             <field name="model_id" ref="model_ir_default"/>

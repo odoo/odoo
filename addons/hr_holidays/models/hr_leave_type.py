@@ -162,20 +162,32 @@ class HolidaysType(models.Model):
 
         for request in requests:
             status_dict = result[request.holiday_status_id.id]
-            status_dict['virtual_remaining_leaves'] -= request.number_of_days
+            status_dict['virtual_remaining_leaves'] -= (request.number_of_hours_display
+                                                    if request.leave_type_request_unit == 'hour'
+                                                    else request.number_of_days)
             if request.state == 'validate':
-                status_dict['leaves_taken'] += request.number_of_days
-                status_dict['remaining_leaves'] -= request.number_of_days
+                status_dict['leaves_taken'] += (request.number_of_hours_display
+                                            if request.leave_type_request_unit == 'hour'
+                                            else request.number_of_days)
+                status_dict['remaining_leaves'] -= (request.number_of_hours_display
+                                                if request.leave_type_request_unit == 'hour'
+                                                else request.number_of_days)
 
-        for allocation in allocations:
+        for allocation in allocations.sudo():
             status_dict = result[allocation.holiday_status_id.id]
             if allocation.state == 'validate':
                 # note: add only validated allocation even for the virtual
                 # count; otherwise pending then refused allocation allow
                 # the employee to create more leaves than possible
-                status_dict['virtual_remaining_leaves'] += allocation.number_of_days
-                status_dict['max_leaves'] += allocation.number_of_days
-                status_dict['remaining_leaves'] += allocation.number_of_days
+                status_dict['virtual_remaining_leaves'] += (allocation.number_of_hours_display
+                                                          if allocation.type_request_unit == 'hour'
+                                                          else allocation.number_of_days)
+                status_dict['max_leaves'] += (allocation.number_of_hours_display
+                                            if allocation.type_request_unit == 'hour'
+                                            else allocation.number_of_days)
+                status_dict['remaining_leaves'] += (allocation.number_of_hours_display
+                                                  if allocation.type_request_unit == 'hour'
+                                                  else allocation.number_of_days)
 
         return result
 
@@ -247,7 +259,10 @@ class HolidaysType(models.Model):
             if record.allocation_type != 'no':
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
-                    'count': _('%g remaining out of %g') % (float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0, float_round(record.max_leaves, precision_digits=2) or 0.0)
+                    'count': _('%g remaining out of %g') % (
+                        float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
+                        float_round(record.max_leaves, precision_digits=2) or 0.0,
+                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
                 }
             res.append((record.id, name))
         return res

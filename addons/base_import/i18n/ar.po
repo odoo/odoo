@@ -3,7 +3,6 @@
 # * base_import
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
@@ -11,13 +10,15 @@
 # Osoul <baruni@osoul.ly>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "%d records were successfully imported"
-msgstr ""
+msgstr "تم استيراد السجلات %d بنجاح"
 
 #. module: base_import
 #. openerp-web
@@ -47,7 +48,7 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"تم العثور على عمود وحيد في الملف. هذا عادة يعني أنك اخترت فاصل غير صحيح."
+"تم العثور على عمود وحيد في الملف. هذا عادة يعني أنك اخترت فاصل غير صحيح"
 
 #. module: base_import
 #. openerp-web
@@ -59,6 +60,9 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"حدث خطأ غير معروف أثناء الاستيراد (قد يكون الاتصال انقطع، أو تم تجاوز الحد "
+"الأقصى للبيانات أو للذاكرة). برجاء إعادة المحاولة ربما تزول المشكلة. وإلا، "
+"جرب تقسيم الملف بدلًا من استيراده مرة واحدة."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -68,12 +72,12 @@ msgstr "الأساس"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "الاستيراد الأساسي"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "ربط الاستيراد الأساسي"
 
 #. module: base_import
 #. openerp-web
@@ -86,18 +90,18 @@ msgstr "إلغاء"
 #: code:addons/base_import/models/base_import.py:693
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "العمود %s يحتوي قيم غير صحيحة (القيمة: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "العمود %s يحتوي قيم غير صحيحة. الخطأ في السطر %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "اسم العمود"
 
 #. module: base_import
 #. openerp-web
@@ -114,13 +118,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"لم نستطع الوصول للرابط: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "إنشاءه إذا لم يوجد"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -173,6 +179,8 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"ينشئ سجلات جديدة إذا لم يستطع إيجادهم (بدلًا من فشل الاستيراد). لاحظ أن قيمة"
+" العمود ستُستخدم كاسم السجل الجديد، ويفترض أن هذا كافي لإنشاء السجل."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -185,35 +193,35 @@ msgstr "العملة"
 #: code:addons/base_import/models/base_import.py:212
 #, python-format
 msgid "Database ID"
-msgstr "معرف قاعدة البيانات"
+msgstr "مُعرف قاعدة البيانات"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:83
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "تنسيق التاريخ:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:84
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "تنسيق التاريخ والوقت:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:88
 #, python-format
 msgid "Decimal Separator:"
-msgstr ""
+msgstr "فاصل الخانات العشرية:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "تأجيل حسابات الأصل والفرع"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -248,7 +256,7 @@ msgstr "لا تستورد"
 #: code:addons/base_import/static/src/js/import_action.js:229
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "دوت"
 
 #. module: base_import
 #. openerp-web
@@ -260,7 +268,7 @@ msgstr "تنزيل"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "دوت"
 
 #. module: base_import
 #. openerp-web
@@ -273,34 +281,34 @@ msgstr "الترميز:"
 #: code:addons/base_import/models/base_import.py:790
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "خطأ في تفسير البيانات [%s:L%d]: %s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr ""
+msgstr "تم العثور على خطأ بخلية عند قراءة ملف XLS/XLSX: %s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:624
 #, python-format
 msgid "Everything seems valid."
-msgstr "كل شيء يبدو صالحاً."
+msgstr "كل شيء يبدو صالحًا."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:82
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
+msgstr "ننصح باستخدام ملفات Excel لأن الحقول منسقة تلقائيًا."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
 #: code:addons/base_import/models/base_import.py:206
 #, python-format
 msgid "External ID"
-msgstr "المعرف الخارجي"
+msgstr "المُعرف الخارجي"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -327,26 +335,26 @@ msgstr "نوع الملف"
 #: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "حجم الملف يتجاوز الحد الأقصى المضبوط (%s بايت)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "File to check and/or import, raw binary (not base64)"
+msgstr "الملف المراد فحصه و/أو استيراده، يكون ملف تنفيذي خام (لا يكون base64)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "لملف CSV، ربما تحتاج لاختيار الفاصل الصحيح."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:13
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "خيارات التنسيق…"
 
 #. module: base_import
 #. openerp-web
@@ -388,7 +396,7 @@ msgstr "إليك بداية الملف الذي لم يمكن استيراده:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
 msgid "ID"
-msgstr "المعرف"
+msgstr "المُعرف"
 
 #. module: base_import
 #. openerp-web
@@ -400,10 +408,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
-"If the file contains\n"
-"                the column names, Odoo can try auto-detecting the\n"
-"                field corresponding to the column. This makes imports\n"
-"                simpler especially when the file has many columns."
+"إذا احتوى الملف على\n"
+"                أسماء الأعمدة، يستطيع أودو أن يحاول كشف\n"
+"                الحقل المقابل للعمود تلقائيًا. مما يسهل عملية الاستيراد\n"
+"                خاصة عندما يحتوي الملف على أعمدة كثيرة."
 
 #. module: base_import
 #. openerp-web
@@ -414,9 +422,9 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
-"If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
+"إذا استخدم الكائن  تطبيق المحادثات، سيقوم تتبع السجلات"
+"                              بإعداد اشتراكات وإرسال إشعارات"
+"                             خلال عملية الاستيراد، لكن هذا سيبطئ العملية."
 
 #. module: base_import
 #. openerp-web
@@ -427,6 +435,9 @@ msgid ""
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
 msgstr ""
+"إذا كان الكائن يستخدم علاقات الأصل والفرع، يتم احتساب                     "
+"علاقة العنصر الأصلي والتابع على كل بند، مما يبطئ عملية الاستيراد."
+"                     ترحيل العلاقة يمكن أن يزيد من سرعة العملية."
 
 #. module: base_import
 #. openerp-web
@@ -441,7 +452,7 @@ msgstr "استيراد"
 #: code:addons/base_import/static/src/xml/base_import.xml:91
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "استيراد الأسئلة المتكررة"
 
 #. module: base_import
 #. openerp-web
@@ -455,7 +466,7 @@ msgstr "استيراد ملف"
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "تم اكتمال الاستيراد"
 
 #. module: base_import
 #. openerp-web
@@ -473,6 +484,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"انتهت مهلة الاستيراد. برجاء المحاولة مرة أخرى. إذا استمرت المشكلة، قد يكون "
+"الملف أكبر من إعدادات نظامنا، حاول تجزئته (من خلال استيراد سجلات أقل لكل "
+"ملف)."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -542,26 +556,26 @@ msgstr "آخر تحديث في"
 #: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "تحميل ملف"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:364
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "تحميل ملف جديد"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:41
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "قم بربط الأعمدة لتتم عملية الاستيراد"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr "النموذج"
+msgstr "الكائن"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
@@ -573,26 +587,26 @@ msgstr "الاسم"
 #: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "تحتاج للمساعدة؟"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:231
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "بلا فاصل"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:513
 #, python-format
 msgid "Normal Fields"
-msgstr "Normal Fields"
+msgstr "الحقول العادية"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
 msgid "Other Variable"
-msgstr "Other Variable"
+msgstr "القيم الأخرى"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
@@ -604,33 +618,33 @@ msgstr "الأصل"
 #: code:addons/base_import/static/src/js/import_action.js:514
 #, python-format
 msgid "Relation Fields"
-msgstr "Relation Fields"
+msgstr "حقول العلاقة"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:100
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "إعادة تحميل الملف"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr ""
+msgstr "كائن Res"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:79
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "اختر ملف CSV أو ملف Excel ليتم استيراده."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:212
 #, python-format
 msgid "Semicolon"
-msgstr "Semicolon"
+msgstr "فاصلة منقوطة"
 
 #. module: base_import
 #. openerp-web
@@ -644,115 +658,115 @@ msgstr "الفاصل:"
 #: code:addons/base_import/static/src/xml/base_import.xml:66
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "إظهار حقول العلاقة (خيار متقدم)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
 msgid "Some Value"
-msgstr "Some Value"
+msgstr "قيمة ما"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:214
 #, python-format
 msgid "Space"
-msgstr "Space"
+msgstr "مسافة"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:213
 #, python-format
 msgid "Tab"
-msgstr "Tab"
+msgstr "تبويب"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:99
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "استيراد الاختبار"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "اختبارات: معاينة كائن الاستيراد الأساسي"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، حرف"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، الحرف غير مقروء فقط"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، الحرف مقروء فقط"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، الحرف مطلوب"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، حالات الحرف"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، لا يزال الحرف مقروء فقط"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، متعدد بواحد"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، علاقة متعدد بواحد"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، مطلوب متعدد بواحد"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، مطلوب علاقة متعدد بواحد"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، واحد بمتعدد"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، تابع واحد بمتعدد"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، مركب"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "اختبارات: كائن الاستيراد الأساسي، عشري"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:80
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "محدد النص:"
 
 #. module: base_import
 #. openerp-web
@@ -762,26 +776,28 @@ msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
+"العمود الأول\n"
+"                 يحتوي عنوان العمود"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:87
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "فاصل الآلاف:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:47
 #, python-format
 msgid "Track history during import"
-msgstr "Track history during import"
+msgstr "تتبع الذاكرة خلال الاستيراد"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:254
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
+msgstr "لا نستطيع تحميل الملف \"{extension}\": نحتاج لموديول البايثون \"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:255
@@ -789,6 +805,7 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
+"صيغة الملف غير مدعومة \"{}\", الاستيراد يدعم ملفات CSV وODS وXLS و XLSX فقط"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -815,7 +832,7 @@ msgstr "القيمة"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "القيمة2"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:760
@@ -824,23 +841,24 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"لا يمكنك استيراد صور بروابط، راجع الأمر مع مديرك أو خدمة الدعم لمعرفة السبب."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:631
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "You must configure at least one field to import"
+msgstr "يجب أن تقوم بإعداد حقل واحد على الأقل لتتمكن من الاستيراد"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:641
 #, python-format
 msgid "at row %d"
-msgstr "at row %d"
+msgstr "في الصف %d"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:643
 #, python-format
 msgid "between rows %d and %d"
-msgstr "between rows %d and %d"
+msgstr "بين الصفين %d و%d"

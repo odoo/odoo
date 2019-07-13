@@ -18,7 +18,7 @@ class SaleOrderTemplate(models.Model):
 
     name = fields.Char('Quotation Template', required=True)
     sale_order_template_line_ids = fields.One2many('sale.order.template.line', 'sale_order_template_id', 'Lines', copy=True)
-    note = fields.Text('Terms and conditions')
+    note = fields.Text('Terms and conditions', translate=True)
     sale_order_template_option_ids = fields.One2many('sale.order.template.option', 'sale_order_template_id', 'Optional Products', copy=True)
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
@@ -120,7 +120,10 @@ class SaleOrderTemplateOption(models.Model):
             return
         product = self.product_id
         self.price_unit = product.list_price
-        self.name = product.name
+        name = product.name
+        if self.product_id.description_sale:
+            name += '\n' + self.product_id.description_sale
+        self.name = name
         self.uom_id = product.uom_id
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}

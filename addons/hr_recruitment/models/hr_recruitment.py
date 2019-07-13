@@ -215,12 +215,12 @@ class Applicant(models.Model):
     def _onchange_job_id_internal(self, job_id):
         department_id = False
         user_id = False
-        stage_id = self.stage_id.id
+        stage_id = self.stage_id.id or self._context.get('default_stage_id')
         if job_id:
             job = self.env['hr.job'].browse(job_id)
             department_id = job.department_id.id
             user_id = job.user_id.id
-            if not self.stage_id:
+            if not stage_id:
                 stage_ids = self.env['hr.recruitment.stage'].search([
                     '|',
                     ('job_id', '=', False),

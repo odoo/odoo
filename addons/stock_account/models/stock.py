@@ -89,7 +89,10 @@ class StockMoveLine(models.Model):
         if 'qty_done' in vals:
             moves_to_update = {}
             for move_line in self.filtered(lambda ml: ml.state == 'done' and (ml.move_id._is_in() or ml.move_id._is_out())):
-                moves_to_update[move_line.move_id] = vals['qty_done'] - move_line.qty_done
+                rounding = move_line.product_uom_id.rounding
+                qty_difference = float_round(vals['qty_done'] - move_line.qty_done, precision_rounding=rounding)
+                if not float_is_zero(qty_difference, precision_rounding=rounding):
+                    moves_to_update[move_line.move_id] = qty_difference
 
             for move_id, qty_difference in moves_to_update.items():
                 move_vals = {}
@@ -156,24 +159,50 @@ class StockMove(models.Model):
 
     @api.model
     def _get_in_base_domain(self, company_id=False):
+        # Domain:
+        # - state is done
+        # - coming from a location without company, or an inventory location within the same company
+        # - going to a location within the same company
         domain = [
             ('state', '=', 'done'),
-            ('location_id.company_id', '=', False),
-            ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id)
+            '&',
+                '|',
+                    ('location_id.company_id', '=', False),
+                    '&',
+                        ('location_id.usage', 'in', ['inventory', 'production']),
+                        ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
+                ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
         ]
         return domain
 
     @api.model
     def _get_all_base_domain(self, company_id=False):
+        # Domain:
+        # - state is done
+        # Then, either 'in' or 'out' moves.
+        # 'in' moves:
+        # - coming from a location without company, or an inventory location within the same company
+        # - going to a location within the same company
+        # 'out' moves:
+        # - coming from to a location within the same company
+        # - going to a location without company, or an inventory location within the same company
         domain = [
             ('state', '=', 'done'),
             '|',
                 '&',
-                    ('location_id.company_id', '=', False),
+                    '|',
+                        ('location_id.company_id', '=', False),
+                        '&',
+                            ('location_id.usage', 'in', ['inventory', 'production']),
+                            ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
                     ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
                 '&',
                     ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
-                    ('location_dest_id.company_id', '=', False)
+                    '|',
+                        ('location_dest_id.company_id', '=', False),
+                        '&',
+                            ('location_dest_id.usage', '=', 'inventory'),
+                            ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
         ]
         return domain
 
@@ -241,7 +270,7 @@ class StockMove(models.Model):
 
         # Find back incoming stock moves (called candidates here) to value this move.
         qty_to_take_on_candidates = quantity or valued_quantity
-        candidates = move.product_id._get_fifo_candidates_in_move()
+        candidates = move.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
@@ -278,7 +307,7 @@ class StockMove(models.Model):
         if qty_to_take_on_candidates == 0:
             move.write({
                 'value': -tmp_value if not quantity else move.value or -tmp_value,  # outgoing move are valued negatively
-                'price_unit': -tmp_value / move.product_qty,
+                'price_unit': -tmp_value / (move.product_qty or quantity),
             })
         elif qty_to_take_on_candidates > 0:
             last_fifo_price = new_standard_price or move.product_id.standard_price
@@ -295,6 +324,7 @@ class StockMove(models.Model):
 
     def _run_valuation(self, quantity=None):
         self.ensure_one()
+        value_to_return = 0
         if self._is_in():
             valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued() and not ml.owner_id)
             valued_quantity = 0
@@ -352,7 +382,7 @@ class StockMove(models.Model):
                 'value': value_to_return,
                 'price_unit': price_unit if self._is_dropshipped() else -price_unit,
             })
-            return value_to_return
+        return value_to_return
 
     def _action_done(self):
         self.product_price_update_before_done()
@@ -383,11 +413,11 @@ class StockMove(models.Model):
         tmpl_dict = defaultdict(lambda: 0.0)
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
-        for move in self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average'):
+        for move in self.filtered(lambda move: move._is_in() and move.product_id.cost_method == 'average'):
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
-            qty_done = 0.0
+            qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
             elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
@@ -396,9 +426,8 @@ class StockMove(models.Model):
             else:
                 # Get the standard price
                 amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.standard_price
-                qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
                 qty = forced_qty or qty_done
-                new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty_done)
+                new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty)
 
             tmpl_dict[move.product_id.id] += qty_done
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
@@ -485,10 +514,8 @@ class StockMove(models.Model):
             'product_variant_ids')
         fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
         fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
-        moves_to_vacuum = self.env['stock.move']
-        for product in fifo_valued_products:
-            moves_to_vacuum |= self.search(
-                [('product_id', '=', product.id), ('remaining_qty', '<', 0)] + self._get_all_base_domain())
+        moves_to_vacuum = self.search(
+            [('product_id', 'in', fifo_valued_products.ids), ('remaining_qty', '<', 0)] + self._get_all_base_domain())
         moves_to_vacuum._fifo_vacuum()
 
     @api.multi
@@ -539,7 +566,7 @@ class StockMove(models.Model):
         debit_value = self.company_id.currency_id.round(valuation_amount)
 
         # check that all data is correct
-        if self.company_id.currency_id.is_zero(debit_value):
+        if self.company_id.currency_id.is_zero(debit_value) and not self.env['ir.config_parameter'].sudo().get_param('stock_account.allow_zero_cost'):
             raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.display_name,))
         credit_value = debit_value
 

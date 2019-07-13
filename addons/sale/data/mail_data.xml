@@ -56,7 +56,7 @@
     </data>
     <!-- Template and notification section -->
     <data noupdate="1">
-        <template id="" inherit_id="mail.mail_notification_paynow" name="oezirhgoi">
+        <template id="mail_notification_paynow_online" inherit_id="mail.mail_notification_paynow" name="oezirhgoi">
             <xpath expr="//t[@t-set='access_name']" position="after">
                 <t t-if="record._name == 'sale.order'">
                     <t t-if="record.has_to_be_signed()">
@@ -102,7 +102,7 @@
 </div>
             </field>
             <field name="report_template" ref="action_report_saleorder"/>
-            <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>

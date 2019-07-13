@@ -44,7 +44,13 @@ class ProductAttribute(models.Model):
             if products:
                 message = ', '.join(products.mapped('name'))
                 raise UserError(_('You are trying to change the type of an attribute value still referenced on at least one product template: %s') % message)
-        return super(ProductAttribute, self).write(vals)
+        invalidate_cache = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
+        res = super(ProductAttribute, self).write(vals)
+        if invalidate_cache:
+            # prefetched o2m have to be resequenced
+            # (eg. product.template: attribute_line_ids)
+            self.invalidate_cache()
+        return res
 
     @api.multi
     def _get_related_product_templates(self):
@@ -77,6 +83,16 @@ class ProductAttributeValue(models.Model):
     @api.multi
     def _variant_name(self, variable_attributes):
         return ", ".join([v.name for v in self if v.attribute_id in variable_attributes])
+
+    @api.multi
+    def write(self, values):
+        invalidate_cache = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
+        res = super(ProductAttributeValue, self).write(values)
+        if invalidate_cache:
+            # prefetched o2m have to be resequenced
+            # (eg. product.template.attribute.line: value_ids)
+            self.invalidate_cache()
+        return res
 
     @api.multi
     def unlink(self):
@@ -136,8 +152,8 @@ class ProductTemplateAttributeLine(models.Model):
         for product_template_attribute_line in self:
             product_template_attribute_line.product_template_value_ids = self.env['product.template.attribute.value'].search([
                 ('product_tmpl_id', 'in', product_template_attribute_line.product_tmpl_id.ids),
-                ('product_attribute_value_id.attribute_id', 'in', product_template_attribute_line.value_ids.mapped('attribute_id').ids)]
-            ).sorted(lambda product_product_attribute: product_product_attribute.sequence)
+                ('product_attribute_value_id', 'in', product_template_attribute_line.value_ids.ids)]
+            )
 
     @api.multi
     def unlink(self):
@@ -246,9 +262,9 @@ class ProductTemplateAttributeExclusion(models.Model):
     _description = 'Product Template Attribute Exclusion'
 
     product_template_attribute_value_id = fields.Many2one(
-        'product.template.attribute.value', string="Attribute Value", ondelete='cascade')
+        'product.template.attribute.value', string="Attribute Value", ondelete='cascade', index=True)
     product_tmpl_id = fields.Many2one(
-        'product.template', string='Product Template', ondelete='cascade', required=True)
+        'product.template', string='Product Template', ondelete='cascade', required=True, index=True)
     value_ids = fields.Many2many(
         'product.template.attribute.value', relation="product_attr_exclusion_value_ids_rel",
         string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id)]")

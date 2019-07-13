@@ -300,6 +300,7 @@ var KanbanRecord = Widget.extend({
         // field's widgets point of view
         // that dict being shared between records, we don't modify it
         // in place
+        var self = this;
         var attrs = Object.create(null);
         _.each(this.fieldsInfo[field_name], function (value, key) {
             if (_.str.startsWith(key, 't-att-')) {
@@ -310,11 +311,12 @@ var KanbanRecord = Widget.extend({
         });
         var options = _.extend({}, this.options, {attrs: attrs});
         var widget = new Widget(this, field_name, this.state, options);
-        var def = widget.replace($field);
+        var def = widget.replace($field).then(function () {
+            self._setFieldDisplay(widget.$el, field_name);
+        });
         if (def.state() === 'pending') {
             this.defs.push(def);
         }
-        this._setFieldDisplay(widget.$el, field_name);
         return widget;
     },
     _processWidgets: function () {
@@ -324,12 +326,13 @@ var KanbanRecord = Widget.extend({
             var Widget = widgetRegistry.get($field.attr('name'));
             var widget = new Widget(self, self.state);
 
-            var def = widget._widgetRenderAndInsert(function () {});
+            var def = widget._widgetRenderAndInsert(function () {}).then(function () {
+                widget.$el.addClass('o_widget');
+                $field.replaceWith(widget.$el);
+            });
             if (def.state() === 'pending') {
                 self.defs.push(def);
             }
-            widget.$el.addClass('o_widget');
-            $field.replaceWith(widget.$el);
         });
     },
     /**

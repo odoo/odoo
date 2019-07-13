@@ -259,7 +259,9 @@ class Product(models.Model):
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
-        for product in self.with_context(prefetch_fields=False).search([]):
+        # Order the search on `id` to prevent the default order on the product name which slows
+        # down the search because of the join on the translation table to get the translated names.
+        for product in self.with_context(prefetch_fields=False).search([], order='id'):
             if OPERATORS[operator](product[field], value):
                 ids.append(product.id)
         return [('id', 'in', ids)]
@@ -456,6 +458,10 @@ class ProductTemplate(models.Model):
     def _is_cost_method_standard(self):
         return True
 
+    @api.depends(
+        'product_variant_ids',
+        'product_variant_ids.stock_quant_ids',
+    )
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
@@ -570,6 +576,8 @@ class ProductTemplate(models.Model):
                 }
 
     def action_open_quants(self):
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
         action['domain'] = [('product_id', 'in', products.ids)]

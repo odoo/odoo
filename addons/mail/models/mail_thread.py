@@ -110,7 +110,7 @@ class MailThread(models.AbstractModel):
         'Number of error', compute='_compute_message_has_error',
         help="Number of messages with delivery error")
     message_attachment_count = fields.Integer('Attachment Count', compute='_compute_message_attachment_count')
-    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', index=True)
+    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', index=True, copy=False)
 
     @api.one
     @api.depends('message_follower_ids')
@@ -237,7 +237,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_error(self, operator, operand):
-        return [('message_ids.has_error', operator, operand)]
+        return ['&', ('message_ids.has_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
     @api.multi
     def _compute_message_attachment_count(self):
@@ -694,6 +694,10 @@ class MailThread(models.AbstractModel):
             params['token'] = token
 
         link = '%s?%s' % (base_link, url_encode(params))
+
+        if self and hasattr(self, 'get_base_url'):
+            link = self[0].get_base_url() + link
+
         return link
 
     @api.multi
@@ -742,7 +746,9 @@ class MailThread(models.AbstractModel):
         access_link = self._notify_get_action_link('view')
 
         if message.model:
-            model_name = self.env['ir.model']._get(message.model).display_name
+            model = self.env['ir.model'].with_context(
+                lang=self.env.context.get('lang', self.env.user.lang))
+            model_name = model._get(message.model).display_name
             view_title = _('View %s') % model_name
         else:
             view_title = _('View')
@@ -1337,7 +1343,8 @@ class MailThread(models.AbstractModel):
                 subtype = 'mail.mt_note'
                 if message_dict.get('parent_id'):
                     parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
-                    partner_ids = [(4, parent_message.author_id.id)]
+                    if parent_message.author_id:
+                        partner_ids = [(4, parent_message.author_id.id)]
             else:
                 subtype = 'mail.mt_comment'
 
@@ -1936,7 +1943,7 @@ class MailThread(models.AbstractModel):
                 if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
-            :param str type: see mail_message.type field
+            :param str type: see mail_message.message_type field
             :param int parent_id: handle reply to a previous message by adding the
                 parent partners to the message in case of private discussion
             :param tuple(str,str) attachments or list id: list of attachment tuples in the form
@@ -2069,7 +2076,7 @@ class MailThread(models.AbstractModel):
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
                                      or all_attachments
-            self.write({'message_main_attachment_id': prioritary_attachments[0].id})
+            self.sudo().write({'message_main_attachment_id': prioritary_attachments[0].id})
         # Notify recipients of the newly-created message (Inbox / Email + channels)
         if msg_vals.get('moderation_status') != 'pending_moderation':
             message._notify(

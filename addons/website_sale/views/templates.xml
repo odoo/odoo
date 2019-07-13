@@ -32,6 +32,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_zoom.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_dynamic_variants.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_deleted_archived_variants.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_list_view_b2c.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_no_variant_attribute.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_options.js"></script>
         </xpath>
@@ -46,6 +47,8 @@
     <template id="assets_common" name="tour" inherit_id="web.assets_common">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_cart_recovery.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_mail.js"></script>
         </xpath>
     </template>
 
@@ -99,9 +102,7 @@
     <template id="products_item" name="Products item">
         <t t-set="product_href" t-value="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
 
-        <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
-        <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
-        <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
+        <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1, pricelist=pricelist)"/>
 
         <form action="/shop/cart/update" method="post">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -111,8 +112,7 @@
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="product_href">
-                        <span t-if="product_variant" itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.product/{{product_variant.id}}/image" t-field="product_variant.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
-                        <span t-else="" itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
+                        <span t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300'}"/>
                     </a>
                 </div>
                 <t t-if="show_publish">
@@ -134,7 +134,7 @@
                             <t t-if="True"><!-- compatibility 12.0 -->
                                 <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </t>
-                            <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                            <span t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                         </b>
@@ -154,15 +154,10 @@
 
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
-            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-            <input name="product_id" t-att-value="product_variant.id" type="hidden" />
-            <t t-if="product._is_quick_add_to_cart_possible()">
+            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+            <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
+            <t t-if="product_variant_id">
                 <a href="#" role="button" class="btn btn-secondary btn-sm a-submit" aria-label="Shopping cart" title="Shopping cart">
-                    <span class="fa fa-shopping-cart" />
-                </a>
-            </t>
-            <t t-elif="product._is_add_to_cart_possible()">
-                <a role="button" class="btn btn-secondary btn-sm" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
@@ -413,9 +408,10 @@
     <!-- /shop/product product page -->
     <template id="product_edit_options" inherit_id="website.user_navbar" name="Edit Product Options">
         <xpath expr="//li[@id='edit-page-menu']" position="after">
-            <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'product.product_template_action'" />
+            <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'website_sale.product_template_action_website'" />
         </xpath>
     </template>
+
     <template id="product" name="Product">
 
         <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
@@ -628,7 +624,7 @@
               <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
-          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(product.currency_id.decimal_places)">
+          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
             <span t-field="product.list_price"
                 t-options='{
                    "widget": "monetary",
@@ -660,12 +656,14 @@
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
                     <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control custom-radio">
-                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
+                        <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
+                        <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
+                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="combination_info['list_price']" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
                         <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label">
-                            <span t-esc="variant_id.name_get()[0][1]"/>
-                            <t t-set="diff_price" t-value="website.currency_id.compare_amounts(variant_id.price, variant_id.product_tmpl_id.price)"/>
-                            <span class="badge badge-pill" t-if="diff_price != 0">
-                                <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(variant_id.price - variant_id.product_tmpl_id.price)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                            <span t-esc="combination_info['display_name']"/>
+                            <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
+                            <span class="badge badge-pill badge-secondary" t-if="diff_price != 0">
+                                <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </span>
                         </label>
                     </div>
@@ -1288,7 +1286,7 @@
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
                 <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
                     <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                 </div>
                 <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
                     <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
@@ -1350,7 +1348,7 @@
                                     <t t-set="partner_id" t-value="partner"/>
 
                                     <t t-set="back_button_icon_class" t-value="'fa-chevron-left'"/>
-                                    <t t-set="back_button_txt" t-value="'Return to Cart'"/>
+                                    <t t-set="back_button_txt">Return to Cart</t>
                                     <t t-set="back_button_class" t-value="'btn btn-secondary'"/>
                                     <t t-set="back_button_link" t-value="'/shop/cart'"/>
                                 </t>
@@ -1366,7 +1364,7 @@
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <form target="_self" action="/shop/payment/validate" method="post" class="float-right">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <a role="button" class="btn btn-primary a-submit">
+                                    <a role="button" class="btn btn-primary a-submit" href="#">
                                         <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
                                         <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-chevron-right"></span></span>
                                     </a>
@@ -1606,8 +1604,7 @@
                         <span t-else="">An error occured while processing your payment. Please try again or contact your administrator.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
-                        <span t-if="payment_tx_id.acquirer_id.auth_msg" t-raw="payment_tx_id.acquirer_id.auth_msg"/>
-                        <span t-else="">Your payment has been authorized.</span>
+                        <span>Your payment has been authorized.</span>
                     </t>
                 </div>
                 <div t-if="payment_tx_id.acquirer_id.post_msg" t-att-class="'card-body %s' % (

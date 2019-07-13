@@ -305,9 +305,12 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 'context': self.model.getContext(),
             });
             _.each(result.handles, function (handle) {
-                self._getWidget(handle).destroy();
-                var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
-                self.widgets.splice(index, 1);
+                var widget = self._getWidget(handle);
+                if (widget) {
+                    widget.destroy();
+                    var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
+                    self.widgets.splice(index, 1);
+                }
             });
             // Get number of widget and if less than constant and if there are more to laod, load until constant
             if (self.widgets.length < self.model.defaultDisplayQty 

@@ -5,7 +5,6 @@
 # Translators:
 # Vladimir Lukianov <lvm.mobile@gmail.com>, 2018
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2018
-# Василий Коробатов <korobatov@gmail.com>, 2018
 # Gennady Marchenko <gennadym@gmail.com>, 2018
 # Алексей <noosvet@gmail.com>, 2018
 # Amaro Vita <vita.amaro@gmail.com>, 2018
@@ -15,14 +14,16 @@
 # Sergey Vilizhanin, 2018
 # Viktor Pogrebniak <vp@aifil.ru>, 2018
 # Martin Trigaux, 2018
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr ""
 #: code:addons/website/static/src/js/editor/snippets.options.js:1068
 #, python-format
 msgid " Add Images"
-msgstr ""
+msgstr "Добавить изображение"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -48,7 +49,7 @@ msgstr ""
 #: code:addons/website/models/website.py:388
 #, python-format
 msgid "%s (id:%s)"
-msgstr ""
+msgstr "%s (id:%s)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -83,6 +84,11 @@ msgstr "&раз;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "' did not match any pages."
+msgstr "' не соответствует ни одной странице."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.500
+msgid "(!!! This view will be removed )"
 msgstr ""
 
 #. module: website
@@ -90,7 +96,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.pageProperties.xml:33
 #, python-format
 msgid "(could be used in"
-msgstr ""
+msgstr "(может быть использовано в"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -123,7 +129,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.default_csv
 msgid "1,2,3"
-msgstr ""
+msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -154,7 +160,7 @@ msgstr "1s"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "2 <span class=\"sr-only\">(current)</span>"
-msgstr ""
+msgstr "2 <span class=\"sr-only\">(текущий)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -583,6 +589,28 @@ msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
 msgstr "<i class=\"fa fa-trash-o\"/>Удалить слайд"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page SEO optimized?\" class=\"fa fa-search\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid ""
+"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
+"tack\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<i>Instant setup, satisfied or reimbursed.</i>"
 msgstr "<i>Быстрая установка, удовлетворены или возмещены.</i>"
@@ -629,6 +657,20 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.company_description
+msgid ""
+"<span class=\"fa fa-map-marker fa-fw mt16\" role=\"img\" aria-"
+"label=\"Address\" title=\"Address\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil\"/>Edit"
 msgstr "<span class=\"fa fa-pencil\"/>Редактировать"
@@ -637,6 +679,11 @@ msgstr "<span class=\"fa fa-pencil\"/>Редактировать"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-plus\"/>New"
 msgstr "<span class=\"fa fa-plus\"/>Новый"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Sort\" title=\"Sort\"/>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page
@@ -652,6 +699,8 @@ msgid ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
 "plus-circle\"/> Add Images</span>"
 msgstr ""
+"<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
+"plus-circle\"/> Добавить изображения</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -680,6 +729,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"sr-only\">Toggle Dropdown</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.user_navbar
+msgid ""
+"<span title=\"Mobile preview\" role=\"img\" aria-label=\"Mobile preview\" "
+"class=\"fa fa-mobile\"/>"
 msgstr ""
 
 #. module: website
@@ -723,6 +779,9 @@ msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
 " performance to any visitor wherever they are located."
 msgstr ""
+"CDN помогает бытсрее получить доступ к статичному сожержимому важего сайта, "
+"повышая надежность и скорость доступа внезависимости от местоположения "
+"посетителей."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -1245,7 +1304,7 @@ msgstr "Компоненты"
 #. module: website
 #: model:ir.model,name:website.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Настройки конфигурации"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
@@ -1370,7 +1429,7 @@ msgstr "Пользовательский"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
 #: model:ir.model.fields,field_description:website.field_website__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Учетная запись заказчика"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -1659,7 +1718,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:7
 #, python-format
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Выпадающее меню"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -1968,7 +2027,7 @@ msgstr "Учетная запись на GitHub"
 #: code:addons/website/static/src/js/menu/content.js:51
 #, python-format
 msgid "Go To Page"
-msgstr ""
+msgstr "Перейти на страницу"
 
 #. module: website
 #. openerp-web
@@ -1988,7 +2047,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "Go to Website"
-msgstr ""
+msgstr "Перейти на сайт"
 
 #. module: website
 #. openerp-web
@@ -2121,7 +2180,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Маршрутизация HTTP"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -2352,7 +2411,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_instagram
 #: model:ir.model.fields,field_description:website.field_website__social_instagram
 msgid "Instagram Account"
-msgstr ""
+msgstr "Учетная запись Instagram"
 
 #. module: website
 #. openerp-web
@@ -3272,7 +3331,7 @@ msgstr "Просмотр"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Предыдущий"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons

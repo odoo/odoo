@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,19 +37,19 @@ msgstr "<strong>Нэр:</strong>"
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "Account Test Report"
-msgstr ""
+msgstr "Санхүүгийн тестийн тайлан"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "Accounting Assert Test"
-msgstr ""
+msgstr "Санхүүгийн тестийн шалгах зүйлс"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Санхүү Тэстүүд"
+msgstr "Санхүүгийн тест"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
@@ -63,8 +65,8 @@ msgstr "Идэвхитэй"
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
-"Хөдөлгөөний мөрүүд нь баланслагдсан, нэг огноо ба мөчлөгтэй байгаа эсэхийг "
-"шалгана уу"
+"Журналын бичилтүүд үлдэгдэл тэнцсэн бөгөөд ижил огноо ба мөчлөгтэй байгаа "
+"эсэхийг шалгана"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -72,14 +74,14 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
-"Банкны хуулга дээр Хаах Баланс = Эхлэх Баланс + хуулгын мөрүүдийн нийлбэр "
-"байгаа эсэхийг шалгана уу"
+"Банкны хуулга дээрх \"Хаалтын үлдэгдэл = Нээлтийн үлдэгдэл + хуулгын "
+"гүйлгээний нийлбэр\" шалгуурыг хангаж буй эсэхийг шалгана"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
-"Төлсөн/тулгагсан нэхэмжлэлүүд 'Нээлттэй' төлөвт байгаа эсэхийг шалган уу."
+"Төлөгдсөн/тулгагсан нэхэмжлэлүүд 'Нээлттэй' төлөвт байгаа эсэхийг шалгана."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -87,8 +89,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
-"Өглөг ба Авлагын дансыг тодорхойлогч тулгасан дансны хөдөлгөөнүүд нь "
-"тулгасан нэхэмжлэлд харьяалагдаж буй эсэхийг шалгана уу"
+"Нэхэмжлэл тулгалт хийж үүсч буй ажил гүйлгээний данс нь зөв Авлага эсвэл "
+"Өглөгийн төрөлтэй данс байгаа эсэхийг шалгана"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -96,8 +98,8 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
-"Борлуулалт/Худалдан авалтын тулгасан нэхэмжлэл доторх Өглөг ба Авлагын "
-"дансын оролтуудыг тулгасан эсэхийг шалгана уу"
+"Борлуулалт болон Худалдан авалтын нэхэмжлэлүүдийг тулгалт хийж буй ажил "
+"гүйлгээний данс нь Авлага эсвэл Өглөгийн данс мөн эсэхийг шалгана"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -133,19 +135,17 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Код нь үргэлж `result` нэртэй хувьсагчид жагсаалт эсвэл толь бичиг төрлийн таны тестийн үр \n"
-"дүнг оноох ёстой. Хэрэв `result` нь хоосон жагсаалт байвал тест амжилттай болсон гэсэн үг. \n"
-"Үгүй бол `result` доторхийг орчуулж хэвлэх гэж оролдоно.\n"
+"Код гэдэг нь 'result' нэртэй хувьсагч ашиглан таны тестийн үр дүнг (list эсвэл dictionary төрөлтэй) хадгална. \n"
+"Хэрэв `result` хоосон бол энэ нь тест амжилттай давсан гэсэн утгатай. \n"
+"Тест даваагүй тохиолдолд `result` доторхыг нээж үзүүлэхийг оролдоно.\n"
 "\n"
-"Хэрэв таны тестийн хариу толь бичиг бол `result`-н агуулгыг хэвлэх дарааллыг сонгохын тулд \n"
-"`column_order` хувьсагчид утга оноох боломжтой.\n"
+"Хэрэв тестийн үр дүн нь dictionary төрөлтэй байвал `column_order` нэртэй хувьсагч ашиглан `result`  доторх агуулгыг нээж харах боломжтой.\n"
 "\n"
-"Шаардлагатай бол мөн дараах хувьсагчуудыг ашиглах боломжтой:\n"
-"    * cr: өгөгдлийн сан руу заах курсор\n"
-"    * uid: идэвхитэй хэрэглэгчийн ID\n"
+"Дараах хувьсагчууд таны кодонд хэрэг болно:\n"
+" * cr: баазад хандах холболт\n"
+" * uid: ажиллаж буй хэрэглэгчийн ID\n"
 "\n"
-"Ямар ч байсан, код нь (шаардлагатай бол) зөв догол мөртэй албан ёсны python илэрхийлэл \n"
-"байх ёстой.\n"
+"Ямар ч тохиолдолд code нь зохих зөв дүрэм, синтаксын дагуу бичигдсэн байх ёстой.\n"
 "\n"
 "Жишээ: \n"
 "    sql = '''SELECT id, name, ref, date\n"
@@ -158,7 +158,7 @@ msgstr ""
 #. module: account_test
 #: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Create a new accounting test"
-msgstr ""
+msgstr "Шинээр санхүүгийн тест хийх"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
@@ -168,18 +168,18 @@ msgstr "Үүсгэгч"
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн"
+msgstr "Үүсгэсэн огноо"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
-msgstr "Тодорхойлолт"
+msgstr "Тайлбар"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
@@ -196,17 +196,17 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr "Сүүлд зассан этгээд"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
@@ -231,20 +231,19 @@ msgstr "Тест 1: Ерөнхий баланс"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr "Тест 3: Хөдөлгөөний мөрүүд"
+msgstr "Тест 3: Гүйлгээний мөрүүд"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
-"Тест 5.1 : Тулгасан нэхэмжлэлүүдийн авлага ба өглөгийн нягтлан бодогчийн "
-"мөрүүд"
+"Тест 5.1  : Тулгагдсан нэхэмжлэлүүдийн авлага ба өглөгийн дансны бичилтүүд"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr "Тэст 5.2 : Тулгагдсан нэхэмжлэлүүд ба  Авлага/Өглөгийн данснууд"
+msgstr "Тэст 5.2 : Тулгагдсан нэхэмжлэлүүд ба Авлага/Өглөгийн данснууд"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
@@ -254,7 +253,7 @@ msgstr "Тэст 6 : Нэхэмжлэлийн төлөв"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr "Тест 7 : Банкны хуулганд баланс хаах"
+msgstr "Тест 7 : Банкны хуулга дээрх хаалтын үлдэгдэл"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
@@ -276,4 +275,4 @@ msgstr "Тест"
 #: code:addons/account_test/report/report_account_test.py:53
 #, python-format
 msgid "The test was passed successfully"
-msgstr "Энэ тэст амжилттай давлаа"
+msgstr "Тест амжилттай давлаа"

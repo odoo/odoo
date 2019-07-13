@@ -112,11 +112,13 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     _onFieldChanged: function (event) {
         var self = this;
         event.stopPropagation();
+        var createValues = {'user_id': session.uid};
         var value = event.data.changes[this.write_field].id;
+        createValues[this.write_field] = value;
         this._rpc({
                 model: this.write_model,
                 method: 'create',
-                args: [{'user_id': session.uid,'partner_id': value,}],
+                args: [createValues],
             })
             .then(function () {
                 self.trigger_up('changeFilter', {
@@ -362,6 +364,11 @@ return AbstractRenderer.extend({
 
         this.$calendar = this.$(".o_calendar_widget");
 
+        // This seems like a workaround but apparently passing the locale
+        // in the options is not enough. We should initialize it beforehand
+        var locale = moment.locale();
+        $.fullCalendar.locale(locale);
+
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var fc_options = $.extend({}, this.state.fc_options, {
             eventDrop: function (event) {
@@ -414,6 +421,7 @@ return AbstractRenderer.extend({
             height: 'parent',
             unselectAuto: false,
             isRTL: _t.database.parameters.direction === "rtl",
+            locale: locale, // reset locale when fullcalendar has already been instanciated before now
         });
 
         this.$calendar.fullCalendar(fc_options);

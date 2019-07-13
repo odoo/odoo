@@ -15,23 +15,33 @@
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
-# amal ahmed <amalalhashemy88@hotmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# amal ahmed <amalalhashemy88@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2018\n"
+"Last-Translator: amal ahmed <amalalhashemy88@hotmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -62,7 +72,7 @@ msgstr "حالة النشاط"
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "نوع النشاط"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
@@ -106,7 +116,7 @@ msgstr "بالتصنيف"
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
 msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
+msgstr "قد يؤدي التصنيف لتفعيل أفعال معينة مثل فتح واجهة التقويم"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
@@ -416,7 +426,7 @@ msgstr ""
 #: selection:mail.activity.type,category:0
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "تذكير"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id

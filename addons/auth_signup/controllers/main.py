@@ -44,7 +44,7 @@ class AuthSignupHome(Home):
                             lang=user_sudo.lang,
                             auth_login=werkzeug.url_encode({'auth_login': user_sudo.email}),
                         ).send_mail(user_sudo.id, force_send=True)
-                return super(AuthSignupHome, self).web_login(*args, **kw)
+                return self.web_login(*args, **kw)
             except UserError as e:
                 qcontext['error'] = e.name or e.value
             except (SignupError, AssertionError) as e:
@@ -69,7 +69,7 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
-                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                    return self.web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
                     assert login, _("No login provided.")

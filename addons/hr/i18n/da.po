@@ -8,19 +8,20 @@
 # Morten Schou <ms@msteknik.dk>, 2018
 # JonathanStein <jstein@image.dk>, 2018
 # Jesper Carstensen <jc@danodoo.dk>, 2018
-# Martin Trigaux, 2018
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
-# Ejner Sønniksen <ejner@vkdata.dk>, 2018
 # lhmflexerp <lhm@flexerp.dk>, 2018
-# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Martin Trigaux, 2019
+# Joe Hansen <joedalton2@yahoo.dk>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,11 @@ msgstr "%s (kopi)"
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -75,6 +81,14 @@ msgstr "<i>Du er selvstændig og lærer hurtigt</i>"
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
 msgstr "<i>Du kan let håndtere dem</i>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -189,7 +203,10 @@ msgid "Additional Note"
 msgstr "Supplerende note"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Alias kontakt sikkerhed"
 
@@ -456,8 +473,8 @@ msgstr "Afdelinger"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
-msgstr "Diskussionskanal"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -631,6 +648,11 @@ msgstr "Følgere (partnere)"
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
 msgstr "Kun følgere"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Fremtidige aktiviteter"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -884,6 +906,11 @@ msgstr "Sidst opdateret af"
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Overskredede aktiviteter"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1191,7 +1218,10 @@ msgid "Planned"
 msgstr "Planlagt"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1514,6 +1544,11 @@ msgid "Today"
 msgstr "I dag"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Dagens aktiviteter"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Totalt forventet antal medarbejdere"
@@ -1625,6 +1660,20 @@ msgstr ""
 " lave produkter som folk elsker at bruge. Vi har brug for nogen som er "
 "ambitiøse, passionerede og .... som ikke er bange for at starte nye ting, en"
 " masse nye ting og skalere dem."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "Beskeder fra hjemmesiden"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "Website kommunikations historik"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1858,6 +1907,9 @@ msgid ""
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
+"Du vil være ansvarlig for udvikling og forbedring af programmer. Du vil "
+"arbejde selvstændigt samt koordinere og overvåge små spredte udviklingshold "
+"for specifikke projekter. Du vil blive teknisk ekspert for produktet."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1897,7 +1949,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "You will report to the head of R&amp;D"
-msgstr ""
+msgstr "Du vil referere til lederen af F&U"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer

@@ -59,7 +59,11 @@ class Job(models.Model):
 
     def get_alias_values(self):
         values = super(Job, self).get_alias_values()
-        values['alias_defaults'] = {'job_id': self.id}
+        values['alias_defaults'] = {
+            'job_id': self.id,
+            'department_id': self.department_id.id,
+            'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id
+        }
         return values
 
     @api.model

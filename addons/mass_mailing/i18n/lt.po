@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Anatolij, 2018
-# Martin Trigaux, 2018
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
@@ -14,13 +13,14 @@
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
 # Viktoras Norkus <viktoras@bmx.lt>, 2018
+# Martin Trigaux, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"POT-Creation-Date: 2019-03-15 10:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -138,9 +138,32 @@ msgid "<i class=\"fa fa-angle-double-up\"/> Headers"
 msgstr "<i class=\"fa fa-angle-double-up\"/> Antraštės"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_rel_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "<i class=\"fa fa-clone\"/> Body"
 msgstr "<i class=\"fa fa-clone\"/> Turinys"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_kanban
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"Warning\"/>"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"Warning\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -151,6 +174,11 @@ msgstr "<i class=\"fa fa-eyedropper\"/>Fono spalva"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "<i class=\"fa fa-plus\"/> Marketing Content"
 msgstr "<i class=\"fa fa-plus\"/> Rinkodaros turinys"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
+msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Contacts\" title=\"Contacts\"/>"
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Contacts\" title=\"Contacts\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -304,6 +332,11 @@ msgid ""
 "                                   The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Leisti gavėjui per prenumeratos atsisakymo puslapį pačiam valdyti savo "
+"būseną juodajame sąraše. Jei pasirinkimas aktyvus, mygtukas \"Pridėti mane į"
+" juodąjį sąrašą\" puslapyje bus paslėptas. Sugrįžimo mygtukas bus rodomas "
+"bet kuriuo atveju, kad partneriai ir šaltieji kontaktai galėtų "
+"užsiprenumeruoti iš naujo."
 
 #. module: mass_mailing
 #. openerp-web
@@ -340,7 +373,7 @@ msgstr "Programos, kurios padeda jūsų verslui augti!"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__archive_src_lists
 msgid "Archive source mailing lists"
-msgstr ""
+msgstr "Archyvuoti šaltinio gavėjų sąrašus"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
@@ -600,27 +633,27 @@ msgstr "Sukurkite kontaktą savo adresų knygelėje"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Create a new mailing"
-msgstr "Sukurti naują laiškų siuntimą"
+msgstr "Sukurkite naują laiškų siuntimą"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
 msgid "Create a new mailing campaign"
-msgstr "Sukurti naują laiškų siuntimo kampaniją"
+msgstr "Sukurkite naują laiškų siuntimo kampaniją"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
 msgid "Create a new mailing list"
-msgstr "Sukurti naują laiškų siuntimo sąrašą"
+msgstr "Sukurkite naują laiškų siuntimo sąrašą"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_stages
 msgid "Create a new mass mailing stage"
-msgstr "Sukurti naują laiškų siuntimo etapą"
+msgstr "Sukurkite naują laiškų siuntimo etapą"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
 msgid "Create a new recipient"
-msgstr "Sukurti naują gavėją"
+msgstr "Sukurkite naują gavėją"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__create_uid
@@ -755,7 +788,7 @@ msgstr "Kurti"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__dest_list_id
 msgid "Destination Mailing List"
-msgstr ""
+msgstr "Tikslo gavėjų sąrašas"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_schedule_date_view_form
@@ -832,6 +865,11 @@ msgstr "El. pašto rinkodara"
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
 msgid "Email Statistics"
 msgstr "El. pašto statistika"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_template
+msgid "Email Templates"
+msgstr "El. laiškų šablonai"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
@@ -1150,7 +1188,7 @@ msgstr "Nuorodų sekimas"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr ""
+msgstr "Nuorodos paspaudimo sekimas"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__links_click_ids
@@ -1542,6 +1580,9 @@ msgid ""
 "No need of importing your mailing lists, you can easily\n"
 "                send emails to any contact saved in other Odoo apps."
 msgstr ""
+"Nereikia importuoti savo gavėjų sąrašų, galite lengvai\n"
+"siųsi laiškus bet kokiems kontaktams, išsaugotiems kitose\n"
+"\"Odoo\" programose."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -1671,6 +1712,8 @@ msgid ""
 "Opt out flag for a specific mailing list.This field should not be used in a "
 "view without a unique and active mailing list context."
 msgstr ""
+"Atsisakymo mygtukas konkrečiam gavėjų sąrašui. Šis laukas neturėtų būti "
+"naudojamas peržiūroje be unikalaus ir aktyvaus gavėjų sąrašo konteksto."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1710,7 +1753,7 @@ msgstr ""
 #: code:addons/mass_mailing/wizard/mass_mailing_schedule_date.py:19
 #, python-format
 msgid "Please select a date equal/or greater than the current date."
-msgstr ""
+msgstr "Pasirinkite lygią arba vėlesnę datą už dabartinę."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__reply_to
@@ -1927,12 +1970,12 @@ msgstr "Siųsti dabar"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send Sample Mail"
-msgstr "Siųskite pavyzdinį el. laišką"
+msgstr "Siųsti pavyzdinį el. laišką"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a Sample Mail"
-msgstr "Siųskite pavyzdinį laišką"
+msgstr "Siųsti pavyzdinį laišką"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -2088,7 +2131,7 @@ msgstr "Žymos"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_schedule_date_view_form
 msgid "Take Future Schedule Date"
-msgstr ""
+msgstr "Pasirinkti ateities planavimo datą"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -2134,6 +2177,8 @@ msgid ""
 "The mailing list can be accessible by recipient in the unsubscription page "
 "to allows him to update his subscription preferences."
 msgstr ""
+"Gavėjų sąrašas gavėjo gali būti pasiekiamas iš prenumeratos puslapio, taip "
+"leidžiant jam atnaujinti savo prenumeratos pasirinkimus. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2274,9 +2319,25 @@ msgid "Unsubscribe"
 msgstr "Nebeprenumeruoti"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
+msgid "Unsubscribed"
+msgstr "Prenumerata atšaukta"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Prenumeratos atsisakymo data"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:880
+#, python-format
+msgid "Unsupported mass mailing model %s"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
+msgid "Update my subscriptions"
+msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
@@ -2313,6 +2374,9 @@ msgid ""
 "outgoing mail server available (based on their sequencing) as it does for "
 "normal mails."
 msgstr ""
+"Naudoti konkretų pašto serverį kaip prioritetinį. Kitu atveju \"Odoo\" "
+"remiasi pirmuoju pasiekiamu išeinančių laiškų serveriu (pagal jų seką), kaip"
+" ir įprastiems laiškams."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2

@@ -5,16 +5,18 @@
 # Translators:
 # Sitthykun LY <ly.sitthykun@gmail.com>, 2018
 # Sengtha Chay <sengtha@gmail.com>, 2018
-# Chan Nath <channath@gmail.com>, 2018
-# Samkhann Seang <seangsamkhann@gmail.com>, 2018
 # AN Souphorn <ansouphorn@gmail.com>, 2018
+# Samkhann Seang <seangsamkhann@gmail.com>, 2018
+# Chan Nath <channath@gmail.com>, 2019
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: AN Souphorn <ansouphorn@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +79,13 @@ msgid "<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple "
+"lines\" title=\"Multiple Lines\"/>"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
 msgid ""
 "<i class=\"fa fa-bar-chart\"/>\n"
@@ -101,6 +110,20 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg\"/> answer"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
+"title=\"Not checked\"/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
 msgstr ""
 
 #. module: survey
@@ -136,6 +159,13 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" "
+"title=\"Single Line\"/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-square-o fa-lg\"/> answer"
 msgstr ""
 
@@ -150,6 +180,13 @@ msgid ""
 "<span class=\"badge badge-primary only_left_radius filter-all\">All "
 "surveys</span><span class=\"badge badge-secondary only_right_radius filter-"
 "finished\">Finished surveys</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.result
+msgid ""
+"<span class=\"badge badge-primary only_left_radius\"><i class=\"fa fa-"
+"filter\" role=\"img\" aria-label=\"Filter\" title=\"Filter\"/></span>"
 msgstr ""
 
 #. module: survey
@@ -183,6 +220,13 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<span class=\"fa fa-filter\"/>  Filters"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.result
+msgid ""
+"<span style=\"font-size:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
+"role=\"img\" aria-label=\"Chart\" title=\"Chart\"/>"
 msgstr ""
 
 #. module: survey
@@ -240,12 +284,12 @@ msgstr ""
 #. module: survey
 #: selection:survey.mail.compose.message,moderation_status:0
 msgid "Accepted"
-msgstr ""
+msgstr "បានទទួល"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "តម្រូវការសកម្មភាព"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__active
@@ -260,12 +304,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "សកម្មភាព"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "ស្ថានភាពសកម្មភាព"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__add_sign
@@ -358,12 +402,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ចំនួនឯកសារភ្ជាប់"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "ឯកសារភ្ជាប់"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__attachment_ids
@@ -371,6 +415,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"ឯកសារភ្ជាប់ត្រូវបានតភ្ជាប់ទៅឯកសារតាមរយៈម៉ូដែល / res_id "
+"និងទៅកាន់សារតាមរយៈប្រអប់នេះ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_id
@@ -383,16 +429,18 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
+"អ្នកនិពន្ធនៃសារ។ "
+"ប្រសិនបើមិនបានកំណត់អ៊ីម៉ែលពីអាចផ្ទុកអាសយដ្ឋានអ៊ីមែលដែលមិនត្រូវគ្នានឹងដៃគូណាមួយ។"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "រូបតំណាងអ្នកនិពន្ធ"
 
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "Vacuum ស្វ័យប្រវត្តិ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.back
@@ -445,17 +493,17 @@ msgstr "បិទ"
 #: model:ir.model.fields,field_description:survey.field_survey_stage__closed
 #: model:survey.stage,name:survey.stage_closed
 msgid "Closed"
-msgstr ""
+msgstr "ការបិទ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Color"
-msgstr ""
+msgstr "ព័ណ៍"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__color
 msgid "Color Index"
-msgstr ""
+msgstr "ការកំណត់ព័ណ៌"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_comments
@@ -578,7 +626,7 @@ msgstr "ថ្ងៃបង្កើត"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__starred
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "អ្នកប្រើបច្ចុប្បន្នមានការជូនដំណឹងផ្កាយដែលបានភ្ជាប់ទៅសារនេះ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__date
@@ -600,7 +648,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
 msgid "Deadline"
-msgstr ""
+msgstr "ពេលកំណត់"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__date_deadline
@@ -617,7 +665,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Delete"
-msgstr ""
+msgstr "លុប"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__auto_delete
@@ -635,6 +683,7 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
@@ -713,7 +762,7 @@ msgstr "ព្រៀង"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "ម៉ឺនុយទម្លាក់ចុះ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__email
@@ -739,7 +788,7 @@ msgstr "អុីម៉ែល"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__email_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "គំរូអ៊ីម៉ែល"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__email_from
@@ -796,22 +845,22 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "អ្នកតាម"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "អ្នកតាម (ឆានែល)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "អ្នកដើរតាម (ដៃគូរ)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Format"
-msgstr ""
+msgstr "ទ្រង់ទ្រាយ"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -922,17 +971,17 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "ប្រសិនបើបានពិនិត្យសារថ្មីតម្រូវឱ្យអ្នកយកចិត្តទុកដាក់។"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ប្រសិនបើបានគូសធីកសារថ្មីទាមទារការយកចិត្តទុកដាក់របស់អ្នក។"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ប្រសិនបើបានគូសធីកសារខ្លះមានកំហុសបញ្ជូន។"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -1003,7 +1052,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "ត្រូវតាមអ្នក"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_closed
@@ -1105,7 +1154,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__layout
 msgid "Layout"
-msgstr ""
+msgstr "ប្លង់"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -1120,7 +1169,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__is_log
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "កត់ត្រាកំណត់ត្រាផ្ទៃក្នុង"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__auth_required
@@ -1131,7 +1180,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
 msgid "Logo"
-msgstr ""
+msgstr "រូបសញ្ញា"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mail_activity_type_id
@@ -1141,12 +1190,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "ឯកសារភ្ជាប់សំខាន់"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
 msgid "Manager"
-msgstr ""
+msgstr "អ្នកគ្រប់គ្រង"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_mandatory
@@ -1157,7 +1206,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.user_input,type:0
 msgid "Manually"
-msgstr ""
+msgstr "ដោយដៃ"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1212,11 +1261,16 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "កំហុសក្នុងការផ្ញើសារ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__record_name
 msgid "Message Record Name"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
+msgid "Message description: either the subject, or the beginning of the body"
 msgstr ""
 
 #. module: survey
@@ -1299,7 +1353,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "សកម្មភាពរបស់ខ្ញុំ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage__name
@@ -1330,17 +1384,17 @@ msgstr "ថ្មី"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "កាលកំណត់សកម្មភាពបន្ទាប់"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ការសង្ខេបសកម្មភាពបន្ទាប់"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "ប្រភេទសកម្មភាពបន្ទាប់"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -1416,12 +1470,12 @@ msgstr ""
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Number"
-msgstr ""
+msgstr "តួរលេខ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "ចំនួនសកម្មភាព"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__column_nb
@@ -1437,17 +1491,17 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "ចំនួនកំហុស"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "ចំនួនសារដែលទាមទារសកម្មភាព"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ចំនួនសារដែលមានកំហុសឆ្គងនៃការដឹកជញ្ជូន"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__tot_sent_survey
@@ -1462,7 +1516,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "ចំនួនសារមិនទាន់អាន"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1493,7 +1547,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
-msgstr ""
+msgstr "ជម្រើស"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mail_server_id
@@ -1503,7 +1557,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.survey,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "ហួសកំណត់"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
@@ -1535,7 +1589,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__parent_id
 msgid "Parent Message"
-msgstr ""
+msgstr "សារមេ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
@@ -1571,7 +1625,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.survey,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "គ្រោងទុក"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:188
@@ -1633,6 +1687,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url
 msgid "Public url"
 msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
+msgid "Published"
+msgstr "ចេញផ្សាយ"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
@@ -1722,12 +1781,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__reply_to
 msgid "Reply-To"
-msgstr ""
+msgstr "ឆ្លើយតបទៅ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "អ្នកទទួលខុសត្រូវ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__result_url
@@ -1928,7 +1987,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey__stage_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_stage_form
 msgid "Stage"
-msgstr ""
+msgstr "ដំណាក់កាល"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred
@@ -1948,7 +2007,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__state
 msgid "Status"
-msgstr ""
+msgstr "ស្ថានភាព"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_state
@@ -1958,6 +2017,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"ស្ថានភាពផ្អែកលើសកម្មភាព\n"
+"ហួសកាលកំណត់: កាលបរិច្ឆេទដល់កំណត់ត្រូវបានកន្លងផុតទៅហើយ\n"
+"ថ្ងៃនេះ: កាលបរិច្ឆេទសកម្មភាពនៅថ្ងៃនេះ\n"
+"គ្រោងទុក: សកម្មភាពនាពេលអនាគត។"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__subject
@@ -2122,7 +2185,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Text"
-msgstr ""
+msgstr "អត្ថបទ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_text
@@ -2338,12 +2401,12 @@ msgstr "ចំណងជើង​"
 #. module: survey
 #: selection:survey.survey,activity_state:0
 msgid "Today"
-msgstr ""
+msgstr "ថ្ងៃនេះ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
-msgstr ""
+msgstr "សកម្មភាពថ្ងៃនេះ"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_4
@@ -2402,7 +2465,7 @@ msgstr "សារមិនទាន់អាន"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "រាប់សារមិនទាន់អាន"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2429,7 +2492,7 @@ msgstr ""
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -2499,6 +2562,11 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "View results"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
+msgid "Visible on the website as a comment"
 msgstr ""
 
 #. module: survey

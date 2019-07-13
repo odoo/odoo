@@ -3,15 +3,18 @@
 # * base_import_module
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Haojun Zou <apollo_zhj@msn.com>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Haojun Zou <apollo_zhj@msn.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: Haojun Zou <apollo_zhj@msn.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Haojun Zou <apollo_zhj@msn.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,6 +135,11 @@ msgid "No file sent."
 msgstr ""
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Note: you can only import data modules (.xml files and static assets)"
+msgstr ""
+
+#. module: base_import_module
 #: code:addons/base_import_module/controllers/main.py:25
 #, python-format
 msgid "Only administrators can upload a module"
@@ -177,6 +185,11 @@ msgid "Unmet module dependencies: %s"
 msgstr ""
 
 #. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "View"
+msgstr "Visa"
+
+#. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "done"
 msgstr "klar"
@@ -185,8 +198,3 @@ msgstr "klar"
 #: selection:base.import.module,state:0
 msgid "init"
 msgstr "init"
-
-#. module: base_import_module
-#: model:ir.model,name:base_import_module.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"

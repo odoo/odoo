@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr "\"%s\" 필드에 대한 저장 시스템을 변경하는 것은 허용�
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__char
 msgid "Char"
-msgstr "채팅"
+msgstr "문자 유형"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_uid
@@ -56,7 +56,7 @@ msgstr "데이터"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "제목"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
@@ -85,16 +85,18 @@ msgid ""
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"이 필드를 설정하면 해당 필드는 자체 데이터베이스 열 대신에 직렬화된 필드의 간단한 구조로 저장됩니다. 이것은 생성된 후에 변경할 수 "
+"없습니다."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
-msgstr ""
+msgstr "정수"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -109,7 +111,7 @@ msgstr "최근 갱신 날짜"
 #. module: base_sparse_field
 #: selection:sparse_fields.test,selection:0
 msgid "One"
-msgstr ""
+msgstr "하나"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__partner
@@ -120,7 +122,7 @@ msgstr "협력사"
 #: code:addons/base_sparse_field/models/models.py:27
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "희소 필드의 이름을 변경할 수 없습니다. \"%s\""
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__selection
@@ -130,100 +132,100 @@ msgstr "선택"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid "Serialization Field"
-msgstr ""
+msgstr "직렬화 필드"
 
 #. module: base_sparse_field
 #: code:addons/base_sparse_field/models/models.py:39
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "희소 필드 \"%s\"에 대한 직렬화 필드 '%s'를 찾을 수 없습니다!"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
 msgid "Sparse fields Test"
-msgstr ""
+msgstr "희소 필드 테스트"
 
 #. module: base_sparse_field
 #: selection:sparse_fields.test,selection:0
 msgid "Two"
-msgstr ""
+msgstr "둘"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "binary"
-msgstr ""
+msgstr "이진수"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "boolean"
-msgstr ""
+msgstr "논리값"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "char"
-msgstr ""
+msgstr "문자 유형"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "date"
-msgstr ""
+msgstr "날짜"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "datetime"
-msgstr ""
+msgstr "날짜시간"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "float"
-msgstr ""
+msgstr "부동소수점"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "html"
-msgstr ""
+msgstr "html"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "integer"
-msgstr ""
+msgstr "정수"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "many2many"
-msgstr ""
+msgstr "다대다"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr ""
+msgstr "다대일"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "monetary"
-msgstr ""
+msgstr "통화"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "one2many"
-msgstr ""
+msgstr "일대다"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "reference"
-msgstr ""
+msgstr "참조"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "selection"
-msgstr ""
+msgstr "선택"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "serialized"
-msgstr ""
+msgstr "직렬화"
 
 #. module: base_sparse_field
 #: selection:ir.model.fields,ttype:0
 msgid "text"
-msgstr ""
+msgstr "본문"

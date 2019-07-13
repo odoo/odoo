@@ -1,21 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
+# Saba Khmaladze <skhmaladze@uglt.org>, 2019
+# Martin Trigaux, 2019
+# Temur, 2019
+# Giorgi Melitauri <gmelitauri@live.com>, 2019
+# Gvantsa Gvinianidze <gvantsa@live.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-19 11:55+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
-"Language: ka\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Gvantsa Gvinianidze <gvantsa@live.com>, 2019\n"
+"Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ka\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -23,53 +29,76 @@ msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
 msgstr "აქტიური"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:100
 #, python-format
 msgid "All Countries"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
+#: code:addons/website_customer/controllers/main.py:81
+#, python-format
+msgid "All Sectors of Activity"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
 msgid "Category Name"
 msgstr "კატეგორიის სახელი"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
 msgstr ""
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid "Close"
+msgstr "დახურვა"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr "კონტაქტი"
+
+#. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Click to create a new partner tag."
+msgid "Create a new contact tag"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
 msgstr "შემქმნელი"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
 msgstr "შექმნის თარიღი"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr "სახელი"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
 msgid "ID"
 msgstr "იდენტიფიკატორი"
 
@@ -79,26 +108,30 @@ msgid "Implemented By"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
-msgid "Last Modified on"
-msgstr "ბოლოს განახლებულია"
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
+msgid "Is published"
+msgstr "გამოქვეყნებულია"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
+msgid "Last Modified on"
+msgstr "ბოლოს შეიცვალა"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
 msgstr "ბოლოს განაახლა"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
-msgstr "ბოლოს განახლებულია"
+msgstr "ბოლოს განახლდა"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
-"Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
 msgstr ""
 
 #. module: website_customer
@@ -108,15 +141,9 @@ msgstr "შედეგი ვერ მოიძებნა"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.details
-#: model_terms:ir.ui.view,arch_db:website_customer.footer_custom
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
 msgstr ""
-
-#. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "პარტნიორი"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_form
@@ -127,22 +154,28 @@ msgstr ""
 #: model:ir.model,name:website_customer.model_res_partner_tag
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
-"sector, or ... "
+"sector, or ..."
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
 msgstr "პარტნიორები"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
+#: model:website.menu,name:website_customer.menu_customers
 msgid "References"
 msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
@@ -156,9 +189,19 @@ msgid "Search"
 msgstr "ძიება"
 
 #. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
+msgid "The full URL to access the document through the website."
+msgstr "სრული URL რათა ვებ-საიტიდან მიწვდეთ ამ დოკუმენტს"
+
+#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
 msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
+msgid "Visible on current website"
+msgstr "მოსჩანს არსებულ ვებ-საიტზე"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -169,7 +212,13 @@ msgid "Website Tags"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
+msgid "Website URL"
+msgstr "ვებ-საიტის მისამართი"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
 msgstr ""
 
@@ -182,6 +231,3 @@ msgstr "მსოფლიო რუკა"
 #: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
 msgstr ""
-
-#~ msgid "Tags"
-#~ msgstr "იარლიყები"

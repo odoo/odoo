@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
+from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
@@ -169,7 +170,7 @@ class account_journal(models.Model):
                            LEFT JOIN account_move move ON aml.move_id = move.id
                            WHERE aml.account_id in %%s
                            AND move.date <= %%s AND move.state = 'posted';""" % (amount_field,)
-                self.env.cr.execute(query, (account_ids, fields.Date.today(),))
+                self.env.cr.execute(query, (account_ids, fields.Date.context_today(self),))
                 query_results = self.env.cr.dictfetchall()
                 if query_results and query_results[0].get('sum') != None:
                     account_sum = query_results[0].get('sum')
@@ -185,13 +186,14 @@ class account_journal(models.Model):
             self.env.cr.execute(query, query_args)
             query_results_drafts = self.env.cr.dictfetchall()
 
-            today = datetime.today()
-            query = """SELECT amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
+            today = fields.Date.today()
+            query = """SELECT residual_signed as amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
-            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
-            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency)
-            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency)
+            curr_cache = {}
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
 
         difference = currency.round(last_balance-account_sum) + 0.0
         return {
@@ -226,23 +228,45 @@ class account_journal(models.Model):
         gather the bills in draft state data, and the arguments
         dictionary to use to run it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency, type, date_invoice, company_id
-                  FROM account_invoice
+        # there is no account_move_lines for draft invoices, so no relevant residual_signed value
+        return ("""SELECT state,
+                    (CASE WHEN inv.type in ('out_invoice', 'in_invoice')
+                        THEN inv.amount_total
+                        ELSE (-1 * inv.amount_total)
+                    END) AS amount_total,
+                    inv.currency_id AS currency,
+                    inv.type,
+                    inv.date_invoice,
+                    inv.company_id
+                  FROM account_invoice inv
                   WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
-    def _count_results_and_sum_amounts(self, results_dict, target_currency):
+    def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
+        amount_total must be signed !
         """
         rslt_count = 0
         rslt_sum = 0.0
+        # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
+        # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
+        # calls of the method.
+        curr_cache = {} if curr_cache is None else curr_cache
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
             rslt_count += 1
-            type_factor = result.get('type') in ('in_refund', 'out_refund') and -1 or 1
-            rslt_sum += type_factor * cur._convert(
-                result.get('amount_total'), target_currency, company, result.get('date_invoice') or fields.Date.today())
+            date = result.get('date_invoice') or fields.Date.today()
+
+            amount = result.get('amount_total', 0) or 0
+            if cur != target_currency:
+                key = (cur, target_currency, company, date)
+                # Using setdefault will call _get_conversion_rate, so we explicitly check the
+                # existence of the key in the cache instead.
+                if key not in curr_cache:
+                    curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
+                amount *= curr_cache[key]
+            rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
     @api.multi
@@ -320,10 +344,16 @@ class account_journal(models.Model):
                 action_name = 'action_view_bank_statement_tree'
             elif self.type == 'sale':
                 action_name = 'action_invoice_tree1'
-                self = self.with_context(use_domain=[('type', 'in', ['out_invoice', 'out_refund'])])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             elif self.type == 'purchase':
                 action_name = 'action_vendor_bill_template'
-                self = self.with_context(use_domain=[('type', 'in', ['in_invoice', 'in_refund'])])
+                use_domain = expression.AND(
+                    [self.env.context.get('use_domain', []), [('journal_id', '=', self.id)]]
+                )
+                self = self.with_context(use_domain=use_domain)
             else:
                 action_name = 'action_move_journal_line'
 

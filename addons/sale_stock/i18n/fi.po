@@ -13,15 +13,16 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2018
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +72,21 @@ msgstr ""
 msgid ""
 "<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Partially Available</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid ""
+"<span class=\"fa fa-download\" role=\"img\" aria-label=\"Download\" "
+"title=\"Download\"/>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: sale_stock
@@ -147,7 +163,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguraatio-asetukset"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -178,6 +194,13 @@ msgstr "Näytä incotermit myyntitilauksella ja laskuilla"
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
 msgstr "Näytä incotermit tilauksilla ja laskuilla"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:101
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -535,6 +558,12 @@ msgid "Warning"
 msgstr "Varoitus"
 
 #. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:100
+#, python-format
+msgid "Warning!"
+msgstr "Varoitus!"
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
 msgstr ""
@@ -561,6 +590,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
+"Et voi vähentää tilattua määrää alle toimitetun määrän.\n"
+"Luo ensin palautus."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:269
@@ -569,6 +600,8 @@ msgid ""
 "You plan to sell %s %s of %s but you only have %s %s available in %s "
 "warehouse."
 msgstr ""
+"Olet myymässä %s %s tuotetta %s, mutta sinulla on vain %s %s saatavilla "
+"%s-varastossa."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

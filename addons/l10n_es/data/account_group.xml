@@ -110,6 +110,11 @@
         <field name="name">Reservas para acciones o participaciones de la sociedad dominante</field>
         <field name="parent_id" ref="l10n_es.account_group_114"/>
     </record>
+    <record id="account_group_1141" model="account.group">
+        <field name="code_prefix">1141</field>
+        <field name="name">Reservas estatutarias</field>
+        <field name="parent_id" ref="l10n_es.account_group_114"/>
+    </record>
     <record id="account_group_1142" model="account.group">
         <field name="code_prefix">1142</field>
         <field name="name">Reserva por capital amortizado</field>
@@ -449,6 +454,11 @@
         <field name="code_prefix">176</field>
         <field name="name">Pasivos por derivados financieros a largo plazo</field>
         <field name="parent_id" ref="l10n_es.account_group_17"/>
+    </record>
+    <record id="account_group_1760" model="account.group">
+        <field name="code_prefix">1760</field>
+        <field name="name">Pasivos por derivados financieros</field>
+        <field name="parent_id" ref="l10n_es.account_group_176"/>
     </record>
     <record id="account_group_1765" model="account.group">
         <field name="code_prefix">1765</field>
@@ -1755,6 +1765,11 @@
     <record id="account_group_4758" model="account.group">
         <field name="code_prefix">4758</field>
         <field name="name">Hacienda Pública, acreedora por subvenciones a reintegrar</field>
+        <field name="parent_id" ref="l10n_es.account_group_475"/>
+    </record>
+    <record id="account_group_4759" model="account.group">
+        <field name="code_prefix">4759</field>
+        <field name="name">Hacienda Pública, acreedora por otros conceptos</field>
         <field name="parent_id" ref="l10n_es.account_group_475"/>
     </record>
     <record id="account_group_476" model="account.group">
@@ -3198,6 +3213,16 @@
     <record id="account_group_6654" model="account.group">
         <field name="code_prefix">6654</field>
         <field name="name">Intereses por operaciones de «factoring» con entidades de crédito del grupo</field>
+        <field name="parent_id" ref="l10n_es.account_group_665"/>
+    </record>
+    <record id="account_group_6655" model="account.group">
+        <field name="code_prefix">6655</field>
+        <field name="name">Intereses por operaciones de "factoring" con entidades de crédito asociadas</field>
+        <field name="parent_id" ref="l10n_es.account_group_665"/>
+    </record>
+    <record id="account_group_6656" model="account.group">
+        <field name="code_prefix">6656</field>
+        <field name="name">Intereses por operaciones de "factoring" con entidades de crédito vinculadas</field>
         <field name="parent_id" ref="l10n_es.account_group_665"/>
     </record>
     <record id="account_group_6657" model="account.group">

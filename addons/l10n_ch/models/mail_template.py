@@ -37,6 +37,9 @@ class MailTemplate(models.Model):
                 pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf([res_id])[0]
                 pdf = base64.b64encode(pdf)
 
-                attachments_list = multi_mode and rslt[res_id]['attachments'] or rslt['attachments']
-                attachments_list.append((report_name, pdf))
+                attachments_list = multi_mode and rslt[res_id].get('attachments', False) or rslt.get('attachments', False)
+                if attachments_list:
+                    attachments_list.append((report_name, pdf))
+                else:
+                    rslt[res_id]['attachments'] = [(report_name, pdf)]
         return rslt

@@ -385,12 +385,20 @@ class MailTemplate(models.Model):
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
 
+        records_company = None
+        if self._context.get('tpl_partners_only') and self.model and results and 'company_id' in self.env[self.model]._fields:
+            records = self.env[self.model].browse(results.keys()).read(['company_id'])
+            records_company = {rec['id']: (rec['company_id'][0] if rec['company_id'] else None) for rec in records}
+
         for res_id, values in results.items():
             partner_ids = values.get('partner_ids', list())
             if self._context.get('tpl_partners_only'):
                 mails = tools.email_split(values.pop('email_to', '')) + tools.email_split(values.pop('email_cc', ''))
+                Partner = self.env['res.partner']
+                if records_company:
+                    Partner = Partner.with_context(default_company_id=records_company[res_id])
                 for mail in mails:
-                    partner_id = self.env['res.partner'].find_or_create(mail)
+                    partner_id = Partner.find_or_create(mail)
                     partner_ids.append(partner_id)
             partner_to = values.pop('partner_to', '')
             if partner_to:
@@ -469,9 +477,13 @@ class MailTemplate(models.Model):
                     report = template.report_template
                     report_service = report.report_name
 
-                    if report.report_type not in ['qweb-html', 'qweb-pdf']:
-                        raise UserError(_('Unsupported report type %s found.') % report.report_type)
-                    result, format = report.render_qweb_pdf([res_id])
+                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                        result, format = report.render_qweb_pdf([res_id])
+                    else:
+                        res = report.render([res_id])
+                        if not res:
+                            raise UserError(_('Unsupported report type %s found.') % report.report_type)
+                        result, format = res
 
                     # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
@@ -523,6 +535,7 @@ class MailTemplate(models.Model):
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
                     'model_description': self.env['ir.model']._get(record._name).display_name,
                     'company': 'company_id' in record and record['company_id'] or self.env.user.company_id,
+                    'record': record,
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.thread']._replace_local_links(body)

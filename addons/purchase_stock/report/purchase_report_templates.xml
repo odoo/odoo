@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-	<template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
-		<xpath expr="//div[@name='purchase_shipping_address']" position="after">
-			<div t-if="not o.dest_address_id and o.picking_type_id and o.picking_type_id.warehouse_id">
-                <span t-field="o.picking_type_id.warehouse_id.name"/>
-                <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
-            </div>
-		</xpath>
-	</template>
+    <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//t[@t-if='o.dest_address_id']" position="after">
+            <t t-else="">
+                <t t-set="information_block">
+                    <strong>Shipping address:</strong>
+                    <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
 
-	<template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
-		<xpath expr="//div[@name='purchase_shipping_address']" position="after">
-			<div t-if="not o.dest_address_id and o.picking_type_id.warehouse_id">
-                <span t-field="o.picking_type_id.warehouse_id.name"/>
-                <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
-            </div>
-		</xpath>
-	</template>
+    <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//t[@t-if='o.dest_address_id']" position="after">
+            <t t-else="">
+                <t t-set="information_block">
+                    <strong>Shipping address:</strong>
+                    <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
 
 </odoo>

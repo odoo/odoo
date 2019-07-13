@@ -46,6 +46,7 @@ class TestTimesheetHolidays(TestTimesheet):
             'timesheet_generate': True,
             'timesheet_project_id': self.internal_project.id,
             'timesheet_task_id': self.internal_task_leaves.id,
+            'validity_start': False,
         })
         self.hr_leave_type_no_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type without timesheet generation',
@@ -53,6 +54,7 @@ class TestTimesheetHolidays(TestTimesheet):
             'timesheet_generate': False,
             'timesheet_project_id': False,
             'timesheet_task_id': False,
+            'validity_start': False,
         })
 
         # HR Officer allocates some leaves to the employee 1

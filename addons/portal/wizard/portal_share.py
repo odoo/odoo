@@ -12,7 +12,8 @@ class PortalShare(models.TransientModel):
         result = super(PortalShare, self).default_get(fields)
         result['res_model'] = self._context.get('active_model')
         result['res_id'] = self._context.get('active_id')
-        result['share_link'] = self.env[result['res_model']].browse(result['res_id'])._get_share_url(redirect=True)
+        record = self.env[result['res_model']].browse(result['res_id'])
+        result['share_link'] = record.get_base_url() + record._get_share_url(redirect=True)
         return result
 
     res_model = fields.Char('Related Document Model', required=True)
@@ -24,12 +25,11 @@ class PortalShare(models.TransientModel):
 
     @api.depends('res_model', 'res_id')
     def _compute_share_link(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for rec in self:
             res_model = self.env[rec.res_model]
             if isinstance(res_model, self.pool['portal.mixin']):
                 record = res_model.browse(rec.res_id)
-                rec.share_link = base_url + record._get_share_url(redirect=True)
+                rec.share_link = record.get_base_url() + record._get_share_url(redirect=True)
 
     @api.depends('res_model', 'res_id')
     def _compute_access_warning(self):
@@ -52,7 +52,7 @@ class PortalShare(models.TransientModel):
             partner_ids = self.partner_ids.filtered(lambda x: x.user_ids)
         # if partner already user or record has access token send common link in batch to all user
         for partner in self.partner_ids:
-            share_link = active_record._get_share_url(redirect=True, pid=partner.id)
+            share_link = active_record.get_base_url() + active_record._get_share_url(redirect=True, pid=partner.id)
             active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
                         'share_link': share_link},
@@ -67,7 +67,7 @@ class PortalShare(models.TransientModel):
             share_link = partner._get_signup_url_for_action(action='/mail/view', res_id=self.res_id, model=self.model)[partner.id]
             active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
-                        'share_link': share_link },
+                        'share_link': share_link},
                 subject=_("You are invited to access %s" % active_record.display_name),
                 subtype_id=note.id,
                 notif_layout='mail.mail_notification_light',

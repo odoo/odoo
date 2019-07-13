@@ -8,13 +8,15 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2018
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "%d records were successfully imported"
-msgstr ""
+msgstr "%d úspešne naimportovaných záznamov"
 
 #. module: base_import
 #. openerp-web
@@ -57,6 +59,9 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Pri importe sa vyskytol neznámy problém ( možné prerušenie spojenia, "
+"prekročenie limitu dát alebo pamäte). Prosím opakujte. Ak problém pretrváva,"
+" rozdeľte súbory na menšie."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -66,12 +71,12 @@ msgstr "Základ"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "Základný import"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Mapovanie základného importu"
 
 #. module: base_import
 #. openerp-web
@@ -84,18 +89,18 @@ msgstr "Zrušiť"
 #: code:addons/base_import/models/base_import.py:693
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "Stĺpec %s obsahuje nesprávne hodnoty (hodnota: %s) "
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Stĺpec %s obsahuje nesprávne hodnoty. Chyba v riadku %d:%s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Názov stĺpca"
 
 #. module: base_import
 #. openerp-web
@@ -112,13 +117,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Nebolo možné získať URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "Ak neexistuje, vytvoriť"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -171,6 +178,9 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Ak sa záznamy nenájdu, budú vytvorené nové (aby sa import dokončil). Pozor -"
+" hodnoty v stĺpci budú použité ako nové názvy záznamov s predpokladom, že "
+"postačujú ny vytvorenie záznamu."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -190,28 +200,28 @@ msgstr "ID databázy"
 #: code:addons/base_import/static/src/js/import_action.js:83
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "Formát dátumu:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:84
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Formát dátumu a času:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:88
 #, python-format
 msgid "Decimal Separator:"
-msgstr ""
+msgstr "Desatinný oddeľovač:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "Odložiť výpočet rodič/potomok"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -246,7 +256,7 @@ msgstr "Neimportovať"
 #: code:addons/base_import/static/src/js/import_action.js:229
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "Bodka"
 
 #. module: base_import
 #. openerp-web
@@ -258,7 +268,7 @@ msgstr "Stiahnuť"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -271,7 +281,7 @@ msgstr "Zakódovanie:"
 #: code:addons/base_import/models/base_import.py:790
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Chyba pri rozbore dátumu [%s:L%d]:%s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:289
@@ -291,7 +301,7 @@ msgstr "Všetko vyzerá platne."
 #: code:addons/base_import/static/src/xml/base_import.xml:82
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
+msgstr "Súbory excel sú doporučované, formátovanie polí je automatické."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
@@ -325,7 +335,7 @@ msgstr "Typ súboru"
 #: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Veľkosť súboru prekročila maximálnu hodnotu (%sbyte)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -337,14 +347,14 @@ msgstr "Súbor na kontrolu a/alebo import, surový binárny (nie base64)"
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "Pre súbory CSV treba zadať správny oddeľovač."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:13
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Možnosti formátovania"
 
 #. module: base_import
 #. openerp-web
@@ -424,6 +434,8 @@ msgid ""
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
 msgstr ""
+"Ak model používa vzťah rodič/potomok, počíta sa pre každý riadok a vedie k "
+"pomalšiemu importu. Jeho potlačenie import zrýchli."
 
 #. module: base_import
 #. openerp-web
@@ -438,7 +450,7 @@ msgstr "Import"
 #: code:addons/base_import/static/src/xml/base_import.xml:91
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "Import FAQ"
 
 #. module: base_import
 #. openerp-web
@@ -452,7 +464,7 @@ msgstr "Importovať súbor"
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "Import dokončeny"
 
 #. module: base_import
 #. openerp-web
@@ -470,6 +482,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Prekročenie času importu. Skúste znova. Ak sa problém objaví znova, súbor "
+"môže byť priveľký pre súčasnú konfiguráciu systému, skúste ho rozdeliť "
+"(importovať menej záznamov v jednotlivých súboroch)."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -539,21 +554,21 @@ msgstr "Naposledy upravované"
 #: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "Načítaj súbor"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:364
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "Načítaj nový súbor"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:41
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "Pre import namapuj stĺpce"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -570,14 +585,14 @@ msgstr "Meno"
 #: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "Potrebujete pomoc?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:231
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Bez oddeľovača"
 
 #. module: base_import
 #. openerp-web
@@ -608,7 +623,7 @@ msgstr "Polia relácie"
 #: code:addons/base_import/static/src/xml/base_import.xml:100
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "Opäť načítať súbor"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -620,7 +635,7 @@ msgstr "Res model"
 #: code:addons/base_import/static/src/xml/base_import.xml:79
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "Pre import vyber súbor Excel alebo CSV."
 
 #. module: base_import
 #. openerp-web
@@ -641,7 +656,7 @@ msgstr "Oddeľovač:"
 #: code:addons/base_import/static/src/xml/base_import.xml:66
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "Zobraz priradené polia (pokročilé)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -667,42 +682,42 @@ msgstr "Tabulátor"
 #: code:addons/base_import/static/src/xml/base_import.xml:99
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "Test importu"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "Testy: Base Import Model Preview"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Testy: Base Import Model, Character"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "Testy: Base Import Model, Character No readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Testy: Base Import Model, Character readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Testy: Base Import Model, znak vyžadovaný"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Testy: Base Import Model, znak stavu"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Testy: Base Import Model, znak stále needitovateľný"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
@@ -749,7 +764,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:80
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Oddeľovač textu:"
 
 #. module: base_import
 #. openerp-web
@@ -759,13 +774,15 @@ msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
+"Prvý riadok\n"
+"obsahuje názov stĺpca"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:87
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Oddelovač tisícov:"
 
 #. module: base_import
 #. openerp-web
@@ -814,7 +831,7 @@ msgstr "Hodnota"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "Hodnota2"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:760
@@ -823,6 +840,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Nemožno importovať obrázky z URL, pre zistenie príčiny kontaktuj svojho "
+"administrátora alebo podporu."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:631

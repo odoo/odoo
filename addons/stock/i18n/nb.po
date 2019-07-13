@@ -6,15 +6,15 @@
 # Mari Løken <inactive+mari123@transifex.com>, 2018
 # Jorunn D. Newth, 2018
 # Martin Trigaux, 2018
-# Marius Stedjan <marius@stedjan.com>, 2018
+# Marius Stedjan <marius@stedjan.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2018\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,7 @@ msgstr ""
 #: code:addons/stock/models/res_company.py:24
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: Transittsted"
+msgstr "%s: Transittlokasjon"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -129,11 +129,45 @@ msgstr ""
 "                    <strong>Dette er din nåværende lagerbeholdning: </strong>"
 
 #. module: stock
-#: code:addons/stock/models/stock_rule.py:111
+#: code:addons/stock/models/stock_rule.py:112
 #, python-format
 msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_inventory_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Expected date\" "
+"title=\"Expected date\"/>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Administrer\" "
+"title=\"Administrer\"/>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
+msgid ""
+"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
+"title=\"Unfold\"/>"
 msgstr ""
 
 #. module: stock
@@ -169,6 +203,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">On Hand</span>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
+msgid ""
+"<span role=\"img\" class=\"o_stock_reports_stream\" title=\"Traceability "
+"Report\" aria-label=\"Traceability Report\"><i class=\"fa fa-fw fa-level-up "
+"fa-rotate-270\"/></span>"
 msgstr ""
 
 #. module: stock
@@ -235,7 +277,7 @@ msgstr "<strong>Lagerbeholdning</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr "<strong>Sted</strong>"
+msgstr "<strong>Lokasjon</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -341,6 +383,7 @@ msgid "A serial number should only be linked to a single product."
 msgstr "Et serienummer må bare knyttes til ett produkt."
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__type
 #: model:ir.model.fields,help:stock.field_product_template__type
 #: model:ir.model.fields,help:stock.field_stock_move__product_type
 msgid ""
@@ -395,7 +438,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
 msgid "Add a new location"
-msgstr ""
+msgstr "Legg til en ny lokasjon"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -488,13 +531,6 @@ msgstr ""
 #, python-format
 msgid "All products"
 msgstr "Alle produkter"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid ""
-"All products could not be reserved. Click on the \"Check Availability\" "
-"button to try to reserve products"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -640,29 +676,29 @@ msgstr "Tilbake ordnene"
 #: code:addons/stock/wizard/stock_backorder_confirmation.py:28
 #, python-format
 msgid "Back order <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "Restordre <em>%s</em> <b>kansellert</b>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr ""
+msgstr "Bekreftelse på Restordre"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr ""
+msgstr "Opprettelse av restordre"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:71
 #, python-format
 msgid "Backorder exists"
-msgstr ""
+msgstr "Restordre eksisterer"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr ""
+msgstr "Restordre"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -677,7 +713,7 @@ msgstr "Strekkode"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr ""
+msgstr "Strekkode-nomenklaturer"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
@@ -742,8 +778,7 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
-"Du kan skjule et sted uten å slette det ved å ta bort avmerking av Aktiv-"
-"feltet."
+"Skjul en lokasjon uten å slette den ved å ta bort avmerking på Aktiv-feltet."
 
 #. module: stock
 #: model:product.product,name:stock.product_cable_management_box
@@ -760,7 +795,7 @@ msgstr "Kalendervisning"
 #: code:addons/stock/models/stock_warehouse.py:520
 #, python-format
 msgid "Can't find any customer or supplier location."
-msgstr "Finner ikke noe sted for kunde eller leverandør."
+msgstr "Finner ingen lokasjon for kunde eller leverandør."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:256
@@ -778,24 +813,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
-msgstr "Kanseller"
+msgstr "Avbryt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Cancel Inventory"
-msgstr "Kanseller Varetelling"
+msgstr "Avbryt Varetelling"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.inventory,state:0 selection:stock.move,state:0
 #: selection:stock.package_level,state:0 selection:stock.picking,state:0
 msgid "Cancelled"
-msgstr "Kansellert"
+msgstr "Avbrutt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Cancelled Moves"
-msgstr ""
+msgstr "Avbrutte bevegelser"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:277
@@ -816,6 +851,7 @@ msgid "Category"
 msgstr "Kategori"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__route_from_categ_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr ""
@@ -858,7 +894,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
 msgid "Check this box to allow using this location as a return location."
-msgstr "Merk av for å tillate å bruke dette stedet som retursted"
+msgstr "Huk av for å tillate bruk av denne lokasjonen som returlokasjon."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -866,7 +902,8 @@ msgstr "Merk av for å tillate å bruke dette stedet som retursted"
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
-"Merk av for å tillate å bruke dette stedet til varer som er vraket/skadet."
+"Huk av for å tillate bruk av denne lokasjonen til varer som er "
+"vraket/skadet."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
@@ -1082,13 +1119,13 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr ""
+msgstr "Opprett Restordre"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:755
 #, python-format
 msgid "Create Backorder?"
-msgstr ""
+msgstr "Opprett restordre?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_tree_view
@@ -1288,27 +1325,29 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:109
+#: code:addons/stock/models/stock_picking.py:111
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 #, python-format
 msgid "Customer"
 msgstr "Kunde"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
+#: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Kundested"
+msgstr "Kundelokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "Kundesteder"
+msgstr "Kundelokasjoner"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
@@ -1538,6 +1577,7 @@ msgid "Delivery Type"
 msgstr "Leveransetype"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__sale_delay
 #: model:ir.model.fields,help:stock.field_product_template__sale_delay
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
@@ -1545,6 +1585,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
@@ -1572,16 +1613,19 @@ msgid "Description for Receipts"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
 msgstr "Beskrivelse på leveringsordrer"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingin
 msgid "Description on Receptions"
 msgstr ""
@@ -1604,12 +1648,12 @@ msgstr "Destinasjonsadresse "
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Destination Location"
-msgstr "Destinasjons Lokasjon"
+msgstr "Destinasjonslokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Location:"
-msgstr ""
+msgstr "Destinasjonslokasjon:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_dest_ids
@@ -1631,7 +1675,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
 msgid "Destination location"
-msgstr ""
+msgstr "Destinasjonslokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -1653,6 +1697,7 @@ msgstr "Detaljer synlige"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
+#: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -1768,6 +1813,7 @@ msgid "Effective Date"
 msgstr "Effektiv dato"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__tracking
 #: model:ir.model.fields,help:stock.field_product_template__tracking
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__product_tracking
 #: model:ir.model.fields,help:stock.field_stock_move__has_tracking
@@ -1852,7 +1898,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__fixed_location_ids
 msgid "Fixed Locations Per Product Category"
-msgstr "Faste steder per produktkategori"
+msgstr "Faste lokasjoner pr produktkategori"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_id
@@ -1934,7 +1980,7 @@ msgstr "Fra leverandør"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__complete_name
 msgid "Full Location Name"
-msgstr "Fullt navn på sted"
+msgstr "Fullt navn på lokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2214,6 +2260,8 @@ msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
 msgstr ""
+"Hvis denne forsendelsen ble splittet, vil dette feltet linke til "
+"forsendelsen som inneholder delen som allerede er behandlet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__picking_type_entire_packs
@@ -2333,13 +2381,13 @@ msgstr "Intern"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "Internt sted"
+msgstr "Intern lokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Internal Locations"
-msgstr "Interne steder"
+msgstr "Interne lokasjoner"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__ref
@@ -2356,7 +2404,7 @@ msgstr "Interne overføringer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr "Internt overføringssted"
+msgstr "Intern overføringslokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
@@ -2401,7 +2449,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__partner_id
 msgid "Inventoried Owner"
-msgstr ""
+msgstr "Inventarført eier"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__package_id
@@ -2470,6 +2518,7 @@ msgid "Inventory Lines"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__inventory_location_id
 msgid "Inventory Location"
@@ -2478,7 +2527,7 @@ msgstr "Lagerlokasjon"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Lagersteder"
+msgstr "Lagerlokasjoner"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -2557,12 +2606,12 @@ msgstr "Er låst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__return_location
 msgid "Is a Return Location?"
-msgstr "Er et retursted?"
+msgstr "Er en returlokasjon?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "Er et vraksted?"
+msgstr "Er en vraklokasjon?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -2802,6 +2851,7 @@ msgstr "Finn"
 
 #. module: stock
 #: selection:barcode.rule,type:0
+#: model:ir.model.fields,field_description:stock.field_product_product__location_id
 #: model:ir.model.fields,field_description:stock.field_product_template__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__fixed_location_id
@@ -2819,17 +2869,17 @@ msgstr "Finn"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Location"
-msgstr "Sted"
+msgstr "Lokasjon"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location Barcode"
-msgstr ""
+msgstr "Lokasjonsstrekkode"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
 msgid "Location Name"
-msgstr "Navn på sted"
+msgstr "Navn på lokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
@@ -2839,12 +2889,12 @@ msgstr "Lokasjon lager"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
 msgid "Location Type"
-msgstr "Type sted"
+msgstr "Type lokasjon"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "Sted hvor systemet vil lagre de ferdige produktene."
+msgstr "Lokasjon hvor systemet vil lagre de ferdige produktene."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -2854,7 +2904,7 @@ msgstr "Sted hvor systemet vil lagre de ferdige produktene."
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Locations"
-msgstr "Steder"
+msgstr "Lokasjoner"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2968,7 +3018,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr ""
+msgstr "Administrer flere eiere av inventar"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -2978,7 +3028,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
 msgid "Manage Multiple Stock Locations"
-msgstr ""
+msgstr "Administrer flere lagerlokasjoner"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
@@ -3058,6 +3108,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
+#: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr ""
 
@@ -3271,7 +3322,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr ""
+msgstr "Ingen restordre"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -3437,7 +3488,7 @@ msgstr "En produktkategori"
 #: code:addons/stock/models/stock_inventory.py:119
 #, python-format
 msgid "One product for a specific owner"
-msgstr ""
+msgstr "Ett produkt for én spesifikk eier"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:115
@@ -3553,7 +3604,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
 msgid "Original Location"
-msgstr "Opprinnelig sted"
+msgstr "Opprinnelig lokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
@@ -3586,7 +3637,7 @@ msgstr "Utgang"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_output_stock_loc_id
 msgid "Output Location"
-msgstr ""
+msgstr "Utgående lokasjon"
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
@@ -3631,12 +3682,12 @@ msgstr "Eier:"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__partner_id
 msgid "Owner of the location if not internal"
-msgstr "Eier av stedet hvis ikke intern"
+msgstr "Eier av lokasjonen hvis ikke intern"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid "Owner of the quants"
-msgstr ""
+msgstr "Eier av kvantene"
 
 #. module: stock
 #: code:addons/stock/models/product.py:340
@@ -3727,7 +3778,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr ""
+msgstr "Pakkeoverføringer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__packaging_id
@@ -3767,7 +3818,7 @@ msgstr "Emballasje"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
 msgid "Packing Location"
-msgstr ""
+msgstr "Pakkelokasjon"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:447
@@ -3968,6 +4019,8 @@ msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
 msgstr ""
+"Prioritet for dette plukket. Ved å manuelt sette en verdi her, vil denne "
+"settes på alle bevegelsene."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4126,6 +4179,7 @@ msgid "Product Tmpl"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__type
 #: model:ir.model.fields,field_description:stock.field_product_template__type
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_type
 msgid "Product Type"
@@ -4163,12 +4217,13 @@ msgid "Production"
 msgstr "Produksjon"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_production
 msgid "Production Location"
-msgstr "Produksjonssted"
+msgstr "Produksjonslokasjon"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:177
+#: code:addons/stock/models/stock_location.py:181
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4285,7 +4340,7 @@ msgstr "Kvalitetskontroll"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_qc_stock_loc_id
 msgid "Quality Control Location"
-msgstr "Sted for kvalitetskontroll"
+msgstr "Lokasjon for kvalitetskontroll"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__quant_ids
@@ -4662,6 +4717,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__responsible_id
 #: model:ir.model.fields,field_description:stock.field_product_template__responsible_id
 msgid "Responsible"
 msgstr "Ansvarlig"
@@ -4701,7 +4757,7 @@ msgstr "Retur"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
 msgid "Return Location"
-msgstr "Retursted"
+msgstr "Returlokasjon"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -4728,7 +4784,7 @@ msgstr "Returnert plukking"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "Reverser overføring"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__name
@@ -4747,6 +4803,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
 #: model:ir.model.fields,field_description:stock.field_product_category__route_ids
+#: model:ir.model.fields,field_description:stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__route_ids
 #: model:ir.ui.menu,name:stock.menu_routes_config
@@ -4828,6 +4885,8 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
+"Planlagt dato for behandling av første del av forsendelsen. Om denne settes "
+"manuelt, vil den bli brukt som forventet dato for alle lagerbevegelser."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:1062
@@ -4846,7 +4905,7 @@ msgstr "Vrak"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Scrap Location"
-msgstr "Vraksted"
+msgstr "Vraklokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__move_id
@@ -4875,7 +4934,7 @@ msgid ""
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
 "Å vrake et produkt fjerner det fra lagerbeholdningen. Produktet\n"
-"plasseres på et vraksted som kan brukes til rapportering."
+"plasseres på en vraklokasjon som kan brukes til rapportering."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4915,6 +4974,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__picking_warn
+#: model:ir.model.fields,help:stock.field_res_users__picking_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -5021,8 +5081,8 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"Angir et varehus hvis du produserer på et fast sted. Dette kan være et "
-"samarbeidssted hvis du setter bort produksjonsoperasjonene."
+"Angir et varehus hvis du produserer på en fast lokasjon. Dette kan være en "
+"samarbeidslokasjon hvis du setter bort produksjonsoperasjonene."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -5164,7 +5224,7 @@ msgstr "Kildelokasjon"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr ""
+msgstr "Kildelokasjon:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_id
@@ -5187,7 +5247,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
+msgstr "Spesifiser eier for å fokusere inventaret på en spesifikk eier."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__package_id
@@ -5334,6 +5394,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
+#: model:ir.model.fields,field_description:stock.field_res_users__picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_id
 msgid "Stock Picking"
 msgstr ""
@@ -5408,7 +5469,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
 msgid "Storage Locations"
-msgstr ""
+msgstr "Lagringslokasjoner"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -5482,6 +5543,8 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
+"Teknisk felt brukt til å skildre en restriksjon på eierskap av kvanter,  som"
+" må overveies når denne bevegelsen blir markert som 'fullført'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__price_unit
@@ -5536,7 +5599,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr "Strekkoden for et sted må være unik per selskap!"
+msgstr "Strekkoden for en lokasjon må være unik pr selskap!"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -5652,12 +5715,14 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
+#: model:ir.model.fields,help:stock.field_res_users__property_stock_customer
 msgid ""
 "The stock location used as destination when sending goods to this contact."
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
+#: model:ir.model.fields,help:stock.field_res_users__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
 msgstr ""
@@ -5737,7 +5802,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "Dette er eieren av kvanten"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_uom_qty
@@ -5749,6 +5814,11 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
+"Dette er antall produkter fra et inventarperspektiv. For bevegelser med "
+"status 'Ferdig', er dette antall produkter som faktisk er flyttet. For andre"
+" bevegelser, er dette antall produkter som er planlagt flyttet. Reduksjon av"
+" antall vil ikke opprette en restordre. Endring av antall på tildelte "
+"bevegelser påvirker reservering av produkter, og må gjøres med omhu."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -5811,6 +5881,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,help:stock.field_product_template__property_stock_production
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
@@ -5818,6 +5889,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,help:stock.field_product_template__property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
@@ -5825,6 +5897,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_product__responsible_id
 #: model:ir.model.fields,help:stock.field_product_template__responsible_id
 msgid ""
 "This user will be responsible of the next activities related to logistic "
@@ -5882,12 +5955,15 @@ msgid "Traceability"
 msgstr "Sporbarhet"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/stock_traceability_report_widgets.js:55
 #: model:ir.actions.client,name:stock.action_stock_report
 #: model:ir.model,name:stock.model_stock_traceability_report
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, python-format
 msgid "Traceability Report"
 msgstr "Sporbarhetsrapport"
 
@@ -5928,6 +6004,7 @@ msgid "Tracked by serial number"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__tracking
 #: model:ir.model.fields,field_description:stock.field_product_template__tracking
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_tracking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__tracking
@@ -5950,7 +6027,7 @@ msgstr "Overføring"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_partner_id
 msgid "Transfer Destination Address"
-msgstr ""
+msgstr "Destinasjonsadresse for overføring"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
@@ -5972,12 +6049,12 @@ msgstr "Overføringer"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr "Transittsted"
+msgstr "Transittlokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Transit Locations"
-msgstr "Transittsteder"
+msgstr "Transittlokasjoner"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -6167,7 +6244,7 @@ msgstr "Haster"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_existing_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr ""
+msgstr "Bruk eksisterende parti-/serienummere"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -6221,14 +6298,15 @@ msgstr "Leverandør"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_supplier
+#: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
-msgstr "Leverandørsted"
+msgstr "Leverandørlokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Leverandørsteder"
+msgstr "Leverandørlokasjoner"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
@@ -6248,7 +6326,7 @@ msgstr "Visning"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "Se sted"
+msgstr "Se lokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6280,10 +6358,11 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr ""
+msgstr "Ventende overføringer"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
+#: model:ir.model.fields,field_description:stock.field_product_product__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_product_template__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__warehouse_id
@@ -6387,7 +6466,7 @@ msgstr "Nettstedmeldinger"
 #: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
 #: model:ir.model.fields,help:stock.field_stock_production_lot__website_message_ids
 msgid "Website communication history"
-msgstr "Kommunikasjonshistorikk på nettstedet"
+msgstr "Kommunikasjonshistorikk for nettsted"
 
 #. module: stock
 #: selection:barcode.rule,type:0
@@ -6574,7 +6653,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:1014
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "Du kan ikke avbryte en lagerbevegelse som er satt til 'Fullført'."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:94
@@ -6652,6 +6731,8 @@ msgstr ""
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
+"Du kan ikke splitte et utkast til en bevegelse. Du må først bekrefte "
+"bevegelsen."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1176
@@ -6745,7 +6826,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:109
 #, python-format
 msgid "You have to set a name for this location."
-msgstr "Du må gi dette stedet et navn."
+msgstr "Du må gi denne lokasjonen et navn."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:47

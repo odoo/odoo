@@ -7,18 +7,19 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2018
 # Ladislav Tomm <tomm@helemik.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# Michal Veselý <michal@veselyberanek.net>, 2018
 # Martin Trigaux, 2018
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# Jakub Snášel <jakub@potisk-tricek.cz>, 2019
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
+# Michal Veselý <michal@veselyberanek.net>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,13 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" "
+"title=\"Manage\"/>Sklad"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -46,7 +54,7 @@ msgstr "&amp;nbsp;"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<i>Work in a fun atmosphere</i>"
-msgstr ""
+msgstr "<i>Práce v příjemné atmosféře</i>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -57,14 +65,14 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<i>You are passionate</i>"
-msgstr ""
+msgstr "<i>Jsi vášnivý</i>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<i>You autonomously and quickly learn</i>"
-msgstr ""
+msgstr "<i>Jste samostatný a rychle se učíte</i>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -72,6 +80,14 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
+msgstr "<i>Můžete je snadno spravovat</i>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: hr
@@ -135,6 +151,10 @@ msgid ""
 "training. If you are passionate, motivate and flexible apply for this job, "
 "you will certainly join the best company ever."
 msgstr ""
+"Práce na plný úvazek s atraktivním platovým balíčkem v malém týmu "
+"inteligentních lidí. Podepíšete smlouvu včetně technického a funkčního "
+"školení. Pokud jste vášniví, motivovaní a přizpůsobiví k této práci, určitě "
+"se přidáte k nejlepší firmě vůbec."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -145,7 +165,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A good job in a young and dynamic team"
-msgstr ""
+msgstr "Dobrá práce v mladém a dynamickém týmu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -174,7 +194,7 @@ msgstr "Stav činností"
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "Přidat nového zaměstnance"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -182,14 +202,17 @@ msgid "Additional Note"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Zabezpečení aliasu kontaktu"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
-msgstr ""
+msgstr "Analyzovat potřeby, psát specifikační dokumenty a nabídky"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
@@ -227,7 +250,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
-msgstr ""
+msgstr "Bakalář"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
@@ -242,6 +265,10 @@ msgid ""
 "source project in a friendly and cooperative atmosphere sounds like fun to "
 "you, read on..."
 msgstr ""
+"Díky našemu neustálému růstu nyní hledáme lidi, kteří posilují náš tým "
+"nadšeného vedoucího technického pracovníka. Takže pokud pracujete na "
+"projektu s otevřeným kódem v přátelské a kooperativní atmosféře, zní to jako"
+" legrace, čtěte dále ..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -254,6 +281,9 @@ msgid ""
 "our team of enthusiastic developers. So if working on an open source project"
 " in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
+"Díky našemu neustálému růstu nyní hledáme lidi, kteří posilují náš tým "
+"nadšených vývojářů. Takže pokud pracujete na projektu s otevřeným kódem v "
+"přátelské a kooperativní atmosféře, zní to jako legrace, čtěte dále ..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -262,6 +292,9 @@ msgid ""
 "our team of enthusiastic trainees. So if working on an open source project "
 "in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
+"Díky našemu neustálému růstu nyní hledáme lidi, kteří posilují náš tým "
+"nadšených školitelů. Takže pokud pracujete na projektu s otevřeným kódem v "
+"přátelské a kooperativní atmosféře, zní to jako legrace, čtěte dále ..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -276,12 +309,12 @@ msgstr ""
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr ""
+msgstr "Výkonný ředitel"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr ""
+msgstr "Technický ředitel"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -302,7 +335,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Close to the perfection ..."
-msgstr ""
+msgstr "Téměř dokonale ..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
@@ -354,7 +387,7 @@ msgstr "Konfigurace"
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
-msgstr ""
+msgstr "Konzultant"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
@@ -371,7 +404,7 @@ msgstr "Kontaktní informace"
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Contributions to open source projects"
-msgstr ""
+msgstr "Kontribuce projektům s otevřeným zdrojovým kódem"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
@@ -414,7 +447,7 @@ msgstr "Datum narození"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Define a clear communication strategy"
-msgstr ""
+msgstr "Definujte jasnou komunikační strategii"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -449,7 +482,7 @@ msgstr "Oddělení"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr "Diskusní kanál"
 
 #. module: hr
@@ -583,7 +616,7 @@ msgstr ""
 #. module: hr
 #: model:hr.job,name:hr.job_developer
 msgid "Experienced Developer"
-msgstr ""
+msgstr "Zkušený vývojář"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -598,7 +631,7 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Follow and check the development part"
-msgstr ""
+msgstr "Sledujete a kontrolujete vývojovou část"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -612,19 +645,24 @@ msgstr "Sledující"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_channel_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Sledující (Kanály)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledující (Partneři)"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
 msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Budoucí činnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -634,42 +672,42 @@ msgstr "Pohlaví"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
-msgstr ""
+msgstr "Dobrá znalost HTML a Javascriptu"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of object oriented programming"
-msgstr ""
+msgstr "Dobrá znalost objektově orientovaného programování"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of the latest web technologies"
-msgstr ""
+msgstr "Dobrá znalost nejnovějších webových technologií"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of the programming language"
-msgstr ""
+msgstr "Dobrá znalost programovacího jazyka"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of web design"
-msgstr ""
+msgstr "Dobrá znalost webového designu"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Good language skills in another language"
-msgstr ""
+msgstr "Dobré jazykové znalosti v jiném jazyce"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -695,7 +733,7 @@ msgstr "Nastavení personalistiky"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Help with the configuration of the software"
-msgstr ""
+msgstr "Pomoc s konfigurací softwaru"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -705,12 +743,12 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 msgid "Hire a team of great executive people"
-msgstr ""
+msgstr "Najmeme tým skvělých manažerů"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Hire a team of great marketing people"
-msgstr ""
+msgstr "Zaměstnáme tým skvělých marketingových lidí"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
@@ -720,12 +758,12 @@ msgstr "Najatí zaměstnanci"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr "Personalistika"
+msgstr "Lidské zdroje"
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr ""
+msgstr "manažer lidských zdrojů"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
@@ -781,7 +819,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Improve our communication to customers"
-msgstr ""
+msgstr "Zlepšete komunikaci se zákazníky"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -798,14 +836,14 @@ msgstr "V náboru"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Increase opportunities"
-msgstr ""
+msgstr "Zvyšte příležitosti"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
-msgstr ""
+msgstr "Zvýšit viditelnost produktu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -880,19 +918,24 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Zpožděné činnosti"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Launch new marketing campaigns and offers"
-msgstr ""
+msgstr "Spouštět nové marketingové kampaně a nabídky"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Launch new products, Human Resources campaigns and offers"
-msgstr ""
+msgstr "Zahájíte nové produkty, kampaně a nabídky v oblasti lidských zdrojů"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 msgid "Launch new products, marketing campaigns and offers"
-msgstr ""
+msgstr "Spouštět nové produkty, marketingové kampaně a nabídky"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -932,7 +975,7 @@ msgstr "Rodinný stav"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr ""
+msgstr "Marketingový a komunitní manažer"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -949,7 +992,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Master or engineer in computer science"
-msgstr ""
+msgstr "MBa nebo inženýr v informatice"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_medium
@@ -995,7 +1038,7 @@ msgstr "Zprávy"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Must have ..."
-msgstr ""
+msgstr "Musíte mít ..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -1010,17 +1053,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Termín další aktivity"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Souhrn další aktivity"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Další typ aktivity"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1031,7 +1074,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
-msgstr ""
+msgstr "Hezké mít"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -1136,7 +1179,7 @@ msgstr "Jiné informace"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Our staff at work"
-msgstr ""
+msgstr "Naši zaměstnanci v práci"
 
 #. module: hr
 #: selection:hr.employee,activity_state:0
@@ -1151,7 +1194,7 @@ msgstr "Nadřazené oddělení"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
-msgstr ""
+msgstr "Vášeň pro internet a její kulturu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -1172,7 +1215,7 @@ msgstr "Fotografie"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Pictures of smart and enthusiastic people"
-msgstr ""
+msgstr "Obrázky chytrých a nadšených lidí"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -1185,7 +1228,10 @@ msgid "Planned"
 msgstr "Plánováno"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1203,7 +1249,7 @@ msgstr "Pozice"
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Preferably 1 year of experience"
-msgstr ""
+msgstr "Výhodou 1 rok zkušeností"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
@@ -1218,12 +1264,12 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Quantify and negotiate the resources required"
-msgstr ""
+msgstr "Kvantifikujete a vyjednáváte o potřebných zdrojích"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Quick and autonomous learner"
-msgstr ""
+msgstr "Rychlý a samostatný student"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -1301,12 +1347,12 @@ msgstr "Č.soc.poj."
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Scale our events organization all around the world"
-msgstr ""
+msgstr "Rozšiřte organizaci našich akcí po celém světě"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
-msgstr ""
+msgstr "Škola"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1357,7 +1403,7 @@ msgstr "Svobodný"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Skills"
-msgstr ""
+msgstr "Dovednosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_small
@@ -1415,6 +1461,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stav na základě aktivit\n"
+"Vypršeno: Datum již uplynulo\n"
+"Dnes: Datum aktivity je dnes\n"
+"Plánováno: Budoucí aktivity."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1434,7 +1484,7 @@ msgstr "Podřízení"
 #. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Název značky již existuje!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
@@ -1449,7 +1499,7 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Team spirit and good communication"
-msgstr ""
+msgstr "Týmový duch a dobrá komunikace"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
@@ -1491,6 +1541,8 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"This field is used in order to define in which timezone the resources will "
+"work."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -1501,6 +1553,11 @@ msgstr "Časové pásmo"
 #: selection:hr.employee,activity_state:0
 msgid "Today"
 msgstr "Dnes"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Dnešní činnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -1516,6 +1573,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Transform our product into a suite of well positioned business Apps"
 msgstr ""
+"Transformujte náš produkt do sady dobře umístěných obchodních aplikací"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -1577,6 +1635,12 @@ msgid ""
 " give him the best service. You report to the head of consulting service and"
 " will be coached by a senior consultant."
 msgstr ""
+"Hledáme motivovaného a funkčně orientovaného poradce! Budete se účastnit "
+"konzultačních služeb, které poskytujeme našim partnerům a zákazníkům, na "
+"funkční straně. Vaše práce začíná od nabídky zákazníkovi až po dodání "
+"zákazníkovi. Posloucháte zákazníka a snažíte se mu poskytnout nejlepší "
+"službu. Odešlete zprávu vedoucímu konzultační služby a bude trénován "
+"vedoucím poradcem."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -1586,6 +1650,9 @@ msgid ""
 "and ..... not afraid to start new things, a lot of new things and scale "
 "them."
 msgstr ""
+"Hledáme vášnivého manažera lidských zdrojů, který nám pomůže dělat produkty,"
+" které lidé rádi používají. Potřebujeme někoho, kdo je ambiciózní, vášnivý a"
+" ..... nebojí se začít nové věci, spoustu nových věcí a měnit je."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1594,6 +1661,9 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+"Hledáme vášnivého výkonného manažera, který nám pomůže tvořit produkty, "
+"které lidé rádi používají. Potřebujeme někoho, kdo je ambiciózní, vášnivý a "
+"..... nebojí se začít nové věci, spoustu nových věcí a měnit je."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1602,6 +1672,23 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+"Hledáme vášnivého marketingového manažera, který nám pomůže učinit výrobky, "
+"které lidé rádi používají. Potřebujeme někoho, kdo je ambiciózní, vášnivý a "
+"..... nebojí se začít nové věci, spoustu nových věcí a měnit je."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "Zprávy Webové stránky"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "Historie komunikace Webové stránky"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1612,7 +1699,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What we offer"
-msgstr ""
+msgstr "Co nabízíme"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1623,7 +1710,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What you will do ..."
-msgstr ""
+msgstr "Co budete dělat... "
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1633,7 +1720,7 @@ msgstr "Vdovec"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Will report to the Head of Professional Services"
-msgstr ""
+msgstr "Dokáže reportovat vedoucímu odborných služeb"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -1657,6 +1744,9 @@ msgid ""
 "source, full featured and it’s online offer is 3 times cheaper than "
 "traditional competitors. We have 2.000.000 users, and we're growing fast."
 msgstr ""
+"S naším produktem, který je sadou 3000 obchodních aplikací. Je plně open "
+"source, plnohodnotný a jeho on-line nabídka je 3krát levnější než tradiční "
+"konkurenti. Máme 2.000 000 uživatelů a rychle rosteme."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -1711,58 +1801,58 @@ msgstr "Pracovní doba"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Write attractive content"
-msgstr ""
+msgstr "Psát atraktivní obsah"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Write attractive content and build up Human Resources materials"
-msgstr ""
+msgstr "Psát atraktivní obsah a budovat materiály o lidských zdrojích"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 msgid "Write attractive content and build up executive materials"
-msgstr ""
+msgstr "Napište zajímavý obsah a sestavte výkonné materiály"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You are a quick and autonomous learner"
-msgstr ""
+msgstr "Jste rychlý a samostatný žák"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You are an excellent communicator and negotiator"
-msgstr ""
+msgstr "Jste vynikající komunikátor a vyjednavač"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You are approachable, honest and fun team player"
-msgstr ""
+msgstr "Jste přístupný, čestný a zábavný týmový hráč"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You are available immediately"
-msgstr ""
+msgstr "Jste okamžitě k dispozici"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You are creative"
-msgstr ""
+msgstr "Jste kreativní"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You are ready to travel in US"
-msgstr ""
+msgstr "Jste připraveni cestovat v USA"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You are ready to work in a dynamic company"
-msgstr ""
+msgstr "Jste připraveni pracovat v dynamické společnosti"
 
 #. module: hr
 #: code:addons/hr/models/hr.py:206
@@ -1779,40 +1869,40 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You have 2 or 3 years of experience"
-msgstr ""
+msgstr "Máte 2 nebo 3 roky zkušeností"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You have a Master degree in Business Management"
-msgstr ""
+msgstr "Máte magisterský titul v oblasti řízení podniku"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the IT world"
-msgstr ""
+msgstr "Máte souvislost se světem IT"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the product"
-msgstr ""
+msgstr "Máte souvislost s produktem"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You have good knowledge in accounting"
-msgstr ""
+msgstr "Máte dobré znalosti účetnictví"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You speak a third language"
-msgstr ""
+msgstr "Mluvíte třemi jazyky"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You speak fluently French and English"
-msgstr ""
+msgstr "Mluvíte plynule francouzsky a anglicky"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1823,6 +1913,10 @@ msgid ""
 "small distributed development teams for specific projects. You will become a"
 " technical                 expert of the product."
 msgstr ""
+"Budete zodpovědní za vývoj a vylepšování aplikací. Budete pracovat "
+"samostatně, stejně jako koordinovat a dohlížet na malé distribuované "
+"vývojové týmy pro konkrétní projekty. Stanete se technickým odborníkem na "
+"produkt."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -1832,6 +1926,10 @@ msgid ""
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
+"Budete zodpovědní za vývoj a vylepšování aplikací. Budete pracovat "
+"samostatně, stejně jako koordinovat a dohlížet na malé distribuované "
+"vývojové týmy pro konkrétní projekty. Stanete se technickým odborníkem na "
+"produkt."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1843,50 +1941,54 @@ msgid ""
 "distributed development teams for specific projects. You will become a "
 "techinical expert of the product."
 msgstr ""
+"Budete zodpovědní za vývoj a zlepšení komunikace produktů. Budete pracovat "
+"samostatně, stejně jako koordinovat a dohlížet na malé distribuované "
+"vývojové týmy pro konkrétní projekty. Stanete se technickým expertem na "
+"produkt."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "You will become a technical expert of the product."
-msgstr ""
+msgstr "Stanete se technickým odborníkem na produkt."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "You will initially be coached by senior developers"
-msgstr ""
+msgstr "Nejprve budete veden staršími vývojáři"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "You will initially be coached by senior technical officer"
-msgstr ""
+msgstr "Budete nejprve školen od staršího technického pracovníka"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "You will initially be coached by senior trainees"
-msgstr ""
+msgstr "Nejprve budete trénován staršími lektory"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "You will report to the head of R&amp;D"
-msgstr ""
+msgstr "Budete o tom informovat vedoucího týmu Výzkumu a Vývoje"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "You will work closely with all developers"
-msgstr ""
+msgstr "Budete úzce spolupracovat se všemi vývojáři"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "You will work closely with all technical officer"
-msgstr ""
+msgstr "Budete úzce spolupracovat se všemi technickými pracovníky"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "You will work closely with all trainees"
-msgstr ""
+msgstr "Budete úzce spolupracovat se všemi účastníky kurzu"
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address

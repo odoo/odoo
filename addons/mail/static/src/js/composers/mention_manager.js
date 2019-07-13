@@ -52,10 +52,8 @@ var MentionManager = Widget.extend({
     getListenerSelection: function (delimiter) {
         var listener = _.findWhere(this._listeners, { delimiter: delimiter });
         if (listener) {
-            var inputMentions = this._composer
-                                    .$input
-                                    .val()
-                                    .match(new RegExp(delimiter+'[^ ]+(?= |&nbsp;)', 'g'));
+            var escapedVal = _.escape(this._composer.$input.val());
+            var inputMentions = escapedVal.match(new RegExp(delimiter+'[^ ]+(?= |&nbsp;|$)', 'g'));
             return this._validateSelection(listener.selection, inputMentions);
         }
         return [];
@@ -168,9 +166,8 @@ var MentionManager = Widget.extend({
                                                       listener.model,
                                                       listener.delimiter,
                                                       matchName);
-                    var subtext = s.substring(startIndex, endIndex)
-                                   .replace(match[0], processedText);
-                    substrings.push(subtext);
+                    substrings.push(s.substring(startIndex, match.index));
+                    substrings.push(processedText);
                     startIndex = endIndex;
                 }
                 substrings.push(s.substring(startIndex, s.length));
@@ -260,7 +257,7 @@ var MentionManager = Widget.extend({
         // create the regex of all mention's names
         var names = _.pluck(listener.selection, 'name');
         var escapedNames = _.map(names, function (str) {
-            return "("+_.str.escapeRegExp(listener.delimiter+str)+")";
+            return "("+_.str.escapeRegExp(listener.delimiter+str)+")(?= |&nbsp;|$)";
         });
         var regexStr = escapedNames.join('|');
         // extract matches

@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:07+0000\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,8 +75,36 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.index
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Start date\" "
+"title=\"Start date\"/>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-clock-o\"/> From"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid ""
+"<i class=\"fa fa-cloud\" title=\"It is an online event\" role=\"img\" aria-"
+"label=\"It is an online event\"/>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events
+msgid ""
+"<i class=\"fa fa-flag fa-5x text-muted\" title=\"Local Events\" role=\"img\""
+" aria-label=\"Local Events\"/>"
 msgstr ""
 
 #. module: website_event
@@ -97,14 +125,43 @@ msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to iCal/Outlook"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid ""
+"<i class=\"fa fa-map-marker\" title=\"It is a physical event\" role=\"img\" "
+"aria-label=\"It is a physical event\"/>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index
+msgid "<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Event type\" title=\"Event type\"/>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Name\" title=\"Name\"/>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>to</i>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_quotes
 msgid "<small>Author</small>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid ""
+"<span class=\"badge badge-danger\" role=\"img\" aria-label=\"Attention: not "
+"published\" title=\"Not published\"><i class=\"fa fa-ban\"/></span>"
 msgstr ""
 
 #. module: website_event
@@ -151,12 +208,12 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Email</strong>"
-msgstr ""
+msgstr "<strong>이메일</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Name</strong>"
-msgstr ""
+msgstr "<strong>이름</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -306,7 +363,7 @@ msgstr "일정"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Category"
-msgstr ""
+msgstr "행사 범주"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -389,7 +446,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Google Maps"
-msgstr ""
+msgstr "구글 맵"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:70
@@ -405,7 +462,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
 msgid "Is published"
-msgstr ""
+msgstr "게시됨"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:71
