@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-21 11:06+0000\n"
+"POT-Creation-Date: 2019-07-10 09:57+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Maidu Targama <m.targama@gmail.com>, 2019\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -346,7 +346,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Rounding Method</span>"
+msgid ""
+"<span class=\"o_form_label\">Rounding Method</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 
 #. module: account
@@ -3385,6 +3387,12 @@ msgstr "Loo esimene raha ümardus"
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
 msgid "Created by"
 msgstr "Loonud"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:419
+#, python-format
+msgid "Created by: %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
