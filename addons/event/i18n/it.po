@@ -17,8 +17,8 @@
 # David Minneci <david@numeko.it>, 2018
 # mymage <stefano.consolaro@mymage.it>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,7 +164,7 @@ msgid ""
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
 "<span class=\"o_form_label\">Avviso: questo evento non ha raggiunto il "
-"numero minimo di registrazioni. Confermare veramente l'evento?</span>"
+"numero minimo di registrazioni. Confermarlo veramente?</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1088,12 +1088,12 @@ msgstr "Partecipanti"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr "Conferma automatica iscrizione"
+msgstr "Conferma automatica registrazione"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr "Conferma iscrizioni automaticamente"
+msgstr "Conferma registrazioni automaticamente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_mail_schedule
@@ -1175,7 +1175,7 @@ msgstr "Annulla Evento"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
-msgstr "Annulla Registrazione"
+msgstr "Annulla registrazione"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -1247,7 +1247,7 @@ msgstr "Conferma Evento"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
-msgstr "Conferma Registrazione"
+msgstr "Conferma registrazione"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -1418,7 +1418,7 @@ msgstr "Orario email"
 #: model:ir.model.fields,field_description:event.field_event_mail__template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_id
 msgid "Email Template"
-msgstr "Template Email"
+msgstr "Modello e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -1514,7 +1514,7 @@ msgstr "Organizzazione Evento"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "Registrazione Evento"
+msgstr "Registrazione evento"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:143
@@ -1595,8 +1595,8 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
-"Eventi e iscrizioni saranno confermati automaticamente\n"
-"                                            alla creazione, semplificando il flusso per gli eventi semplici."
+"Eventi e registrazioni verranno confermati automaticamente\n"
+"                                            alla creazione, semplificando il flusso per eventi semplici."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1604,8 +1604,8 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
-"Eventi e iscrizioni saranno confermati automaticamente alla creazione, "
-"semplificando il flusso per gli eventi semplici."
+"Eventi e registrazioni verranno confermati automaticamente alla creazione, "
+"semplificando il flusso per eventi semplici."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1661,9 +1661,8 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
-"Per ogni evento puoi definire il massimo dei posti disponibili (numero di "
-"partecipanti), oltre questo numero le registrazioni all'evento non saranno "
-"accettate."
+"Per ciascun evento può essere definito un massimo di registrazioni posti "
+"(numero di partecipanti). Ulteriori registrazioni non verranno accettate."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_min
@@ -1672,9 +1671,9 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
-"Per ogni evento puoi definire il minimo dei posti disponibili (numero di "
-"partecipanti), se non sarà raggiunto il numero minimo, l'evento potrebbe non"
-" essere confermato (scrivi 0 per ignorare questa regola)"
+"Per ciascun evento è possibile definire un minimo di posti a disposizione "
+"(numero di partecipanti). Se il valore non viene raggiunto, l'evento non "
+"potrà essere confermato (0 per ignorare questa regola)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1963,7 +1962,7 @@ msgstr "Numero Massimo di Partecipanti"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_max
 msgid "Maximum Registrations"
-msgstr "Iscrizioni massime"
+msgstr "Registrazioni massime"
 
 #. module: event
 #: code:addons/event/models/event.py:258
@@ -2224,7 +2223,7 @@ msgstr "Badge registrazione"
 #: model:ir.model.fields,field_description:event.field_event_registration__date_open
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr "Data di registrazione"
+msgstr "Data registrazione"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search

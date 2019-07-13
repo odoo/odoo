@@ -34,14 +34,15 @@
 # Martin Trigaux, 2019
 # Osoul <baruni@osoul.ly>, 2019
 # Ali Alrehawi <alrehawi@hotmail.com>, 2019
+# Firas Fraxnet <firas@fraxnet.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-21 11:06+0000\n"
+"POT-Creation-Date: 2019-07-10 09:57+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2019\n"
+"Last-Translator: Firas Fraxnet <firas@fraxnet.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -468,8 +469,10 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Rounding Method</span>"
-msgstr "<span class=\"o_form_label\">طريقة التقريب</span>"
+msgid ""
+"<span class=\"o_form_label\">Rounding Method</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -845,7 +848,7 @@ msgstr ""
 #: code:addons/account/models/reconciliation_widget.py:681
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr "يجب أن تشمل التسوية بندي حركة على الأقل."
+msgstr "يجب أن تشمل التسوية على حركتين على الأقل."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2118,7 +2121,7 @@ msgstr "تطبيق آلي لقيود الأرباح المُرحلة للعقو�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automated Entries"
-msgstr "تطبيق آلي للقيود"
+msgstr "ادخال آلي للقيود"
 
 #. module: account
 #: code:addons/account/models/company.py:407
@@ -3546,6 +3549,12 @@ msgstr "القيام بأولى عمليات التقريب للنقدية"
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:419
+#, python-format
+msgid "Created by: %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -12393,4 +12402,4 @@ msgstr "النوع: [(الاسم، المبلغ، القاعدة، الكمية 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
-msgstr "← إحصاء"
+msgstr "← عدد"
