@@ -11,15 +11,15 @@
 # laznikd <laznik@mentis.si>, 2019
 # Martin Trigaux, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
-# Grega Vavtar <grega@hbs.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
+# Grega Vavtar <grega@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-21 11:06+0000\n"
+"POT-Creation-Date: 2019-07-10 09:57+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
@@ -85,7 +85,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp;<span>na</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_chatter
@@ -343,7 +343,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Rounding Method</span>"
+msgid ""
+"<span class=\"o_form_label\">Rounding Method</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 
 #. module: account
@@ -369,6 +371,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Znesek</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Skupni znesek</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -418,7 +422,7 @@ msgstr "<span>Znesek plačan</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Balance</span>"
-msgstr ""
+msgstr "<span>Ravnovesje</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -438,12 +442,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Date</span>"
-msgstr ""
+msgstr "<span>Datum računa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
-msgstr ""
+msgstr "<span>Številka računa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -473,7 +477,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "<span>Prvotni znesek</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -488,7 +492,7 @@ msgstr "<span>Poročanje</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Source Document</span>"
-msgstr ""
+msgstr "<span>Izvorni dokument</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -516,6 +520,8 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr ""
+"<strong class=\"text-center\">Preglej me s svojo bančno "
+"aplikacijo.</strong><br/><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -523,6 +529,8 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">Informacije SEPA QR kode niso pravilno "
+"nastavljene.</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -532,7 +540,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>Dolgovani znesek</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -542,12 +550,12 @@ msgstr "<strong>Podjetje:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
-msgstr ""
+msgstr "<strong>Koda stranke:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
-msgstr ""
+msgstr "<strong>Kupec: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -582,17 +590,17 @@ msgstr "<strong>Dnevnik:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Memo: </strong>"
-msgstr ""
+msgstr "<strong>Zapisek: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Amount: </strong>"
-msgstr ""
+msgstr "<strong>Znesek plačila: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Date: </strong>"
-msgstr ""
+msgstr "<strong>Datum plačila: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -633,7 +641,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Vendor: </strong>"
-msgstr ""
+msgstr "<strong>Dobavitelj: </strong>"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -2428,7 +2436,7 @@ msgstr "Preklicano"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Invoice"
-msgstr "Prekilcani račun"
+msgstr "Preklicani račun"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:56
@@ -3332,6 +3340,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
 msgid "Created by"
 msgstr "Ustvaril"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:419
+#, python-format
+msgid "Created by: %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -7321,7 +7335,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 #, python-format
 msgid "Paid on"
-msgstr ""
+msgstr "Plačano"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reconciled
@@ -7549,7 +7563,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt:"
-msgstr ""
+msgstr "Potrdilo o plačilu:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference

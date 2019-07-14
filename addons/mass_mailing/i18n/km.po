@@ -124,6 +124,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -368,7 +372,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__is_blacklisted
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklist"
-msgstr ""
+msgstr "បញ្ជើខ្មៅ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -734,7 +738,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
 msgid "Design"
-msgstr ""
+msgstr "ច្នៃប្រឌិត"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__dest_list_id
@@ -799,7 +803,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
 msgid "Edit"
-msgstr ""
+msgstr "កែសម្រួល"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__email
@@ -886,7 +890,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__expected
 msgid "Expected"
-msgstr ""
+msgstr "បានរំពឹងទុក"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
@@ -936,7 +940,7 @@ msgstr "អ្នកដើរតាម (ដៃគូរ)"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__email_from
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__email_from
 msgid "From"
-msgstr ""
+msgstr "មកពី"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -1014,6 +1018,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"ប្រសិនបើអាស័យដ្ឋានអ៊ីម៉ែលស្ថិតនៅក្នុងបញ្ជីខ្មៅនោះទំនាក់ទំនងនឹងមិនទទួលបានសំបុត្រធំ"
+" ៗ ទៀតទេពីបញ្ជីណាមួយ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__ignored
@@ -1291,7 +1297,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:mail.mass_mailing.tag,name:mass_mailing.mass_mail_tag_1
 msgid "Marketing"
-msgstr ""
+msgstr "ទីផ្សារ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__name
@@ -1408,7 +1414,7 @@ msgstr "Medium"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_list_merge_view_form
 msgid "Merge"
-msgstr ""
+msgstr "បញ្ចូលចូលគ្នា"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mass_mailing_list_merge
@@ -2210,7 +2216,7 @@ msgstr "សរុប​"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Tracking"
-msgstr ""
+msgstr "ការ​តាមដាន"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_unread
@@ -2377,9 +2383,9 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:49
+#: code:addons/mass_mailing/static/src/js/unsubscribe.js:50
 #, python-format
-msgid "You have been <strong>successfully unsubscribed from </strong>."
+msgid "You have been <strong>successfully unsubscribed from %s</strong>."
 msgstr ""
 
 #. module: mass_mailing
