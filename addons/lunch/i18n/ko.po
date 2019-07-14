@@ -819,7 +819,7 @@ msgstr "내 계정 그룹화"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr "나의 점심"
+msgstr "점심 주문"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -995,7 +995,7 @@ msgstr "상품"
 #: model:ir.actions.act_window,name:lunch.lunch_product_category_action
 #: model:ir.ui.menu,name:lunch.lunch_product_category_menu
 msgid "Product Categories"
-msgstr "상품 범주"
+msgstr "상품 종류"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__category_id
@@ -1003,12 +1003,12 @@ msgstr "상품 범주"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__name
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Category"
-msgstr "상품 범주"
+msgstr "상품 종류"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Category:"
-msgstr "상품 범주 :"
+msgstr "상품 종류 :"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__name
@@ -1043,18 +1043,18 @@ msgstr "상품 트리"
 msgid ""
 "Products from this vendor can <strong>not</strong> be ordered at that "
 "moment."
-msgstr ""
+msgstr "이 공급업체의 제품은 지금 주문할 수 <strong>없습니다</strong>."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Products from this vendor can be ordered at that moment."
-msgstr ""
+msgstr "이 공급업체의 제품은 지금 주문할 수 없습니다."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Receive"
-msgstr ""
+msgstr "수신"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -1070,7 +1070,7 @@ msgstr "반복"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 msgid "Register Cash Moves"
-msgstr ""
+msgstr "현금 이동 등록"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
@@ -1098,22 +1098,22 @@ msgstr "검색"
 #: code:addons/lunch/static/src/xml/lunch.xml:5
 #, python-format
 msgid "Select a product and put your order comments on the note."
-msgstr ""
+msgstr "제품을 선택하고 노트에 주문 주석을 입력하세요."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Select your order"
-msgstr ""
+msgstr "주문 선택"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Select your vendor"
-msgstr ""
+msgstr "공급업체 선택"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
 msgid "Specific Day"
-msgstr ""
+msgstr "특정일"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__state
@@ -1124,7 +1124,7 @@ msgstr "상태"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
+msgstr "모든 점심 주문의 요약. 공급업체별 및 날짜별로 그룹화."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sunday
@@ -1140,21 +1140,21 @@ msgstr "해당 사용자가 현재 근무하는 회사"
 #: code:addons/lunch/models/lunch.py:130
 #, python-format
 msgid "The date of your order is in the past."
-msgstr ""
+msgstr "주문 날짜가 과거입니다."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action
 msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
-msgstr ""
+msgstr "이전 주문이 기록되지 않았습니다.\"점심 주문\"을 클릭한 다음 새로운 점심 주문을 만듭니다."
 
 #. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/xml/lunch.xml:4
 #, python-format
 msgid "This is the first time you order a meal"
-msgstr "이것은 첫번쨰 고기 주문입니다."
+msgstr "식사 주문하는 건 이번이 처음이에요"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thursday
@@ -1164,7 +1164,7 @@ msgstr "목요일"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
 msgid "Today's Orders"
-msgstr ""
+msgstr "오늘의 주문"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__total
@@ -1199,7 +1199,7 @@ msgstr "사용자"
 msgid ""
 "Validate order for one company at a time to send emails (mixed orders from "
 "%s and %s)"
-msgstr ""
+msgstr "한 회사의 주문을 한꺼번에 확인하여 이메일을 보냅니다(%s 및 %s의 혼합 주문)"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:239
@@ -1207,7 +1207,7 @@ msgstr ""
 msgid ""
 "Validate order for one currency at a time to send emails (mixed orders from "
 "%s and %s)"
-msgstr ""
+msgstr "하나의 통화에 대한 주문을 한꺼번에 확인하여 이메일을 보냅니다(%s 및 %s의 혼합 주문)"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:229
@@ -1215,7 +1215,7 @@ msgstr ""
 msgid ""
 "Validate order for one supplier at a time to send emails (mixed orders from "
 "%s and %s)"
-msgstr ""
+msgstr "해당 공급업체에 대한 주문을 한꺼번에 확인하여 이메일을 보냅니다(%s 및 %s의 혼합 주문)"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__partner_id
@@ -1230,13 +1230,13 @@ msgstr "공급업체"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "날짜별 공급업체 주문"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:192
 #, python-format
 msgid "Vendor(s) '%s' is not available today"
-msgstr ""
+msgstr "'%s' 공급업체는 현재 사용할 수 없습니다"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday
@@ -1246,47 +1246,47 @@ msgstr "수요일"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Write the message you want to display during the defined period..."
-msgstr ""
+msgstr "정의된 기간 동안 표시할 메시지를 작성하십시오..."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_account
 msgid "Your Account"
-msgstr ""
+msgstr "귀하의 계정"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_form
 msgid "Your Lunch Account"
-msgstr "점심 계정"
+msgstr "귀하의 점심 계정"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action
 msgid "Your Orders"
-msgstr ""
+msgstr "귀하의 주문"
 
 #. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/xml/lunch.xml:6
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
-msgstr ""
+msgstr "여러분이 가장 좋아하는 식사는 마지막 주문에 따라 만들어질 것입니다."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "현금이동 양식"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
 msgid "cashmove tree"
-msgstr ""
+msgstr "현금이동 트리"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "점심 현금이동"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "점심 식사비 지불"

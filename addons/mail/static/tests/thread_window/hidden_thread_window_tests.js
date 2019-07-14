@@ -222,6 +222,91 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
     testUtils.unpatch(this.services.mail_service);
 });
 
+QUnit.test('receive message from hidden thread window', function (assert) {
+    // This is almost the same test as the one before, except there are
+    // at most 3 thread windows visible, and 2 thread windows are visible
+    // when it shows the 'hidden thread window' button.
+    // This case occurs when the amount of available slots depends on
+    // whether the hidden button should be displayed or not
+    // Example:
+    //      - global width of 400px
+    //      - button width of 100px
+    //      - thread width of 250px
+    //
+    // Without button: 1 thread window (250px < 800px)
+    //    With button: 1 thread window (250px + 100px = 350px < 400px)
+    assert.expect(7);
+
+    testUtils.patch(this.services.mail_service, {
+        HIDDEN_THREAD_WINDOW_DROPDOWN_BUTTON_WIDTH: 100,
+        THREAD_WINDOW_WIDTH: 250,
+        _getGlobalWidth: function () { return 400; },
+    });
+
+    var channels = [{
+        id: 1,
+        channel_type: 'channel',
+        name: "channel" + 1,
+    }, {
+        id: 2,
+        channel_type: 'channel',
+        name: "channel" + 2,
+    }];
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: channels,
+        },
+    };
+
+    var parent = this.createParent({
+        data: this.data,
+        services: this.services,
+    });
+
+    // detach channel 2 first, so that chanel 1 is open and channel 2 is hidden
+    parent.call('mail_service', 'getChannel', 2).detach();
+    parent.call('mail_service', 'getChannel', 1).detach();
+
+    var $visibleThreadWindows = $('.o_thread_window:not(.o_thread_window_dropdown, .o_hidden)');
+
+    assert.strictEqual($visibleThreadWindows.length, 1,
+        "should have 1 thread windows visible (as many as available slots)");
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="1"]').length, 1,
+        "the thread window with ID 1 should be visible");
+    assert.strictEqual($('.o_thread_window.o_hidden[data-thread-id="2"]').length, 1,
+        "the thread window with ID 2 should be hidden");
+    assert.strictEqual(
+        $('.o_thread_window_dropdown .o_total_unread_counter').text().trim(),
+        "",
+        "should have no unread counter on hidden dropup menu");
+
+    // simulate receiving a message in channel ID 2
+    var messageData = {
+        author_id: [5, "Someone else"],
+        body: "<p>Test message</p>",
+        id: 1,
+        model: 'mail.channel',
+        res_id: 2,
+        channel_ids: [2],
+    };
+    var notification = [[false, 'mail.channel', 2], messageData];
+    parent.call('bus_service', 'trigger', 'notification', [notification]);
+
+    $visibleThreadWindows = $('.o_thread_window:not(.o_thread_window_dropdown, .o_hidden)');
+    assert.strictEqual($visibleThreadWindows.filter('[data-thread-id="1"]').length, 1,
+        "the thread window with ID 1 should stay visible");
+    assert.strictEqual($('.o_thread_window.o_hidden[data-thread-id="2"]').length, 1,
+        "the thread window with ID 2 should stay hidden");
+    assert.strictEqual(
+        $('.o_thread_window_dropdown .o_total_unread_counter').text().trim(),
+        "1",
+        "should have unread counter of 1 on hidden dropup menu");
+
+    parent.destroy();
+    testUtils.unpatch(this.services.mail_service);
+});
+
 });
 });
 });

@@ -776,12 +776,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'company_id': company.id,
         })
 
-        # To allow testing validation of PO
+        # To allow testing validation of PO and Delivery
+        today = date_po
         def _today(*args, **kwargs):
-            return date_po
-        # To allow testing validation of Delivery
+            return today
         def _now(*args, **kwargs):
-            return date_delivery + ' 01:00:00'
+            return today + ' 01:00:00'
 
         patchers = [
             patch('odoo.fields.Date.context_today', _today),
@@ -810,13 +810,17 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
 
+        today = date_delivery
         picking = po.picking_ids
         (picking.move_lines
             .filtered(lambda l: l.purchase_line_id == line_product_avg)
             .write({'quantity_done': 1.0}))
 
         picking.button_validate()
+        # 1 Unit received at rate 0.7 = 42.86
+        self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
+        today = date_invoice
         inv = self.env['account.invoice'].create({
             'type': 'in_invoice',
             'date_invoice': date_invoice,
@@ -899,7 +903,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'purchase_method': 'purchase',
             'cost_method': 'average',
             'name': 'AVG',
-            'standard_price': 60,
+            'standard_price': 0,
             'property_account_creditor_price_difference': self.price_diff_account.id
         }).product_variant_id
         product_avg.invoice_policy = 'order'
@@ -946,13 +950,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'company_id': company.id,
         })
 
-        # To allow testing validation of PO
+        # To allow testing validation of PO and Delivery
+        today = date_po
         def _today(*args, **kwargs):
-            return date_po
-        # To allow testing validation of Delivery
-        delivery_now = date_delivery
+            return today
         def _now(*args, **kwargs):
-            return delivery_now + ' 01:00:00'
+            return today + ' 01:00:00'
 
         patchers = [
             patch('odoo.fields.Date.context_today', _today),
@@ -981,6 +984,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
 
+        today = date_delivery
         picking = po.picking_ids
         (picking.move_lines
             .filtered(lambda l: l.purchase_line_id == line_product_avg)
@@ -988,7 +992,10 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         picking.button_validate()
         picking.action_done()  # Create Backorder
+        # 5 Units received at rate 0.7 = 42.86
+        self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
+        today = date_invoice
         inv = self.env['account.invoice'].create({
             'type': 'in_invoice',
             'date_invoice': date_invoice,
@@ -1011,13 +1018,16 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         inv.action_invoice_open()
 
+        today = date_delivery1
         backorder_picking = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
-        delivery_now = date_delivery1
         (backorder_picking.move_lines
             .filtered(lambda l: l.purchase_line_id == line_product_avg)
             .write({'quantity_done': 5.0}))
         backorder_picking.button_validate()
+        # 5 Units received at rate 0.7 (42.86) + 5 Units received at rate 0.8 (37.50) = 40.18
+        self.assertAlmostEqual(product_avg.standard_price, 40.18)
 
+        today = date_invoice1
         inv1 = self.env['account.invoice'].create({
             'type': 'in_invoice',
             'date_invoice': date_invoice1,

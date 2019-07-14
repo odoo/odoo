@@ -347,9 +347,9 @@ class IrHttp(models.AbstractModel):
         if not filename:
             if filename_field in obj:
                 filename = obj[filename_field]
-            elif module_resource_path:
+            if not filename and module_resource_path:
                 filename = os.path.basename(module_resource_path)
-            else:
+            if not filename:
                 filename = "%s-%s-%s" % (obj._name, obj.id, field)
 
         # mimetype
@@ -363,6 +363,13 @@ class IrHttp(models.AbstractModel):
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
                 mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+
+        # extension
+        _, existing_extension = os.path.splitext(filename)
+        if not existing_extension:
+            extension = mimetypes.guess_extension(mimetype)
+            if extension:
+                filename = "%s%s" % (filename, extension)
 
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 

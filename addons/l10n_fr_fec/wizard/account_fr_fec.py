@@ -305,7 +305,9 @@ class AccountFrFec(models.TransientModel):
             END
             AS PieceRef,
             TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
-            CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/' ELSE replace(replace(aml.name, '|', '/'), '\t', '') END AS EcritureLib,
+            CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
+                WHEN aml.name SIMILAR TO '[\t|\s|\n]*' THEN '/'
+                ELSE replace(replace(replace(replace(aml.name, '|', '/'), '\t', ''), '\n', ''), '\r', '') END AS EcritureLib,
             replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
             replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,

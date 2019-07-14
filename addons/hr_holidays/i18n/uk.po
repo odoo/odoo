@@ -2579,14 +2579,26 @@ msgid "You can not have 2 leaves that overlaps on the same day."
 msgstr "Ви не можете мати 2 відпустки, які перекриваються в той же день."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:463
+#: code:addons/hr_holidays/models/hr_leave.py:520
+#, python-format
+msgid "You can take %s from %s"
+msgstr "Ви можете взяти %s з %s"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:515
 #, python-format
 msgid "You can take %s only between %s and %s"
 msgstr "Ви можете взяти %s тільки між %s та %s"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:511
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:354
+#: code:addons/hr_holidays/models/hr_leave.py:525
+#, python-format
+msgid "You can take %s until %s"
+msgstr "Ви можете взяти %s до %s"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:576
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:379
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "Ви не можете вилучити відпустку, що у стані %s."
@@ -2612,10 +2624,13 @@ msgstr ""
 msgid "day(s)"
 msgstr "день(дні)"
 
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:222
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#, python-format
 msgid "days"
 msgstr "днів"
 
@@ -2625,11 +2640,16 @@ msgid "e.g. Report to the next month..."
 msgstr "наприклад, Запит на наступний місяць"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:392
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:219
+#: code:addons/hr_holidays/models/hr_leave.py:398
 #, python-format
 msgid "hour(s)"
 msgstr "година(и)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:222
+#, python-format
+msgid "hours"
+msgstr "години"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary

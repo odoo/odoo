@@ -123,14 +123,32 @@ class AccountVoucher(models.Model):
     @api.multi
     @api.depends('tax_correction', 'line_ids.price_subtotal')
     def _compute_total(self):
+        tax_calculation_rounding_method = self.env.user.company_id.tax_calculation_rounding_method
         for voucher in self:
             total = 0
             tax_amount = 0
+            tax_lines_vals_merged = {}
             for line in voucher.line_ids:
                 tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
-                total += tax_info.get('total_included', 0.0)
-                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)])
-            voucher.amount = total + voucher.tax_correction
+                if tax_calculation_rounding_method == 'round_globally':
+                    total += tax_info.get('total_excluded', 0.0)
+                    for t in tax_info.get('taxes', False):
+                        key = (
+                            t['id'],
+                            t['account_id'],
+                        )
+                        if key not in tax_lines_vals_merged:
+                            tax_lines_vals_merged[key] = t.get('amount', 0.0)
+                        else:
+                            tax_lines_vals_merged[key] += t.get('amount', 0.0)
+                else:
+                    total += tax_info.get('total_included', 0.0)
+                    tax_amount += sum([t.get('amount', 0.0) for t in tax_info.get('taxes', False)])
+            if tax_calculation_rounding_method == 'round_globally':
+                tax_amount = sum([voucher.currency_id.round(t) for t in tax_lines_vals_merged.values()])
+                voucher.amount = total + tax_amount + voucher.tax_correction
+            else:
+                voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
     @api.onchange('date')
@@ -304,10 +322,13 @@ class AccountVoucher(models.Model):
                 'payment_id': self._context.get('payment_id'),
             }
             # Create one line per tax and fix debit-credit for the move line if there are tax included
-            if (line.tax_ids):
-                tax_group = line.tax_ids.compute_all(line.price_unit, line.currency_id, line.quantity, line.product_id, self.partner_id)
+            if (line.tax_ids and tax_calculation_rounding_method == 'round_per_line'):
+                tax_group = line.tax_ids.compute_all(self._convert(line.price_unit), self.company_id.currency_id, line.quantity, line.product_id, self.partner_id)
                 if move_line['debit']: move_line['debit'] = tax_group['total_excluded']
                 if move_line['credit']: move_line['credit'] = tax_group['total_excluded']
+                Currency = self.env['res.currency']
+                company_cur = Currency.browse(company_currency)
+                current_cur = Currency.browse(current_currency)
                 for tax_vals in tax_group['taxes']:
                     if tax_vals['amount']:
                         tax = self.env['account.tax'].browse([tax_vals['id']])
@@ -328,8 +349,8 @@ class AccountVoucher(models.Model):
                             ctx = {}
                             if self.account_date:
                                 ctx['date'] = self.account_date
-                            temp['currency_id'] = current_currency.id
-                            temp['amount_currency'] = company_currency._convert(tax_vals['amount'], current_currency, line.company_id, self.account_date or fields.Date.today(), round=True)
+                            temp['currency_id'] = current_currency
+                            temp['amount_currency'] = company_cur._convert(tax_vals['amount'], current_cur, line.company_id, self.account_date or fields.Date.today(), round=True)
                         self.env['account.move.line'].create(temp)
 
             self.env['account.move.line'].create(move_line)
