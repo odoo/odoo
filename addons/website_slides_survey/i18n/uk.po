@@ -39,6 +39,20 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний(а) ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        На жаль, ви не пройшли сертифікацію і більше не є учасником курсу: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Не соромтеся зареєструватися знову!\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Зареєструватися зараз\n"
+"            </a>\n"
+"        </div>\n"
+"        Дякуємо за вашу участь.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -46,51 +60,53 @@ msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
 "certification\" title=\"Download certification\"/> Download certification"
 msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Завантажити сертифікат"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_home_inherit_survey
 msgid "<i class=\"fa fa-trophy mr-1\"/>Certifications"
-msgstr ""
+msgstr "<i class=\"fa fa-trophy mr-1\"/>Сертифікати"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
 msgid "<span class=\"text-muted small font-weight-bold\">Certifications</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small font-weight-bold\">Сертифікати</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.top3_user_card
 msgid "<span class=\"text-muted\">Certifications</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Сертифікати</span>"
 
 #. module: website_slides_survey
 #: sql_constraint:slide.slide:0
 msgid "A slide of type 'certification' requires a certification."
-msgstr ""
+msgstr "Слайд типу \"сертифікація\" вимагає сертифікації."
 
 #. module: website_slides_survey
 #: sql_constraint:slide.slide:0
 msgid "A slide of type certification cannot be previewed."
-msgstr ""
+msgstr "Неможливо переглянути слайд типу сертифікації."
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
 msgid "Ash"
-msgstr ""
+msgstr "Зола"
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
 msgid "Bed"
-msgstr ""
+msgstr "Ліжко"
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
 msgid "Beech"
-msgstr ""
+msgstr "Берег"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 msgid "Begin Certification"
-msgstr ""
+msgstr "Почати сертифікацію"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -106,18 +122,19 @@ msgstr "Сертифікація"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_quizz_passed
 msgid "Certification Quizz Passed"
-msgstr ""
+msgstr "Вікторина сертифікації пройшла"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
 msgid "Certification attempts"
-msgstr ""
+msgstr "Спроби сертифікації"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:34
 #, python-format
 msgid "Certification slides are completed when the survey is succeeded."
 msgstr ""
+"Слайди із сертифікації завершуються після успішного проведення опитування."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
@@ -127,7 +144,7 @@ msgstr "Сертифікації"
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
 msgid "Chair"
-msgstr ""
+msgstr "Крісло"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -141,17 +158,17 @@ msgstr "Попередній перегляд"
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:25
 #, python-format
 msgid "Cover Image File"
-msgstr ""
+msgstr "Файл фонового зображення"
 
 #. module: website_slides_survey
 #: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
 msgid "DIY Furniture Certification"
-msgstr ""
+msgstr "Сертифікація меблів DIY"
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
 msgid "Desk"
-msgstr ""
+msgstr "Стіл"
 
 #. module: website_slides_survey
 #: selection:slide.slide,slide_type:0
@@ -163,12 +180,12 @@ msgstr "Документ"
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:11
 #, python-format
 msgid "Download certification"
-msgstr ""
+msgstr "Завантажити сертифікат"
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
 msgid "Fir"
-msgstr ""
+msgstr "Ялина"
 
 #. module: website_slides_survey
 #: model:survey.question,question:website_slides_survey.furniture_certification_page_1
@@ -180,12 +197,12 @@ msgstr "Меблі"
 #: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
 #: model:survey.survey,title:website_slides_survey.furniture_certification
 msgid "Furniture Creation Certification"
-msgstr ""
+msgstr "Сертифікація створення меблів"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_templates_inherit_website_slides
 msgid "Go back to course"
-msgstr ""
+msgstr "Повернутися до курсу"
 
 #. module: website_slides_survey
 #: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1
@@ -203,36 +220,36 @@ msgstr "Інфографіка"
 #. module: website_slides_survey
 #: model:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
 msgid "It's time to test your knowledge!"
-msgstr ""
+msgstr "Саме час перевірити знання!"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "No certifications yet!"
-msgstr ""
+msgstr "Ще немає жодного сертифікату!"
 
 #. module: website_slides_survey
 #: model:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
 msgid ""
 "Now that you have completed the course, it's time to test your knowledge!"
-msgstr ""
+msgstr "Тепер, коли ви закінчили курс, настав час перевірити свої знання!"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_category__nbr_certification
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
 msgid "Number of Certifications"
-msgstr ""
+msgstr "Кількість сертифікацій"
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
 msgid "Oak"
-msgstr ""
+msgstr "Дуб"
 
 #. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:7
 #, python-format
 msgid "Pass Certification"
-msgstr ""
+msgstr "Пройти сертифікацію"
 
 #. module: website_slides_survey
 #: selection:slide.slide,slide_type:0
@@ -242,33 +259,33 @@ msgstr "Презентація"
 #. module: website_slides_survey
 #: selection:slide.slide,slide_type:0
 msgid "Quiz"
-msgstr ""
+msgstr "Вікторина"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
 msgid "Related course slide"
-msgstr ""
+msgstr "Пов'язаний слайд курсу"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Score :"
-msgstr ""
+msgstr "Оцінка :"
 
 #. module: website_slides_survey
 #: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_2
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
 msgid "Select all the furniture shown in the video"
-msgstr ""
+msgstr "Виберіть всі меблі, показані на відео"
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
 msgid "Shelve"
-msgstr ""
+msgstr "Полиця"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr ""
+msgstr "Slide / Partner decorated m2m"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel
@@ -278,7 +295,7 @@ msgstr "Канал відео"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Slide membership information for the logged in user"
-msgstr ""
+msgstr "Розмістіть інформацію про членство для зареєстрованого користувача"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide
@@ -293,7 +310,7 @@ msgstr "Категорія слайдів"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Subscriber information"
-msgstr ""
+msgstr "Інформація підписника"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_survey_survey
@@ -313,17 +330,17 @@ msgstr "Таблиця"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 msgid "Test Certification"
-msgstr ""
+msgstr "Тестова сертифікація"
 
 #. module: website_slides_survey
 #: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
 msgid "Test your furniture knowledge!"
-msgstr ""
+msgstr "Протестуйте ваші знання про меблі!"
 
 #. module: website_slides_survey
 #: model_terms:survey.survey,description:website_slides_survey.furniture_certification
 msgid "Test your furniture knowledge!."
-msgstr ""
+msgstr "Протестуйте ваші знання про меблі!."
 
 #. module: website_slides_survey
 #: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1
@@ -345,7 +362,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
 msgid "The related course slide when there is no membership information"
-msgstr ""
+msgstr "Пов'язаний слайд курсу, коли немає інформації про членство"
 
 #. module: website_slides_survey
 #: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1
@@ -374,15 +391,15 @@ msgstr "Веб-сторінка"
 #: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_3
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
 msgid "What do you think about the content of the course? (not rated)"
-msgstr ""
+msgstr "Що ви думаєте про зміст курсу? (не оцінено)"
 
 #. module: website_slides_survey
 #: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_1
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
 msgid "What type of wood is the best for furniture?"
-msgstr ""
+msgstr "З якого дерева меблі найкращі?"
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
-msgstr ""
+msgstr "Ви провалили курс: ${object.slide_partner_id.channel_id.name}"
