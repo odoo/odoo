@@ -3,13 +3,13 @@
 # * hr_expense
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2017
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Paolo Valier, 2018
+# Cécile Collart <cco@odoo.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Valeria Torrisi <valeriatorrisi93@gmail.com>, 2018
 # Martin Trigaux, 2018
@@ -19,8 +19,8 @@
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # Petra <bop@odoo.com>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:18+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +110,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:39
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr ""
+msgstr "<p>Seleziona le note spese da inviare al supervisore</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -120,6 +120,9 @@ msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
+"<p>Il contabile riceve i rendiconti nota spese approvati.</p><p>Se le "
+"imposte e i conti sono corretti può effettuare le registrazioni in un "
+"clic.</p>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -285,7 +288,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
-msgstr ""
+msgstr "Fogli nota spese correnti, non quelli rifiutati"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -311,7 +314,7 @@ msgstr "Tutte le spese"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
 msgid "An expense account is expected"
-msgstr ""
+msgstr "È atteso un conto nota spese"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
@@ -350,7 +353,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:35
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "Allega qui la ricevuta."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -726,7 +729,7 @@ msgstr "Report spese sottoposto, in attesa di approvazione"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line_expense_id
 msgid "Expense where the move line come from"
-msgstr ""
+msgstr "Nota spese da cui proviene la riga del movimento"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
@@ -807,6 +810,8 @@ msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
 msgstr ""
+"Per generare registrazioni contabili deve essere specificato un registro "
+"nota spese."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:442
@@ -844,7 +849,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_is_refused
 msgid "Explicitely Refused by manager or acccountant"
-msgstr ""
+msgstr "Non approvato espressamente dal supervisore o dal contabile"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -927,12 +932,12 @@ msgstr "Sistemazione in hotel"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "Nota spese risorse umane"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr ""
+msgstr "Foglio nota spese risorse umane"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
@@ -1093,7 +1098,7 @@ msgstr "Nessun indirizzo fiscale trovato per il dipendente %s, impostane uno."
 #: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr ""
+msgstr "Nessun conto avere trovato per il registro %s, configurarne uno."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_refused
@@ -1244,6 +1249,8 @@ msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Configurare il conto predefinito per il prodotto nota spese: "
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1315,12 +1322,12 @@ msgstr "Ragione"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "Motivo :"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Motivo di rifiuto nota spese"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1665,7 +1672,7 @@ msgstr "Unità di misura"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Unreported Expenses"
-msgstr ""
+msgstr "Note spese non rendicontate"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1699,7 +1706,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "View Report"
-msgstr ""
+msgstr "Visualizza rendiconto"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1735,6 +1742,8 @@ msgstr "Inserisci il nome del prodotto , o seleziona uno già esistente"
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
+"Possono essere generate registrazioni contabili solo per note spese "
+"approvate."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1762,7 +1771,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:469
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr ""
+msgstr "Impossibile eliminare una nota spese registrata o pagata."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:111
@@ -1795,7 +1804,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "La nota spese"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1840,7 +1849,7 @@ msgstr "es. Trasferta a New York"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "è stata rifiutata"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:344
