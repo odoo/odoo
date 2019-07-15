@@ -10,6 +10,7 @@ class MailTestSMS(models.Model):
     _description = 'Chatter Model for SMS Gateway'
     _name = 'mail.test.sms'
     _inherit = ['mail.thread']
+    _order = 'name asc, id asc'
 
     name = fields.Char()
     subject = fields.Char()
@@ -18,6 +19,19 @@ class MailTestSMS(models.Model):
     mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
 
-    @api.multi
-    def _get_default_sms_recipients(self):
+    def _sms_get_default_partners(self):
         return self.mapped('customer_id')
+
+    def _sms_get_number_fields(self):
+        return ['phone_nbr', 'mobile_nbr']
+
+
+class MailTestSMSSoLike(models.Model):
+    """ A model like sale order having only a customer, not specific phone
+    or mobile fields. """
+    _description = 'Chatter Model for SMS Gateway (Partner only)'
+    _name = 'mail.test.sms.partner'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    partner_id = fields.Many2one('res.partner', 'Customer')
