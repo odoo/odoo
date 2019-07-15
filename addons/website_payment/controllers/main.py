@@ -78,7 +78,7 @@ class WebsitePayment(http.Controller):
         tx_id = request.session.pop('website_payment_tx_id', False)
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
-            if tx.state == 'done':
+            if tx.state in ['done', 'authorized']:
                 status = 'success'
                 message = tx.acquirer_id.done_msg
             elif tx.state == 'pending':

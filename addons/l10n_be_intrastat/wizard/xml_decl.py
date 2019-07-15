@@ -4,8 +4,10 @@
 import base64
 import xml.etree.ElementTree as ET
 from collections import namedtuple
+from functools import partial
 
 from odoo import api, exceptions, fields, models, _
+from odoo.tools import float_round, float_is_zero
 
 INTRASTAT_XMLNS = 'http://www.onegate.eu/2010-01-01'
 
@@ -102,7 +104,16 @@ class XmlDeclaration(models.TransientModel):
             'res_id': self.id,
         }
 
+    def _get_rounding_digits(self):
+        """A hook to not break behavior
+        Allows to programmatically set with what precision
+        the price, weight and values will be rounded"""
+        return 0
+
     def _build_intrastat_line(self, numlgn, item, linekey, amounts, dispatchmode, extendedmode):
+        round_digits = self._get_rounding_digits()
+        _round = partial(float_round, precision_digits=round_digits)
+
         self._set_Dim(item, 'EXSEQCODE', unicode(numlgn))
         self._set_Dim(item, 'EXTRF', unicode(linekey.EXTRF))
         self._set_Dim(item, 'EXCNT', unicode(linekey.EXCNT))
@@ -112,9 +123,9 @@ class XmlDeclaration(models.TransientModel):
         if extendedmode:
             self._set_Dim(item, 'EXTPC', unicode(linekey.EXTPC))
             self._set_Dim(item, 'EXDELTRM', unicode(linekey.EXDELTRM))
-        self._set_Dim(item, 'EXTXVAL', unicode(round(amounts[0], 0)).replace(".", ","))
-        self._set_Dim(item, 'EXWEIGHT', unicode(round(amounts[1], 0)).replace(".", ","))
-        self._set_Dim(item, 'EXUNITS', unicode(round(amounts[2], 0)).replace(".", ","))
+        self._set_Dim(item, 'EXTXVAL', unicode(_round(amounts[0])).replace(".", ","))
+        self._set_Dim(item, 'EXWEIGHT', unicode(_round(amounts[1])).replace(".", ","))
+        self._set_Dim(item, 'EXUNITS', unicode(_round(amounts[2])).replace(".", ","))
 
     def _get_intrastat_linekey(self, declcode, inv_line, dispatchmode, extendedmode):
         IntrastatRegion = self.env['l10n_be_intrastat.region']
@@ -296,7 +307,7 @@ class XmlDeclaration(models.TransientModel):
         numlgn = 0
         for linekey in entries:
             amounts = entries[linekey]
-            if round(amounts[0], 0) == 0:
+            if float_is_zero(amounts[0], precision_digits=self._get_rounding_digits()):
                 continue
             numlgn += 1
             item = ET.SubElement(datas, 'Item')
