@@ -470,7 +470,8 @@ class AccountMove(models.Model):
             ('reverse_entry_id', '=', False)])
         for move in records:
             date = None
-            if move.reverse_date and (not self.env.user.company_id.period_lock_date or move.reverse_date > self.env.user.company_id.period_lock_date):
+            company = move.company_id or self.env.user.company_id
+            if move.reverse_date and (not company.period_lock_date or move.reverse_date > company.period_lock_date):
                 date = move.reverse_date
             move.reverse_moves(date=date, auto=True)
 
