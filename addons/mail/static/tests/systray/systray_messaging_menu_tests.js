@@ -513,6 +513,64 @@ QUnit.test('preview of inbox message not linked to document + mark as read', asy
     messagingMenu.destroy();
 });
 
+QUnit.test('preview of inbox message linked to document: mark as read', async function (assert) {
+    assert.expect(7);
+
+    this.data.initMessaging = {
+        needaction_inbox_counter: 1,
+    };
+
+    const needactionMessages = [{
+        author_id: [1, "Demo"],
+        body: "<p>*Message*</p>",
+        id: 689,
+        model: 'project.task',
+        needaction: true,
+        needaction_partner_ids: [44],
+        res_id: 100,
+    }];
+    this.data['mail.message'].records =
+        this.data['mail.message'].records.concat(needactionMessages);
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: {
+            partner_id: 44,
+        },
+        mockRPC(route, args) {
+            if (args.method === 'set_message_done') {
+                assert.step('method: set_message_done, messageIDs: ' + JSON.stringify(args.args[0]));
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
+        "should display a counter of 1 on the messaging menu icon");
+
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+
+    assert.containsOnce(messagingMenu, '.o_mail_preview',
+        "should display one preview");
+
+    const $preview = messagingMenu.$('.o_mail_preview').eq(0);
+    assert.ok($preview.hasClass('o_preview_unread'),
+        "preview should be marked as unread");
+
+    await testUtils.dom.click($preview.find('.o_mail_preview_mark_as_read'));
+    assert.verifySteps(['method: set_message_done, messageIDs: [689]'],
+        "should mark preview as read");
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
+        "should display a counter of 0 on the messaging menu icon after marking one preview as read");
+    assert.containsNone(messagingMenu, '.o_mail_preview',
+        "should display no preview remaining");
+
+    messagingMenu.destroy();
+});
+
 QUnit.test('grouped preview for needaction messages linked to same document', async function (assert) {
     assert.expect(5);
 

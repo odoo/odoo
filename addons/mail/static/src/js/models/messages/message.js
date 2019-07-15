@@ -236,7 +236,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return channel.getName();
     },
     /**
-     * Returns the information required to render the preview of this channel.
+     * Returns the information required to render the preview of this message.
      *
      * @return {Object}
      */
