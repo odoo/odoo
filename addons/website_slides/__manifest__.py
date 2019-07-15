@@ -27,6 +27,7 @@ Featuring
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
