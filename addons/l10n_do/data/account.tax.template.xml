@@ -1217,36 +1217,6 @@
             <field name="tax_group_id" ref="group_ret"/>
         </record>
 
-        <record id="tax_group_moral_construction" model="account.tax.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">62</field>
-            <field name="name">Retención a Jurídica (Servicios Construcción con Materiales)</field>
-            <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
-            <field name="type_tax_use">none</field>
-            <field name="tax_group_id" ref="group_ret"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
-        </record>
-
         <record id="tax_group_person_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">58</field>
