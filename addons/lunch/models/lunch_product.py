@@ -94,7 +94,7 @@ class LunchProduct(models.Model):
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', required=True)
     active = fields.Boolean(default=True)
 
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', related='supplier_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     # image: all image fields are base64 encoded and PIL-supported
