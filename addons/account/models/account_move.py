@@ -1219,8 +1219,11 @@ class AccountMove(models.Model):
             return
 
         self._cr.execute('''
-            SELECT move.id
-            FROM account_move move
+            WITH current_moves (id, name, state, company_id, journal_id, type) as ( values {} )
+            SELECT move2.id
+            FROM (    SELECT id, name, state, company_id, journal_id, type from account_move
+            UNION ALL SELECT id, name, state, company_id, journal_id, type from current_moves
+            ) move
             INNER JOIN account_move move2 ON
                 move2.name = move.name
                 AND move2.company_id = move.company_id
@@ -1230,7 +1233,7 @@ class AccountMove(models.Model):
             WHERE move.id IN %s
             AND move.state = 'posted'
             AND move2.state = 'posted'
-        ''', [tuple(self.ids)])
+        '''.format(", ".join(self.mapped(lambda r: "(%s, '%s', '%s', %s, %s, '%s')" % (r.id, r.name, r.state, r.company_id.id, r.journal_id.id, r.type)))), [tuple(self.ids)])
         res = self._cr.fetchone()
         if res:
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
@@ -1242,18 +1245,22 @@ class AccountMove(models.Model):
             return
 
         self._cr.execute('''
-            SELECT move.id
-            FROM account_move move
+            WITH current_moves (id,  ref, company_id, commercial_partner_id, type, invoice_date) as ( values {} )
+            SELECT move2.id
+            FROM (    SELECT id, ref, company_id, commercial_partner_id, type, invoice_date from account_move
+            UNION ALL SELECT id, ref, company_id, commercial_partner_id, type, invoice_date from current_moves
+            ) move
             INNER JOIN account_move move2 ON
                 move2.ref = move.ref
                 AND move2.company_id = move.company_id
                 AND move2.commercial_partner_id = move.commercial_partner_id
                 AND move2.type = move.type
+                AND (move2.invoice_date = move.invoice_date OR move.invoice_date is NULL)
                 AND move2.id != move.id
             WHERE move.id IN %s
             AND move.type in ('in_invoice', 'in_refund')
             AND move.ref IS NOT NULL
-        ''', [tuple(self.ids)])
+        '''.format(", ".join(self.mapped(lambda r: "(%s, '%s', %s, %s, '%s', TO_DATE(%s, 'YYYY-MM-DD'))" % (r.id, r.ref, r.company_id.id, r.commercial_partner_id.id, r.type, r.invoice_date and "'" + str(r.invoice_date) + "'" or 'NULL')))), [tuple(moves.ids)])
         if self._cr.fetchone():
             raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.'))
 
