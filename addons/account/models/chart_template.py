@@ -22,27 +22,6 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     if xml_record_ids:
         cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
-def migrate_tags_on_taxes(cr, registry):
-    ''' This is a utility function to help migrate the tags of taxes when the localization has been modified on stable version. If
-    called accordingly in a post_init_hooked function, it will reset the tags set on taxes as per their equivalent template.
-
-    Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
-    and working out of the box when people are creating/using new taxes.
-    '''
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    xml_records = env['ir.model.data'].search([
-        ('model', '=', 'account.tax.template'),
-        ('module', 'like', 'l10n_%')
-    ])
-    tax_template_ids = [x['res_id'] for x in xml_records.sudo().read(['res_id'])]
-    for tax_template in env['account.tax.template'].browse(tax_template_ids):
-        tax_id = env['account.tax'].search([
-            ('name', '=', tax_template.name),
-            ('type_tax_use', '=', tax_template.type_tax_use),
-            ('description', '=', tax_template.description)
-        ])
-        tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
-
 def preserve_existing_tags_on_taxes(cr, registry, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
     env = api.Environment(cr, SUPERUSER_ID, {})

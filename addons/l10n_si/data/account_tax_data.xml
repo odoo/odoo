@@ -314,7 +314,7 @@
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260001'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
+                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -333,7 +333,7 @@
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260001'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
+                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
             }),
         ]"/>
     </record>
@@ -363,7 +363,7 @@
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
+                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -382,7 +382,7 @@
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
+                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
             }),
         ]"/>
     </record>
