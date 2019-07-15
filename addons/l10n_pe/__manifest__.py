@@ -15,7 +15,7 @@ SUNAT 2011 (PCGE 2010).
     """,
     'author': ['Cubic ERP'],
     'category': 'Localization',
-    'depends': ['account'],
+    'depends': ['account', 'base_address_city'],
     'data': [
         'data/l10n_pe_chart_data.xml',
         'data/account.account.template.csv',
@@ -23,5 +23,6 @@ SUNAT 2011 (PCGE 2010).
         'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
+        'data/res.city.csv'
     ],
 }
