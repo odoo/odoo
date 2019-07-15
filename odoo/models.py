@@ -3298,7 +3298,8 @@ Fields:
             field = self._fields[fname]
             if field.inverse:
                 determine_inverses.setdefault(field.inverse, []).append(field)
-                records_to_inverse[field] = self
+                # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
+                records_to_inverse[field] = self.filtered('id')
             protected.update(self._field_computed.get(field, [field]))
 
         # protect fields being written against recomputation
@@ -3395,14 +3396,40 @@ Fields:
 
                     env.remove_todo(field, record)
 
-                    for invf in record._field_inverses[field]:
-                        if field.relational:
-                            # DLE P60
-                            records = self.env[field.comodel_name].browse(env.cache.get_value(record, field, []))
+                    # DLE P149: `test_40_new_defaults`
+                    # Assigning an existing many2one to a `new` record should not update the inverse `one2many` on the existing record
+                    # ```
+                    # new_msg.discussion = discussion
+                    # self.assertNotIn(new_msg, discussion.messages)
+                    # ```
+                    if record.id:
+                        if field.name == 'active':
+                            # DLE P147:
+                            # `test_manufacturing_3_steps`
+                            # When writing `warehouse.manufacture_steps = 'pbm_sam'`
+                            # it write active: True on a stock.location.route, which must update the inverses with the record that has just been activated
+                            # `route_ids = fields.Many2many('stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id', ...)
+                            # I tried with res.groups.users and user.active, it wasnt working either:
+                            # In [26]: self.env['res.groups'].browse(1).users
+                            # Out[26]: res.users(414, 413, 412, 6, 2, 411)
+                            # In [27]: self.env['res.users'].browse(6).active = False
+                            # In [28]: self.env['res.groups'].browse(1).users
+                            # Out[28]: res.users(414, 413, 412, 6, 2, 411)
+                            # TODO: This is enough for this test, which enable a disabled route, but we have to do something for the opposite: Disabling an active record.
+                            # The `_update` only cares to add a record to an existing one2many
+                            invfs = [(f, [invf for invf in invfs if invf.type in ('one2many', 'many2many')]) for f, invfs in record._field_inverses.items()]
                         else:
-                            records = record[field.name]
-                        update_res = invf._update(records, record)
-                        toflush = not update_res or toflush
+                            invfs = [(field, record._field_inverses[field])]
+
+                        for f, invfs in invfs:
+                            for invf in invfs:
+                                if field.relational:
+                                    # DLE P60
+                                    records = self.env[f.comodel_name].browse(env.cache.get_value(record, f, []))
+                                else:
+                                    records = record[f.name]
+                                update_res = invf._update(records, record)
+                                toflush = not update_res or toflush
 
                 # flush if parent field
                 if self._parent_store and fname == self._parent_name:

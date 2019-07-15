@@ -128,6 +128,18 @@ class TestProcurement(TestMrpCommon):
 
         # create MO, but check it raises error as components are in make to order and not everyone has
         with self.assertRaises(UserError):
+            # DLE P148:
+            # class `Form` will trigger an onchange, which will invalidate the cache at some point.
+            # We must flush everything we need before invalidating the cache for the onchanges.
+            # `test_procurement_2`
+            # I would have like to put it either in __init__ of `Form` either in models.py def onchange
+            # But calling `flush` triggers `recompute`, which can fail for `new` records, as attests
+            # `test_pricelist_application`, which tries to compute `_compute_currency_rate`
+            # and the `new` record has not even a `currency_id`, therefore there is a crash:
+            # File "/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/models/res_currency.py", line 184, in _get_conversion_rate
+            # res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
+            # TypeError: unsupported operand type(s) for /: 'NoneType' and 'float'
+            self.env['mrp.production'].flush()
             production_form = Form(self.env['mrp.production'])
             production_form.product_id = self.product_4
             production_form.product_uom_id = self.product_4.uom_id
