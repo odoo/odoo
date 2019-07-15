@@ -3,7 +3,14 @@
     <data>
         <template id="assets_backend" name="sms_assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/sms/static/src/js/sms_widget.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/fields_phone_widget.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/fields_sms_widget.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/mail_failure.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/message.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/sms_notification_manager.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/systray_messaging_menu.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/thread_widget.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/sms/static/src/scss/thread.scss"/>
             </xpath>
         </template>
 

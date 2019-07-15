@@ -50,7 +50,7 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
 
     def assertNotifStates(self, states, message):
         notif = self.env['mail.notification'].search([('mail_message_id', '=', message.id)], order="res_partner_id asc")
-        self.assertEquals(tuple(notif.mapped('email_status')), states)
+        self.assertEquals(tuple(notif.mapped('notification_status')), states)
         return notif
 
     def assertBusMessage(self, partners):
