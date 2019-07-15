@@ -54,122 +54,25 @@
 
     <record id="account_tax_report_baza_tva_intrcmtr_bnr" model="account.tax.report.line">
         <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="tag_name">Baza TVA Intracomunitar Bunuri</field>
         <field name="sequence" eval="6"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_clt"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_baza_tva_intrcmtr1_bnr" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_colectata_00_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_bnr"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_intrcmtr2_bnr" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_colectata_05_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_bnr"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_intrcmtr3_bnr" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_colectata_09_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_bnr"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_intrcmtr4_bnr" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_colectata_24_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_bnr"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_baza_tva_intrcmtr_srvci" model="account.tax.report.line">
         <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="tag_name">Baza TVA Intracomunitar Servicii</field>
         <field name="sequence" eval="7"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_clt"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_baza_tva_intrcmtr1_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_intrcmtr2_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_intrcmtr3_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_intrcmtr4_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_intrcmtr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_baza_tva_tx_invrsa" model="account.tax.report.line">
         <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="tag_name">Baza TVA Taxare Inversa</field>
         <field name="sequence" eval="8"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_clt"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_tx1_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_colectata_00_taxare_inversa_Baza</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_tx2_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_colectata_05_taxare_inversa_Baza</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_tx3_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_colectata_09_taxare_inversa_Baza</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_baza_tva_tx4_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_colectata_24_taxare_inversa_Baza</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_baza_tva_tx_invrsa"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -181,7 +84,7 @@
 
     <record id="account_tax_report_tva_0" model="account.tax.report.line">
         <field name="name">TVA 0%</field>
-        <field name="tag_name">TVA 0%</field>
+        <field name="tag_name">TVA 0% (TVA colectata)</field>
         <field name="code">ROTAX_TVA_colectata_0</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
@@ -190,7 +93,7 @@
 
     <record id="account_tax_report_tva_19" model="account.tax.report.line">
         <field name="name">TVA 19%</field>
-        <field name="tag_name">TVA 19%</field>
+        <field name="tag_name">TVA 19% (TVA colectata)</field>
         <field name="code">ROTAX_TVA_colectata_19</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
@@ -199,7 +102,7 @@
 
     <record id="account_tax_report_tva_24" model="account.tax.report.line">
         <field name="name">TVA 24%</field>
-        <field name="tag_name">TVA 24%</field>
+        <field name="tag_name">TVA 24% (TVA colectata)</field>
         <field name="code">ROTAX_TVA_colectata_24</field>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
@@ -208,7 +111,7 @@
 
     <record id="account_tax_report_tva_5" model="account.tax.report.line">
         <field name="name">TVA 5%</field>
-        <field name="tag_name">TVA 5%</field>
+        <field name="tag_name">TVA 5% (TVA colectata)</field>
         <field name="code">ROTAX_TVA_colectata_5</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
@@ -217,7 +120,7 @@
 
     <record id="account_tax_report_tva_9" model="account.tax.report.line">
         <field name="name">TVA 9%</field>
-        <field name="tag_name">TVA 9%</field>
+        <field name="tag_name">TVA 9% (TVA colectata)</field>
         <field name="code">ROTAX_TVA_colectata_9</field>
         <field name="sequence" eval="5"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
@@ -225,131 +128,38 @@
     </record>
 
     <record id="account_tax_report_tva_intracmunitr_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="name">TVA Intracomunitar Bunuri (TVA colectata)</field>
+        <field name="tag_name">TVA Intracomunitar Bunuri (TVA colectata)</field>
         <field name="sequence" eval="6"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_tva_intracmunitr1_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_intracmunitr2_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_colectata_05_intracomunitar_bunuri</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_intracmunitr3_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_colectata_09_intracomunitar_bunuri</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_intracmunitr4_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_colectata_24_intracomunitar_bunuri</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_tva_intra_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="name">TVA Intracomunitar Servicii (TVA colectata)</field>
+        <field name="tag_name">TVA Intracomunitar Servicii (TVA colectata)</field>
         <field name="sequence" eval="7"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_tva_intra1_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_tva_intra_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_intra2_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_tva_intra_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_intra3_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_tva_intra_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_intra4_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_tva_intra_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_tva_tx_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
+        <field name="name">TVA Taxare Inversa (TVA colectata)</field>
+        <field name="tag_name">TVA Taxare Inversa (TVA colectata)</field>
         <field name="sequence" eval="8"/>
         <field name="parent_id" ref="account_tax_report_tva_colcta"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_tva_tx1_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_tx2_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="tag_name">TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_colectata_05_taxare_inversa</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_tx3_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="tag_name">TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_colectata_09_taxare_inversa</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_tva_tx4_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="tag_name">TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_colectata_24_taxare_inversa</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_baza_tva_deducbl" model="account.tax.report.line">
-        <field name="name">BAZA TVA DEDUCTIBIL</field>
+        <field name="name">BAZA TVA DEDUCTIBILA</field>
         <field name="sequence" eval="3"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
     <record id="account_tax_report_baza_tva_deducbl_0" model="account.tax.report.line">
         <field name="name">Baza TVA 0%</field>
-        <field name="tag_name">Baza TVA 0%</field>
+        <field name="tag_name">Baza TVA 0% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_0_Baza</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
@@ -358,7 +168,7 @@
 
     <record id="account_tax_report_baza_tva_deducbl_19" model="account.tax.report.line">
         <field name="name">Baza TVA 19%</field>
-        <field name="tag_name">Baza TVA 19%</field>
+        <field name="tag_name">Baza TVA 19% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_19_Baza</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
@@ -367,7 +177,7 @@
 
     <record id="account_tax_report_baza_tva_deducbl_24" model="account.tax.report.line">
         <field name="name">Baza TVA 24%</field>
-        <field name="tag_name">Baza TVA 24%</field>
+        <field name="tag_name">Baza TVA 24% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_24_Baza</field>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
@@ -376,7 +186,7 @@
 
     <record id="account_tax_report_baza_tva_deducbl_5" model="account.tax.report.line">
         <field name="name">Baza TVA 5%</field>
-        <field name="tag_name">Baza TVA 5%</field>
+        <field name="tag_name">Baza TVA 5% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_5_Baza</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
@@ -385,7 +195,7 @@
 
     <record id="account_tax_report_baza_tva_deducbl_9" model="account.tax.report.line">
         <field name="name">Baza TVA 9%</field>
-        <field name="tag_name">Baza TVA 9%</field>
+        <field name="tag_name">Baza TVA 9% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_9_Baza</field>
         <field name="sequence" eval="5"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
@@ -393,123 +203,26 @@
     </record>
 
     <record id="account_tax_report_ro_baza_tva_intracmunitr_bnuri" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri%</field>
+        <field name="name">Baza TVA Intracomunitar Bunuri (deductibila)</field>
+        <field name="tag_name">Baza TVA Intracomunitar Bunuri (deductibila)</field>
         <field name="sequence" eval="6"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_ro_baza_tva_intracmunitr1_bnuri" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="code">ROTAX_TVA_deductibila_00_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_bnuri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_intracmunitr2_bnuri" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="code">ROTAX_TVA_deductibila_05_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_bnuri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_intracmunitr3_bnuri" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="code">ROTAX_TVA_deductibila_09_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_bnuri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_intracmunitr4_bnuri" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="tag_name">Baza TVA Intracomunitar Bunuri%</field>
-        <field name="code">ROTAX_TVA_deductibila_24_intracomunitar_bunuri_Baza</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_bnuri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_ro_baza_tva_intracmunitr_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii%</field>
+        <field name="name">Baza TVA Intracomunitar Servicii (deductibila)</field>
+        <field name="tag_name">Baza TVA Intracomunitar Servicii (deductibila)</field>
         <field name="sequence" eval="7"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_ro_baza_tva_intracmunitr1_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii%</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_intracmunitr2_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii%</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_intracmunitr3_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii%</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_intracmunitr4_srvci" model="account.tax.report.line">
-        <field name="name">Baza TVA Intracomunitar Servicii%</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_ro_baza_tva_tx_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="name">Baza TVA Taxare Inversa (deductibila)</field>
+        <field name="tag_name">Baza TVA Taxare Inversa (deductibila)</field>
         <field name="sequence" eval="8"/>
         <field name="parent_id" ref="account_tax_report_baza_tva_deducbl"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_tx1_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_deductibila_00_taxare_inversa_Baza</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_tx2_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_deductibila_05_taxare_inversa_Baza</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_tx3_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_deductibila_09_taxare_inversa_Baza</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_baza_tva_tx4_invrsa" model="account.tax.report.line">
-        <field name="name">Baza TVA Taxare Inversa</field>
-        <field name="tag_name">Baza TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_deductibila_24_taxare_inversa_Baza</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_ro_baza_tva_tx_invrsa"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -529,8 +242,8 @@
     </record>
 
     <record id="account_tax_report_ro_tva_decucible_19" model="account.tax.report.line">
-        <field name="name">TVA 19%</field>
-        <field name="tag_name">TVA 19%</field>
+        <field name="name">TVA 19% (deductibila)</field>
+        <field name="tag_name">TVA 19% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_19</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_decucible"/>
@@ -538,8 +251,8 @@
     </record>
 
     <record id="account_tax_report_ro_tva_decucible_24" model="account.tax.report.line">
-        <field name="name">TVA 24%</field>
-        <field name="tag_name">TVA 24%</field>
+        <field name="name">TVA 24% (deductibila)</field>
+        <field name="tag_name">TVA 24% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_24</field>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_decucible"/>
@@ -547,8 +260,8 @@
     </record>
 
     <record id="account_tax_report_ro_tva_decucible_5" model="account.tax.report.line">
-        <field name="name">TVA 5%</field>
-        <field name="tag_name">TVA 5%</field>
+        <field name="name">TVA 5% (deductibila)</field>
+        <field name="tag_name">TVA 5% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_5</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_decucible"/>
@@ -556,8 +269,8 @@
     </record>
 
     <record id="account_tax_report_ro_tva_decucible_9" model="account.tax.report.line">
-        <field name="name">TVA 9%</field>
-        <field name="tag_name">TVA 9%</field>
+        <field name="name">TVA 9% (deductibila)</field>
+        <field name="tag_name">TVA 9% (deductibila)</field>
         <field name="code">ROTAX_TVA_deductibila_9</field>
         <field name="sequence" eval="5"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_decucible"/>
@@ -565,119 +278,26 @@
     </record>
 
     <record id="account_tax_report_ro_tva_intracmunitr_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="name">TVA Intracomunitar Bunuri (deductibila)</field>
+        <field name="tag_name">TVA Intracomunitar Bunuri (deductibila)</field>
         <field name="sequence" eval="6"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_decucible"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_ro_tva_intracmunitr1_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_intracmunitr2_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_deductibila_05_intracomunitar_bunuri</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_intracmunitr3_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_deductibila_09_intracomunitar_bunuri</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_intracmunitr4_bunri" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Bunuri</field>
-        <field name="tag_name">TVA Intracomunitar Bunuri</field>
-        <field name="code">ROTAX_TVA_deductibila_24_intracomunitar_bunuri</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_bunri"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_ro_tva_intracmunitr_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="name">TVA Intracomunitar Servicii (deductibila)</field>
+        <field name="tag_name">TVA Intracomunitar Servicii (deductibila)</field>
         <field name="sequence" eval="7"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_decucible"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
-    <record id="account_tax_report_ro_tva_intracmunitr1_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_intracmunitr2_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_intracmunitr3_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_intracmunitr4_srvci" model="account.tax.report.line">
-        <field name="name">TVA Intracomunitar Servicii</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_intracmunitr_srvci"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
     <record id="account_tax_report_ro_tva_tx_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
+        <field name="name">TVA Taxare Inversa (deductibila)</field>
+        <field name="tag_name">TVA Taxare Inversa (deductibila)</field>
         <field name="sequence" eval="8"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_decucible"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_tx1_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_tx2_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="tag_name">TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_deductibila_05_taxare_inversa</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_tx3_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="tag_name">TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_deductibila_09_taxare_inversa</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_tx_invrsa"/>
-        <field name="country_id" ref="base.ro"/>
-    </record>
-
-    <record id="account_tax_report_ro_tva_tx4_invrsa" model="account.tax.report.line">
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="tag_name">TVA Taxare Inversa</field>
-        <field name="code">ROTAX_TVA_deductibila_24_taxare_inversa</field>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_ro_tva_tx_invrsa"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
