@@ -5578,17 +5578,31 @@ Fields:
                     records = self - self.env.protected(field)
                     if not records:
                         continue
-                    if field.compute:
-                        records = self.env.add_todo(field, records)
+                    # DLE P151: This is at the same time a performance improvement issue,
+                    # and an issue solver.
+                    # Dont force the recomputation of compute fields which are not stored
+                    # as this is not really necessary.
+                    # Just invalidate the computed field which are not stored, they will be recomputed
+                    # when accessed.
+                    # Same thing goes for new records, as they are not stored either.
+                    # Besides for them it's even mandatory:
+                    # Required fields are not required for new records,
+                    # while the compute method might rely on the fact the field is required
+                    # e.g. def _compute_currency_rate(self):, which rely on the fact currency_id is mandatory on order.
+                    # If added to the todo, it will be computed and it will crash for sure as soon as you call reocmpute,
+                    # while if you dont it will only happen when accessed, which doesnt happen.
+                    if field.compute and field.store:
+                        records_to_invalidate = records.filtered(lambda r: not r.id)
+                        records_todo = self.env.add_todo(field, records - records_to_invalidate)
                     else:
-                        records2 = self.env.cache.get_present_records(records, field)
-                        self.env.cache.invalidate([(field, records2._ids)])
-                        # RCO WTF?  records2 - records is always empty, because
-                        # records2 is a subset of records; looks like random
-                        # patch to break some infinite recursion...
-                        records = records2 - records
+                        records_to_invalidate = records
+                        records_todo = records.browse()
+                    if records_to_invalidate:
+                        records_to_invalidate = self.env.cache.get_present_records(records, field)
+                        self.env.cache.invalidate([(field, records_to_invalidate._ids)])
                     # recursively trigger recomputation of field's dependents
-                    if records:
+                    records_modified = records_todo + records_to_invalidate
+                    if records_modified:
                         todo[records].append(field.name)
                 for records, fieldnames in todo.items():
                     records.modified(fieldnames)
@@ -5792,6 +5806,11 @@ Fields:
             :param field_onchange: dictionary mapping field names to their
                 on_change attribute
         """
+        # DLE P148:
+        # class `Form` will trigger an onchange, which will invalidate the cache at some point.
+        # We must flush everything we need before invalidating the cache for the onchanges.
+        # `test_procurement_2`
+        self.flush()
         env = self.env
         if isinstance(field_name, list):
             names = field_name
