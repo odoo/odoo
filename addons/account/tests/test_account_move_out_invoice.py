@@ -13,7 +13,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccountMoveOutInvoiceOnchanges, cls).setUpClass()
-        
+
         cls.invoice = cls.init_invoice('out_invoice')
 
         cls.product_line_vals_1 = {
@@ -878,7 +878,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'date': move_reversal.date,
             'state': 'draft',
-            'invoice_payment_ref': move_reversal.reason,
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'not_paid',
         })
 
@@ -921,7 +921,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'date': move_reversal.date,
             'state': 'posted',
-            'invoice_payment_ref': move_reversal.reason,
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'paid',
         })
 
