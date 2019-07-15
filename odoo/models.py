@@ -5017,6 +5017,164 @@ Fields:
             key = itemgetter(key)
         return self.browse(item.id for item in sorted(self, key=key, reverse=reverse))
 
+    def grouped(self, groupby, orderby=None, **aggregate_functions):
+        """ High-level group by.
+            Fetches all rows, then return a structure including *all* such rows grouped according to arguments.
+            This is slower than read_group(), however more powerful.
+            More powerful than itertools.groupby().
+            Useful for reporting/pivoting.
+            Example:
+env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'partner_id.name'], ['tot_amount'], tot_amount='sum(price_subtotal_signed)')
+            :param groupby:
+                A list of grouping functions, one for each grouping level.
+                Each group level is define either by:
+                * a 1-ary function, that returns a group name for each record,
+                * or a field name, even with dot notation
+                * or a list of such
+            :param orderby (optional):
+                Sorting function/s, for each grouping level.
+                Same rules than groupby
+                If omitted, groups will be used. Please notice you can also use aggregate functions here.
+            :param aggregate_functions (optional): either a string, or a 1-ary functions that take a recordset as argument and
+                return a scalar.
+                Strings are accepted in a very limited syntax: "sum(fieldname)", "max(fieldname)", "min(fieldname)"
+                (and in general every Python aggregate function will work)
+                Examples of lambdas: count=lambda x:len(x), total_amount=lambda x:sum([z.amount for z in x]),
+                description=lambda x:max(x.description)
+                All functions are applied to all grouping levels.
+            :return a dict of objects, each one representing one group.
+                These objects are list, so that you can iterate on them to get subgroups or real records (according to group level)
+                These objects have the particolar fields:
+                 * group_name     -> calculated according to groupby
+                 * group_level  -> integer, 1 for innermost group
+                 * count        -> count of all records in the group
+                 * all the aggregate functions calulated on that group
+                 * _all_records    -> recordset of all records in the group
+        """
+
+        def uniform_attrgetter(arg):
+                """
+                Take a field name, or an attrgetter, or a list of such, and return the corresponding lambda
+                """
+                if isinstance(arg, str):
+                    return attrgetter(arg)
+                elif callable(arg):
+                    return arg
+                else:
+                    try:    #if iterable
+                        attrgetters = []
+                        for x in arg:
+                            attrgetters.append(lambda z,x=x:uniform_attrgetter(x)(z))
+                        return lambda z:(f(z) for f in attrgetters)
+                    except TypeError:
+                        raise ValueError("Expected string, or 1-ary function, or list, got " + x)
+
+        def parse_aggregate_function(arg):
+            """
+            Given 'sum(goofy)' return (sum, 'goofy')
+            """
+            import re
+            pattern = re.compile("([^\(\)]+)\(([^\(\)]+)\)$")
+            match = pattern.match(arg)
+            if not re.match:
+                raise ValueError("Expecting string in form 'funcname(fieldname)', got: " + x)
+            funcname = match.group(1)
+            fieldname = match.group(2)
+            try:
+                func = safe_eval(funcname)
+            except NameError:
+                raise ValueError("Unknown aggregate function: " + funcname)
+            return func, fieldname
+
+
+        # Fix argument groupby
+        uniform_groupby = [uniform_attrgetter(attr) for attr in groupby]
+
+        # Fix argument orderby
+        # We choose default order by id
+        uniform_orderby = [uniform_attrgetter(attr) for attr in orderby] if orderby else [uniform_attrgetter('group_name')]
+        if len(uniform_orderby) == 1 and len(uniform_groupby) > 1:
+            uniform_orderby = [uniform_orderby[0] for i in range(len(uniform_groupby))]
+
+        # Some basic aggregations, may consider others
+        aggregate_functions.update({
+            'count' : lambda x:len(x),
+            'id' : 'min(id)'
+            })
+
+        # Fix argument aggregate_functions
+        uniform_aggregate_functions = {}
+        for fname, x in iter(aggregate_functions.items()):
+            if isinstance(x, str):
+                func, fieldname = parse_aggregate_function(x)
+                uniform_aggregate_functions[fname] = lambda recs,fieldname=fieldname:func([attrgetter(fieldname)(rec) for rec in recs])
+            elif callable(x):
+                uniform_aggregate_functions[fname] = x
+            else:
+                raise ValueError("Expected string or 1-ary function, got " + str(x))
+        
+        return self._grouped(uniform_groupby, uniform_orderby, **uniform_aggregate_functions)
+
+    def _grouped(self, groupby, orderby, **aggregate_functions):
+        """
+        Same as grouped(), assume arguments are sanitized, i.e. all lambdas
+        """
+        
+        class Group():
+            def __init__(self, group_name, group_level):
+                self.group_name = group_name
+                self.group_level = group_level  # integer >= 1
+                self.items = []
+                self._all_records = []
+            def __repr__(self):
+                return " Group " + str(self.group_name) + ": " + self.items.__repr__()
+            def __str__(self):
+                return str(repr(self))
+            def __getitem__(self, key):
+                return self.items.__getitem__(key)
+            def __setitem__(self, key):
+                return self.items.__setitem__(key)
+            def __iter__(self):
+                return self.items.__iter__()
+            def __next__(self):
+                return self.items.__next__()
+            def __len__(self):
+                return self.items.__len__()
+
+        group_level = len(groupby)
+
+        if group_level == 0:    #group level 0 does not exist!
+            return self
+        else:
+            group_f = groupby[0]
+            
+            group_names = set([group_f(rec) for rec in self])
+            # don't use self.mapped(). It could return a recordset, and lose "None"
+            #if not False in group_names:
+            #    group_names = set(x for x in group_names)
+            #    group_names.add(False)
+            _logger.info("names=" + str(group_names))    #DEBUG
+
+            groups = []
+
+            for group_name in set(group_names):
+                group = Group(group_name, group_level)
+                if group_name is None:
+                    group._all_records = self.filtered(lambda x:group_f(x) is None)
+                else:
+                    group._all_records = self.filtered(lambda x:group_f(x) == group_name)
+                groups.append(group)
+
+            for group in groups:
+                for fname, f in iter(aggregate_functions.items()):
+                    group.__dict__[fname] = f(group._all_records)
+
+            for group in groups:
+                group.items = group._all_records._grouped(groupby[1:], orderby[1:], **aggregate_functions)
+
+            sort_f = lambda x:str(orderby[0](x))
+            return sorted(groups, key=sort_f)
+
     @api.multi
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
