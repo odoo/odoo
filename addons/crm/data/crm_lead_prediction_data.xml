@@ -17,6 +17,9 @@
         <record id="frequency_field_source_id" model="crm.lead.scoring.frequency.field">
             <field name="field_id" eval="ref('crm.field_crm_lead__source_id')"/>
         </record>
+        <record id="frequency_field_lang_id" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" eval="ref('crm.field_crm_lead__lang_id')"/>
+        </record>
     </data>
 
 	<record id="website_crm_score_cron" model="ir.cron">
