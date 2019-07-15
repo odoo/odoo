@@ -78,7 +78,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         # Let's do an invoice for a deposit of 100
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
-            'amount': 100,
+            'fixed_amount': 100,
             'deposit_account_id': self.account_income.id
         })
         payment.create_invoices()

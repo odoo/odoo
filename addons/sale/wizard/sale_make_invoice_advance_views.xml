@@ -24,8 +24,11 @@
                             invisible="1"/>
                         <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
                         <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fixed_amount"
+                                attrs="{'required': [('advance_payment_method', '=', 'fixed')], 'invisible': [('advance_payment_method', '!=','fixed')]}" class="oe_inline"/>
                             <field name="amount"
-                                attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
+                                attrs="{'required': [('advance_payment_method', '=', 'percentage')], 'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
                             <span
                                 attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline">%</span>
                         </div>
