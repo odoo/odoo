@@ -2,12 +2,17 @@ odoo.define('web.ajax', function (require) {
 "use strict";
 
 var config = require('web.config');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var time = require('web.time');
 var download = require('web.download');
 var contentdisposition = require('web.contentdisposition');
 
 var _t = core._t;
+
+// Create the final object containing all the functions first to allow monkey
+// patching them correctly if ever needed.
+var ajax = {};
 
 function _genericJsonRpc (fct_name, params, settings, fct) {
     var shadow = settings.shadow || false;
@@ -469,44 +474,79 @@ var loadAsset = (function () {
 })();
 
 /**
- * Loads the given js and css libraries. Note that the ajax loadJS and loadCSS methods
- * don't do anything if the given file is already loaded.
+ * Loads the given js/css libraries and asset bundles. Note that no library or
+ * asset will be loaded if it was already done before.
  *
  * @param {Object} libs
- * @Param {Array | Array<Array>} [libs.jsLibs=[]] The list of JS files that we want to
- *   load. The list may contain strings (the files to load), or lists of strings. The
- *   first level is loaded sequentially, and files listed in inner lists are loaded in
- *   parallel.
- * @param {Array<string>} [libs.cssLibs=[]] A list of css files, to be loaded in
- *   parallel
- * @param {Array<string>} [libs.assetLibs=[]] A list of xmlId. The loaded template
- *   contains the script and link to be loaded
+ * @param {Array<string|string[]>} [libs.assetLibs=[]]
+ *      The list of assets to load. Each list item may be a string (the xmlID
+ *      of the asset to load) or a list of strings. The first level is loaded
+ *      sequentially (so use this if the order matters) while the assets in
+ *      inner lists are loaded in parallel (use this for efficiency but only
+ *      if the order does not matter, should rarely be the case for assets).
+ * @param {string[]} [libs.cssLibs=[]]
+ *      The list of CSS files to load. They will all be loaded in parallel but
+ *      put in the DOM in the given order (only the order in the DOM is used
+ *      to determine priority of CSS rules, not loaded time).
+ * @param {Array<string|string[]>} [libs.jsLibs=[]]
+ *      The list of JS files to load. Each list item may be a string (the URL
+ *      of the file to load) or a list of strings. The first level is loaded
+ *      sequentially (so use this if the order matters) while the files in inner
+ *      lists are loaded in parallel (use this for efficiency but only
+ *      if the order does not matter).
+ * @param {string[]} [libs.cssContents=[]]
+ *      List of inline styles to add after loading the CSS files.
+ * @param {string[]} [libs.jsContents=[]]
+ *      List of inline scripts to add after loading the JS files.
  *
  * @returns {Promise}
  */
-function loadLibs (libs) {
-    var defs = [];
-    (libs.jsLibs || []).forEach(function (urls) {
-        defs.push(Promise.all(defs).then(function () {
-            if (typeof(urls) === 'string') {
-                return ajax.loadJS(urls);
-            } else {
-                return Promise.all(urls.map(ajax.loadJS));
+function loadLibs(libs) {
+    var mutex = new concurrency.Mutex();
+    mutex.exec(function () {
+        var defs = [];
+        var cssLibs = [libs.cssLibs || []];  // Force loading in parallel
+        defs.push(_loadArray(cssLibs, ajax.loadCSS).then(function () {
+            if (libs.cssContents && libs.cssContents.length) {
+                $('head').append($('<style/>', {
+                    html: libs.cssContents.join('\n'),
+                }));
             }
         }));
-    });
-    (libs.cssLibs || []).forEach(function (url) {
-        defs.push(ajax.loadCSS(url));
-    });
-    _.each(libs.assetLibs || [], function (xmlId) {
-        defs.push(loadAsset(xmlId).then(function (asset) {
-            return loadLibs(asset);
+        defs.push(_loadArray(libs.jsLibs || [], ajax.loadJS).then(function () {
+            if (libs.jsContents && libs.jsContents.length) {
+                $('head').append($('<script/>', {
+                    html: libs.jsContents.join('\n'),
+                }));
+            }
         }));
+        return Promise.all(defs);
     });
-    return Promise.all(defs);
+    mutex.exec(function () {
+        return _loadArray(libs.assetLibs || [], function (xmlID) {
+            return ajax.loadAsset(xmlID).then(function (asset) {
+                return ajax.loadLibs(asset);
+            });
+        });
+    });
+
+    function _loadArray(array, loadCallback) {
+        var _mutex = new concurrency.Mutex();
+        array.forEach(function (urlData) {
+            _mutex.exec(function () {
+                if (typeof urlData === 'string') {
+                    return loadCallback(urlData);
+                }
+                return Promise.all(urlData.map(loadCallback));
+            });
+        });
+        return _mutex.getUnlockedDef();
+    }
+
+    return mutex.getUnlockedDef();
 }
 
-var ajax = {
+_.extend(ajax, {
     jsonRpc: jsonRpc,
     rpc: rpc,
     loadCSS: loadCSS,
@@ -516,7 +556,7 @@ var ajax = {
     loadLibs: loadLibs,
     get_file: get_file,
     post: post,
-};
+});
 
 return ajax;
 

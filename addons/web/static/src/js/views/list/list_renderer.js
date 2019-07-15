@@ -405,7 +405,8 @@ var ListRenderer = BasicRenderer.extend({
             isPassword: 'password' in node.attrs,
         });
         this._handleAttributes($td, node);
-        return $td.html(formattedValue).attr('title', formattedValue);
+        var title = field.type !== 'boolean' ? formattedValue : '';
+        return $td.html(formattedValue).attr('title', title);
     },
     /**
      * Renders the button element associated to the given node and record.

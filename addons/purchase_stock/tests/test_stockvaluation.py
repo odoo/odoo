@@ -822,12 +822,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'company_id': company.id,
         })
 
-        # To allow testing validation of PO
+        # To allow testing validation of PO and Delivery
+        today = date_po
         def _today(*args, **kwargs):
-            return datetime.strptime(date_po, "%Y-%m-%d").date()
-        # To allow testing validation of Delivery
+            return datetime.strptime(today, "%Y-%m-%d").date()
         def _now(*args, **kwargs):
-            return datetime.strptime(date_delivery + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
+            return datetime.strptime(today + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
 
         patchers = [
             patch('odoo.fields.Date.context_today', _today),
@@ -856,13 +856,17 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
 
+        today = date_delivery
         picking = po.picking_ids
         (picking.move_lines
             .filtered(lambda l: l.purchase_line_id == line_product_avg)
             .write({'quantity_done': 1.0}))
 
         picking.button_validate()
+        # 5 Units received at rate 0.7 = 42.86
+        self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
+        today = date_invoice
         inv = self.env['account.move'].with_context(default_type='in_invoice').create({
             'type': 'in_invoice',
             'invoice_date': date_invoice,
@@ -944,7 +948,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         product_avg = self.product1.copy({
             'purchase_method': 'purchase',
             'name': 'AVG',
-            'standard_price': 60,
+            'standard_price': 0,
             'property_account_creditor_price_difference': self.price_diff_account.id
         })
         product_avg.invoice_policy = 'order'
@@ -991,13 +995,12 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'company_id': company.id,
         })
 
-        # To allow testing validation of PO
+        # To allow testing validation of PO and Delivery
+        today = date_po
         def _today(*args, **kwargs):
-            return datetime.strptime(date_po, "%Y-%m-%d").date()
-        # To allow testing validation of Delivery
-        delivery_now = date_delivery
+            return datetime.strptime(today, "%Y-%m-%d").date()
         def _now(*args, **kwargs):
-            return datetime.strptime(delivery_now + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
+            return datetime.strptime(today + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
 
         patchers = [
             patch('odoo.fields.Date.context_today', _today),
@@ -1027,6 +1030,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
 
+        today = date_delivery
         picking = po.picking_ids
         (picking.move_lines
             .filtered(lambda l: l.purchase_line_id == line_product_avg)
@@ -1034,7 +1038,10 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         picking.button_validate()
         picking.action_done()  # Create Backorder
+        # 5 Units received at rate 0.7 = 42.86
+        self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
+        today = date_invoice
         inv = self.env['account.move'].with_context(default_type='in_invoice').create({
             'type': 'in_invoice',
             'invoice_date': date_invoice,
@@ -1055,13 +1062,16 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         inv.post()
 
+        today = date_delivery1
         backorder_picking = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
-        delivery_now = date_delivery1
         (backorder_picking.move_lines
             .filtered(lambda l: l.purchase_line_id == line_product_avg)
             .write({'quantity_done': 5.0}))
         backorder_picking.button_validate()
+        # 5 Units received at rate 0.7 (42.86) + 5 Units received at rate 0.8 (37.50) = 40.18
+        self.assertAlmostEqual(product_avg.standard_price, 40.18)
 
+        today = date_invoice1
         inv1 = self.env['account.move'].with_context(default_type='in_invoice').create({
             'type': 'in_invoice',
             'invoice_date': date_invoice1,

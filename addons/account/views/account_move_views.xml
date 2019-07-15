@@ -761,6 +761,26 @@
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
                                     </tree>
+                                    <!-- Form view to cover mobile use -->
+                                    <form>
+                                      <group>
+                                        <field name="tax_line_id" invisible="1"/>
+                                        <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                                        <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
+                                        <field name="name"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                        <field name="amount_currency" groups="base.group_multi_currency"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                        <field name="debit" sum="Total Debit"/>
+                                        <field name="credit" sum="Total Credit"/>
+                                        <field name="tax_ids" string="Taxes Applied" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
+                                        <field name="recompute_tax_line" invisible="1" readonly="1"/>
+                                      </group>
+                                    </form>
                                 </field>
                             </page>
                             <page id="other_tab" string="Other Info" name="other_info"
@@ -929,7 +949,8 @@
             view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>            <field name="name">Journal Items</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>
+            <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped"/>
@@ -937,7 +958,7 @@
         </record>
 
         <record id="action_account_moves_journal_sales" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'sales', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'sales', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>
             <field name="name">Sales</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -946,7 +967,7 @@
         </record>
 
         <record id="action_account_moves_journal_purchase" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'purchase', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_purchases':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'purchase', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_purchases':1, 'name_groupby':1}</field>
             <field name="name">Purchase</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -955,7 +976,7 @@
         </record>
 
         <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'name_groupby':1}</field>
             <field name="name">Bank and Cash</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -964,7 +985,7 @@
         </record>
 
         <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_misc_filter':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_misc_filter':1, 'name_groupby':1}</field>
             <field name="name">Miscellaneous</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -973,7 +994,7 @@
         </record>
 
         <record id="action_account_moves_ledger_general" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_account': 1, 'group_by':'account_id', 'search_default_posted':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_account': 1, 'search_default_posted':1}</field>
             <field name="name">General Ledger</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -982,7 +1003,7 @@
         </record>
 
         <record id="action_account_moves_ledger_partner" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_partner': 1, 'group_by':'partner_id', 'search_default_posted':1, 'search_default_payable':1, 'search_default_receivable':1, 'search_default_unreconciled':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_partner': 1, 'search_default_posted':1, 'search_default_payable':1, 'search_default_receivable':1, 'search_default_unreconciled':1}</field>
             <field name="name">Partner Ledger</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -991,7 +1012,7 @@
         </record>
 
         <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'name_groupby':1}</field>
             <field name="name">Bank and Cash</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1000,7 +1021,7 @@
         </record>
 
         <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'group_by':'move_id', 'search_default_posted':1, 'search_default_misc_filter':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_misc_filter':1, 'name_groupby':1}</field>
             <field name="name">Miscellaneous</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1009,7 +1030,7 @@
         </record>
 
         <record id="action_account_moves_ledger_general" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_account': 1, 'group_by':'account_id', 'search_default_posted':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_account': 1, 'search_default_posted':1}</field>
             <field name="name">General Ledger</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1018,7 +1039,7 @@
         </record>
 
         <record id="action_account_moves_ledger_partner" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_partner': 1, 'group_by':'partner_id', 'search_default_posted':1, 'search_default_payable':1, 'search_default_receivable':1, 'search_default_unreconciled':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_partner': 1, 'search_default_posted':1, 'search_default_payable':1, 'search_default_receivable':1, 'search_default_unreconciled':1}</field>
             <field name="name">Partner Ledger</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>

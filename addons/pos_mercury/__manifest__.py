@@ -29,6 +29,7 @@ following:
         'views/pos_mercury_views.xml',
         'views/pos_mercury_transaction_templates.xml',
         'views/pos_config_setting_views.xml',
+        'views/pos_config_views.xml',
     ],
     'demo': [
         'data/pos_mercury_demo.xml',
