@@ -380,15 +380,22 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
-        prec = self.env.user.company_id.currency_id.decimal_places
-
-        self._cr.execute("""\
-            SELECT      move_id
-            FROM        account_move_line
-            WHERE       move_id in %s
-            GROUP BY    move_id
-            HAVING      abs(sum(debit) - sum(credit)) > %s
-            """, (tuple(self.ids), 10 ** (-max(5, prec))))
+        self._cr.execute("""
+        SELECT main.id
+        FROM        
+            (SELECT
+                aml.move_id AS id,
+                sum(aml.debit) AS debit,
+                sum(aml.credit) AS credit,
+                min(rc.decimal_places) AS prec
+            FROM
+                account_move_line aml
+                LEFT JOIN res_currency rc ON (rc.id = aml.company_currency_id)
+            WHERE aml.move_id in %s
+            GROUP BY aml.move_id
+            ) AS main
+        WHERE abs(main.debit - main.credit) > POWER(10, -GREATEST(5, main.prec))
+        """, (tuple(self.ids),)
         if len(self._cr.fetchall()) != 0:
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
