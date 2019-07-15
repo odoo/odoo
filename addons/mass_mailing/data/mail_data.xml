@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <template id="mass_mailing_mail_style">
-        <style>
-            @media screen and (max-width: 768px) {
-                .o_mail_col_mv {
-                    display: block !important;
-                    width: auto !important;
-                }
-                .o_mail_table_styles {
-                    width: 100% !important;
-                }
-                .o_mail_col_container {
-                    margin: 0px 0px 10px 0px !important;
-                }
-            }
-        </style>
-    </template>
-
+<odoo><data noupdate="1">
     <!-- Reference: https://litmus.com/community/learning/24-how-to-code-a-responsive-email-from-scratch -->
     <template id="mass_mailing_mail_layout">
         &lt;!DOCTYPE html&gt;
@@ -34,4 +17,4 @@
             </body>
         </html>
     </template>
-</odoo>
+</data></odoo>
