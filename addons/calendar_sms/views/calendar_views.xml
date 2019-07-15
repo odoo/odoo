@@ -7,6 +7,9 @@
         binding_model="calendar.event"
         res_model="sms.composer"
         view_mode="form"
-        target="new"/>
+        target="new"
+        context="{
+            'default_composition_mode': 'comment',
+        }"/>
 
 </odoo>
