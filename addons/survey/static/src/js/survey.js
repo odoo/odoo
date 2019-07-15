@@ -52,11 +52,11 @@ if(!the_form.length) {
     $('.js_drop select').change(function(){
         var other_val = $(this).find('.js_other_option').val();
         if($(this).val() === other_val){
-            $(this).parent().removeClass('col-lg-12').addClass('col-lg-6');
+            // $(this).parent().removeClass('col-lg-12').addClass('col-lg-6');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').show().focus();
         }
         else{
-            $(this).parent().removeClass('col-lg-6').addClass('col-lg-12');
+            // $(this).parent().removeClass('col-lg-6').addClass('col-lg-12');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').val("").hide();
         }
     });
@@ -149,7 +149,7 @@ if(!the_form.length) {
         success: function(response, status, xhr, wfe){ // submission attempt
             if(_.has(response, 'errors')){  // some questions have errors
                 _.each(_.keys(response.errors), function(key){
-                    $("#" + key + '>.js_errzone').append('<p>' + response.errors[key] + '</p>').show();
+                    $("#" + key + '>.js_errzone').append('<span>' + response.errors[key] + '</span>').show();
                     if (_.keys(response.errors)[_.keys(response.errors).length - 1] === key) {
                          $('html, body').animate({
                             scrollTop: $('.js_errzone:visible:first').closest('.js_question-wrapper').offset().top - $('.o_main_navbar').height()
