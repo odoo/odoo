@@ -478,12 +478,6 @@ class SaleOrder(models.Model):
         }
         return invoice_vals
 
-    def print_quotation(self):
-        self.filtered(lambda s: s.state == 'draft').write({'state': 'sent'})
-
-        return self.env.ref('sale.action_report_saleorder')\
-            .with_context({'discard_logo_check': True}).report_action(self)
-
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
@@ -1456,8 +1450,19 @@ class SaleOrderLine(models.Model):
             ])
         return super(SaleOrderLine, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
+    def _check_line_unlink(self):
+        """
+        Check wether a line can be deleted or not.
+
+        Lines cannot be deleted if the order is confirmed; downpayment
+        lines who have not yet been invoiced bypass that exception.
+        :rtype: recordset sale.order.line
+        :returns: set of lines that cannot be deleted
+        """
+        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment))
+
     def unlink(self):
-        if self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment)):
+        if self._check_line_unlink():
             raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
         return super(SaleOrderLine, self).unlink()
 
