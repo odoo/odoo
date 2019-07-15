@@ -174,19 +174,23 @@ class AccountReconcileModel(models.Model):
             tax = self.env['account.tax'].browse(tax_res['id'])
 
             new_aml_dicts.append({
-                'account_id': tax.account_id and tax.account_id.id or base_line_dict['account_id'],
-                'name': tax.name,
+                'account_id': tax_res['account_id'] or base_line_dict['account_id'],
+                'name': tax_res['name'],
                 'partner_id': base_line_dict.get('partner_id'),
                 'debit': tax_res['amount'] > 0 and tax_res['amount'] or 0,
                 'credit': tax_res['amount'] < 0 and -tax_res['amount'] or 0,
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
-                'tax_exigible': tax.tax_exigibility == 'on_payment',
+                'tax_exigible': tax_res['tax_exigibility'],
+                'tax_repartition_line_id': tax_res['tax_repartition_line_id'],
+                'tax_ids': tax_res['tax_ids'],
+                'tag_ids': tax_res['tag_ids']
             })
 
             # Handle price included taxes.
             base_line_dict['debit'] = tax_res['base'] > 0 and tax_res['base'] or base_line_dict['debit']
             base_line_dict['credit'] = tax_res['base'] < 0 and -tax_res['base'] or base_line_dict['credit']
+        base_line_dict['tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
     @api.multi

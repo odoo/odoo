@@ -257,7 +257,7 @@ class WebsiteSlides(WebsiteProfile):
         if request.env.user._is_public():
             users = request.env['res.users'].sudo().search([
                 ('karma', '>', 0),
-                ('website_published', '=', True)], limit=5, order='create_date desc')
+                ('website_published', '=', True)], limit=5, order='karma desc')
         else:
             users = None
 
@@ -323,6 +323,7 @@ class WebsiteSlides(WebsiteProfile):
     def _get_top3_users(self):
         return request.env['res.users'].sudo().search_read([
             ('karma', '>', 0),
+            ('website_published', '=', True),
             ('image', '!=', False)], ['id'], limit=3, order='karma desc')
 
     @http.route([
