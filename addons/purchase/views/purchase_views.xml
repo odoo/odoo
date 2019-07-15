@@ -338,13 +338,13 @@
                         </page>
                         <page string="Other Information" name="purchase_delivery_invoice">
                             <group>
-                                <group>
+                                <group name="planning">
                                     <label for="date_planned"/>
                                     <div>
                                         <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
                                     </div>
                                 </group>
-                                <group>
+                                <group name="other_info">
                                     <field name="user_id"/>
                                     <field name="invoice_status"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
