@@ -331,15 +331,17 @@
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
                             />
                             <button
-                                string="Recompute shipping cost"
-                                name="recompute_delivery_cost"
+                                string="Update shipping cost"
+                                name="action_open_delivery_wizard"
+                                context="{'carrier_recompute':True}"
                                 type="object"
                                 class="text-warning btn-secondary"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
                             />
                             <button
-                                string="Recompute shipping cost"
-                                name="recompute_delivery_cost"
+                                string="Update shipping cost"
+                                name="action_open_delivery_wizard"
+                                context="{'carrier_recompute':True}"
                                 type="object"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
                             />
