@@ -321,7 +321,9 @@ class Message(models.Model):
         partners = self.env['res.partner'].sudo()
         attachments = self.env['ir.attachment']
         message_ids = list(message_tree.keys())
-        for message in message_tree.values():
+        # By rebrowsing all the messages at once, we ensure all the messages
+        # to be on the same prefetch group, enhancing that way the performances 
+        for message in self.sudo().browse(message_ids):
             if message.author_id:
                 partners |= message.author_id
             if message.subtype_id and message.partner_ids:  # take notified people of message with a subtype
@@ -391,13 +393,14 @@ class Message(models.Model):
             for notification in message.notification_ids.filtered(filter_notification):
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.email_status))
 
-            has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
-            main_attachment = has_access_to_model and message.res_id and self.env[message.model].search([('id', '=',message.res_id)]) and getattr(self.env[message.model].browse(message.res_id), 'message_main_attachment_id')
             attachment_ids = []
-            for attachment in message.attachment_ids:
-                if attachment.id in attachments_tree:
-                    attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
-                    attachment_ids.append(attachments_tree[attachment.id])
+            if message.attachment_ids:
+                has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
+                main_attachment = has_access_to_model and message.res_id and self.env[message.model].search_count([('id', '=',message.res_id)]) and getattr(self.env[message.model].browse(message.res_id), 'message_main_attachment_id')
+                for attachment in message.attachment_ids:
+                    if attachment.id in attachments_tree:
+                        attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
+                        attachment_ids.append(attachments_tree[attachment.id])
             tracking_value_ids = []
             for tracking_value_id in message_to_tracking.get(message_id, list()):
                 if tracking_value_id in tracking_tree:
