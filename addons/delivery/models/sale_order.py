@@ -51,8 +51,14 @@ class SaleOrder(models.Model):
 
     def action_open_delivery_wizard(self):
         view_id = self.env.ref('delivery.choose_delivery_carrier_view_form').id
+        if self.env.context.get('carrier_recompute'):
+            name = _('Update shipping cost')
+            carrier = self.carrier_id
+        else:
+            name = _('Add a shipping method')
+            carrier = self.partner_id.property_delivery_carrier_id
         return {
-            'name': _('Add a shipping method'),
+            'name': name,
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'choose.delivery.carrier',
@@ -61,26 +67,9 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': {
                 'default_order_id': self.id,
-                'default_carrier_id': self.partner_id.property_delivery_carrier_id.id,
+                'default_carrier_id': carrier.id,
             }
         }
-
-    def recompute_delivery_cost(self):
-        self.ensure_one()
-        delivery_line = self.order_line.filtered('is_delivery')[:1]
-        res = self.carrier_id.rate_shipment(self)
-        if res.get('success'):
-            self.delivery_message = res.get('warning_message', False)
-        else:
-            raise UserError(res['error_message'])
-        delivery_line.name = self.carrier_id.with_context(lang=self.partner_id.lang).name
-        if self.carrier_id.invoice_policy == 'real':
-            delivery_line.name += _(' (Estimated Cost: %s )') % self._format_currency_amount(res['price'])
-        else:
-            delivery_line.price_unit = res['price']
-        if self.carrier_id.free_over and self._compute_amount_total_without_delivery() >= res['price']:
-            delivery_line.name += '\nFree Shipping'
-        self.recompute_delivery_price = False
 
     def _create_delivery_line(self, carrier, price_unit, price_unit_in_description=False):
         SaleOrderLine = self.env['sale.order.line']
@@ -163,3 +152,17 @@ class SaleOrderLine(models.Model):
     def _is_delivery(self):
         self.ensure_one()
         return self.is_delivery
+
+    # override to allow deletion of delivery line in a confirmed order
+    def _check_line_unlink(self):
+        """
+        Extend the allowed deletion policy of SO lines.
+
+        Lines that are delivery lines can be deleted from a confirmed order.
+
+        :rtype: recordset sale.order.line
+        :returns: set of lines that cannot be deleted
+        """
+
+        undeletable_lines = super()._check_line_unlink()
+        return undeletable_lines.filtered(lambda line: not line.is_delivery)
