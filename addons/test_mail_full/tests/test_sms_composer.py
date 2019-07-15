@@ -300,6 +300,14 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
         for record in self.records:
             self.assertSMSOutgoing(record.customer_id, None, self._test_body)
 
+    def test_message_schedule_sms_w_log(self):
+        with self.sudo('employee'):
+            with self.mockSMSGateway():
+                self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(body=self._test_body, mass_keep_log=True)
+
+        for record in self.records:
+            self.assertSMSNotification([{'partner': record.customer_id, 'state': 'ready'}], self._test_body)
+
     def test_message_schedule_sms_w_template(self):
         with self.sudo('employee'):
             with self.mockSMSGateway():
@@ -307,3 +315,11 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
 
         for record in self.records:
             self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+
+    def test_message_schedule_sms_w_template_and_log(self):
+        with self.sudo('employee'):
+            with self.mockSMSGateway():
+                self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(template=self.sms_template, mass_keep_log=True)
+
+        for record in self.records:
+            self.assertSMSNotification([{'partner': record.customer_id, 'state': 'ready'}], 'Dear %s this is an SMS.' % record.display_name)

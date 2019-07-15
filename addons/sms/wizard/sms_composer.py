@@ -54,6 +54,7 @@ class SendSMS(models.TransientModel):
     active_domain = fields.Text('Active domain', readonly=True)
     # options for comment and mass mode
     mass_keep_log = fields.Boolean('Keep a note on document')
+    mass_force_send = fields.Boolean('Send directly')
     # recipients
     recipient_description = fields.Text('Recipients (Partners)', compute='_compute_description')
     recipient_invalid = fields.Text('Invalid recipients', compute='_compute_description')
@@ -134,14 +135,9 @@ class SendSMS(models.TransientModel):
     # ------------------------------------------------------------
 
     def action_send_sms(self):
-        if self.recipient_invalid:
+        if self.composition_mode in ('numbers', 'comment') and self.recipient_invalid:
             raise UserError(_('Invalid recipients: %s') % self.recipient_invalid)
         self._action_send_sms()
-        if self.composition_mode == 'comment':
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload',
-            }
         return False
 
     def _action_send_sms(self, force_send=False):
@@ -152,7 +148,7 @@ class SendSMS(models.TransientModel):
             if records is not None and issubclass(type(records), self.pool['mail.thread']):
                 return self._action_send_sms_comment(records)
             return self._action_send_sms_numbers()
-        elif self.mass_keep_log:
+        elif self.mass_keep_log and records is not None and issubclass(type(records), self.pool['mail.thread']):
             return self._action_send_sms_mass_w_log(records)
         else:
             return self._action_send_sms_mass(records)
@@ -184,17 +180,21 @@ class SendSMS(models.TransientModel):
         record_values = self._prepare_mass_sms_values(records)
         sms_create_vals = [record_values[record.id] for record in records]
         sms = self.env['sms.sms'].sudo().create(sms_create_vals)
+
+        if sms and self.mass_force_send:
+            sms.send(auto_commit=False, raise_exception=False)
+
         return sms
 
-    def _action_send_sms_mass_w_log(self):
-        records = self._get_records()
-        if records and hasattr(records, '_message_sms'):
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
-            for record in records:
-                record._message_sms(self.body, subtype_id=subtype_id, partner_ids=False, sms_numbers=None)
-        else:
-            self.env['sms.api']._send_sms(self.numbers, self.body)
-        return True
+    def _action_send_sms_mass_w_log(self, records=None):
+        records = records if records is not None else self._get_records()
+        all_bodies = self._prepare_body_values(records=records)
+        subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+
+        messages = self.env['mail.message']
+        for record in records:
+            messages |= record._message_sms(all_bodies[record.id], subtype_id=subtype_id, partner_ids=False, sms_numbers=None, put_in_queue=not self.mass_force_send)
+        return messages
 
     # ------------------------------------------------------------
     # Mass mode specific
