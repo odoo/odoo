@@ -422,6 +422,40 @@ class ProductProduct(models.Model):
         self.clear_caches()
         return res
 
+    def _unlink_or_archive(self, check_access=True):
+        """Unlink or archive products.
+        Try in batch as much as possible because it is much faster.
+        Use dichotomy when an exception occurs.
+        """
+
+        # Avoid access errors in case the products is shared amongst companies
+        # but the underlying objects are not. If unlink fails because of an
+        # AccessError (e.g. while recomputing fields), the 'write' call will
+        # fail as well for the same reason since the field has been set to
+        # recompute.
+        if check_access:
+            self.check_access_rights('unlink')
+            self.check_access_rule('unlink')
+            self.check_access_rights('write')
+            self.check_access_rule('write')
+            self = self.sudo()
+
+        try:
+            with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                self.unlink()
+        except Exception:
+            # We catch all kind of exceptions to be sure that the operation
+            # doesn't fail.
+            if len(self) > 1:
+                self[:len(self) // 2]._unlink_or_archive(check_access=False)
+                self[len(self) // 2:]._unlink_or_archive(check_access=False)
+            else:
+                if self.active:
+                    # Note: this can still fail if something is preventing
+                    # from archiving.
+                    # This is the case from existing stock reordering rules.
+                    self.write({'active': False})
+
     @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
