@@ -137,6 +137,7 @@ class Lead(models.Model):
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
+    lang_id = fields.Many2one('res.lang', string='Language', help="Language of the lead.")
     phone = fields.Char('Phone', tracking=50)
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
@@ -357,6 +358,10 @@ class Lead(models.Model):
         if self.country_id:
             res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
         return res
+
+    @api.onchange('lang_id')
+    def _onchange_lang_id(self):
+        self._onchange_compute_probability(optional_field_name='lang_id')
 
     # Phone Validation
     # ----------------

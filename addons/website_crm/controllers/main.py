@@ -52,6 +52,9 @@ class WebsiteForm(WebsiteForm):
         if model.model == 'crm.lead':
             if 'company_id' not in values:
                 values['company_id'] = request.website.company_id.id
+            lang = request.context.get('lang', False)
+            lang_id = request.env["res.lang"].sudo().search([('code', '=', lang)], limit=1).id
+            values['lang_id'] = lang_id
         result = super(WebsiteForm, self).insert_record(request, model, values, custom, meta=meta)
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
         if visitor_sudo and result:
