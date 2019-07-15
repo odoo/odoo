@@ -5,6 +5,7 @@ var AbstractStorageService = require('web.AbstractStorageService');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
 var Dialog = require('web.Dialog');
+var ViewDialogs = require('web.view_dialogs');
 var fieldUtils = require('web.field_utils');
 var mixins = require('web.mixins');
 var RamStorage = require('web.RamStorage');
@@ -461,6 +462,62 @@ QUnit.module('Views', {
             "should have switched to a bigger modal for an actual create rather than quickcreate");
         assert.strictEqual($('.modal-lg main .o_form_view.o_form_editable').length, 1,
             "should open the full event form view in a dialog");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('open multiple event form at the same time', function (assert) {
+        assert.expect(2);
+
+        var def = $.Deferred();
+        var counter = 0;
+        testUtils.mock.patch(ViewDialogs.FormViewDialog, {
+            open: function () {
+                counter++;
+                this.options = _.omit(this.options, 'fields_view');  // force loadFieldView
+                return this._super.apply(this, arguments);
+            },
+            loadFieldView: function () {
+                var self = this;
+                var args = arguments;
+                var _super = this._super;
+                return def.then(function () {
+                    return _super.apply(self, args);
+                });
+            },
+        });
+
+        var event = $.Event();
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'quick_add="False" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        for (var i = 0; i < 5; i++) {
+            testUtils.dom.triggerMouseEvent($cell, "mousedown");
+            testUtils.dom.triggerMouseEvent($cell, "mouseup");
+        }
+        def.resolve();
+        assert.equal(counter, 5, "there should had been 5 attemps to open a modal")
+        assert.containsOnce($('body'), '.modal', "there should be only one open modal");
 
         calendar.destroy();
     });
