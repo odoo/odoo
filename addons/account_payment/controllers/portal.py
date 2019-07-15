@@ -20,7 +20,5 @@ class PortalAccount(PortalAccount):
                                                                     ])
             values['existing_token'] = token_count > 0
         values.update(payment_inputs)
-        # if the current user is connected we set partner_id to his partner otherwise we set it as the invoice partner
-        # we do this to force the creation of payment tokens to the correct partner and avoid token linked to the public user
-        values['partner_id'] = invoice.partner_id if is_public_user else request.env.user.partner_id,
+        values['partner_id'] = invoice.partner_id  # should always be the billing partner
         return values
