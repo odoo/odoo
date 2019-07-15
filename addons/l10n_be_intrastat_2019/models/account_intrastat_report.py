@@ -12,6 +12,15 @@ class XmlDeclaration(models.TransientModel):
     """
     _inherit = "l10n_be_intrastat_xml.xml_decl"
 
+    def _get_rounding_digits(self):
+        """
+        @override
+
+        https://www.nbb.be/doc/dq/f_pdf_ex/nieuwsbriefintrastat_n28_2018_fr.pdf
+        Chapter 3
+        """
+        return 2
+
     def _build_intrastat_line(self, numlgn, item, linekey, amounts, dispatchmode, extendedmode):
         super(XmlDeclaration, self)._build_intrastat_line(numlgn, item, linekey, amounts, dispatchmode, extendedmode)
         if dispatchmode:

@@ -280,7 +280,7 @@ class Website(models.Model):
                 if code_pricelist:
                     pricelist_id = code_pricelist.id
                     update_pricelist = True
-            elif code is not None and sale_order.pricelist_id.code:
+            elif code is not None and sale_order.pricelist_id.code and code != sale_order.pricelist_id.code:
                 # code is not None when user removes code and click on "Apply"
                 pricelist_id = partner.property_product_pricelist.id
                 update_pricelist = True
