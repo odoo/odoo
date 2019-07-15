@@ -96,6 +96,14 @@ class Users(models.Model):
             if old_rank != user.rank_id:
                 user._rank_changed()
 
+    def _get_next_rank(self):
+        """ For fresh users with 0 karma that don't have a rank_id and next_rank_id yet
+        this method returns the first karma rank (by karma ascending). This acts as a
+        default value in related views.
+
+        TDE FIXME in post-12.4: make next_rank_id a non-stored computed field correctly computed """
+        return self.next_rank_id or (not self.rank_id and self.env['gamification.karma.rank'].search([], order="karma_min ASC", limit=1))
+
     def get_gamification_redirection_data(self):
         """
         Hook for other modules to add redirect button(s) in new rank reached mail

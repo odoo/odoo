@@ -825,8 +825,8 @@ class PaymentTransaction(models.Model):
     @api.model
     def _compute_reference_prefix(self, values):
         if values and values.get('invoice_ids'):
-            many_list = self.resolve_2many_commands('invoice_ids', values['invoice_ids'], fields=['number'])
-            return ','.join(dic['number'] for dic in many_list)
+            many_list = self.resolve_2many_commands('invoice_ids', values['invoice_ids'], fields=['name'])
+            return ','.join(dic['name'] for dic in many_list)
         return None
 
     @api.model

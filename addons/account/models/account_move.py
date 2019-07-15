@@ -1024,7 +1024,7 @@ class AccountMove(models.Model):
                     vendor_display_name = _('From: ') + move.invoice_source_email
                     move.invoice_vendor_icon = '@'
                 else:
-                    vendor_display_name = ('Created by: ') + move.create_uid.name
+                    vendor_display_name = ('Created by: ') + move.sudo().create_uid.name
                     move.invoice_vendor_icon = '#'
             move.invoice_vendor_display_name = vendor_display_name
 
@@ -1877,6 +1877,9 @@ class AccountMove(models.Model):
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
                 raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format))))
+
+            move.message_subscribe([p.id for p in [move.partner_id, move.commercial_partner_id] if p not in move.message_partner_ids])
+
             to_write = {'state': 'posted'}
 
             if move.name == '/':
@@ -2090,6 +2093,18 @@ class AccountMove(models.Model):
             ('auto_post', '=', True),
         ])
         records.post()
+
+    # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
+    @api.multi
+    def action_duplicate(self):
+        self.ensure_one()
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action['context'] = dict(self.env.context)
+        action['context']['form_view_initial_mode'] = 'edit'
+        action['context']['view_no_maturity'] = False
+        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+        action['res_id'] = self.copy().id
+        return action
 
 
 class AccountMoveLine(models.Model):
@@ -3535,19 +3550,6 @@ class AccountMoveLine(models.Model):
 
             tables, where_clause, where_clause_params = query.get_sql()
         return tables, where_clause, where_clause_params
-
-    # FIXME: Clarify me and change me in master
-    @api.multi
-    def action_duplicate(self):
-        self.ensure_one()
-        action = self.env.ref('account.action_move_journal_line').read()[0]
-        action['target'] = 'inline'
-        action['context'] = dict(self.env.context)
-        action['context']['form_view_initial_mode'] = 'edit'
-        action['context']['view_no_maturity'] = False
-        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
-        action['res_id'] = self.copy().id
-        return action
 
     def _reconciled_lines(self):
         ids = []
