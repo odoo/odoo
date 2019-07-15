@@ -198,6 +198,9 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="class">account_export_as_xlsx</attribute>
+                </xpath>
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
@@ -216,6 +219,9 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="class">account_export_as_xlsx</attribute>
+                </xpath>
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="ref" position="attributes"><attribute name="optional">show</attribute></field>
@@ -229,6 +235,9 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="class">account_export_as_xlsx</attribute>
+                </xpath>
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
             </field>
