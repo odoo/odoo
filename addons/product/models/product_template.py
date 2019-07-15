@@ -479,13 +479,11 @@ class ProductTemplate(models.Model):
     def create_variant_ids(self):
         Product = self.env["product.product"]
 
+        variants_to_create = []
+        variants_to_activate = Product
+        variants_to_unlink = Product
+
         for tmpl_id in self.with_context(active_test=False):
-            # Handle the variants for each template separately. This will be
-            # less efficient when called on a lot of products with few variants
-            # but it is better when there's a lot of variants on one template.
-            variants_to_create = []
-            variants_to_activate = self.env['product.product']
-            variants_to_unlink = self.env['product.product']
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
             variant_alone = tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
@@ -510,20 +508,22 @@ class ProductTemplate(models.Model):
                     for variant in tmpl_id.product_variant_ids
                 }
                 # For each possible variant, create if it doesn't exist yet.
+                current_variants_to_create = []
                 for value_ids in all_variants:
                     value_ids = frozenset(value_ids)
                     if value_ids not in existing_variants:
-                        variants_to_create.append({
+                        current_variants_to_create.append({
                             'product_tmpl_id': tmpl_id.id,
                             'attribute_value_ids': [(6, 0, list(value_ids))],
                             'active': tmpl_id.active,
                         })
-                        if len(variants_to_create) > 1000:
+                        if len(current_variants_to_create) > 1000:
                             raise UserError(_(
                                 'The number of variants to generate is too high. '
                                 'You should either not generate variants for each combination or generate them on demand from the sales order. '
                                 'To do so, open the form view of attributes and change the mode of *Create Variants*.'))
 
+                variants_to_create += current_variants_to_create
             # Check existing variants if any needs to be activated or unlinked.
             # - if the product is not active and has valid attributes and attribute values, it
             #   should be activated
@@ -538,43 +538,17 @@ class ProductTemplate(models.Model):
                 else:
                     variants_to_unlink += product_id
 
-            if variants_to_activate:
-                variants_to_activate.write({'active': True})
-
-            # create new products
-            if variants_to_create:
-                Product.create(variants_to_create)
-
-            # Avoid access errors in case the products is shared amongst companies but the underlying
-            # objects are not. If unlink fails because of an AccessError (e.g. while recomputing
-            # fields), the 'write' call will fail as well for the same reason since the field has
-            # been set to recompute.
-            if variants_to_unlink:
-                variants_to_unlink.check_access_rights('unlink')
-                variants_to_unlink.check_access_rule('unlink')
-                variants_to_unlink.check_access_rights('write')
-                variants_to_unlink.check_access_rule('write')
-                variants_to_unlink = variants_to_unlink.sudo()
-            # unlink or inactive product
-            # try in batch first because it is much faster
-            try:
-                with self._cr.savepoint(), tools.mute_logger('odoo.sql_db'):
-                    variants_to_unlink.unlink()
-            except Exception:
-                # fall back to one by one if batch is not possible
-                for variant in variants_to_unlink:
-                    try:
-                        with self._cr.savepoint(), tools.mute_logger('odoo.sql_db'):
-                            variant.unlink()
-                    # We catch all kind of exception to be sure that the operation doesn't fail.
-                    except Exception:
-                        # Note: this can still fail if something is preventing from archiving.
-                        # This is the case from existing stock reordering rules.
-                        variant.write({'active': False})
+        if variants_to_activate:
+            variants_to_activate.write({'active': True})
+        if variants_to_create:
+            Product.create(variants_to_create)
+        if variants_to_unlink:
+            variants_to_unlink._unlink_or_archive()
 
         # prefetched o2m have to be reloaded (because of active_test)
         # (eg. product.template: product_variant_ids)
-        # We can't rely on existing invalidate_cache because of the savepoint.
+        # We can't rely on existing invalidate_cache because of the savepoint
+        # in _unlink_or_archive.
         self.invalidate_cache()
         return True
 
