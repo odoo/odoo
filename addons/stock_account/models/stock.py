@@ -200,7 +200,7 @@ class StockMove(models.Model):
                     '|',
                         ('location_dest_id.company_id', '=', False),
                         '&',
-                            ('location_dest_id.usage', '=', 'inventory'),
+                            ('location_dest_id.usage', 'in', ['inventory', 'production']),
                             ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
         ]
         return domain
