@@ -394,7 +394,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @private
      * @param {Object} messageData
-     * @param {Function} callback
+     * @param {Function|undefined} [callback]
      */
     _postMessage: function (messageData, callback) {
         var self = this;
@@ -404,7 +404,7 @@ var AbstractThreadWindow = Widget.extend({
         this._thread.postMessage(messageData)
             .then(function () {
                 self._threadWidget.scrollToBottom();
-                callback();
+                callback && callback();
             });
     },
     /**
