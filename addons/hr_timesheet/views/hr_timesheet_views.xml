@@ -24,7 +24,7 @@
                 <tree editable="top" string="Timesheet Activities" import="false">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="project_id" required="1"/>
+                    <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
                 </tree>
@@ -57,6 +57,18 @@
             </field>
         </record>
 
+        <record id="view_hr_timesheet_line_graph" model="ir.ui.view">
+            <field name="name">account.analytic.line.graph</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet">
+                    <field name="task_id" type="row"/>
+                    <field name="project_id" type="row"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
@@ -68,7 +80,7 @@
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="project_id" required="1"/>
+                                <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                                 <field name="task_id"/>
                                 <field name="name"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
