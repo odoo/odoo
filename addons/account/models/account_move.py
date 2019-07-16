@@ -395,7 +395,7 @@ class AccountMove(models.Model):
             GROUP BY aml.move_id
             ) AS main
         WHERE abs(main.debit - main.credit) > POWER(10, -GREATEST(5, main.prec))
-        """, (tuple(self.ids),)
+        """, (tuple(self.ids),))
         if len(self._cr.fetchall()) != 0:
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
