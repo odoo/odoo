@@ -25,6 +25,7 @@ class PaymentAcquirerAuthorize(models.Model):
     provider = fields.Selection(selection_add=[('authorize', 'Authorize.Net')])
     authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
+    authorize_signature_key = fields.Char(string='API Signature Key', required_if_provider='authorize', groups="base.group_user")
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -57,15 +58,8 @@ class PaymentAcquirerAuthorize(models.Model):
             values['x_amount'],
             values['x_currency_code']]).encode('utf-8')
 
-        # [BACKWARD COMPATIBILITY] Check that the merchant did update his transaction
-        # key to signature key (end of MD5 support from Authorize.net)
-        # The signature key is now '128-character hexadecimal format', while the
-        # transaction key was only 16-character.
-        if len(values['x_trans_key']) == 128:
-            key = bytes.fromhex(values['x_trans_key'])
-            return hmac.new(key, data, hashlib.sha512).hexdigest().upper()
-        else:
-            return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
+        key = bytes.fromhex(self.authorize_signature_key)
+        return hmac.new(key, data, hashlib.sha512).hexdigest().upper()
 
     @api.multi
     def authorize_form_generate_values(self, values):
@@ -83,7 +77,6 @@ class PaymentAcquirerAuthorize(models.Model):
         authorize_tx_values = dict(values)
         temp_authorize_tx_values = {
             'x_login': self.authorize_login,
-            'x_trans_key': self.authorize_transaction_key,
             'x_amount': float_repr(values['amount'], values['currency'].decimal_places if values['currency'] else 2),
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE' if not self.capture_manually else 'AUTH_ONLY',
