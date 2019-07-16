@@ -353,14 +353,19 @@ class AccountVoucher(models.Model):
                             temp['amount_currency'] = company_cur._convert(tax_vals['amount'], current_cur, line.company_id, self.account_date or fields.Date.today(), round=True)
                         self.env['account.move.line'].create(temp)
 
-            self.env['account.move.line'].create(move_line)
             # When global rounding is activated, we must wait until all tax lines are computed to
             # merge them.
             if tax_calculation_rounding_method == 'round_globally':
+                # _apply_taxes modifies the dict move_line in place to account for included/excluded taxes
                 tax_lines_vals += self.env['account.move.line'].with_context(round=False)._apply_taxes(
                     move_line,
                     move_line.get('debit', 0.0) - move_line.get('credit', 0.0)
                 )
+                # rounding False means the move_line's amount are not rounded
+                currency = self.env['res.currency'].browse(company_currency)
+                move_line['debit'] = currency.round(move_line['debit'])
+                move_line['credit'] = currency.round(move_line['credit'])
+            self.env['account.move.line'].create(move_line)
 
         # When round globally is set, we merge the tax lines
         if tax_calculation_rounding_method == 'round_globally':
