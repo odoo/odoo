@@ -153,8 +153,12 @@ class SaleOrderOption(models.Model):
     _description = "Sale Options"
     _order = 'sequence, id'
 
+    is_present = fields.Boolean(string="Present on Quotation",
+                           help="This field will be checked if the option line's product is "
+                                "already present in the quotation.",
+                           compute="_compute_is_present", search="_search_is_present")
     order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
-    line_id = fields.Many2one('sale.order.line', ondelete="set null")
+    line_id = fields.Many2one('sale.order.line', ondelete="set null", copy=False)
     name = fields.Text('Description', required=True)
     product_id = fields.Many2one('product.product', 'Product', required=True, domain=[('sale_ok', '=', True)])
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
@@ -162,6 +166,18 @@ class SaleOrderOption(models.Model):
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
     quantity = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of optional products.")
+
+    @api.depends('line_id', 'order_id.order_line', 'product_id')
+    def _compute_is_present(self):
+        # NOTE: this field cannot be stored as the line_id is usually removed
+        # through cascade deletion, which means the compute would be false
+        for option in self:
+            option.is_present = bool(option.order_id.order_line.filtered(lambda l: l.product_id == option.product_id))
+
+    def _search_is_present(self, operator, value):
+        if (operator, value) in [('=', True), ('!=', False)]:
+            return [('line_id', '=', False)]
+        return [('line_id', '!=', False)]
 
     @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):
@@ -181,7 +197,6 @@ class SaleOrderOption(models.Model):
     @api.multi
     def button_add_to_order(self):
         self.add_option_to_order()
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     @api.multi
     def add_option_to_order(self):
