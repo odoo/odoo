@@ -10,7 +10,6 @@
                     <field name="code" groups="base.group_no_one"/>
                     <field name="iso_code" groups="base.group_no_one"/>
                     <field name="direction" groups="base.group_no_one"/>
-                    <field name="translatable" groups="base.group_no_one"/>
                     <field name="active"/>
                     <button name="%(base.action_view_base_language_install)d"
                         string="Activate Language and Update Translations"
@@ -41,7 +40,6 @@
                                 <field name="code"/>
                                 <field name="iso_code"/>
                                 <field name="active"/>
-                                <field name="translatable"/>
                             </group>
                             <group>
                                 <field name="direction"/>
@@ -93,7 +91,6 @@
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
                         string="Language"/>
-                    <filter string="Translatable" name="translatable" domain="[('translatable','=',True)]"/>
                     <filter string="Active" name="active" domain="[('active','=',True)]"/>
                     <field name="direction"/>
                 </search>
