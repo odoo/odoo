@@ -14,6 +14,8 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def default_get(self, field_list):
         result = super(AccountAnalyticLine, self).default_get(field_list)
+        if 'encoding_uom_id' in field_list:
+            result['encoding_uom_id'] = self.env.company.timesheet_encode_uom_id.id
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
         return result
@@ -23,6 +25,11 @@ class AccountAnalyticLine(models.Model):
 
     employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
+    encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
+
+    def _compute_encoding_uom_id(self):
+        for analytic_line in self:
+            analytic_line.encoding_uom_id = self.env.company.timesheet_encode_uom_id
 
     @api.onchange('project_id')
     def onchange_project_id(self):
