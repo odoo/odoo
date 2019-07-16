@@ -28,7 +28,10 @@ class Company(models.Model):
     @api.model
     def create(self, values):
         company = super(Company, self).create(values)
-        company._create_leave_project_task()
+        # use sudo as the user could have the right to create a company
+        # but not to create a project. On the other hand, when the company
+        # is created, it is not in the allowed_company_ids on the env
+        company.sudo()._create_leave_project_task()
         return company
 
     def _create_leave_project_task(self):
