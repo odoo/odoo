@@ -67,22 +67,25 @@ QUnit.module('Views', {
 
         this.archs = {
             'partner,false,list': '<tree><field name="foo"/></tree>',
-            'partner,false,kanban': '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div><field name="foo"/></div>' +
-                    '</t></templates>' +
-                '</kanban>',
-            'partner,false,form': '<form>' +
-                        '<button name="1" type="action" string="multi view"/>' +
-                        '<field name="foo"/>' +
-                    '</form>',
+            'partner,false,kanban':
+                `<kanban>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
+            'partner,false,form':
+                `<form>
+                    <button name="1" type="action" string="multi view"/>
+                    <field name="foo"/>
+                </form>`,
             'partner,false,pivot': '<pivot><field name="int_field" type="measure"/></pivot>',
-            'partner,false,search': '<search>' +
-                    '<searchpanel>' +
-                        '<field name="company_id"/>' +
-                        '<field select="multi" name="category_id"/>' +
-                    '</searchpanel>' +
-                '</search>',
+            'partner,false,search':
+                `<search>
+                    <searchpanel>
+                        <field name="company_id"/>
+                        <field select="multi" name="category_id"/>
+                    </searchpanel>
+                </search>`,
         };
 
         var RamStorageService = AbstractStorageService.extend({
@@ -108,20 +111,24 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                            '<field select="multi" name="category_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                            <field select="multi" name="category_id"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -164,20 +171,24 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id" icon="fa-car" color="blue"/>' +
-                            '<field select="multi" name="state" icon="fa-star" color="#000"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" icon="fa-car" color="blue"/>
+                            <field select="multi" name="state" icon="fa-star" color="#000"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -199,20 +210,23 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `<kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                            '<field select="multi" invisible="1" name="state"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                            <field select="multi" invisible="1" name="state"/>
+                        </searchpanel>
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
@@ -238,21 +252,25 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                            '<field select="multi" name="category_id"/>' +
-                            '<field name="state"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                            <field select="multi" name="category_id"/>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
             }
         });
 
@@ -275,20 +293,24 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                            '<field name="state"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -319,19 +341,23 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                        </searchpanel>
+                    </search>`,
             },
             domain: [['bar', '=', true]],
         });
@@ -381,19 +407,18 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="state"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `<search><searchpanel><field name="state"/></searchpanel></search>`,
             },
         });
 
@@ -452,19 +477,23 @@ QUnit.module('Views', {
             services: {
                 local_storage: RamStorageService,
             },
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <seasrch>
+                        <searchpanel>
+                            <field name="company_id"/>
+                        </searchpanel>
+                    </seasrch>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -511,19 +540,18 @@ QUnit.module('Views', {
             services: {
                 local_storage: RamStorageService,
             },
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -557,20 +585,24 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                            '<field name="state"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
             },
             domain: [['bar', '=', true]],
         });
@@ -628,19 +660,18 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
             },
         });
 
@@ -712,19 +743,18 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="category_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `<search><searchpanel><field name="category_id"/></searchpanel></search>`,
             },
         });
 
@@ -761,19 +791,18 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
             },
         });
 
@@ -810,19 +839,18 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
             },
         });
 
@@ -858,19 +886,18 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
             },
             domain: [['bar', '=', true]],
         });
@@ -939,20 +966,24 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="state"/>' +
-                            '<field select="multi" name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state"/>
+                            <field select="multi" name="company_id"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -1014,19 +1045,23 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -1074,19 +1109,23 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id"/>
+                        </searchpanel>
+                    </search>`,
             },
             domain: [['bar', '=', true]],
         });
@@ -1177,19 +1216,23 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="state"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="state"/>
+                        </searchpanel>
+                    </search>`,
             },
             domain: [['bar', '=', true]],
         });
@@ -1265,20 +1308,24 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="state"/>' +
-                            '<field select="multi" name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state"/>
+                            <field select="multi" name="company_id"/>
+                        </searchpanel>
+                    </search>`,
             },
             viewOptions: {
                 limit: 2,
@@ -1345,19 +1392,23 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id" groupby="category_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id" groupby="category_id"/>
+                        </searchpanel>
+                    </search>`,
             },
             domain: [['bar', '=', true]],
         });
@@ -1467,19 +1518,23 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id" domain="[(\'parent_id\',\'=\',False)]"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id" domain="[('parent_id','=',False)]"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -1500,19 +1555,23 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id" groupby="category_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id" groupby="category_id"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -1575,20 +1634,24 @@ QUnit.module('Views', {
                 return result;
             },
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="category_id"/>' +
-                            '<field select="multi" name="company_id" domain="[[\'category_id\', \'=\', category_id]]"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id"/>
+                            <field select="multi" name="company_id" domain="[['category_id', '=', category_id]]"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -1641,20 +1704,24 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id"/>' +
-                            '<field select="multi" name="state"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id"/>
+                            <field select="multi" name="state"/>
+                        </searchpanel>
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -1687,19 +1754,23 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id"/>
+                        </searchpanel>
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -1725,19 +1796,23 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field select="multi" name="company_id" groupby="category_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field select="multi" name="company_id" groupby="category_id"/>
+                        </searchpanel>
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -1767,20 +1842,24 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             services: this.services,
-            arch: '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             archs: {
-                'partner,false,search': '<search>' +
-                        '<searchpanel>' +
-                            '<field name="company_id"/>' +
-                            '<field select="multi" name="category_id"/>' +
-                        '</searchpanel>' +
-                    '</search>',
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                            <field select="multi" name="category_id"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -1821,12 +1900,13 @@ QUnit.module('Views', {
     QUnit.test('search panel with view_types attribute', async function (assert) {
         assert.expect(6);
 
-        this.archs['partner,false,search'] = '<search>' +
-                '<searchpanel view_types="kanban,pivot">' +
-                    '<field name="company_id"/>' +
-                    '<field select="multi" name="category_id"/>' +
-                '</searchpanel>' +
-            '</search>';
+        this.archs['partner,false,search'] =
+            `<search>
+                <searchpanel view_types="kanban,pivot">
+                    <field name="company_id"/>
+                    <field select="multi" name="category_id"/>
+                </searchpanel>
+            </search>`;
 
 
         var actionManager = await createActionManager({
@@ -2076,7 +2156,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('search panel is not instanciated in dialogs', async function (assert) {
+    QUnit.test('search panel is not instantiated in dialogs', async function (assert) {
         assert.expect(2);
 
         this.data.company.records = [
@@ -2097,12 +2177,13 @@ QUnit.module('Views', {
             arch: '<form><field name="company_id"/></form>',
             archs: {
                 'company,false,list': '<tree><field name="name"/></tree>',
-                'company,false,search': '<search>' +
-                                                '<field name="name"/>' +
-                                                '<searchpanel>' +
-                                                    '<field name="category_id"/>' +
-                                                '</searchpanel>' +
-                                            '</search>',
+                'company,false,search':
+                    `<search>
+                        <field name="name"/>
+                        <searchpanel>
+                            <field name="category_id"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
