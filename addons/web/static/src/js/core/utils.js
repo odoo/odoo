@@ -440,6 +440,18 @@ var utils = {
         return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
+     * Returns whether the given anchor is valid.
+     *
+     * This test is useful to prevent a crash that would happen if using an invalid
+     * anchor as a selector.
+     *
+     * @param {string} anchor
+     * @returns {boolean}
+     */
+    isValidAnchor: function (anchor) {
+        return /^#[\w-]+$/.test(anchor);
+    },
+    /**
      * @param {any} node
      * @param {any} human_readable
      * @param {any} indent
