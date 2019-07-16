@@ -621,11 +621,7 @@ return AbstractRenderer.extend({
         }
         var dataPoints = this._filterDataPoints();
         if (!dataPoints.length && this.state.mode !== 'pie') {
-            this.$el.append(qweb.render('GraphView.error', {
-                title: _t("No data to display"),
-                description: _t("Try to add some records, or make sure that " +
-                    "there is no active filter in the search bar."),
-            }));
+            this.$el.append(qweb.render('View.NoContentHelper'));
         } else if (this.isInDOM) {
             // only render the graph if the widget is already in the DOM (this
             // happens typically after an update), otherwise, it will be
@@ -758,7 +754,7 @@ return AbstractRenderer.extend({
         });
         if (someNegative && !allNegative) {
             this.$el.empty();
-            this.$el.append(qweb.render('GraphView.error', {
+            this.$el.append(qweb.render('View.NoContentHelper', {
                 title: _t("Invalid data"),
                 description: _t("Pie chart cannot mix positive and negative numbers. " +
                     "Try to change your domain to only display positive results"),
@@ -767,7 +763,7 @@ return AbstractRenderer.extend({
         }
         if (allZero && !this.isEmbedded && this.state.origins.length === 1) {
             this.$el.empty();
-            this.$el.append(qweb.render('GraphView.error', {
+            this.$el.append(qweb.render('View.NoContentHelper', {
                 title: _t("Invalid data"),
                 description: _t("Pie chart cannot display all zero numbers.. " +
                     "Try to change your domain to display positive results"),
