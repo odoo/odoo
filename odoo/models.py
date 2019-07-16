@@ -5544,7 +5544,7 @@ Fields:
                [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.cache.invalidate(spec)
 
-    def modified(self, fnames):
+    def modified(self, fnames, modified=None):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
@@ -5564,9 +5564,9 @@ Fields:
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self._modified_triggers(tree)
+            self._modified_triggers(tree, modified=modified)
 
-    def _modified_triggers(self, tree):
+    def _modified_triggers(self, tree, modified=None):
         """ Process a tree of field triggers on ``self``. """
         if not self:
             return
@@ -5574,8 +5574,11 @@ Fields:
             if key is None:
                 # val is a list of fields to mark as todo
                 todo = defaultdict(list)
+                modified = modified or {}
                 for field in val:
                     records = self - self.env.protected(field)
+                    if modified and field in modified:
+                        records -= modified[field]
                     if not records:
                         continue
                     # DLE P151: This is at the same time a performance improvement issue,
@@ -5593,19 +5596,19 @@ Fields:
                     # while if you dont it will only happen when accessed, which doesnt happen.
                     if field.compute and field.store:
                         records_to_invalidate = records.filtered(lambda r: not r.id)
-                        records_todo = self.env.add_todo(field, records - records_to_invalidate)
-                    else:
-                        records_to_invalidate = records
-                        records_todo = records.browse()
-                    if records_to_invalidate:
-                        records_to_invalidate = self.env.cache.get_present_records(records, field)
+                        self.env.add_todo(field, records - records_to_invalidate)
                         self.env.cache.invalidate([(field, records_to_invalidate._ids)])
+                    else:
+                        self.env.cache.invalidate([(field, records._ids)])
                     # recursively trigger recomputation of field's dependents
-                    records_modified = records_todo + records_to_invalidate
-                    if records_modified:
-                        todo[records].append(field.name)
+                    todo[records].append(field.name)
                 for records, fieldnames in todo.items():
-                    records.modified(fieldnames)
+                    for fname in fieldnames:
+                        if records._fields[fname] in modified:
+                            modified[records._fields[fname]] += records
+                        else:
+                            modified[records._fields[fname]] = records
+                    records.modified(fieldnames, modified=modified)
             else:
                 # val is another tree of dependencies
                 model = self.env[key.model_name]
@@ -5675,7 +5678,7 @@ Fields:
                         if not key.store or new_records:
                             cache_records = self.env.cache.get_records(model, key)
                             records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
-                records._modified_triggers(val)
+                records._modified_triggers(val, modified=modified)
 
     def _recompute_check(self, field):
         """ If ``field`` must be recomputed on some record in ``self``, return the
