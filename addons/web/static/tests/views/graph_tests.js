@@ -979,7 +979,7 @@ QUnit.module('Views', {
                         var graph = self.actionManager.getCurrentController().widget;
                         if (self.combinationsToCheck[combination].errorMessage) {
                             assert.strictEqual(
-                                graph.$('.o_nocontent_help p').eq(1).text(),
+                                graph.$('.o_nocontent_help p').eq(1).text().trim(),
                                 self.combinationsToCheck[combination].errorMessage
                             );
                         } else {
