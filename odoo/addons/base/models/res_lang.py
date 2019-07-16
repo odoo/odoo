@@ -28,7 +28,6 @@ class Lang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
-    translatable = fields.Boolean()
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
@@ -141,7 +140,6 @@ class Lang(models.Model):
             'iso_code': iso_lang,
             'name': lang_name,
             'active': True,
-            'translatable': True,
             'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),

@@ -15,7 +15,7 @@ class BaseLanguageExport(models.TransientModel):
 
     @api.model
     def _get_languages(self):
-        langs = self.env['res.lang'].search([('translatable', '=', True)])
+        langs = self.env['res.lang'].search([])
         return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + \
                [(lang.code, lang.name) for lang in langs]
    

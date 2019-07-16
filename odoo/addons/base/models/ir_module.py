@@ -857,7 +857,7 @@ class Module(models.Model):
 
     def _update_translations(self, filter_lang=None):
         if not filter_lang:
-            langs = self.env['res.lang'].search([('translatable', '=', True)])
+            langs = self.env['res.lang'].search([])
             filter_lang = [lang.code for lang in langs]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
