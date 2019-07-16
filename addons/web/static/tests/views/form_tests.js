@@ -4526,6 +4526,52 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('*_view_ref in context are removed while read o2m object', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].product_ids = [37,41];
+        this.data.product.fields.color = {string: "color field", type: "char"};
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="product_ids" context="{\'tree_view_ref\':\'module.tree_view_ref\'}"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'product,false,form': '<form>'+
+                                            '<field name="display_name"/>'+
+                                            '<field name="color"/>'+
+                                        '</form>',
+                'product,false,list': '<tree>'+
+                                            '<field name="display_name"/>'+
+                                        '</tree>',
+            },
+            mockRPC: function (route, args) {
+                debugger;
+                if (args.method === 'load_views' && args.model === 'product') {
+                    var context = args.kwargs.context;
+                    assert.deepEqual(context.tree_view_ref, 'module.tree_view_ref',
+                        'The correct _view_ref should have been sent to the server, first time');
+                }
+                if (args.method === 'read' && args.model === 'product') {
+                    assert.notOk(_.contains(args.kwargs.context, 'tree_view_ref'),
+                        "the context should not have tree_view_ref while reading o2m object");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // open o2m record in form
+        var row = form.$('.o_field_one2many .o_list_view .o_data_row:first');
+        await testUtils.dom.click(row);
+
+        form.destroy();
+    });
+
     QUnit.test('readonly fields with modifiers may be saved', function (assert) {
         // the readonly property on the field description only applies on view,
         // this is not a DB constraint. It should be seen as a default value,

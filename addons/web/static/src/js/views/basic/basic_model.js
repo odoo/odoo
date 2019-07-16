@@ -2727,6 +2727,9 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'one2many' || field.type === 'many2many') {
                 var fieldInfo = record.fieldsInfo[viewType][fieldName];
                 var rawContext = fieldInfo && fieldInfo.context;
+                rawContext = _.pick(rawContext, function (value, key) {
+                    return key.indexOf('_view_ref') === -1;
+                });
                 var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                 var fieldsInfo = view ? view.fieldsInfo : (fieldInfo.fieldsInfo || {});
                 var ids = record.data[fieldName] || [];
