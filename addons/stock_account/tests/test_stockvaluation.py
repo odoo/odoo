@@ -3917,3 +3917,49 @@ class TestStockValuation(TransactionCase):
 
         self.assertAlmostEqual(move1.remaining_qty, 0.0)
         self.assertAlmostEqual(self.product1.stock_value, 0.0)
+
+    def test_at_date_average_1(self):
+        """ Set a company on the inventory loss, take items from there then put items there, check
+        the values and quantities at date.
+        """
+        now = Date.from_string(Date.today())
+        date1 = now - timedelta(days=8)
+        date2 = now - timedelta(days=7)
+
+        self.product1.standard_price = 10
+        self.env['product.price.history'].search([('product_id', '=', self.product1.id)], order='datetime desc, id DESC', limit=1).datetime = date1
+        self.product1.product_tmpl_id.cost_method = 'average'
+        self.inventory_location.company_id = self.env.user.company_id.id
+
+        move1 = self.env['stock.move'].create({
+            'name': 'Adjustment of 10 units',
+            'location_id': self.inventory_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+        move1.date = date1
+
+        move2 = self.env['stock.move'].create({
+            'name': 'Sell 5 units',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.inventory_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 5.0
+        move2._action_done()
+        move2.date = date2
+
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 5)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 50)
