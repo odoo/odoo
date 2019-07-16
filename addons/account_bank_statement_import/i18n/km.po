@@ -6,13 +6,15 @@
 # Sengtha Chay <sengtha@gmail.com>, 2016
 # Samkhann Seang <seangsamkhann@gmail.com>, 2016
 # Chan Nath <channath@gmail.com>, 2016
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Chan Nath <channath@gmail.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:15+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,44 +26,45 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr ""
+msgstr "%dប្រតិបត្តិការត្រូវបាននាំចូលហើយត្រូវបានគេមិនអើពើ។"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr ""
+"1​ប្រតិបត្តិការត្រូវបានដាក់ចូលហើយតែមិនត្រូវបានគេរាប់បញ្ជូលក្នុងរបាយការណ៌"
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
-msgstr ""
+msgstr "របាយការប្រត្តិបត្តិការគណនីតែលអាចដាក់បញ្ជូលបានត្រឹមតែមួយ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
 msgid "Account Number"
-msgstr ""
+msgstr "លេខគណនី"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type_control_ids
 msgid "Account Types Allowed"
-msgstr ""
+msgstr "ប្រភេទគណនីត្រូវបានអនុញ្ញាត"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_control_ids
 msgid "Accounts Allowed"
-msgstr ""
+msgstr "គណនីអនុញ្ញាត"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid "Allow Cancelling Entries"
-msgstr ""
+msgstr "អនុញ្ញាតឱ្យបោះបង់ការចុះបញ្ជី"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
-msgstr ""
+msgstr "ធាតុដែលបាននាំចូលរួចហើយ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
@@ -88,27 +91,27 @@ msgstr "គណនីធនាគារ"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
 msgid "Bank Feeds"
-msgstr ""
+msgstr "ការបង់ប្រាក់ទៅធនាគារ"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr ""
+msgstr "ឈ្មោះបញ្ជីគណនីធានាគារ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
 msgid "Bank Statement File"
-msgstr ""
+msgstr "ឯកសារធានាគារ"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "របាយការណ៌ខ្សែបណ្តាយធានាគារ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "កម្មសិទ្ឋិស្ថិតក្រោមអ្នកគ្រប់គ្រងក្រុមហ៊ុនបច្ចុប្បន្ន"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -123,6 +126,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
+"មិនអាចរកឃើញនៅក្នុងរបាយការណ៌ទិនានុប្បវត្តិ។សូមមេត្តាការនាំចូលសេចក្តីថ្លែងការណ៍នេះដោយជ្រើសទិនានុប្បវត្តិ"
+" ណាមួយក្នុងចំណោមទំាងនោះ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -137,11 +142,12 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
+"ពិនិត្យមើលប្រអប់នេះប្រសិនបើអ្នកចង់អនុញ្ញាតឱ្យលុបចោលធាតុទាក់ទងនឹងទិនានុប្បវត្តិនេះឬវិក័យប័ត្រដែលទាក់ទងទៅនឹងទំព័រនេះ"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
-msgstr ""
+msgstr "ជ្រើសរើសឯកសារដាក់ចូល"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
@@ -151,7 +157,7 @@ msgstr "ក្រុមហ៊ុន"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "ក្រុមហ៊ុននិងការផ្សារភ្ជាប់ជាមួយសៀវភៅទិនានុប្បវត្តិ"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
@@ -160,6 +166,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"មិនអាចយល់ពីឯកសារដែលបានផ្តល់ឱ្យ។ "
+"តើអ្នកបានដំឡើងម៉ូឌុលដើម្បីគាំទ្រប្រភេទនៃឯកសារនេះដែរឬទេ?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -191,12 +199,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
 msgid "Default Credit Account"
-msgstr ""
+msgstr "គណនីឥណទានលំនាំដើម"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
 msgid "Default Debit Account"
-msgstr ""
+msgstr "គណនីឥណពន្ឋលំនំាដើម"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_display_name
@@ -217,16 +225,18 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
+"ទាញយករបាយការណ៍ធនាគារពីធនាគាររបស់អ្នកហើយដាក់ចូលក្នុង​របាយការណ៌ "
+"ដែលគំាទ្រទម្រង់ដែរមានស្រាប់"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
 msgid "Entry Sequence"
-msgstr ""
+msgstr "ដាក់បញ្ជូលភាពស្មើរ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
 msgid "Filename"
-msgstr ""
+msgstr "ឈ្មោះឯកសារ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -234,11 +244,12 @@ msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
+"ទទួលបានរបាយការណ៍ធនាគារជាទម្រង់អេឡិចត្រូនិចពីធនាគាររបស់អ្នកហើយជ្រើសយកពួកគេនៅទីនេះ។"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
 msgid "Group Invoice Lines"
-msgstr ""
+msgstr "ខ្សែបន្ទាត់ក្រុមវិកយបត្រ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_id
@@ -252,11 +263,12 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
+"ប្រសិនបើប្រអប់នេះត្រូវបានត្រួតពិនិត្យដោយប្រព័ន្ធនឹងការខិតខំព្យាយាពីក្រុមខ្សែបណ្តាយត់គណនេយ្យនៅពេលធ្វើការបន្លែងចេញពីវិក័យប័ត្រ។"
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
 msgid "Import"
-msgstr ""
+msgstr "ការដាក់បញ្ជូលរបាយការណ៌"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
@@ -271,44 +283,44 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Import Bank Statements"
-msgstr ""
+msgstr "ការដាក់បញ្ជូលរបាយការណ៌គណនី"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line_unique_import_id
 msgid "Import ID"
-msgstr ""
+msgstr "ការដាក់បញ្ជូលអត្ថសញ្ញាណសំគាល់"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "Import Statement"
-msgstr ""
+msgstr "បញ្ជេញរបាយការណ៌"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
 msgid "It acts as a default account for credit amount"
-msgstr ""
+msgstr "សកម្មភាពលំំនំាដើមសម្រាប់ចំនួនរបាយការណ៌គណនីឥណទាន"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
 msgid "It acts as a default account for debit amount"
-msgstr ""
+msgstr "សកម្មភាពលំំនំាដើមសម្រាប់ចំនួនរបាយការណ៌គណនីឥណពន្ឋ"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "ទិនានុប្បវត្តិ"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
-msgstr ""
+msgstr "ការបង្កើតរបាយការណ៌ទិនានុប្បវត្តិ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_name
 msgid "Journal Name"
-msgstr ""
+msgstr "ឈ្មោះសៀវភៅទិនានុប្បន្នវត្តិ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
@@ -321,6 +333,8 @@ msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
 msgstr ""
+"ចុចលើពាក្យថាយល់ព្រមក្នុងការបង្កើតរបាយការណ៌គណនី៊៊/របាយការណ៌ទិនានុប្បវត្តិ "
+"ហើយបញ្ជប់ដោយការដាក់របាយការណ៌។ប្រសិនបើមានកំហុសប៉ះលើពាក្យលុបចោលពីរបាយការណ៌"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -353,7 +367,7 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
 msgid "Loss Account"
-msgstr ""
+msgstr "គណនីបាត់បង់"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
@@ -375,12 +389,12 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr ""
+msgstr "មិនមានរូបិយបណ្ណ័ដែលមិនអាចស្វែងរកការផ្គូសផ្គូងត្រូវគ្នា"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "OK"
-msgstr ""
+msgstr "យល់ព្រម"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -390,7 +404,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid "Profit Account"
-msgstr ""
+msgstr "គណនីប្រាក់ចំណេញ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
@@ -405,11 +419,15 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"ជ្រើសរើស 'លក់' សម្រាប់វិក័យប័ត្រវិក័យប័ត្ររបស់អតិថិជន។\n"
+"ជ្រើសរើសយក 'ការទិញ' សម្រាប់វិក័យប័ត្រអ្នកលក់។\n"
+"ជ្រើសរើសយក 'សាច់ប្រាក់' ឬ 'ធនាគារ' សម្រាប់ទិនានុប្បវត្តិដែលត្រូវបានប្រើនៅក្នុងការទូទាត់អតិថិជនឬអ្នកលក់។\n"
+"ជ្រើសយក 'ទូទៅ' សម្រាប់ប្រតិបត្ដិការប្រតិបត្ដិផ្សេងៗ។"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
-msgstr ""
+msgstr "ជ្រើសរើសឯកសាររបាយការណ៍ធនាគារដែលត្រូវនាំចូល"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
@@ -419,7 +437,7 @@ msgstr "Sequence"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "Short Code"
-msgstr ""
+msgstr "កូដខកាត់"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
@@ -429,7 +447,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr ""
+msgstr "បង្ហាញទិនានុប្បវត្តិនៅលើផ្ទៃតាប្លូ"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -438,13 +456,15 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
+"គណនីនៃសេចក្តីថ្លែងការណ៍ដែលអ្នកកំពុងនាំចូលមិនទាន់ត្រូវបានកត់ត្រានៅក្នុង Odoo "
+"ទេ។ ដើម្បីបន្តការនាំចូលអ្នកត្រូវបង្កើតកំណត់ហេតុធនាគារសម្រាប់គណនីនេះ។"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
+msgstr "គណនីនៃសេចក្តីថ្លែងការណ៍នេះ %s គឺមិនដូចគ្នានឹងទិនានុប្បវត្តិ (%s) ។"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
@@ -457,12 +477,13 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "រូបិយប័ណ្ណដែលត្រូវប្រើដើម្បីបញ្ចូលសេចក្តីថ្លែងការណ៍"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
+"ធាតុទិនានុប្បវត្តិនៃទិនានុប្បវត្តិនេះនឹងត្រូវបានដាក់ឈ្មោះដោយប្រើបុព្វបទនេះ។"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -470,6 +491,7 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"វាលនេះមានព័ត៌មានទាក់ទងនឹងការដាក់លេខរៀងនៃទិនានុប្បវត្តិនៃទិនានុប្បវត្តិនេះ។"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
@@ -482,13 +504,13 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr ""
+msgstr "ឯកសារនេះមិនមានសេចក្តីថ្លែងការណ៍ណាមួយទេ។"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
 #, python-format
 msgid "This file doesn't contain any transaction."
-msgstr ""
+msgstr "ឯកសារនេះមិនមានប្រតិបត្តិការណាមួយឡើយ។"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -498,7 +520,7 @@ msgstr "Type"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "ត្រូវបានប្រើដើម្បីបញ្ជាទិញទិនានុប្បវត្តិក្នុងទិដ្ឋភាពផ្ទាំងគ្រប់គ្រង"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
@@ -506,6 +528,7 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"ត្រូវបានប្រើដើម្បីចុះឈ្មោះការបាត់បង់នៅពេលដែលសមតុល្យបញ្ចប់នៃការកត់ត្រាសាច់ប្រាក់ខុសពីអ្វីដែលប្រព័ន្ធគណនា"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
@@ -513,11 +536,12 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"ត្រូវបានប្រើដើម្បីចុះឈ្មោះប្រាក់ចំណេញនៅពេលដែលសមតុល្យបញ្ចប់នៃគណនីសាច់ប្រាក់ខុសពីអ្វីដែលប្រព័ន្ធគណនា"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "ថាតើទិនានុប្បវត្តិនេះគួរត្រូវបានបង្ហាញនៅលើផ្ទៃតាប្លូឬអត់"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
@@ -531,9 +555,9 @@ msgstr ""
 msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
-msgstr ""
+msgstr "អ្នកត្រូវកំណត់គណនីឥណពន្ធលំនាំដើមនិងគណនីឥណទានលំនាំដើមសម្រាប់កាសែត:"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
-msgstr ""
+msgstr "ការនំាចូល"

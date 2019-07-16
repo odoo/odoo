@@ -3,28 +3,29 @@
 # * stock
 # 
 # Translators:
-# Robert Frykelius <robert.frykelius@linserv.se>, 2016
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
-# Martin Trigaux, 2016
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
-# Patrik Lermon <patrik.lermon@gmail.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
-# Haojun Zou <apollo_zhj@msn.com>, 2016
-# Leif Persson <leifpz54@gmail.com>, 2016
-# lasch a <bmail440@gmail.com>, 2016
 # Johan Bergquist <johan.bergquist@netip.se>, 2016
+# lasch a <bmail440@gmail.com>, 2016
+# Leif Persson <leifpz54@gmail.com>, 2016
 # Zou Haojun <haojunzou84@gmail.com>, 2016
+# Robert Frykelius <robert.frykelius@linserv.se>, 2016
+# Patrik Lermon <patrik.lermon@gmail.com>, 2016
+# Haojun Zou <apollo_zhj@msn.com>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
-# Kim Asplund <kim.asplund@gmail.com>, 2017
+# Martin Trigaux, 2016
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2016
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
 # lynnliuying <lynn.liu1971@gmail.com>, 2017
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# Kim Asplund <kim.asplund@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
-"PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: lynnliuying <lynn.liu1971@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:29+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -250,6 +251,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 50 vendors</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> Skapa manuellt</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 50 leverantörer</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -356,11 +362,13 @@ msgid ""
 "<strong>Automated flows</strong>: from sale to delivery, and purchase to "
 "reception"
 msgstr ""
+"<strong>Automatiska flöden</strong>: från kundorder till leverans, från "
+"inköp till godsmottagning"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Automated replenishment rules</strong>"
-msgstr ""
+msgstr "<strong>Automatiserdade återanskaffningsregler</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -615,7 +623,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Accurate visibility on all your operations"
-msgstr ""
+msgstr "Korrekt överblick för hela din lagerhantering"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_active
@@ -740,7 +748,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
-msgstr ""
+msgstr "Tillåter leveranser från din leverantör direkt till din kund"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_procurement_jit
@@ -1843,7 +1851,7 @@ msgstr "Delivered Qty"
 #: model:ir.actions.act_window,name:stock.action_deliver_move
 #: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
 msgid "Deliveries"
-msgstr ""
+msgstr "Leveranser"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_delivery_count
@@ -2084,7 +2092,7 @@ msgstr "Rörelser i utkast"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Direktleverans"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
@@ -2386,6 +2394,8 @@ msgid ""
 "Help rental management, by generating automated return moves for rented "
 "products"
 msgstr ""
+"Underlättar uthyrning, genom att skapa återlämningstransaktioner för hyrda "
+"produkter."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2634,6 +2644,8 @@ msgid ""
 "If you have less than 50 vendors, we recommend you\n"
 "                                        to create them manually."
 msgstr ""
+"Om du har färre än 50 leverantörer, rekommenderar vi \n"
+"att du skapar dem manuellt."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2659,7 +2671,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Import using the top left button in"
-msgstr ""
+msgstr "Importera via vänstra knappen i huvudet i "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2700,6 +2712,8 @@ msgid ""
 "In short, you will get a more efficient warehouse management that leads\n"
 "                        to inventory reduction and better efficiencies in your daily operations."
 msgstr ""
+"Kortfattat, du får en effektivare lagerhantering som leder till minskat "
+"lager och bättre effektivitet i det dagliga arbetet."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
@@ -3930,6 +3944,9 @@ msgid ""
 "                        invoicing process. Everything is automated from the initial\n"
 "                        quotation to the delivery and the final invoice."
 msgstr ""
+"Odoo lagerhantering är helt integrerat med försäljnings- och "
+"faktureringsprocessen. Allt är automatiserat från offert till leverans och "
+"slutfalturan."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4218,7 +4235,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
 #, python-format
 msgid "Package"
-msgstr ""
+msgstr "Emballage"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode_small
@@ -4782,11 +4799,13 @@ msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
 msgstr ""
+"Produkter kan ha flera attribut, som definierar varianter (exempel: storlek,"
+" färg,...)"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr ""
+msgstr "Produkter kan endast ha en enhet (enklare)"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_scrap
@@ -5862,7 +5881,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,module_stock_dropshipping:0
 msgid "Suppliers always deliver to your warehouse(s)"
-msgstr ""
+msgstr "Leverantörer levererar alltid till ditt/dina lager"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6235,6 +6254,8 @@ msgid ""
 "This guide helps getting started with Odoo Inventory.\n"
 "                        Once you are done, you will benefit from:"
 msgstr ""
+"Denna guide hjälper dig att komma igång med Odoo lager. \n"
+"                     När du är färdig kan du dra nytta av:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6627,6 +6648,8 @@ msgid ""
 "Unless you are starting a new business, you probably have a list of vendors "
 "you would like to import."
 msgstr ""
+"Om du inte startar från noll, så har du troligen en lista med leverantörer "
+"som du önskar att importera."
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -6904,6 +6927,8 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
+"Vi hjälper dig med hela importprocessen\n"
+"år er: skicka en CSV-fil med dina data till din projektledare på Odoo SA. (förutsätter att du köpt implementation av Odoo SA)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7262,17 +7287,17 @@ msgstr "Dina produkter"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Situation"
-msgstr ""
+msgstr "Dina förhållanden"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Vendors"
-msgstr ""
+msgstr "Dina leverantörer"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Warehouse"
-msgstr ""
+msgstr "Ditt lager"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7443,7 +7468,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "the list of vendors"
-msgstr ""
+msgstr "leverantörslista"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form

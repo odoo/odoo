@@ -32,8 +32,8 @@
                             $("head").append($parsedHTML.find(".resources").html());
                         } 
     
-                        $(".container").html($parsedHTML.find('.pos-customer_facing_display').html());
-                        $(".container").attr('class', 'container').addClass($parsedHTML.find('.pos-customer_facing_display').attr('class'));
+                        $(".container-fluid").html($parsedHTML.find('.pos-customer_facing_display').html());
+                        $(".container-fluid").attr('class', 'container-fluid').addClass($parsedHTML.find('.pos-customer_facing_display').attr('class'));
     
                         var d = $('.pos_orderlines_list');
                         d.scrollTop(d.prop("scrollHeight"));

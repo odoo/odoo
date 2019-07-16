@@ -34,7 +34,7 @@ class SaleOrderLine(models.Model):
             lines.setdefault(line, 0.0)
             uom = self.env['product.uom'].browse(d['product_uom_id'][0])
             if line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(d['unit_amount'], line.product_uom)
+                qty = uom._compute_quantity(d['unit_amount'], line.product_uom, rounding_method='HALF-UP')
             else:
                 qty = d['unit_amount']
             lines[line] += qty

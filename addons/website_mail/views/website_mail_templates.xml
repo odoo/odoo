@@ -82,7 +82,7 @@
                                     <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
                                 </h5>
                                 <t t-set="object" t-value="message"/>
-                                <t t-call="website.publish_short"/>
+                                <t t-if="not message.subtype_id.internal" t-call="website.publish_short"/> <!-- do not forward on v11 or later -->
                                 <div t-field="message.body"/>
                                     <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">

@@ -3,19 +3,21 @@
 # * point_of_sale
 # 
 # Translators:
+# Ubuntu Erka <erdenebold10@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 # nasaaskii <nasaaskii@gmail.com>, 2017
-# Erdenebold Ts <erdenebold10@gmail.com>, 2017
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
-# Jacara <baskhuujacara@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Bayarkhuu Bataa, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Jacara <baskhuujacara@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:25+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -609,7 +611,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:511
 #, python-format
 msgid "Change"
-msgstr "Солих"
+msgstr "Хариулт"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1124,7 +1126,7 @@ msgstr "Төлбөр хийгдээгүй Захиалгуудыг Татах"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:509
 #, python-format
 msgid "Due"
-msgstr "Төлөлт"
+msgstr "Төлөх"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_9
@@ -1212,7 +1214,7 @@ msgstr "Сэшний Төгсгөл"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end_real
 msgid "Ending Balance"
-msgstr "Төгсгөлийн баланс"
+msgstr "Эцсийн үлдэгдэл"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_category.py:13
@@ -1342,6 +1344,13 @@ msgstr "Бүлэглэх"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
 msgid "Group Journal Items"
 msgstr "Кассын бичилтийг бүлэглэх"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:135
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -1518,7 +1527,7 @@ msgstr "Jonagold алим"
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
 msgid "Journal"
-msgstr "Журналь"
+msgstr "Журнал"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_account_move
@@ -1675,6 +1684,15 @@ msgid "Make Payment"
 msgstr "Төлбөр Хийх"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:137
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Manage loyalty program with points and rewards for customers"
 msgstr "Захиалагч нарт лоялти хөтөлбөрийг оноо болон шагналаар удирдах"
@@ -1705,7 +1723,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:512
 #, python-format
 msgid "Method"
-msgstr "Метод"
+msgstr "Төлбөрийн хэлбэр"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.product_product_consumable
@@ -2255,6 +2273,13 @@ msgstr "Их Тоо Хэмжээг баталгаажуулна уу"
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Энэ бараанд орлогын данс тодорхойлно уу: \"%s\" (id:%d)."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2017
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr "Үндсэн системд нэвтэрч нэхэмжлэлээ хэвлэж авна уу"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:446
@@ -3004,7 +3029,7 @@ msgstr "Амжилттай импортлосон"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_end
 msgid "Sum of opening balance and transactions."
-msgstr "Нээлтийн баланс болон гүйлгээний нийлбэр"
+msgstr "Эхний үлдэгдэл болон гүйлгээний нийлбэр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -3072,7 +3097,7 @@ msgstr "Утас:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:510
 #, python-format
 msgid "Tendered"
-msgstr "Тендер зарласан"
+msgstr "Төлсөн"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:254
@@ -3176,6 +3201,17 @@ msgid "The order could not be sent to the server due to an unknown error"
 msgstr "Үл мэдэгдэх алдаанаас болж захиалгыг сервер рүү илгээж чадсангүй"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
+"Захиалга өмнө нь аль хэдийнээ серверт илгээгдсэн байна. Үндсэн системд "
+"нэвтэрч ороод холбогдох захиалгаас нэхэмжлэл үүсгэнэ үү: "
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
@@ -3249,7 +3285,7 @@ msgid ""
 "using their CashBox tab."
 msgstr ""
 "Систем кассын бүртгэлүүдийг бүгдийг нээх бөгөөд ингэснээр төлбөрүүдийг "
-"хөтлөж эхлэх боломжтой болно. Кассын бүртгэл бүрийн нээлтийн балансыг "
+"хөтлөж эхлэх боломжтой болно. Кассын бүртгэл бүрийн эхний үлдэгдлийг "
 "тэдгээрийн касс хавтасыг ашиглан шалгахыг зөвлөе."
 
 #. module: point_of_sale

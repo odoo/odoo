@@ -4,24 +4,26 @@
 # 
 # Translators:
 # Stefan Stieranka <stieranka@itec.sk>, 2017
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# gebri <gebri@inmail.sk>, 2017
 # Matus Krnac <matus.krnac@gmail.com>, 2017
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 # Martin Trigaux, 2017
-# gebri <gebri@inmail.sk>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
-"PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:29+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:230
@@ -31,6 +33,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> Jednotka produktu je %s (%s) - Jednotka pohybu je %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:231
@@ -40,6 +45,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"Blokované: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -100,6 +108,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Nové: Keď je skladový pohyb vytvorený ale zatiaľ nepotvrdený\n"
+"* Čakanie na iný pohyb: tento stav je zobrazovaný keď jeden pohyb čaká na ďalší, napríklad v reťazovom toku.\n"
+"* Čakanie na dostupnosť: tento stav býva dosiahnutý keď výsledok obstarávania nie je priamočiary. Môže byt potrebné spustiť plánovač, vyrobiť komponent...\n"
+"* Dostupné: Ak sú produkty rezervované, je nastavená na \"Dostupné\".\n"
+"* Hotovo: Ak je zásielka spracovaná, stav je \"hotovo'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -507,7 +520,7 @@ msgstr "<strong>Lokácia</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr ""
+msgstr "<strong>Číslo šarže/Sériové číslo</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -707,7 +720,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr ""
+msgstr "Na partnera (Sklad) môže byť nastavené varovanie"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -742,7 +755,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr ""
+msgstr "Zadaj internú poznámku, ktorá bude vytlačená na vyskladňovacom liste"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -807,6 +820,8 @@ msgid ""
 "All items couldn't be shipped, the remaining ones will be shipped as soon as"
 " they become available."
 msgstr ""
+"Nebolo možné dodať všetky položky, zostávajúce budú dodané akonáhle budú "
+"dostupné."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:90
@@ -1248,7 +1263,7 @@ msgstr "Skontrolujte existenciou kvantít spojených s týmto preberním"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_pack_operation_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "Over dostupnosť baliacich operácií pri vyskladnení"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
@@ -1527,7 +1542,7 @@ msgstr "Dátum vytvorenia"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr ""
+msgstr "Vytvor novú šaržu / sériové číslo"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -1947,6 +1962,12 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
+"Definujte vaše lokácie aby reflektovali štruktúru vašich skladísk a\n"
+"organizácie. Odoo je schopné riadiť fyzické lokácie\n"
+"(skladiská, police, zásobníky, atď) pridružené lokácie (zákazníci,\n"
+"dodávatelia) a virtuálne lokácie ktoré sú náprotivkom\n"
+"zásobovacím operáciám ako sú výrobné objednávky\n"
+"spotreby, zásoby, atď."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -2024,7 +2045,7 @@ msgstr "Dodací list"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
 msgid "Delivery Type"
-msgstr ""
+msgstr "Typ dodania"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2281,6 +2302,11 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
+"Každá operácia zásob v Odoo presunie produkt z jednej\n"
+"lokácie do druhej. Napríklad, ak obdržíte produkty\n"
+"od dodávateľa, Odoo presunie produkty z lokácie\n"
+"Dodávatelia do lokácie Zásoby. Každý report môže byť vykonaný na\n"
+"fyzickej, partnerskej alebo virtuálnej lokácií."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:647
@@ -2543,7 +2569,7 @@ msgstr "Má baliace operácie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
 msgid "Has Scrap Moves"
-msgstr ""
+msgstr "Má vyraďovacie pohyby"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -2801,6 +2827,8 @@ msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
+"Ak je zaškrtnuté iba toto, bue to predpokladať že chcete vytvoriť nové "
+"Sériové čísla / Šarže, takže ich môžte poskytnúť v textovom políčku."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_existing_lots
@@ -2943,7 +2971,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Obsahuje vyradené produkty"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -3078,6 +3106,7 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr ""
+"Interné referenčné číslo v prípade, že sa líši od sériového čísla výrobcu"
 
 #. module: stock
 #: code:addons/stock/models/product.py:257
@@ -3189,7 +3218,7 @@ msgstr "Inventárny riadok"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
 msgid "Inventory Lines"
-msgstr ""
+msgstr "Inventárne riadky"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3506,7 +3535,7 @@ msgstr "Spojený kvant"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "Zobrazenie zoznamu riadkov"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -3516,7 +3545,7 @@ msgstr "Lokalizácia"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Locate"
-msgstr ""
+msgstr "Lokalizovať"
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:12
@@ -3638,7 +3667,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr ""
+msgstr "Inventúra šarží / sériových čísel"
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:268
@@ -3681,7 +3710,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr ""
+msgstr "Šarže / Sériové čísla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_pack_lot_ids
@@ -3809,7 +3838,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
 msgid "Manage several warehouses"
-msgstr ""
+msgstr "Spravovať viacero skladov"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3824,7 +3853,7 @@ msgstr "Manuálna operácia"
 #. module: stock
 #: selection:stock.picking.type,code:0
 msgid "Manufacturing Operation"
-msgstr ""
+msgstr "Výrobná operácia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3971,7 +4000,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
 msgid "Move that created the return move"
-msgstr ""
+msgstr "Pohyb ktorý vytvoril vratný pohyb"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
@@ -4278,7 +4307,7 @@ msgstr "Iba jeden vlastník"
 #: code:addons/stock/models/stock_inventory.py:91
 #, python-format
 msgid "One product category"
-msgstr ""
+msgstr "Jedna kategória produktu"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:98
@@ -4314,7 +4343,7 @@ msgstr "Názov operácie"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
-msgstr ""
+msgstr "Typy operácií"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4850,7 +4879,7 @@ msgstr "Kladné"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
 msgid "Preferred Packaging"
-msgstr ""
+msgstr "Preferované balenie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
@@ -5208,7 +5237,7 @@ msgstr "Množstvo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done_uom_ordered
 msgid "Quantity Done"
-msgstr ""
+msgstr "Množstvo spracované"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5236,7 +5265,7 @@ msgstr "Množstvo nemôže byť záporné"
 #: code:addons/stock/models/stock_move.py:394
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "Množstvo pokleslo!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
@@ -5773,7 +5802,7 @@ msgstr "Vyradené"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Scraps"
-msgstr ""
+msgstr "Vyradenia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5783,12 +5812,12 @@ msgstr "Vyhľadať zásoby"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr ""
+msgstr "Vyhľadať inventárne riadky."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
-msgstr ""
+msgstr "Vyhľadať vyradenia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -5831,31 +5860,31 @@ msgstr "Sekvencia"
 #: code:addons/stock/models/stock_warehouse.py:658
 #, python-format
 msgid "Sequence in"
-msgstr ""
+msgstr "Sekvencia dnu"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:662
 #, python-format
 msgid "Sequence internal"
-msgstr ""
+msgstr "Interná sekvencia"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:659
 #, python-format
 msgid "Sequence out"
-msgstr ""
+msgstr "Sekvencia von"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:660
 #, python-format
 msgid "Sequence packing"
-msgstr ""
+msgstr "Sekvenčné balenie"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:661
 #, python-format
 msgid "Sequence picking"
-msgstr ""
+msgstr "Sekvenčný výber"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -6045,6 +6074,8 @@ msgstr "Špecifikujte balenie pre zameranie vašich zásob na konkrétne balenie
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
 msgstr ""
+"Špecifikuj kategóriu produktu pre zameranie inventúry na čiastkovú "
+"kategóriu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
@@ -6149,7 +6180,7 @@ msgstr "Zásoby na sklade"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Stock Operation"
-msgstr ""
+msgstr "Skladová operácia"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
@@ -6306,13 +6337,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_tmpl_id
 msgid "Technical: used in views"
-msgstr ""
+msgstr "Technické: použité v pohľadoch"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_stock_move_ids
 #: model:ir.model.fields,help:stock.field_product_product_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Technické: použité na výpočet množstiev"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
@@ -6367,7 +6398,7 @@ msgstr "Kombinácia sériového čísla a produktu musí byť unikátna !"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_company_id
 msgid "The company is automatically set from your user preferences."
-msgstr ""
+msgstr "Spoločnosť je automaticky nastavená podľa preferencií užívateľa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_company_id
@@ -6444,6 +6475,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
+"Nadradená lokácia ktorá obsahuje danú lokáciu. Príklad: pre 'bránu 1' je "
+"'dispečer 1' nadradená lokácia."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:795
@@ -6475,6 +6508,8 @@ msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
+"Množstvo obstarávania bude zaokrúhlené na tento násobok. Ak je to 0, bude "
+"použité presné množstvo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
@@ -6663,6 +6698,8 @@ msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products contained in lot."
 msgstr ""
+"Toto je zoznam všetkých produkčných šarží ktoré ste zaznamenali. Keď\n"
+"zvolíte šaržu, môžete dostať sledovateľnosť produktov v nej obsiahnutých."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
@@ -6993,7 +7030,7 @@ msgstr "Za žiadnych okolností nemáte mazať alebo meniť kvanty vy sami!"
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
 msgid "Unique Lot/Serial Number"
-msgstr ""
+msgstr "Jednoznačná Šarža/Sériové číslo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
@@ -7115,7 +7152,7 @@ msgstr "Súrne"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr ""
+msgstr "Použiť existujúce Šarže / Sériové čísla"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
@@ -7159,7 +7196,7 @@ msgstr "Overené"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Počet variantov"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_variant_count
@@ -7566,13 +7603,13 @@ msgstr "Nemôžte zrušiť skladový pohyb ktorý bol nastavený na \"Dokončen�
 #: code:addons/stock/models/stock_scrap.py:72
 #, python-format
 msgid "You cannot delete a scrap which is done."
-msgstr ""
+msgstr "Nemôžete zmazať vyradenie ktoré je hotové."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:103
 #, python-format
 msgid "You cannot delete a validated inventory adjustement."
-msgstr ""
+msgstr "Nemôžete zmazať potvrdenú inventúrnu úpravu."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
@@ -7698,7 +7735,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:21
 #, python-format
 msgid "You must define a warehouse for the company: %s."
-msgstr ""
+msgstr "Musíte zadefinovať skladisko pre spoločnosť: %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
@@ -7726,6 +7763,8 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
+"Naďalej sú aktívne pravidlá doobjednávania pre tento produkt. Najprv ich "
+"vymažte alebo archivujte prosím."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:226

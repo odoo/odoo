@@ -10,6 +10,12 @@
                     class="o_open_quotation" string="Preview"
                     attrs="{'invisible': [('template_id', '=', False)]}"/>
             </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="website_description" invisible="1" readonly="1"/>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/form/field[@name='name']" position="after">
+                <field name="website_description" invisible="1" readonly="1"/>
+            </xpath>
             <xpath expr="//page/field[@name='order_line']/.." position="after">
                 <page string="Suggested Products">
                     <field name="quote_viewed" invisible="1"/>

@@ -57,7 +57,8 @@ var FieldTextHtmlSimple = widget.extend({
         this.$translate.remove();
         this.$translate = $();
         // Triggers a mouseup to refresh the editor toolbar
-        this.$content.trigger('mouseup');
+        var mouseupEvent = $.Event('mouseup', {'setStyleInfoFromEditable': true});
+        this.$content.trigger(mouseupEvent);
         return def;
     },
     initialize_content: function () {
@@ -170,7 +171,11 @@ var FieldTextHtmlSimple = widget.extend({
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
         }
-        this.internal_set_value(this.$content.html());
+        var value = this.$content.html();
+        if (this.get('value') === false && value === '<p><br></p>') {
+            value = false;
+        }
+        this.internal_set_value(value);
     },
     destroy_content: function () {
         $(".oe-view-manager-content").off("scroll");

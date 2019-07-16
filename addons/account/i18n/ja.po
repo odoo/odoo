@@ -3,29 +3,30 @@
 # * account
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-# Martin Trigaux, 2016
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
-# Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2016
-# Masayuki Takesue <m_takesue@nifty.com>, 2016
-# ook rio <riokoko5@gmail.com>, 2016
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
-# Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
+# ook rio <riokoko5@gmail.com>, 2016
+# Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2016
+# Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016
+# Masayuki Takesue <m_takesue@nifty.com>, 2016
 # kent_ocean <ke.tanabe@gmail.com>, 2016
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2016
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 # Kazuki Eda <edak1209@gmail.com>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# Martin Trigaux, 2017
 # Tim Siu Lai <tl@roomsfor.hk>, 2017
-# 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2017
+# 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2018
 # Takuya Sawada <takuya@tuntunkun.com>, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
-"PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Takuya Sawada <takuya@tuntunkun.com>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:15+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,7 +161,7 @@ msgstr "-> 消込"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "-> 部分的に消込済の仕訳照会"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:468
@@ -181,7 +182,7 @@ msgstr "正味30日"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr ""
+msgstr "30%前払、70%翌月末"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1710,7 +1711,7 @@ msgstr "通貨金額"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
 msgid "Amount in Currency"
-msgstr ""
+msgstr "通貨金額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
@@ -3371,7 +3372,7 @@ msgstr "顧客請求書"
 #: code:addons/account/models/account_payment.py:508
 #, python-format
 msgid "Customer Payment"
-msgstr ""
+msgstr "顧客支払"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_payment_term_id
@@ -3458,6 +3459,24 @@ msgstr "請求月末起算"
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the invoice date"
 msgstr "請求日起算"
+
+#. module: account
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"ご担当者様\n"
+"\n"
+"弊社レコードによるとお客様のアカウントで未払の請求書があるようです。下記の詳細をご確認の上、速やかに未払額をお支払いいただけますよう、お願い申し上げます。もし入れ違いで既にお支払済でしたら、こちらのご案内は無視されてください。\n"
+"\n"
+"ご不明点等ございましたら、ご連絡いただけますようお願いいたします。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -3639,7 +3658,7 @@ msgstr "差異"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_writeoff_account_id
 msgid "Difference Account"
-msgstr ""
+msgstr "差異勘定"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_difference
@@ -5075,7 +5094,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr ""
+msgstr "ドラフトに再設定するには先に請求書を取り消してください。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
@@ -5489,7 +5508,7 @@ msgstr "現在日付を利用するには空のままとします。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date
 msgid "Keep empty to use the invoice date."
-msgstr ""
+msgstr "請求日を適用するには空のままにしてください。"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -7675,12 +7694,12 @@ msgstr "標準"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr ""
+msgstr "会社通貨での未消込額"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "請求書通貨での未消込額"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual
@@ -7869,7 +7888,7 @@ msgstr "販売担当者"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:89
 #, python-format
 msgid "Save and New"
-msgstr ""
+msgstr "保存して新たに追加"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
@@ -9279,7 +9298,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:21
 #, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
-msgstr ""
+msgstr "ヒント: CTRL+Enterで、シート内で貸借一致したすべての項目を消し込むことができます。"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9670,6 +9689,7 @@ msgid ""
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
+"請求書を取り消したい場合はこのオプションを使用してください。クレジットノートが作成、検証され、請求書と消し込まれます。クレジットノートの編集はできません。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance

@@ -193,8 +193,8 @@ class StockMove(models.Model):
         if self.state == 'done':
             self.availability = self.product_qty
         else:
-            quants = self.env['stock.quant'].search([('location_id', 'child_of', self.location_id.id), ('product_id', '=', self.product_id.id), ('reservation_id', '=', False)])
-            self.availability = min(self.product_qty, sum(quants.mapped('qty')))
+            qty_tot = self.env['stock.quant'].read_group([('location_id', 'child_of', self.location_id.id), ('product_id', '=', self.product_id.id), ('reservation_id', '=', False)], ['qty'], [])[0]
+            self.availability = min(self.product_qty, qty_tot['qty'] or 0)
 
     @api.multi
     def _compute_string_qty_information(self):
@@ -868,13 +868,15 @@ class StockMove(models.Model):
                             false_quants += [reserved_quant]
                         elif float_compare(lot_quantities.get(reserved_quant.lot_id.id, 0), 0, precision_rounding=rounding) > 0:
                             if float_compare(lot_quantities[reserved_quant.lot_id.id], reserved_quant.qty, precision_rounding=rounding) >= 0:
-                                lot_quantities[reserved_quant.lot_id.id] -= reserved_quant.qty
-                                quants_taken += [(reserved_quant, reserved_quant.qty)]
-                                qty_on_link -= reserved_quant.qty
+                                qty_taken = min(reserved_quant.qty, qty_on_link)
+                                lot_quantities[reserved_quant.lot_id.id] -= qty_taken
+                                quants_taken += [(reserved_quant, qty_taken)]
+                                qty_on_link -= qty_taken
                             else:
-                                quants_taken += [(reserved_quant, lot_quantities[reserved_quant.lot_id.id])]
-                                lot_quantities[reserved_quant.lot_id.id] = 0
-                                qty_on_link -= lot_quantities[reserved_quant.lot_id.id]
+                                qty_taken = min(qty_on_link, lot_quantities[reserved_quant.lot_id.id])
+                                quants_taken += [(reserved_quant, qty_taken)]
+                                lot_quantities[reserved_quant.lot_id.id] -= qty_taken
+                                qty_on_link -= qty_taken
                     lot_move_qty[move.id] = qty_on_link
 
                 remaining_move_qty[move.id] -= prout_move_qty[move]

@@ -3,30 +3,32 @@
 # * point_of_sale
 # 
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Martin Trigaux, 2016
-# Sergio Zanchetta <primes2h@gmail.com>, 2016
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
+# Davide Corio <enlightx@gmail.com>, 2016
+# Luca Tralli, 2016
+# Alessandro Forte <a.forte1010@gmail.com>, 2016
+# Luca Cantarini <caluk1955@gmail.com>, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
-# Paolo Valier, 2016
-# Davide Corio <enlightx@gmail.com>, 2016
-# Alessandro Forte <a.forte1010@gmail.com>, 2016
-# Luca Tralli, 2016
-# Luca Cantarini <caluk1955@gmail.com>, 2016
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
+# Martin Trigaux, 2016
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
 # Germano Massullo <germano.massullo@gmail.com>, 2017
+# Paolo Valier, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # mymage <stefano.consolaro@mymage.it>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:25+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,9 +88,9 @@ msgid ""
 "laptops, or industrial hardware.</p><p>Once the session launched, the system"
 " continues to run without an internet connection.</p>"
 msgstr ""
-"<p> Fare clic per avviare l'interfaccia del punto vendita. <b> Funziona su "
-"tablet </b>, portatili o hardware industriale.</p> <p>Dopo l'avvio della "
-"sessione, il sistema funziona anche senza connessione Internet. </p>"
+"<p>Fare clic per avviare l'interfaccia del punto vendita. <b>Funziona su "
+"tablet</b>, portatili o hardware industriale.</p><p>Dopo l'avvio della "
+"sessione, il sistema funziona anche senza connessione Internet.</p>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -278,7 +280,7 @@ msgstr "ABC"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
 msgid "Account Bank Statement Cashbox Details"
-msgstr "Dettagli rendiconto bancario della cassa"
+msgstr "Dettagli estratto conto bancario della cassa"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -945,7 +947,7 @@ msgstr "Saldo predefinito"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_account_id
 msgid "Default Debit Account"
-msgstr "Conto predefinito di debito"
+msgstr "Conto \"Dare\" predefinito"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_fiscal_position_id
@@ -1358,6 +1360,13 @@ msgstr "Raggruppa Voci Sezionale"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:135
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1322
 #, python-format
 msgid "Hardware Events"
@@ -1685,6 +1694,15 @@ msgstr "Programma Fedeltà"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "Pagamento"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:137
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
@@ -2254,7 +2272,7 @@ msgstr "Tipo Picking"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
 msgid "Picking count"
-msgstr ""
+msgstr "Totale prelievi"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2268,6 +2286,13 @@ msgstr "Confermare l'importo elevato"
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Definire un conto di ricavo per questo prodotto: \"%s\" (id:%d)."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2017
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:446
@@ -3191,6 +3216,15 @@ msgstr ""
 "L'ordine non può essere inviato al server a causa di un errore sconosciuto"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
@@ -3433,6 +3467,8 @@ msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Questo trasferimento è stato creato dalla sessione del punto vendita <a "
+"href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
@@ -3467,6 +3503,8 @@ msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
 msgstr ""
+"Per restituire un prodotto è necessario aprire una sessione che verrà usata "
+"per registrare il rimborso."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3803,8 +3841,8 @@ msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
 msgstr ""
-"Deve essere definito come prodotto tutto ciò che viene\n"
-"                venduto attraverso l'interfaccia del punto vendita."
+"È necessario definire un prodotto per tutto ciò che viene venduto\n"
+"                attraverso l'interfaccia del punto vendita."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3993,7 +4031,7 @@ msgstr "report.point_of_sale.report_saledetails"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1592
 #, python-format
 msgid "return"
-msgstr ""
+msgstr "invio"
 
 #. module: point_of_sale
 #. openerp-web

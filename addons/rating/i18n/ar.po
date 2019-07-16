@@ -4,19 +4,20 @@
 # 
 # Translators:
 # amrnegm <amrnegm.01@gmail.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:27+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,13 +50,13 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_access_token
 msgid "Access token to set the rating of the value"
-msgstr ""
+msgstr "كلمة سر الوصول لتقييم القيمة"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
-msgstr ""
+msgstr "الرسالة المرتبطة عند نشر تقييم. تستخدم غالبًا في إضافات المواقع."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_partner_id
@@ -102,7 +103,7 @@ msgstr "نموذج وثيقة "
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_consumed
 msgid "Enabled if the rating has been filled."
-msgstr ""
+msgstr "تُفعل إذا كان التقييم قد تم ملأه."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_feedback
@@ -112,12 +113,12 @@ msgstr "سبب ردود الفعل "
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "تقييم ممتلئ"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go to our website"
-msgstr ""
+msgstr "زر موقعنا"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.view_rating_rating_search
@@ -166,7 +167,7 @@ msgstr "المعرف"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_res_id
 msgid "Identifier of the rated object"
-msgstr ""
+msgstr "مُعرف المنتج المُقيم"
 
 #. module: rating
 #. openerp-web
@@ -209,7 +210,7 @@ msgstr "شهر"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.view_rating_rating_search
 msgid "My Ratings"
-msgstr ""
+msgstr "تقييماتي"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.view_rating_rating_search
@@ -219,7 +220,7 @@ msgstr "حسنا"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_rated_partner_id
 msgid "Owner of the rated resource"
-msgstr ""
+msgstr "مالك المصدر المُقيم"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_rated_partner_id
@@ -229,7 +230,7 @@ msgstr "تصنيف الشريك"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.view_rating_rating_search
 msgid "Rated User"
-msgstr ""
+msgstr "المستخدم المُقيم"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
@@ -257,7 +258,7 @@ msgstr "متوسط التقييم"
 #: model:ir.model.fields,field_description:rating.field_project_task_rating_last_value
 #: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "آخر قيمة للتقييم"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
@@ -271,12 +272,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:rating.field_project_task_rating_count
 #: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "عدد التقييمات"
 
 #. module: rating
 #: sql_constraint:rating.rating:0
 msgid "Rating should be between 0 to 10"
-msgstr ""
+msgstr "ينبغي أن يكون التقييم بين 0 و10"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_mail_channel_rating_last_value
@@ -286,7 +287,7 @@ msgstr ""
 #: model:ir.model.fields,help:rating.field_rating_mixin_rating_last_value
 #: model:ir.model.fields,help:rating.field_rating_rating_rating
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr ""
+msgstr "قيمة التقييم: 0= غير سعيد، 10= سعيد"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.view_rating_rating_search
@@ -316,17 +317,17 @@ msgstr "رمز الحماية"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr ""
+msgstr "إرسال ملحوظة"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thanks! We appreciate your feedback."
-msgstr ""
+msgstr "شكرًا لك! نحن نقدر ملاحظاتكم."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_res_name
 msgid "The name of the rated resource."
-msgstr ""
+msgstr "اسم المصدر المُقيم."
 
 #. module: rating
 #: model:ir.actions.act_window,help:rating.action_view_rating
@@ -341,12 +342,12 @@ msgstr "تعيس"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "We appreciate your feedback!"
-msgstr ""
+msgstr "نحن نقدر ملاحظاتكم!"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Would be great if you can provide more information:"
-msgstr ""
+msgstr "يسعدنا أن تقدم لنا معلومات أكثر:"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.view_rating_rating_search
@@ -356,7 +357,7 @@ msgstr "السنة"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Your rating has been submitted."
-msgstr ""
+msgstr "تم إرسال تقييمك."
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -367,21 +368,21 @@ msgstr "بواسطة"
 #: code:addons/rating/controllers/main.py:21
 #, python-format
 msgid "highly dissatisfied"
-msgstr ""
+msgstr "مستاء تمامًا"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:20
 #, python-format
 msgid "not satisfied"
-msgstr ""
+msgstr "غير راضٍ"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:22
 #, python-format
 msgid "satisfied"
-msgstr ""
+msgstr "راضٍ"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "you are"
-msgstr ""
+msgstr "أنت"

@@ -99,15 +99,16 @@ class WebsiteAccount(website_account):
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
         # pager
+        count = request.env['project.task'].search_count(domain)
         pager = request.website.pager(
             url="/my/tasks",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'project': project},
-            total=values['task_count'],
+            total=count,
             page=page,
             step=self._items_per_page
         )
         # content according to pager and archive selected
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=(page - 1) * self._items_per_page)
 
         values.update({
             'date': date_begin,

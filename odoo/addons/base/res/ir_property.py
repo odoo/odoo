@@ -50,9 +50,9 @@ class Property(models.Model):
 
     @api.multi
     def _update_values(self, values):
-        value = values.pop('value', None)
-        if not value:
+        if 'value' not in values:
             return values
+        value = values.pop('value')
 
         prop = None
         type_ = values.get('type')
@@ -68,7 +68,9 @@ class Property(models.Model):
             raise UserError(_('Invalid type'))
 
         if field == 'value_reference':
-            if isinstance(value, models.BaseModel):
+            if not value:
+                value = False
+            elif isinstance(value, models.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
             elif isinstance(value, (int, long)):
                 field_id = values.get('fields_id')
@@ -158,11 +160,30 @@ class Property(models.Model):
         # note: order by 'company_id asc' will return non-null values first
         props = self.search(domain, order='company_id asc')
         result = {}
-        for prop in props:
-            # for a given res_id, take the first property only
-            id = refs.pop(prop.res_id, None)
-            if id is not None:
-                result[id] = prop.get_by_record()
+        field = self.env[model]._fields[name]
+        if field.type == 'many2one':
+            # optimization for many2one fields
+            Comodel = self.env[field.comodel_name]
+            co_ids = set()
+            for prop in props:
+                # for a given res_id, take the first property only
+                id = refs.pop(prop.res_id, None)
+                if id is not None:
+                    val = prop.value_reference
+                    if val:
+                        val = int(val.split(',')[1])
+                        co_ids.add(val)
+                    result[id] = val
+            # check for existence in batch, and update result accordingly
+            existing = {rec.id: rec for rec in Comodel.browse(co_ids).exists()}
+            result = {id: existing.get(val, Comodel) for id, val in result.items()}
+
+        else:
+            for prop in props:
+                # for a given res_id, take the first property only
+                id = refs.pop(prop.res_id, None)
+                if id is not None:
+                    result[id] = prop.get_by_record()
 
         # set the default value to the ids that are not in result
         default_value = result.pop(False, False)

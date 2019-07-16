@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2016
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:17+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,50 +23,69 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\">បើក</span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> : Lat : </span>"
-msgstr ""
+msgstr "<span>: Lat : </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> ;  Long:  </span>"
-msgstr ""
+msgstr " <span>; វែង:</span> "
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:17
+#: code:addons/base_geolocalize/models/res_partner.py:18
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"\n"
+"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
+msgstr ""
+"លេខកូដ API សម្រាប់ GeoCoding (កន្លែង) ត្រូវបានទាមទារ។"
+"                           "
+"រក្សាទុកកូនសោនេះនៅក្នុងប៉ារ៉ាម៉ែត្រប្រព័ន្ធដែលមានកូនសោ: "
+"google.api_key_geocode, តម្លៃ: <your api key>                          "
+"ចូលមើល https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key សម្រាប់ព័ត៌មានបន្ថែម។"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:29
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
 msgstr ""
+"មិនអាចទាក់ទងម៉ាស៊ីនមេភូមិសាស្ត្រ។ "
+"សូមប្រាកដថាការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នកត្រូវបានដំឡើងនិងកំពុងដំណើរការ (%s) ។"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Geo Latitude"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "រយៈបណ្ដោយខាងជើង"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocate"
-msgstr ""
+msgstr "រយៈបណ្តាយ"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
-msgstr ""
+msgstr "បណ្តាយ"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
 msgid "Geolocation Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទរយៈបណ្តាយ"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -74,4 +95,18 @@ msgstr "ដៃគូ"
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
+msgstr "ការផ្តល់ជាដៃគូ"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:34
+#, python-format
+msgid ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+"error_message"
 msgstr ""

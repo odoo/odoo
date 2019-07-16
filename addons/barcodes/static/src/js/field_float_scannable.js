@@ -22,6 +22,10 @@ var FieldFloatScannable = form_widgets.FieldFloat.extend({
         return formats.parse_value(val, {type: "float"}, def);
     },
 
+    format_value: function(val, def) {
+        return formats.format_value(val, {type: "float"}, def);
+    },
+
     simulateKeypress: function (e) {
         /* only simulate a keypress if it has been previously prevented */
         if (e.originalEvent.dispatched_by_barcode_reader !== true) {

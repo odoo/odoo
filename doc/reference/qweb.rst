@@ -99,7 +99,7 @@ Extra conditional branching directives ``t-elif`` and ``t-else`` are also
 available::
 
     <div>
-        <p t-if="user.birthday == today()">Happy bithday!</p>
+        <p t-if="user.birthday == today()">Happy birthday!</p>
         <p t-elif="user.login == 'root'">Welcome master!</p>
         <p t-else="">Welcome!</p>
     </div>

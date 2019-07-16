@@ -30,5 +30,6 @@ import test_user_has_group
 import test_view_validation
 import test_views
 import test_xmlrpc
+import test_res_partner
 import test_res_partner_bank
 import test_non_regression

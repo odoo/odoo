@@ -3,23 +3,24 @@
 # * sale
 # 
 # Translators:
-# ТАрас <tratatuta@i.ua>, 2016
-# Bohdan Lisnenko, 2016
-# Martin Trigaux, 2016
-# Zoriana Zaiats, 2016
 # Kateryna Onyshchenko <Katrona17@gmail.com>, 2016
+# Zoriana Zaiats, 2016
 # Евгений Жердев <e.v.zherdev@gmail.com>, 2017
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
-# Олександр Воронюк <pactallc@gmail.com>, 2017
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2017
+# Олександр Воронюк <pactallc@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2018
+# Bohdan Lisnenko, 2018
+# Martin Trigaux, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-08 13:18+0000\n"
-"PO-Revision-Date: 2018-03-08 13:18+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:28+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,7 +159,8 @@ msgid ""
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"u'Пропозиція' or u'Замовлення'} (Референс ${object.name or u'немає' })"
+"'Комерційна пропозиція' or 'Замовлення'} (Референс ${object.name or 'немає' "
+"})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -623,7 +625,7 @@ msgstr "Натисніть, щоб встановити ціль команди"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Перспективний"
+msgstr "Юридична особа"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -865,7 +867,7 @@ msgstr "Знижка у рядках"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_discount_policy
 msgid "Discount policy"
-msgstr "Дисконтна політика"
+msgstr "Політика знижки"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
@@ -2179,12 +2181,12 @@ msgstr "Показати кінцеві суми без податків (B2B)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr "Відображати пра"
+msgstr "Відображати прайслисти на товарах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr "Відображати прайс-листи по товарах"
+msgstr "Відображати прайслисти клієнтам"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
@@ -2449,7 +2451,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr "Табелі для проекту"
+msgstr "Табелі на проекті"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice

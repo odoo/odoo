@@ -67,6 +67,11 @@ msgid "Corrupted data on point of sale order with id %s."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#: model:ir.model,name:l10n_fr_pos_cert.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
 #: model:ir.ui.menu,name:l10n_fr_pos_cert.pos_fr_statements_menu
 msgid "French Statements"
 msgstr ""
@@ -137,7 +142,13 @@ msgid "This session has been opened another day. To comply with the French law, 
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#: code:addons/l10n_fr_pos_cert/models/account_bank_statement.py:11
+#: code:addons/l10n_fr_pos_cert/models/account_fiscal_position.py:14
+#, python-format
+msgid "You cannot modify a fiscal position used in a POS order. You should archive it and create a new one."
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: code:addons/l10n_fr_pos_cert/models/account_bank_statement.py:12
 #, python-format
 msgid "You cannot modify anything on a bank statement (name: %s) that was created by point of sale operations."
 msgstr ""
