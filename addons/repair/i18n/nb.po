@@ -3,15 +3,17 @@
 # * repair
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jorunn D. Newth, 2018
+# Viktor Basso <viktor@voit.no>, 2018
+# Martin Trigaux, 2019
+# Jorunn D. Newth, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Jorunn D. Newth, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:51+0000\n"
+"PO-Revision-Date: 2018-03-22 16:02+0000\n"
+"Last-Translator: Jorunn D. Newth, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -838,6 +840,12 @@ msgid "Repair Reference"
 msgstr "Reparasjonsreferanse"
 
 #. module: repair
+#: model:product.product,name:repair.product_service_order_repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr ""
+
+#. module: repair
 #: code:addons/repair/models/repair.py:196
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
@@ -948,6 +956,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status basert på aktiviteter\n"
+"Utgått: Fristen er allerede passert\n"
+"I dag: Aktiviteten skal gjøres i dag\n"
+"Planlagt: Fremtidige aktiviteter."
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
@@ -1068,6 +1080,12 @@ msgstr "Enhetspris"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Unit of Measure"
 msgstr "Måleenhet"
+
+#. module: repair
+#: model:product.product,uom_name:repair.product_service_order_repair
+#: model:product.template,uom_name:repair.product_service_order_repair_product_template
+msgid "Unit(s)"
+msgstr "Enhet(er)"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread

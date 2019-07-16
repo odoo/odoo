@@ -1093,7 +1093,7 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.form.clickEdit(form);
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should display the records in order");
 
             await testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:first td:first'));
@@ -1102,12 +1102,12 @@ QUnit.module('fields', {}, function () {
             // the domain fail if the widget does not use the allready loaded data.
             await testUtils.form.clickDiscard(form);
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "blurp#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "blurp#21#22#23#24#25#26#27#28#29",
                 "should display the records in order with the changes");
 
             await testUtils.dom.click($('.modal .modal-footer button:first'));
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
 
             await testUtils.form.clickEdit(form);
@@ -1119,7 +1119,7 @@ QUnit.module('fields', {}, function () {
                 { position: 'top' }
             );
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#30#31#32#33#34#35#36#37#38",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#30#31#32#33#34#35#36#37#38",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             // Drag and drop the third line in second position
@@ -1129,17 +1129,17 @@ QUnit.module('fields', {}, function () {
                 { position: 'top' }
             );
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             await testUtils.form.clickDiscard(form);
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence");
 
             await testUtils.dom.click($('.modal .modal-footer button:first'));
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
 
             form.destroy();
