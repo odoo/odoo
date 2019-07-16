@@ -780,7 +780,10 @@ var TextPlugin = AbstractPlugin.extend({
             clipboardData = e.originalEvent.clipboardData.getData('text/plain');
             // get that text as an array of text nodes separated by <br> where needed
             var allNewlines = /\n/g;
-            clipboardData = $('<p>' + clipboardData.replace(allNewlines, '<br>') + '</p>').contents().toArray();
+            clipboardData = _.str.trim(clipboardData)
+                .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(allNewlines, '<br>');
+            clipboardData = $('<p>' + clipboardData + '</p>').contents().toArray();
         }
 
         // Delete selection

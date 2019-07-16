@@ -209,9 +209,9 @@ class SaleOrder(models.Model):
     def _get_reward_line_values(self, program):
         self.ensure_one()
         if program.reward_type == 'discount':
-            return self._get_reward_values_discount(program)
+            return self._get_reward_values_discount(program.with_context(lang=self.partner_id.lang))
         elif program.reward_type == 'product':
-            return [self._get_reward_values_product(program)]
+            return [self._get_reward_values_product(program.with_context(lang=self.partner_id.lang))]
 
     def _create_reward_line(self, program):
         self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
