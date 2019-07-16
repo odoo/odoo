@@ -30,6 +30,8 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered('is_delivery')
         if delivery_line:
             self.delivery_set = True
+        else:
+            self.delivery_set = False
 
     @api.onchange('order_line', 'partner_id')
     def onchange_order_line(self):
