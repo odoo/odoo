@@ -265,11 +265,22 @@
                             </div>
                         </group>
                     </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_project_view_form_simplified_footer" model="ir.ui.view">
+            <field name="name">project.project.view.form.simplified</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="after">
                     <footer>
                         <button string="Create" name="open_tasks" type="object" class="btn-primary o_open_tasks"/>
                         <button string="Discard" class="btn-secondary" special="cancel"/>
                     </footer>
-                </form>
+                </xpath>
             </field>
         </record>
 
@@ -277,7 +288,7 @@
             <field name="name">Create a Project</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="project_project_view_form_simplified"/>
+            <field name="view_id" ref="project_project_view_form_simplified_footer"/>
             <field name="target">new</field>
         </record>
 
