@@ -584,9 +584,9 @@
                                     <field name="invoice_payment_term_id"
                                            placeholder="Computed"
                                            class="oe_inline"
-                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                    <span class="o_form_label oe_edit_only"
-                                          attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
+                                           attrs="{'invisible': ['|', ('invoice_date_due', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                    <span class="o_form_label"
+                                          attrs="{'invisible': ['|', '|', ('invoice_payment_term_id', '!=', False), ('invoice_date_due', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
                                     <field name="invoice_date_due" force_save="1"
                                            placeholder="Pick a Date"
                                            class="oe_inline"
@@ -622,7 +622,7 @@
                                         <!-- Displayed fields -->
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id" optional="show"/>
-                                        <field name="name" widget="section_and_note_text" optional="show"/>
+                                        <field name="name" widget="section_and_note_text"/>
                                         <field name="account_id"
                                                groups="account.group_account_user"
                                                domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable'))]"
@@ -703,7 +703,7 @@
                                         <field name="partner_id"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
-                                        <field name="name" widget="section_and_note_text" optional="show"/>
+                                        <field name="name" widget="section_and_note_text"/>
                                         <field name="analytic_account_id"
                                                optional="show"
                                                groups="analytic.group_analytic_accounting"
@@ -793,7 +793,7 @@
                             <page id="other_tab" string="Other Info" name="other_info"
                                   attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                                 <group id="other_tab_group">
-                                    <group string="Sales"
+                                    <group string="Invoice"
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
                                         <field name="company_id" groups="base.group_multi_company"/>
@@ -886,7 +886,7 @@
                     <field name="journal_id"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
-                    <filter name="unpaid" string="Open" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
+                    <filter name="unpaid" string="Posted" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
                     <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
                     <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]" help="Overdue invoices, maturity date passed"/>

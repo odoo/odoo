@@ -172,8 +172,8 @@ class AccountMove(models.Model):
     invoice_payment_state = fields.Selection(selection=[
             ('not_paid', 'Not Paid'),
             ('in_payment', 'In Payment'),
-            ('paid', 'paid')
-        ], string='Payment Status', store=True, readonly=True, copy=False, tracking=True,
+            ('paid', 'Paid')
+        ], string='Payment', store=True, readonly=True, copy=False, tracking=True,
         compute='_compute_amount')
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]},
@@ -2100,7 +2100,7 @@ class AccountMoveLine(models.Model):
         currency_field='company_currency_id',
         compute='_compute_balance',
         help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
-    amount_currency = fields.Monetary(string='Balance in Currency', store=True, copy=True,
+    amount_currency = fields.Monetary(string='Amount in Currency', store=True, copy=True,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     price_subtotal = fields.Monetary(string='Subtotal', store=True, readonly=True,
         currency_field='always_set_currency_id')
