@@ -460,7 +460,8 @@ class ProductTemplate(models.Model):
 
     @api.depends(
         'product_variant_ids',
-        'product_variant_ids.stock_quant_ids',
+        'product_variant_ids.stock_move_ids.product_qty',
+        'product_variant_ids.stock_move_ids.state',
     )
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
