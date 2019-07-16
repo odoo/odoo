@@ -349,8 +349,6 @@
                     <group name="preferences">
                         <group>
                             <field name="email" widget="email" readonly="0"/>
-                            <field name="company_id" options="{'no_create': True}" readonly="0"
-                                groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <label for="lang"/>
@@ -369,10 +367,14 @@
                             <field name="tz_offset" invisible="1"/>
                         </group>
                     </group>
-                    <group name="preference_contact"></group>
                     <group name="signature">
                         <field name="signature" readonly="0"/>
                     </group>
+                    <group name="status" string="Status">
+                        <field name="company_id" options="{'no_create': True}" readonly="0"
+                            groups="base.group_multi_company"/>
+                    </group>
+                    <group name="preference_contact"></group>
                     <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>

@@ -38,7 +38,7 @@ class Users(models.Model):
     moderation_channel_ids = fields.Many2many(
         'mail.channel', 'mail_channel_moderator_rel',
         string='Moderated channels')
-    out_of_office_message = fields.Char(string='Message')
+    out_of_office_message = fields.Char(string='Chat Status')
 
     @api.depends('moderation_channel_ids.moderation', 'moderation_channel_ids.moderator_ids')
     def _compute_is_moderator(self):
