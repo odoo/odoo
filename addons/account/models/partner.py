@@ -451,6 +451,7 @@ class ResPartner(models.Model):
         return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
 
     def can_edit_vat(self):
+        ''' Can't edit `vat` if there is (non draft) issued invoices. '''
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat
