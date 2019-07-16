@@ -8,7 +8,10 @@ if (window.self === window.top) {
     return;
 }
 
-$(document.body).addClass('o_in_iframe'); //  in order to apply css rules
+$(document.body)
+    .addClass('o_in_iframe')
+    .addClass('container-fluid')
+    .removeClass('container');
 
 var web_base_url = $('html').attr('web-base-url');
 var trusted_host = utils.get_host_from_url(web_base_url);

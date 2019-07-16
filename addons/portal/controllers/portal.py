@@ -258,6 +258,7 @@ class CustomerPortal(Controller):
             # if no_breadcrumbs = False -> force breadcrumbs even if access_token to `invite` users to register if they click on it
             values['no_breadcrumbs'] = no_breadcrumbs
             values['access_token'] = access_token
+            values['token'] = access_token  # for portal chatter
 
         # Those are used notably whenever the payment form is implied in the portal.
         if kwargs.get('error'):
