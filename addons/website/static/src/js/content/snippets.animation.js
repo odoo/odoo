@@ -10,6 +10,7 @@ var core = require('web.core');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
+var utils = require('web.utils');
 
 var qweb = core.qweb;
 
@@ -1018,7 +1019,7 @@ registry.anchorSlide = publicWidget.Widget.extend({
             return;
         }
         var hash = this.$target[0].hash;
-        if (!/^#[\w-]+$/.test(hash)) {
+        if (!utils.isValidAnchor(hash)) {
             return;
         }
         var $anchor = $(hash);
