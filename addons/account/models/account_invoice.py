@@ -440,7 +440,7 @@ class AccountInvoice(models.Model):
                     vendor_display_name = _('From: ') + invoice.source_email
                     invoice.invoice_icon = '@'
                 else:
-                    vendor_display_name = ('Created by: ') + invoice.sudo().create_uid.name
+                    vendor_display_name = _('Created by: %s') % invoice.sudo().create_uid.name
                     invoice.invoice_icon = '#'
             invoice.vendor_display_name = vendor_display_name
 
@@ -1568,6 +1568,8 @@ class AccountInvoice(models.Model):
 
         values['type'] = TYPE2REFUND[invoice['type']]
         values['date_invoice'] = date_invoice or fields.Date.context_today(invoice)
+        if values.get('date_due', False) and values['date_invoice'] > values['date_due']:
+            values['date_due'] = values['date_invoice']
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
