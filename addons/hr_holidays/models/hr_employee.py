@@ -60,7 +60,7 @@ class HrEmployeeBase(models.AbstractModel):
                 ) h
                 join hr_leave_type s ON (s.id=h.holiday_status_id)
             WHERE
-                h.state='validate' AND
+                s.active = true AND h.state='validate' AND
                 (s.allocation_type='fixed' OR s.allocation_type='fixed_allocation') AND
                 h.employee_id in %s
             GROUP BY h.employee_id""", (tuple(self.ids),))
@@ -77,6 +77,7 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self:
             allocations = self.env['hr.leave.allocation'].search([
                 ('employee_id', '=', employee.id),
+                ('holiday_status_id.active', '=', True),
                 ('state', '=', 'validate'),
                 '|',
                     ('date_to', '=', False),
