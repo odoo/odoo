@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Account Taxes Tags Ventas -->
+        <record id="tag_cl_sale_tot_mnt_exe" model="account.account.tag">
+            <!-- TotMntExe -->
+            <field name="name">Ventas - Total Monto Exento o No Gravado</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_mnt_neto" model="account.account.tag">
+            <!-- TotMntNeto -->
+            <field name="name">Ventas - Total Monto Neto</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_mnt_iva" model="account.account.tag">
+            <!-- TotMntIVA -->
+            <field name="name">Ventas - Total Monto IVA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_mnt_fuera_plazo" model="account.account.tag">
+            <!-- TotIVAFueraPlazo -->
+            <field name="name">Ventas - Total IVA Fuera de Plazo</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_iva_propio" model="account.account.tag">
+            <!-- TotIVAPropio -->
+            <field name="name">Ventas - Total IVA Propio</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_iva_terceros" model="account.account.tag">
+            <!-- TotIVATerceros -->
+            <field name="name">Ventas - Total IVA Terceros</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_iva_18211" model="account.account.tag">
+            <!-- TotLey18211 -->
+            <field name="name">Ventas - Total IVA Ley 18211</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_otros_imp" model="account.account.tag">
+            <!-- TotOtrosImp -->
+            <field name="name">Ventas - Total Otros Impuestos</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_iva_ret_total" model="account.account.tag">
+            <!-- TotIVARetTotal -->
+            <field name="name">Ventas - IVA Retenido Total</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_iva_ret_parcial" model="account.account.tag">
+            <!-- TotIVARetParcial -->
+            <field name="name">Ventas - IVA Retenido Parcial</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_cred_ec" model="account.account.tag">
+            <!-- TotCredEC -->
+            <field name="name">Ventas - Total Credito Especial 65% Empresas Constructoras</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_dep_env" model="account.account.tag">
+            <!-- TotDepEnvase -->
+            <field name="name">Ventas - Total Depósito de Envases</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_valor_neto_comis" model="account.account.tag">
+            <!-- TotValComNeto -->
+            <field name="name">Ventas - Total Valor Neto Comisiones y Otros Cargos</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_valor_comisiones_no_afecto" model="account.account.tag">
+            <!-- TotValComExe -->
+            <field name="name">Ventas - Total Valor Neto Comisiones y Otros Cargos No Afectos</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_iva_comisiones" model="account.account.tag">
+            <!-- TotValComIVA -->
+            <field name="name">Ventas - Total IVA Comisiones y Otros Cargos</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_iva_no_retenido" model="account.account.tag">
+            <!-- TotOpIVANoRetenido -->
+            <field name="name">Ventas - Total IVA Comisiones y Otros Cargos</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_monto_no_facturable" model="account.account.tag">
+            <!-- TotMntNoFact -->
+            <field name="name">Ventas - Total Monto No Facturable</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_exento_vta_pasajes_nacional" model="account.account.tag">
+            <!-- TotPsjNac -->
+            <field name="name">Ventas - Exento Ventas de Pasajes Nacional</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_tot_exento_vta_pasajes_internacional" model="account.account.tag">
+            <!-- TotPsjInt -->
+            <field name="name">Ventas - Exento Ventas de Pasajes Internacional</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <!-- Account Taxes Tags Commpras -->
+        <record id="tag_cl_purchase_tot_mnt_exe" model="account.account.tag">
+            <!-- TotMntExe -->
+            <field name="name">Compras - Total Monto Exento o No Gravado</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_mnt_neto" model="account.account.tag">
+            <!-- TotMntNeto -->
+            <field name="name">Compras - Total Monto Neto</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_mnt_iva" model="account.account.tag">
+            <!-- TotMntIVA -->
+            <field name="name">Compras - Total Monto IVA Recuperable</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_mnt_neto_actf" model="account.account.tag">
+            <!-- TotMntActivoFijo -->
+            <field name="name">Compras - Total Monto Neto Activo Fijo</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_mnt_iva_actf" model="account.account.tag">
+            <!-- TotMntIVAActivoFijo -->
+            <field name="name">Compras - Total Monto IVA Activo Fijo</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_mnt_iva_no_rec" model="account.account.tag">
+            <!-- TotMntIVANoRec -->
+            <field name="name">Compras - Total Monto IVA No Recuperable</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_mnt_iva_uso_comun" model="account.account.tag">
+            <!-- TotMntIVANoRec -->
+            <field name="name">Compras - Total Monto IVA Uso Comun</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_mnt_otros_imp" model="account.account.tag">
+            <!-- TotOtrosImp -->
+            <field name="name">Compras - Total Monto Otros Impuestos</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_imp_sin_credito" model="account.account.tag">
+            <!-- TotImpSinCredito -->
+            <field name="name">Compras - Total Impuestos Sin Crédito</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_iva_no_ret" model="account.account.tag">
+            <!-- TotIVANoRetenido -->
+            <field name="name">Compras - Total IVA No Retenido Fac de compra</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_tab_puros" model="account.account.tag">
+            <!-- TotTabPuros -->
+            <field name="name">Compras - Total Tabacos Manufacturados Puros</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_tab_cigar" model="account.account.tag">
+            <!-- TotTabCigarrillos -->
+            <field name="name">Compras - Total Tabacos Manufacturados Cigarrillos</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_tab_elab" model="account.account.tag">
+            <!-- TotTabCigarrillos -->
+            <field name="name">Compras - Total Tabacos Manufacturados Elaborados</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_imp_42" model="account.account.tag">
+            <!-- TotCredImp -->
+            <field name="name">Compras - Total Credito Imp Art 42</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_imp_sin_cred" model="account.account.tag">
+            <!-- TotImpSinCredito -->
+            <field name="name">Compras - Total Impuesto Sin Credito</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_iva_no_reten" model="account.account.tag">
+            <!-- TotIVANoRetenido -->
+            <field name="name">Compras - Total IVA No Retenido</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_purchase_tot_imp_vehic" model="account.account.tag">
+            <!-- TotImpVehiculo -->
+            <field name="name">Compras - Impuesto a Vehículos Automotores</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <!-- honorarios y otros -->
+        <record id="tag_cl_fees_amount" model="account.account.tag">
+            <field name="name">Honorarios -  Montos Sujetos a Retención Renta 2 Categoría</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_fees_amount_widholding" model="account.account.tag">
+            <field name="name">Honorarios -  Retención a la Renta 2da Categoría</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_cl_fees_amount_widholding_payable" model="account.account.tag">
+            <field name="name">Honorario - Impuesto Retenido 2da Categoría a Pagar</field>
+            <field name="applicability">taxes</field>
+        </record>
+    </data>
+</odoo>
