@@ -163,6 +163,7 @@ class ProductPublicCategory(models.Model):
                                 help="Small-sized image of the category. It is automatically "
                                 "resized as a 64x64px image, with aspect ratio preserved. "
                                 "Use this field anywhere a small image is required.")
+    product_tmpl_ids = fields.Many2many('product.template', relation='product_public_category_product_template_rel')
 
     @api.model
     def create(self, vals):
@@ -209,7 +210,7 @@ class ProductTemplate(models.Model):
     website_style_ids = fields.Many2many('product.style', string='Styles')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
                                       default=lambda self: self._default_website_sequence())
-    public_categ_ids = fields.Many2many('product.public.category', string='Website Product Category',
+    public_categ_ids = fields.Many2many('product.public.category', relation='product_public_category_product_template_rel', string='Website Product Category',
                                         help="The product will be available in each mentioned e-commerce category. Go to"
                                         "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
 
