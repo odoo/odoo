@@ -3214,10 +3214,11 @@ class AccountMoveLine(models.Model):
     def name_get(self):
         result = []
         for line in self:
+            name = line.move_id.name or ''
             if line.ref:
-                result.append((line.id, (line.move_id.name or '') + '(' + line.ref + ')'))
-            else:
-                result.append((line.id, line.move_id.name))
+                name += " (%s)" % line.ref
+            name += (line.name or line.product_id.display_name) and (' ' + (line.name or line.product_id.display_name)) or ''
+            result.append((line.id, name))
         return result
 
     # -------------------------------------------------------------------------
