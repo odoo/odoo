@@ -57,15 +57,22 @@ class ChangeProductionQty(models.TransientModel):
                 if line.child_bom_id and line.child_bom_id.type == 'phantom' or\
                         line.product_id.type not in ['product', 'consu']:
                     continue
-                move, old_qty, new_qty = production._update_raw_move(line, line_data)
+                move = production.move_raw_ids.filtered(lambda x: x.bom_line_id.id == line.id and x.state not in ('done', 'cancel'))
+                if move:
+                    old_qty = move[0].product_uom_qty
+                else:
+                    old_qty = 0
                 iterate_key = production._get_document_iterate_key(move)
                 if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move: (new_qty, old_qty)}, iterate_key, 'UP')
+                    document = self.env['stock.picking']._log_activity_get_documents({move: (line_data['qty'], old_qty)}, iterate_key, 'UP')
                     for key, value in document.items():
                         if documents.get(key):
                             documents[key] += [value]
                         else:
                             documents[key] = [value]
+
+                production._update_raw_move(line, line_data)
+
             production._log_manufacture_exception(documents)
             operation_bom_qty = {}
             for bom, bom_data in boms:

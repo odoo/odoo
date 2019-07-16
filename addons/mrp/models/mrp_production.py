@@ -568,12 +568,13 @@ class MrpProduction(models.Model):
                 move[0]._recompute_state()
                 move[0]._action_assign()
                 move[0].unit_factor = quantity / move[0].raw_material_production_id.product_qty
-            elif quantity < 0:  # Do not remove 0 lines
+                return move[0], old_qty, quantity
+            else:
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
                 move[0]._action_cancel()
                 move[0].unlink()
-            return move[0], old_qty, quantity
+                return self.env['stock.move'], old_qty, quantity
         else:
             move_values = self._get_move_raw_values(bom_line, line_data)
             move = self.env['stock.move'].create(move_values)
@@ -847,15 +848,14 @@ class MrpProduction(models.Model):
                 raise UserError(_('Work order %s is still running') % wo.name)
         self._check_lots()
 
-        # Cancel unfinished move
-        move_to_cancel = self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))
-        move_to_cancel._action_cancel()
-
         self.post_inventory()
         # Moves without quantity done are not posted => set them as done instead of canceling. In
         # case the user edits the MO later on and sets some consumed quantity on those, we do not
         # want the move lines to be canceled.
-        (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({'state': 'done'})
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
+            'state': 'done',
+            'product_uom_qty': 0.0,
+        })
         self.write({'date_finished': fields.Datetime.now()})
         return True
 
