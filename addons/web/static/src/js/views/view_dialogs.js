@@ -317,6 +317,7 @@ var SelectCreateDialog = ViewDialog.extend({
         this._super.apply(this, arguments);
         _.defaults(this.options, { initial_view: 'search' });
         this.on_selected = this.options.on_selected || (function () {});
+        this.on_clear = this.options.on_clear || (function () {});
         this.initialIDs = this.options.initial_ids;
     },
 

@@ -17,6 +17,11 @@ if (!config.device.isMobile) {
 
 relational_fields.FieldMany2One.include({
 
+    start: function () {
+        var superRes = this._super.apply(this, arguments);
+        this.$input.prop('readonly', true);
+        return superRes;
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
