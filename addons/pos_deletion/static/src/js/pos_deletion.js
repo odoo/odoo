@@ -14,7 +14,6 @@ odoo.define('pos_deletion.deletion', function (require) {
     var _t      = core._t;
     var round_pr = utils.round_precision;
 
-
     var orderline_super = models.Orderline.prototype;
     models.Orderline = models.Orderline.extend({
         set_quantity: function (quantity, no_decrease) {
@@ -29,10 +28,6 @@ odoo.define('pos_deletion.deletion', function (require) {
                             var selected_orderline = order.get_selected_orderline();
                             qty_decrease = parseInt(qty_decrease, 10);
 
-                             // We have to prevent taking back more than what was on the order. The
-                            // right way to do this is by "merging" all the orderlines that we can
-                            // with this one (including previous decreases). Then we can figure out
-                            // how much the POS user can still decrease by.
                             var current_total_quantity_remaining = selected_orderline.get_quantity();
                             order.get_orderlines().forEach(function (orderline, index, array) {
                                 if (selected_orderline.id != orderline.id &&
@@ -72,19 +67,19 @@ odoo.define('pos_deletion.deletion', function (require) {
         }
     });
 
-     screens.OrderWidget.include({
+    screens.OrderWidget.include({
         set_value: function (val) {
             var order = this.pos.get_order();
             var mode = this.numpad_state.get('mode');
 
-             if (order.get_selected_orderline() && mode === 'quantity') {
+            if (order.get_selected_orderline() && mode === 'quantity') {
                 order.get_selected_orderline().set_quantity(val, "dont_allow_decreases");
             } else {
                 this._super(val);
             }
         },
 
-         update_summary: function () {
+        update_summary: function () {
             if (this.pos.get_order()) {
                 return this._super();
             } else {
@@ -92,7 +87,7 @@ odoo.define('pos_deletion.deletion', function (require) {
             }
         },
 
-         orderline_change: function(line) {
+        orderline_change: function(line) {
             // don't try to rerender non-visible lines
             if (this.pos.get_order() && line.node && line.node.parentNode) {
                 return this._super(line);
@@ -102,9 +97,55 @@ odoo.define('pos_deletion.deletion', function (require) {
         }
     });
 
-    var ProductScreenWidget = screens.ScreenWidget.extend({
+    screens.ProductScreenWidget.include({
+        show: function(){
+            this._super();
+        },
         _onKeypadKeyDown: function (ev) {
-            console.log('tututu');
+            var order = this.pos.get_order();
+            var orderline = this.pos.get_order().selected_orderline;
+            var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1]
+
+            if(last_id === orderline.cid && orderline.quantity > 0){
+                this._super(event);
+            }
+        },
+    });
+
+    screens.NumpadWidget.include({
+        start: function(event) {
+            this._super(event);
+            this.$el.find('.mode-button[data-mode=price]').prop("disabled",true);
+            this.$el.find('.numpad-minus').prop("disabled",true);
+        },
+        clickChangeMode: function (event) {
+            if (event.currentTarget.attributes['data-mode'].nodeValue === "price") {
+                this.gui.show_popup("error", {
+                    'title': _t("Module error"),
+                    'body':  _t("Adjusting the price is not allowed."),
+                });
+            } else {
+                this._super(event);
+            }
+        },
+        clickAppendNewChar: function(event) {
+            var order = this.pos.get_order();
+            var orderline = this.pos.get_order().selected_orderline;
+            var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1]
+
+            if(last_id === orderline.cid && orderline.quantity > 0){
+                this._super(event);
+            }
+        },
+    });
+
+    var NumberPopupWidget = popups.include({
+        show: function(options){
+           this._super(options);
+           $(document).off('keydown.productscreen', this.gui.screen_instances.products._onKeypadKeyDown);
+        },
+        close: function(){
+            $(document).on('keydown.productscreen', this.gui.screen_instances.products._onKeypadKeyDown);
         },
     });
  });
