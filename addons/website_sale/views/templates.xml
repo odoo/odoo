@@ -370,11 +370,11 @@
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <li class="nav-item">
-            <i t-if="c.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if c.id in parent_category_ids else 'fa-chevron-right'}"
-               t-attf-title="#{'Unfold' if c.id in parent_category_ids else 'Fold'}"
-               t-attf-aria-label="#{'Unfold' if c.id in parent_category_ids else 'Fold'}" role="img"/>
+            <i t-if="c.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if c.id in category.parents_and_self.ids else 'fa-chevron-right'}"
+               t-attf-title="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
+               t-attf-aria-label="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}" role="img"/>
             <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link #{'active' if c.id == category.id else ''}" t-field="c.name"></a>
-            <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if c.id in parent_category_ids else 'display:none;'">
+            <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if c.id in category.parents_and_self.ids else 'display:none;'">
                 <t t-foreach="c.child_id" t-as="c">
                     <t t-if="not search or c.id in search_categories_ids">
                         <t t-call="website_sale.option_collapse_categories_recursive"/>

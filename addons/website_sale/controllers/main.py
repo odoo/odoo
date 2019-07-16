@@ -267,14 +267,8 @@ class WebsiteSale(http.Controller):
             search_categories = Category
             categs = Category.search([('parent_id', '=', False)] + request.website.website_domain())
 
-        parent_category_ids = []
         if category:
             url = "/shop/category/%s" % slug(category)
-            parent_category_ids = [category.id]
-            current_category = category
-            while current_category.parent_id:
-                parent_category_ids.append(current_category.parent_id.id)
-                current_category = current_category.parent_id
 
         product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
@@ -313,7 +307,6 @@ class WebsiteSale(http.Controller):
             'attributes': attributes,
             'compute_currency': compute_currency,
             'keep': keep,
-            'parent_category_ids': parent_category_ids,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
         }
