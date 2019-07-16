@@ -1885,6 +1885,9 @@ var HelperPlugin = AbstractPlugin.extend({
         // Create empty text node to have a range into the node
         if (range.sc.tagName && !dom.isVoid(range.sc) && !range.sc.childNodes[range.so]) {
             $(range.sc).append(invisible);
+            if (invisible.previousSibling && invisible.previousSibling.tagName === "BR") {
+                invisible.previousSibling.remove();
+            }
             range = this.context.invoke('editor.setRange', invisible, 0);
         }
 
