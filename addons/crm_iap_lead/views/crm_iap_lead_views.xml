@@ -43,12 +43,12 @@
                         </div>
                     </span>
                     <group>
-                        <group string="Request">
+                        <group name="requests" string="Request">
                             <field name="lead_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="search_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="error" attrs="{'invisible': [('state', '!=', 'error')]}"/>
                         </group>
-                        <group string="Lead Information">
+                        <group name="lead_info" string="Lead Information">
                             <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="team_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -56,7 +56,7 @@
                         </group>
                     </group>
                     <group>
-                        <group string="Companies">
+                        <group name="companies" string="Companies">
                             <field name="filter_on_size" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
                             <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
@@ -70,7 +70,7 @@
                             <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])], 'readonly': [('state', '!=', 'draft')]}" domain="[('country_id', 'in', country_ids)]" options="{'no_create': True, 'no_open': True}"/>
                             <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
                         </group>
-                        <group string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                        <group name="contacts" string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
                             <field name="contact_number" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('search_type', '=', 'people')]}"/>
                             <field name="contact_filter_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="preferred_role_id"
