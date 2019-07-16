@@ -244,6 +244,20 @@
     </t>
 </t>
 
+<div t-name="View.NoContentHelper" class="o_view_nocontent" role="alert">
+    <div class="o_nocontent_help">
+        <p class="o_view_nocontent_empty_folder">
+            <t t-if="title" t-esc="title"/>
+            <t t-else="1">No data to display</t>
+        </p>
+        <p>
+            <t t-if="description" t-esc="description"/>
+            <t t-else="1">Try to add some records, or make sure that there is no
+                active filter in the search bar.</t>
+        </p>
+    </div>
+</div>
+
 <t t-name="ListView.buttons">
     <div class="o_list_buttons" role="toolbar" aria-label="Main actions">
         <button type="button" class="btn btn-primary o_list_button_save" accesskey="s">
@@ -384,12 +398,6 @@
         <button class="btn btn-secondary fa fa-database o_graph_button" title="Stacked" aria-label="Stacked" data-mode="stack"/>
     </div>
 </t>
-<div t-name="GraphView.error" class="o_view_nocontent" role="alert">
-    <div class="o_nocontent_help">
-        <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
-        <p><t t-esc="description"/></p>
-    </div>
-</div>
 
 <div t-name="PivotView" t-attf-class="o_pivot #{widget.enableLinking ? 'o_enable_linking' : ''}">
     <div class="o_field_selection"/>
@@ -436,18 +444,6 @@
         </t>
     </div>
 </t>
-<div t-name="PivotView.nodata">
-    <div class="o_view_nocontent" role="alert">
-        <div class="o_nocontent_help">
-            <p class="o_view_nocontent_empty_folder">
-                No data to display
-            </p><p>
-                Try to add some records, or make sure
-                that there is at least one measure and no active filter in the search bar.
-            </p>
-        </div>
-    </div>
-</div>
 
 <t t-name="FormSelection">
     <div class="btn-group o_selection" aria-atomic="true">
