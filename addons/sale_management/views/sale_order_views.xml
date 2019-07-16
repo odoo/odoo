@@ -17,6 +17,7 @@
                                 <field name="uom_id" groups="uom.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                <field name="is_present" />
                             </group>
                         </form>
                         <kanban class="o_kanban_mobile">
@@ -24,6 +25,7 @@
                             <field name="quantity"/>
                             <field name="uom_id" groups="uom.group_uom"/>
                             <field name="price_unit"/>
+                            <field name="is_present" />
                             <templates>
                                 <t t-name="kanban-box">
                                     <div class="oe_kanban_card oe_kanban_global_click">
@@ -36,7 +38,7 @@
                                                 </strong>
                                             </div>
                                             <div class="col-2">
-                                                <button name="button_add_to_order" class="btn btn-link oe_link fa fa-shopping-cart" string="Add to order lines" type="object"/>
+                                                <button name="button_add_to_order" class="btn btn-link oe_link fa fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -60,7 +62,7 @@
                                 </t>
                             </templates>
                         </kanban>
-                        <tree string="Sales Quotation Template Lines" editable="bottom">
+                        <tree string="Sales Quotation Template Lines" editable="bottom" decoration-success="is_present == True">
                             <control>
                                 <create name="add_product_control" string="Add a product"/>
                             </control>
@@ -71,7 +73,8 @@
                             <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                             <field name="price_unit"/>
                             <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
-                            <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
+                            <field name="is_present" invisible="1" />
+                            <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
                         </tree>
                     </field>
                 </page>
