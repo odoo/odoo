@@ -272,7 +272,7 @@ class WebsitePayment(http.Controller):
         tx_id = int(kw.get('tx_id', 0))
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
-            if tx.state == 'done':
+            if tx.state in ['done', 'authorized']:
                 status = 'success'
                 message = tx.acquirer_id.done_msg
             elif tx.state == 'pending':

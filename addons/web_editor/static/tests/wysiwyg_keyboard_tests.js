@@ -814,6 +814,18 @@ var keyboardTestsChar = [{
             start: "b:contents(0)->1",
         },
     },
+    {
+        name: "'a' in empty li",
+        content: '<ul><li><p><br></p></li></ul>',
+        steps: [{
+            start: "p->1",
+            key: 'a',
+        }],
+        test: {
+            content: '<ul><li><p>a</p></li></ul>',
+            start: "p:contents(0)->1",
+        },
+    },
 ];
 
 QUnit.test('Char', function (assert) {
@@ -2246,6 +2258,25 @@ var keyboardTestsComplex = [{
         test: {
             content: '<div><p>1</p></div><ul class="list-group list-group-flush"><li class="list-group-item"><p><br></p></li></ul>',
             start: "p:eq(1)->0",
+        },
+    },
+    // List indent
+    {
+        name: "ENTER -> TAB -> a' at end of li > p (split -> indent -> write)",
+        content: '<ul><li><p>a</p></li></ul>',
+        steps: [{
+            start: "p:contents()[0]->1",
+            key: 'ENTER',
+        },
+        {
+            key: 'TAB',
+        },
+        {
+            key: 'a',
+        }],
+        test: {
+            content: '<ul><li><p>a</p></li><li class="o_indent"><ul><li><p>a</p></li></ul></li></ul>',
+            start: "p:eq(1):contents()[0]->1",
         },
     },
 ];
