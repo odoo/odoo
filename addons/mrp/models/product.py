@@ -143,10 +143,6 @@ class ProductProduct(models.Model):
         return action
 
     def action_view_mos(self):
-        action = self.env.ref('mrp.mrp_production_report').read()[0]
+        action = self.product_tmpl_id.action_view_mos()
         action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
-        action['context'] = {
-            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'},
-            'graph_measure': 'product_uom_qty',
-        }
         return action
