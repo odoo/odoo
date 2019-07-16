@@ -259,13 +259,14 @@ class WebsiteSale(http.Controller):
         Product = request.env['product.template'].with_context(bin_size=True)
 
         search_product = Product.search(domain)
+        website_domain = request.website.website_domain()
+        categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
-            categories = search_product.mapped('public_categ_ids')
-            search_categories = Category.search([('id', 'parent_of', categories.ids)] + request.website.website_domain())
-            categs = search_categories.filtered(lambda c: not c.parent_id)
+            search_categories = Category.search([('product_tmpl_ids', 'in', search_product.ids)] + website_domain).parents_and_self
+            categs_domain.append(('id', 'in', search_categories.ids))
         else:
             search_categories = Category
-            categs = Category.search([('parent_id', '=', False)] + request.website.website_domain())
+        categs = Category.search(categs_domain)
 
         if category:
             url = "/shop/category/%s" % slug(category)
