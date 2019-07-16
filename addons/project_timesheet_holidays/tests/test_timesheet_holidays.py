@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 
-from odoo.tests import common
+from odoo.tests import common, new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 
 
@@ -23,6 +23,17 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
         self.assertEqual(status.timesheet_project_id, company.leave_timesheet_project_id, 'The default project linked to the status should be the same as the company')
         self.assertEqual(status.timesheet_task_id, company.leave_timesheet_task_id, 'The default task linked to the status should be the same as the company')
 
+    def test_company_create(self):
+        main_company = self.env.ref('base.main_company')
+        user = new_test_user(self.env, login='fru',
+                             groups='base.group_user,base.group_erp_manager,base.group_partner_manager',
+                             company_id=main_company.id,
+                             company_ids=[(6, 0, main_company.ids)])
+        Company = self.env['res.company']
+        Company = Company.with_user(user)
+        Company = Company.with_context(allowed_company_ids=main_company.ids)
+        company = Company.create({'name': "Wall Company"})
+        self.assertEqual(company.leave_timesheet_project_id.sudo().company_id, company, "It should have created a project for the company")
 
 class TestTimesheetHolidays(TestCommonTimesheet):
 
