@@ -26,6 +26,7 @@
         'data/stock_traceability_report_data.xml',
         'data/procurement_data.xml',
 
+        'report/report_stock_quantity.xml',
         'report/stock_report_views.xml',
         'report/report_package_barcode.xml',
         'report/report_lot_barcode.xml',
