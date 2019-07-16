@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if">not o.l10n_latam_document_type_id.report_name</attribute>
+        </xpath>
+
+        <xpath expr="//h2" position="after">
+            <h2 t-if="o.l10n_latam_document_type_id.report_name">
+                <span t-field="o.l10n_latam_document_type_id.report_name"/>
+                <span t-field="o.l10n_latam_document_number"/>
+            </h2>
+        </xpath>
+
+        <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-field">line.l10n_latam_price_unit</attribute>
+        </xpath>
+
+        <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.invoice_line_tax_ids))" position="replace">
+            <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_invoice_line_tax_ids))"/>
+        </span>
+
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="replace">
+            <t t-set="current_subtotal" t-value="current_subtotal + line.l10n_latam_price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+        </t>
+
+        <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded" position="replace">
+            <span t-field="line.l10n_latam_price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+        </span>
+
+        <span t-field="o.amount_untaxed" position="attributes">
+            <attribute name="t-field">o.l10n_latam_amount_untaxed</attribute>
+        </span>
+
+    </template>
+
+</odoo>

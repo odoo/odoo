@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">view_partner_form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="model">res.partner</field>
+            <field type="xml" name="arch">
+                <xpath expr="//field[@name='ref']" position="attributes">
+                    <attribute name="string">Fantasy Name</attribute>
+                </xpath>
+                <field name="street2" position="after">
+                    <field name="l10n_cl_county_id" domain="[('country_id', '=', country_id)]"
+                           placeholder="Comuna" style="width: 100%" options='{"no_create": True}'/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

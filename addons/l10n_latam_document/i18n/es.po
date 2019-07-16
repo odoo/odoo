@@ -1,0 +1,491 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* l10n_latam_document
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-22 13:24+0000\n"
+"PO-Revision-Date: 2019-05-22 13:24+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_latam_document
+#: model:mail.template,subject:l10n_latam_document.email_template_edi_invoice
+msgid "${object.company_id.name} Invoice (Ref ${object.display_name or 'n/a'})"
+msgstr "${object.company_id.name} Factura (Ref ${object.display_name or 'n/a'})"
+
+#. module: l10n_latam_document
+#: model:mail.template,body_html:l10n_latam_document.email_template_edi_invoice
+msgid "<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Dear ${object.partner_id.name}\n"
+"    % if object.partner_id.parent_id:\n"
+"        (${object.partner_id.parent_id.name})\n"
+"    % endif\n"
+"    <br/><br/>\n"
+"    Here is your \n"
+"    % if object.display_name:\n"
+"        invoice <strong>${object.display_name}</strong>\n"
+"    % else:\n"
+"        invoice\n"
+"    %endif\n"
+"    % if object.origin:\n"
+"        (with reference: ${object.origin})\n"
+"    % endif\n"
+"    amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"    from ${object.company_id.name}.\n"
+"    % if object.state=='paid':\n"
+"        This invoice is already paid.\n"
+"    % else:\n"
+"        Please remit payment at your earliest convenience.\n"
+"    % endif\n"
+"    <br/><br/>\n"
+"    Do not hesitate to contact us if you have any question.\n"
+"</p>\n"
+"</div>\n"
+"        "
+msgstr "<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Estimado ${object.partner_id.name}\n"
+"    % if object.partner_id.parent_id:\n"
+"        (${object.partner_id.parent_id.name})\n"
+"    % endif\n"
+"    <br/><br/>\n"
+"    Acá esta tu \n"
+"    % if object.display_name:\n"
+"        factura <strong>${object.display_name}</strong>\n"
+"    % else:\n"
+"        factura\n"
+"    %endif\n"
+"    % if object.origin:\n"
+"        (con referencia: ${object.origin})\n"
+"    % endif\n"
+"    por valor de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"    from ${object.company_id.name}.\n"
+"    % if object.state=='paid':\n"
+"        Esta factura esta pagada.\n"
+"    % else:\n"
+"        Por favor envíe el pago a su más pronta conveniencia.\n"
+"    % endif\n"
+"    <br/><br/>\n"
+"    No dude en contactarnos si tiene alguna pregunta.\n"
+"</p>\n"
+"</div>\n"
+"        "
+
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_supplier_invoice_form
+msgid "<span attrs=\"{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}\" class=\"oe_inline\">- Next Number: </span>"
+msgstr "<span attrs=\"{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}\" class=\"oe_inline\">- Próximo Número: </span>"
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_invoice_form
+msgid "<span attrs=\"{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}\" class=\"oe_inline\">- Next Number:</span>"
+msgstr "<span attrs=\"{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}\" class=\"oe_inline\">- Pŕoximo Número:</span>"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Plantilla de Plan de Cuentas"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr "Widget de reconciliación de cuenta"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__active
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+msgid "Active"
+msgstr "Activo"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_line__l10n_latam_price_subtotal
+msgid "Amount"
+msgstr "Importe"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_l10n_latam_document_type__internal_type
+msgid "Analog to odoo account.invoice.type but with more options allowing to identify the kind of document we are working with. (not only related to account.invoice, could be for documents of other models like stock.picking)"
+msgstr ""
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+msgid "Archived"
+msgstr "ARchivados"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_available_document_type_ids
+msgid "Available Document Types"
+msgstr "Tipos de Documento Disponibles"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_refund__l10n_latam_available_document_type_ids
+msgid "Available Journal Document Types"
+msgstr "Tipos de Documento Disponibles"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__code
+msgid "Code"
+msgstr "Código"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_l10n_latam_document_type__code
+msgid "Code used by different localizations"
+msgstr "Código usando por diferentes localizaciones"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__country_id
+msgid "Country"
+msgstr "País"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_country_code
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_journal__l10n_latam_country_code
+msgid "Country Code"
+msgstr "Código País"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_l10n_latam_document_type__country_id
+msgid "Country in which this type of document is valid"
+msgstr "País donde el tipo de documento es valido"
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_account_journal_form
+msgid "Create Sequences"
+msgstr "Crear Secuencias"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_invoice_refund
+msgid "Credit Note"
+msgstr "Rectificativa"
+
+#. module: l10n_latam_document
+#: selection:l10n_latam.document.type,internal_type:0
+msgid "Credit Notes"
+msgstr "Notas de Crédito"
+
+#. module: l10n_latam_document
+#: selection:l10n_latam.document.type,internal_type:0
+msgid "Debit Notes"
+msgstr "Notas de Débito"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__doc_code_prefix
+msgid "Document Code Prefix"
+msgstr "Prefijo del código de documento"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_document_number
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_refund__l10n_latam_document_number
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_move__l10n_latam_document_number
+msgid "Document Number"
+msgstr "Número de Documento"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__display_name
+msgid "Document Reference"
+msgstr "Referencia de Documento"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_refund__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_report__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_move__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_move_line__l10n_latam_document_type_id
+#: model:ir.model.fields,field_description:l10n_latam_document.field_ir_sequence__l10n_latam_document_type_id
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_account_invoice_report_search_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_account_move_line_filter
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_form
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_tree
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+#. module: l10n_latam_document
+#: model:ir.actions.act_window,name:l10n_latam_document.action_document_type
+#: model:ir.ui.menu,name:l10n_latam_document.menu_document_type
+msgid "Document Types"
+msgstr "Tipos de Documentos"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:258
+#, python-format
+msgid "Error!. Please define sequence on the journal related documents to this invoice or set the document number."
+msgstr "Error!. Por favor defina una secuencia en el diario relacionado al docuemento de esta factura o indique el número de documento."
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__internal_type
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+msgid "Internal Type"
+msgstr "Tipo interno"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:134
+#: model:ir.model,name:l10n_latam_document.model_account_invoice
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_refund__l10n_ar_invoice_id
+#, python-format
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Linea de Factura"
+
+#. module: l10n_latam_document
+#: model:mail.template,report_name:l10n_latam_document.email_template_edi_invoice
+msgid "Invoice_${(object.display_name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}"
+msgstr "Factura_${(object.display_name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}"
+
+#. module: l10n_latam_document
+#: selection:l10n_latam.document.type,internal_type:0
+msgid "Invoices"
+msgstr "Facturas"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr "Estadísticas de facturas"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_journal
+#: model:ir.model.fields,field_description:l10n_latam_document.field_ir_sequence__l10n_latam_journal_id
+msgid "Journal"
+msgstr "Diario"
+
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_move
+msgid "Journal Entries"
+msgstr "Asientos contables"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_sequence_id
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_refund__l10n_latam_sequence_id
+msgid "L10N Latam Sequence"
+msgstr ""
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_l10n_latam_document_type
+msgid "Latam Document Type"
+msgstr "Tipo de Documento Latam"
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+msgid "Localization"
+msgstr "Localización"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:339
+#, python-format
+msgid "Method not implemented by localization of %s"
+msgstr "Método no implementado por localización %s"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__report_name
+msgid "Name on Reports"
+msgstr "Nombre en Reportes"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_l10n_latam_document_type__report_name
+msgid "Name that will be printed in reports, for example \"CREDIT NOTE\""
+msgstr "Nombre que será impreso en los reportes, por ejemplo \"NOTA DE CREDITO\""
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_line__l10n_latam_price_net
+msgid "Net Amount"
+msgstr "Cantidad Neta"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_next_number
+msgid "Next Number"
+msgstr "Próximo número"
+
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_l10n_latam_document_type__doc_code_prefix
+msgid "Prefix for Documents Codes on Invoices and Account Moves. For eg. 'FA ' will build 'FA 0001-0000001' Document Number"
+msgstr "Prefijo para Códigos de Documentos en Facturas y Asientos. Por eje: 'FA ' será contruido como número de docuemnto 'FA 0001-0000001'"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:136
+#, python-format
+msgid "Refund"
+msgstr ""
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/wizards/account_invoice_refund.py:18
+#, python-format
+msgid "Refund wizard must be call only from one invoice"
+msgstr ""
+
+#. module: l10n_latam_document
+#: model:ir.model,name:l10n_latam_document.model_ir_sequence
+#: model:ir.model.fields,field_description:l10n_latam_document.field_l10n_latam_document_type__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+msgid "Show active document types"
+msgstr "Mostrar tipos de documento activos"
+
+#. module: l10n_latam_document
+#: model_terms:ir.ui.view,arch_db:l10n_latam_document.view_document_type_filter
+msgid "Show archived document types"
+msgstr "Mostrar tipos de documento archivados"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:212
+#, python-format
+msgid "Some invoices have a journal that require a document but not document type has been selected.\n"
+"Invoices ids: %s"
+msgstr "Algunas facturas tienen un diario el cual requiere un documento pero ningun tipo de documento ha sido seleccionado.\n"
+"Factuas con ids: %s"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_amount_tax
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: l10n_latam_document
+#: model:ir.ui.menu,name:l10n_latam_document.menu_tax_entities_config
+msgid "Tax Entities"
+msgstr "Entidades Tributarias"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_tax_line_ids
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_line__l10n_latam_invoice_line_tax_ids
+msgid "Taxes"
+msgstr "Impuestos"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_account_invoice__l10n_latam_country_code
+#: model:ir.model.fields,help:l10n_latam_document.field_account_journal__l10n_latam_country_code
+msgid "Technical field used to hide/show fields regarding the localization"
+msgstr "Campo técnico usado para esconder/mostrar dependiendo de la liocalización"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_l10n_latam_document_type__name
+msgid "The document name"
+msgstr "El nombre del documento"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,help:l10n_latam_document.field_l10n_latam_document_type__sequence
+msgid "To set in which order show the documents type taking into account the most commonly used first"
+msgstr "Para seleccionar en que orden deben mostrar los tipos de documento teniendo en cuenta los más usados comunmente"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_line__l10n_latam_price_unit
+msgid "Unit Price"
+msgstr "Precio unitario"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_amount_untaxed
+msgid "Untaxed Amount"
+msgstr "Base imponible"
+
+#. module: l10n_latam_document
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice__l10n_latam_use_documents
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_invoice_refund__l10n_latam_use_documents
+#: model:ir.model.fields,field_description:l10n_latam_document.field_account_journal__l10n_latam_use_documents
+#: model:ir.model.fields,field_description:l10n_latam_document.field_res_company__l10n_latam_use_documents
+msgid "Use Documents?"
+msgstr "Usa Documentos?"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:135
+#, python-format
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:137
+#, python-format
+msgid "Vendor Refund"
+msgstr ""
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_journal.py:28
+#, python-format
+msgid "You can not modify the field \"Use Documents?\" if invoices already exist in the journal!"
+msgstr "No puedes modificar el campo \"Usa Documentos?\" si ya existen facutas en este diario!"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:369
+#, python-format
+msgid "You can not use a %s document type with a invoice"
+msgstr "No puedes usar el tipo de documento %s con una factura"
+
+#. module: l10n_latam_document
+#: code:addons/l10n_latam_document/models/account_invoice.py:364
+#, python-format
+msgid "You can not use a %s document type with a refund invoice"
+msgstr ""
+
