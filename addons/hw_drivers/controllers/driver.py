@@ -56,7 +56,7 @@ def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return '19_04'
+    return '19_07'
 
 #----------------------------------------------------------
 # Controllers

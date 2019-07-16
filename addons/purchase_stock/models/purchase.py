@@ -273,7 +273,7 @@ class PurchaseOrderLine(models.Model):
     def write(self, values):
         for line in self:
             if values.get('date_planned') and line.propagate_date:
-                new_date = values['date_planned']
+                new_date = fields.Datetime.to_datetime(values['date_planned'])
                 delta_days = (new_date - line.date_planned).total_seconds() / 86400
                 if abs(delta_days) < line.propagate_date_minimum_delta:
                     continue
