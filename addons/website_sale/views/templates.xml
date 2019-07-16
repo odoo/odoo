@@ -258,14 +258,16 @@
                                 </table>
                             </div>
                             <t t-else="">
-                                <div class="text-center text-muted oe_product">
-                                    <h3 class="css_editable_display mt8">No product defined.</h3>
-                                    <t t-if="search">
-                                        <p>
-                                            No results found for "<strong t-esc='search'/>".
-                                        </p>
+                                <div class="text-center text-muted">
+                                    <t t-if="not search">
+                                        <h3 class="mt8">No product defined</h3>
+                                        <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
                                     </t>
-                                    <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                                    <t t-else="">
+                                        <h3 class="mt8">No results</h3>
+                                        <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
+                                    </t>
+                                    <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                                 </div>
                             </t>
                         </div>
