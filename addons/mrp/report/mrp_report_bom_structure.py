@@ -15,19 +15,20 @@ class ReportBomStructure(models.AbstractModel):
         for bom_id in docids:
             bom = self.env['mrp.bom'].browse(bom_id)
             candidates = bom.product_id or bom.product_tmpl_id.product_variant_ids
+            quantity = float(data.get('quantity', 1))
             for product_variant_id in candidates:
                 if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
+                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, child_bom_ids=json.loads(data.get('childs')))
                 else:
-                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), unfolded=True)
+                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, unfolded=True)
                 doc['report_type'] = 'pdf'
                 doc['report_structure'] = data and data.get('report_type') or 'all'
                 docs.append(doc)
             if not candidates:
                 if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
+                    doc = self._get_pdf_line(bom_id, qty=quantity, child_bom_ids=json.loads(data.get('childs')))
                 else:
-                    doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), unfolded=True)
+                    doc = self._get_pdf_line(bom_id, qty=quantity, unfolded=True)
                 doc['report_type'] = 'pdf'
                 doc['report_structure'] = data and data.get('report_type') or 'all'
                 docs.append(doc)
