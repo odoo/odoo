@@ -50,6 +50,8 @@ class ResConfigSettings(models.TransientModel):
         for setting in self:
             if setting.predictive_lead_scoring_fields:
                 setting.predictive_lead_scoring_fields_str = ','.join(setting.predictive_lead_scoring_fields.mapped('name'))
+            else:
+                setting.predictive_lead_scoring_fields_str = ''
 
     @api.depends('predictive_lead_scoring_start_date_str')
     def _compute_pls_start_date(self):

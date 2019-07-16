@@ -30,12 +30,10 @@
             &.o_list_number {
                 text-align: right;
             }
-            &.o_list_text {
-                white-space: pre-wrap;
-            }
+            &.o_list_char,
+            &.o_list_text,
             &.o_list_many2one {
                 white-space: pre-wrap;
-
             }
         }
 
@@ -180,11 +178,14 @@
             .o_list_record_remove_header, .o_handle_cell {
                 width: 32px;
             }
+        &>tbody>tr>td.o_list_char,
             &>tbody>tr>td.o_list_many2one {
                 white-space: nowrap;
             }
             // checkboxes in editable lists should be clickable and activate the row
             .o_data_row:not(.o_selected_row) .o_data_cell {
+            &.o_toggle_button_cell:not(.o_readonly_modifier) button, // registry: toggle_button
+            &.o_boolean_favorite_cell:not(.o_readonly_modifier) .o_favorite, // registry: boolean_favorite
                 .custom-checkbox:not(.o_readonly_modifier) {
                     pointer-events: none;
                 }

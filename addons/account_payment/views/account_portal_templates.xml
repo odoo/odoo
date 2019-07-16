@@ -38,7 +38,7 @@
     <template id="portal_invoice_payment" name="Invoice Payment">
         <div class="row" t-if="not tx_ids and invoice.state == 'posted' and invoice.invoice_payment_state == 'not_paid' and invoice.amount_total" id="portal_pay">
             <div class="modal fade" id="pay_with" role="dialog">
-                <div class="modal-dialog modal-content">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title">Pay with</h3>
