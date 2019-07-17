@@ -51,6 +51,8 @@ class PickingType(models.Model):
     show_operations = fields.Boolean(
         'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
+    show_reserved = fields.Boolean(
+        'Show Reserved', default=True, help="If this checkbox is ticked, Odoo will show which products are reserved (lot/serial number, source location, source package).")
 
     # Statistics for the kanban view
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
@@ -121,6 +123,11 @@ class PickingType(models.Model):
             'stock.group_stock_multi_locations,'
             'stock.group_tracking_lot'
         )
+
+    @api.onchange('show_operations')
+    def onchange_show_operations(self):
+        if self.show_operations is True:
+            self.show_reserved = True
 
     def _get_action(self, action_xmlid):
         action = self.env.ref(action_xmlid).read()[0]
