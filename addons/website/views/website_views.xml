@@ -70,7 +70,8 @@
                 <search string="Search Redirect">
                     <field name="url_from"/>
                     <field name="url_to"/>
-
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group string="Group By">
                         <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'redirect_type'}"/>
                     </group>

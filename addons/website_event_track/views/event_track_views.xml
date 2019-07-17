@@ -81,24 +81,28 @@
                     <field name="location_id"/>
                     <field name="stage_id"/>
                     <field name="partner_id"/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
+                    <separator/>    
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Exception Activities" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Date" name="date" context="{'group_by':'date'}"/>
-                        <filter string="Event" name="event" context="{'group_by':'event_id'}"/>
+                        <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                        <filter string="Event" name="event" context="{'group_by': 'event_id'}"/>
                     </group>
                 </search>
             </field>

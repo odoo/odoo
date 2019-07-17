@@ -40,7 +40,7 @@ class MrpBom(models.Model):
         'Quantity', default=1.0,
         digits='Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')

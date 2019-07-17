@@ -7,17 +7,20 @@
         <field name="arch" type="xml">
             <search string="Search">
                 <field name="name" string="Product" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
-                <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
+                <field name="user_id"/>
+                <filter name='is_mine' string="My Orders" domain="[('user_id', '=', uid)]"/>
                 <separator/>
-                <filter name="not_confirmed" string="Not Received" domain="[('state','!=',('confirmed'))]"/>
-                <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
-                <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
+                <filter name="not_confirmed" string="Not Received" domain="[('state', '!=', ('confirmed'))]"/>
+                <filter name="confirmed" string="Received" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
                 <separator/>
                 <filter name="date_filter" string="Today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]" />
-                <field name="user_id"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier_id'}"/>
-                    <filter name="group_by_date" string="Order Date" context="{'group_by':'date:day'}" help="Vendor Orders by Date"/>
+                    <filter name="group_by_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
+                    <filter name="group_by_date" string="Order Date" context="{'group_by': 'date:day'}" help="Vendor Orders by Date"/>
                 </group>
             </search>
         </field>

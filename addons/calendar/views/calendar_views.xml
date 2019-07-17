@@ -252,7 +252,7 @@
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <search string="Search Meetings">
-                <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
+                <field name="name" string="Meeting" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="partner_ids"/>
                 <field name="categ_ids"/>
                 <field name="user_id"/>
@@ -260,10 +260,11 @@
                 <field name="privacy" string="Privacy"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Availability" name="availability" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" name="privacy" domain="[]" context="{'group_by':'privacy'}"/>
+                    <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Availability" name="availability" domain="[]" context="{'group_by': 'show_as'}"/>
+                    <filter string="Privacy" name="privacy" domain="[]" context="{'group_by': 'privacy'}"/>
                 </group>
             </search>
         </field>

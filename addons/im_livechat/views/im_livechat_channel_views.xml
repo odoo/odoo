@@ -160,7 +160,15 @@
             </field>
         </record>
 
-
+        <record id="im_livechat_channel_view_search" model="ir.ui.view">
+            <field name="name">im.livechat.channel.view.search</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="arch" type="xml">
+                <search string="LiveChat Channel Search">
+                    <field name="name" string="Channel"/>
+                </search>
+            </field>
+        </record>
 
         <!-- im_livechat.channel.rule -->
         <record id="im_livechat_channel_rule_view_tree" model="ir.ui.view">

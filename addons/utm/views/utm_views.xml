@@ -5,6 +5,7 @@
         sequence="30"
         web_icon="utm,static/description/icon.png"
         groups="base.group_no_one"/>
+
     <menuitem id="marketing_utm"
         name="UTMs"
         parent="menu_link_tracker_root"
@@ -39,6 +40,7 @@
             </tree>
         </field>
     </record>
+
     <record id="utm_medium_view_form" model="ir.ui.view">
         <field name="name">utm.medium.view.form</field>
         <field name="model">utm.medium</field>
@@ -54,10 +56,23 @@
         </field>
     </record>
 
+    <record id="utm_medium_view_search" model="ir.ui.view">
+        <field name="name">utm.medium.view.search</field>
+        <field name="model">utm.medium</field>
+        <field name="arch" type="xml">
+            <search string="Search UTM Medium">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    
     <record id="utm_medium_action" model="ir.actions.act_window">
         <field name="name">Mediums</field>
         <field name="res_model">utm.medium</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="utm_medium_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Define a new UTM medium
@@ -81,6 +96,7 @@
             </tree>
         </field>
     </record>
+
     <record id="utm_source_view_form" model="ir.ui.view">
         <field name="name">utm.source.view.form</field>
         <field name="model">utm.source</field>

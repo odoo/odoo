@@ -125,9 +125,10 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <filter string="Expired" name="expired" domain="[('rule_date_to', '&lt;', datetime.datetime.now())]" help="Expired Programs"/>
+                <separator/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
                 <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
-                <filter string="Expired" name="expired" domain="[('rule_date_to', '&lt;', datetime.datetime.now())]" help="Expired Programs"/>
             </search>
         </field>
     </record>

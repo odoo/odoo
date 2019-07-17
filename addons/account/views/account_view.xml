@@ -118,6 +118,7 @@
               </p>
             </field>
         </record>
+
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_user" sequence="2"/>
 
         <!-- Account Journal -->
@@ -136,6 +137,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="account_journal_view_kanban" model="ir.ui.view">
             <field name="name">account.journal.kanban</field>
             <field name="model">account.journal</field>
@@ -159,22 +161,26 @@
                 </kanban>
             </field>
         </record>
+        
         <record id="view_account_journal_search" model="ir.ui.view">
             <field name="name">account.journal.search</field>
             <field name="model">account.journal</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <filter name="sales" domain="[('type', '=', 'sale')]" string="Sales"/>
-                    <filter name="purchases" domain="[('type', '=', 'purchase')]" string="Purchases"/>
-                    <filter name="liquidity" domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
-                    <filter name="miscellaneous" domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
+                    <field name="name" string="Journal" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
+                    <separator/>
+                    <filter name="sales" string="Sales" domain="[('type', '=', 'sale')]"/>
+                    <filter name="purchases" string="Purchases" domain="[('type', '=', 'purchase')]"/>
+                    <filter name="liquidity" string="Liquidity" domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]"/>
+                    <filter name="miscellaneous" string="Miscellaneous" domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]"/>
+                    <separator/>
+                    <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
+
         <record id="view_account_journal_group_tree" model="ir.ui.view">
             <field name="name">account.journal.group.tree</field>
             <field name="model">account.journal.group</field>
@@ -188,6 +194,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_journal_group_form" model="ir.ui.view">
             <field name="name">account.journal.group.form</field>
             <field name="model">account.journal.group</field>
@@ -205,6 +212,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_account_journal_form" model="ir.ui.view">
             <field name="name">account.journal.form</field>
             <field name="model">account.journal</field>
@@ -401,9 +409,22 @@ action = model.setting_init_bank_account_action()
             </field>
         </record>
 
+        <record id="account_tag_view_search" model="ir.ui.view">
+            <field name="name">account.tag.view.search</field>
+            <field name="model">account.account.tag</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="account_tag_action" model="ir.actions.act_window">
             <field name="name">Account Tags</field>
             <field name="res_model">account.account.tag</field>
+            <field name="search_view_id" ref="account_tag_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new tag
@@ -1067,6 +1088,7 @@ action = model.setting_init_bank_account_action()
                 </kanban>
             </field>
         </record>
+
         <record id="view_account_tax_search" model="ir.ui.view">
             <field name="name">account.tax.search</field>
             <field name="model">account.tax</field>
@@ -1086,6 +1108,7 @@ action = model.setting_init_bank_account_action()
                 </search>
             </field>
         </record>
+
         <record id="account_tax_view_search" model="ir.ui.view">
             <field name="name">account.tax.search.filters</field>
             <field name="model">account.tax</field>
@@ -1231,6 +1254,7 @@ action = model.setting_init_bank_account_action()
                 </tree>
             </field>
         </record>
+
         <record id="view_payment_term_line_form" model="ir.ui.view">
             <field name="name">account.payment.term.line.form</field>
             <field name="model">account.payment.term.line</field>
@@ -1269,6 +1293,7 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
         <record id="view_payment_term_search" model="ir.ui.view">
             <field name="name">account.payment.term.search</field>
             <field name="model">account.payment.term</field>
@@ -1276,9 +1301,12 @@ action = model.setting_init_bank_account_action()
                 <search string="Payment Terms">
                     <field name="name" string="Payment Terms"/>
                     <field name="active"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
+
         <record id="view_payment_term_tree" model="ir.ui.view">
             <field name="name">account.payment.term.tree</field>
             <field name="model">account.payment.term</field>
@@ -1290,6 +1318,7 @@ action = model.setting_init_bank_account_action()
                 </tree>
             </field>
         </record>
+
         <record id="view_payment_term_form" model="ir.ui.view">
             <field name="name">account.payment.term.form</field>
             <field name="model">account.payment.term</field>
@@ -1315,6 +1344,7 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
         <record id="view_account_payment_term_kanban" model="ir.ui.view">
             <field name="name">account.payment.term.kanban</field>
             <field name="model">account.payment.term</field>
@@ -1333,6 +1363,7 @@ action = model.setting_init_bank_account_action()
                 </kanban>
             </field>
         </record>
+
         <record id="action_payment_term_form" model="ir.actions.act_window">
             <field name="name">Payment Terms</field>
             <field name="res_model">account.payment.term</field>
@@ -1367,6 +1398,7 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
         <record id="view_account_template_tree" model="ir.ui.view">
             <field name="name">account.account.template.tree</field>
             <field name="model">account.account.template</field>
@@ -1378,6 +1410,7 @@ action = model.setting_init_bank_account_action()
                 </tree>
             </field>
         </record>
+
         <record id="view_account_template_search" model="ir.ui.view">
             <field name="name">account.account.template.search</field>
             <field name="model">account.account.template</field>
@@ -1428,6 +1461,7 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
         <record id="view_account_chart_template_seacrh" model="ir.ui.view">
             <field name="name">account.chart.template.search</field>
             <field name="model">account.chart.template</field>
@@ -1446,6 +1480,7 @@ action = model.setting_init_bank_account_action()
                 </search>
             </field>
         </record>
+
         <record id="view_account_chart_template_tree" model="ir.ui.view">
             <field name="name">account.chart.template.tree</field>
             <field name="model">account.chart.template</field>
@@ -1526,6 +1561,7 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
         <record id="view_account_tax_template_tree" model="ir.ui.view">
             <field name="name">account.tax.template.tree</field>
             <field name="model">account.tax.template</field>
@@ -1536,18 +1572,22 @@ action = model.setting_init_bank_account_action()
                 </tree>
             </field>
         </record>
+
         <record id="view_account_tax_template_search" model="ir.ui.view">
             <field name="name">account.tax.template.search</field>
             <field name="model">account.tax.template</field>
             <field name="arch" type="xml">
                 <search string="Search Tax Templates">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax Template"/>
-                    <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
-                    <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]" string="Tax Template"/>
                     <field name="chart_template_id"/>
+                    <filter string="Sale" name="sale" domain="[('type_tax_use', '=', 'sale')]" help="Taxes used in Sales"/>
+                    <filter string="Purchase" name="purchase" domain="[('type_tax_use', '=', 'purchase')]" help="Taxes used in Purchases"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
+
         <record id="action_account_tax_template_form" model="ir.actions.act_window">
             <field name="name">Tax Templates</field>
             <field name="res_model">account.tax.template</field>
@@ -1599,6 +1639,7 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
         <record id="view_account_position_template_tree" model="ir.ui.view">
             <field name="name">account.fiscal.position.template.tree</field>
             <field name="model">account.fiscal.position.template</field>
@@ -1632,6 +1673,7 @@ action = model.setting_init_bank_account_action()
                 </pivot>
             </field>
          </record>
+
         <record id="account_bank_statement_graph" model="ir.ui.view">
             <field name="name">account.bank.statement.graph</field>
             <field name="model">account.bank.statement</field>

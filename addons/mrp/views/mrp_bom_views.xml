@@ -106,7 +106,8 @@
                 </form>
             </field>
         </record>
-       <record id="mrp_bom_tree_view" model="ir.ui.view">
+
+        <record id="mrp_bom_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
@@ -154,22 +155,23 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <field name="code" filter_domain="['|',('code','ilike',self),('product_tmpl_id','ilike',self)]"/>
-                    <field name="bom_line_ids" string="Components"/>
+                    <field name="code" string="Bill of Materials" filter_domain="['|', ('code', 'ilike', self), ('product_tmpl_id', 'ilike', self)]"/>
                     <field name="product_tmpl_id" string="Product"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <separator/>
+                    <field name="bom_line_ids" string="Component"/>
+                    <filter string="Manufacturing" name="normal" domain="[('type', '=', 'normal')]"/>
                     <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
-                    <filter string="Normal" name="normal" domain="[('type', '=', 'normal')]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                         <filter string='BoM Type' name="group_by_type" domain="[]" context="{'group_by' : 'type'}"/>
-                        <filter string="Routings" name="routings" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string='Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string="Routing" name="routings" domain="[]" context="{'group_by': 'routing_id'}"/>
                    </group>
                 </search>
             </field>
         </record>
+
         <record id="mrp_bom_form_action" model="ir.actions.act_window">
             <field name="name">Bills of Materials</field>
             <field name="type">ir.actions.act_window</field>
@@ -188,6 +190,7 @@
               </p>
             </field>
         </record>
+
         <menuitem id="menu_mrp_bom_form_action"
             action="mrp_bom_form_action"
             parent="menu_mrp_bom"

@@ -177,17 +177,20 @@
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
             <search string="Point of Sale Session">
-                <field name="name" />
-                <filter name="open_sessions" string="Open" domain="[('state', '=', 'opened')]" />
+                <field name="name"/>
+                <field name="config_id" />
+                <field name="user_id" />
+                <filter name="my_sessions" string="My Sessions" domain="[('user_id', '=', uid)]"/>
+                <separator/>    
+                <filter name="open_sessions" string="In Progress" domain="[('state', '=', 'opened')]"/>
                 <separator/>
                 <filter string="Start Today" name="start_at_filter" domain="[
                     ('start_at', '>=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
                     ('start_at', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
-                <field name="config_id" />
-                <field name="user_id" />
                 <group expand="0" string="Group By">
-                    <filter string="User" name="user" domain="[]" context="{'group_by' : 'user_id'}" />
-                    <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}" />
+                    <filter string="Responsible" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
+                    <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}"/>
+                    <filter string="Opening Date" name="start_date" domain="[]" context="{'group_by': 'start_at'}"/>
                 </group>
             </search>
         </field>
