@@ -14,7 +14,6 @@ class Partner(models.Model):
         inverse="_inverse_product_pricelist", company_dependent=False,
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
-    @api.multi
     @api.depends('country_id')
     def _compute_product_pricelist(self):
         company = self.env.context.get('force_company', False)

@@ -88,7 +88,6 @@ class PaymentWizard(models.TransientModel):
     def _on_save_payment_acquirer(self):
         self._install_module('account_payment')
 
-    @api.multi
     def add_payment_methods(self):
         """ Install required payment acquiers, configure them and mark the
             onboarding step as done."""

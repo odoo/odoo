@@ -23,7 +23,6 @@ class Blog(models.Model):
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
 
-    @api.multi
     def write(self, vals):
         res = super(Blog, self).write(vals)
         if 'active' in vals:
@@ -35,7 +34,6 @@ class Blog(models.Model):
                 blog_post.active = vals['active']
         return res
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
@@ -50,7 +48,6 @@ class Blog(models.Model):
                 subtype = 'mail.mt_note'
         return super(Blog, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
-    @api.multi
     def all_tags(self, min_limit=1):
         req = """
             SELECT
@@ -113,13 +110,11 @@ class BlogPost(models.Model):
     _order = 'id DESC'
     _mail_post_access = 'read'
 
-    @api.multi
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()
         for blog_post in self:
             blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
-    @api.multi
     @api.depends('post_date', 'visits')
     def _compute_ranking(self):
         res = {}
@@ -171,7 +166,6 @@ class BlogPost(models.Model):
 
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
 
-    @api.multi
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
         for blog_post in self:
@@ -181,12 +175,10 @@ class BlogPost(models.Model):
                 content = html2plaintext(blog_post.content).replace('\n', ' ')
                 blog_post.teaser = content[:150] + '...'
 
-    @api.multi
     def _set_teaser(self):
         for blog_post in self:
             blog_post.teaser_manual = blog_post.teaser
 
-    @api.multi
     @api.depends('create_date', 'published_date')
     def _compute_post_date(self):
         for blog_post in self:
@@ -195,7 +187,6 @@ class BlogPost(models.Model):
             else:
                 blog_post.post_date = blog_post.create_date
 
-    @api.multi
     def _set_post_date(self):
         for blog_post in self:
             blog_post.published_date = blog_post.post_date
@@ -219,7 +210,6 @@ class BlogPost(models.Model):
         post_id._check_for_publication(vals)
         return post_id
 
-    @api.multi
     def write(self, vals):
         result = True
         for post in self:
@@ -231,7 +221,6 @@ class BlogPost(models.Model):
         self._check_for_publication(vals)
         return result
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on website
         directly if user is an employee or if the post is published. """
@@ -247,7 +236,6 @@ class BlogPost(models.Model):
             'res_id': self.id,
         }
 
-    @api.multi
     def _notify_get_groups(self):
         """ Add access button to everyone if the document is published. """
         groups = super(BlogPost, self)._notify_get_groups()
@@ -258,7 +246,6 @@ class BlogPost(models.Model):
 
         return groups
 
-    @api.multi
     def _notify_record_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be

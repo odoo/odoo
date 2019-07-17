@@ -31,14 +31,12 @@ class MassMailing(models.Model):
                 mass_mailing.crm_lead_count = 0
                 mass_mailing.crm_opportunities_count = lead_and_opportunities_count
 
-    @api.multi
     def action_redirect_to_leads(self):
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
         action['domain'] = self._get_crm_utm_domain()
         action['context'] = {'default_type': 'lead', 'active_test': False}
         return action
 
-    @api.multi
     def action_redirect_to_opportunities(self):
         action = self.env.ref('crm.crm_lead_opportunities').read()[0]
         action['view_mode'] = 'tree,kanban,graph,pivot,form,calendar'

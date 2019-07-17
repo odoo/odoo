@@ -167,7 +167,6 @@ class Lead(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
-    @api.multi
     def _compute_kanban_state(self):
         today = date.today()
         for lead in self:
@@ -234,7 +233,6 @@ class Lead(models.Model):
                         break
             lead.email_state = email_state
 
-    @api.multi
     def _compute_meeting_count(self):
         meeting_data = self.env['calendar.event'].read_group([('opportunity_id', 'in', self.ids)], ['opportunity_id'], ['opportunity_id'])
         mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
@@ -335,7 +333,6 @@ class Lead(models.Model):
         self._onchange_compute_probability(optional_field_name='email_state')
 
     @api.constrains('user_id')
-    @api.multi
     def _valid_team(self):
         for lead in self:
             if lead.user_id:
@@ -396,7 +393,6 @@ class Lead(models.Model):
         result._write_probability(vals)
         return result
 
-    @api.multi
     def write(self, vals):
         # stage change:
         if 'stage_id' in vals:
@@ -441,7 +437,6 @@ class Lead(models.Model):
                 super(Lead, lead).write(proba_vals)
         return
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
@@ -473,13 +468,11 @@ class Lead(models.Model):
     # Actions Methods
     # ----------------------------------------
 
-    @api.multi
     def action_set_lost(self):
         """ Lost semantic: probability = 0 or active = False """
         result = self.write({'active': False, 'probability': 0})
         return result
 
-    @api.multi
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
@@ -490,7 +483,6 @@ class Lead(models.Model):
     def action_set_automated_probability(self):
         self.write({'probability': self.automated_probability})
 
-    @api.multi
     def action_set_won_rainbowman(self):
         self.ensure_one()
         self.action_set_won()
@@ -542,7 +534,6 @@ class Lead(models.Model):
                 }
         return True
 
-    @api.multi
     def action_schedule_meeting(self):
         """ Open meeting's calendar view to schedule meeting on current opportunity.
             :return dict: dictionary value for created Meeting view
@@ -561,11 +552,9 @@ class Lead(models.Model):
         }
         return action
 
-    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def edit_dialog(self):
         form_view = self.env.ref('crm.crm_case_form_view_oppor')
         return {
@@ -606,7 +595,6 @@ class Lead(models.Model):
         # perform search, return the first found
         return self.env['crm.stage'].search(search_domain, order=order, limit=1)
 
-    @api.multi
     def _merge_get_result_type(self):
         """ Define the type of the result of the merge.  If at least one of the
             element to merge is an opp, the resulting new element will be an opp.
@@ -622,7 +610,6 @@ class Lead(models.Model):
             return 'opportunity'
         return 'lead'
 
-    @api.multi
     def _merge_data(self, fields):
         """ Prepare lead/opp data into a dictionary for merging. Different types
             of fields are processed in different ways:
@@ -696,7 +683,6 @@ class Lead(models.Model):
             bodies.append("<br/>".join(body + ['<br/>']))
         return bodies
 
-    @api.multi
     def _merge_notify(self, opportunities):
         """ Create a message gathering merged leads/opps informations. Using message_post, send a
             message explaining which fields has been merged and their new value. `self` is the
@@ -715,7 +701,6 @@ class Lead(models.Model):
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
-    @api.multi
     def _merge_opportunity_history(self, opportunities):
         """ Move mail.message from the given opportunities to the current one. `self` is the
             crm.lead record destination for message of `opportunities`.
@@ -730,7 +715,6 @@ class Lead(models.Model):
                 })
         return True
 
-    @api.multi
     def _merge_opportunity_attachments(self, opportunities):
         """ Move attachments of given opportunities to the current one `self`, and rename
             the attachments having same name than native ones.
@@ -756,7 +740,6 @@ class Lead(models.Model):
                 attachment.write(values)
         return True
 
-    @api.multi
     def merge_dependences(self, opportunities):
         """ Merge dependences (messages, attachments, ...). These dependences will be
             transfered to `self`, the most important lead.
@@ -768,7 +751,6 @@ class Lead(models.Model):
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
 
-    @api.multi
     def merge_opportunity(self, user_id=False, team_id=False):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
@@ -821,7 +803,6 @@ class Lead(models.Model):
 
         return opportunities_head
 
-    @api.multi
     def get_duplicated_leads(self, partner_id, include_lost=False):
         """ Search for opportunities that have the same partner and that arent done or cancelled
             :param partner_id : partner to search
@@ -850,7 +831,6 @@ class Lead(models.Model):
             domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
         return self.search(domain)
 
-    @api.multi
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
             :param customer : res.partner record
@@ -874,7 +854,6 @@ class Lead(models.Model):
             value['stage_id'] = stage.id
         return value
 
-    @api.multi
     def convert_opportunity(self, partner_id, user_ids=False, team_id=False):
         customer = False
         if partner_id:
@@ -890,7 +869,6 @@ class Lead(models.Model):
 
         return True
 
-    @api.multi
     def _create_lead_partner_data(self, name, is_company, parent_id=False):
         """ extract data from lead to create a partner
             :param name : furtur name of the partner
@@ -921,7 +899,6 @@ class Lead(models.Model):
             'type': 'contact'
         }
 
-    @api.multi
     def _create_lead_partner(self):
         """ Create a partner from lead data
             :returns res.partner record
@@ -945,7 +922,6 @@ class Lead(models.Model):
             return partner_company
         return Partner.create(self._create_lead_partner_data(self.name, False))
 
-    @api.multi
     def handle_partner_assignation(self,  action='create', partner_id=False):
         """ Handle partner assignation during a lead conversion.
             if action is 'create', create new partner with contact and assign lead to new partner_id.
@@ -970,7 +946,6 @@ class Lead(models.Model):
             partner_ids[lead.id] = partner_id
         return partner_ids
 
-    @api.multi
     def allocate_salesman(self, user_ids=None, team_id=False):
         """ Assign salesmen and salesteam to a batch of leads.  If there are more
             leads than salesmen, these salesmen will be assigned in round-robin.
@@ -996,7 +971,6 @@ class Lead(models.Model):
                 lead.write(value)
         return True
 
-    @api.multi
     def redirect_opportunity_view(self):
         self.ensure_one()
         # Get opportunity views
@@ -1020,7 +994,6 @@ class Lead(models.Model):
             'context': {'default_type': 'opportunity'}
         }
 
-    @api.multi
     def redirect_lead_view(self):
         self.ensure_one()
         # Get lead views
@@ -1062,7 +1035,6 @@ class Lead(models.Model):
             sub_title = _('or send an email to %s') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
-    @api.multi
     def log_meeting(self, meeting_subject, meeting_date, duration):
         if not duration:
             duration = _('unknown')
@@ -1209,7 +1181,6 @@ class Lead(models.Model):
     def _creation_subtype(self):
         return self.env.ref('crm.mt_lead_create')
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.probability == 100 and self.stage_id:
@@ -1220,7 +1191,6 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_stage')
         return super(Lead, self)._track_subtype(init_values)
 
-    @api.multi
     def _notify_get_groups(self):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
@@ -1248,7 +1218,6 @@ class Lead(models.Model):
 
         return [new_group] + groups
 
-    @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Override to set alias of lead and opportunities to their sales team if any. """
         aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
@@ -1258,7 +1227,6 @@ class Lead(models.Model):
             res.update(super(Lead, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
         return res
 
-    @api.multi
     def get_formview_id(self, access_uid=None):
         if self.type == 'opportunity':
             view_id = self.env.ref('crm.crm_case_form_view_oppor').id
@@ -1266,7 +1234,6 @@ class Lead(models.Model):
             view_id = super(Lead, self).get_formview_id()
         return view_id
 
-    @api.multi
     def _message_get_default_recipients(self):
         return {r.id: {
             'partner_ids': [],
@@ -1274,7 +1241,6 @@ class Lead(models.Model):
             'email_cc': False}
             for r in self}
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(Lead, self)._message_get_suggested_recipients()
         try:
@@ -1331,7 +1297,6 @@ class Lead(models.Model):
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
         return super(Lead, self)._message_post_after_hook(message, msg_vals)
 
-    @api.multi
     def _message_partner_info_from_emails(self, emails, link_mail=False):
         result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
         for partner_info in result:

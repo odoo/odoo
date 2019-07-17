@@ -176,24 +176,20 @@ class FleetVehicleLogContract(models.Model):
         if self.vehicle_id:
             self.odometer_unit = self.vehicle_id.odometer_unit
 
-    @api.multi
     def write(self, vals):
         res = super(FleetVehicleLogContract, self).write(vals)
         if vals.get('expiration_date') or vals.get('user_id'):
             self.activity_reschedule(['fleet.mail_act_fleet_contract_to_renew'], date_deadline=vals.get('expiration_date'), new_user_id=vals.get('user_id'))
         return res
 
-    @api.multi
     def contract_close(self):
         for record in self:
             record.state = 'closed'
 
-    @api.multi
     def contract_open(self):
         for record in self:
             record.state = 'open'
 
-    @api.multi
     def act_renew_contract(self):
         assert len(self.ids) == 1, "This operation should only be done for 1 single contract at a time, as it it suppose to open a window as result"
         for element in self:

@@ -7,7 +7,6 @@ class Website(models.Model):
 
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
 
-    @api.multi
     def _prepare_sale_order_values(self, partner, pricelist):
         self.ensure_one()
         values = super(Website, self)._prepare_sale_order_values(partner, pricelist)

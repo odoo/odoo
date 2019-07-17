@@ -565,16 +565,6 @@ Two decorators can expose a new-style method to the old API:
         # can be called as
         old_style_model.some_method(cr, uid, a_value, context=context)
 
-:func:`~odoo.api.multi`
-    the method is exposed as taking a list of ids (possibly empty), its
-    "old API" signature is ``cr, uid, ids, *arguments, context``::
-
-        @api.multi
-        def some_method(self, a_value):
-            pass
-        # can be called as
-        old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
-
 Note that a method `create` decorated with :func:`~odoo.api.model` will always
 be called with a single dictionary. A method `create` decorated with the variant
 :func:`~odoo.api.model_create_multi` will always be called with a list of dicts.

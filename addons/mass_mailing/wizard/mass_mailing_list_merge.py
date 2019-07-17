@@ -27,7 +27,6 @@ class MassMailingListMerge(models.TransientModel):
         })
         return res
 
-    @api.multi
     def action_mailing_lists_merge(self):
         if self.merge_options == 'new':
             self.dest_list_id = self.env['mail.mass_mailing.list'].create({

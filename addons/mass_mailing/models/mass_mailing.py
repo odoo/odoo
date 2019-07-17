@@ -75,7 +75,6 @@ class MassMailingContactListRel(models.Model):
             vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
         return super(MassMailingContactListRel, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if 'opt_out' in vals:
             vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
@@ -133,11 +132,9 @@ class MassMailingList(models.Model):
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
 
-    @api.multi
     def name_get(self):
         return [(list.id, "%s (%s)" % (list.name, list.contact_nbr)) for list in self]
 
-    @api.multi
     def action_merge(self, src_lists, archive):
         """
             Insert all the contact from the mailing lists 'src_lists' to the
@@ -200,7 +197,6 @@ class MassMailingList(models.Model):
         if archive:
             (src_lists - self).write({'active': False})
 
-    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
@@ -285,7 +281,6 @@ class MassMailingContact(models.Model):
         contact = self.create({'name': name, 'email': email, 'list_ids': [(4, list_id)]})
         return contact.name_get()[0]
 
-    @api.multi
     def _message_get_default_recipients(self):
         return {r.id: {
             'partner_ids': [],
@@ -578,7 +573,6 @@ class MassMailing(models.Model):
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
 
-    @api.multi
     def _unsubscribe_token(self, res_id, email):
         """Generate a secure hash for this mailing list and parameters.
 
@@ -654,7 +648,6 @@ class MassMailing(models.Model):
             vals['subject'] = vals['name']
         return super(MassMailing, self).create(vals)
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
@@ -734,7 +727,6 @@ class MassMailing(models.Model):
     # Views & Actions
     #------------------------------------------------------
 
-    @api.multi
     def action_duplicate(self):
         self.ensure_one()
         mass_mailing_copy = self.copy()
@@ -750,7 +742,6 @@ class MassMailing(models.Model):
             }
         return False
 
-    @api.multi
     def action_test_mailing(self):
         self.ensure_one()
         ctx = dict(self.env.context, default_mass_mailing_id=self.id)
@@ -763,22 +754,18 @@ class MassMailing(models.Model):
             'context': ctx,
         }
 
-    @api.multi
     def action_schedule_date(self):
         self.ensure_one()
         action = self.env.ref('mass_mailing.mass_mailing_schedule_date_action').read()[0]
         action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
         return action
 
-    @api.multi
     def put_in_queue(self):
         self.write({'state': 'in_queue'})
 
-    @api.multi
     def cancel_mass_mailing(self):
         self.write({'state': 'draft', 'schedule_date': False})
 
-    @api.multi
     def retry_failed_mail(self):
         failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
         failed_mails.mapped('statistics_ids').unlink()

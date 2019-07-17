@@ -175,7 +175,6 @@ class AccountMove(models.Model):
                                    - associate this bank with a postal reference for the currency used in this invoice\n
                                    - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
 
-    @api.multi
     def action_invoice_sent(self):
         # OVERRIDE
         rslt = super(AccountMove, self).action_invoice_sent()
@@ -185,7 +184,6 @@ class AccountMove(models.Model):
 
         return rslt
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('l10n_ch_mark_isr_as_sent'):

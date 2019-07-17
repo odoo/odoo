@@ -93,7 +93,6 @@ class LunchSupplier(models.Model):
          'Automatic Email Sending Time should be between 0 and 12'),
     ]
 
-    @api.multi
     def name_get(self):
         res = []
         for supplier in self:

@@ -47,7 +47,6 @@ class AccountMove(models.Model):
 
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice", copy=False)
 
-    @api.multi
     def post(self):
         # OVERRIDE
         super(AccountMove, self).post()
@@ -134,7 +133,6 @@ class AccountMove(models.Model):
             if not tax_line.tax_line_id.l10n_it_has_exoneration and tax_line.tax_line_id.amount == 0:
                 raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration." % tax_line.name))
 
-    @api.multi
     def invoice_generate_xml(self):
         for invoice in self:
             if invoice.l10n_it_einvoice_id and invoice.l10n_it_send_state not in ['invalid', 'to_send']:
@@ -253,7 +251,6 @@ class AccountMove(models.Model):
         content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export').render(template_values)
         return content
 
-    @api.multi
     def send_pec_mail(self):
         self.ensure_one()
         allowed_state = ['to_send', 'invalid']
@@ -738,7 +735,6 @@ class ImportInvoiceImportWizard(models.TransientModel):
     _name = 'account.invoice.import.wizard'
     _inherit = 'account.invoice.import.wizard'
 
-    @api.multi
     def _create_invoice_from_file(self, attachment):
         if attachment.mimetype == 'application/xml' and re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", attachment.name):
             if self.env['account.move'].search([('l10n_it_einvoice_name', '=', attachment.name)], limit=1):

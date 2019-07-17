@@ -78,7 +78,6 @@ class AccountAnalyticAccount(models.Model):
                 line['credit'] = sum(accounts.mapped('credit'))
         return res
 
-    @api.multi
     def _compute_debit_credit_balance(self):
         Curr = self.env['res.currency']
         analytic_line_obj = self.env['account.analytic.line']
@@ -140,7 +139,6 @@ class AccountAnalyticAccount(models.Model):
 
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True)
 
-    @api.multi
     def name_get(self):
         res = []
         for analytic in self:
@@ -190,7 +188,6 @@ class AccountAnalyticLine(models.Model):
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True, store=True, compute_sudo=True)
     group_id = fields.Many2one('account.analytic.group', related='account_id.group_id', store=True, readonly=True, compute_sudo=True)
 
-    @api.multi
     @api.constrains('company_id', 'account_id')
     def _check_company_id(self):
         for line in self:

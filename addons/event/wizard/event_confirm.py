@@ -9,7 +9,6 @@ class event_confirm(models.TransientModel):
     _name = "event.confirm"
     _description = 'Event Confirmation'
 
-    @api.multi
     def confirm(self):
         events = self.env['event.event'].browse(self._context.get('event_ids', []))
         events.do_confirm()

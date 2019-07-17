@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 class BankStatement(models.Model):
     _inherit = 'account.bank.statement'
 
-    @api.multi
     def button_draft(self):
         self.state = 'open'
 

@@ -67,7 +67,6 @@ class AcquirerPaypal(models.Model):
                 'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
             }
 
-    @api.multi
     def paypal_compute_fees(self, amount, currency_id, country_id):
         """ Compute paypal fees.
 
@@ -89,7 +88,6 @@ class AcquirerPaypal(models.Model):
         fees = (percentage / 100.0 * amount) + fixed / (1 - percentage / 100.0)
         return fees
 
-    @api.multi
     def paypal_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
@@ -117,7 +115,6 @@ class AcquirerPaypal(models.Model):
         })
         return paypal_tx_values
 
-    @api.multi
     def paypal_get_form_action_url(self):
         return self._get_paypal_urls(self.environment)['paypal_form_url']
 
@@ -151,7 +148,6 @@ class TxPaypal(models.Model):
             raise ValidationError(error_msg)
         return txs[0]
 
-    @api.multi
     def _paypal_form_get_invalid_parameters(self, data):
         invalid_parameters = []
         _logger.info('Received a notification from Paypal with IPN version %s', data.get('notify_version'))
@@ -188,7 +184,6 @@ class TxPaypal(models.Model):
 
         return invalid_parameters
 
-    @api.multi
     def _paypal_form_validate(self, data):
         status = data.get('payment_status')
         res = {

@@ -288,7 +288,6 @@ class IrTranslation(models.Model):
         if model_name in self.CACHED_MODELS:
             self.clear_caches()
 
-    @api.multi
     def _modified(self):
         """ Invalidate the ormcache if necessary, depending on the translations ``self``. """
         for trans in self:
@@ -507,7 +506,6 @@ class IrTranslation(models.Model):
         fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
-    @api.multi
     def check(self, mode):
         """ Check access rights of operation ``mode`` on ``self`` for the
         current user. Raise an AccessError in case conditions are not met.
@@ -569,7 +567,6 @@ class IrTranslation(models.Model):
         records._modified()
         return records
 
-    @api.multi
     def write(self, vals):
         if vals.get('value'):
             vals.setdefault('state', 'translated')
@@ -581,7 +578,6 @@ class IrTranslation(models.Model):
         self._modified()
         return result
 
-    @api.multi
     def unlink(self):
         self.check('unlink')
         self._modified()

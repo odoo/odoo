@@ -70,7 +70,6 @@ class ir_cron(models.Model):
         values['usage'] = 'ir_cron'
         return super(ir_cron, self).create(values)
 
-    @api.multi
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
@@ -277,7 +276,6 @@ class ir_cron(models.Model):
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
 
-    @api.multi
     def _try_lock(self):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,
            to make sure a following write() or unlink() will not block due
@@ -291,17 +289,14 @@ class ir_cron(models.Model):
                               "This cron task is currently being executed and may not be modified "
                               "Please try again in a few minutes"))
 
-    @api.multi
     def write(self, vals):
         self._try_lock()
         return super(ir_cron, self).write(vals)
 
-    @api.multi
     def unlink(self):
         self._try_lock()
         return super(ir_cron, self).unlink()
 
-    @api.multi
     def try_write(self, values):
         try:
             with self._cr.savepoint():

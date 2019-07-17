@@ -36,7 +36,6 @@ class Followers(models.Model):
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
 
-    @api.multi
     def _invalidate_documents(self, vals_list=None):
         """ Invalidate the cache of the documents followed by ``self``.
 
@@ -57,7 +56,6 @@ class Followers(models.Model):
         res._invalidate_documents(vals_list)
         return res
 
-    @api.multi
     def write(self, vals):
         if 'res_model' in vals or 'res_id' in vals:
             self._invalidate_documents()
@@ -66,7 +64,6 @@ class Followers(models.Model):
             self._invalidate_documents()
         return res
 
-    @api.multi
     def unlink(self):
         self._invalidate_documents()
         return super(Followers, self).unlink()

@@ -36,7 +36,6 @@ class AccountCommonReport(models.TransientModel):
     def _print_report(self, data):
         raise NotImplementedError()
 
-    @api.multi
     def check_report(self):
         self.ensure_one()
         data = {}

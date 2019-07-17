@@ -580,7 +580,6 @@ class PosOrder(models.Model):
         if self.partner_id:
             self.pricelist = self.partner_id.property_product_pricelist.id
 
-    @api.multi
     def write(self, vals):
         res = super(PosOrder, self).write(vals)
         Partner = self.env['res.partner']
@@ -596,7 +595,6 @@ class PosOrder(models.Model):
                 order.statement_ids.write({'partner_id': partner_id})
         return res
 
-    @api.multi
     def unlink(self):
         for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
@@ -616,7 +614,6 @@ class PosOrder(models.Model):
         values.setdefault('company_id', session.config_id.company_id.id)
         return values
 
-    @api.multi
     def action_view_invoice(self):
         return {
             'name': _('Customer Invoice'),
@@ -628,14 +625,12 @@ class PosOrder(models.Model):
             'res_id': self.account_move.id,
         }
 
-    @api.multi
     def action_pos_order_paid(self):
         if not self.test_paid():
             raise UserError(_("Order is not paid."))
         self.write({'state': 'paid'})
         return self.create_picking()
 
-    @api.multi
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
 
@@ -686,11 +681,9 @@ class PosOrder(models.Model):
         }
 
     # this method is unused, and so is the state 'cancel'
-    @api.multi
     def action_pos_order_cancel(self):
         return self.write({'state': 'cancel'})
 
-    @api.multi
     def action_pos_order_done(self):
         return self._create_account_move_line()
 
@@ -937,7 +930,6 @@ class PosOrder(models.Model):
         self.amount_paid = sum(payment.amount for payment in self.statement_ids)
         return args.get('statement_id', False)
 
-    @api.multi
     def refund(self):
         """Create a copy of order  for refund order"""
         refund_orders = self.env['pos.order']
@@ -1105,7 +1097,6 @@ class PosOrderLine(models.Model):
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
-    @api.multi
     def _get_tax_ids_after_fiscal_position(self):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
@@ -1235,7 +1226,6 @@ class ReportSaleDetails(models.AbstractModel):
             } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 
-    @api.multi
     def _get_report_values(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])

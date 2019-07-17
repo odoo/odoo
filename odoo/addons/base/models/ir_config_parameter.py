@@ -97,12 +97,10 @@ class IrConfigParameter(models.Model):
         self.clear_caches()
         return super(IrConfigParameter, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         self.clear_caches()
         return super(IrConfigParameter, self).write(vals)
 
-    @api.multi
     def unlink(self):
         self.clear_caches()
         return super(IrConfigParameter, self).unlink()

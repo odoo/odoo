@@ -9,7 +9,6 @@ class res_partner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
-    @api.multi
     def _compute_purchase_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.search([('id', 'child_of', self.ids)])
@@ -26,7 +25,6 @@ class res_partner(models.Model):
                     partner.purchase_order_count += group['partner_id_count']
                 partner = partner.parent_id
 
-    @api.multi
     def _compute_supplier_invoice_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.search([('id', 'child_of', self.ids)])

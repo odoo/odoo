@@ -30,7 +30,6 @@ class StockChangeStandardPrice(models.TransientModel):
         res['counterpart_account_id_required'] = bool(product_or_template.valuation == 'real_time')
         return res
 
-    @api.multi
     def change_price(self):
         """ Changes the Standard Price of Product and creates an account move accordingly. """
         self.ensure_one()

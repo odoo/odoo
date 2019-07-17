@@ -196,7 +196,6 @@ class IrModel(models.Model):
                 _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
-    @api.multi
     def unlink(self):
         # Prevent manual deletion of module tables
         if not self._context.get(MODULE_UNINSTALL_FLAG):
@@ -220,7 +219,6 @@ class IrModel(models.Model):
 
         return res
 
-    @api.multi
     def write(self, vals):
         if '__last_update' in self._context:
             self = self.with_context({k: v for k, v in self._context.items() if k != '__last_update'})
@@ -558,7 +556,6 @@ class IrModelFields(models.Model):
         result = self.env.cr.fetchone()
         return result and result[0]
 
-    @api.multi
     def _drop_column(self):
         tables_to_drop = set()
 
@@ -593,7 +590,6 @@ class IrModelFields(models.Model):
 
         return True
 
-    @api.multi
     def _prepare_update(self):
         """ Check whether the fields in ``self`` may be modified or removed.
             This method prevents the modification/deletion of many2one fields
@@ -650,7 +646,6 @@ class IrModelFields(models.Model):
             # the registry has been modified, restore it
             self.pool.setup_models(self._cr)
 
-    @api.multi
     def unlink(self):
         if not self:
             return True
@@ -709,7 +704,6 @@ class IrModelFields(models.Model):
 
         return res
 
-    @api.multi
     def write(self, vals):
         # if set, *one* column can be renamed here
         column_rename = None
@@ -782,7 +776,6 @@ class IrModelFields(models.Model):
 
         return res
 
-    @api.multi
     def name_get(self):
         res = []
         for field in self:
@@ -989,7 +982,6 @@ class IrModelConstraint(models.Model):
          'Constraints with the same name are unique per module.'),
     ]
 
-    @api.multi
     def _module_data_uninstall(self):
         """
         Delete PostgreSQL foreign keys and constraints tracked by this model.
@@ -1033,7 +1025,6 @@ class IrModelConstraint(models.Model):
 
         self.unlink()
 
-    @api.multi
     def copy(self, default=None):
         default = dict(default or {})
         default['name'] = self.name + '_copy'
@@ -1114,7 +1105,6 @@ class IrModelRelation(models.Model):
     date_update = fields.Datetime(string='Update Date')
     date_init = fields.Datetime(string='Initialization Date')
 
-    @api.multi
     def _module_data_uninstall(self):
         """
         Delete PostgreSQL many2many relations tracked by this model.
@@ -1322,12 +1312,10 @@ class IrModelAccess(models.Model):
         self.call_cache_clearing_methods()
         return super(IrModelAccess, self).create(vals_list)
 
-    @api.multi
     def write(self, values):
         self.call_cache_clearing_methods()
         return super(IrModelAccess, self).write(values)
 
-    @api.multi
     def unlink(self):
         self.call_cache_clearing_methods()
         return super(IrModelAccess, self).unlink()
@@ -1378,7 +1366,6 @@ class IrModelData(models.Model):
                            self._table, ['model', 'res_id'])
         return res
 
-    @api.multi
     def name_get(self):
         model_id_name = defaultdict(dict)       # {res_model: {res_id: name}}
         for xid in self:
@@ -1474,7 +1461,6 @@ class IrModelData(models.Model):
         """
         return self.xmlid_to_object("%s.%s" % (module, xml_id), raise_if_not_found=True)
 
-    @api.multi
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
         self.clear_caches()
@@ -1738,7 +1724,6 @@ class WizardModelMenu(models.TransientModel):
     menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')
     name = fields.Char(string='Menu Name', required=True)
 
-    @api.multi
     def menu_create(self):
         for menu in self:
             model = self.env['ir.model'].browse(self._context.get('model_id'))

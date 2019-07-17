@@ -32,7 +32,6 @@ class StockMove(models.Model):
         keys_sorted += [move.purchase_line_id.id, move.created_purchase_line_id.id]
         return keys_sorted
 
-    @api.multi
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
@@ -136,13 +135,11 @@ class StockWarehouse(models.Model):
         })
         return rules
 
-    @api.multi
     def _get_all_routes(self):
         routes = super(StockWarehouse, self)._get_all_routes()
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
-    @api.multi
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]

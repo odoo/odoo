@@ -5,7 +5,6 @@ class AccountUnreconcile(models.TransientModel):
     _name = "account.unreconcile"
     _description = "Account Unreconcile"
 
-    @api.multi
     def trans_unrec(self):
         context = dict(self._context or {})
         if context.get('active_ids', False):

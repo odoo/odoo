@@ -26,7 +26,6 @@ class BaseUpdateTranslations(models.TransientModel):
             raise UserError(_('No language with code "%s" exists') % lang_code)
         return lang.name
 
-    @api.multi
     def act_update(self):
         this = self[0]
         lang_name = self._get_lang_name(this.lang)

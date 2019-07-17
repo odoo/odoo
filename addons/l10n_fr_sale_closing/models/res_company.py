@@ -18,7 +18,6 @@ class ResCompany(models.Model):
             company._create_secure_sequence(sequence_fields)
         return company
 
-    @api.multi
     def write(self, vals):
         res = super(ResCompany, self).write(vals)
         #if country changed to fr, create the securisation sequence

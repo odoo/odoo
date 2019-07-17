@@ -90,7 +90,6 @@ class ViewCustom(models.Model):
     user_id = fields.Many2one('res.users', string='User', index=True, required=True, ondelete='cascade')
     arch = fields.Text(string='View Architecture', required=True)
 
-    @api.multi
     def name_get(self):
         return [(rec.id, rec.user_id.name) for rec in self]
 
@@ -294,7 +293,6 @@ actual arch.
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
-    @api.multi
     def reset_arch(self, mode='soft'):
         for view in self:
             arch = False
@@ -450,7 +448,6 @@ actual arch.
         self.clear_caches()
         return super(View, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         # Keep track if view was modified. That will be useful for the --dev mode
         # to prefer modified arch over file arch.
@@ -474,7 +471,6 @@ actual arch.
             self.inherit_children_ids.unlink()
         super(View, self).unlink()
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
@@ -483,7 +479,6 @@ actual arch.
             default = dict(default or {}, key=new_key)
         return super(View, self).copy(default)
 
-    @api.multi
     def toggle(self):
         """ Switches between enabled and disabled statuses
         """
@@ -758,7 +753,6 @@ actual arch.
             source = self.apply_view_inheritance(source, view_id, model, root_id=root_id)
         return source
 
-    @api.multi
     def read_combined(self, fields=None):
         """
         Utility function to get a view combined with its inherited views.
@@ -1317,12 +1311,10 @@ actual arch.
             for attr in node.attrib
         )
 
-    @api.multi
     def translate_qweb(self, arch, lang):
         # Deprecated: templates are translated once read from database
         return arch
 
-    @api.multi
     @tools.ormcache('self.id')
     def get_view_xmlid(self):
         domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', self.id)]
@@ -1333,7 +1325,6 @@ actual arch.
     def render_template(self, template, values=None, engine='ir.qweb'):
         return self.browse(self.get_view_id(template)).render(values, engine)
 
-    @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         assert isinstance(self.id, int)
 
@@ -1371,7 +1362,6 @@ actual arch.
     # Misc
     #------------------------------------------------------
 
-    @api.multi
     def open_translations(self):
         """ Open a view for editing the translations of field 'arch_db'. """
         return self.env['ir.translation'].translate_fields('ir.ui.view', self.id, 'arch_db')
@@ -1570,7 +1560,6 @@ class ResetViewArchWizard(models.TransientModel):
                 diff = handle_style(diff)
             view.arch_diff = diff
 
-    @api.multi
     def reset_view_button(self):
         self.ensure_one()
         self.view_id.reset_arch(self.reset_mode)

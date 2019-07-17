@@ -61,14 +61,12 @@ class IrActions(models.Model):
         self.clear_caches()
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(IrActions, self).write(vals)
         # self.get_bindings() depends on action records
         self.clear_caches()
         return res
 
-    @api.multi
     def unlink(self):
         """unlink ir.action.todo which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
@@ -197,7 +195,6 @@ class IrActionsActWindow(models.Model):
     filter = fields.Boolean()
     search_view = fields.Text(compute='_compute_search_view')
 
-    @api.multi
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
         """
@@ -234,12 +231,10 @@ class IrActionsActWindow(models.Model):
                 vals['name'] = self.env[vals['res_model']]._description
         return super(IrActionsActWindow, self).create(vals_list)
 
-    @api.multi
     def unlink(self):
         self.clear_caches()
         return super(IrActionsActWindow, self).unlink()
 
-    @api.multi
     def exists(self):
         ids = self._existing()
         existing = self.filtered(lambda rec: rec.id in ids)
@@ -423,7 +418,6 @@ class IrActionsServer(models.Model):
     def _onchange_model_id(self):
         self.model_name = self.model_id.model
 
-    @api.multi
     def create_action(self):
         """ Create a contextual action for each server action. """
         for action in self:
@@ -431,7 +425,6 @@ class IrActionsServer(models.Model):
                           'binding_type': 'action'})
         return True
 
-    @api.multi
     def unlink_action(self):
         """ Remove the contextual actions created for the server actions. """
         self.check_access_rights('write', raise_exception=True)
@@ -541,7 +534,6 @@ class IrActionsServer(models.Model):
         })
         return eval_context
 
-    @api.multi
     def run(self):
         """ Runs the server action. For each server action, the
         run_action_<STATE> method is called. This allows easy overriding
@@ -647,7 +639,6 @@ class IrServerObjectLines(models.Model):
             if line.resource_ref:
                 line.value = str(line.resource_ref.id)
 
-    @api.multi
     def eval_value(self, eval_context=None):
         result = dict.fromkeys(self.ids, False)
         for line in self:
@@ -684,7 +675,6 @@ class IrActionsTodo(models.Model):
                 self.ensure_one_open_todo()
         return todos
 
-    @api.multi
     def write(self, vals):
         res = super(IrActionsTodo, self).write(vals)
         if vals.get('state', '') == 'open':
@@ -697,11 +687,9 @@ class IrActionsTodo(models.Model):
         if open_todo:
             open_todo.write({'state': 'done'})
 
-    @api.multi
     def name_get(self):
         return [(record.id, record.action_id.name) for record in self]
 
-    @api.multi
     def unlink(self):
         if self:
             try:
@@ -722,7 +710,6 @@ class IrActionsTodo(models.Model):
             return self.browse(action_ids).name_get()
         return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    @api.multi
     def action_launch(self):
         """ Launch Action of Wizard"""
         self.ensure_one()
@@ -750,7 +737,6 @@ class IrActionsTodo(models.Model):
 
         return result
 
-    @api.multi
     def action_open(self):
         """ Sets configuration wizard in TODO state"""
         return self.write({'state': 'open'})

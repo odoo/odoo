@@ -42,7 +42,6 @@ class PosMakePayment(models.TransientModel):
                 'domain': {'journal_id': [('id', 'in', self.session_id.config_id.journal_ids.ids)]}
             }
 
-    @api.multi
     def check(self):
         """Check the order:
         if the order is not paid: continue payment,

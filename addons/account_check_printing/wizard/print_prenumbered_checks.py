@@ -18,7 +18,6 @@ class PrintPreNumberedChecks(models.TransientModel):
             if check.next_check_number and not re.match(r'^[0-9]+$', check.next_check_number):
                 raise ValidationError(_('Next Check Number should only contains numbers.'))
 
-    @api.multi
     def print_checks(self):
         check_number = int(self.next_check_number)
         payments = self.env['account.payment'].browse(self.env.context['payment_ids'])

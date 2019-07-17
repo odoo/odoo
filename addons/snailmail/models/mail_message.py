@@ -9,14 +9,12 @@ class Message(models.Model):
     letter_ids = fields.One2many(comodel_name='snailmail.letter', inverse_name='message_id')
     message_type = fields.Selection(selection_add=[('snailmail', 'Snailmail')])
 
-    @api.multi
     def _get_message_format_fields(self):
         res = super(Message, self)._get_message_format_fields()
         res.append('snailmail_error')
         res.append('snailmail_status')
         return res
 
-    @api.multi
     @api.depends('letter_ids', 'letter_ids.state')
     def _compute_snailmail_error(self):
         for message in self:
@@ -27,21 +25,17 @@ class Message(models.Model):
                 message.snailmail_error = False
                 message.snailmail_status = ''
 
-    @api.multi
     def _search_snailmail_error(self, operator, operand):
         if operator == '=' and operand:
             return ['&', ('letter_ids.state', '=', 'error'), ('letter_ids.user_id', '=', self.env.user.id)]
         return ['!', '&', ('letter_ids.state', '=', 'error'), ('letter_ids.user_id', '=', self.env.user.id)] 
 
-    @api.multi
     def cancel_letter(self):
         self.mapped('letter_ids').cancel()
 
-    @api.multi
     def send_letter(self):
         self.mapped('letter_ids')._snailmail_print()
 
-    @api.multi
     def message_fetch_failed(self):
         res = super(Message, self).message_fetch_failed()
         failed_letters = self.letter_ids.fetch_failed_letters()

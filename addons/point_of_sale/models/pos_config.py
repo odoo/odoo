@@ -13,7 +13,6 @@ class AccountCashboxLine(models.Model):
 
     default_pos_id = fields.Many2one('pos.config', string='This cashbox line is used by default when opening or closing a balance for this point of sale')
 
-    @api.multi
     def name_get(self):
         result = []
         for cashbox_line in self:
@@ -319,7 +318,6 @@ class PosConfig(models.Model):
             self.receipt_header = False
             self.receipt_footer = False
 
-    @api.multi
     def name_get(self):
         result = []
         for config in self:
@@ -354,7 +352,6 @@ class PosConfig(models.Model):
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_config
 
-    @api.multi
     def write(self, vals):
         result = super(PosConfig, self).write(vals)
 
@@ -367,7 +364,6 @@ class PosConfig(models.Model):
         self.sudo()._check_groups_implied()
         return result
 
-    @api.multi
     def unlink(self):
         for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id or pos_config.sequence_line_id):
             pos_config.sequence_id.unlink()
@@ -411,7 +407,6 @@ class PosConfig(models.Model):
          }
 
     # Methods to open the POS
-    @api.multi
     def open_ui(self):
         """ open the pos interface """
         self.ensure_one()
@@ -421,7 +416,6 @@ class PosConfig(models.Model):
             'target': 'self',
         }
 
-    @api.multi
     def open_session_cb(self):
         """ new session button
 
@@ -443,7 +437,6 @@ class PosConfig(models.Model):
             return self._open_session(self.current_session_id.id)
         return self._open_session(self.current_session_id.id)
 
-    @api.multi
     def open_existing_session_cb(self):
         """ close session button
 

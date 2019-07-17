@@ -128,13 +128,11 @@ class HrEmployeePrivate(models.Model):
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
 
-    @api.multi
     def name_get(self):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).name_get()
         return self.env['hr.employee.public'].browse(self.ids).name_get()
 
-    @api.multi
     def read(self, fields, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).read(fields, load=load)
@@ -163,7 +161,6 @@ class HrEmployeePrivate(models.Model):
             return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
         return self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.multi
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         if access_uid:
@@ -176,7 +173,6 @@ class HrEmployeePrivate(models.Model):
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
 
-    @api.multi
     def get_formview_action(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
@@ -259,7 +255,6 @@ class HrEmployeePrivate(models.Model):
             ])._subscribe_users()
         return employee
 
-    @api.multi
     def write(self, vals):
         if 'address_home_id' in vals:
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
@@ -277,7 +272,6 @@ class HrEmployeePrivate(models.Model):
             ])._subscribe_users()
         return res
 
-    @api.multi
     def unlink(self):
         resources = self.mapped('resource_id')
         super(HrEmployeePrivate, self).unlink()
@@ -301,7 +295,6 @@ class HrEmployeePrivate(models.Model):
             }
         return res
 
-    @api.multi
     def generate_random_barcode(self):
         for employee in self:
             employee.barcode = "".join(choice(digits) for i in range(8))
@@ -392,7 +385,6 @@ class HrEmployeePrivate(models.Model):
     def _message_log(self, **kwargs):
         return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *args, **kwargs):
         return super(HrEmployeePrivate, self._post_author()).message_post(*args, **kwargs)

@@ -39,7 +39,6 @@ class PortalShare(models.TransientModel):
                 record = res_model.browse(rec.res_id)
                 rec.access_warning = record.access_warning
 
-    @api.multi
     def action_send_mail(self):
         active_record = self.env[self.res_model].browse(self.res_id)
         template = self.env.ref('portal.portal_share_template', False)

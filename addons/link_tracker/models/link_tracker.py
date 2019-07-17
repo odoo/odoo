@@ -164,13 +164,11 @@ class LinkTracker(models.Model):
 
         return html
 
-    @api.multi
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')
         action['domain'] = [('link_id', '=', self.id)]
         return action
 
-    @api.multi
     def action_visit_page(self):
         return {
             'name': _("Visit Webpage"),

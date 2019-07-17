@@ -22,7 +22,6 @@ class Company(models.Model):
     _description = 'Companies'
     _order = 'sequence, name'
 
-    @api.multi
     def copy(self, default=None):
         raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
 
@@ -163,7 +162,6 @@ class Company(models.Model):
     def _onchange_state(self):
         self.country_id = self.state_id.country_id
 
-    @api.multi
     def on_change_country(self, country_id):
         # This function is called from account/models/chart_template.py, hence decorated with `multi`.
         self.ensure_one()
@@ -240,7 +238,6 @@ class Company(models.Model):
                 currency.write({'active': True})
         return company
 
-    @api.multi
     def write(self, values):
         self.clear_caches()
         # Make sure that the selected currency is enabled
@@ -256,12 +253,10 @@ class Company(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive companies.'))
 
-    @api.multi
     def open_company_edit_report(self):
         self.ensure_one()
         return self.env['res.config.settings'].open_company()
 
-    @api.multi
     def write_company_and_print_report(self):
         context = self.env.context
         report_name = context.get('default_report_name')
@@ -302,7 +297,6 @@ class Company(models.Model):
             self[onboarding_state] = 'done'
         return old_values
 
-    @api.multi
     def action_save_onboarding_company_step(self):
         if bool(self.street):
             self.set_onboarding_step_done('base_onboarding_company_state')

@@ -47,7 +47,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
         else:
             self.price_unit = 0.0
 
-    @api.multi
     def action_create_sale_order(self):
         # if project linked to SO line or at least on tasks with SO line, then we consider project as billable.
         if self.project_id.sale_line_id:

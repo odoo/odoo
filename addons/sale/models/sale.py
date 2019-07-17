@@ -114,7 +114,6 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
-    @api.multi
     def _get_payment_type(self):
         self.ensure_one()
         return 'form'
@@ -219,7 +218,6 @@ class SaleOrder(models.Model):
         for order in self:
             order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
 
-    @api.multi
     @api.depends('order_line.customer_lead', 'confirmation_date', 'order_line.state')
     def _compute_expected_date(self):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
@@ -234,7 +232,6 @@ class SaleOrder(models.Model):
             if dates_list:
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
 
-    @api.multi
     def _compute_remaining_validity_days(self):
         for record in self:
             if record.validity_date:
@@ -254,20 +251,17 @@ class SaleOrder(models.Model):
                 total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
             order.amount_undiscounted = total
 
-    @api.multi
     @api.depends('state')
     def _compute_type_name(self):
         for record in self:
             record.type_name = _('Quotation') if record.state in ('draft', 'sent', 'cancel') else _('Sales Order')
 
-    @api.multi
     def unlink(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
                 raise UserError(_('You can not delete a sent quotation or a confirmed sales order. You must first cancel it.'))
         return super(SaleOrder, self).unlink()
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'sale':
@@ -276,7 +270,6 @@ class SaleOrder(models.Model):
             return self.env.ref('sale.mt_order_sent')
         return super(SaleOrder, self)._track_subtype(init_values)
 
-    @api.multi
     @api.onchange('partner_shipping_id', 'partner_id')
     def onchange_partner_shipping_id(self):
         """
@@ -285,7 +278,6 @@ class SaleOrder(models.Model):
         self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         return {}
 
-    @api.multi
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         """
@@ -385,7 +377,6 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).create(vals)
         return result
 
-    @api.multi
     def _write(self, values):
         """ Override of private write method in order to generate activities
         based in the invoice status. As the invoice status is a computed field
@@ -412,7 +403,6 @@ class SaleOrder(models.Model):
 
         return super(SaleOrder, self)._write(values)
 
-    @api.multi
     def copy_data(self, default=None):
         if default is None:
             default = {}
@@ -420,7 +410,6 @@ class SaleOrder(models.Model):
             default['order_line'] = [(0, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
         return super(SaleOrder, self).copy_data(default)
 
-    @api.multi
     def name_get(self):
         if self._context.get('sale_show_partner_name'):
             res = []
@@ -446,7 +435,6 @@ class SaleOrder(models.Model):
                 return self.browse(order_ids).name_get()
         return super(SaleOrder, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    @api.multi
     def _prepare_invoice(self):
         """
         Prepare the dict of values to create the new invoice for a sales order. This method may be
@@ -479,14 +467,12 @@ class SaleOrder(models.Model):
         }
         return invoice_vals
 
-    @api.multi
     def print_quotation(self):
         self.filtered(lambda s: s.state == 'draft').write({'state': 'sent'})
 
         return self.env.ref('sale.action_report_saleorder')\
             .with_context({'discard_logo_check': True}).report_action(self)
 
-    @api.multi
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
@@ -499,7 +485,6 @@ class SaleOrder(models.Model):
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    @api.multi
     def _create_invoices(self, grouped=False, final=False):
         """
         Create the invoice associated to the SO.
@@ -589,7 +574,6 @@ class SaleOrder(models.Model):
             )
         return moves
 
-    @api.multi
     def action_draft(self):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
         return orders.write({
@@ -599,7 +583,6 @@ class SaleOrder(models.Model):
             'signed_on': False,
         })
 
-    @api.multi
     def action_cancel(self):
         return self.write({'state': 'cancel'})
 
@@ -616,7 +599,6 @@ class SaleOrder(models.Model):
 
         return template_id
 
-    @api.multi
     def action_quotation_send(self):
         ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
         self.ensure_one()
@@ -643,7 +625,6 @@ class SaleOrder(models.Model):
             'context': ctx,
         }
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
@@ -651,14 +632,12 @@ class SaleOrder(models.Model):
             self.env.company.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
-    @api.multi
     def _send_order_confirmation_mail(self):
         template_id = self._find_mail_template(force_confirmation_template=True)
         if template_id:
             for order in self:
                 order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
 
-    @api.multi
     def action_done(self):
         for order in self:
             tx = order.sudo().transaction_ids.get_last_transaction()
@@ -667,11 +646,9 @@ class SaleOrder(models.Model):
                 tx.write({'is_processed': True})
         return self.write({'state': 'done'})
 
-    @api.multi
     def action_unlock(self):
         self.write({'state': 'sale'})
 
-    @api.multi
     def _action_confirm(self):
         """ Implementation of additionnal mecanism of Sales Order confirmation.
             This method should be extended when the confirmation should generated
@@ -685,7 +662,6 @@ class SaleOrder(models.Model):
 
         return True
 
-    @api.multi
     def action_confirm(self):
         if self._get_forbidden_state_confirm() & set(self.mapped('state')):
             raise UserError(_(
@@ -706,7 +682,6 @@ class SaleOrder(models.Model):
     def _get_forbidden_state_confirm(self):
         return {'done', 'cancel'}
 
-    @api.multi
     def _create_analytic_account(self, prefix=None):
         for order in self:
             name = order.name
@@ -770,7 +745,6 @@ class SaleOrder(models.Model):
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
-    @api.multi
     def _notify_get_groups(self):
         """ Give access button to users and portal customer as portal is integrated
         in sale. Customer and portal group have probably no right to see
@@ -785,7 +759,6 @@ class SaleOrder(models.Model):
 
         return groups
 
-    @api.multi
     def _create_payment_transaction(self, vals):
         '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
         current sales orders fields (e.g. the partner or the currency).
@@ -851,7 +824,6 @@ class SaleOrder(models.Model):
 
         return transaction
 
-    @api.multi
     def preview_sale_order(self):
         self.ensure_one()
         return {
@@ -867,15 +839,12 @@ class SaleOrder(models.Model):
             else:
                 line.qty_to_invoice = 0
 
-    @api.multi
     def payment_action_capture(self):
         self.authorized_transaction_ids.s2s_capture_transaction()
 
-    @api.multi
     def payment_action_void(self):
         self.authorized_transaction_ids.s2s_void_transaction()
 
-    @api.multi
     def get_portal_last_transaction(self):
         self.ensure_one()
         return self.transaction_ids.get_last_transaction()
@@ -884,12 +853,10 @@ class SaleOrder(models.Model):
     def _get_customer_lead(self, product_tmpl_id):
         return False
 
-    @api.multi
     def _get_report_base_filename(self):
         self.ensure_one()
         return '%s %s' % (self.type_name, self.name)
 
-    @api.multi
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         """Override for sales order.
 
@@ -903,7 +870,6 @@ class SaleOrder(models.Model):
             return self.get_portal_url(query_string='&%s' % auth_param)
         return super(SaleOrder, self)._get_share_url(redirect, signup_partner, pid)
 
-    @api.multi
     def _get_payment_type(self):
         self.ensure_one()
         return 'form_save' if self.require_payment else 'form'
@@ -1013,7 +979,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
-    @api.multi
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
@@ -1080,7 +1045,6 @@ class SaleOrderLine(models.Model):
             msg += "</ul>"
             order.message_post(body=msg)
 
-    @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type.")
@@ -1193,7 +1157,6 @@ class SaleOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
 
-    @api.multi
     @api.depends('state', 'is_expense')
     def _compute_qty_delivered_method(self):
         """ Sale module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
@@ -1210,7 +1173,6 @@ class SaleOrderLine(models.Model):
             else:  # service and consu
                 line.qty_delivered_method = 'manual'
 
-    @api.multi
     @api.depends('qty_delivered_method', 'qty_delivered_manual', 'analytic_line_ids.so_line', 'analytic_line_ids.unit_amount', 'analytic_line_ids.product_uom_id')
     def _compute_qty_delivered(self):
         """ This method compute the delivered quantity of the SO lines: it covers the case provide by sale module, aka
@@ -1229,7 +1191,6 @@ class SaleOrderLine(models.Model):
             if line.qty_delivered_method == 'manual':
                 line.qty_delivered = line.qty_delivered_manual or 0.0
 
-    @api.multi
     def _get_delivered_quantity_by_analytic(self, additional_domain):
         """ Compute and write the delivered quantity of current SO lines, based on their related
             analytic lines.
@@ -1269,7 +1230,6 @@ class SaleOrderLine(models.Model):
 
         return result
 
-    @api.multi
     @api.onchange('qty_delivered')
     def _inverse_qty_delivered(self):
         """ When writing on qty_delivered, if the value should be modify manually (`qty_delivered_method` = 'manual' only),
@@ -1328,7 +1288,6 @@ class SaleOrderLine(models.Model):
                 amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    @api.multi
     def _prepare_invoice_line(self):
         """
         Prepare the dict of values to create the new invoice line for a sales order line.
@@ -1351,7 +1310,6 @@ class SaleOrderLine(models.Model):
             'sale_line_ids': [(4, self.id)],
         }
 
-    @api.multi
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from a sale order line. This method could be override in order to add other custom key that could
@@ -1359,7 +1317,6 @@ class SaleOrderLine(models.Model):
         """
         return {}
 
-    @api.multi
     def _get_display_price(self, product):
         # TO DO: move me in master/saas-16 on sale.order
         # awa: don't know if it's still the case since we need the "product_no_variant_attribute_value_ids" field now
@@ -1392,7 +1349,6 @@ class SaleOrderLine(models.Model):
         # negative discounts (= surcharge) are included in the display price
         return max(base_price, final_price)
 
-    @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
         if not self.product_id:
@@ -1464,7 +1420,6 @@ class SaleOrderLine(models.Model):
             )
             self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
 
-    @api.multi
     def name_get(self):
         result = []
         for so_line in self.sudo():
@@ -1483,7 +1438,6 @@ class SaleOrderLine(models.Model):
             ])
         return super(SaleOrderLine, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    @api.multi
     def unlink(self):
         if self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment)):
             raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))

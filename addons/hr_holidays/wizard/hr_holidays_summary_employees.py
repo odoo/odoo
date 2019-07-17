@@ -18,7 +18,6 @@ class HolidaysSummaryEmployee(models.TransientModel):
         ('both', 'Both Approved and Confirmed')
     ], string='Select Time Off Type', required=True, default='Approved')
 
-    @api.multi
     def print_report(self):
         self.ensure_one()
         [data] = self.read()

@@ -61,7 +61,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             return {'value': {'amount': 0}}
         return {}
 
-    @api.multi
     def _create_invoice(self, order, so_line, amount):
         if self.amount <= 0.00:
             raise UserError(_('The value of the down payment amount must be positive.'))
@@ -105,7 +104,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return invoice
 
-    @api.multi
     def create_invoices(self):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
 

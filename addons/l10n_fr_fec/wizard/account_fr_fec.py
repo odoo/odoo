@@ -97,7 +97,6 @@ class AccountFrFec(models.TransientModel):
             'siren': company.vat[4:13] if not is_dom_tom else '',
         }
 
-    @api.multi
     def generate_fec(self):
         self.ensure_one()
         # We choose to implement the flat file instead of the XML

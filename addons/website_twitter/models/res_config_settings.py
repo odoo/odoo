@@ -68,7 +68,6 @@ class ResConfigSettings(models.TransientModel):
             TwitterConfig._check_twitter_authorization()
         return TwitterConfig
 
-    @api.multi
     def write(self, vals):
         TwitterConfig = super(ResConfigSettings, self).write(vals)
         if vals.get('twitter_api_key') or vals.get('twitter_api_secret') or vals.get('twitter_screen_name'):
