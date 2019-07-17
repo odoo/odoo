@@ -22,9 +22,8 @@ class StockMove(models.Model):
         return bom
 
     def _action_confirm(self, merge=True, merge_into=False):
-        res = super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
         subcontract_details_per_picking = defaultdict(list)
-        for move in res:
+        for move in self:
             if not move.picking_id:
                 continue
             if not move.picking_id._is_subcontract():
@@ -38,4 +37,4 @@ class StockMove(models.Model):
             subcontract_details_per_picking[move.picking_id].append((move, bom))
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
-        return res
+        return super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
