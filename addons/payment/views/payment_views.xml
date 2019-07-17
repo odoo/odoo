@@ -73,13 +73,42 @@
                         </div>
                         <group name="acquirer_base" col="2" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
                             <group name="acquirer_left">
-                                <field name="provider" groups="base.group_no_one"/>
+                                <field name="provider" groups="base.group_no_one" attrs="{'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
                                 <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                             </group>
                         </group>
                         <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                            <page string="Credentials" name="acquirer_credentials">
+                            <page string="Credentials" name="acquirer_credentials" attrs="{'invisible': ['provider', '=', 'manual']}">
                                 <group name="acquirer">
+                                </group>
+                            </page>
+                            <page string="Configuration">
+                                <group name="acquirer_config">
+                                    <group string="Payment Form" name="payment_form">
+                                        <field name="payment_icon_ids" widget="many2many_tags"/>
+                                        <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
+                                        <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                        <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                        <field name="view_template_id" groups="base.group_no_one"/>
+                                        <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
+                                        <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
+                                        <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
+                                    </group>
+                                    <group string="Availability" name="availability">
+                                        <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere."/>
+                                    </group>
+                                    <group string="Payment Followup" name="payment_followup">
+                                        <field name="journal_id" context="{'default_type': 'bank'}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Fees" attrs="{'invisible': [('fees_implemented', '=', False)]}">
+                                <group name="payment_fees">
+                                    <field name="fees_active"/>
+                                    <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                 </group>
                             </page>
                             <page string="Messages">
@@ -90,45 +119,6 @@
                                     <field name="done_msg"/>
                                     <field name="cancel_msg"/>
                                     <field name="error_msg"/>
-                                </group>
-                            </page>
-                            <page string="Configuration">
-                                <group name="acquirer_config">
-                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
-                                    <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
-                                    <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
-                                    <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>
-                                    <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="specific_countries"/>
-                                    <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
-                                    <field name="country_ids" widget="many2many_tags" attrs="{'invisible': [('specific_countries', '=', False)]}"/>
-                                    <label for="view_template_id" groups="base.group_no_one"/>
-                                    <div groups="base.group_no_one">
-                                        <field name="view_template_id" nolabel="1"/>
-                                        <div>
-                                            This template renders the acquirer button with all necessary values.
-                                            It is rendered with qWeb with the following evaluation context:
-                                            <ul>
-                                                <li>tx_url: transaction URL to post the form</li>
-                                                <li>acquirer: payment.acquirer browse record</li>
-                                                <li>user: current user browse record</li>
-                                                <li>reference: the transaction reference number</li>
-                                                <li>currency: the transaction currency browse record</li>
-                                                <li>amount: the transaction amount, a float</li>
-                                                <li>partner: the buyer partner browse record, not necessarily set</li>
-                                                <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
-                                                <li>tx_values: transaction values</li>
-                                                <li>context: the current context dictionary</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
-                                    <field name="payment_icon_ids" widget="many2many_tags"/>
-                                    <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
-                                    <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
                                 </group>
                             </page>
                         </notebook>
@@ -188,6 +178,7 @@
                     <field name="provider"/>
                     <field name="website_published"/>
                     <field name="environment"/>
+                    <field name="country_ids" widget="many2many_tags" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -198,8 +189,9 @@
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="name"/>
+                    <field name="name" string="Acquirer" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]"/>
                     <field name="provider"/>
+                    <filter name="acquirer_installed" string="Installed" domain="[('provider', '!=', 'manual')]"/>
                     <group expand="0" string="Group By">
                         <filter string="Provider" name="provider" domain="[]" context="{'group_by': 'provider'}"/>
                         <filter string="Environment" name="environment" domain="[]" context="{'group_by': 'environment'}"/>

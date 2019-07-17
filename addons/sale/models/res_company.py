@@ -21,7 +21,7 @@ class ResCompany(models.Model):
         ('paypal', 'PayPal'),
         ('stripe', 'Stripe'),
         ('other', 'Pay with another payment acquirer'),
-        ('manual', 'Wire Transfer'),
+        ('manual', 'Manual Payment'),
     ], string="Sale onboarding selected payment method")
 
     @api.model
