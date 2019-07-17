@@ -297,6 +297,7 @@
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
+                    <separator/>
                     <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
                 </search>
             </field>

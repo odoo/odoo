@@ -36,6 +36,17 @@
             </field>
         </record>
 
+        <record id="account_analytic_tag_view_search" model="ir.ui.view">
+            <field name="name">account.analytic.tag.view.search</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <search string="Search Analytic Tags">
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="account_analytic_tag_action" model="ir.actions.act_window">
             <field name="name">Analytic Tags</field>
             <field name="res_model">account.analytic.tag</field>
@@ -228,11 +239,12 @@
             <field name="model">account.analytic.account</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Analytic Account"/>
                     <field name="partner_id"/>
+                    <separator/>
                     <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>
             </field>
@@ -266,7 +278,6 @@
             </field>
         </record>
 
-
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
@@ -294,6 +305,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_account_analytic_line_filter" model="ir.ui.view">
             <field name="name">account.analytic.line.select</field>
             <field name="model">account.analytic.line</field>
@@ -303,13 +315,15 @@
                     <field name="date"/>
                     <field name="account_id"/>
                     <field name="tag_ids" widget="many2many_tags"/>
+                    <filter string="Date" name="date" date="date"/>
                     <group string="Group By..." expand="0" name="groupby">
-                        <filter string="Analytic Account" context="{'group_by':'account_id'}" name="account_id"/>
-                        <filter string="Tasks Date" context="{'group_by':'date'}" name="group_date"/>
+                        <filter string="Analytic Account" name="account_id" context="{'group_by': 'account_id'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
         </record>
+
         <record id="view_account_analytic_line_graph" model="ir.ui.view">
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
@@ -321,6 +335,7 @@
                 </graph>
             </field>
         </record>
+
         <record id="view_account_analytic_line_pivot" model="ir.ui.view">
             <field name="name">account.analytic.line.pivot</field>
             <field name="model">account.analytic.line</field>

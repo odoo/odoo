@@ -685,37 +685,37 @@
                 </xpath>
             </field>
         </record>
+
         <record id="view_sales_order_filter" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
             <field name="priority" eval="15"/>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <field name="name" string="Sales Order" filter_domain="['|','|',('name','ilike',self),('client_order_ref','ilike',self),('partner_id','child_of',self)]"/>
+                    <field name="name" string="Order" filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="team_id" string="Sales Team"/>
+                    <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <!-- We only allow to search on the following sale order line fields (product, name) because the other fields, such as price, quantity, ...
                         will not be searched as often, and if they need to be searched it's usually in the context of products
                         and then they can be searched from the page listing the sale order lines related to a product (from the product itself).
                     -->
-                    <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
-                    <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
+                    <filter string="My Orders" domain="[('user_id', '=', uid)]" name="my_sale_orders_filter"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Exception Activities" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter name="customer" string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Order Date" name="order_month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by': 'user_id'}"/>
+                        <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Order Date" name="order_month" domain="[]" context="{'group_by': 'date_order'}"/>
                     </group>
                </search>
             </field>

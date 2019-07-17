@@ -206,19 +206,22 @@
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <search string="Survey">
-                <field string="Title" name="title"/>
-                <filter string="Is a certification?" name="certificate" domain="[('certificate','=',True)]"/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <field string="Survey" name="title"/>
+                <filter string="Certification" name="certificate" domain="[('certificate', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Upcoming Activities" name="activities_upcoming_all"
-                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                    ]"/>
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Category" name="groupby_category" context="{'group_by': 'category'}"/>
                     <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>

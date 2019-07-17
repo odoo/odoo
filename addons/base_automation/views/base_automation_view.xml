@@ -58,6 +58,8 @@
                 <search>
                     <field name="name"/>
                     <field name="model_id"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>

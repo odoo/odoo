@@ -265,16 +265,16 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <search string="Search Work Orders">
-                <field name="name" string="Work Orders"/>
-                <field name="date_planned_start"/>
-                <field name="state"/>
-                <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
-                <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
-                <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
-                <filter string="Finished" name="finish" domain="[('state','=','done')]"/>
-                <filter string="Available" name="available" domain="[('production_availability','=', 'assigned')]"/>
+                <field name="name" string="Work Order"/>
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
+                <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
+                <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
+                <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
+                <filter string="Available" name="available" domain="[('production_availability', '=', 'assigned')]"/>
                 <separator/>
-                <filter string="Late" name="late" domain="['&amp;', ('date_planned_start','&lt;', current_date), ('state', '=', 'ready')]"
+                <filter string="Late" name="late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -284,14 +284,12 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
-                <field name="workcenter_id"/>
-                <field name="production_id"/>
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Work Center" name="work_center" domain="[]" context="{'group_by':'workcenter_id'}"/>
-                    <filter string="Production" name="production" domain="[]" context="{'group_by':'production_id'}"/>
-                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Scheduled Date" name="scheduled_month" domain="[]" context="{'group_by':'date_planned_start'}"/>
+                    <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
+                    <filter string="Manufacturing Order" name="production" domain="[]" context="{'group_by': 'production_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Scheduled Date" name="scheduled_month" domain="[]" context="{'group_by': 'date_planned_start'}"/>
                 </group>
              </search>
         </field>

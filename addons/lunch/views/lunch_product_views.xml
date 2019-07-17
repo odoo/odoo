@@ -5,14 +5,15 @@
         <field name="model">lunch.product</field>
         <field name="arch" type="xml">
             <search string="Product Search">
-                <field name="name"/>
-                <field name="category_id"/>
+                <field name="name" string="Product"/>
+                <field name="category_id" string="Category"/>
                 <field name="supplier_id"/>
                 <field name="description"/>
-                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+                <separator/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
-                    <filter name="group_by_category" string="Product Category" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
                 </group>
                 <searchpanel>
                     <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>

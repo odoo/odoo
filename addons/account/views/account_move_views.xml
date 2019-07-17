@@ -292,37 +292,43 @@
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
+                    <field name="name" string="Journal Item" filter_domain="[
+                        '|', '|', '|',
+                        ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="date"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="move_id" string="Journal Entry" filter_domain="[
+                        '|'', '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self), ('move_id.partner_id', 'ilike', self)]"/>
+                    <field name="tax_ids" />
+                    <field name="tax_line_id" string="Originator Tax"/>
+                    <field name="reconcile_model_id"/>
                     <separator/>
-                    <filter string="Unposted" name="unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
-                    <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
+                    <filter string="Unposted" name="unposted" domain="[('move_id.state', '=', 'draft')]" help="Unposted Journal Items"/>
+                    <filter string="Posted" name="posted" domain="[('move_id.state', '=', 'posted')]" help="Posted Journal Items"/>
+                    <separator/>
                     <filter string="To Check" name="to_check" domain="[('move_id.to_check', '=', True)]"/>
                     <separator/>
-                    <filter string="Sales" name="sales" domain="[('move_id.journal_id.type','=','sale')]" context="{'default_journal_type': 'sale'}"/>
-                    <filter string="Purchases" name="purchases" domain="[('move_id.journal_id.type','=','purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('balance', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                    <separator/>
+                    <filter string="Sales" name="sales" domain="[('move_id.journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('move_id.journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
                     <filter string="Bank" name="bank" domain="[('move_id.journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
                     <filter string="Cash" name="cash" domain="[('move_id.journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
-                    <filter string="Miscellaneous Operations" domain="[('move_id.journal_id.type','=','general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
-                    <separator/>
-                    <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('balance','!=', 0), ('account_id.reconcile','=',True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                    <filter string="Miscellaneous" domain="[('move_id.journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>
                     <separator/>
-                    <field name="account_id"/>
-                    <field name="partner_id"/>
-                    <field name="journal_id"/>
-                    <field name="move_id" string="Number (Move)"/>
-                    <field name="tax_line_id"/>
-                    <field name="tax_ids" />
-                    <field name="reconcile_model_id"/>
+                    <filter string="Date" name="date" date="date"/>
+                    <separator/>
                     <group expand="0" string="Group By">
-                        <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by':'move_id'}"/>
-                        <filter string="Account" name="group_by_account" domain="[]" context="{'group_by':'account_id'}"/>
-                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_id'}"/>
+                        <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
+                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
@@ -851,25 +857,29 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <search string="Search Move">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
+                    <field name="name" string="Journal Entry" filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="date"/>
-                    <filter string="Unposted" name="unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
-                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
-                    <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
-                    <separator/>
-                    <filter string="Sales" name="sales" domain="[('journal_id.type','=','sale')]" context="{'default_journal_type': 'sale'}"/>
-                    <filter string="Purchases" name="purchases" domain="[('journal_id.type','=','purchase')]" context="{'default_journal_type': 'purchase'}"/>
-                    <filter string="Bank Operations" name="bankoperations" domain="[('journal_id.type','=','bank')]" context="{'default_journal_type': 'bank'}"/>
-                    <filter string="Cash Operations" name="cashoperations" domain="[('journal_id.type','=','cash')]" context="{'default_journal_type': 'cash'}"/>
-                    <filter string="Miscellaneous Operations" domain="[('journal_id.type','=','general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
-                    <separator/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
+                    <filter string="Unposted" name="unposted" domain="[('state', '=', 'draft')]" help="Unposted Journal Entries"/>
+                    <filter string="Posted" name="posted" domain="[('state', '=', 'posted')]" help="Posted Journal Entries"/>
+                    <separator/>
+                    <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
+                    <separator/>
+                    <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank" name="bankoperations" domain="[('journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash" name="cashoperations" domain="[('journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Miscellaneous" name="misc_filter" domain="[('journal_id.type', '=', 'general')]" context="{'default_journal_type': 'general'}"/>
+                    <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                    <separator/>
                     <group expand="0" string="Group By">
-                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" name="date" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Date"/>
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}" help="Journal Entries by Date"/>
+                        <filter string="Company" name="by_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -881,34 +891,42 @@
             <field name="arch" type="xml">
                 <search string="Search Invoice">
                     <field name="name" string="Invoice"
-                           filter_domain="['|','|','|', '|', ('name','ilike',self), ('invoice_origin','ilike',self), ('ref', 'ilike', self), ('invoice_payment_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                    <filter domain="[('invoice_user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
+                           filter_domain="[
+                                '|', '|' , '|', '|',
+                                ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
+                                ('ref', 'ilike', self), ('invoice_payment_ref', 'ilike', self),
+                                ('partner_id', 'child_of', self)]"/>
                     <field name="journal_id"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
+                    <field name="date" string="Period"/>
+                    <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
-                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                     <filter name="unpaid" string="Open" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
                     <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
                     <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
-                    <field name="partner_id" operator="child_of"/>
-                    <field name="invoice_user_id" string="Salesperson" domain="[('share','=', False)]"/>
-                    <field name="date" string="Period"/>
+                    <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
+                    <filter name="due_date" string="Due Date" date="invoice_date_due"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_by_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>
-                        <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
-                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Partner" name="group_by_partner_id" context="{'group_by': 'commercial_partner_id'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by': 'invoice_user_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
                         <separator/>
-                        <filter string="Invoice Date" name="invoicedate" context="{'group_by':'invoice_date'}"/>
-                        <filter string="Due Date" name="duedate" context="{'group_by':'invoice_date_due'}"/>
+                        <filter string="Invoice Date" name="invoicedate" context="{'group_by': 'invoice_date'}"/>
+                        <filter string="Due Date" name="duedate" context="{'group_by': 'invoice_date_due'}"/>
                     </group>
                </search>
             </field>

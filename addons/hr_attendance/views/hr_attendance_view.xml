@@ -71,13 +71,12 @@
                 <field name="department_id" operator="child_of"/>
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]" />
                 <separator/>
-                <filter name="check_in_filter" string="Check In Date" date="check_in" default_period="last_month"/>
+                <filter string="Check In" name="check_in_filter" date="check_in" default_period="last_month"/>
                 <filter string="No Check Out" name="nocheckout" domain="[('check_out', '=', False)]" />
                 <group expand="0" string="Group By">
-                    <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <separator/>
-                    <filter name="groupby_name" string="Check In Date" context="{'group_by': 'check_in'}"/>
-                    <filter name="groupby_check_out" string="Check Out Date" context="{'group_by': 'check_out'}"/>
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Check In" name="groupby_name" context="{'group_by': 'check_in'}"/>
+                    <filter string="Check Out" name="groupby_check_out" context="{'group_by': 'check_out'}"/>
                 </group>
             </search>
         </field>

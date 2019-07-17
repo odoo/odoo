@@ -80,27 +80,32 @@
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
                 <search string="Payments">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('communication','ilike',self)]" string="Description"/>
+                    <field name="name" string="Payment"
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('communication', 'ilike', self)]"/>
+                    <field name="partner_id" string="Customer/Vendor"/>
+                    <field name="journal_id"/>
                     <separator/>
-                    <field name="partner_id" />
-                    <field name="journal_id" />
-                    <field name="company_id" groups="base.group_multi_company" />
-                    <filter string="Vendor Payments" domain="[('partner_type','=','supplier')]" name="outbound_filter"/>
-                    <filter string="Customer Payments" domain="[('partner_type','=','customer')]" name="inbound_filter"/>
-                    <filter string="Transfers" domain="[('payment_type','=','transfer')]" name="transfers_filter"/>
+                    <filter string="Customer Payments" name="inbound_filter" domain="[('partner_type', '=', 'customer')]"/>
+                    <filter string="Vendor Payments" name="outbound_filter" domain="[('partner_type', '=', 'supplier')]"/>
+                    <filter string="Transfers" name="transfers_filter" domain="[('payment_type', '=', 'transfer')]"/>
                     <separator/>
-                    <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
-                    <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
-                    <filter string="Sent" domain="[('state','=','sent')]" name='state_sent'/>
-                    <filter string="Reconciled" name="reconciled" domain="[('state','=','reconciled')]"/>
+                    <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Posted" name="state_posted" domain="[('state', '=', 'posted')]"/>
+                    <filter string="Sent" name="state_sent" domain="[('state', '=', 'sent')]"/>
+                    <filter string="Reconciled" name="reconciled" domain="[('state', '=', 'reconciled')]"/>
                     <separator/>
-                    <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Payment Date" name="payment_date" date="payment_date"/>
+                    <separator/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Customer/Vendor" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                     <filter string="Payment Method" name="paymentmethod" domain="[]" context="{'group_by': 'payment_method_id'}"/>
-                    <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Payment Date" name="groupby_payment_date" domain="[]" context="{'group_by': 'payment_date'}"/>
                     <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
                     <!-- company_id is not stored (cdca5d4751a979f6b694f02d88160843f81a77f5). But we can't break structure-->
-                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company" invisible="1" />
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company" invisible="1"/>
+                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>

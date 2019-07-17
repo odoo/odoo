@@ -259,14 +259,15 @@
             <field name="model">purchase.requisition</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Agreements">
-                    <field name="name" string="Purchase Agreements" filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
-                    <field name="type_id"/>
-                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="New Agreements"/>
-                    <filter string="Confirmed" name="confirmed" domain="[('state','in',('in_progress','open'))]" help="In negotiation"/>
-                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                    <field name="name" string="Reference" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
+                    <field name="user_id"/>
+                    <field name="product_id"/>
+                    <filter string="My Agreements" name="my_agreements" domain="[('user_id', '=', uid)]"/>
                     <separator/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
-                    <filter string="My Agreements" name="my_agreements" domain="[('user_id','=', uid)]"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" help="New Agreements"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', 'in', ('in_progress', 'open'))]" help="In negotiation"/>
+                    <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
@@ -276,13 +277,10 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Exception Activities" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
-                    <field name="user_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Source" name="source" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Ordering Date" name="ordering_date" domain="[]" context="{'group_by':'ordering_date'}"/>
-                        <filter string="End Date" name="end_month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Ordering Date" name="ordering_date" domain="[]" context="{'group_by': 'ordering_date'}"/>
                     </group>
                 </search>
             </field>

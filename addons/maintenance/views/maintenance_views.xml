@@ -6,41 +6,44 @@
         <field name="name">equipment.request.search</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <search string="maintenance Request Search">
-                <field name="name"/>
+            <search string="Maintenance Request Search">
+                <field name="name" string="Request"/>
                 <field name="category_id"/>
                 <field name="user_id"/>
                 <field name="equipment_id"/>
                 <field name="owner_user_id"/>
                 <field name="stage_id"/>
                 <field name="maintenance_team_id"/>
-                <filter string="My Requests" name="my_requests" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Maintenances" name="my_maintenances" domain="[('user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="To do" domain="[('stage_id.done', '=', False)]" name="todo"/>
+                <filter string="To Do" name="todo" domain="[('stage_id.done', '=', False)]"/>
+                <separator/>
                 <filter string="Blocked" name="kanban_state_block" domain="[('kanban_state', '=', 'blocked')]"/>
-                <filter string="In Progress" name="progress" domain="[('kanban_state', '=', 'normal')]"/>
-                <filter string="Done" name="done" domain="[('kanban_state', '=', 'done')]"/>
-                <filter string="Top Priorities" name="top_priority" domain="[('priority', '=', '3')]"/>
+                <filter string="Ready" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <separator/>
-                <filter string="Unscheduled Maintenance" domain="[('schedule_date', '=', False)]" name="unscheduled"/>
+                <filter string="High-priority" name="high_priority" domain="[('priority', '=', '3')]"/>
+                <separator/>
+                <filter string="Unscheduled" name="unscheduled" domain="[('schedule_date', '=', False)]"/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                <separator/>
+                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                <separator/>
-                <filter string="Archived" name="inactive" domain="[('archive','=',True)]"/>
+                <filter string="Archived" name="inactive" domain="[('archive', '=', True)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Assigned' name="assigned" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string='Assigned to' name="assigned" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by' : 'category_id'}"/>
-                    <filter string='Stages' name="stages" domain="[]" context="{'group_by' : 'stage_id'}"/>
+                    <filter string='Stage' name="stages" domain="[]" context="{'group_by' : 'stage_id'}"/>
                     <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'owner_user_id'}"/>
                 </group>
             </search>
@@ -503,31 +506,36 @@
         <field name="model">maintenance.equipment</field>
         <field name="arch" type="xml">
             <search string="Search">
-                <field name="name"  filter_domain="['|','|','|',('name','ilike',self),('model','ilike',self),('serial_no','ilike',self),('partner_ref', 'ilike', self)]"/>
-                <field name="category_id"/>
+                <field string="Equipment" name="name" filter_domain="[
+                    '|', '|', '|',
+                    ('name', 'ilike', self), ('model', 'ilike', self), ('serial_no', 'ilike', self), ('partner_ref', 'ilike', self)]"/>
+                <field string="Category" name="category_id"/>
                 <field name="owner_user_id"/>
+                <filter string="My Equipments" name="my" domain="[('owner_user_id', '=', uid)]"/>
+                <filter string="Assigned" name="assigned" domain="[('owner_user_id', '!=', False)]"/>
+                <filter string="Unassigned" name="available" domain="[('owner_user_id', '=', False)]"/>
+                <separator/>
                 <filter string="Under Maintenance" name="under_maintenance" domain="[('maintenance_open_count', '&gt;', 0)]"/>
                 <separator/>
-                <filter string="Assigned" name="assigned" domain="[('owner_user_id', '!=', False)]"/>
-                <filter string="Available" name="available" domain="[('owner_user_id', '=', False)]"/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
-                <filter string="My Equipments" name="my" domain="[('owner_user_id', '=', uid)]"/>
-                <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                <!-- <filter string="Archived" name="inactive" domain="[('active','=',False)]"/> -->
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Technicians' name="technicians" domain="[]" context="{'group_by': 'technician_user_id'}"/>
+                    <filter string='Technician' name="technicians" domain="[]" context="{'group_by': 'technician_user_id'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by': 'category_id'}"/>
                     <filter string='Owner' name="owner" domain="[]" context="{'group_by': 'owner_user_id'}"/>
                     <filter string='Vendor' name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -934,6 +942,7 @@
         <field name="model">maintenance.team</field>
         <field name="arch" type="xml">
             <search string="Search">
+                <field string="Team" name="name"/>
                 <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
             </search>
         </field>

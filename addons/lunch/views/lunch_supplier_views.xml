@@ -102,9 +102,22 @@
         </field>
     </record>
 
+    <record id="lunch_supplier_view_search" model="ir.ui.view">
+        <field name="name">lunch.supplier.view.search</field>
+        <field name="model">lunch.supplier</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="lunch_vendors_action" model="ir.actions.act_window">
         <field name="name">Vendors</field>
         <field name="res_model">lunch.supplier</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="lunch_supplier_view_search"/>
     </record>
 </odoo>
