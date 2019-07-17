@@ -228,8 +228,7 @@ class MassMailing(models.Model):
                                   help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
-    medium_id = fields.Many2one('utm.medium', string='Medium',
-                                help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
+    medium_id = fields.Many2one('utm.medium', string='Medium', help="Delivery method: Email")
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, copy=False, default='draft', group_expand='_group_expand_states')
@@ -344,10 +343,7 @@ class MassMailing(models.Model):
     @api.onchange('mass_mailing_campaign_id')
     def _onchange_mass_mailing_campaign_id(self):
         if self.mass_mailing_campaign_id:
-            dic = {'campaign_id': self.mass_mailing_campaign_id.campaign_id,
-                   'source_id': self.mass_mailing_campaign_id.source_id,
-                   'medium_id': self.mass_mailing_campaign_id.medium_id}
-            self.update(dic)
+            self.campaign_id = self.mass_mailing_campaign_id.campaign_id.id
 
     @api.onchange('mailing_model_id', 'contact_list_ids')
     def _onchange_model_and_list(self):
@@ -381,6 +377,8 @@ class MassMailing(models.Model):
             values['subject'] = values['name']
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        if 'medium_id' not in values:
+            values['medium_id'] = self.env.ref('utm.utm_medium_email').id
         return super(MassMailing, self).create(values)
 
     def write(self, values):
@@ -534,18 +532,14 @@ class MassMailing(models.Model):
         return opt_out
 
     def _get_convert_links(self):
-        self.ensure_one()
-        utm_mixin = self.mass_mailing_campaign_id if self.mass_mailing_campaign_id else self
-        vals = {'mass_mailing_id': self.id}
-
+        vals = {
+            'mass_mailing_id': self.id,
+            'source_id': self.source_id.id,
+            'medium_id': self.medium_id.id,
+        }
         if self.mass_mailing_campaign_id:
             vals['mass_mailing_campaign_id'] = self.mass_mailing_campaign_id.id
-        if utm_mixin.campaign_id:
-            vals['campaign_id'] = utm_mixin.campaign_id.id
-        if utm_mixin.source_id:
-            vals['source_id'] = utm_mixin.source_id.id
-        if utm_mixin.medium_id:
-            vals['medium_id'] = utm_mixin.medium_id.id
+            vals['campaign_id'] = self.mass_mailing_campaign_id.campaign_id.id
         return vals
 
     def _get_seen_list(self):
