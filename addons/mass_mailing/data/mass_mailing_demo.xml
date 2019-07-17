@@ -68,7 +68,7 @@
             <field name="tag_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_tag_1')])]"/>
         </record>
 
-        <record id="mass_mail_1" model="mail.mass_mailing">
+        <record id="mass_mail_1" model="mailing.mailing">
             <field name="name">Newsletter 1</field>
             <field name="subject" eval="'%s Newsletter' % (DateTime.today().strftime('%B'))"/>
             <field name="state">done</field>
@@ -196,7 +196,7 @@
             <field name="attachment_ids" eval="[(4, ref('mass_mail_attach_1'))]"/>
         </record>
         <!-- Generate link tracker information from it -->
-        <function model="mail.mass_mailing" name="convert_links" eval="[ref('mass_mailing.mass_mail_1')]"/>
+        <function model="mailing.mailing" name="convert_links" eval="[ref('mass_mailing.mass_mail_1')]"/>
 
         <record id="mass_mail_1_stat_0" model="mailing.trace">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>

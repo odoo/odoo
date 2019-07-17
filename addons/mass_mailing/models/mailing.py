@@ -81,7 +81,7 @@ class MassMailingCampaign(models.Model):
         'mailing.tag', 'mail_mass_mailing_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
     mass_mailing_ids = fields.One2many(
-        'mail.mass_mailing', 'mass_mailing_campaign_id',
+        'mailing.mailing', 'mass_mailing_campaign_id',
         string='Mass Mailings')
     unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
         help='If checked, recipients will be mailed only once for the whole campaign. '
@@ -154,7 +154,7 @@ class MassMailingCampaign(models.Model):
             self.browse(row.pop('campaign_id')).update(row)
 
     def _compute_total_mailings(self):
-        campaign_data = self.env['mail.mass_mailing'].read_group(
+        campaign_data = self.env['mailing.mailing'].read_group(
             [('mass_mailing_campaign_id', 'in', self.ids)],
             ['mass_mailing_campaign_id'], ['mass_mailing_campaign_id'])
         mapped_data = dict([(c['mass_mailing_campaign_id'][0], c['mass_mailing_campaign_id_count']) for c in campaign_data])
@@ -184,7 +184,7 @@ class MassMailingCampaign(models.Model):
 class MassMailing(models.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
     A mass mailing is an occurence of sending emails. """
-    _name = 'mail.mass_mailing'
+    _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
@@ -313,7 +313,7 @@ class MassMailing(models.Model):
             FROM
                 mailing_trace s
             RIGHT JOIN
-                mail_mass_mailing m
+                mailing_mailing m
                 ON (m.id = s.mass_mailing_id)
             WHERE
                 m.id IN %s
@@ -409,7 +409,7 @@ class MassMailing(models.Model):
             return {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
-                'res_model': 'mail.mass_mailing',
+                'res_model': 'mailing.mailing',
                 'res_id': mass_mailing_copy.id,
                 'context': context,
             }
@@ -422,14 +422,14 @@ class MassMailing(models.Model):
             'name': _('Test Mailing'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'mail.mass_mailing.test',
+            'res_model': 'mailing.mailing.test',
             'target': 'new',
             'context': ctx,
         }
 
     def action_schedule_date(self):
         self.ensure_one()
-        action = self.env.ref('mass_mailing.mass_mailing_schedule_date_action').read()[0]
+        action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
         action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
         return action
 

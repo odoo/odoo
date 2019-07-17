@@ -32,7 +32,7 @@ class TestMassMail(MassMailingCase):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_link_tracker(self):
         _url = 'https://www.example.com/foo/bar?baz=qux'
-        mailing = self.env['mail.mass_mailing'].create({
+        mailing = self.env['mailing.mailing'].create({
             'name': 'TestMailing',
             'subject': 'Test',
             'medium_id': self.test_medium.id,
@@ -69,7 +69,7 @@ class TestAccessRights(TransactionCase):
 
     def test_01_mass_mail_blacklist(self):
         mass_mailing_contacts = self.env['mailing.contact']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing = self.env['mailing.mailing']
         mail_blacklist = self.env['mail.blacklist']
 
         # create mailing contact record
@@ -113,7 +113,7 @@ class TestAccessRights(TransactionCase):
         mass_mailing_contacts = self.env['mailing.contact']
         mass_mailing_lists = self.env['mailing.list']
         mass_mailing_optout = self.env['mailing.contact.subscription']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email 1', 'email': 'test1@email.com'})
@@ -162,7 +162,7 @@ class TestAccessRights(TransactionCase):
         mass_mailing_contacts = self.env['mailing.contact']
         mass_mailing_lists = self.env['mailing.list']
         mass_mailing_optout = self.env['mailing.contact.subscription']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email 1', 'email': 'test1@email.com'})
@@ -219,7 +219,7 @@ class TestAccessRights(TransactionCase):
         mass_mailing_contacts = self.env['mailing.contact']
         mass_mailing_lists = self.env['mailing.list']
         mass_mailing_optout = self.env['mailing.contact.subscription']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email (A)', 'email': 'test@email.com'})
@@ -271,7 +271,7 @@ class TestOnResPartner(TransactionCase):
 
     def test_mass_mail_on_res_partner(self):
         partners = self.env['res.partner']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         partner_a = partners.create({

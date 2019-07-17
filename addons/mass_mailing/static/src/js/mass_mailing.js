@@ -28,7 +28,7 @@ KanbanRecord.include({
 KanbanColumn.include({
     init: function () {
         this._super.apply(this, arguments);
-        if (this.modelName === 'mail.mass_mailing') {
+        if (this.modelName === 'mailing.mailing') {
             this.draggable = false;
         }
     },

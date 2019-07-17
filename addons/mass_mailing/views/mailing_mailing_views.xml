@@ -2,8 +2,8 @@
 <odoo>
         <!--  MAILING !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_search">
-            <field name="name">mail.mass_mailing.search</field>
-            <field name="model">mail.mass_mailing</field>
+            <field name="name">mailing.mailing.search</field>
+            <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
                <search string="Mailings">
                     <field name="name" string="Mailings"/>
@@ -26,8 +26,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_tree">
-            <field name="name">mail.mass_mailing.tree</field>
-            <field name="model">mail.mass_mailing</field>
+            <field name="name">mailing.mailing.tree</field>
+            <field name="model">mailing.mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Mailings">
@@ -43,8 +43,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_form">
-            <field name="name">mail.mass_mailing.form</field>
-            <field name="model">mail.mass_mailing</field>
+            <field name="name">mailing.mailing.form</field>
+            <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
                 <form string="Mailing">
                     <header style="min-height:31px;">
@@ -230,8 +230,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
-            <field name="name">mail.mass_mailing.kanban</field>
-            <field name="model">mail.mass_mailing</field>
+            <field name="name">mailing.mailing.kanban</field>
+            <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="state">
                     <field name='state' readonly="1"/>
@@ -315,8 +315,8 @@
         </record>
 
         <record id="view_mail_mass_mailing_graph" model="ir.ui.view">
-            <field name="name">mail.mass_mailing.graph</field>
-            <field name="model">mail.mass_mailing</field>
+            <field name="name">mailing.mailing.graph</field>
+            <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
                 <graph string="Mailing" type="bar">
                     <field name="state" type="row"/>
@@ -326,7 +326,7 @@
 
         <record id="action_view_mass_mailings" model="ir.actions.act_window">
             <field name="name">Mailings</field>
-            <field name="res_model">mail.mass_mailing</field>
+            <field name="res_model">mailing.mailing</field>
             <field name="view_mode">kanban,tree,form,graph</field>
             <field name="context">{
                     'search_default_assigned_to_me': 1,
@@ -344,7 +344,7 @@
 
         <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
             <field name="name">Mailings</field>
-            <field name="res_model">mail.mass_mailing</field>
+            <field name="res_model">mailing.mailing</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
                 'search_default_assigned_to_me': 1,
@@ -365,7 +365,7 @@
 
         <record id="action_create_mass_mailings_from_campaign" model="ir.actions.act_window">
             <field name="name">Mailings</field>
-            <field name="res_model">mail.mass_mailing</field>
+            <field name="res_model">mailing.mailing</field>
             <field name="view_mode">form,kanban,tree</field>
             <field name="context">{
                 'search_default_assigned_to_me': 1,
@@ -386,7 +386,7 @@
 
         <record id="action_create_ab_mass_mailings_from_campaign" model="ir.actions.act_window">
             <field name="name">Mailings</field>
-            <field name="res_model">mail.mass_mailing</field>
+            <field name="res_model">mailing.mailing</field>
             <field name="view_mode">form,kanban,tree</field>
             <field name="context">{
                 'search_default_assigned_to_me': 1,

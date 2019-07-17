@@ -24,7 +24,7 @@ class MailingTraceReport(models.Model):
 
     def init(self):
         """Mass Mail Statistical Report: based on mailing.trace that models the various
-        statistics collected for each mailing, and mail.mass_mailing model that models the
+        statistics collected for each mailing, and mailing.mailing model that models the
         various mailing performed. """
         tools.drop_view_if_exists(self.env.cr, 'mailing_trace_report')
         self.env.cr.execute("""
@@ -44,7 +44,7 @@ class MailingTraceReport(models.Model):
                     mm.email_from
                 FROM
                     mailing_trace as ms
-                    left join mail_mass_mailing as mm ON (ms.mass_mailing_id=mm.id)
+                    left join mailing_mailing as mm ON (ms.mass_mailing_id=mm.id)
                     left join mail_mass_mailing_campaign as mc ON (ms.mass_mailing_campaign_id=mc.id)
                     left join utm_campaign as utm_campaign ON (mc.campaign_id = utm_campaign.id)
                     left join utm_source as utm_source ON (mm.source_id = utm_source.id)

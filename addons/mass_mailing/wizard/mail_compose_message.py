@@ -9,7 +9,7 @@ class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
-    mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing', ondelete='cascade')
+    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
     mass_mailing_name = fields.Char(string='Mass Mailing Name')
     mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
 
@@ -27,7 +27,7 @@ class MailComposeMessage(models.TransientModel):
             if not mass_mailing:
                 reply_to_mode = 'email' if self.no_auto_thread else 'thread'
                 reply_to = self.reply_to if self.no_auto_thread else False
-                mass_mailing = self.env['mail.mass_mailing'].create({
+                mass_mailing = self.env['mailing.mailing'].create({
                         'mass_mailing_campaign_id': self.mass_mailing_campaign_id.id,
                         'name': self.mass_mailing_name,
                         'template_id': self.template_id.id,
