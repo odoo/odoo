@@ -823,6 +823,7 @@ class Warehouse(models.Model):
                 'default_location_src_id': False,
                 'sequence': max_sequence + 1,
                 'barcode': self.code.replace(" ", "").upper() + "-RECEIPTS",
+                'show_reserved': False,
             }, 'out_type_id': {
                 'name': _('Delivery Orders'),
                 'code': 'outgoing',
