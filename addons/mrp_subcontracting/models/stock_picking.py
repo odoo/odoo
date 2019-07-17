@@ -53,11 +53,12 @@ class StockPicking(models.Model):
     # Action methods
     # -------------------------------------------------------------------------
     def action_done(self):
+        res = super(StockPicking, self).action_done()
         for picking in self:
             subcontracted_productions = picking._get_subcontracted_productions()
             for subcontracted_production in subcontracted_productions:
                 subcontracted_production.button_mark_done()
-        return super(StockPicking, self).action_done()
+        return res
 
     def action_view_subcontracted_move_lines(self):
         """ Returns a list view with the move lines of the subcontracted products. To find them, we
