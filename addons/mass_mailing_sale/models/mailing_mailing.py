@@ -6,8 +6,8 @@ from odoo import api, fields, models
 
 
 class MassMailing(models.Model):
-    _name = 'mail.mass_mailing'
-    _inherit = 'mail.mass_mailing'
+    _name = 'mailing.mailing'
+    _inherit = 'mailing.mailing'
 
     sale_quotation_count = fields.Integer('Quotation Count', groups='sales_team.group_sale_salesman', compute='_compute_sale_quotation_count')
     sale_invoiced_amount = fields.Integer('Invoiced Amount', groups='sales_team.group_sale_salesman', compute='_compute_sale_invoiced_amount')

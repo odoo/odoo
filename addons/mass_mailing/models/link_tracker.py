@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class LinkTracker(models.Model):
     _inherit = "link.tracker"
 
-    mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
+    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
 
 
@@ -15,7 +15,7 @@ class LinkTrackerClick(models.Model):
     _inherit = "link.tracker.click"
 
     mailing_trace_id = fields.Many2one('mailing.trace', string='Mail Statistics')
-    mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
+    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
 
     def _prepare_click_values_from_route(self, **route_values):
