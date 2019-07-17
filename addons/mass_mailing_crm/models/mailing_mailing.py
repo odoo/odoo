@@ -7,8 +7,8 @@ from odoo.osv import expression
 
 
 class MassMailing(models.Model):
-    _name = 'mail.mass_mailing'
-    _inherit = 'mail.mass_mailing'
+    _name = 'mailing.mailing'
+    _inherit = 'mailing.mailing'
 
     crm_lead_activated = fields.Boolean('Use Leads', compute='_compute_crm_lead_activated')
     crm_lead_count = fields.Integer('Lead Count', groups='sales_team.group_sale_salesman', compute='_compute_crm_lead_and_opportunities_count')

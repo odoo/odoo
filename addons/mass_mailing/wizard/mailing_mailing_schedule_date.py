@@ -5,12 +5,12 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class MassMailingScheduleDate(models.TransientModel):
-    _name = 'mass.mailing.schedule.date'
+class MailingMailingScheduleDate(models.TransientModel):
+    _name = 'mailing.mailing.schedule.date'
     _description = 'Mass Mailing Scheduling'
 
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    mass_mailing_id = fields.Many2one('mail.mass_mailing', required=True)
+    mass_mailing_id = fields.Many2one('mailing.mailing', required=True)
 
     @api.constrains('schedule_date')
     def _check_schedule_date(self):

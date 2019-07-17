@@ -13,7 +13,7 @@ class MailMail(models.Model):
     """Add the mass mailing campaign data to mail"""
     _inherit = ['mail.mail']
 
-    mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
+    mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     mailing_trace_ids = fields.One2many('mailing.trace', 'mail_mail_id', string='Statistics')
 
     @api.model

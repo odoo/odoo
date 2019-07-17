@@ -7,7 +7,7 @@ class TestAutoBlacklist(common.TransactionCase):
 
     def test_mail_bounced_auto_blacklist(self):
         mass_mailing_contacts = self.env['mailing.contact']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing = self.env['mailing.mailing']
         mail_blacklist = self.env['mail.blacklist']
         mail_statistics = self.env['mailing.trace']
         mail_thread = self.env['mail.thread']

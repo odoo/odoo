@@ -5,12 +5,12 @@ from odoo import api, fields, models, tools
 
 
 class TestMassMailing(models.TransientModel):
-    _name = 'mail.mass_mailing.test'
+    _name = 'mailing.mailing.test'
     _description = 'Sample Mail Wizard'
 
     email_to = fields.Char(string='Recipients', required=True,
                            help='Comma-separated list of email addresses.', default=lambda self: self.env['mail.message']._get_default_from())
-    mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mailing', required=True, ondelete='cascade')
+    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', required=True, ondelete='cascade')
 
     def send_mail_test(self):
         self.ensure_one()

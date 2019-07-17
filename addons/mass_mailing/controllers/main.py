@@ -14,11 +14,11 @@ class MassMailController(http.Controller):
     def _valid_unsubscribe_token(self, mailing_id, res_id, email, token):
         if not (mailing_id and res_id and email and token):
             return False
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         return consteq(mailing._unsubscribe_token(res_id, email), token)
 
     def _log_blacklist_action(self, blacklist_entry, mailing_id, description):
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         model_display = mailing.mailing_model_id.display_name
         blacklist_entry._message_log(body=description + " ({})".format(model_display))
 
@@ -29,7 +29,7 @@ class MassMailController(http.Controller):
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         if mailing.exists():
             res_id = res_id and int(res_id)
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)):
@@ -82,7 +82,7 @@ class MassMailController(http.Controller):
 
     @http.route('/mail/mailing/unsubscribe', type='json', auth='public')
     def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email, res_id, token):
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         if mailing.exists():
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
                 return 'unauthorized'
@@ -152,7 +152,7 @@ class MassMailController(http.Controller):
 
     @http.route('/mailing/feedback', type='json', auth='public')
     def send_feedback(self, mailing_id, res_id, email, feedback, token):
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         if mailing.exists() and email:
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
                 return 'unauthorized'

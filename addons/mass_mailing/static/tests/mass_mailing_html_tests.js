@@ -14,7 +14,7 @@ QUnit.module('mass_mailing', {}, function () {
 QUnit.module('field html', {
     beforeEach: function () {
         this.data = weTestUtils.wysiwygData({
-            'mail.mass_mailing': {
+            'mailing.mailing': {
                 fields: {
                     display_name: {
                         string: "Displayed name",
@@ -68,7 +68,7 @@ QUnit.test('save arch and html', async function (assert) {
 
     var form = await testUtils.createView({
         View: FormView,
-        model: 'mail.mass_mailing',
+        model: 'mailing.mailing',
         data: this.data,
         arch: '<form>' +
             '   <field name="body_html" class="oe_read_only" widget="html"'+
@@ -152,7 +152,7 @@ QUnit.test('save and edit arch wysiwyg', async function (assert) {
 
     var form = await testUtils.createView({
         View: FormView,
-        model: 'mail.mass_mailing',
+        model: 'mailing.mailing',
         data: this.data,
         arch: '<form>' +
             '   <header style="min-height:31px;">' +
