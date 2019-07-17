@@ -408,6 +408,62 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEquals(mo_pick1.bom_id, self.bom)
         self.assertEquals(mo_pick2.bom_id, bom2)
 
+    def test_flow_5(self):
+        """ Extra quantity on the move.
+        """
+        # We create a second partner of type subcontractor
+        main_partner_2 = self.env['res.partner'].create({'name': 'main_partner'})
+        subcontractor_partner2 = self.env['res.partner'].create({
+            'name': 'subcontractor_partner',
+            'type': 'subcontractor',
+            'parent_id': main_partner_2.id,
+        })
+
+        # We create a different BoM for the same product
+        comp3 = self.env['product.product'].create({
+            'name': 'Component3',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.type = 'subcontract'
+        bom_form.product_tmpl_id = self.finished.product_tmpl_id
+        with bom_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.comp1
+            bom_line.product_qty = 1
+        with bom_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = comp3
+            bom_line.product_qty = 2
+        bom2 = bom_form.save()
+
+        # We assign the second BoM to the new partner
+        self.bom.write({'subcontractor_ids': [(4, self.subcontractor_partner1.id, None)]})
+        bom2.write({'subcontractor_ids': [(4, subcontractor_partner2.id, None)]})
+
+        # Create a receipt picking from the subcontractor1
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = subcontractor_partner2
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 1
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        picking_receipt.move_lines.quantity_done = 3.0
+        picking_receipt.action_done()
+        mo = picking_receipt._get_subcontracted_productions()
+        move_comp1 = mo.move_raw_ids.filtered(lambda m: m.product_id == self.comp1)
+        move_comp3 = mo.move_raw_ids.filtered(lambda m: m.product_id == comp3)
+        self.assertEqual(sum(move_comp1.mapped('product_uom_qty')), 3.0)
+        self.assertEqual(sum(move_comp3.mapped('product_uom_qty')), 6.0)
+        self.assertEqual(sum(move_comp1.mapped('quantity_done')), 3.0)
+        self.assertEqual(sum(move_comp3.mapped('quantity_done')), 6.0)
+        move_finished = mo.move_finished_ids
+        self.assertEqual(sum(move_finished.mapped('product_uom_qty')), 3.0)
+        self.assertEqual(sum(move_finished.mapped('quantity_done')), 3.0)
+
 
 class TestSubcontractingTracking(TransactionCase):
     def setUp(self):
