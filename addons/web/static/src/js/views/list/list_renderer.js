@@ -745,7 +745,7 @@ var ListRenderer = BasicRenderer.extend({
             $th.css({ textAlign: 'right' });
         }
 
-        if (config.isDebug()) {
+        if (config.isDebug() || node.attrs.help || field.help) {
             var fieldDescr = {
                 field: field,
                 name: name,
