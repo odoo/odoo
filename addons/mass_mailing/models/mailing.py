@@ -24,8 +24,8 @@ MASS_MAILING_BUSINESS_MODELS = [
     'res.partner',
     'event.track',
     'sale.order',
-    'mail.mass_mailing.list',
-    'mail.mass_mailing.contact'
+    'mailing.list',
+    'mailing.contact'
 ]
 
 # Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
@@ -33,9 +33,9 @@ MASS_MAILING_BUSINESS_MODELS = [
 image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
-class MassMailingTag(models.Model):
+class MailingTag(models.Model):
     """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
-    _name = 'mail.mass_mailing.tag'
+    _name = 'mailing.tag'
     _description = 'Mass Mailing Tag'
     _order = 'name'
 
@@ -43,256 +43,14 @@ class MassMailingTag(models.Model):
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
-class MassMailingContactListRel(models.Model):
-    """ Intermediate model between mass mailing list and mass mailing contact
-        Indicates if a contact is opted out for a particular list
-    """
-    _name = 'mail.mass_mailing.list_contact_rel'
-    _description = 'Mass Mailing Subscription Information'
-    _table = 'mail_mass_mailing_contact_list_rel'
-    _rec_name = 'contact_id'
 
-    contact_id = fields.Many2one('mail.mass_mailing.contact', string='Contact', ondelete='cascade', required=True)
-    list_id = fields.Many2one('mail.mass_mailing.list', string='Mailing List', ondelete='cascade', required=True)
-    opt_out = fields.Boolean(string='Opt Out',
-                             help='The contact has chosen not to receive mails anymore from this list', default=False)
-    unsubscription_date = fields.Datetime(string='Unsubscription Date')
-    contact_count = fields.Integer(related='list_id.contact_nbr', store=False, readonly=False)
-    message_bounce = fields.Integer(related='contact_id.message_bounce', store=False, readonly=False)
-    is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False, readonly=False)
-
-    _sql_constraints = [
-        ('unique_contact_list', 'unique (contact_id, list_id)',
-         'A contact cannot be subscribed multiple times to the same list!')
-    ]
-
-    @api.model
-    def create(self, vals):
-        if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
-        return super(MassMailingContactListRel, self).create(vals)
-
-    def write(self, vals):
-        if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
-        return super(MassMailingContactListRel, self).write(vals)
-
-    def action_open_mailing_list_contact(self):
-        """TODO DBE : To remove - Deprecated"""
-        contact_id = self.contact_id
-        action = {
-            'name': _(contact_id.name),
-            'type': 'ir.actions.act_window',
-            'res_model': 'mail.mass_mailing.contact',
-            'view_mode': 'form',
-            'target': 'current',
-            'res_id': contact_id.id
-        }
-        return action
-
-
-class MassMailingList(models.Model):
-    """Model of a contact list. """
-    _name = 'mail.mass_mailing.list'
-    _order = 'name'
-    _description = 'Mailing List'
-
-    name = fields.Char(string='Mailing List', required=True)
-    active = fields.Boolean(default=True)
-    contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
-    contact_ids = fields.Many2many(
-        'mail.mass_mailing.contact', 'mail_mass_mailing_contact_list_rel', 'list_id', 'contact_id',
-        string='Mailing Lists')
-    subscription_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id',
-        string='Subscription Information')
-    is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
-                                                  " page to allows him to update his subscription preferences.")
-
-    # Compute number of contacts non opt-out, non blacklisted and valid email recipient for a mailing list
-    def _compute_contact_nbr(self):
-        self.env.cr.execute('''
-            select
-                list_id, count(*)
-            from
-                mail_mass_mailing_contact_list_rel r
-                left join mail_mass_mailing_contact c on (r.contact_id=c.id)
-                left join mail_blacklist bl on c.email_normalized = bl.email and bl.active
-            where
-                list_id in %s
-                AND COALESCE(r.opt_out,FALSE) = FALSE
-                AND c.email_normalized IS NOT NULL
-                AND bl.id IS NULL
-            group by
-                list_id
-        ''', (tuple(self.ids), ))
-        data = dict(self.env.cr.fetchall())
-        for mailing_list in self:
-            mailing_list.contact_nbr = data.get(mailing_list.id, 0)
-
-    def name_get(self):
-        return [(list.id, "%s (%s)" % (list.name, list.contact_nbr)) for list in self]
-
-    def action_merge(self, src_lists, archive):
-        """
-            Insert all the contact from the mailing lists 'src_lists' to the
-            mailing list in 'self'. Possibility to archive the mailing lists
-            'src_lists' after the merge except the destination mailing list 'self'.
-        """
-        # Explation of the SQL query with an example. There are the following lists
-        # A (id=4): yti@odoo.com; yti@example.com
-        # B (id=5): yti@odoo.com; yti@openerp.com
-        # C (id=6): nothing
-        # To merge the mailing lists A and B into C, we build the view st that looks
-        # like this with our example:
-        #
-        #  contact_id |           email           | row_number |  list_id |
-        # ------------+---------------------------+------------------------
-        #           4 | yti@odoo.com              |          1 |        4 |
-        #           6 | yti@odoo.com              |          2 |        5 |
-        #           5 | yti@example.com           |          1 |        4 |
-        #           7 | yti@openerp.com           |          1 |        5 |
-        #
-        # The row_column is kind of an occurence counter for the email address.
-        # Then we create the Many2many relation between the destination list and the contacts
-        # while avoiding to insert an existing email address (if the destination is in the source
-        # for example)
-        self.ensure_one()
-        # Put destination is sources lists if not already the case
-        src_lists |= self
-        self.env.cr.execute("""
-            INSERT INTO mail_mass_mailing_contact_list_rel (contact_id, list_id)
-            SELECT st.contact_id AS contact_id, %s AS list_id
-            FROM
-                (
-                SELECT
-                    contact.id AS contact_id,
-                    contact.email AS email,
-                    mailing_list.id AS list_id,
-                    row_number() OVER (PARTITION BY email ORDER BY email) AS rn
-                FROM
-                    mail_mass_mailing_contact contact,
-                    mail_mass_mailing_contact_list_rel contact_list_rel,
-                    mail_mass_mailing_list mailing_list
-                WHERE contact.id=contact_list_rel.contact_id
-                AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
-                AND contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)
-                AND mailing_list.id=contact_list_rel.list_id
-                AND mailing_list.id IN %s
-                AND NOT EXISTS
-                    (
-                    SELECT 1
-                    FROM
-                        mail_mass_mailing_contact contact2,
-                        mail_mass_mailing_contact_list_rel contact_list_rel2
-                    WHERE contact2.email = contact.email
-                    AND contact_list_rel2.contact_id = contact2.id
-                    AND contact_list_rel2.list_id = %s
-                    )
-                ) st
-            WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
-        self.invalidate_cache()
-        if archive:
-            (src_lists - self).write({'active': False})
-
-    def close_dialog(self):
-        return {'type': 'ir.actions.act_window_close'}
-
-
-class MassMailingContact(models.Model):
-    """Model of a contact. This model is different from the partner model
-    because it holds only some basic information: name, email. The purpose is to
-    be able to deal with large contact list to email without bloating the partner
-    base."""
-    _name = 'mail.mass_mailing.contact'
-    _inherit = ['mail.thread.blacklist']
-    _description = 'Mass Mailing Contact'
-    _order = 'email'
-    _rec_name = 'email'
-
-    name = fields.Char()
-    company_name = fields.Char(string='Company Name')
-    title_id = fields.Many2one('res.partner.title', string='Title')
-    email = fields.Char(required=True)
-    is_email_valid = fields.Boolean(compute='_compute_is_email_valid', store=True)
-    list_ids = fields.Many2many(
-        'mail.mass_mailing.list', 'mail_mass_mailing_contact_list_rel',
-        'contact_id', 'list_id', string='Mailing Lists')
-    subscription_list_ids = fields.One2many('mail.mass_mailing.list_contact_rel',
-        'contact_id', string='Subscription Information')
-    country_id = fields.Many2one('res.country', string='Country')
-    tag_ids = fields.Many2many('res.partner.category', string='Tags')
-    opt_out = fields.Boolean('Opt Out', compute='_compute_opt_out', search='_search_opt_out',
-                             help='Opt out flag for a specific mailing list.'
-                                  'This field should not be used in a view without a unique and active mailing list context.')
-
-    @api.depends('email')
-    def _compute_is_email_valid(self):
-        for record in self:
-            normalized = tools.email_normalize(record.email)
-            record.is_email_valid = normalized if not normalized else True
-
-    @api.model
-    def _search_opt_out(self, operator, value):
-        # Assumes operator is '=' or '!=' and value is True or False
-        if operator != '=':
-            if operator == '!=' and isinstance(value, bool):
-                value = not value
-            else:
-                raise NotImplementedError()
-
-        if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
-            [active_list_id] = self._context['default_list_ids']
-            contacts = self.env['mail.mass_mailing.list_contact_rel'].search([('list_id', '=', active_list_id)])
-            return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
-        else:
-            raise UserError('Search opt out cannot be executed without a unique and valid active mailing list context.')
-
-    @api.depends('subscription_list_ids')
-    def _compute_opt_out(self):
-        if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
-            [active_list_id] = self._context['default_list_ids']
-            for record in self:
-                active_subscription_list = record.subscription_list_ids.filtered(lambda l: l.list_id.id == active_list_id)
-                record.opt_out = active_subscription_list.opt_out
-        else:
-            for record in self:
-                record.opt_out = False
-
-    def get_name_email(self, name):
-        name, email = self.env['res.partner']._parse_partner_name(name)
-        if name and not email:
-            email = name
-        if email and not name:
-            name = email
-        return name, email
-
-    @api.model
-    def name_create(self, name):
-        name, email = self.get_name_email(name)
-        contact = self.create({'name': name, 'email': email})
-        return contact.name_get()[0]
-
-    @api.model
-    def add_to_list(self, name, list_id):
-        name, email = self.get_name_email(name)
-        contact = self.create({'name': name, 'email': email, 'list_ids': [(4, list_id)]})
-        return contact.name_get()[0]
-
-    def _message_get_default_recipients(self):
-        return {r.id: {
-            'partner_ids': [],
-            'email_to': r.email_normalized,
-            'email_cc': False}
-            for r in self}
-
-
-class MassMailingStage(models.Model):
+class MailingStage(models.Model):
 
     """Stage for mass mailing campaigns. """
-    _name = 'mail.mass_mailing.stage'
+    _name = 'mailing.stage'
     _description = 'Mass Mailing Campaign Stage'
     _order = 'sequence'
 
@@ -307,8 +65,8 @@ class MassMailingCampaign(models.Model):
     _rec_name = "campaign_id"
     _inherits = {'utm.campaign': 'campaign_id'}
 
-    stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', ondelete='restrict', required=True, 
-        default=lambda self: self.env['mail.mass_mailing.stage'].search([], limit=1),
+    stage_id = fields.Many2one('mailing.stage', string='Stage', ondelete='restrict', required=True, 
+        default=lambda self: self.env['mailing.stage'].search([], limit=1),
         group_expand='_group_expand_stage_ids')
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -320,10 +78,10 @@ class MassMailingCampaign(models.Model):
     medium_id = fields.Many2one('utm.medium', string='Medium',
             help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email', False))
     tag_ids = fields.Many2many(
-        'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
+        'mailing.tag', 'mail_mass_mailing_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
     mass_mailing_ids = fields.One2many(
-        'mail.mass_mailing', 'mass_mailing_campaign_id',
+        'mailing.mailing', 'mass_mailing_campaign_id',
         string='Mass Mailings')
     unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
         help='If checked, recipients will be mailed only once for the whole campaign. '
@@ -331,7 +89,7 @@ class MassMailingCampaign(models.Model):
              'the effectiveness of the mailings, without causing duplicate messages.')
     color = fields.Integer(string='Color Index')
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of clicks")
-    # stat fields
+    # trace statistics fields
     total = fields.Integer(compute="_compute_statistics")
     scheduled = fields.Integer(compute="_compute_statistics")
     failed = fields.Integer(compute="_compute_statistics")
@@ -349,9 +107,9 @@ class MassMailingCampaign(models.Model):
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
-            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_campaign_id AS id
-            FROM mail_mail_statistics AS stats
-            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mail_stat_id = stats.id
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_campaign_id AS id
+            FROM mailing_trace AS stats
+            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_campaign_id IN %s
             GROUP BY stats.mass_mailing_campaign_id
         """, (tuple(self.ids), ))
@@ -376,7 +134,7 @@ class MassMailingCampaign(models.Model):
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
             FROM
-                mail_mail_statistics s
+                mailing_trace s
             RIGHT JOIN
                 mail_mass_mailing_campaign c
                 ON (c.id = s.mass_mailing_campaign_id)
@@ -396,14 +154,14 @@ class MassMailingCampaign(models.Model):
             self.browse(row.pop('campaign_id')).update(row)
 
     def _compute_total_mailings(self):
-        campaign_data = self.env['mail.mass_mailing'].read_group(
+        campaign_data = self.env['mailing.mailing'].read_group(
             [('mass_mailing_campaign_id', 'in', self.ids)],
             ['mass_mailing_campaign_id'], ['mass_mailing_campaign_id'])
         mapped_data = dict([(c['mass_mailing_campaign_id'][0], c['mass_mailing_campaign_id_count']) for c in campaign_data])
         for campaign in self:
             campaign.total_mailings = mapped_data.get(campaign.id, 0)
 
-    def get_recipients(self, model=None):
+    def _get_recipients(self, model=None):
         """Return the recipients of a mailing campaign. This is based on the statistics
         build for each mailing. """
         res = dict.fromkeys(self.ids, {})
@@ -411,7 +169,7 @@ class MassMailingCampaign(models.Model):
             domain = [('mass_mailing_campaign_id', '=', campaign.id)]
             if model:
                 domain += [('model', '=', model)]
-            res[campaign.id] = set(self.env['mail.mail.statistics'].search(domain).mapped('res_id'))
+            res[campaign.id] = set(self.env['mailing.trace'].search(domain).mapped('res_id'))
         return res
 
     @api.model
@@ -426,8 +184,7 @@ class MassMailingCampaign(models.Model):
 class MassMailing(models.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
     A mass mailing is an occurence of sending emails. """
-
-    _name = 'mail.mass_mailing'
+    _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
@@ -448,7 +205,7 @@ class MassMailing(models.Model):
     def default_get(self, fields):
         res = super(MassMailing, self).default_get(fields)
         if 'reply_to_mode' in fields and not 'reply_to_mode' in res and res.get('mailing_model_real'):
-            if res['mailing_model_real'] in ['res.partner', 'mail.mass_mailing.contact']:
+            if res['mailing_model_real'] in ['res.partner', 'mailing.contact']:
                 res['reply_to_mode'] = 'email'
             else:
                 res['reply_to_mode'] = 'thread'
@@ -471,8 +228,7 @@ class MassMailing(models.Model):
                                   help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
-    medium_id = fields.Many2one('utm.medium', string='Medium',
-                                help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
+    medium_id = fields.Many2one('utm.medium', string='Medium', help="Delivery method: Email")
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, copy=False, default='draft', group_expand='_group_expand_states')
@@ -484,20 +240,20 @@ class MassMailing(models.Model):
     reply_to = fields.Char(string='Reply To', help='Preferred Reply-To Address',
         default=lambda self: self.env['mail.message']._get_default_from())
     # recipients
-    mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mail.mass_mailing.contact', required=True)
+    mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mailing.contact', required=True)
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
-        default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
+        default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
-    contact_list_ids = fields.Many2many('mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
+    contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel',
         string='Mailing Lists')
     contact_ab_pc = fields.Integer(string='A/B Testing percentage',
         help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
     # statistics data
-    statistics_ids = fields.One2many('mail.mail.statistics', 'mass_mailing_id', string='Emails Statistics')
+    mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
     expected = fields.Integer(compute="_compute_statistics")
@@ -517,13 +273,13 @@ class MassMailing(models.Model):
 
     def _compute_total(self):
         for mass_mailing in self:
-            mass_mailing.total = len(mass_mailing.sudo().get_recipients())
+            mass_mailing.total = len(mass_mailing.sudo()._get_recipients())
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
-            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_id AS id
-            FROM mail_mail_statistics AS stats
-            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mail_stat_id = stats.id
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_id AS id
+            FROM mailing_trace AS stats
+            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
             GROUP BY stats.mass_mailing_id
         """, (tuple(self.ids), ))
@@ -536,7 +292,7 @@ class MassMailing(models.Model):
     @api.depends('mailing_model_id')
     def _compute_model(self):
         for record in self:
-            record.mailing_model_real = (record.mailing_model_name != 'mail.mass_mailing.list') and record.mailing_model_name or 'mail.mass_mailing.contact'
+            record.mailing_model_real = (record.mailing_model_name != 'mailing.list') and record.mailing_model_name or 'mailing.contact'
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
@@ -555,9 +311,9 @@ class MassMailing(models.Model):
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced,
                 COUNT(CASE WHEN s.exception is not null THEN 1 ELSE null END) AS failed
             FROM
-                mail_mail_statistics s
+                mailing_trace s
             RIGHT JOIN
-                mail_mass_mailing m
+                mailing_mailing m
                 ON (m.id = s.mass_mailing_id)
             WHERE
                 m.id IN %s
@@ -573,24 +329,6 @@ class MassMailing(models.Model):
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
 
-    def _unsubscribe_token(self, res_id, email):
-        """Generate a secure hash for this mailing list and parameters.
-
-        This is appended to the unsubscription URL and then checked at
-        unsubscription time to ensure no malicious unsubscriptions are
-        performed.
-
-        :param int res_id:
-            ID of the resource that will be unsubscribed.
-
-        :param str email:
-            Email of the resource that will be unsubscribed.
-        """
-        secret = self.env["ir.config_parameter"].sudo().get_param(
-            "database.secret")
-        token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
-        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
-
     def _compute_next_departure(self):
         cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall
         str2dt = fields.Datetime.from_string
@@ -605,16 +343,13 @@ class MassMailing(models.Model):
     @api.onchange('mass_mailing_campaign_id')
     def _onchange_mass_mailing_campaign_id(self):
         if self.mass_mailing_campaign_id:
-            dic = {'campaign_id': self.mass_mailing_campaign_id.campaign_id,
-                   'source_id': self.mass_mailing_campaign_id.source_id,
-                   'medium_id': self.mass_mailing_campaign_id.medium_id}
-            self.update(dic)
+            self.campaign_id = self.mass_mailing_campaign_id.campaign_id.id
 
     @api.onchange('mailing_model_id', 'contact_list_ids')
     def _onchange_model_and_list(self):
         mailing_domain = []
         if self.mailing_model_name:
-            if self.mailing_model_name == 'mail.mass_mailing.list':
+            if self.mailing_model_name == 'mailing.list':
                 if self.contact_list_ids:
                     mailing_domain.append(('list_ids', 'in', self.contact_list_ids.ids))
                 else:
@@ -632,21 +367,24 @@ class MassMailing(models.Model):
         if self.subject and not self.name:
             self.name = self.subject
 
-    #------------------------------------------------------
-    # Technical stuff
-    #------------------------------------------------------
+    # ------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------
 
     @api.model
-    def name_create(self, name):
-        """ _rec_name is source_id, creates a utm.source instead """
-        mass_mailing = self.create({'name': name, 'subject': name})
-        return mass_mailing.name_get()[0]
+    def create(self, values):
+        if values.get('name') and not values.get('subject'):
+            values['subject'] = values['name']
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        if 'medium_id' not in values:
+            values['medium_id'] = self.env.ref('utm.utm_medium_email').id
+        return super(MassMailing, self).create(values)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name') and not vals.get('subject'):
-            vals['subject'] = vals['name']
-        return super(MassMailing, self).create(vals)
+    def write(self, values):
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super(MassMailing, self).write(values)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -658,74 +396,9 @@ class MassMailing(models.Model):
     def _group_expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
 
-    def update_opt_out(self, email, list_ids, value):
-        if len(list_ids) > 0:
-            model = self.env['mail.mass_mailing.contact'].with_context(active_test=False)
-            records = model.search([('email_normalized', '=', tools.email_normalize(email))])
-            opt_out_records = self.env['mail.mass_mailing.list_contact_rel'].search([
-                ('contact_id', 'in', records.ids),
-                ('list_id', 'in', list_ids),
-                ('opt_out', '!=', value)
-            ])
-
-            opt_out_records.write({'opt_out': value})
-            message = _('The recipient <strong>unsubscribed from %s</strong> mailing list(s)') \
-                if value else _('The recipient <strong>subscribed to %s</strong> mailing list(s)')
-            for record in records:
-                # filter the list_id by record
-                record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
-                if len(record_lists) > 0:
-                    record.sudo().message_post(body=_(message % ', '.join(str(list.name) for list in record_lists.mapped('list_id'))))
-
-    @api.model
-    def create(self, values):
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).create(values)
-
-    def write(self, values):
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).write(values)
-
-    def _convert_inline_images_to_urls(self, body_html):
-        """
-        Find inline base64 encoded images, make an attachement out of
-        them and replace the inline image with an url to the attachement.
-        """
-
-        def _image_to_url(b64image: bytes):
-            """Store an image in an attachement and returns an url"""
-            attachment = self.env['ir.attachment'].create({
-                'datas': b64image,
-                'name': "cropped_image_mailing_{}".format(self.id),
-                'type': 'binary',})
-
-            attachment.generate_access_token()
-
-            return '/web/image/%s?access_token=%s' % (
-                attachment.id, attachment.access_token)
-
-
-        modified = False
-        root = lxml.html.fromstring(body_html)
-        for node in root.iter('img'):
-            match = image_re.match(node.attrib.get('src', ''))
-            if match:
-                mime = match.group(1)  # unsed
-                image = match.group(2).encode()  # base64 image as bytes
-
-                node.attrib['src'] = _image_to_url(image)
-                modified = True
-
-        if modified:
-            return lxml.html.tostring(root)
-
-        return body_html
-
-    #------------------------------------------------------
-    # Views & Actions
-    #------------------------------------------------------
+    # ------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------
 
     def action_duplicate(self):
         self.ensure_one()
@@ -736,7 +409,7 @@ class MassMailing(models.Model):
             return {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
-                'res_model': 'mail.mass_mailing',
+                'res_model': 'mailing.mailing',
                 'res_id': mass_mailing_copy.id,
                 'context': context,
             }
@@ -749,14 +422,14 @@ class MassMailing(models.Model):
             'name': _('Test Mailing'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'mail.mass_mailing.test',
+            'res_model': 'mailing.mailing.test',
             'target': 'new',
             'context': ctx,
         }
 
     def action_schedule_date(self):
         self.ensure_one()
-        action = self.env.ref('mass_mailing.mass_mailing_schedule_date_action').read()[0]
+        action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
         action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
         return action
 
@@ -768,10 +441,10 @@ class MassMailing(models.Model):
 
     def retry_failed_mail(self):
         failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
-        failed_mails.mapped('statistics_ids').unlink()
+        failed_mails.mapped('mailing_trace_ids').unlink()
         failed_mails.sudo().unlink()
-        res_ids = self.get_recipients()
-        except_mailed = self.env['mail.mail.statistics'].search([
+        res_ids = self._get_recipients()
+        except_mailed = self.env['mailing.trace'].search([
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
             ('exception', '!=', False),
@@ -798,11 +471,11 @@ class MassMailing(models.Model):
 
     def _action_view_documents_filtered(self, view_filter):
         if view_filter in ('sent', 'opened', 'replied', 'bounced', 'clicked'):
-            opened_stats = self.statistics_ids.filtered(lambda stat: stat[view_filter])
+            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat[view_filter])
         elif view_filter == ('delivered'):
-            opened_stats = self.statistics_ids.filtered(lambda stat: stat.sent and not stat.bounced)
+            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.sent and not stat.bounced)
         else:
-            opened_stats = self.env['mail.mail.statistics']
+            opened_stats = self.env['mailing.trace']
         res_ids = opened_stats.mapped('res_id')
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         return {
@@ -813,20 +486,39 @@ class MassMailing(models.Model):
             'domain': [('id', 'in', res_ids)],
         }
 
-    #------------------------------------------------------
+    def update_opt_out(self, email, list_ids, value):
+        if len(list_ids) > 0:
+            model = self.env['mailing.contact'].with_context(active_test=False)
+            records = model.search([('email_normalized', '=', tools.email_normalize(email))])
+            opt_out_records = self.env['mailing.contact.subscription'].search([
+                ('contact_id', 'in', records.ids),
+                ('list_id', 'in', list_ids),
+                ('opt_out', '!=', value)
+            ])
+
+            opt_out_records.write({'opt_out': value})
+            message = _('The recipient <strong>unsubscribed from %s</strong> mailing list(s)') \
+                if value else _('The recipient <strong>subscribed to %s</strong> mailing list(s)')
+            for record in records:
+                # filter the list_id by record
+                record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
+                if len(record_lists) > 0:
+                    record.sudo().message_post(body=_(message % ', '.join(str(list.name) for list in record_lists.mapped('list_id'))))
+
+    # ------------------------------------------------------
     # Email Sending
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def _get_opt_out_list(self):
         """Returns a set of emails opted-out in target model"""
         self.ensure_one()
         opt_out = {}
         target = self.env[self.mailing_model_real]
-        if self.mailing_model_real == "mail.mass_mailing.contact":
+        if self.mailing_model_real == "mailing.contact":
             # if user is opt_out on One list but not on another
             # or if two user with same email address, one opted in and the other one opted out, send the mail anyway
             # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
-            target_list_contacts = self.env['mail.mass_mailing.list_contact_rel'].search(
+            target_list_contacts = self.env['mailing.contact.subscription'].search(
                 [('list_id', 'in', self.contact_list_ids.ids)])
             opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
             opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
@@ -840,18 +532,14 @@ class MassMailing(models.Model):
         return opt_out
 
     def _get_convert_links(self):
-        self.ensure_one()
-        utm_mixin = self.mass_mailing_campaign_id if self.mass_mailing_campaign_id else self
-        vals = {'mass_mailing_id': self.id}
-
+        vals = {
+            'mass_mailing_id': self.id,
+            'source_id': self.source_id.id,
+            'medium_id': self.medium_id.id,
+        }
         if self.mass_mailing_campaign_id:
             vals['mass_mailing_campaign_id'] = self.mass_mailing_campaign_id.id
-        if utm_mixin.campaign_id:
-            vals['campaign_id'] = utm_mixin.campaign_id.id
-        if utm_mixin.source_id:
-            vals['source_id'] = utm_mixin.source_id.id
-        if utm_mixin.medium_id:
-            vals['medium_id'] = utm_mixin.medium_id.id
+            vals['campaign_id'] = self.mass_mailing_campaign_id.campaign_id.id
         return vals
 
     def _get_seen_list(self):
@@ -863,7 +551,7 @@ class MassMailing(models.Model):
         # + use a basic heuristic for extracting emails
         query = """
             SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-              FROM mail_mail_statistics s
+              FROM mailing_trace s
               JOIN %(target)s t ON (s.res_id = t.id)
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
         """
@@ -873,7 +561,7 @@ class MassMailing(models.Model):
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-                  FROM mail_mail_statistics s
+                  FROM mailing_trace s
                   JOIN %(target)s t ON (s.res_id = t.id)
                   JOIN res_partner p ON (t.partner_id = p.id)
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
@@ -914,7 +602,7 @@ class MassMailing(models.Model):
             'post_convert_links': self._get_convert_links(),
         }
 
-    def get_recipients(self):
+    def _get_recipients(self):
         if self.mailing_domain:
             domain = safe_eval(self.mailing_domain)
             res_ids = self.env[self.mailing_model_real].search(domain).ids
@@ -927,7 +615,7 @@ class MassMailing(models.Model):
             contact_nbr = self.env[self.mailing_model_real].search_count(domain)
             topick = int(contact_nbr / 100.0 * self.contact_ab_pc)
             if self.mass_mailing_campaign_id and self.mass_mailing_campaign_id.unique_ab_testing:
-                already_mailed = self.mass_mailing_campaign_id.get_recipients()[self.mass_mailing_campaign_id.id]
+                already_mailed = self.mass_mailing_campaign_id._get_recipients()[self.mass_mailing_campaign_id.id]
             else:
                 already_mailed = set([])
             remaining = set(res_ids).difference(already_mailed)
@@ -936,20 +624,21 @@ class MassMailing(models.Model):
             res_ids = random.sample(remaining, topick)
         return res_ids
 
-    def get_remaining_recipients(self):
-        res_ids = self.get_recipients()
-        already_mailed = self.env['mail.mail.statistics'].search_read([('model', '=', self.mailing_model_real),
-                                                                     ('res_id', 'in', res_ids),
-                                                                     ('mass_mailing_id', '=', self.id)], ['res_id'])
-        already_mailed_res_ids = [record['res_id'] for record in already_mailed]
-        return list(set(res_ids) - set(already_mailed_res_ids))
+    def _get_remaining_recipients(self):
+        res_ids = self._get_recipients()
+        already_mailed = self.env['mailing.trace'].search_read([
+            ('model', '=', self.mailing_model_real),
+            ('res_id', 'in', res_ids),
+            ('mass_mailing_id', '=', self.id)], ['res_id'])
+        done_res_ids = [record['res_id'] for record in already_mailed]
+        return [rid for rid in res_ids if rid not in done_res_ids]
 
-    def send_mail(self, res_ids=None):
+    def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
         for mailing in self:
             if not res_ids:
-                res_ids = mailing.get_remaining_recipients()
+                res_ids = mailing._get_remaining_recipients()
             if not res_ids:
                 raise UserError(_('There is no recipients selected.'))
 
@@ -1007,8 +696,63 @@ class MassMailing(models.Model):
         for mass_mailing in mass_mailings:
             user = mass_mailing.write_uid or self.env.user
             mass_mailing = mass_mailing.with_context(**user.with_user(user).context_get())
-            if len(mass_mailing.get_remaining_recipients()) > 0:
+            if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
-                mass_mailing.send_mail()
+                mass_mailing.action_send_mail()
             else:
                 mass_mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
+
+    # ------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------
+
+    def _unsubscribe_token(self, res_id, email):
+        """Generate a secure hash for this mailing list and parameters.
+
+        This is appended to the unsubscription URL and then checked at
+        unsubscription time to ensure no malicious unsubscriptions are
+        performed.
+
+        :param int res_id:
+            ID of the resource that will be unsubscribed.
+
+        :param str email:
+            Email of the resource that will be unsubscribed.
+        """
+        secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
+        token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
+        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
+
+    def _convert_inline_images_to_urls(self, body_html):
+        """
+        Find inline base64 encoded images, make an attachement out of
+        them and replace the inline image with an url to the attachement.
+        """
+
+        def _image_to_url(b64image: bytes):
+            """Store an image in an attachement and returns an url"""
+            attachment = self.env['ir.attachment'].create({
+                'datas': b64image,
+                'name': "cropped_image_mailing_{}".format(self.id),
+                'type': 'binary',})
+
+            attachment.generate_access_token()
+
+            return '/web/image/%s?access_token=%s' % (
+                attachment.id, attachment.access_token)
+
+        modified = False
+        root = lxml.html.fromstring(body_html)
+        for node in root.iter('img'):
+            match = image_re.match(node.attrib.get('src', ''))
+            if match:
+                mime = match.group(1)  # unsed
+                image = match.group(2).encode()  # base64 image as bytes
+
+                node.attrib['src'] = _image_to_url(image)
+                modified = True
+
+        if modified:
+            return lxml.html.tostring(root)
+
+        return body_html

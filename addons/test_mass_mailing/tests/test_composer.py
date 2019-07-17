@@ -15,7 +15,7 @@ class TestComposer(common.SavepointCase):
         )
 
         test_record = self.env['res.partner'].create({'name': 'Mass Mail Partner'})
-        mass_mail_record = self.env['mail.mass_mailing'].with_user(test_user).create({
+        mass_mail_record = self.env['mailing.mailing'].with_user(test_user).create({
             'name': 'Test',
             'subject': 'Test',
             'state': 'draft',
