@@ -552,6 +552,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return any(a.create_variant == 'dynamic' for a in self.valid_product_attribute_ids)
 
+    @api.depends('attribute_line_ids', 'attribute_line_ids.value_ids')
     def _compute_valid_attributes(self):
         """A product template attribute line is considered valid if it has at
         least one possible value.

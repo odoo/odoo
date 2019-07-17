@@ -22,6 +22,7 @@ class ResPartner(models.Model):
             domain=[('partner_id', 'in', all_partners.ids)],
             fields=['partner_id'], groupby=['partner_id']
         )
+        self.sale_order_count = 0
         for group in sale_order_groups:
             partner = self.browse(group['partner_id'][0])
             while partner:

@@ -573,6 +573,9 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.inherited:
             self._modules.update(field._modules)
 
+        if field.depends_context:
+            self.depends_context = field.depends_context
+
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
@@ -2252,11 +2255,6 @@ class Many2one(_Relational):
 
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
-    _slots = {
-        # DLE P9: If there is a change in the context, the one2many fields cache values of the initial context is not recomputed
-        # See test test_70_archive_internal_partners
-        'depends_context': ('active_test',),      # depends on context (active_test)
-    }
     _convert_to_cache_read = True
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``, return True if everything is in cache. """
@@ -2276,23 +2274,34 @@ class _RelationalMulti(_Relational):
                 return
         cache = records.env.cache
         result = True
-        for record in records:
-            if cache.contains(record, self):
-                try:
-                    val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-                    cache.set(record, self, val)
-                except Exception as exc:
-                    # delay the failure until the field is necessary
-                    cache.set_failed(record, [self], exc)
+        if self.depends_context and 'active_test' in self.depends_context:
+            if records.env.context.get('active_test', True):
+                updates = [(value.filtered(lambda r: r.sudo().active), records.with_context(active_test=True)), (value, records.with_context(active_test=False))]
             else:
-                result = False
-        # DLE P103: `test_00_product_company_level_delays`
-        # on `moves.write({'picking_id': picking.id})`, `picking.move_lines` gets updated here,
-        # which must trigger the modification of `picking.group_id`, defined as `related='move_lines.group_id', store=True`
-        # DLE P135: `test_field_message_is_follower`
-        # When modifying `message_follower_ids`, it must trigger the modification of fields depending on it
-        # e.g. `message_is_follower`
-        records.modified([self.name])
+                updates = [(value, records), (value, records.with_context(active_test=True))]
+        else:
+            updates = [(value, records)]
+        for value, recs in updates:
+            if not value:
+                continue
+            for record in recs:
+                if cache.contains(record, self):
+                    try:
+                        val = self.convert_to_cache(record[self.name] | value, record, validate=False)
+                        cache.set(record, self, val)
+                    except Exception as exc:
+                        # delay the failure until the field is necessary
+                        cache.set_failed(record, [self], exc)
+                else:
+                    result = False
+            # DLE P103: `test_00_product_company_level_delays`
+            # on `moves.write({'picking_id': picking.id})`, `picking.move_lines` gets updated here,
+            # which must trigger the modification of `picking.group_id`, defined as `related='move_lines.group_id', store=True`
+            # DLE P135: `test_field_message_is_follower`
+            # When modifying `message_follower_ids`, it must trigger the modification of fields depending on it
+            # e.g. `message_is_follower`
+            recs.env._protected = records.env._protected
+            recs.modified([self.name])
         return result
 
     def convert_to_cache(self, value, record, validate=True):
@@ -2430,6 +2439,13 @@ class _RelationalMulti(_Relational):
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
             )
+
+    def _setup_regular_full(self, model):
+        super(_RelationalMulti, self)._setup_regular_full(model)
+        # DLE P9: If there is a change in the context, the one2many fields cache values of the initial context is not recomputed
+        # See test test_70_archive_internal_partners
+        if 'active' in model.env[self.comodel_name] and (not self.depends_context or 'active_test' not in self.depends_context):
+            self.depends_context = (self.depends_context or tuple()) + ('active_test',)
 
 
 class One2many(_RelationalMulti):

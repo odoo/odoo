@@ -724,6 +724,8 @@ class Cache(object):
                 return get_context('force_company') or env.company.id
             elif key == 'uid':
                 return (env.uid, env.su)
+            elif key == 'active_test':
+                return get_context('active_test', field.context.get('active_test', True))
             else:
                 return get_context(key)
 
