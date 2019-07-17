@@ -94,15 +94,15 @@ class MassMailController(http.Controller):
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='public')
     def track_mail_open(self, mail_id, **post):
         """ Email tracking. """
-        request.env['mail.mail.statistics'].sudo().set_opened(mail_mail_ids=[mail_id])
+        request.env['mailing.trace'].sudo().set_opened(mail_mail_ids=[mail_id])
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
         response.data = base64.b64decode(b'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
 
         return response
 
-    @http.route('/r/<string:code>/m/<int:stat_id>', type='http', auth="public")
-    def full_url_redirect(self, code, stat_id, **post):
+    @http.route('/r/<string:code>/m/<int:mailing_trace_id>', type='http', auth="public")
+    def full_url_redirect(self, code, mailing_trace_id, **post):
         # don't assume geoip is set, it is part of the website module
         # which mass_mailing doesn't depend on
         country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
@@ -111,7 +111,7 @@ class MassMailController(http.Controller):
             code,
             ip=request.httprequest.remote_addr,
             country_code=country_code,
-            mail_stat_id=stat_id
+            mailing_trace_id=mailing_trace_id
         )
         return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
 

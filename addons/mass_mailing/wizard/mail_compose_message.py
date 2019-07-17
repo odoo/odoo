@@ -16,7 +16,7 @@ class MailComposeMessage(models.TransientModel):
 
     def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
-        mail.mail.statistics values in the o2m of mail_mail, when doing pure
+        mailing.trace values in the o2m of mail_mail, when doing pure
         email mass mailing. """
         self.ensure_one()
         res = super(MailComposeMessage, self).get_mail_values(res_ids)
@@ -71,7 +71,7 @@ class MailComposeMessage(models.TransientModel):
                     mail_values['state'] = 'cancel'
                 elif seen_list is not None:
                     seen_list.add(mail_to)
-                stat_vals = {
+                trace_vals = {
                     'model': self.model,
                     'res_id': res_id,
                     'mass_mailing_id': mass_mailing.id,
@@ -79,12 +79,12 @@ class MailComposeMessage(models.TransientModel):
                 }
                 if mail_values.get('body_html') and mass_mail_layout:
                     mail_values['body_html'] = mass_mail_layout.render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
-                # propagate ignored state to stat when still-born
+                # propagate ignored state to trace when still-born
                 if mail_values.get('state') == 'cancel':
-                    stat_vals['ignored'] = fields.Datetime.now()
+                    trace_vals['ignored'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
-                    'statistics_ids': [(0, 0, stat_vals)],
+                    'mailing_trace_ids': [(0, 0, trace_vals)],
                     # email-mode: keep original message for routing
                     'notification': mass_mailing.reply_to_mode == 'thread',
                     'auto_delete': not mass_mailing.keep_archives,

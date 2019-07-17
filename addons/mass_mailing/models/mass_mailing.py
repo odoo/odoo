@@ -89,7 +89,7 @@ class MassMailingCampaign(models.Model):
              'the effectiveness of the mailings, without causing duplicate messages.')
     color = fields.Integer(string='Color Index')
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of clicks")
-    # stat fields
+    # trace statistics fields
     total = fields.Integer(compute="_compute_statistics")
     scheduled = fields.Integer(compute="_compute_statistics")
     failed = fields.Integer(compute="_compute_statistics")
@@ -107,9 +107,9 @@ class MassMailingCampaign(models.Model):
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
-            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_campaign_id AS id
-            FROM mail_mail_statistics AS stats
-            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mail_stat_id = stats.id
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_campaign_id AS id
+            FROM mailing_trace AS stats
+            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_campaign_id IN %s
             GROUP BY stats.mass_mailing_campaign_id
         """, (tuple(self.ids), ))
@@ -134,7 +134,7 @@ class MassMailingCampaign(models.Model):
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
             FROM
-                mail_mail_statistics s
+                mailing_trace s
             RIGHT JOIN
                 mail_mass_mailing_campaign c
                 ON (c.id = s.mass_mailing_campaign_id)
@@ -169,7 +169,7 @@ class MassMailingCampaign(models.Model):
             domain = [('mass_mailing_campaign_id', '=', campaign.id)]
             if model:
                 domain += [('model', '=', model)]
-            res[campaign.id] = set(self.env['mail.mail.statistics'].search(domain).mapped('res_id'))
+            res[campaign.id] = set(self.env['mailing.trace'].search(domain).mapped('res_id'))
         return res
 
     @api.model
@@ -253,7 +253,7 @@ class MassMailing(models.Model):
     contact_ab_pc = fields.Integer(string='A/B Testing percentage',
         help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
     # statistics data
-    statistics_ids = fields.One2many('mail.mail.statistics', 'mass_mailing_id', string='Emails Statistics')
+    mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
     expected = fields.Integer(compute="_compute_statistics")
@@ -277,9 +277,9 @@ class MassMailing(models.Model):
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
-            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_id AS id
-            FROM mail_mail_statistics AS stats
-            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mail_stat_id = stats.id
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_id AS id
+            FROM mailing_trace AS stats
+            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
             GROUP BY stats.mass_mailing_id
         """, (tuple(self.ids), ))
@@ -311,7 +311,7 @@ class MassMailing(models.Model):
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced,
                 COUNT(CASE WHEN s.exception is not null THEN 1 ELSE null END) AS failed
             FROM
-                mail_mail_statistics s
+                mailing_trace s
             RIGHT JOIN
                 mail_mass_mailing m
                 ON (m.id = s.mass_mailing_id)
@@ -441,10 +441,10 @@ class MassMailing(models.Model):
 
     def retry_failed_mail(self):
         failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
-        failed_mails.mapped('statistics_ids').unlink()
+        failed_mails.mapped('mailing_trace_ids').unlink()
         failed_mails.sudo().unlink()
         res_ids = self._get_recipients()
-        except_mailed = self.env['mail.mail.statistics'].search([
+        except_mailed = self.env['mailing.trace'].search([
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
             ('exception', '!=', False),
@@ -471,11 +471,11 @@ class MassMailing(models.Model):
 
     def _action_view_documents_filtered(self, view_filter):
         if view_filter in ('sent', 'opened', 'replied', 'bounced', 'clicked'):
-            opened_stats = self.statistics_ids.filtered(lambda stat: stat[view_filter])
+            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat[view_filter])
         elif view_filter == ('delivered'):
-            opened_stats = self.statistics_ids.filtered(lambda stat: stat.sent and not stat.bounced)
+            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.sent and not stat.bounced)
         else:
-            opened_stats = self.env['mail.mail.statistics']
+            opened_stats = self.env['mailing.trace']
         res_ids = opened_stats.mapped('res_id')
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         return {
@@ -551,7 +551,7 @@ class MassMailing(models.Model):
         # + use a basic heuristic for extracting emails
         query = """
             SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-              FROM mail_mail_statistics s
+              FROM mailing_trace s
               JOIN %(target)s t ON (s.res_id = t.id)
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
         """
@@ -561,7 +561,7 @@ class MassMailing(models.Model):
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-                  FROM mail_mail_statistics s
+                  FROM mailing_trace s
                   JOIN %(target)s t ON (s.res_id = t.id)
                   JOIN res_partner p ON (t.partner_id = p.id)
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
@@ -626,7 +626,7 @@ class MassMailing(models.Model):
 
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
-        already_mailed = self.env['mail.mail.statistics'].search_read([
+        already_mailed = self.env['mailing.trace'].search_read([
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
             ('mass_mailing_id', '=', self.id)], ['res_id'])

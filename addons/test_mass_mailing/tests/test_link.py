@@ -48,7 +48,7 @@ class TestLinkTracker(common.MassMailingCase):
         mailing = self.env['mail.mass_mailing'].create({'name': 'Test Mailing', "subject": "Hi!"})
         code = self.link.code
         self.assertEqual(self.link.count, 1)
-        stat = self.env['mail.mail.statistics'].create({'mass_mailing_id': mailing.id})
+        stat = self.env['mailing.trace'].create({'mass_mailing_id': mailing.id})
         self.assertFalse(stat.opened)
         self.assertFalse(stat.clicked)
 
@@ -57,7 +57,7 @@ class TestLinkTracker(common.MassMailingCase):
             code,
             ip='100.00.00.01',
             country_code='BEL',
-            mail_stat_id=stat.id
+            mailing_trace_id=stat.id
         )
         self.assertEqual(self.link.count, 2)
         self.assertEqual(click.mass_mailing_id, mailing)

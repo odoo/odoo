@@ -9,7 +9,7 @@ class TestAutoBlacklist(common.TransactionCase):
         mass_mailing_contacts = self.env['mail.mass_mailing.contact']
         mass_mailing = self.env['mail.mass_mailing']
         mail_blacklist = self.env['mail.blacklist']
-        mail_statistics = self.env['mail.mail.statistics']
+        mail_statistics = self.env['mailing.trace']
         mail_thread = self.env['mail.thread']
 
         # create mailing contact record
@@ -44,7 +44,6 @@ class TestAutoBlacklist(common.TransactionCase):
             'email': self.mailing_contact_1.email
         })
         self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
-
 
         # create mass mailing record
         self.mass_mailing = mass_mailing.create({

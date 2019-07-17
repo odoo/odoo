@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import fields, models, tools
 
 
-class MassMailingReport(models.Model):
-    _name = 'mail.statistics.report'
+class MailingTraceReport(models.Model):
+    _name = 'mailing.trace.report'
     _auto = False
     _description = 'Mass Mailing Statistics'
 
@@ -23,12 +23,12 @@ class MassMailingReport(models.Model):
     email_from = fields.Char('From', readonly=True)
 
     def init(self):
-        """Mass Mail Statistical Report: based on mail.mail.statistics that models the various
+        """Mass Mail Statistical Report: based on mailing.trace that models the various
         statistics collected for each mailing, and mail.mass_mailing model that models the
         various mailing performed. """
-        tools.drop_view_if_exists(self.env.cr, 'mail_statistics_report')
+        tools.drop_view_if_exists(self.env.cr, 'mailing_trace_report')
         self.env.cr.execute("""
-            CREATE OR REPLACE VIEW mail_statistics_report AS (
+            CREATE OR REPLACE VIEW mailing_trace_report AS (
                 SELECT
                     min(ms.id) as id,
                     ms.scheduled as scheduled_date,
@@ -43,7 +43,7 @@ class MassMailingReport(models.Model):
                     mm.state,
                     mm.email_from
                 FROM
-                    mail_mail_statistics as ms
+                    mailing_trace as ms
                     left join mail_mass_mailing as mm ON (ms.mass_mailing_id=mm.id)
                     left join mail_mass_mailing_campaign as mc ON (ms.mass_mailing_campaign_id=mc.id)
                     left join utm_campaign as utm_campaign ON (mc.campaign_id = utm_campaign.id)
