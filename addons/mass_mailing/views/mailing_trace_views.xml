@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--  MAIL MAIL STATISTICS !-->
-    <record model="ir.ui.view" id="view_mail_mail_statistics_search">
-        <field name="name">mail.mail.statistics.search</field>
-        <field name="model">mail.mail.statistics</field>
+    <!--  MAILING TRACE !-->
+    <record model="ir.ui.view" id="mailing_trace_view_search">
+        <field name="name">mailing.trace.search</field>
+        <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
            <search string="Mail Statistics">
                 <field name="mail_mail_id_int"/>
@@ -30,9 +30,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
-        <field name="name">mail.mail.statistics.tree</field>
-        <field name="model">mail.mail.statistics</field>
+    <record model="ir.ui.view" id="mailing_trace_view_tree">
+        <field name="name">mailing.trace.tree</field>
+        <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
             <tree string="Mail Statistics" create="0">
                 <field name="email"/>
@@ -49,9 +49,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mail_statistics_form">
-        <field name="name">mail.mail.statistics.form</field>
-        <field name="model">mail.mail.statistics</field>
+    <record model="ir.ui.view" id="mailing_trace_view_form">
+        <field name="name">mailing.trace.form</field>
+        <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
             <form string="Mail Statistics" create="0">
                 <header>
@@ -88,13 +88,13 @@
 
     <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
         <field name="name">Mail Statistics</field>
-        <field name="res_model">mail.mail.statistics</field>
+        <field name="res_model">mailing.trace</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
         <field name="name">Mail Statistics</field>
-        <field name="res_model">mail.mail.statistics</field>
+        <field name="res_model">mailing.trace</field>
         <field name="view_mode">graph,tree,form,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_mass_mailing_id': active_id}</field>
@@ -102,7 +102,7 @@
 
     <record id="action_view_mail_mail_statistics_mailing_list" model="ir.actions.act_window">
         <field name="name">Emails Sent</field>
-        <field name="res_model">mail.mail.statistics</field>
+        <field name="res_model">mailing.trace</field>
         <field name="view_mode">tree,graph,form,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_mass_mailing_id': active_id}</field>
@@ -110,7 +110,7 @@
 
     <record id="view_mail_mail_statistics_graph" model="ir.ui.view">
         <field name="name">Mail Statistics Graph</field>
-        <field name="model">mail.mail.statistics</field>
+        <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
             <graph string="Mail Statistics" type="bar" stacked="True" interval="day">
                 <field name="state_update" type="row" interval="day"/>
