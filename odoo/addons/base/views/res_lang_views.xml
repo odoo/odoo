@@ -13,7 +13,9 @@
                     <field name="translatable" groups="base.group_no_one"/>
                     <field name="active"/>
                     <button name="%(base.action_view_base_language_install)d"
-                    string="Download and Update Translation" type="action" icon="fa-refresh" help="Download and Update Translation"/>
+                        string="Activate Language and Update Translations"
+                        type="action"
+                        icon="fa-refresh"/>
                 </tree>
             </field>
         </record>
@@ -23,6 +25,13 @@
             <field name="arch" type="xml">
                 <form string="Languages">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button string="Activate and Translate"
+                                name="%(base.action_view_base_language_install)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-refresh" />
+                        </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
