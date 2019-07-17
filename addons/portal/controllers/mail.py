@@ -75,7 +75,7 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
                 raise NotFound()
     # Signed Token Case: author_id is forced
     elif kw.get('hash') and kw.get('pid'):
-        author_id = kw.get('pid')
+        author_id = int(kw['pid'])
 
     kw.pop('csrf_token', None)
     kw.pop('attachment_ids', None)
