@@ -473,6 +473,132 @@
             <field name="price_unit">12.50</field>
         </record>
 
+        <record id="website_sale_order_19" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=6)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="website_id" eval="1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+        <record id="website_sale_order_line_19" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_19"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_1').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">250.0</field>
+        </record>
+
+        <record id="website_sale_order_20" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=5)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="website_id" eval="1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+        <record id="website_sale_order_line_20" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_20"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_2').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">750.0</field>
+        </record>
+
+        <record id="website_sale_order_21" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=4)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="website_id" eval="1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+        <record id="website_sale_order_line_21" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_21"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_3').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">650.0</field>
+        </record>
+
+        <record id="website_sale_order_22" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=3)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="website_id" eval="2"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+        <record id="website_sale_order_line_22" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_22"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_4').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1999.0</field>
+        </record>
+
+        <record id="website_sale_order_23" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=2)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="website_id" eval="2"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+        <record id="website_sale_order_line_23" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_23"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_5').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_5"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">2999.0</field>
+        </record>
+
+        <record id="website_sale_order_24" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="website_id" eval="2"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+        <record id="website_sale_order_line_24" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_24"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_6').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_6"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1450.0</field>
+        </record>
+
         <!-- Active Carts -->
         <record id="website_sale_order_10" model="sale.order">
             <field name="partner_id" ref="base.res_partner_3"/>
