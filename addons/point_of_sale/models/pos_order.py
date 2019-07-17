@@ -1097,6 +1097,7 @@ class PosOrderLine(models.Model):
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
+    @api.depends('order_id', 'order_id.fiscal_position_id')
     def _get_tax_ids_after_fiscal_position(self):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
