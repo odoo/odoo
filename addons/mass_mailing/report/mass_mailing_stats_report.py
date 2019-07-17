@@ -9,7 +9,7 @@ class MassMailingReport(models.Model):
     _auto = False
     _description = 'Mass Mailing Statistics'
 
-    scheduled_date = fields.Datetime(stirng='Scheduled Date', readonly=True)
+    scheduled_date = fields.Datetime(string='Scheduled Date', readonly=True)
     name = fields.Char(string='Mass Mail', readonly=True)
     campaign = fields.Char(string='Mass Mail Campaign', readonly=True)
     sent = fields.Integer(readonly=True)
