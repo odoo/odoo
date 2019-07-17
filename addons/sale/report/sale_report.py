@@ -153,7 +153,6 @@ class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
     _description = 'Proforma Report'
 
-    @api.multi
     def _get_report_values(self, docids, data=None):
         docs = self.env['sale.order'].browse(docids)
         return {

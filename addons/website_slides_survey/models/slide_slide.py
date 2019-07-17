@@ -27,7 +27,6 @@ class SlidePartnerRelation(models.Model):
                 vals['completed'] = True
         return super(SlidePartnerRelation, self).create(vals_list)
 
-    @api.multi
     def _write(self, vals):
         if vals.get('survey_quizz_passed'):
             vals['completed'] = True
@@ -45,7 +44,6 @@ class Slide(models.Model):
         ('check_certification_preview', "CHECK(slide_type != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
 
-    @api.multi
     def _generate_certification_url(self):
         """ get a map of certification url for certification slide from `self`. The url will come from the survey user input:
                 1/ existing and not done user_input for member of the course

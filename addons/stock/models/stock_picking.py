@@ -408,7 +408,6 @@ class Picking(models.Model):
                 for move in picking.move_lines
             )
 
-    @api.multi
     @api.depends('state', 'move_lines')
     def _compute_show_mark_as_todo(self):
         for picking in self:
@@ -421,7 +420,6 @@ class Picking(models.Model):
             else:
                 picking.show_mark_as_todo = True
 
-    @api.multi
     @api.depends('state', 'is_locked')
     def _compute_show_validate(self):
         for picking in self:
@@ -488,7 +486,6 @@ class Picking(models.Model):
         res._autoconfirm_picking()
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(Picking, self).write(vals)
         # Change locations of moves if those of the picking change
@@ -514,7 +511,6 @@ class Picking(models.Model):
             (self - pickings_to_not_autoconfirm)._autoconfirm_picking()
         return res
 
-    @api.multi
     def unlink(self):
         self.mapped('move_lines')._action_cancel()
         self.mapped('move_lines').unlink() # Checks if moves are not done
@@ -531,12 +527,10 @@ class Picking(models.Model):
         for picking in self:
             picking.move_lines.write({'partner_id': picking.partner_id.id})
 
-    @api.multi
     def do_print_picking(self):
         self.write({'printed': True})
         return self.env.ref('stock.action_report_picking').report_action(self)
 
-    @api.multi
     def action_confirm(self):
         self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         # call `_action_confirm` on every draft move
@@ -548,7 +542,6 @@ class Picking(models.Model):
             .mapped('move_lines')._action_assign()
         return True
 
-    @api.multi
     def action_assign(self):
         """ Check availability of picking moves.
         This has the effect of changing the state and reserve quants on available moves, and may
@@ -567,13 +560,11 @@ class Picking(models.Model):
         package_level_done.write({'is_done': True})
         return True
 
-    @api.multi
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
         self.write({'is_locked': True})
         return True
 
-    @api.multi
     def action_done(self):
         """Changes picking state to done by processing the Stock Moves of the Picking
 
@@ -664,7 +655,6 @@ class Picking(models.Model):
             all_in = False
         return all_in
 
-    @api.multi
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for picking in self:
@@ -697,13 +687,11 @@ class Picking(models.Model):
                             'package_level_id': package_level_ids[0].id,
                         })
 
-    @api.multi
     def do_unreserve(self):
         for picking in self:
             picking.move_lines._do_unreserve()
             picking.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
-    @api.multi
     def button_validate(self):
         self.ensure_one()
         if not self.move_lines and not self.move_line_ids:
@@ -811,7 +799,6 @@ class Picking(models.Model):
             quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
 
-    @api.multi
     def _autoconfirm_picking(self):
         for picking in self.filtered(lambda picking: picking.immediate_transfer and picking.state not in ('done', 'cancel') and (picking.move_lines or picking.package_level_ids)):
             picking.action_confirm()

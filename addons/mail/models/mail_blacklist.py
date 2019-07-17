@@ -50,7 +50,6 @@ class MailBlackList(models.Model):
         results = super(MailBlackList, self).create(to_create)
         return self.env['mail.blacklist'].browse(bl_entries.values()) | results
 
-    @api.multi
     def write(self, values):
         if 'email' in values:
             values['email'] = tools.email_normalize(values['email'])
@@ -151,7 +150,6 @@ class MailBlackListMixin(models.AbstractModel):
         for record in self:
             record.is_blacklisted = record.email_normalized in blacklist
 
-    @api.multi
     def _message_receive_bounce(self, email, partner, mail_id=None):
         """ Override of mail.thread generic method. Purpose is to increment the
         bounce counter of the record. """

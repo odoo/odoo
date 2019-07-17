@@ -69,7 +69,6 @@ class HrEmployeeBase(models.AbstractModel):
             GROUP BY h.employee_id""", (tuple(self.ids),))
         return dict((row['employee_id'], row['days']) for row in self._cr.dictfetchall())
 
-    @api.multi
     def _compute_remaining_leaves(self):
         remaining = self._get_remaining_leaves()
         for employee in self:
@@ -77,7 +76,6 @@ class HrEmployeeBase(models.AbstractModel):
             employee.leaves_count = value
             employee.remaining_leaves = value
 
-    @api.multi
     def _compute_allocation_count(self):
         for employee in self:
             allocations = self.env['hr.leave.allocation'].search([
@@ -98,7 +96,6 @@ class HrEmployeeBase(models.AbstractModel):
         employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and employee.is_absent)
         employees.update({'hr_presence_state': 'absent'})
 
-    @api.multi
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         holidays = self.env['hr.leave'].sudo().search([
@@ -130,7 +127,6 @@ class HrEmployeeBase(models.AbstractModel):
         if manager and manager.has_group('hr.group_hr_user') and (self.leave_manager_id == previous_manager or not self.leave_manager_id):
             self.leave_manager_id = manager
 
-    @api.multi
     def _compute_show_leaves(self):
         show_leaves = self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
         for employee in self:
@@ -139,7 +135,6 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 employee.show_leaves = False
 
-    @api.multi
     def _search_absent_employee(self, operator, value):
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),

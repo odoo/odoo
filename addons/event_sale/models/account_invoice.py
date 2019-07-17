@@ -7,7 +7,6 @@ from odoo import api, models
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
     def action_invoice_paid(self):
         """ When an invoice linked to a sales order selling registrations is
         paid confirm attendees. Attendees should indeed not be confirmed before

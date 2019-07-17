@@ -7,7 +7,6 @@ class StockImmediateTransfer(models.TransientModel):
 
     pick_to_backorder_ids = fields.Many2many('stock.picking', help='Picking to backorder')
 
-    @api.multi
     def process(self):
         backorder_wizard_dict = super(StockImmediateTransfer, self).process()
         # If the immediate transfer wizard process all our picking but with some back order maybe needed we want to add the backorder already passed to the wizard.

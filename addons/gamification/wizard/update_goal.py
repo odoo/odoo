@@ -11,7 +11,6 @@ class goal_manual_wizard(models.TransientModel):
     goal_id = fields.Many2one("gamification.goal", string='Goal', required=True)
     current = fields.Float('Current')
 
-    @api.multi
     def action_update_current(self):
         """Wizard action for updating the current value"""
         for wiz in self:

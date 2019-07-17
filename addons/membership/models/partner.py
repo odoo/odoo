@@ -114,7 +114,6 @@ class Partner(models.Model):
         partners._recompute_todo(self._fields['membership_state'])
         self.recompute()
 
-    @api.multi
     def create_membership_invoice(self, product, amount):
         """ Create Customer Invoice of Membership for partners.
         """

@@ -48,7 +48,6 @@ class Project(models.Model):
             values['analytic_account_id'] = analytic_account.id
         return super(Project, self).create(values)
 
-    @api.multi
     def write(self, values):
         # create the AA for project still allowing timesheet
         if values.get('allow_timesheets'):
@@ -115,7 +114,6 @@ class Task(models.Model):
     # ORM
     # ---------------------------------------------------------
 
-    @api.multi
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
         if 'project_id' in values and self and not values.get('project_id'):

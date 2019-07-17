@@ -14,7 +14,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.event_count = self.env['event.event'].search_count([('registration_ids.partner_id', 'child_of', partner.ids)])
 
-    @api.multi
     def action_event_view(self):
         action = self.env.ref('event.action_event_view').read()[0]
         action['context'] = {}

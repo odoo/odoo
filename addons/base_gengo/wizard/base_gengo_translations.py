@@ -54,7 +54,6 @@ class BaseGengoTranslations(models.TransientModel):
         icp = self.env['ir.config_parameter'].sudo()
         return icp.get_param(self.GENGO_KEY, default="Undefined")
 
-    @api.multi
     def open_company(self):
         self.ensure_one()
         return {
@@ -92,7 +91,6 @@ class BaseGengoTranslations(models.TransientModel):
             _logger.exception('Gengo connection failed')
             return (False, _("Gengo connection failed with this message:\n``%s``") % e)
 
-    @api.multi
     def act_update(self):
         '''
         Function called by the wizard.

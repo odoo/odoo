@@ -62,7 +62,6 @@ class MrpProduction(models.Model):
                 # able to produce orders
                 AccountAnalyticLine.create(vals)
 
-    @api.multi
     def button_mark_done(self):
         self.ensure_one()
         res = super(MrpProduction, self).button_mark_done()

@@ -60,7 +60,6 @@ class Property(models.Model):
                             default='many2one',
                             index=True)
 
-    @api.multi
     def _update_values(self, values):
         if 'value' not in values:
             return values
@@ -98,7 +97,6 @@ class Property(models.Model):
         values[field] = value
         return values
 
-    @api.multi
     def write(self, values):
         # if any of the records we're writing on has a res_id=False *or*
         # we're writing a res_id=False on any record
@@ -124,7 +122,6 @@ class Property(models.Model):
             self.clear_caches()
         return r
 
-    @api.multi
     def unlink(self):
         default_deleted = False
         if self._ids:
@@ -138,7 +135,6 @@ class Property(models.Model):
             self.clear_caches()
         return r
 
-    @api.multi
     def get_by_record(self):
         self.ensure_one()
         if self.type in ('char', 'text', 'selection'):

@@ -37,11 +37,9 @@ class SaleOrder(models.Model):
         if delivery_line:
             self.recompute_delivery_price = True
 
-    @api.multi
     def _remove_delivery_line(self):
         self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)]).unlink()
 
-    @api.multi
     def set_delivery_line(self, carrier, amount):
 
         # Remove delivery products from the sales order
@@ -156,7 +154,6 @@ class SaleOrderLine(models.Model):
                 return 0.0
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
-    @api.multi
     def unlink(self):
         for line in self:
             if line.is_delivery:

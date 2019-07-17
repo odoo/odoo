@@ -61,7 +61,6 @@ class SMSResend(models.TransientModel):
         record.check_access_rights('read')
         record.check_access_rule('read')
 
-    @api.multi
     def action_resend(self):
         self._check_access()
 
@@ -98,7 +97,6 @@ class SMSResend(models.TransientModel):
         self.mail_message_id._notify_sms_update()
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def action_cancel(self):
         self._check_access()
 
@@ -107,7 +105,6 @@ class SMSResend(models.TransientModel):
         self.mail_message_id._notify_sms_update()
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def action_buy_credits(self):
         url = self.env['iap.account'].get_credits_url(service_name='sms')
         return {

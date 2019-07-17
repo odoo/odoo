@@ -563,7 +563,6 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
             counter.update(['create'])
             return origin_create(self, vals)
 
-        @api.multi
         def unlink(self):
             counter.update(['unlink'])
             return origin_unlink(self)

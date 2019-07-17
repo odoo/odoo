@@ -50,7 +50,6 @@ class Website(models.Model):
                 Pricelist._get_website_pricelists_domain(website.id)
             )
 
-    @api.multi
     def _compute_pricelist_id(self):
         for website in self:
             if website._context.get('website_id') != website.id:
@@ -190,7 +189,6 @@ class Website(models.Model):
             _logger.error('Fail to find pricelist for partner "%s" (id %s)', partner.name, partner.id)
         return pl
 
-    @api.multi
     def sale_product_domain(self):
         return [("sale_ok", "=", True)] + self.get_current_website().website_domain()
 
@@ -202,7 +200,6 @@ class Website(models.Model):
             self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
         ).id
 
-    @api.multi
     def _prepare_sale_order_values(self, partner, pricelist):
         self.ensure_one()
         affiliate_id = request.session.get('affiliate_id')
@@ -229,7 +226,6 @@ class Website(models.Model):
 
         return values
 
-    @api.multi
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
         """ Return the current sales order after mofications specified by params.
         :param bool force_create: Create sales order if not already existing

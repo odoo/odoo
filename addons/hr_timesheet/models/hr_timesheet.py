@@ -79,7 +79,6 @@ class AccountAnalyticLine(models.Model):
             result._timesheet_postprocess(values)
         return result
 
-    @api.multi
     def write(self, values):
         values = self._timesheet_preprocess(values)
         result = super(AccountAnalyticLine, self).write(values)
@@ -148,7 +147,6 @@ class AccountAnalyticLine(models.Model):
             vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
         return vals
 
-    @api.multi
     def _timesheet_postprocess(self, values):
         """ Hook to update record one by one according to the values of a `write` or a `create`. """
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo() in `_timesheet_postprocess_values`override
@@ -158,7 +156,6 @@ class AccountAnalyticLine(models.Model):
                 timesheet.write(values_to_write[timesheet.id])
         return values
 
-    @api.multi
     def _timesheet_postprocess_values(self, values):
         """ Get the addionnal values to write on record
             :param dict values: values for the model's fields, as a dictionary::

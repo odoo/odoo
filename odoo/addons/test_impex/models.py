@@ -44,7 +44,6 @@ for name, field in MODELS:
         const = fields.Integer(default=4)
         value = field
 
-        @api.multi
         def name_get(self):
             return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
@@ -66,7 +65,6 @@ class One2ManyChild(models.Model):
     str = fields.Char()
     value = fields.Integer()
 
-    @api.multi
     def name_get(self):
         return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
@@ -99,7 +97,6 @@ class One2ManyChildMultiple(models.Model):
     str = fields.Char()
     value = fields.Integer()
 
-    @api.multi
     def name_get(self):
         return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
@@ -125,7 +122,6 @@ class Many2ManyChild(models.Model):
     str = fields.Char()
     value = fields.Integer()
 
-    @api.multi
     def name_get(self):
         return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 

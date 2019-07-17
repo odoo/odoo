@@ -15,7 +15,6 @@ class IrModelFields(models.Model):
              "This cannot be changed after creation.",
     )
 
-    @api.multi
     def write(self, vals):
         # Limitation: renaming a sparse field or changing the storing system is
         # currently not allowed

@@ -7,7 +7,6 @@ from odoo import api, models
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    @api.multi
     def _compute_visible_expense_policy(self):
         super(ProductTemplate, self)._compute_visible_expense_policy()
 

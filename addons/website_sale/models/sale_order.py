@@ -33,14 +33,12 @@ class SaleOrder(models.Model):
         for order in self:
             order.website_order_line = order.order_line
 
-    @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
     def _compute_cart_info(self):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 
-    @api.multi
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
         for order in self:
@@ -70,7 +68,6 @@ class SaleOrder(models.Model):
             return abandoned_domain
         return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
-    @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         """Find the cart line matching the given parameters.
 
@@ -98,7 +95,6 @@ class SaleOrder(models.Model):
 
         return self.env['sale.order.line']
 
-    @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
@@ -144,7 +140,6 @@ class SaleOrder(models.Model):
             'discount': discount,
         }
 
-    @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
@@ -305,7 +300,6 @@ class SaleOrder(models.Model):
 
             return random.sample(accessory_products, len(accessory_products))
 
-    @api.multi
     def action_recovery_email_send(self):
         for order in self:
             order._portal_ensure_token()
@@ -330,7 +324,6 @@ class SaleOrder(models.Model):
             },
         }
 
-    @api.multi
     def _get_cart_recovery_template(self):
         """
         Return the cart recovery template record for a set of orders.
@@ -343,7 +336,6 @@ class SaleOrder(models.Model):
         template = template or self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
         return template or self.env['mail.template']
 
-    @api.multi
     def _cart_recovery_email_send(self):
         """Send the cart recovery email on the current recordset,
         making sure that the portal token exists to avoid broken links, and marking the email as sent.
@@ -367,7 +359,6 @@ class SaleOrderLine(models.Model):
     linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
-    @api.multi
     @api.depends('product_id.display_name')
     def _compute_name_short(self):
         """ Compute a short name for this sale order line, to be used on the website where we don't have much space.

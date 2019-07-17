@@ -33,13 +33,11 @@ class IrFilters(models.Model):
         self._cr.execute("SELECT model, name FROM ir_model ORDER BY name")
         return self._cr.fetchall()
 
-    @api.multi
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, name=_('%s (copy)') % self.name)
         return super(IrFilters, self).copy(default)
 
-    @api.multi
     def _get_eval_domain(self):
         self.ensure_one()
         return safe_eval(self.domain, {

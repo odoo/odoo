@@ -40,14 +40,12 @@ class MailChannel(models.Model):
     _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
                          'Livechat Operator ID is required for a channel of type livechat.')]
 
-    @api.multi
     def _compute_is_chat(self):
         super(MailChannel, self)._compute_is_chat()
         for record in self:
             if record.channel_type == 'livechat':
                 record.is_chat = True
 
-    @api.multi
     def _channel_message_notifications(self, message, message_format=False):
         """ When a anonymous user create a mail.channel, the operator is not notify (to avoid massive polling when
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
@@ -68,13 +66,11 @@ class MailChannel(models.Model):
                 notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
         return notifications
 
-    @api.multi
     def channel_fetch_message(self, last_id=False, limit=20):
         """ Override to add the context of the livechat username."""
         channel = self.with_context(im_livechat_use_username=True) if self.channel_type == 'livechat' else self
         return super(MailChannel, channel).channel_fetch_message(last_id=last_id, limit=limit)
 
-    @api.multi
     def channel_info(self, extra_info=False):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)

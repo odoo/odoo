@@ -63,7 +63,6 @@ class ImLivechatChannel(models.Model):
         for channel in self:
             channel.are_you_inside = bool(self.env.uid in [u.id for u in channel.user_ids])
 
-    @api.multi
     def _compute_script_external(self):
         view = self.env['ir.model.data'].get_object('im_livechat', 'external_loader')
         values = {
@@ -74,13 +73,11 @@ class ImLivechatChannel(models.Model):
             values["channel_id"] = record.id
             record.script_external = view.render(values)
 
-    @api.multi
     def _compute_web_page_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
             record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id)
 
-    @api.multi
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
         for record in self:
@@ -91,7 +88,6 @@ class ImLivechatChannel(models.Model):
         tools.image_resize_images(vals)
         return super(ImLivechatChannel, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         tools.image_resize_images(vals)
         return super(ImLivechatChannel, self).write(vals)
@@ -99,17 +95,14 @@ class ImLivechatChannel(models.Model):
     # --------------------------
     # Action Methods
     # --------------------------
-    @api.multi
     def action_join(self):
         self.ensure_one()
         return self.write({'user_ids': [(4, self._uid)]})
 
-    @api.multi
     def action_quit(self):
         self.ensure_one()
         return self.write({'user_ids': [(3, self._uid)]})
 
-    @api.multi
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
             sessions of the current channel
@@ -123,7 +116,6 @@ class ImLivechatChannel(models.Model):
     # --------------------------
     # Channel Methods
     # --------------------------
-    @api.multi
     def _get_available_users(self):
         """ get available user of a given channel
             :retuns : return the res.users having their im_status online
@@ -131,7 +123,6 @@ class ImLivechatChannel(models.Model):
         self.ensure_one()
         return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
-    @api.multi
     def _get_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
             :param anonymous_name : the name of the anonymous person of the channel

@@ -19,7 +19,6 @@ class HrAttendance(models.Model):
     check_out = fields.Datetime(string="Check Out")
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
 
-    @api.multi
     def name_get(self):
         result = []
         for attendance in self:
@@ -97,7 +96,6 @@ class HrAttendance(models.Model):
                         'datetime': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(last_attendance_before_check_out.check_in))),
                     })
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))

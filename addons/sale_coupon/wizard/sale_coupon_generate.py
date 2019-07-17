@@ -15,7 +15,6 @@ class SaleCouponGenerate(models.TransientModel):
         ], default='nbr_coupon')
     partners_domain = fields.Char(string="Customer", default='[]')
 
-    @api.multi
     def generate_coupon(self):
         """Generates the number of coupons entered in wizard field nbr_coupons
         """

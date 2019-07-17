@@ -186,7 +186,6 @@ class ResPartner(models.Model):
 
         return partners
 
-    @api.multi
     def write(self, values):
         res = super(ResPartner, self).write(values)
         if len(self) == 1:

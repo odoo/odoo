@@ -414,7 +414,6 @@ class ResPartner(models.Model):
             values['vat'] = self._fix_vat_number(values['vat'])
         return super(ResPartner, self).create(values)
 
-    @api.multi
     def write(self, values):
         if values.get('vat'):
             values['vat'] = self._fix_vat_number(values['vat'])

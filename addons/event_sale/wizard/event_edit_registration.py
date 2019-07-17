@@ -45,7 +45,6 @@ class RegistrationEditor(models.TransientModel):
         res = self._convert_to_write(res)
         return res
 
-    @api.multi
     def action_make_registration(self):
         self.ensure_one()
         for registration_line in self.event_registration_ids:
@@ -74,7 +73,6 @@ class RegistrationEditorLine(models.TransientModel):
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Name', index=True)
 
-    @api.multi
     def get_registration_data(self):
         self.ensure_one()
         return {

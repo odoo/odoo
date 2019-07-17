@@ -137,7 +137,6 @@ class Contract(models.Model):
         for contract in self:
             contract.employee_id.sudo().write({'contract_id': contract.id})
 
-    @api.multi
     def write(self, vals):
         res = super(Contract, self).write(vals)
         if vals.get('state') == 'open':
@@ -163,7 +162,6 @@ class Contract(models.Model):
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id
         return contracts
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'open' and 'kanban_state' in init_values and self.kanban_state == 'blocked':

@@ -51,7 +51,6 @@ class Notification(models.Model):
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX mail_notification_res_partner_id_is_read_notification_status_mail_message_id ON mail_message_res_partner_needaction_rel (res_partner_id, is_read, notification_status, mail_message_id)')
 
-    @api.multi
     def format_failure_reason(self):
         self.ensure_one()
         if self.failure_type != 'UNKNOWN':

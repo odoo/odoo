@@ -71,7 +71,6 @@ class Job(models.Model):
             job.document_ids = result[job.id]
             job.documents_count = len(job.document_ids)
 
-    @api.multi
     def _compute_application_count(self):
         read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
         result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
@@ -111,11 +110,9 @@ class Job(models.Model):
         vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
         return super(Job, self).create(vals)
 
-    @api.multi
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
 
-    @api.multi
     def action_get_attachment_tree_view(self):
         action = self.env.ref('base.action_attachment').read()[0]
         action['context'] = {
@@ -126,11 +123,9 @@ class Job(models.Model):
         action['domain'] = ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.mapped('application_ids').ids)]
         return action
 
-    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def edit_dialog(self):
         form_view = self.env.ref('hr.view_hr_job_form')
         return {

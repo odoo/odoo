@@ -19,7 +19,6 @@ class MailMessage(models.Model):
         'Has SMS error', compute='_compute_has_sms_error', search='_search_has_sms_error',
         help='Has error')
 
-    @api.multi
     def _compute_has_sms_error(self):
         sms_error_from_notification = self.env['mail.notification'].sudo().search([
             ('notification_type', '=', 'sms'),
@@ -28,13 +27,11 @@ class MailMessage(models.Model):
         for message in self:
             message.has_error = message in sms_error_from_notification
 
-    @api.multi
     def _search_has_sms_error(self, operator, operand):
         if operator == '=' and operand:
             return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', True)]
         raise NotImplementedError()
 
-    @api.multi
     def _format_mail_failures(self):
         """ A shorter message to notify a SMS delivery failure update
 
@@ -62,7 +59,6 @@ class MailMessage(models.Model):
             res.append(info)
         return res
 
-    @api.multi
     def _notify_sms_update(self):
         """ Send bus notifications to update status of notifications in chatter.
         Purpose is to send the updated status per author.
@@ -88,7 +84,6 @@ class MailMessage(models.Model):
         ] for author, author_messages in groupby(messages, itemgetter('author_id'))]
         self.env['bus.bus'].sendmany(updates)
 
-    @api.multi
     def message_format(self):
         """ Override in order to retrieves data about SMS (recipient name and
             SMS status)

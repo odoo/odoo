@@ -220,7 +220,6 @@ class FleetVehicle(models.Model):
             future_driver.write({'plan_to_change_car': True})
         return res
 
-    @api.multi
     def write(self, vals):
         if 'driver_id' in vals and vals['driver_id']:
             driver_id = vals['driver_id']
@@ -276,7 +275,6 @@ class FleetVehicle(models.Model):
         rec = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(rec).name_get()
 
-    @api.multi
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """
         self.ensure_one()
@@ -290,7 +288,6 @@ class FleetVehicle(models.Model):
             return res
         return False
 
-    @api.multi
     def act_show_log_cost(self):
         """ This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
             @return: the costs log view
@@ -305,7 +302,6 @@ class FleetVehicle(models.Model):
         )
         return res
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'driver_id' in init_values:

@@ -37,7 +37,6 @@ class FetchmailServer(models.Model):
             if record.l10n_it_is_pec and record.type != 'imap':
                 raise ValidationError("PEC mail server must be of type IMAP.")
 
-    @api.multi
     def fetch_mail(self):
         """ WARNING: meant for cron usage only - will commit() after each email! """
 

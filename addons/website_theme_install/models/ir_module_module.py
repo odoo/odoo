@@ -36,7 +36,6 @@ class IrModuleModule(models.Model):
     # for kanban view
     is_installed_on_current_website = fields.Boolean(compute='_compute_is_installed_on_current_website')
 
-    @api.multi
     def _compute_is_installed_on_current_website(self):
         """
             Compute for every theme in ``self`` if the current website is using it or not.
@@ -48,7 +47,6 @@ class IrModuleModule(models.Model):
         for module in self:
             module.is_installed_on_current_website = module == self.env['website'].get_current_website().theme_id
 
-    @api.multi
     def write(self, vals):
         """
             Override to correctly upgrade themes after upgrade/installation of modules.
@@ -93,7 +91,6 @@ class IrModuleModule(models.Model):
 
         return super(IrModuleModule, self).write(vals)
 
-    @api.multi
     def _get_module_data(self, model_name):
         """
             Return every theme template model of type ``model_name`` for every theme in ``self``.
@@ -180,7 +177,6 @@ class IrModuleModule(models.Model):
 
         self._theme_cleanup(model_name, website)
 
-    @api.multi
     def _post_copy(self, old_rec, new_rec):
         self.ensure_one()
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
@@ -194,7 +190,6 @@ class IrModuleModule(models.Model):
                              (dst_field, new_rec.id, src_field, old_rec.id))
 
 
-    @api.multi
     def _theme_load(self, website):
         """
             For every type of model in ``self._theme_model_names``, and for every theme in ``self``:
@@ -213,7 +208,6 @@ class IrModuleModule(models.Model):
             self = self.env()[self._name].browse(self.id)
             self.env['theme.utils']._post_copy(module, website)
 
-    @api.multi
     def _theme_unload(self, website):
         """
             For every type of model in ``self._theme_model_names``, and for every theme in ``self``:
@@ -231,7 +225,6 @@ class IrModuleModule(models.Model):
                 models.unlink()
                 self._theme_cleanup(model_name, website)
 
-    @api.multi
     def _theme_cleanup(self, model_name, website):
         """
             Remove orphan models of type ``model_name`` from the current theme and
@@ -265,7 +258,6 @@ class IrModuleModule(models.Model):
         ])
         orphans.unlink()
 
-    @api.multi
     def _theme_get_upstream(self):
         """
             Return installed upstream themes.
@@ -275,7 +267,6 @@ class IrModuleModule(models.Model):
         self.ensure_one()
         return self.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
 
-    @api.multi
     def _theme_get_downstream(self):
         """
             Return installed downstream themes that starts with the same name.
@@ -288,7 +279,6 @@ class IrModuleModule(models.Model):
         self.ensure_one()
         return self.downstream_dependencies().filtered(lambda x: x.name.startswith(self.name))
 
-    @api.multi
     def _theme_get_stream_themes(self):
         """
             Returns all the themes in the stream of the current theme.
@@ -305,7 +295,6 @@ class IrModuleModule(models.Model):
                 all_mods = up_mod | all_mods
         return all_mods
 
-    @api.multi
     def _theme_get_stream_website_ids(self):
         """
             Websites for which this theme (self) is in the stream (up or down) of their theme.
@@ -319,7 +308,6 @@ class IrModuleModule(models.Model):
                 websites |= website
         return websites
 
-    @api.multi
     def _theme_upgrade_upstream(self):
         """
             Upgrade the upstream dependencies of a theme.
@@ -351,7 +339,6 @@ class IrModuleModule(models.Model):
             theme._theme_unload(website)
         website.theme_id = False
 
-    @api.multi
     def button_choose_theme(self):
         """
             Remove any existing theme on the current website and install the theme ``self`` instead.

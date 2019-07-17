@@ -112,7 +112,6 @@ class HrExpense(models.Model):
                     expense.company_id, date_expense or fields.Date.today())
             expense.total_amount_company = amount
 
-    @api.multi
     def _compute_attachment_number(self):
         attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
         attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
@@ -163,14 +162,12 @@ class HrExpense(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
-    @api.multi
     def unlink(self):
         for expense in self:
             if expense.state in ['done', 'approved']:
                 raise UserError(_('You cannot delete a posted or approved expense.'))
         return super(HrExpense, self).unlink()
 
-    @api.multi
     def write(self, vals):
         if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
@@ -198,7 +195,6 @@ class HrExpense(models.Model):
     # Actions
     # ----------------------------------------
 
-    @api.multi
     def action_view_sheet(self):
         self.ensure_one()
         return {
@@ -209,7 +205,6 @@ class HrExpense(models.Model):
             'res_id': self.sheet_id.id
         }
 
-    @api.multi
     def action_submit_expenses(self):
         if any(expense.state != 'draft' or expense.sheet_id for expense in self):
             raise UserError(_("You cannot report twice the same line!"))
@@ -230,7 +225,6 @@ class HrExpense(models.Model):
             }
         }
 
-    @api.multi
     def action_get_attachment_view(self):
         self.ensure_one()
         res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
@@ -242,7 +236,6 @@ class HrExpense(models.Model):
     # Business
     # ----------------------------------------
 
-    @api.multi
     def _prepare_move_values(self):
         """
         This function prepares move values related to an expense
@@ -261,7 +254,6 @@ class HrExpense(models.Model):
         }
         return move_values
 
-    @api.multi
     def _get_account_move_by_sheet(self):
         """ Return a mapping between the expense sheet of current expense and its account move
             :returns dict where key is a sheet id, and value is an account move record
@@ -277,7 +269,6 @@ class HrExpense(models.Model):
                 move = move_grouped_by_sheet[expense.sheet_id.id]
         return move_grouped_by_sheet
 
-    @api.multi
     def _get_expense_account_source(self):
         self.ensure_one()
         if self.account_id:
@@ -293,7 +284,6 @@ class HrExpense(models.Model):
                 raise UserError(_('Please configure Default Expense account for Product expense: `property_account_expense_categ_id`.'))
         return account
 
-    @api.multi
     def _get_expense_account_destination(self):
         self.ensure_one()
         account_dest = self.env['account.account']
@@ -307,7 +297,6 @@ class HrExpense(models.Model):
             account_dest = self.employee_id.address_home_id.property_account_payable_id.id
         return account_dest
 
-    @api.multi
     def _get_account_move_line_values(self):
         move_line_values_by_expense = {}
         for expense in self:
@@ -392,7 +381,6 @@ class HrExpense(models.Model):
             move_line_values_by_expense[expense.id] = move_line_values
         return move_line_values_by_expense
 
-    @api.multi
     def action_move_create(self):
         '''
         main function that is called when trying to create the accounting entries related to an expense
@@ -449,7 +437,6 @@ class HrExpense(models.Model):
 
         return move_group_by_sheet
 
-    @api.multi
     def refuse_expense(self, reason):
         self.write({'is_refused': True})
         self.sheet_id.write({'state': 'cancel'})
@@ -648,7 +635,6 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.total_amount = sum(sheet.expense_line_ids.mapped('total_amount_company'))
 
-    @api.multi
     def _compute_attachment_number(self):
         for sheet in self:
             sheet.attachment_number = sum(sheet.expense_line_ids.mapped('attachment_number'))
@@ -658,7 +644,6 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.is_multiple_currency = len(sheet.expense_line_ids.mapped('currency_id')) > 1
 
-    @api.multi
     def _compute_can_reset(self):
         is_expense_user = self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         for sheet in self:
@@ -670,7 +655,6 @@ class HrExpenseSheet(models.Model):
         self.department_id = self.employee_id.department_id
         self.user_id = self.employee_id.expense_manager_id or self.employee_id.parent_id.user_id
 
-    @api.multi
     @api.constrains('expense_line_ids')
     def _check_payment_mode(self):
         for sheet in self:
@@ -691,7 +675,6 @@ class HrExpenseSheet(models.Model):
         sheet.activity_update()
         return sheet
 
-    @api.multi
     def unlink(self):
         for expense in self:
             if expense.state in ['post', 'done']:
@@ -702,7 +685,6 @@ class HrExpenseSheet(models.Model):
     # Mail Thread
     # --------------------------------------------
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
@@ -725,7 +707,6 @@ class HrExpenseSheet(models.Model):
     # Actions
     # --------------------------------------------
 
-    @api.multi
     def action_sheet_move_create(self):
         if any(sheet.state != 'approve' for sheet in self):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
@@ -747,7 +728,6 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
         return res
 
-    @api.multi
     def action_get_attachment_view(self):
         res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_line_ids.ids)]
@@ -763,16 +743,13 @@ class HrExpenseSheet(models.Model):
     # Business
     # --------------------------------------------
 
-    @api.multi
     def set_to_paid(self):
         self.write({'state': 'done'})
 
-    @api.multi
     def action_submit_sheet(self):
         self.write({'state': 'submit'})
         self.activity_update()
 
-    @api.multi
     def approve_expense_sheets(self):
         if not self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
@@ -789,11 +766,9 @@ class HrExpenseSheet(models.Model):
         self.write({'state': 'approve', 'user_id': responsible_id})
         self.activity_update()
 
-    @api.multi
     def paid_expense_sheets(self):
         self.write({'state': 'done'})
 
-    @api.multi
     def refuse_sheet(self, reason):
         if not self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
@@ -811,7 +786,6 @@ class HrExpenseSheet(models.Model):
             sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': self.name})
         self.activity_update()
 
-    @api.multi
     def reset_expense_sheets(self):
         if not self.can_reset:
             raise UserError(_("Only HR Officers or the concerned employee can reset to draft."))

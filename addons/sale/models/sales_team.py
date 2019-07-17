@@ -53,7 +53,6 @@ class CrmTeam(models.Model):
             self.browse(datum['team_id']).quotations_amount = datum['amount_total']
             self.browse(datum['team_id']).quotations_count = datum['count']
 
-    @api.multi
     def _compute_sales_to_invoice(self):
         sale_order_data = self.env['sale.order'].read_group([
             ('team_id', 'in', self.ids),
@@ -63,7 +62,6 @@ class CrmTeam(models.Model):
         for team in self:
             team.sales_to_invoice_count = data_map.get(team.id,0.0)
 
-    @api.multi
     def _compute_invoiced(self):
         if not self:
             return
@@ -127,6 +125,5 @@ class CrmTeam(models.Model):
             return self.env.ref('sale.action_order_report_so_salesteam').read()[0]
         return super(CrmTeam, self).action_primary_channel_button()
             
-    @api.multi
     def update_invoiced_target(self, value):
         return self.write({'invoiced_target': round(float(value or 0))})

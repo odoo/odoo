@@ -162,7 +162,6 @@ class IrMailServer(models.Model):
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
 
-    @api.multi
     def test_smtp_connection(self):
         for server in self:
             smtp = False

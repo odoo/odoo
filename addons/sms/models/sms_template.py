@@ -80,14 +80,12 @@ class SMSTemplate(models.Model):
             expression += "}"
         return expression
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
                        name=_("%s (copy)") % self.name)
         return super(SMSTemplate, self).copy(default=default)
 
-    @api.multi
     def _get_context_lang_per_id(self, res_ids):
         self.ensure_one()
         if res_ids is None:
@@ -104,7 +102,6 @@ class SMSTemplate(models.Model):
 
         return results
 
-    @api.multi
     def _get_ids_per_lang(self, res_ids):
         self.ensure_one()
 

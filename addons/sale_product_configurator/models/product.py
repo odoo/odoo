@@ -14,7 +14,6 @@ class ProductTemplate(models.Model):
         "e.g. for computers: warranty, software, etc.).")
     has_configurable_attributes = fields.Boolean("Is a configurable product", compute='_compute_has_configurable_attributes', store=True)
 
-    @api.multi
     @api.depends('attribute_line_ids.value_ids.is_custom', 'attribute_line_ids.attribute_id.create_variant')
     def _compute_has_configurable_attributes(self):
         """ A product is considered configurable if:

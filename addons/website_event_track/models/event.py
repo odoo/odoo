@@ -47,14 +47,12 @@ class Event(models.Model):
         'event.track.tag', relation='event_track_tags_rel', string='Track Tags',
         compute='_compute_tracks_tag_ids', store=True)
 
-    @api.multi
     def _compute_track_count(self):
         data = self.env['event.track'].read_group([('stage_id.is_cancel', '!=', True)], ['event_id'], ['event_id'])
         result = dict((data['event_id'][0], data['event_id_count']) for data in data)
         for event in self:
             event.track_count = result.get(event.id, 0)
 
-    @api.multi
     def _compute_sponsor_count(self):
         data = self.env['event.sponsor'].read_group([], ['event_id'], ['event_id'])
         result = dict((data['event_id'][0], data['event_id_count']) for data in data)
@@ -99,7 +97,6 @@ class Event(models.Model):
         res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
         return res
 
-    @api.multi
     @api.depends('track_ids.tag_ids')
     def _compute_tracks_tag_ids(self):
         for event in self:

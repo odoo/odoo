@@ -7,7 +7,6 @@ from odoo import api, fields, models
 class Channel(models.Model):
     _inherit = 'mail.channel'
 
-    @api.multi
     def partner_info(self, all_partners, direct_partners):
         partner_infos = super(Channel, self).partner_info(all_partners, direct_partners)
         # only search for leave out_of_office_message if im_status is on leave

@@ -9,7 +9,6 @@ class Applicant(models.Model):
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
     response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", oldname="response")
 
-    @api.multi
     def action_start_survey(self):
         self.ensure_one()
         # create a response and link it to this applicant
@@ -21,7 +20,6 @@ class Applicant(models.Model):
         # grab the token of the response and start surveying
         return self.survey_id.with_context(survey_token=response.token).action_start_survey()
 
-    @api.multi
     def action_print_survey(self):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """
         self.ensure_one()

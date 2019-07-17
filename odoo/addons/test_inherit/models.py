@@ -96,7 +96,6 @@ class test_inherit_property(models.Model):
     # override property_bar with a new-api computed field
     property_bar = fields.Integer(compute='_compute_bar', company_dependent=False)
 
-    @api.multi
     def _compute_bar(self):
         for record in self:
             record.property_bar = 42

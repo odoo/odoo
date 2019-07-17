@@ -298,7 +298,6 @@ class Module(models.Model):
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
     ]
 
-    @api.multi
     def unlink(self):
         if not self:
             return True
@@ -339,7 +338,6 @@ class Module(models.Model):
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
             raise UserError(msg % (module_name, e.args[0]))
 
-    @api.multi
     def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies !'))
@@ -371,7 +369,6 @@ class Module(models.Model):
         return demo
 
     @assert_log_admin_access
-    @api.multi
     def button_install(self):
         # domain to select auto-installable (but not yet installed) modules
         auto_domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
@@ -429,7 +426,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Install'))
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_install(self):
         """ Installs the selected module(s) immediately and fully,
         returns the next res.config action to execute
@@ -449,13 +445,11 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_install)
 
     @assert_log_admin_access
-    @api.multi
     def button_install_cancel(self):
         self.write({'state': 'uninstalled', 'demo': False})
         return True
 
     @assert_log_admin_access
-    @api.multi
     def module_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
         including the deletion of all database structures created by the module:
@@ -467,7 +461,6 @@ class Module(models.Model):
         self.with_context(prefetch_fields=False).write({'state': 'uninstalled', 'latest_version': False})
         return True
 
-    @api.multi
     def _remove_copied_views(self):
         """ Remove the copies of the views installed by the modules in `self`.
 
@@ -481,7 +474,6 @@ class Module(models.Model):
         orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
         orphans.unlink()
 
-    @api.multi
     @api.returns('self')
     def downstream_dependencies(self, known_deps=None,
                                 exclude_states=('uninstalled', 'uninstallable', 'to remove')):
@@ -506,7 +498,6 @@ class Module(models.Model):
             known_deps |= missing_mods.downstream_dependencies(known_deps, exclude_states)
         return known_deps
 
-    @api.multi
     @api.returns('self')
     def upstream_dependencies(self, known_deps=None,
                               exclude_states=('installed', 'uninstallable', 'to remove')):
@@ -548,7 +539,6 @@ class Module(models.Model):
             'url': '/web',
         }
 
-    @api.multi
     def _button_immediate_function(self, function):
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
@@ -580,7 +570,6 @@ class Module(models.Model):
         }
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_uninstall(self):
         """
         Uninstall the selected module(s) immediately and fully,
@@ -590,7 +579,6 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_uninstall)
 
     @assert_log_admin_access
-    @api.multi
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
             raise UserError(_("The `base` module cannot be uninstalled"))
@@ -599,7 +587,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     @assert_log_admin_access
-    @api.multi
     def button_uninstall_wizard(self):
         """ Launch the wizard to uninstall the given module. """
         return {
@@ -611,13 +598,11 @@ class Module(models.Model):
             'context': {'default_module_id': self.id},
         }
 
-    @api.multi
     def button_uninstall_cancel(self):
         self.write({'state': 'installed'})
         return True
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_upgrade(self):
         """
         Upgrade the selected module(s) immediately and fully,
@@ -626,7 +611,6 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_upgrade)
 
     @assert_log_admin_access
-    @api.multi
     def button_upgrade(self):
         Dependency = self.env['ir.module.module.dependency']
         self.update_list()
@@ -657,7 +641,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     @assert_log_admin_access
-    @api.multi
     def button_upgrade_cancel(self):
         self.write({'state': 'installed'})
         return True
@@ -737,7 +720,6 @@ class Module(models.Model):
         return res
 
     @assert_log_admin_access
-    @api.multi
     def download(self, download=True):
         return []
 
@@ -873,7 +855,6 @@ class Module(models.Model):
             cat_id = modules.db.create_categories(self._cr, categs)
             self.write({'category_id': cat_id})
 
-    @api.multi
     def _update_translations(self, filter_lang=None):
         if not filter_lang:
             langs = self.env['res.lang'].search([('translatable', '=', True)])
@@ -889,7 +870,6 @@ class Module(models.Model):
         mod_names = topological_sort(mod_dict)
         self.env['ir.translation']._load_module_terms(mod_names, filter_lang)
 
-    @api.multi
     def _check(self):
         for module in self:
             if not module.description_html:
@@ -926,7 +906,6 @@ class ModuleDependency(models.Model):
         help="Whether this dependency blocks automatic installation "
              "of the dependent")
 
-    @api.multi
     @api.depends('name')
     def _compute_depend(self):
         # retrieve all modules corresponding to the dependency names
@@ -958,7 +937,6 @@ class ModuleExclusion(models.Model):
     exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module', compute='_compute_exclusion')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
-    @api.multi
     @api.depends('name')
     def _compute_exclusion(self):
         # retrieve all modules corresponding to the exclusion names

@@ -93,7 +93,6 @@ class Team(models.Model):
         defaults['team_id'] = self.id
         return values   
 
-    @api.multi
     def write(self, vals):
         result = super(Team, self).write(vals)
         if 'alias_defaults' in vals:

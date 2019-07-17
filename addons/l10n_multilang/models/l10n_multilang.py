@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    @api.multi
     def process_translations(self, langs, in_field, in_ids, out_ids):
         """
         This method copies translations values of templates into new Accounts/Taxes/Journals for languages selected
@@ -46,7 +45,6 @@ class AccountChartTemplate(models.Model):
                 counter += 1
         return True
 
-    @api.multi
     def process_coa_translations(self):
         installed_langs = dict(self.env['res.lang'].get_installed())
         company_obj = self.env['res.company']
@@ -72,17 +70,14 @@ class AccountChartTemplate(models.Model):
                         chart_template_id._process_fiscal_pos_translations(company.id, langs, 'name')
         return True
 
-    @api.multi
     def _process_accounts_translations(self, company_id, langs, field):
         in_ids, out_ids = self._get_template_from_model(company_id, 'account.account')
         return self.process_translations(langs, field, in_ids, out_ids)
 
-    @api.multi
     def _process_taxes_translations(self, company_id, langs, field):
         in_ids, out_ids = self._get_template_from_model(company_id, 'account.tax')
         return self.process_translations(langs, field, in_ids, out_ids)
 
-    @api.multi
     def _process_fiscal_pos_translations(self, company_id, langs, field):
         in_ids, out_ids = self._get_template_from_model(company_id, 'account.fiscal.position')
         return self.process_translations(langs, field, in_ids, out_ids)
@@ -121,7 +116,6 @@ class BaseLanguageInstall(models.TransientModel):
     """ Install Language"""
     _inherit = "base.language.install"
 
-    @api.multi
     def lang_install(self):
         self.ensure_one()
         already_installed = self.env['res.lang'].search_count([('code', '=', self.lang)])

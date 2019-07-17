@@ -185,12 +185,10 @@ class Repair(models.Model):
             self.partner_invoice_id = addresses['invoice']
             self.pricelist_id = self.partner_id.property_product_pricelist.id
 
-    @api.multi
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
         return True
 
-    @api.multi
     def action_repair_cancel_draft(self):
         if self.filtered(lambda repair: repair.state != 'cancel'):
             raise UserError(_("Repair must be canceled in order to reset it to draft."))
@@ -220,7 +218,6 @@ class Repair(models.Model):
                 'target': 'new'
             }
 
-    @api.multi
     def action_repair_confirm(self):
         """ Repair order state is set to 'To be invoiced' when invoice method
         is 'Before repair' else state becomes 'Confirmed'.
@@ -237,7 +234,6 @@ class Repair(models.Model):
         to_confirm.write({'state': 'confirmed'})
         return True
 
-    @api.multi
     def action_repair_cancel(self):
         if self.filtered(lambda repair: repair.state == 'done'):
             raise UserError(_("Cannot cancel completed repairs."))
@@ -246,7 +242,6 @@ class Repair(models.Model):
         self.mapped('operations').write({'state': 'cancel'})
         return self.write({'state': 'cancel'})
 
-    @api.multi
     def action_send_mail(self):
         self.ensure_one()
         template_id = self.env.ref('repair.mail_template_repair_quotation').id
@@ -266,7 +261,6 @@ class Repair(models.Model):
             'context': ctx,
         }
 
-    @api.multi
     def print_repair_order(self):
         return self.env.ref('repair.action_report_repair_order').report_action(self)
 
@@ -279,7 +273,6 @@ class Repair(models.Model):
                 repair.write({'state': 'done'})
         return True
 
-    @api.multi
     def _create_invoices(self, group=False):
         """ Creates invoice(s) for repair order.
         @param group: It is set to true when group invoice is to be generated.
@@ -429,7 +422,6 @@ class Repair(models.Model):
 
         return dict((repair.id, repair.invoice_id.id) for repair in repairs)
 
-    @api.multi
     def action_created_invoice(self):
         self.ensure_one()
         return {
@@ -446,7 +438,6 @@ class Repair(models.Model):
         self.mapped('operations').write({'state': 'confirmed'})
         return self.write({'state': 'ready'})
 
-    @api.multi
     def action_repair_start(self):
         """ Writes repair order state to 'Under Repair'
         @return: True
@@ -456,7 +447,6 @@ class Repair(models.Model):
         self.mapped('operations').write({'state': 'confirmed'})
         return self.write({'state': 'under_repair'})
 
-    @api.multi
     def action_repair_end(self):
         """ Writes repair order state to 'To be invoiced' if invoice method is
         After repair else state is set to 'Ready'.
@@ -473,7 +463,6 @@ class Repair(models.Model):
             repair.write(vals)
         return True
 
-    @api.multi
     def action_repair_done(self):
         """ Creates stock move for operation and stock move for final product of repair order.
         @return: Move ids of final products

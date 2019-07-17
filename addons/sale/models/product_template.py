@@ -36,20 +36,17 @@ class ProductTemplate(models.Model):
              'Delivered Quantity: Invoice quantities delivered to the customer.',
         default='order')
 
-    @api.multi
     @api.depends('name')
     def _compute_visible_expense_policy(self):
         visibility = self.user_has_groups('analytic.group_analytic_accounting')
         for product_template in self:
             product_template.visible_expense_policy = visibility
 
-    @api.multi
     @api.depends('product_variant_ids.sales_count')
     def _compute_sales_count(self):
         for product in self:
             product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
 
-    @api.multi
     def action_view_sales(self):
         action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
         action['domain'] = [('product_tmpl_id', 'in', self.ids)]
@@ -62,7 +59,6 @@ class ProductTemplate(models.Model):
         }
         return action
 
-    @api.multi
     def _create_product_variant(self, combination, log_warning=False):
         """ Create if necessary and possible and return the product variant
         matching the given combination for this template.
@@ -108,7 +104,6 @@ class ProductTemplate(models.Model):
             'attribute_value_ids': [(6, 0, attribute_values.ids)]
         })
 
-    @api.multi
     def create_product_variant(self, product_template_attribute_value_ids):
         """ Create if necessary and possible and return the id of the product
         variant matching the given combination for this template.
@@ -170,7 +165,6 @@ class ProductTemplate(models.Model):
                 }]
         return res
 
-    @api.multi
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """ Return info about a given combination.
 
@@ -287,7 +281,6 @@ class ProductTemplate(models.Model):
             'has_discounted_price': has_discounted_price,
         }
 
-    @api.multi
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
         It's possible to add to cart (potentially after configuration) if
@@ -306,7 +299,6 @@ class ProductTemplate(models.Model):
             return False
         return next(self._get_possible_combinations(parent_combination), False) is not False
 
-    @api.multi
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a pricelist is given, fallback to the company of the
         pricelist if it is set, otherwise use the one from parent method."""

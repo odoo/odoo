@@ -17,14 +17,12 @@ class Meeting(models.Model):
                                    'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active',
                                    'start_date', 'start_datetime', 'stop_date', 'stop_datetime']
 
-    @api.multi
     def write(self, values):
         sync_fields = set(self.get_fields_need_update_google())
         if (set(values) and sync_fields) and 'oe_update_date' not in values and 'NewMeeting' not in self._context:
             values['oe_update_date'] = fields.Datetime.now()
         return super(Meeting, self).write(values)
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = default or {}
@@ -36,7 +34,6 @@ class Meeting(models.Model):
             default['oe_update_date'] = False
         return super(Meeting, self).copy(default)
 
-    @api.multi
     def unlink(self, can_be_deleted=False):
         return super(Meeting, self).unlink(can_be_deleted=can_be_deleted)
 
@@ -52,7 +49,6 @@ class Attendee(models.Model):
         ('google_id_uniq', 'unique(google_internal_event_id,partner_id,event_id)', 'Google ID should be unique!')
     ]
 
-    @api.multi
     def write(self, values):
         for attendee in self:
             meeting_id_to_update = values.get('event_id', attendee.event_id.id)

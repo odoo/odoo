@@ -34,7 +34,6 @@ class ProjectCreateInvoice(models.TransientModel):
             'domain': {'sale_order_id': [('id', 'in', sale_orders.ids)]},
         }
 
-    @api.multi
     @api.depends('sale_order_id')
     def _compute_amount_to_invoice(self):
         for wizard in self:
@@ -45,7 +44,6 @@ class ProjectCreateInvoice(models.TransientModel):
                 amount_tax += line.price_tax
             wizard.amount_to_invoice = amount_untaxed + amount_tax
 
-    @api.multi
     def action_create_invoice(self):
         if not self.sale_order_id and self.sale_order_id.invoice_status != 'to invoice':
             raise UserError(_("The selected Sales Order should contain something to invoice."))

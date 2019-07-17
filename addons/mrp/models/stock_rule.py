@@ -66,7 +66,6 @@ class StockRule(models.Model):
         fields += ['bom_line_id']
         return fields
 
-    @api.multi
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get('bom_id', False):
             return values['bom_id']

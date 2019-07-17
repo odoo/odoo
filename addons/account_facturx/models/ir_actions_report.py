@@ -10,7 +10,6 @@ import io
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
-    @api.multi
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         # OVERRIDE
         if self.model == 'account.move' and res_ids and len(res_ids) == 1:

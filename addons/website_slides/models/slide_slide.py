@@ -241,7 +241,6 @@ class Slide(models.Model):
             for key, value in values.items():
                 self[key] = value
 
-    @api.multi
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
         # TDE FIXME: clena this link.tracker strange stuff
@@ -297,7 +296,6 @@ class Slide(models.Model):
             slide._post_publication()
         return slide
 
-    @api.multi
     def write(self, values):
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
@@ -314,7 +312,6 @@ class Slide(models.Model):
     # Mail/Rating
     # ---------------------------------------------------------
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
         self.ensure_one()
@@ -322,7 +319,6 @@ class Slide(models.Model):
             raise KarmaError(_('Not enough karma to comment'))
         return super(Slide, self).message_post(message_type=message_type, **kwargs)
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
@@ -336,7 +332,6 @@ class Slide(models.Model):
             }
         return super(Slide, self).get_access_action(access_uid)
 
-    @api.multi
     def _notify_get_groups(self):
         """ Add access button to everyone if the document is active. """
         groups = super(Slide, self)._notify_get_groups()

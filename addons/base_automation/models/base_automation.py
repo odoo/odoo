@@ -102,7 +102,6 @@ class BaseAutomation(models.Model):
         self._update_registry()
         return base_automation
 
-    @api.multi
     def write(self, vals):
         res = super(BaseAutomation, self).write(vals)
         if set(vals).intersection(self.CRITICAL_FIELDS):
@@ -110,7 +109,6 @@ class BaseAutomation(models.Model):
             self._update_registry()
         return res
 
-    @api.multi
     def unlink(self):
         res = super(BaseAutomation, self).unlink()
         self._update_cron()
@@ -265,7 +263,6 @@ class BaseAutomation(models.Model):
             # Note: we patch method _write() instead of write() in order to
             # catch updates made by field recomputations.
             #
-            @api.multi
             def _write(self, vals, **kw):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.automation']._get_actions(self, ['on_write', 'on_create_or_write'])
@@ -289,7 +286,6 @@ class BaseAutomation(models.Model):
 
         def make_unlink():
             """ Instanciate an unlink method that processes action rules. """
-            @api.multi
             def unlink(self, **kwargs):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.automation']._get_actions(self, ['on_unlink'])

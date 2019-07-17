@@ -18,7 +18,6 @@ class AccountChartTemplate(models.Model):
             ]
         return super(AccountChartTemplate, self)._get_default_bank_journals_data()
 
-    @api.multi
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         """Create fiscal journals for buys"""
         res = super(AccountChartTemplate, self)._prepare_all_journals(

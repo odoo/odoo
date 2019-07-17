@@ -129,7 +129,6 @@ class Forum(models.Model):
     def create(self, values):
         return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
 
-    @api.multi
     def write(self, vals):
         res = super(Forum, self).write(vals)
         if 'active' in vals:
@@ -291,14 +290,12 @@ class Post(models.Model):
             else:
                 post.relevancy = 0
 
-    @api.multi
     def _get_user_vote(self):
         votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
         mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
 
-    @api.multi
     @api.depends('vote_ids.vote')
     def _get_vote_count(self):
         read_group_res = self.env['forum.post.vote'].read_group([('post_id', 'in', self._ids)], ['post_id', 'vote'], ['post_id', 'vote'], lazy=False)
@@ -342,7 +339,6 @@ class Post(models.Model):
         for post in self:
             post.has_validated_answer = any(answer.is_correct for answer in post.child_ids)
 
-    @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
         is_admin = self.env.is_admin()
@@ -435,7 +431,6 @@ class Post(models.Model):
                     raise KarmaError(_('%d karma required to edit a post.') % post.karma_edit)
         return super(Post, self).get_mail_message_access(res_ids, operation, model_name=model_name)
 
-    @api.multi
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
         if 'content' in vals:
@@ -490,7 +485,6 @@ class Post(models.Model):
                 answers.write({'active': vals['active']})
         return res
 
-    @api.multi
     def post_notification(self):
         for post in self:
             tag_partners = post.tag_ids.mapped('message_partner_ids')
@@ -520,7 +514,6 @@ class Post(models.Model):
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
         return True
 
-    @api.multi
     def reopen(self):
         if any(post.parent_id or post.state != 'close' for post in self):
             return False
@@ -542,7 +535,6 @@ class Post(models.Model):
 
         self.sudo().write({'state': 'active'})
 
-    @api.multi
     def close(self, reason_id):
         if any(post.parent_id for post in self):
             return False
@@ -630,7 +622,6 @@ class Post(models.Model):
             })
         return True
 
-    @api.multi
     def mark_as_offensive_batch(self, key, values):
         spams = self.browse()
         if key == 'create_uid':
@@ -644,7 +635,6 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    @api.multi
     def unlink(self):
         for post in self:
             if not post.can_unlink:
@@ -656,7 +646,6 @@ class Post(models.Model):
                 self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * -1)
         return super(Post, self).unlink()
 
-    @api.multi
     def bump(self):
         """ Bump a question: trigger a write_date by writing on a dummy bump_date
         field. One cannot bump a question more than once every 10 days. """
@@ -666,7 +655,6 @@ class Post(models.Model):
             return self.sudo().write({'bump_date': fields.Datetime.now()})
         return False
 
-    @api.multi
     def vote(self, upvote=True):
         Vote = self.env['forum.post.vote']
         vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
@@ -685,7 +673,6 @@ class Post(models.Model):
                 Vote.create({'post_id': post_id, 'vote': new_vote})
         return {'vote_count': self.vote_count, 'user_vote': new_vote}
 
-    @api.multi
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
@@ -778,12 +765,10 @@ class Post(models.Model):
             result.append(comment.unlink())
         return result
 
-    @api.multi
     def set_viewed(self):
         self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
@@ -795,7 +780,6 @@ class Post(models.Model):
             'res_id': self.id,
         }
 
-    @api.multi
     def _notify_get_groups(self):
         """ Add access button to everyone if the document is active. """
         groups = super(Post, self)._notify_get_groups()
@@ -806,7 +790,6 @@ class Post(models.Model):
 
         return groups
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
@@ -829,7 +812,6 @@ class Post(models.Model):
                 kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, **kwargs)
 
-    @api.multi
     def _notify_record_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
@@ -887,7 +869,6 @@ class Vote(models.Model):
         vote._vote_update_karma('0', vote.vote)
         return vote
 
-    @api.multi
     def write(self, values):
         # can't modify owner of a vote
         if not self.env.is_admin():
@@ -951,7 +932,6 @@ class Tags(models.Model):
         ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
-    @api.multi
     @api.depends("post_ids.tag_ids", "post_ids.state")
     def _get_posts_count(self):
         for tag in self:

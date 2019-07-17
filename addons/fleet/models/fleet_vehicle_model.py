@@ -18,7 +18,6 @@ class FleetVehicleModel(models.Model):
     image_medium = fields.Binary(related='brand_id.image_medium', string="Logo (medium)", readonly=False)
     image_small = fields.Binary(related='brand_id.image_small', string="Logo (small)", readonly=False)
 
-    @api.multi
     @api.depends('name', 'brand_id')
     def name_get(self):
         res = []
@@ -60,7 +59,6 @@ class FleetVehicleModelBrand(models.Model):
             tools.image_resize_images(vals)
         return super(FleetVehicleModelBrand, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         tools.image_resize_images(vals)
         return super(FleetVehicleModelBrand, self).write(vals)

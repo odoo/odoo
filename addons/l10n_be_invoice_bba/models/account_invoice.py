@@ -17,7 +17,6 @@ account.move object: add support for Belgian structured communication
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
     def _get_reference_be_partner(self):
         """ This computes the reference based on the belgian national standard
             “OGM-VCS”.
@@ -35,7 +34,6 @@ class AccountMove(models.Model):
         reference = '+++%s/%s/%s%02d+++' % (bbacomm[:3], bbacomm[3:7], bbacomm[7:], mod)
         return reference
 
-    @api.multi
     def _get_reference_be_invoice(self):
         """ This computes the reference based on the belgian national standard
             “OGM-VCS”.

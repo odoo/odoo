@@ -39,7 +39,6 @@ class ChangeProductionQty(models.TransientModel):
             move[0].write({'product_uom_qty': move.product_uom_qty - qty})
         return modification
 
-    @api.multi
     def change_prod_qty(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for wizard in self:

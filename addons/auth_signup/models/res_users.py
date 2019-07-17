@@ -48,7 +48,6 @@ class ResUsers(models.Model):
 
         return expression.TRUE_DOMAIN
 
-    @api.multi
     def _compute_state(self):
         for user in self:
             user.state = 'active' if user.login_date else 'new'
@@ -119,7 +118,6 @@ class ResUsers(models.Model):
                 raise SignupError(_('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
 
-    @api.multi
     def _notify_inviter(self):
         for user in self:
             invite_partner = user.create_uid.partner_id
@@ -165,7 +163,6 @@ class ResUsers(models.Model):
             raise Exception(_('Reset password: invalid username or email'))
         return users.action_reset_password()
 
-    @api.multi
     def action_reset_password(self):
         """ create signup token for each user, and send their signup url by email """
         # prepare reset password signup
@@ -203,7 +200,6 @@ class ResUsers(models.Model):
                 template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
 
-    @api.multi
     def send_unregistered_user_reminder(self, after_days=5):
         datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
         datetime_max = datetime_min + relativedelta(hours=23, minutes=59, seconds=59)
@@ -245,7 +241,6 @@ class ResUsers(models.Model):
                 user.partner_id.with_context(create_user=True).signup_cancel()
         return user
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()

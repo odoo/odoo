@@ -16,7 +16,6 @@ class AccountInvoiceSend(models.TransientModel):
     invalid_addresses = fields.Integer('Invalid Addresses Count', compute='_compute_invalid_addresses')
     invalid_invoice_ids = fields.Many2many('account.move', string='Invalid Addresses', compute='_compute_invalid_addresses')
 
-    @api.multi
     @api.depends('invoice_ids')
     def _compute_invalid_addresses(self):
         for wizard in self:
@@ -24,20 +23,17 @@ class AccountInvoiceSend(models.TransientModel):
             wizard.invalid_invoice_ids = invalid_invoices
             wizard.invalid_addresses = len(invalid_invoices)
 
-    @api.multi
     @api.depends('invoice_ids')
     def _get_partner(self):
         for wizard in self:
             if wizard.invoice_ids and len(wizard.invoice_ids) == 1:
                 wizard.partner_id = wizard.invoice_ids.partner_id.id
 
-    @api.multi
     @api.depends('snailmail_is_letter')
     def _compute_snailmail_cost(self):
         for wizard in self:
             wizard.snailmail_cost = len(wizard.invoice_ids.ids)
 
-    @api.multi
     def snailmail_print_action(self):
         self.ensure_one()
         letters = self.env['snailmail.letter']
@@ -58,7 +54,6 @@ class AccountInvoiceSend(models.TransientModel):
         else:
             letters._snailmail_print(immediate=False)
 
-    @api.multi
     def send_and_print_action(self):
         if self.snailmail_is_letter:
             if self.invalid_addresses and self.composition_mode == "mass_mail":
@@ -67,7 +62,6 @@ class AccountInvoiceSend(models.TransientModel):
         res = super(AccountInvoiceSend, self).send_and_print_action()
         return res
 
-    @api.multi
     def notify_invalid_addresses(self):
         self.ensure_one()
         self.env['bus.bus'].sendone(
@@ -76,7 +70,6 @@ class AccountInvoiceSend(models.TransientModel):
             'message': _("%s of the selected invoice(s) had an invalid address and were not sent") % self.invalid_addresses}
         )
 
-    @api.multi
     def invalid_addresses_action(self):
         return {
             'name': _('Invalid Addresses'),

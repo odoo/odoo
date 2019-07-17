@@ -269,13 +269,11 @@ class Channel(models.Model):
     def _get_can_publish_error_message(self):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
 
-    @api.multi
     def get_base_url(self):
         self.ensure_one()
         icp = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return self.website_id and self.website_id._get_http_domain() or icp
 
-    @api.multi
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
         super(Channel, self)._compute_website_url()
@@ -284,7 +282,6 @@ class Channel(models.Model):
                 base_url = channel.get_base_url()
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
-    @api.multi
     def _compute_action_rights(self):
         user_karma = self.env.user.karma
         for channel in self:
@@ -332,7 +329,6 @@ class Channel(models.Model):
             channel._add_groups_members()
         return channel
 
-    @api.multi
     def write(self, vals):
         res = super(Channel, self).write(vals)
         if vals.get('user_id'):
@@ -344,7 +340,6 @@ class Channel(models.Model):
             self._add_groups_members()
         return res
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
@@ -365,7 +360,6 @@ class Channel(models.Model):
     # Business / Actions
     # ---------------------------------------------------------
 
-    @api.multi
     def action_redirect_to_members(self):
         action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
         action['view_mode'] = 'tree'
@@ -375,7 +369,6 @@ class Channel(models.Model):
 
         return action
 
-    @api.multi
     def action_channel_invite(self):
         self.ensure_one()
 
@@ -479,7 +472,6 @@ class Channel(models.Model):
     # Rating Mixin API
     # ---------------------------------------------------------
 
-    @api.multi
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
         domain = super(Channel, self)._rating_domain()

@@ -143,7 +143,6 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
 
-    @api.multi
     @api.depends('name', 'partner_ref')
     def name_get(self):
         result = []
@@ -162,14 +161,12 @@ class PurchaseOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
         return super(PurchaseOrder, self).create(vals)
 
-    @api.multi
     def unlink(self):
         for order in self:
             if not order.state == 'cancel':
                 raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
         return super(PurchaseOrder, self).unlink()
 
-    @api.multi
     def copy(self, default=None):
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
@@ -179,7 +176,6 @@ class PurchaseOrder(models.Model):
             line.date_planned = line._get_date_planned(seller)
         return new_po
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'purchase':
@@ -239,7 +235,6 @@ class PurchaseOrder(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.multi
     def action_rfq_send(self):
         '''
         This function opens a window to compose an email, with the edi purchase template message loaded by default
@@ -295,30 +290,25 @@ class PurchaseOrder(models.Model):
             'context': ctx,
         }
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('mark_rfq_as_sent'):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
         return super(PurchaseOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
-    @api.multi
     def print_quotation(self):
         self.write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
-    @api.multi
     def button_approve(self, force=False):
         self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self.filtered(lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
-    @api.multi
     def button_draft(self):
         self.write({'state': 'draft'})
         return {}
 
-    @api.multi
     def button_confirm(self):
         for order in self:
             if order.state not in ['draft', 'sent']:
@@ -335,7 +325,6 @@ class PurchaseOrder(models.Model):
                 order.write({'state': 'to approve'})
         return True
 
-    @api.multi
     def button_cancel(self):
         for order in self:
             for inv in order.invoice_ids:
@@ -344,15 +333,12 @@ class PurchaseOrder(models.Model):
 
         self.write({'state': 'cancel'})
 
-    @api.multi
     def button_unlock(self):
         self.write({'state': 'purchase'})
 
-    @api.multi
     def button_done(self):
         self.write({'state': 'done'})
 
-    @api.multi
     def _add_supplier_to_product(self):
         # Add the partner in the supplier list of the product if the supplier is not registered for
         # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
@@ -389,7 +375,6 @@ class PurchaseOrder(models.Model):
                 except AccessError:  # no write access rights -> just ignore
                     break
 
-    @api.multi
     def action_view_invoice(self):
         '''
         This function returns an action that display existing vendor bills of given purchase order ids.
@@ -416,7 +401,6 @@ class PurchaseOrder(models.Model):
         result['context']['default_reference'] = self.partner_ref
         return result
 
-    @api.multi
     def action_set_date_planned(self):
         for order in self:
             order.order_line.update({'date_planned': order.date_planned})
@@ -509,7 +493,6 @@ class PurchaseOrderLine(models.Model):
             'partner': self.order_id.partner_id,
         }
 
-    @api.multi
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
@@ -529,21 +512,18 @@ class PurchaseOrderLine(models.Model):
                         qty -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
-    @api.multi
     @api.depends('product_id')
     def _compute_qty_received_method(self):
         for line in self:
             if line.product_id.type in ['consu', 'service']:
                 line.qty_received_method = 'manual'
 
-    @api.multi
     @api.depends('qty_received_method', 'qty_received_manual')
     def _compute_qty_received(self):
         for line in self:
             if line.qty_received_method == 'manual':
                 line.qty_received = line.qty_received_manual or 0.0
 
-    @api.multi
     @api.onchange('qty_received')
     def _inverse_qty_received(self):
         """ When writing on qty_received, if the value should be modify manually (`qty_received_method` = 'manual' only),
@@ -567,7 +547,6 @@ class PurchaseOrderLine(models.Model):
             line.order_id.message_post(body=msg)
         return line
 
-    @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type.")
@@ -580,7 +559,6 @@ class PurchaseOrderLine(models.Model):
                                                          subtype_id=self.env.ref('mail.mt_note').id)
         return super(PurchaseOrderLine, self).write(values)
 
-    @api.multi
     def unlink(self):
         for line in self:
             if line.order_id.state in ['purchase', 'done']:
@@ -680,7 +658,6 @@ class PurchaseOrderLine(models.Model):
 
         self.price_unit = price_unit
 
-    @api.multi
     @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
         for line in self:
@@ -704,7 +681,6 @@ class PurchaseOrderLine(models.Model):
         else:
             self.product_qty = 1.0
 
-    @api.multi
     def _prepare_account_move_line(self, move):
         self.ensure_one()
         if self.product_id.purchase_method == 'purchase':

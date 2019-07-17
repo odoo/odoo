@@ -16,7 +16,6 @@ class ProductTemplate(models.Model):
     available_threshold = fields.Float(string='Availability Threshold', default=5.0)
     custom_message = fields.Text(string='Custom Message', default='', translate=True)
 
-    @api.multi
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, reference_product=False, only_template=False):
         combination_info = super(ProductTemplate, self)._get_combination_info(
             combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,

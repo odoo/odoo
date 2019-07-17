@@ -36,12 +36,10 @@ class PosCategory(models.Model):
         tools.image_resize_images(vals)
         return super(PosCategory, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         tools.image_resize_images(vals)
         return super(PosCategory, self).write(vals)
 
-    @api.multi
     def name_get(self):
         def get_names(cat):
             res = []

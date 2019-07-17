@@ -79,7 +79,6 @@ class PublisherWarrantyContract(AbstractModel):
         r.raise_for_status()
         return literal_eval(r.text)
 
-    @api.multi
     def update_notification(self, cron_mode=True):
         """
         Send a message to Odoo's publisher warranty server to check the

@@ -14,7 +14,6 @@ class BaseImportModule(models.TransientModel):
     import_message = fields.Text()
     force = fields.Boolean(string='Force init', help="Force init mode even if installed. (will update `noupdate='1'` records)")
 
-    @api.multi
     def import_module(self):
         self.ensure_one()
         IrModule = self.env['ir.module.module']
@@ -35,7 +34,6 @@ class BaseImportModule(models.TransientModel):
             'context': context,
         }
 
-    @api.multi
     def action_module_open(self):
         self.ensure_one()
         return {

@@ -11,14 +11,12 @@ class BaseModuleUpdate(models.TransientModel):
     added = fields.Integer('Number of modules added', readonly=True)
     state = fields.Selection([('init', 'init'), ('done', 'done')], 'Status', readonly=True, default='init')
 
-    @api.multi
     def update_module(self):
         for this in self:
             updated, added = self.env['ir.module.module'].update_list()
             this.write({'updated': updated, 'added': added, 'state': 'done'})
         return False
 
-    @api.multi
     def action_module_open(self):
         res = {
             'domain': str([]),

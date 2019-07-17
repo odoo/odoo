@@ -36,7 +36,6 @@ class PaymentAcquirerStripe(models.Model):
              "brand or product. As defined in your Stripe profile. See: "
              "https://stripe.com/docs/checkout")
 
-    @api.multi
     def stripe_form_generate_values(self, tx_values):
         self.ensure_one()
         stripe_tx_values = dict(tx_values)
@@ -74,7 +73,6 @@ class PaymentAcquirerStripe(models.Model):
         })
         return payment_token
 
-    @api.multi
     def stripe_s2s_form_validate(self, data):
         self.ensure_one()
 
@@ -127,7 +125,6 @@ class PaymentTransactionStripe(models.Model):
         _logger.info('_create_stripe_charge: Values received:\n%s', pprint.pformat(res))
         return res
 
-    @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
         result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref, email=self.partner_email)
@@ -152,7 +149,6 @@ class PaymentTransactionStripe(models.Model):
         _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
         return res
 
-    @api.multi
     def stripe_s2s_do_refund(self, **kwargs):
         self.ensure_one()
         result = self._create_stripe_refund()
@@ -186,7 +182,6 @@ class PaymentTransactionStripe(models.Model):
             raise ValidationError(error_msg)
         return tx[0]
 
-    @api.multi
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
         if self.state != 'draft':
@@ -215,7 +210,6 @@ class PaymentTransactionStripe(models.Model):
             self._set_transaction_cancel()
             return False
 
-    @api.multi
     def _stripe_form_get_invalid_parameters(self, data):
         invalid_parameters = []
         reference = data['metadata']['reference']
@@ -223,7 +217,6 @@ class PaymentTransactionStripe(models.Model):
             invalid_parameters.append(('Reference', reference, self.reference))
         return invalid_parameters
 
-    @api.multi
     def _stripe_form_validate(self,  data):
         return self._stripe_s2s_validate_tree(data)
 

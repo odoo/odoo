@@ -11,7 +11,6 @@ class SaleCouponApplyCode(models.TransientModel):
 
     coupon_code = fields.Char(string="Coupon", required=True)
 
-    @api.multi
     def process_coupon(self):
         """
         Apply the entered coupon code if valid, raise an UserError otherwise.

@@ -61,7 +61,6 @@ class HrWorkEntry(models.Model):
         dt = date_stop - date_start
         return dt.days * 24 + dt.seconds / 3600  # Number of hours
 
-    @api.multi
     def action_validate(self):
         """
         Try to validate work entries.
@@ -75,7 +74,6 @@ class HrWorkEntry(models.Model):
             return True
         return False
 
-    @api.multi
     def _check_if_error(self):
         if not self:
             return False
@@ -143,7 +141,6 @@ class HrWorkEntry(models.Model):
         with self._error_checking(skip=skip_check):
             return super(HrWorkEntry, self).write(vals)
 
-    @api.multi
     def unlink(self):
         with self._error_checking():
             return super().unlink()

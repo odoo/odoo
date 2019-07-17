@@ -13,7 +13,6 @@ class AccountPayment(models.Model):
     payment_token_id = fields.Many2one('payment.token', string="Saved payment token", domain=[('acquirer_id.capture_manually', '=', False)],
                                        help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
 
-    @api.multi
     def _get_payment_chatter_link(self):
         self.ensure_one()
         return '<a href=# data-oe-model=account.payment data-oe-id=%d>%s</a>' % (self.id, self.name)
@@ -33,7 +32,6 @@ class AccountPayment(models.Model):
         res['domain'] = {'payment_token_id': domain}
         return res
 
-    @api.multi
     def _prepare_payment_transaction_vals(self):
         self.ensure_one()
         return {
@@ -48,7 +46,6 @@ class AccountPayment(models.Model):
             'type': 'server2server',
         }
 
-    @api.multi
     def _create_payment_transaction(self, vals=None):
         for pay in self:
             if pay.payment_transaction_id:
@@ -76,7 +73,6 @@ class AccountPayment(models.Model):
         self.mapped('payment_transaction_id').filtered(lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
         return res
 
-    @api.multi
     def post(self):
         # Post the payments "normally" if no transactions are needed.
         # If not, let the acquirer updates the state.

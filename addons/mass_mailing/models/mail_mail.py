@@ -52,7 +52,6 @@ class MailMail(models.Model):
         )
         return url
 
-    @api.multi
     def _send_prepare_body(self):
         """ Override to add the tracking URL to the body and to add
         Statistic_id in shorted urls """
@@ -80,7 +79,6 @@ class MailMail(models.Model):
 
         return body
 
-    @api.multi
     def _send_prepare_values(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         res = super(MailMail, self)._send_prepare_values(partner)
@@ -94,7 +92,6 @@ class MailMail(models.Model):
                 res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
         return res
 
-    @api.multi
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         mail_sent = not failure_type  # we consider that a recipient error is a failure with mass mailling and show them as failed
         for mail in self:

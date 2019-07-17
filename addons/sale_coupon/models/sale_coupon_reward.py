@@ -51,7 +51,6 @@ class SaleCouponReward(models.Model):
         if self.filtered(lambda reward: reward.discount_type == 'percentage' and (reward.discount_percentage < 0 or reward.discount_percentage > 100)):
             raise ValidationError(_('Discount percentage should be between 1-100'))
 
-    @api.multi
     def name_get(self):
         """
         Returns a complete description of the reward

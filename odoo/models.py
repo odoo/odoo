@@ -728,7 +728,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for record in self
         )
 
-    @api.multi
     def _export_rows(self, fields, *, _is_toplevel_call=True):
         """ Export fields of the records in ``self``.
 
@@ -830,7 +829,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     # backward compatibility
     __export_rows = _export_rows
 
-    @api.multi
     def export_data(self, fields_to_export, raw_data=False):
         """ Export fields for selected objects
 
@@ -1097,7 +1095,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 
-    @api.multi
     def _validate_fields(self, field_names):
         field_names = set(field_names)
 
@@ -1498,7 +1495,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             }
         return result
 
-    @api.multi
     def get_formview_id(self, access_uid=None):
         """ Return an view id to open the document ``self`` with. This method is
             meant to be overridden in addons that want to give specific view ids
@@ -1509,7 +1505,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         return False
 
-    @api.multi
     def get_formview_action(self, access_uid=None):
         """ Return an action to open the document ``self``. This method is meant
             to be overridden in addons that want to give specific view ids for
@@ -1529,7 +1524,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             'context': dict(self._context),
         }
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
@@ -1594,7 +1588,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for record in self:
             record.display_name = names.get(record.id, False)
 
-    @api.multi
     def name_get(self):
         """ name_get() -> [(id, name), ...]
 
@@ -2795,7 +2788,6 @@ Fields:
 
         return fields
 
-    @api.multi
     def read(self, fields=None, load='_classic_read'):
         """ read([fields])
 
@@ -2848,7 +2840,6 @@ Fields:
 
         return result
 
-    @api.multi
     def _prefetch_field(self, field):
         """ Read from the database in order to fetch ``field`` (:class:`Field`
             instance) for ``self`` in cache.
@@ -2899,7 +2890,6 @@ Fields:
                 exc = AccessError("No value found for %s.%s" % (self, field.name))
                 self.env.cache.set_failed(self, [field], exc)
 
-    @api.multi
     def _read_from_database(self, field_names, inherited_field_names=[]):
         """ Read the given fields of the records in ``self`` from the database,
             and store them in cache. Access errors are also stored in cache.
@@ -3007,7 +2997,6 @@ Fields:
                 exc = self.env['ir.rule']._make_access_error('read', forbidden)
                 self.env.cache.set_failed(forbidden, self._fields.values(), exc)
 
-    @api.multi
     def get_metadata(self):
         """
         Returns some metadata about the given records.
@@ -3040,7 +3029,6 @@ Fields:
             r['noupdate'] = value.get('noupdate', False)
         return res
 
-    @api.multi
     def get_base_url(self):
         """
         Returns rooturl for a specific given record.
@@ -3055,7 +3043,6 @@ Fields:
         self.ensure_one()
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
-    @api.multi
     def _check_concurrency(self):
         if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
             return
@@ -3085,7 +3072,6 @@ Fields:
         """
         return self.env['ir.model.access'].check(self._name, operation, raise_exception)
 
-    @api.multi
     def check_access_rule(self, operation):
         """ Verifies that the operation given by ``operation`` is allowed for
             the current user according to ir.rules.
@@ -3162,7 +3148,6 @@ Fields:
             if not (it or it.origin) or (it or it.origin) in valid_ids
         ])
 
-    @api.multi
     def unlink(self):
         """ unlink()
 
@@ -3240,7 +3225,6 @@ Fields:
 
         return True
 
-    @api.multi
     def write(self, vals):
         """ write(vals)
 
@@ -3429,7 +3413,6 @@ Fields:
 
         return True
 
-    @api.multi
     def _write(self, vals):
         # low-level implementation of write()
         if not self:
@@ -4204,7 +4187,6 @@ Fields:
 
         return _uniquify_list([x[0] for x in res])
 
-    @api.multi
     @api.returns(None, lambda value: value[0])
     def copy_data(self, default=None):
         """
@@ -4275,7 +4257,6 @@ Fields:
 
         return [default]
 
-    @api.multi
     def copy_translations(old, new, excluded=()):
         """ Recursively copy the translations from original to new record
 
@@ -4348,7 +4329,6 @@ Fields:
                     vals_list.append(vals)
                 Translation._upsert_translations(vals_list)
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         """ copy(default=None)
@@ -4367,7 +4347,6 @@ Fields:
         self.with_context(from_copy_translation=True).copy_translations(new, excluded=default or ())
         return new
 
-    @api.multi
     @api.returns('self')
     def exists(self):
         """  exists() -> records
@@ -4398,7 +4377,6 @@ Fields:
             self.env.cache.set_failed(self - existing, self._fields.values(), exc)
         return existing
 
-    @api.multi
     def _check_recursion(self, parent=None):
         """
         Verifies that there is no loop in a hierarchical structure of records,
@@ -4424,7 +4402,6 @@ Fields:
                     return False
         return True
 
-    @api.multi
     def _check_m2m_recursion(self, field_name):
         """
         Verifies that there is no loop in a directed graph of records, by
@@ -4463,7 +4440,6 @@ Fields:
                     todo.add(id2)
         return True
 
-    @api.multi
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
 
@@ -4482,7 +4458,6 @@ Fields:
             result[data['res_id']].append('%(module)s.%(name)s' % data)
         return result
 
-    @api.multi
     def get_external_id(self):
         """Retrieve the External ID of any database record, if there
         is one. This method works as a possible implementation
@@ -4665,7 +4640,6 @@ Fields:
         index = {vals['id']: vals for vals in result}
         return [index[record.id] for record in records if record.id in index]
 
-    @api.multi
     def toggle_active(self):
         """ Inverse the value of the field ``active`` on the records in ``self``. """
         for record in self:
@@ -4678,7 +4652,6 @@ Fields:
         """
         return self.filtered(lambda record: record.active).toggle_active()
 
-    @api.multi
     def action_unarchive(self):
         """
             Set active=True on a recordset, by calling toggle_active to take the
@@ -4699,7 +4672,6 @@ Fields:
 
             Example::
 
-                @api.multi
                 def do_write(self, values):
                     # do stuff, and call the original method
                     return do_write.origin(self, values)
@@ -5017,7 +4989,6 @@ Fields:
             key = itemgetter(key)
         return self.browse(item.id for item in sorted(self, key=key, reverse=reverse))
 
-    @api.multi
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
         for record in self:
@@ -5269,7 +5240,6 @@ Fields:
                [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.cache.invalidate(spec)
 
-    @api.multi
     def modified(self, fnames):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
@@ -5441,7 +5411,6 @@ Fields:
                 process(method_res)
             return
 
-    @api.multi
     def onchange(self, values, field_name, field_onchange):
         """ Perform an onchange on the given field.
 

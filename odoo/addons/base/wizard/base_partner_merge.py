@@ -316,7 +316,6 @@ class MergePartnerAutomatic(models.TransientModel):
         # delete source partner, since they are merged
         src_partners.unlink()
 
-    @api.multi
     def _log_merge_operation(self, src_partners, dst_partner):
         _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
 
@@ -407,7 +406,6 @@ class MergePartnerAutomatic(models.TransientModel):
             reverse=True,
         )
 
-    @api.multi
     def _compute_models(self):
         """ Compute the different models needed by the system if you want to exclude some partners. """
         model_mapping = {}
@@ -421,14 +419,12 @@ class MergePartnerAutomatic(models.TransientModel):
     # Actions
     # ----------------------------------------
 
-    @api.multi
     def action_skip(self):
         """ Skip this wizard line. Don't compute any thing, and simply redirect to the new step."""
         if self.current_line_id:
             self.current_line_id.unlink()
         return self._action_next_screen()
 
-    @api.multi
     def _action_next_screen(self):
         """ return the action of the next screen ; this means the wizard is set to treat the
             next wizard line. Each line is a subset of partner that can be merged together.
@@ -463,7 +459,6 @@ class MergePartnerAutomatic(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def _process_query(self, query):
         """ Execute the select request and write the result in this wizard
             :param query : the SQL query used to fill the wizard line
@@ -499,7 +494,6 @@ class MergePartnerAutomatic(models.TransientModel):
 
         _logger.info("counter: %s", counter)
 
-    @api.multi
     def action_start_manual_process(self):
         """ Start the process 'Merge with Manual Check'. Fill the wizard according to the group_by and exclude
             options, and redirect to the first step (treatment of first wizard line). After, for each subset of
@@ -513,7 +507,6 @@ class MergePartnerAutomatic(models.TransientModel):
         self._process_query(query)
         return self._action_next_screen()
 
-    @api.multi
     def action_start_automatic_process(self):
         """ Start the process 'Merge Automatically'. This will fill the wizard with the same mechanism as 'Merge
             with Manual Check', but instead of refreshing wizard with the current line, it will automatically process
@@ -538,7 +531,6 @@ class MergePartnerAutomatic(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def parent_migration_process_cb(self):
         self.ensure_one()
 
@@ -595,7 +587,6 @@ class MergePartnerAutomatic(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def action_update_all_process(self):
         self.ensure_one()
         self.parent_migration_process_cb()
@@ -618,7 +609,6 @@ class MergePartnerAutomatic(models.TransientModel):
 
         return self._action_next_screen()
 
-    @api.multi
     def action_merge(self):
         """ Merge Contact button. Merge the selected partners, and redirect to
             the end screen (since there is no other wizard line to process.

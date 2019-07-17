@@ -10,7 +10,6 @@ class SaleOrderTemplate(models.Model):
 
     website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False)
 
-    @api.multi
     def open_template(self):
         self.ensure_one()
         return {
@@ -37,7 +36,6 @@ class SaleOrderTemplateLine(models.Model):
         values = self._inject_quotation_description(values)
         return super(SaleOrderTemplateLine, self).create(values)
 
-    @api.multi
     def write(self, values):
         values = self._inject_quotation_description(values)
         return super(SaleOrderTemplateLine, self).write(values)

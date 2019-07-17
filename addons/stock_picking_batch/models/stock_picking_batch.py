@@ -34,25 +34,21 @@ class StockPickingBatch(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('picking.batch') or '/'
         return super(StockPickingBatch, self).create(vals)
 
-    @api.multi
     def confirm_picking(self):
         pickings_todo = self.mapped('picking_ids')
         self.write({'state': 'in_progress'})
         return pickings_todo.action_assign()
 
-    @api.multi
     def cancel_picking(self):
         self.mapped('picking_ids').action_cancel()
         return self.write({'state': 'cancel'})
 
-    @api.multi
     def print_picking(self):
         pickings = self.mapped('picking_ids')
         if not pickings:
             raise UserError(_('Nothing to print.'))
         return self.env.ref('stock_picking_batch.action_report_picking_batch').report_action(self)
 
-    @api.multi
     def done(self):
         pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
         if any(picking.state not in ('assigned') for picking in pickings):

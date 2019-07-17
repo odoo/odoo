@@ -25,11 +25,9 @@ class ProductAttribute(models.Model):
         string="Create Variants",
         help="Check this if you want to create multiple variants for this attribute.", required=True)
 
-    @api.multi
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pa: pa.create_variant != 'no_variant')
 
-    @api.multi
     def write(self, vals):
         """Override to make sure attribute type can't be changed if it's used on
         a product template.
@@ -51,7 +49,6 @@ class ProductAttribute(models.Model):
             self.invalidate_cache()
         return res
 
-    @api.multi
     def _get_related_product_templates(self):
         return self.env['product.template'].with_context(active_test=False).search([
             ('attribute_line_ids.attribute_id', 'in', self.ids),
@@ -73,7 +70,6 @@ class ProductAttributeValue(models.Model):
         ('value_company_uniq', 'unique (name, attribute_id)', 'This attribute value already exists !')
     ]
 
-    @api.multi
     def name_get(self):
         """Override because in general the name of the value is confusing if it
         is displayed without the name of the corresponding attribute.
@@ -87,11 +83,9 @@ class ProductAttributeValue(models.Model):
             return super(ProductAttributeValue, self).name_get()
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
-    @api.multi
     def _variant_name(self, variable_attributes):
         return ", ".join([v.name for v in self if v.attribute_id in variable_attributes])
 
-    @api.multi
     def write(self, values):
         invalidate_cache = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
         res = super(ProductAttributeValue, self).write(values)
@@ -101,18 +95,15 @@ class ProductAttributeValue(models.Model):
             self.invalidate_cache()
         return res
 
-    @api.multi
     def unlink(self):
         linked_products = self._get_related_product_templates()
         if linked_products:
             raise UserError(_('The operation cannot be completed:\nYou are trying to delete an attribute value with a reference on a product variant.'))
         return super(ProductAttributeValue, self).unlink()
 
-    @api.multi
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
 
-    @api.multi
     def _get_related_product_templates(self):
         return self.env['product.template'].with_context(active_test=False).search([
             ('attribute_line_ids.value_ids', 'in', self.ids),
@@ -162,7 +153,6 @@ class ProductTemplateAttributeLine(models.Model):
                 ('product_attribute_value_id', 'in', product_template_attribute_line.value_ids.ids)]
             )
 
-    @api.multi
     def unlink(self):
         for product_template_attribute_line in self:
             self.env['product.template.attribute.value'].search([
@@ -215,7 +205,6 @@ class ProductTemplateAttributeLine(models.Model):
             return self.browse(attribute_ids).name_get()
         return super(ProductTemplateAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    @api.multi
     def _without_no_variant_attributes(self):
         return self.filtered(lambda ptal: ptal.attribute_id.create_variant != 'no_variant')
 
@@ -253,7 +242,6 @@ class ProductTemplateAttributeValue(models.Model):
         help="""Make this attribute value not compatible with
         other values of the product or some attribute values of optional and accessory products.""")
 
-    @api.multi
     def name_get(self):
         """Override because in general the name of the value is confusing if it
         is displayed without the name of the corresponding attribute.
@@ -261,7 +249,6 @@ class ProductTemplateAttributeValue(models.Model):
         """
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
-    @api.multi
     def _without_no_variant_attributes(self):
         return self.filtered(lambda ptav: ptav.attribute_id.create_variant != 'no_variant')
 

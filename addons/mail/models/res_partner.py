@@ -22,14 +22,12 @@ class Partner(models.Model):
     # override the field to track the visibility of user
     user_id = fields.Many2one(tracking=True)
 
-    @api.multi
     def _message_get_suggested_recipients(self):
         recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
             partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
         return recipients
 
-    @api.multi
     def _message_get_default_recipients(self):
         return {r.id: {
             'partner_ids': [r.id],

@@ -11,7 +11,6 @@ class L10nItDdt(models.Model):
     name = fields.Char(string="Numero DDT", size=20, help="Transport document number", required=True)
     date = fields.Date(string="Data DDT", help="Transport document date", required=True)
 
-    @api.multi
     def name_get(self):
         res = []
         for ddt in self:

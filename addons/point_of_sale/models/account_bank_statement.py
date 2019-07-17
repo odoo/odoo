@@ -11,7 +11,6 @@ class AccountBankStatement(models.Model):
     pos_session_id = fields.Many2one('pos.session', string="Session", copy=False)
     account_id = fields.Many2one('account.account', related='journal_id.default_debit_account_id', readonly=True)
 
-    @api.multi
     def check_confirm_bank(self):
         for bs in self:
             if bs.pos_session_id.state  in ('opened', 'closing_control') and bs.state == 'open':

@@ -27,7 +27,6 @@ class PaymentWizard(models.TransientModel):
         """ Override. """
         self.env.company.set_onboarding_step_done('sale_onboarding_order_confirmation_state')
 
-    @api.multi
     def add_payment_methods(self, *args, **kwargs):
         self.env.company.sale_onboarding_payment_method = self.payment_method
         if self.payment_method == 'digital_signature':

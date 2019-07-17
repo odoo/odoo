@@ -49,7 +49,6 @@ class MailResendMessage(models.TransientModel):
             raise UserError('No message_id found in context')
         return rec
 
-    @api.multi
     def resend_mail_action(self):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
@@ -79,7 +78,6 @@ class MailResendMessage(models.TransientModel):
             self.mail_message_id._notify_mail_failure_update()
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def cancel_mail_action(self):
         for wizard in self:
             for notif in wizard.notification_ids:

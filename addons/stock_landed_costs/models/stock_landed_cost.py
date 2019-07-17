@@ -60,25 +60,21 @@ class LandedCost(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
         return super(LandedCost, self).create(vals)
 
-    @api.multi
     def unlink(self):
         self.button_cancel()
         return super(LandedCost, self).unlink()
 
-    @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'done':
             return self.env.ref('stock_landed_costs.mt_stock_landed_cost_open')
         return super(LandedCost, self)._track_subtype(init_values)
 
-    @api.multi
     def button_cancel(self):
         if any(cost.state == 'done' for cost in self):
             raise UserError(
                 _('Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them'))
         return self.write({'state': 'cancel'})
 
-    @api.multi
     def button_validate(self):
         if any(cost.state != 'draft' for cost in self):
             raise UserError(_('Only draft landed costs can be validated'))
@@ -171,7 +167,6 @@ class LandedCost(models.Model):
             raise UserError(_("You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO or average costing method."))
         return lines
 
-    @api.multi
     def compute_landed_cost(self):
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()

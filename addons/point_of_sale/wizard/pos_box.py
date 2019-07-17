@@ -10,7 +10,6 @@ from odoo.addons.account.wizard.pos_box import CashBox
 class PosBox(CashBox):
     _register = False
 
-    @api.multi
     def run(self):
         active_model = self.env.context.get('active_model', False)
         active_ids = self.env.context.get('active_ids', [])

@@ -21,7 +21,6 @@ class AccountTax(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
     def post(self):
         # OVERRIDE to check the invoice lines taxes.
         for invoice in self.filtered(lambda move: move.is_invoice()):
