@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class TransferPaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('transfer', 'Wire Transfer')], default='transfer')
+    provider = fields.Selection(selection_add=[('transfer', 'Manual Payment')], default='transfer')
 
     @api.model
     def _create_missing_journal_for_acquirers(self, company=None):

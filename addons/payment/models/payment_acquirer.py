@@ -75,7 +75,19 @@ class PaymentAcquirer(models.Model):
         default=lambda self: self.env.company.id, required=True)
     view_template_id = fields.Many2one(
         'ir.ui.view', 'Form Button Template',
-        default=_get_default_view_template_id)
+        default=_get_default_view_template_id,
+        help="This template renders the acquirer button with all necessary values.\n"
+        "It is rendered with qWeb with the following evaluation context:\n"
+        "tx_url: transaction URL to post the form\n"
+        "acquirer: payment.acquirer browse record\n"
+        "user: current user browse record\n"
+        "reference: the transaction reference number\n"
+        "currency: the transaction currency browse record\n"
+        "amount: the transaction amount, a float\n"
+        "partner: the buyer partner browse record, not necessarily set\n"
+        "partner_values: specific values about the buyer, for example coming from a shipping form\n"
+        "tx_values: transaction values\n"
+        "context: the current context dictionary")
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
@@ -91,15 +103,7 @@ class PaymentAcquirer(models.Model):
         help="Capture the amount from Odoo, when the delivery is completed.")
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
-        help="""Payments will be registered into this journal. If you get paid straight on your bank account,
-                select your bank account. If you get paid in batch for several transactions, create a specific
-                payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
-                the amount in a temporary transfer account of your books (created automatically when you create
-                the payment journal). Then when you get paid on your bank account by the payment acquirer, you
-                reconcile the bank statement line with this temporary transfer account. Use reconciliation
-                templates to do it in one-click.""")
-    specific_countries = fields.Boolean(string="Specific Countries",
-        help="If you leave it empty, the payment acquirer will be available for all the countries.")
+        help="""Journal where the successful transactions will be posted""")
     check_validity = fields.Boolean(string="Verify Card Validity",
         help="""Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.
         Without this check, the validity will be verified at the very first transaction.""")
@@ -116,15 +120,15 @@ class PaymentAcquirer(models.Model):
         help='Message displayed after having done the payment process.')
     pending_msg = fields.Html(
         'Pending Message', translate=True,
-        default=lambda s: _('<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.'),
+        default=lambda s: _('Your payment has been successfully processed but is waiting for approval.'),
         help='Message displayed, if order is in pending state after having done the payment process.')
     done_msg = fields.Html(
         'Done Message', translate=True,
-        default=lambda s: _('<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.'),
+        default=lambda s: _('Your payment has been successfully processed. Thank you!'),
         help='Message displayed, if order is done successfully after having done the payment process.')
     cancel_msg = fields.Html(
         'Cancel Message', translate=True,
-        default=lambda s: _('<i>Cancel,</i> Your payment has been cancelled.'),
+        default=lambda s: _('Your payment has been cancelled.'),
         help='Message displayed, if order is cancel during the payment process.')
     error_msg = fields.Html(
         'Error Message', translate=True,
@@ -693,7 +697,7 @@ class PaymentTransaction(models.Model):
                 inv.message_post(body=post_message)
 
     def _set_transaction_pending(self):
-        '''Move the transaction to the pending state(e.g. Wire Transfer).'''
+        '''Move the transaction to the pending state(e.g. Manual Payment).'''
         if any(trans.state != 'draft' for trans in self):
             raise ValidationError(_('Only draft transaction can be processed.'))
 
