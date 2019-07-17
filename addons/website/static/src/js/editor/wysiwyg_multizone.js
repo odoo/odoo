@@ -199,6 +199,7 @@ var WysiwygMultizone = Wysiwyg.extend({
             self._getEditableArea().attr('contenteditable', true);
             self.$('[data-oe-readonly]').addClass('o_not_editable').attr('contenteditable', false);
             self.$('.oe_structure').attr('contenteditable', false).addClass('o_fake_not_editable');
+            self.$('.oe_structure').children().attr('contenteditable', true);
             self.$('[data-oe-field][data-oe-type="image"]').attr('contenteditable', false).addClass('o_fake_not_editable');
         });
     },
