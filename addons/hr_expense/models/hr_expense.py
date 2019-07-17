@@ -65,7 +65,7 @@ class HrExpense(models.Model):
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
         ("company_account", "Company")
-    ], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)], 'submitted': [('readonly', True)]}, string="Paid By")
+    ], default='own_account', states={'done': [('readonly', True)], 'approved': [('readonly', True)], 'reported': [('readonly', True)]}, string="Paid By")
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
     state = fields.Selection([
         ('draft', 'To Submit'),
