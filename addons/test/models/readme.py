@@ -24,7 +24,7 @@ class test(models.Model):
     @api.depends('source')
     def _get_intx2(self):
         for record in self:
-            record.intx2 = int1 * 2
+            record.intx2 = record.int1 * 2
 
     def testme(self):
         main_id = self.create({
