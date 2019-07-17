@@ -70,6 +70,8 @@
             <field file="base/static/img/country_flags/ar.png" name="image" type="base64" />
             <field name="currency_id" ref="ARS" />
             <field eval="54" name="phone_code" />
+            <field name="vat_label">CUIT</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="as" model="res.country">
             <field name="name">American Samoa</field>
