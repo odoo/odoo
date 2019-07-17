@@ -25,12 +25,21 @@ var PrintTicket = AbstractAction.extend({
     start: function () {
         var $receipt = QWeb.render('OrderXmlReceipt', this.receipt_data);
         var def = this._rpc({
-                route: this.iot_box_url+'/hw_proxy/print_xml_receipt',
-                params:{receipt: $receipt}
-            });
-
+            route: this.iot_box_url + '/hw_proxy/print_xml_receipt',
+            params: {receipt: $receipt}
+        });
         return Promise.all([def, this._super.apply(this, arguments)]);
     },
+    /**
+     * Return back to Order after printing the record
+     *
+     * @override
+     *
+     */
+    on_attach_callback: function () {
+        this._super.apply(this, arguments);
+        this.trigger_up('history_back');
+    }
 });
 
 core.action_registry.add('print_ticket_action', PrintTicket);

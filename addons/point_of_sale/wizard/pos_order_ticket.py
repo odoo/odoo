@@ -9,19 +9,19 @@ class PosOrderTicket(models.TransientModel):
     _name = 'pos.order.ticket'
     _description = 'Pos Order Ticket Reprint'
 
-    pos_name = fields.Many2one('pos.config', string="POS Name", required=True)
-    proxy_ip = fields.Char(related="pos_name.proxy_ip")
+    pos_config_id = fields.Many2one('pos.config', string="POS Name", required=True)
     ip_url = fields.Char(compute="_compute_ip_url")
 
-    @api.depends('pos_name')
+    @api.depends('pos_config_id')
     def _compute_ip_url(self):
-        for box in self:
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            if box.proxy_ip:
-                if base_url[:5] == "https":
-                    box.ip_url = "https://" + box.proxy_ip
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for wiz in self:
+            pos_config = wiz.pos_config_id
+            if not pos_config.proxy_ip.startswith('http') :
+                if base_url.startswith("https"):
+                    wiz.ip_url = "https://" + pos_config.proxy_ip
                 else:
-                    box.ip_url = "http://" + box.proxy_ip + ":8069"
+                    wiz.ip_url = "http://" + pos_config.proxy_ip + ":8069"
 
     def _amount_by_group(self, order_line):
         res = {}
@@ -64,13 +64,16 @@ class PosOrderTicket(models.TransientModel):
     @api.multi
     def print_ticket(self):
         self.ensure_one()
-        rec = self.env['pos.order'].browse(self.env.context.get('active_id', False))
+        order_id = self.env.context.get('active_id')
+        if not order_id:
+            return
+        order = self.env['pos.order'].browse(order_id)
         total = 0.0
         orderlines = []
         taxes = []
         statement_ids = []
-        if rec.statement_ids:
-            for statement in rec.statement_ids:
+        if order.statement_ids:
+            for statement in order.statement_ids:
                 if statement.amount < 0:
                     change = statement.amount
                     total = 0.0
@@ -81,20 +84,20 @@ class PosOrderTicket(models.TransientModel):
                 "amount": total,
                 "name": journal
             })
-        img = base64.b64decode(rec.company_id.logo)
+        img = base64.b64decode(order.company_id.logo)
         mimetype = guess_mimetype(img, default='image/png')
         company = {
-            "name": rec.company_id.name,
-            "contact_address": rec.company_id.name,
-            "phone": rec.company_id.phone,
-            "vat": rec.company_id.vat,
-            "email": rec.company_id.email,
-            "website": rec.company_id.website,
-            "logo": 'data:%s;base64,' % mimetype + rec.company_id.logo.decode('utf-8')
+            "name": order.company_id.name,
+            "contact_address": order.company_id.name,
+            "phone": order.company_id.phone,
+            "vat": order.company_id.vat,
+            "email": order.company_id.email,
+            "website": order.company_id.website,
+            "logo": 'data:%s;base64,' % mimetype + order.company_id.logo.decode('utf-8')
         }
         price_total = 0.0
         total_disc = 0.0
-        for line in rec.lines:
+        for line in order.lines:
             price_total += line.price_subtotal
             total_disc += line.price_unit * (line.discount/100) * line.qty
             orderlines.append({
@@ -111,7 +114,7 @@ class PosOrderTicket(models.TransientModel):
                     "amount": tax.amount
                 } for tax in line.tax_ids_after_fiscal_position],
             })
-        tax_details = self._amount_by_group(rec)
+        tax_details = self._amount_by_group(order)
         for tax in tax_details:
             taxes.append({
                 'name': tax[0],
@@ -121,21 +124,21 @@ class PosOrderTicket(models.TransientModel):
         product_uom = self.env.ref('product.decimal_product_uom')
         report_data = {
             "receipt": {
-                "cashier": rec.user_id.display_name,
+                "cashier": order.user_id.display_name,
                 "orderlines": orderlines,
                 "paymentlines": statement_ids,
-                "total_with_tax": rec.amount_total,
-                "total_tax": rec.amount_tax,
-                "name": rec.pos_reference,
-                "date": {"localestring": rec.date_order},
+                "total_with_tax": order.amount_total,
+                "total_tax": order.amount_tax,
+                "name": order.pos_reference,
+                "date": {"localestring": order.date_order},
                 "company": company,
                 "subtotal": price_total,
                 "discount": total_disc,
-                "change": abs(change) if rec.statement_ids and change else 0.0,
+                "change": abs(change) if order.statement_ids and change else 0.0,
                 "tax_details": taxes
                 },
             "pos": {
-                "currency": {"decimals": rec.pricelist_id.currency_id.decimal_places},
+                "currency": {"decimals": order.pricelist_id.currency_id.decimal_places},
                 "dp": {
                     product_price.name: product_price.digits,
                     product_uom.name: product_uom.digits
