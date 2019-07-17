@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import link_tracker
-from . import mass_mailing_contact
-from . import mass_mailing_list
+from . import mailing_contact
+from . import mailing_list
 from . import mass_mailing
 from . import mailing_trace
 from . import mail_mail

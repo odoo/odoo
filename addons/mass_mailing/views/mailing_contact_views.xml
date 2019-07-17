@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--  MAILING CONTACT -->
-    <record model="ir.ui.view" id="mail_mass_mailing_list_contact_rel_view_form">
-        <!--TODO DBE : To remove - Deprecated -->
-        <field name="name">mail.mass_mailing.list_contact_rel.view.form</field>
-        <field name="model">mail.mass_mailing.list_contact_rel</field>
+    <!--  MAILING CONTACT SUBSCRIPTION -->
+    <record model="ir.ui.view" id="mailing_contact_subscription_view_form">
+        <field name="name">mailing.contact.subscription.view.form</field>
+        <field name="model">mailing.contact.subscription</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <form string="Mailing List contacts">
@@ -27,10 +26,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="mail_mass_mailing_list_contact_rel_list_contact_view_tree">
-        <!--TODO DBE : To remove - Deprecated -->
-        <field name="name">mail.mass_mailing.list_contact_rel.list_contact.view.tree</field>
-        <field name="model">mail.mass_mailing.list_contact_rel</field>
+    <record model="ir.ui.view" id="mailing_contact_subscription_view_tree">
+        <field name="name">mailing.contact.subscription.view.tree</field>
+        <field name="model">mailing.contact.subscription</field>
         <field name="arch" type="xml">
             <tree string="Mailing Lists">
                 <field name="contact_id"/>
@@ -43,10 +41,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="mail_mass_mailing_list_contact_view_search">
-        <!--TODO DBE : To remove - Deprecated -->
-        <field name="name">mail.mass_mailing.list_contact_rel.view.search</field>
-        <field name="model">mail.mass_mailing.list_contact_rel</field>
+    <record model="ir.ui.view" id="mailing_contact_subscription_view_search">
+        <field name="name">mailing.contact.subscription.view.search</field>
+        <field name="model">mailing.contact.subscription</field>
         <field name="arch" type="xml">
            <search string="Mailing List Contacts">
                 <field name="contact_id"/>
@@ -71,8 +68,8 @@
     </record>
 
     <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
-        <field name="name">mail.mass_mailing.contact.search</field>
-        <field name="model">mail.mass_mailing.contact</field>
+        <field name="name">mailing.contact.search</field>
+        <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
            <search string="Mailing List Contacts">
                 <field name="name" filter_domain="['|','|',('name','ilike',self),('company_name','ilike',self), ('email','ilike',self)]"
@@ -99,8 +96,8 @@
     </record>
 
     <record model="ir.ui.view" id="view_mail_mass_mailing_contact_tree">
-        <field name="name">mail.mass_mailing.contact.tree</field>
-        <field name="model">mail.mass_mailing.contact</field>
+        <field name="name">mailing.contact.tree</field>
+        <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Mailing List Contacts">
@@ -116,8 +113,8 @@
     </record>
 
     <record id="view_mail_mass_mailing_contact_kanban" model="ir.ui.view">
-        <field name="name">mail.mass_mailing.contact.kanban</field>
-        <field name="model">mail.mass_mailing.contact</field>
+        <field name="name">mailing.contact.kanban</field>
+        <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="name"/>
@@ -158,8 +155,8 @@
     </record>
 
     <record model="ir.ui.view" id="view_mail_mass_mailing_contact_form">
-        <field name="name">mail.mass_mailing.contact.form</field>
-        <field name="model">mail.mass_mailing.contact</field>
+        <field name="name">mailing.contact.form</field>
+        <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <form string="Mailing List Contacts">
@@ -213,8 +210,8 @@
     </record>
 
     <record model="ir.ui.view" id="view_mail_mass_mailing_contact_pivot">
-        <field name="name">mail.mass_mailing.contact.pivot</field>
-        <field name="model">mail.mass_mailing.contact</field>
+        <field name="name">mailing.contact.pivot</field>
+        <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <pivot string="Mailing List Contacts" stacked="True">
@@ -224,8 +221,8 @@
     </record>
 
     <record model="ir.ui.view" id="view_mail_mass_mailing_contact_graph">
-        <field name="name">mail.mass_mailing.contact.graph</field>
-        <field name="model">mail.mass_mailing.contact</field>
+        <field name="name">mailing.contact.graph</field>
+        <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <graph string="Mailing List Contacts" stacked="True">
@@ -236,7 +233,7 @@
 
     <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
         <field name="name">Mailing List Contacts</field>
-        <field name="res_model">mail.mass_mailing.contact</field>
+        <field name="res_model">mailing.contact</field>
         <field name="view_mode">tree,kanban,form,graph,pivot</field>
         <field name="context">{'search_default_valid_recipient': 1}</field>
         <field name="help" type="html">
@@ -250,7 +247,7 @@
 
     <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
         <field name="name">Recipients</field>
-        <field name="res_model">mail.mass_mailing.contact</field>
+        <field name="res_model">mailing.contact</field>
         <field name="view_mode">tree,form,graph</field>
         <field name="domain">[('list_ids', 'in', [active_id])]</field>
         <field name="context">{'search_default_valid_recipients': 1, 'default_list_ids': [active_id]}</field>

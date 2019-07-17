@@ -5,11 +5,11 @@ from odoo import api, fields, models
 
 
 class MassMailingListMerge(models.TransientModel):
-    _name = 'mass.mailing.list.merge'
+    _name = 'mailing.list.merge'
     _description = 'Merge Mass Mailing List'
 
-    src_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing Lists')
-    dest_list_id = fields.Many2one('mail.mass_mailing.list', string='Destination Mailing List')
+    src_list_ids = fields.Many2many('mailing.list', string='Mailing Lists')
+    dest_list_id = fields.Many2one('mailing.list', string='Destination Mailing List')
     merge_options = fields.Selection([
         ('new', 'Merge into a new mailing list'),
         ('existing', 'Merge into an existing mailing list'),
@@ -29,7 +29,7 @@ class MassMailingListMerge(models.TransientModel):
 
     def action_mailing_lists_merge(self):
         if self.merge_options == 'new':
-            self.dest_list_id = self.env['mail.mass_mailing.list'].create({
+            self.dest_list_id = self.env['mailing.list'].create({
                 'name': self.new_list_name,
             }).id
         self.dest_list_id.action_merge(self.src_list_ids, self.archive_src_lists)

@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models, tools
 from odoo.tools import email_re
 
 
 class MailComposeMessage(models.TransientModel):
-    """Add concept of mass mailing campaign to the mail.compose.message wizard
-    """
     _inherit = 'mail.compose.message'
 
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
     mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing', ondelete='cascade')
     mass_mailing_name = fields.Char(string='Mass Mailing Name')
-    mailing_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing List')
+    mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
 
     def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
