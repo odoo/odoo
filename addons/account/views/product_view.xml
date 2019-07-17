@@ -28,7 +28,7 @@
                     </page>
                 </page>
                 <field name="list_price" position="after">
-                    <field name="taxes_id" widget="many2many_tags"/>
+                    <field name="taxes_id" widget="many2many_tags" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                 </field>
                 <group name="bill" position="inside">
                     <field name="supplier_taxes_id" widget="many2many_tags"/>

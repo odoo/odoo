@@ -45,7 +45,7 @@
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                                     <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                                     <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
                                         <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
@@ -350,7 +350,8 @@
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
-                    <field name="lst_price"/>
+                    <field name="sale_ok" invisible="1"/>
+                    <field name="lst_price" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                     <field name="standard_price"/>
                     <field name="type" invisible="1"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
@@ -378,7 +379,7 @@
                 </field>
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
-                   <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
+                   <attribute name="attrs">{'invisible': [('sale_ok', '=', False)], 'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
                 </field>
                 <group name="packaging" position="attributes">
                     <attribute name="attrs">{'invisible': 0}</attribute>
@@ -419,6 +420,7 @@
                     <field name="image_small"/>
                     <field name="lst_price"/>
                     <field name="activity_state"/>
+                    <field name="sale_ok"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
@@ -434,7 +436,7 @@
                                     <div class="o_kanban_tags_section">
                                         <field name="attribute_value_ids" groups="product.group_product_variant"/>
                                     </div>
-                                    <ul>
+                                    <ul t-if="record.sale_ok.raw_value">
                                         <li><strong>Price: <field name="lst_price"></field></strong></li>
                                     </ul>
                                     <div name="tags"/>

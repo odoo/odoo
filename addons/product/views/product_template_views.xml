@@ -8,7 +8,8 @@
                 <field name="sequence" widget="handle"/>
                 <field name="default_code"/>
                 <field name="name"/>
-                <field name="list_price" string="Sales Price"/>
+                <field name="sale_ok" invisible="1"/>
+                <field name="list_price" string="Sales Price" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                 <field name="standard_price"/>
                 <field name="categ_id"/>
                 <field name="type"/>
@@ -71,6 +72,7 @@
                 <field name="product_variant_count"/>
                 <field name="currency_id"/>
                 <field name="activity_state"/>
+                <field name="sale_ok"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-box">
@@ -89,7 +91,7 @@
                                     </strong>
                                 </div>
                                 <div name="tags"/>
-                                <ul>
+                                <ul t-if="record.sale_ok.raw_value">
                                     <li>Price: <field name="lst_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"></field></li>
                                 </ul>
                                 <div name="tags"/>
