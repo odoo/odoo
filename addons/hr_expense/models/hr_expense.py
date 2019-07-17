@@ -312,8 +312,8 @@ class HrExpense(models.Model):
                 'currency_id': expense.currency_id.id if different_currency else False,
             }
             move_line_values.append(move_line_src)
-            total_amount -= move_line_src['debit']
-            total_amount_currency -= move_line_src['amount_currency'] or move_line_src['debit']
+            total_amount += -move_line_src['debit'] or move_line_src['credit']
+            total_amount_currency += -move_line_src['amount_currency'] if move_line_src['currency_id'] else (-move_line_src['debit'] or move_line_src['credit'])
 
             # taxes move lines
             for tax in taxes['taxes']:
