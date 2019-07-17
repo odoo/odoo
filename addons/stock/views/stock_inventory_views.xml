@@ -100,19 +100,18 @@
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
             <search string="Search Inventory">
-                <field name="name" string="Inventory Reference"/>
-                <field name="date"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="product_ids" string="Inventory Product" filter_domain="['|', ('product_ids', 'ilike', self), ('line_ids.product_id','ilike',self)]"/>
+                <field name="name" string="Reference"/>
+                <field name="product_ids" string="Product" filter_domain="['|', ('product_ids', 'ilike', self), ('line_ids.product_id','ilike',self)]"/>
                 <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
                 <filter string="In Progress" name="confirm" domain="[('state', '=', 'confirm')]"/>
                 <filter string="Validated" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Inventory Date" name="inventory_date" date="date"/>
                 <group expand="0" string="Group By">
-                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Inventories Date" name="inventories_month" domain="[]" context="{'group_by':'date'}" help="Physical Inventories by Date"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Inventory Date" name="inventories_month" domain="[]" context="{'group_by': 'date'}" help="Physical Inventories by Date"/>
                 </group>
             </search>
-
         </field>
     </record>
 
@@ -127,6 +126,7 @@
                 <field name="product_ids" widget="many2many_tags" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

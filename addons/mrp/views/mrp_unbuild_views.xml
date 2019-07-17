@@ -16,7 +16,6 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="product_id"/>
-                    <field name="state"/>
                     <field name="mo_id"/>
                     <group expand="0" string="Filters">
                         <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
@@ -27,10 +26,9 @@
                         <filter invisible="1" string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                         <filter invisible="1" string="Future Activitie" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                            domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                         <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
+                            domain="[('activity_exception_decoration', '!=', False)]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                         <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>

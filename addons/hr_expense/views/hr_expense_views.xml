@@ -201,43 +201,41 @@
             </field>
         </record>
 
-        <record id="view_hr_expense_filter" model="ir.ui.view">
-            <field name="name">hr.expense.filter</field>
+        <record id="hr_expense_view_search" model="ir.ui.view">
+            <field name="name">hr.expense.view.search</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <search string="Expense">
-                    <field name="name" string="Expenses" filter_domain="['|',('employee_id','ilike',self),('name','ilike',self)]"/>
+                    <field string="Expense" name="name" filter_domain="['|', '|', ('employee_id', 'ilike', self), ('name', 'ilike', self), ('product_id', 'ilike', self)]"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="product_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                    <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <filter string="My Team" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <separator />
-                    <filter domain="[('sheet_id', '=', False)]" string="To report" name="no_report"/>
-                    <filter domain="[('sheet_id', '!=', False)]" string="Reported" name="submitted" help="Confirmed Expenses"/>
-                    <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
-                    <filter domain="['|', ('state', '=', 'approved'), ('state', '=', 'done')]" string="Approved" name="approved" help="Actual expense sheets, not the refused ones"/>
+                    <filter string="To Report" name="no_report" domain="[('sheet_id', '=', False)]"/>
+                    <filter string="Refused" name="refused" domain="[('state', '=', 'refused')]" help="Refused Expenses"/>
                     <separator />
-                    <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
+                    <filter string="Date" name="date" date="date"/>
+                    <separator />
+                    <filter string="Former Employees" name="inactive" domain="[('employee_id.active', '=', False)]" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
+                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                            domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                            ]"/>
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Exception Activities" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Report" name="report" domain="[]" context="{'group_by': 'sheet_id'}"/>
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                         <filter string="Analytic Account" name="analyticacc" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
-                        <filter string="Date" name="expensesmonth" domain="[]" context="{'group_by': 'date'}" help="Expense Date"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="expensesmonth" domain="[]" context="{'group_by': 'date'}" help="Expense Date"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -267,7 +265,7 @@
             <field name="name">All Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_mode">graph,pivot,tree,kanban,form,activity</field>
-            <field name="search_view_id" ref="view_hr_expense_filter"/>
+            <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new expense
@@ -279,7 +277,7 @@
             <field name="name">My Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
-            <field name="search_view_id" ref="view_hr_expense_filter"/>
+            <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="context">{'search_default_my_expenses': 1, 'search_default_no_report': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -613,22 +611,20 @@
         </record>
 
 
-        <record id="view_hr_expense_sheet_filter" model="ir.ui.view">
-            <field name="name">hr.expense.sheet.filter</field>
+        <record id="hr_expense_sheet_view_search" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.view.search</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
                 <search string="Expense">
-                    <field name="name" string="Expenses"/>
+                    <field string="Expense Report" name="name"/>
                     <field name="accounting_date"/>
-                    <field name="state"/>
                     <separator />
                     <field name="employee_id"/>
-                    <field name="department_id" operator="child_of" string="Department"/>
-                    <field name="journal_id"/>
+                    <field string="Department" name="department_id" operator="child_of"/>
+                    <field string="Journal" name="journal_id"/>
                     <filter string="My Reports" name="my_reports" domain="[('employee_id.user_id', '=', uid)]"/>
-                    <filter string="My Team Reports" name="my_team_reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
+                    <filter string="My Team" name="my_team_reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <separator />
-                    <filter domain="[('state', '=', 'draft')]" string="Draft" name="draft" help="Expenses in Draft"/>
                     <filter domain="[('state', '=', 'submit')]" string="To Approve" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'approve')]" string="To Post" name="to_post" help="Approved Expenses"/>
                     <filter domain="['|', ('state', '=', 'approve'), ('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
@@ -650,7 +646,7 @@
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Date" name="expenses_month" domain="[]" context="{'group_by': 'accounting_date'}" help="Expenses by Date"/>
-                        <filter string="State" domain="[]" context="{'group_by': 'state'}" name="state"/>
+                        <filter string="Status" domain="[]" context="{'group_by': 'state'}" name="state"/>
                     </group>
                 </search>
             </field>
@@ -681,7 +677,7 @@
             <field name="name">My Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[('employee_id.user_id', '=', uid), ('state', '!=', 'cancel')]</field>
             <field name="context">{'search_default_my_reports': 1}</field>
             <field name="help" type="html">
@@ -697,7 +693,7 @@
             <field name="name">Expense Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
             <field name="context">{'search_default_submitted': 1}</field>
             <field name="help" type="html">
@@ -711,7 +707,7 @@
             <field name="name">Expense Reports To Post</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_post': 1}</field>
             <field name="help" type="html">
@@ -727,7 +723,7 @@
             <field name="name">Expense Reports To Pay</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
             <field name="context">{'search_default_approved': 1}</field>
             <field name="help" type="html">
@@ -743,7 +739,7 @@
             <field name="name">All Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">graph,pivot,tree,kanban,form</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
             <field name="context">{}</field>
             <field name="help" type="html">
@@ -760,7 +756,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_submitted': 1}</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -776,7 +772,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_to_post': 1}</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -792,7 +788,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_approved': 1}</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -807,7 +803,7 @@
             <field name="name">Expense Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="context">{
                 'search_default_submitted': 1,
                 'search_default_department_id': [active_id],

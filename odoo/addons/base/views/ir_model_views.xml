@@ -590,16 +590,18 @@
             <field name="arch" type="xml">
                 <search string="Access Rights">
                     <field name="name" string="Access Rights"/>
-                    <filter string="Global" name="global" domain="[('group_id','=',False)]"/>
+                    <filter string="Global" name="global" domain="[('group_id', '=', False)]"/>
                     <separator/>
-                    <filter string="Full Access" name="full_access" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
-                    <filter string="Read Access" name="read_access" domain="[('perm_read','=',True)]"/>
-                    <filter string="Write Access" name="write_access" domain="[('perm_write','=',True)]"/>
+                    <filter string="Full Access" name="full_access" domain="[('perm_read', '=', True), ('perm_write', '=', True), ('perm_create', '=', True), ('perm_unlink', '=', True)]"/>
+                    <filter string="Read Access" name="read_access" domain="[('perm_read', '=', True)]"/>
+                    <filter string="Write Access" name="write_access" domain="[('perm_write', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
                     <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
-                        <filter string="Group" name="group" domain="[]" context="{'group_by':'group_id'}"/>
-                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Group" name="group" domain="[]" context="{'group_by': 'group_id'}"/>
+                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
                     </group>
                 </search>
             </field>

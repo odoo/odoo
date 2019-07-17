@@ -99,7 +99,7 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_job_filter" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
+            <xpath expr="//field[@name='department_id']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
             </xpath>
             <xpath expr="//group" position="after">

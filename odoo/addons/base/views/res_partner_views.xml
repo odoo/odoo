@@ -463,26 +463,25 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <search string="Search Partner">
-                   <field name="name"
-                       filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
-                   <field name="parent_id" domain="[('is_company','=',True)]" operator="child_of"/>
-                   <filter name="filter_my_partners" help="My Contacts"
-                           domain="[('user_id','=',uid)]"/>
-                   <separator/>
-                   <filter string="Individuals" name="type_person" domain="[('is_company','=',False)]"/>
-                   <filter string="Companies" name="type_company" domain="[('is_company','=',True)]"/>
-                   <separator/>
-                   <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                   <separator/>
-                   <field name="category_id" string="Tag" filter_domain="[('category_id','child_of', self)]"/>
-                   <field name="user_id"/>
-                   <field name="phone" filter_domain="['|',('phone','ilike',self),('mobile','=',self)]"/>
-                   <group expand="0" name="group_by" string="Group By">
-                       <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
-                       <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
-                       <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
-                   </group>
-               </search>
+                    <field name="name"
+                        filter_domain="['|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self)]"/>
+                    <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
+                    <field name="email" filter_domain="[('email', 'ilike', self)]"/>
+                    <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', '=', self)]"/>
+                    <field name="category_id" string="Tag" filter_domain="[('category_id', 'child_of', self)]"/>
+                    <field name="user_id"/>
+                    <separator/>
+                    <filter string="Individuals" name="type_person" domain="[('is_company', '=', False)]"/>
+                    <filter string="Companies" name="type_company" domain="[('is_company', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
+                        <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -688,6 +687,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_partner_category_list" model="ir.ui.view">
             <field name="name">Contact Tags</field>
             <field name="model">res.partner.category</field>
@@ -698,10 +698,25 @@
                 </tree>
             </field>
         </record>
+
+        <record id="res_partner_category_view_search" model="ir.ui.view">
+            <field name="name">res.partner.category.view.search</field>
+            <field name="model">res.partner.category</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner Category">
+                    <field name="name"/>
+                    <field name="display_name"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="action_partner_category_form" model="ir.actions.act_window">
             <field name="name">Contact Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
+            <field name="search_view_id" ref="res_partner_category_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new contact tag
@@ -727,6 +742,7 @@
                 </form>
             </field>
         </record>
+
         <record id="res_partner_industry_view_tree" model="ir.ui.view">
             <field name="name">Industry</field>
             <field name="model">res.partner.industry</field>
@@ -739,11 +755,26 @@
                 </tree>
             </field>
         </record>
+
+        <record id="res_partner_industry_view_search" model="ir.ui.view">
+            <field name="name">res.partner.industry.view.search</field>
+            <field name="model">res.partner.industry</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner Industry">
+                    <field name="name"/>
+                    <field name="full_name"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="res_partner_industry_action" model="ir.actions.act_window">
             <field name="name">Industry</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.industry</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="res_partner_industry_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new industry

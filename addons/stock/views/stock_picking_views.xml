@@ -6,7 +6,6 @@
             <field name="arch" type="xml">
                 <search string="Operation Type">
                     <field name="name"/>
-                    <field name="sequence_id"/>
                     <field name="warehouse_id"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
@@ -373,19 +372,21 @@
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
                 <search string="Picking Lists">
-                    <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <filter name="my_transfers" string="My Transfers" domain="[('user_id','=',uid)]"/>
-                    <filter name="unassigned_transfers" string="Unassigned Transfers" domain="[('user_id','=',False)]"/>
+                    <field name="name" string="Transfer" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <separator/>
-                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
-                    <filter name="waiting" string="Waiting" domain="[('state','in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
-                    <filter name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
-                    <filter name="done" string="Done" domain="[('state','=','done')]" help="Transfers already processed"/>
-                    <filter name="cancel" string="Cancelled" domain="[('state','=', 'cancel')]" help="Cancelled Moves"/>
+                    <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" help="Draft Moves"/>
+                    <filter name="waiting" string="Waiting" domain="[('state', 'in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
+                    <filter name="available" string="Ready" domain="[('state', 'in', ('assigned', 'partially_available'))]" help="Assigned Moves"/>
+                    <filter name="done" string="Done" domain="[('state', '=', 'done')]" help="Pickings already processed"/>
+                    <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" help="Cancelled Moves"/>
                     <separator/>
                     <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Transfers that are late on scheduled time"/>
                     <separator/>
-                    <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
+                    <filter name="backorder" string="Backorders" domain="[('backorder_id', '!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -393,20 +394,14 @@
                     <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Exception Activities" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
-                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="product_id"/>
-                    <field name="picking_type_id"/>
-                    <field name="group_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" name="order_date" domain="[]"  context="{'group_by':'date'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Scheduled Date" name="expected_date" domain="[]" context="{'group_by': 'scheduled_date'}"/>
-                        <filter string="Origin" name="origin" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter name="picking_type" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter string="Source Document" name="origin" domain="[]" context="{'group_by': 'origin'}"/>
+                        <filter string="Operation Type" name="picking_type" domain="[]" context="{'group_by': 'picking_type_id'}"/>
                     </group>
                 </search>
             </field>

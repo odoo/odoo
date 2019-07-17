@@ -172,10 +172,10 @@ class AccountMove(models.Model):
         string='Salesperson',
         default=lambda self: self.env.user)
     invoice_payment_state = fields.Selection(selection=[
-            ('not_paid', 'Not Paid'),
-            ('in_payment', 'In Payment'),
-            ('paid', 'paid')
-        ], string='Payment Status', store=True, readonly=True, copy=False, tracking=True,
+        ('not_paid', 'Not Paid'),
+        ('in_payment', 'In Payment'),
+        ('paid', 'Paid')],
+        string='Payment Status', store=True, readonly=True, copy=False, tracking=True,
         compute='_compute_amount')
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]},
@@ -2133,7 +2133,7 @@ class AccountMoveLine(models.Model):
 
     # ==== Tax fields ====
     tax_ids = fields.Many2many('account.tax', string='Taxes')
-    tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict', store=True,
+    tax_line_id = fields.Many2one('account.tax', string='Originator Tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id')
     tax_group_id = fields.Many2one(related='tax_line_id.tax_group_id', string='Originator tax group',
         readonly=True, store=True,

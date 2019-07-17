@@ -178,10 +178,13 @@
             <field name="arch" type="xml">
                 <search string="Landed Costs">
                     <field name="name" string="Name"/>
-                    <field name="date"/>
+                    <field name="picking_ids" string="Picking"/>
                     <separator/>
-                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
-                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                    <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
@@ -192,8 +195,8 @@
                     <filter string="Exception Activities" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Date" name="group_by_month" context="{'group_by': 'date'}"/>
                         <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="group_by_month" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>

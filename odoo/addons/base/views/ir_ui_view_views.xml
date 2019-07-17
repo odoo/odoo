@@ -46,6 +46,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_view_tree" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
@@ -59,24 +60,25 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_view_search" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
                 <search string="Views">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
                     <field name="key"/>
-                    <filter string="Active" name="active" domain="[('active', '=',True)]"/>
-                    <filter string="Inactive" name="inactive" domain="[('active', '=',False)]"/>
-                    <separator/>
+                    <field name="model"/>
+                    <field name="inherit_id"/>
+                    <field name="type"/>
+                    <field name="arch_db" string="View Architecture"/>
                     <filter string="Form" name="form" domain="[('type', '=','form')]"/>
                     <filter string="Tree" name="tree" domain="[('type', '=', 'tree')]"/>
                     <filter string="Kanban" name="kanban" domain="[('type', '=', 'kanban')]"/>
                     <filter string="Search" name="search" domain="[('type', '=', 'search')]"/>
                     <filter string="QWeb" name="qweb" domain="[('type', '=', 'qweb')]"/>
-                    <field name="model"/>
-                    <field name="inherit_id"/>
-                    <field name="type"/>
-                    <field name="arch_db" string="View Architecture"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('active', '=',True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Object" name="object" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
@@ -85,6 +87,7 @@
                 </search>
             </field>
         </record>
+
         <record id="action_ui_view" model="ir.actions.act_window">
             <field name="name">Views</field>
             <field name="type">ir.actions.act_window</field>
@@ -93,6 +96,7 @@
             <field name="context">{'search_default_active': 1}</field>
             <field name="help">Views allows you to personalize each view of Odoo. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
         </record>
+
         <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2" sequence="2"/>
 
         <!-- Reset view wizard -->
@@ -119,6 +123,7 @@
                 </form>
             </field>
         </record>
+
         <act_window id="reset_view_arch_wizard_action"
             name="Reset View Architecture"
             binding_model="ir.ui.view" binding_views="form"
@@ -143,6 +148,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_view_custom_tree" model="ir.ui.view">
             <field name="model">ir.ui.view.custom</field>
             <field name="arch" type="xml">
@@ -152,6 +158,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_view_custom_search" model="ir.ui.view">
             <field name="model">ir.ui.view.custom</field>
             <field name="arch" type="xml">
@@ -161,12 +168,14 @@
                 </search>
             </field>
         </record>
+
         <record id="action_ui_view_custom" model="ir.actions.act_window">
             <field name="name">Customized Views</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.ui.view.custom</field>
             <field name="help" type="html"><p class="o_view_nocontent_smiling_face">Create a customized view</p><p>Customized views are used when users reorganize the content of their dashboard views (via web client)</p></field>
         </record>
+
         <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2" sequence="3"/>
 
 </odoo>

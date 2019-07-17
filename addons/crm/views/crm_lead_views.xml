@@ -445,22 +445,28 @@
                     <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
                     <field name="user_id"/>
                     <field name="team_id"/>
-                    <field name="city"/>
                     <field name="country_id"/>
+                    <field name="city"/>
                     <field name="create_date"/>
+                    <field name="source_id"/>
                     <field name="medium_id"/>
                     <field name="campaign_id"/>
-                    <field name="source_id"/>
                     <separator />
                     <filter string="My Leads"
                             name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
                             help="Leads that are assigned to me"/>
-                    <filter string="Unassigned Leads" name="unassigned_leads"
-                        domain="[('user_id','=', False), ('type', '=', 'lead')]" help="No salesperson"/>
+                    <filter string="Unassigned" name="unassigned_leads"
+                            domain="[('user_id','=', False), ('type', '=', 'lead')]"
+                            help="Leads that are not assigned"/>
                     <separator />
-                    <filter string="Lost Leads" name="lost"
+                    <filter string="Lost" name="lost"
                             domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Creation Date" name="creation_date" date="create_date"/>
+                    <separator/>
+                    <filter string="Activities Todo" name="activities_my"
+                            domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                             domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -468,10 +474,11 @@
                     <filter invisible="1" string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                            domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
+                            domain="[('activity_exception_decoration', '!=', False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
@@ -768,52 +775,54 @@
             <field name="priority">15</field>
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
-                    <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
+                    <field name="name" string="Opportunity" filter_domain="[
+                        '|', '|', '|', '|',
+                        ('partner_id', 'ilike', self),
+                        ('partner_name', 'ilike', self),
+                        ('email_from', 'ilike', self),
+                        ('name', 'ilike', self),
+                        ('contact_name', 'ilike', self)]"/>
+                    <field name="partner_id" operator="child_of" string="Customer" filter_domain="[
+                        '|', '|', '|',
+                        ('partner_id', 'ilike', self),
+                        ('partner_name', 'ilike', self),
+                        ('email_from', 'ilike', self),
+                        ('contact_name', 'ilike', self)]"/>
                     <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
-                    <field name="stage_id" domain="[]"/>
                     <field name="user_id"/>
                     <field name="team_id"/>
-                    <field name="partner_id" operator="child_of" string="Customer"/>
-                    <field name="city"/>
+                    <field name="stage_id" domain="[]"/>
                     <field name="country_id"/>
-                    <field name="activity_type_id"/>
-                    <field name="activity_summary"/>
-                    <field name="probability"/>
-                    <field name="lost_reason"/>
-                    <field name="date_conversion"/>
-                    <field name="campaign_id"/>
+                    <field name="city"/>
                     <separator/>
                     <filter string="My Pipeline" name="assigned_to_me"
                         domain="[('user_id', '=', uid)]"
                         help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
-                        domain="[('user_id','=', False)]" help="No salesperson"/>
+                        domain="[('user_id', '=', False)]" help="No salesperson"/>
                     <filter string="Open Opportunities" name="open_opportunities"
-                            domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
-                            help="Open Opportunities"/>
+                        domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
+                        help="Open Opportunities"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
-                    <filter string="Overdue Opportunities" name="overdue_opp"
-                            domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
-                            help="Opportunities with a date of Expected Closing which is in the past"/>
                     <filter string="Creation Date" name="creation_date" date="create_date"/>
-                    <filter string="Expected Closing" name="close_this_month" date="date_deadline"/>
                     <filter string="Closed Date" name="close_date" date="date_closed"/>
                     <separator/>
                     <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', True)]"/>
                     <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                            help="Show all opportunities for which the next action date is before today"/>
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all opportunities for which the next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                            domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Exception Activities" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
@@ -828,8 +837,8 @@
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Conversion Date" name="date_conversion" context="{'group_by': 'date_conversion'}" groups="crm.group_use_lead"/>
+                        <filter string="Expected Closing" name="date_deadline" context="{'group_by':'date_deadline'}"/>
                         <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
-                        <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
                     </group>
                 </search>
             </field>
@@ -843,8 +852,9 @@
             <field name="model">crm.lost.reason</field>
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
-                    <filter string="Include archived" name="archived"
-                            domain="['|', ('active', '=', True), ('active', '=', False)]"/>
+                    <filter string="Include archived" name="archived" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>

@@ -89,21 +89,36 @@
             <search string="Search Work Entry">
                 <field name="employee_id"/>
                 <field name="name"/>
-                <filter string="My Work Entries" domain="[('employee_id.user_id','=',uid)]" name="my_work_entries"/>
-                <filter string="With error" domain="[('state','=', 'conflict')]" name="work_entries_error"/>
+                <filter name="my_work_entries" string="My Entries" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
                 <filter name="date_filter" string="Date" date="date_start"/>
-                <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                <filter name="group_work_entry_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
+                <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
 
     <!-- HR WORK ENTRY TYPE -->
 
+    <record id="hr_work_entry_type_view_search" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.view.search</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Entry Type">
+                <field name="name"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="hr_work_entry_type_action" model="ir.actions.act_window">
         <field name="name">Work Entry Types</field>
         <field name="res_model">hr.work.entry.type</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
     </record>
 
     <record id="hr_work_entry_type_view_tree" model="ir.ui.view">

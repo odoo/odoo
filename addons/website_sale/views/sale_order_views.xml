@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="mode">primary</field> 
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
-                <filter string="Confirmed Orders" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
-                <filter string="Unpaid Orders" name="order_unpaid" domain="[('state', '=', 'sent'), ('website_id', '!=', False)]"/>
-                <filter string="Abandoned Carts" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
+                <filter string="Unpaid" name="order_unpaid" domain="[('state', '=', 'sent'), ('website_id', '!=', False)]"/>
+                <filter string="Abandoned" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
                 <separator/>
@@ -28,6 +28,10 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Order Date" name="order_date" date="date_order"/>
+                <separator/>
             </xpath>
         </field>
     </record>
@@ -91,8 +95,13 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <search string="Search Abandoned Sales Orders">
+                <filter string="Creation Date" name="creation_date" date="create_date"/>
+                <separator/>
                 <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
                 <filter string="Recovery Email Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
+                </group>
             </search>
         </field>
     </record>

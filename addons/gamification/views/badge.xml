@@ -1,9 +1,22 @@
 <odoo>
     <!-- Badge views -->
+    <record id="gamification_badge_view_search" model="ir.ui.view">
+        <field name="name">gamification.badge.view.search</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <search string="Search Badge">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="badge_list_action" model="ir.actions.act_window">
         <field name="name">Badges</field>
         <field name="res_model">gamification.badge</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="gamification_badge_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new badge
@@ -15,6 +28,7 @@
         </field>
     </record>
 
+    
     <record id="badge_list_view" model="ir.ui.view">
         <field name="name">Badge List</field>
         <field name="model">gamification.badge</field>

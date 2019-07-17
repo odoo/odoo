@@ -12,7 +12,7 @@ class StockPickingBatch(models.Model):
     _order = "name desc"
 
     name = fields.Char(
-        string='Batch Transfer Name', default='New',
+        string='Batch Transfer', default='New',
         copy=False, required=True,
         help='Name of the batch transfer')
     user_id = fields.Many2one(

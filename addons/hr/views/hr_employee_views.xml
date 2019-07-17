@@ -7,14 +7,14 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
-                    <field name="department_id" operator="child_of"/>
-                    <field name="category_ids" groups="hr.group_hr_manager"/>
-                    <field name="job_title" />
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <field name="category_ids" groups="hr.group_hr_user"/>
+                    <field name="job_id"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
@@ -22,11 +22,9 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter name="group_coach" string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
-                        <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter name="group_job" string="Job" domain="[]" context="{'group_by':'job_id'}"/>
-                        <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_id'}"/>
                     </group>
                     <searchpanel>
                         <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>

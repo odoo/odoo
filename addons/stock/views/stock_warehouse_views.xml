@@ -65,6 +65,7 @@
                 </form>
             </field>
         </record>
+
         <record id="stock_warehouse_view_form_editable" model="ir.ui.view">
             <field name="name">stock.warehouse.form.editable</field>
             <field name="model">stock.warehouse</field>
@@ -76,6 +77,7 @@
                 </xpath>
             </field>
         </record>
+
         <record id="view_warehouse_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.tree</field>
             <field name="model">stock.warehouse</field>
@@ -90,6 +92,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="stock_warehouse_view_tree_editable" model="ir.ui.view">
             <field name="name">stock.warehouse.tree.editable</field>
             <field name="model">stock.warehouse</field>
@@ -101,6 +104,7 @@
                 </xpath>
             </field>
         </record>
+
         <record id="stock_warehouse_view_search" model="ir.ui.view">
             <field name="name">stock.warehouse.search</field>
             <field name="model">stock.warehouse</field>
@@ -111,6 +115,7 @@
                 </search>
             </field>
         </record>
+
         <record id="action_warehouse_form" model="ir.actions.act_window">
             <field name="name">Warehouses</field>
             <field name="res_model">stock.warehouse</field>
@@ -122,6 +127,7 @@
               </p>
             </field>
         </record>
+
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form"
             parent="menu_warehouse_config" sequence="1"/>
 
@@ -182,15 +188,15 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
-                    <field name="name" string="Reordering Rules"/>
+                    <field name="name" string="Reordering Rule"/>
+                    <field name="product_id"/>
                     <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="product_id"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Warehouse" name="warehouse" domain="[]"  context="{'group_by':'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
-                        <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Warehouse" name="warehouse" domain="[]"  context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
+                        <filter string="Location" name="location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                     </group>
                 </search>
             </field>
@@ -265,6 +271,7 @@
               </p>
             </field>
         </record>
+
         <menuitem
             id="menu_reordering_rules_config"
             action="action_orderpoint_form"

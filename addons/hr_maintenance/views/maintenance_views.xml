@@ -10,8 +10,8 @@
             <xpath expr="field[@name='user_id']" position="after">
                 <field name="employee_id"/>
             </xpath>
-            <xpath expr="//filter[@name='my_requests']" position="replace">
-                <filter string="My Requests" name="my_requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+            <xpath expr="//filter[@name='my_maintenances']" position="replace">
+                <filter string="My Maintenances" name="my_maintenances" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
             </xpath>
             <xpath expr="//filter[@name='created_by']" position="replace">
                 <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'employee_id'}"/>
