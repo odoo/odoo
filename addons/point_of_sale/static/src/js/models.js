@@ -1721,7 +1721,9 @@ exports.Orderline = Backbone.Model.extend({
 
             if (tax_mappings && tax_mappings.length) {
                 _.each(tax_mappings, function(tm) {
-                    taxes.push(self.pos.taxes_by_id[tm.tax_dest_id[0]]);
+                    if (tm.tax_dest_id) {
+                        taxes.push(self.pos.taxes_by_id[tm.tax_dest_id[0]]);
+                    }
                 });
             } else{
                 taxes.push(tax);

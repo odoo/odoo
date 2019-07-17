@@ -1252,10 +1252,11 @@ var ClientListScreenWidget = ScreenWidget.extend({
         if( this.has_client_changed() ){
             var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
             if ( this.new_client ) {
+                var client_fiscal_position_id;
                 if (this.new_client.property_account_position_id ){
-                  var client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
-                  order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
+                    client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
                 }
+                order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
                 order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
             } else {
                 order.fiscal_position = default_fiscal_position_id;
