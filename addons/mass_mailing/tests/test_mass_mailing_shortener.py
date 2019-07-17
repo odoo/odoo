@@ -35,23 +35,23 @@ class TestMassMailingShortener(common.TransactionCase):
         self.addCleanup(patcher2.stop)
 
     def test_00_test_mass_mailing_shortener(self):
-        mailing_list_A = self.env['mail.mass_mailing.list'].create({
+        mailing_list_A = self.env['mailing.list'].create({
             'name': 'A',
         })
-        self.env['mail.mass_mailing.contact'].create({
+        self.env['mailing.contact'].create({
             'name': 'User 1', 'email': 'user1@example.com', 'list_ids': [(4, mailing_list_A.id)]
         })
-        self.env['mail.mass_mailing.contact'].create({
+        self.env['mailing.contact'].create({
             'name': 'User 2', 'email': 'user2@example.com', 'list_ids': [(4, mailing_list_A.id)]
         })
-        self.env['mail.mass_mailing.contact'].create({
+        self.env['mailing.contact'].create({
             'name': 'User 3', 'email': 'user3@example.com', 'list_ids': [(4, mailing_list_A.id)]
         })
 
         mass_mailing = self.env['mail.mass_mailing'].create({
             "reply_to_mode": "email",
             "reply_to": "Administrator <admin@yourcompany.example.com>",
-            "mailing_model_id": self.env.ref('mass_mailing.model_mail_mass_mailing_list').id,
+            "mailing_model_id": self.env.ref('mass_mailing.model_mailing_list').id,
             "mailing_domain": "[('list_ids', 'in', [%d])]" % mailing_list_A.id,
             "contact_list_ids": [[6, False, [mailing_list_A.id]]],
             "mass_mailing_campaign_id": False,

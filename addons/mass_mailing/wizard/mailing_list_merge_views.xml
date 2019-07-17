@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <odoo>
 	<!-- Merge Mailing List  -->
-    <record id="mass_mailing_list_merge_view_form" model="ir.ui.view">
-        <field name="name">mass.mailing.list.merge.form</field>
-        <field name="model">mass.mailing.list.merge</field>
+    <record id="mailing_list_merge_view_form" model="ir.ui.view">
+        <field name="name">mailing.list.merge.form</field>
+        <field name="model">mailing.list.merge</field>
         <field name="arch" type="xml">
             <form string="Merge Mass Mailing List">
                 <group>
@@ -26,8 +26,8 @@
         </field>
     </record>
 
-    <act_window id="mass_mailing_list_merge_action" name="Merge Selected Mailing Lists"
-        res_model="mass.mailing.list.merge"
-        binding_model="mail.mass_mailing.list" binding_views="list"
+    <act_window id="mailing_list_merge_action" name="Merge Selected Mailing Lists"
+        res_model="mailing.list.merge"
+        binding_model="mailing.list" binding_views="list"
         view_mode="form" target="new"/>
 </odoo>

@@ -9,13 +9,13 @@ class MassMailingContactListRel(models.Model):
     """ Intermediate model between mass mailing list and mass mailing contact
         Indicates if a contact is opted out for a particular list
     """
-    _name = 'mail.mass_mailing.list_contact_rel'
+    _name = 'mailing.contact.subscription'
     _description = 'Mass Mailing Subscription Information'
-    _table = 'mail_mass_mailing_contact_list_rel'
+    _table = 'mailing_contact_list_rel'
     _rec_name = 'contact_id'
 
-    contact_id = fields.Many2one('mail.mass_mailing.contact', string='Contact', ondelete='cascade', required=True)
-    list_id = fields.Many2one('mail.mass_mailing.list', string='Mailing List', ondelete='cascade', required=True)
+    contact_id = fields.Many2one('mailing.contact', string='Contact', ondelete='cascade', required=True)
+    list_id = fields.Many2one('mailing.list', string='Mailing List', ondelete='cascade', required=True)
     opt_out = fields.Boolean(string='Opt Out',
                              help='The contact has chosen not to receive mails anymore from this list', default=False)
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
@@ -45,7 +45,7 @@ class MassMailingContactListRel(models.Model):
         action = {
             'name': _(contact_id.name),
             'type': 'ir.actions.act_window',
-            'res_model': 'mail.mass_mailing.contact',
+            'res_model': 'mailing.contact',
             'view_mode': 'form',
             'target': 'current',
             'res_id': contact_id.id
@@ -58,7 +58,7 @@ class MassMailingContact(models.Model):
     because it holds only some basic information: name, email. The purpose is to
     be able to deal with large contact list to email without bloating the partner
     base."""
-    _name = 'mail.mass_mailing.contact'
+    _name = 'mailing.contact'
     _inherit = ['mail.thread.blacklist']
     _description = 'Mass Mailing Contact'
     _order = 'email'
@@ -70,10 +70,9 @@ class MassMailingContact(models.Model):
     email = fields.Char(required=True)
     is_email_valid = fields.Boolean(compute='_compute_is_email_valid', store=True)
     list_ids = fields.Many2many(
-        'mail.mass_mailing.list', 'mail_mass_mailing_contact_list_rel',
+        'mailing.list', 'mailing_contact_list_rel',
         'contact_id', 'list_id', string='Mailing Lists')
-    subscription_list_ids = fields.One2many('mail.mass_mailing.list_contact_rel',
-        'contact_id', string='Subscription Information')
+    subscription_list_ids = fields.One2many('mailing.contact.subscription', 'contact_id', string='Subscription Information')
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
     opt_out = fields.Boolean('Opt Out', compute='_compute_opt_out', search='_search_opt_out',
@@ -97,7 +96,7 @@ class MassMailingContact(models.Model):
 
         if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
             [active_list_id] = self._context['default_list_ids']
-            contacts = self.env['mail.mass_mailing.list_contact_rel'].search([('list_id', '=', active_list_id)])
+            contacts = self.env['mailing.contact.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
         else:
             raise UserError('Search opt out cannot be executed without a unique and valid active mailing list context.')

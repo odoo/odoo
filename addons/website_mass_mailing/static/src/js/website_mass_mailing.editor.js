@@ -30,7 +30,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
             'select': _t("Newsletter"),
             'init': function (field, dialog) {
                 return rpc.query({
-                    model: 'mail.mass_mailing.list',
+                    model: 'mailing.list',
                     method: 'name_search',
                     args: ['', [['is_public', '=', true]]],
                     context: self.options.recordInfo.context,
