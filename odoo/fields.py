@@ -2275,10 +2275,7 @@ class _RelationalMulti(_Relational):
         cache = records.env.cache
         result = True
         if self.depends_context and 'active_test' in self.depends_context:
-            if records.env.context.get('active_test', True):
-                updates = [(value.filtered(lambda r: r.sudo().active), records.with_context(active_test=True)), (value, records.with_context(active_test=False))]
-            else:
-                updates = [(value, records), (value, records.with_context(active_test=True))]
+            updates = [(value.filtered(lambda r: r.sudo().active), records.with_context(active_test=True)), (value, records.with_context(active_test=False))]
         else:
             updates = [(value, records)]
         for value, recs in updates:
