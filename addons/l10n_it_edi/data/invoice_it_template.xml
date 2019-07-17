@@ -164,6 +164,20 @@
                         </t>
 
                     </DatiBeniServizi>
+                    <DatiPagamento>
+                        <t t-set="payments" t-value="record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))"/>
+                        <CondizioniPagamento><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
+                        <DettaglioPagamento>
+                            <t t-set="company_bank_account" t-value="record.invoice_partner_bank_id"/>
+                            <ModalitaPagamento t-if="company_bank_account">MP05</ModalitaPagamento>
+                            <DataScadenzaPagamento t-esc="format_date(record.invoice_date_due)"/>
+                            <ImportoPagamento t-esc="format_numbers_two(record.amount_total)"/>
+                            <IstitutoFinanziario t-if="company_bank_account.bank_id" t-esc="company_bank_account.bank_id.name[:80]"/>
+                            <IBAN t-if="company_bank_account.acc_type == 'iban'" t-esc="company_bank_account.sanitized_acc_number"/>
+                            <BIC t-if="company_bank_account.acc_type == 'bank' and company_bank_account.bank_id.bic" t-esc="company_bank_account.bank_id.bic"/>
+                            <CodicePagamento t-esc="record.invoice_payment_ref[:60]"/>
+                        </DettaglioPagamento>
+                    </DatiPagamento>
                     <Allegati t-if="pdf">
                         <NomeAttachment t-esc="pdf_name"/>
                         <FormatoAttachment>PDF</FormatoAttachment>
