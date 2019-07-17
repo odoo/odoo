@@ -33,9 +33,9 @@ MASS_MAILING_BUSINESS_MODELS = [
 image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
-class MassMailingTag(models.Model):
+class MailingTag(models.Model):
     """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
-    _name = 'mail.mass_mailing.tag'
+    _name = 'mailing.tag'
     _description = 'Mass Mailing Tag'
     _order = 'name'
 
@@ -47,10 +47,10 @@ class MassMailingTag(models.Model):
     ]
 
 
-class MassMailingStage(models.Model):
+class MailingStage(models.Model):
 
     """Stage for mass mailing campaigns. """
-    _name = 'mail.mass_mailing.stage'
+    _name = 'mailing.stage'
     _description = 'Mass Mailing Campaign Stage'
     _order = 'sequence'
 
@@ -65,8 +65,8 @@ class MassMailingCampaign(models.Model):
     _rec_name = "campaign_id"
     _inherits = {'utm.campaign': 'campaign_id'}
 
-    stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', ondelete='restrict', required=True, 
-        default=lambda self: self.env['mail.mass_mailing.stage'].search([], limit=1),
+    stage_id = fields.Many2one('mailing.stage', string='Stage', ondelete='restrict', required=True, 
+        default=lambda self: self.env['mailing.stage'].search([], limit=1),
         group_expand='_group_expand_stage_ids')
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -78,7 +78,7 @@ class MassMailingCampaign(models.Model):
     medium_id = fields.Many2one('utm.medium', string='Medium',
             help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email', False))
     tag_ids = fields.Many2many(
-        'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
+        'mailing.tag', 'mail_mass_mailing_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
     mass_mailing_ids = fields.One2many(
         'mail.mass_mailing', 'mass_mailing_campaign_id',

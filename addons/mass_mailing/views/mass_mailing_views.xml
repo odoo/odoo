@@ -411,8 +411,8 @@
 
         <!--  MAILING CAMPAIGN STAGE !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_stage_search">
-            <field name="name">mail.mass_mailing.stage.search</field>
-            <field name="model">mail.mass_mailing.stage</field>
+            <field name="name">mailing.stage.search</field>
+            <field name="model">mailing.stage</field>
             <field name="arch" type="xml">
                <search string="Mailings">
                     <field name="name"/>
@@ -421,8 +421,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_stage_tree">
-            <field name="name">mail.mass_mailing.stage.tree</field>
-            <field name="model">mail.mass_mailing.stage</field>
+            <field name="name">mailing.stage.tree</field>
+            <field name="model">mailing.stage</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Mailings" editable="top">
@@ -433,7 +433,7 @@
         </record>
         <record id="action_view_mass_mailing_stages" model="ir.actions.act_window">
             <field name="name">Mailing Stages</field>
-            <field name="res_model">mail.mass_mailing.stage</field>
+            <field name="res_model">mailing.stage</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -449,8 +449,8 @@
 
         <!--  MAILING CAMPAIGN TAGS !-->
         <record id="mail_mass_mailing_tag_view_form" model="ir.ui.view">
-            <field name="name">mail.mass_mailing.tag.form</field>
-            <field name="model">mail.mass_mailing.tag</field>
+            <field name="name">mailing.tag.form</field>
+            <field name="model">mailing.tag</field>
             <field name="arch" type="xml">
                 <form string="Campaign Tags">
                     <sheet>
@@ -463,7 +463,7 @@
         </record>
         <record id="mass_mailing_tag_action" model="ir.actions.act_window">
             <field name="name">Campaign Tags</field>
-            <field name="res_model">mail.mass_mailing.tag</field>
+            <field name="res_model">mailing.tag</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new tag
