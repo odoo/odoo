@@ -80,6 +80,7 @@ class Serialized(fields.Field):
         'prefetch': False,              # not prefetched by default
     }
     column_type = ('text', 'text')
+    _convert_to_cache_read = True
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return json.dumps(value)
