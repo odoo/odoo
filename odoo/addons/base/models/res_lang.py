@@ -215,16 +215,10 @@ class Lang(models.Model):
     def toggle_active(self):
         super().toggle_active()
         # Automatically load translation
-        if len(self) == 1 and self.active:
-            return {
-                'name': "Load a Translation",
-                'type': 'ir.actions.act_window',
-                'res_model': 'base.language.install',
-                'context': {'default_lang': self.code},
-                'view_mode': 'form',
-                'target': 'new',
-                'views': [[False, 'form']],
-            }
+        active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
+        if active_lang:
+            mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
+            mods._update_translations(filter_lang=active_lang)
 
     @api.model_create_multi
     def create(self, vals_list):
