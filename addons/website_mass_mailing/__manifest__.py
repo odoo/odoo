@@ -15,7 +15,8 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'security/ir.model.access.csv',
         'views/website_mass_mailing_templates.xml',
         'views/snippets_templates.xml',
-        'views/mass_mailing_view.xml',
+        'views/mailing_list_views.xml',
+        'views/website_mass_mailing_views.xml',
     ],
     'qweb': [
         'static/src/xml/*.xml',

@@ -32,7 +32,7 @@ class TestMassMail(MassMailingCase):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_link_tracker(self):
         _url = 'https://www.example.com/foo/bar?baz=qux'
-        mailing = self.env['mail.mass_mailing'].create({
+        mailing = self.env['mailing.mailing'].create({
             'name': 'TestMailing',
             'subject': 'Test',
             'medium_id': self.test_medium.id,
@@ -42,7 +42,7 @@ class TestMassMail(MassMailingCase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        mailing.send_mail()
+        mailing.action_send_mail()
 
         # basic test emails are sent
         self.assertEqual(mailing.sent, 5)
@@ -68,8 +68,8 @@ class TestMassMail(MassMailingCase):
 class TestAccessRights(TransactionCase):
 
     def test_01_mass_mail_blacklist(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing = self.env['mailing.mailing']
         mail_blacklist = self.env['mail.blacklist']
 
         # create mailing contact record
@@ -92,7 +92,7 @@ class TestAccessRights(TransactionCase):
                                  self.mailing_contact_4.id, self.mailing_contact_5.id])],
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
+        res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -110,10 +110,10 @@ class TestAccessRights(TransactionCase):
                          'blacklist ignored email number incorrect, should be equals to 2')
 
     def test_02_mass_mail_simple_opt_out(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing_lists = self.env['mail.mass_mailing.list']
-        mass_mailing_optout = self.env['mail.mass_mailing.list_contact_rel']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing_lists = self.env['mailing.list']
+        mass_mailing_optout = self.env['mailing.contact.subscription']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email 1', 'email': 'test1@email.com'})
@@ -159,10 +159,10 @@ class TestAccessRights(TransactionCase):
                          'Opt Out ignored email number incorrect, should be equals to 1')
 
     def test_03_mass_mail_multi_opt_out(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing_lists = self.env['mail.mass_mailing.list']
-        mass_mailing_optout = self.env['mail.mass_mailing.list_contact_rel']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing_lists = self.env['mailing.list']
+        mass_mailing_optout = self.env['mailing.contact.subscription']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email 1', 'email': 'test1@email.com'})
@@ -216,10 +216,10 @@ class TestAccessRights(TransactionCase):
                          'Opt Out ignored email number incorrect, should be equals to 0')
 
     def test_04_mass_mail_multi_users_different_opt_out(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing_lists = self.env['mail.mass_mailing.list']
-        mass_mailing_optout = self.env['mail.mass_mailing.list_contact_rel']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing_lists = self.env['mailing.list']
+        mass_mailing_optout = self.env['mailing.contact.subscription']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email (A)', 'email': 'test@email.com'})
@@ -271,7 +271,7 @@ class TestOnResPartner(TransactionCase):
 
     def test_mass_mail_on_res_partner(self):
         partners = self.env['res.partner']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing = self.env['mailing.mailing']
 
         # create mailing contact record
         partner_a = partners.create({
@@ -296,7 +296,7 @@ class TestOnResPartner(TransactionCase):
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.mailing_model_real = 'res.partner'
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
+        res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,

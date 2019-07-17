@@ -16,7 +16,7 @@ KanbanRecord.include({
     _openRecord: function () {
         if (this.modelName === 'mail.mass_mailing.campaign') {
             this.$('.oe_mailings').click();
-        } else if (this.modelName === 'mail.mass_mailing.list' &&
+        } else if (this.modelName === 'mailing.list' &&
             this.$('.o_mailing_list_kanban_boxes a')) {
             this.$('.o_mailing_list_kanban_boxes a').first().click();
         } else {
@@ -28,7 +28,7 @@ KanbanRecord.include({
 KanbanColumn.include({
     init: function () {
         this._super.apply(this, arguments);
-        if (this.modelName === 'mail.mass_mailing') {
+        if (this.modelName === 'mailing.mailing') {
             this.draggable = false;
         }
     },

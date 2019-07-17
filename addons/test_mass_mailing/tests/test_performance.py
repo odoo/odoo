@@ -41,7 +41,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
     @warmup
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing(self):
-        mailing = self.env['mail.mass_mailing'].create({
+        mailing = self.env['mailing.mailing'].create({
             'name': 'Test',
             'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
@@ -51,7 +51,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         })
 
         with self.assertQueryCount(__system__=2477, marketing=3128):
-            mailing.send_mail()
+            mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
@@ -79,7 +79,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
     @warmup
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing_w_bl(self):
-        mailing = self.env['mail.mass_mailing'].create({
+        mailing = self.env['mailing.mailing'].create({
             'name': 'Test',
             'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
@@ -89,7 +89,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         with self.assertQueryCount(__system__=2864, marketing=3611):
-            mailing.send_mail()
+            mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)

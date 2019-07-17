@@ -13,17 +13,17 @@ class MailMail(models.Model):
     """Add the mass mailing campaign data to mail"""
     _inherit = ['mail.mail']
 
-    mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
-    statistics_ids = fields.One2many('mail.mail.statistics', 'mail_mail_id', string='Statistics')
+    mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
+    mailing_trace_ids = fields.One2many('mailing.trace', 'mail_mail_id', string='Statistics')
 
     @api.model
     def create(self, values):
-        """ Override mail_mail creation to create an entry in mail.mail.statistics """
+        """ Override mail_mail creation to create an entry in mailing.trace """
         # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
         mail = super(MailMail, self).create(values)
-        if values.get('statistics_ids'):
+        if values.get('mailing_trace_ids'):
             mail_sudo = mail.sudo()
-            mail_sudo.statistics_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
+            mail_sudo.mailing_trace_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
         return mail
 
     def _get_tracking_url(self):
@@ -54,12 +54,12 @@ class MailMail(models.Model):
 
     def _send_prepare_body(self):
         """ Override to add the tracking URL to the body and to add
-        Statistic_id in shorted urls """
+        trace ID in shortened urls """
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         self.ensure_one()
         body = super(MailMail, self)._send_prepare_body()
 
-        if self.mailing_id and body and self.statistics_ids:
+        if self.mailing_id and body and self.mailing_trace_ids:
             for match in re.findall(URL_REGEX, self.body_html):
                 href = match[0]
                 url = match[1]
@@ -67,7 +67,7 @@ class MailMail(models.Model):
                 parsed = werkzeug.urls.url_parse(url, scheme='http')
 
                 if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
-                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
+                    new_href = href.replace(url, url + '/m/' + str(self.mailing_trace_ids[0].id))
                     body = body.replace(href, new_href)
 
             # generate tracking URL
@@ -96,8 +96,8 @@ class MailMail(models.Model):
         mail_sent = not failure_type  # we consider that a recipient error is a failure with mass mailling and show them as failed
         for mail in self:
             if mail.mailing_id:
-                if mail_sent is True and mail.statistics_ids:
-                    mail.statistics_ids.write({'sent': fields.Datetime.now(), 'exception': False})
-                elif mail_sent is False and mail.statistics_ids:
-                    mail.statistics_ids.write({'exception': fields.Datetime.now()})
-        return  super(MailMail, self)._postprocess_sent_message(success_pids, failure_reason=failure_reason, failure_type=failure_type)
+                if mail_sent is True and mail.mailing_trace_ids:
+                    mail.mailing_trace_ids.write({'sent': fields.Datetime.now(), 'exception': False})
+                elif mail_sent is False and mail.mailing_trace_ids:
+                    mail.mailing_trace_ids.write({'exception': fields.Datetime.now()})
+        return super(MailMail, self)._postprocess_sent_message(success_pids, failure_reason=failure_reason, failure_type=failure_type)
