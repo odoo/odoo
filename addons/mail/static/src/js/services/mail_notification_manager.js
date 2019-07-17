@@ -361,6 +361,9 @@ MailManager.include({
             this._handlePartnerMailFailureNotification(data);
         } else if (data.type === 'user_connection') {
             this._handlePartnerUserConnectionNotification(data);
+        } else if (data.type === 'simple_notification') {
+            var title = _.escape(data.title), message = _.escape(data.message);
+            data.warning ? this.do_warn(title, message, data.sticky) : this.do_notify(title, message, data.sticky);
         } else {
             this._handlePartnerChannelNotification(data);
         }
