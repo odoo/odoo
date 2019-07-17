@@ -20,7 +20,8 @@ sent mails with personal token for the invitation of the survey.
         'auth_signup',
         'http_routing',
         'mail',
-        'web_tour'],
+        'web_tour',
+        'gamification'],
     'data': [
         'views/survey_report_templates.xml',
         'views/survey_reports.xml',
@@ -34,6 +35,7 @@ sent mails with personal token for the invitation of the survey.
         'views/survey_user_views.xml',
         'views/survey_question_views.xml',
         'views/survey_templates.xml',
+        'views/gamification_badge_views.xml',
         'wizard/survey_invite_views.xml',
     ],
     'demo': [
