@@ -98,6 +98,9 @@ class TestACLFeedback(Feedback):
             'perm_create': True,
         })
         self.record = self.env['test_access_right.some_obj'].create({'val': 5})
+        # values are in cache, clear them up for the test
+        ACL.flush()
+        ACL.invalidate_cache()
 
     def test_no_groups(self):
         """ Operation is never allowed
@@ -295,7 +298,8 @@ Note: this might be a multi-company issue.
         )
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        # p.with_user(self.user).val
+        p.flush()
+        p.invalidate_cache()
         self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
