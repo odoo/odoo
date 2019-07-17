@@ -1172,36 +1172,6 @@ exports.PosModel = Backbone.Model.extend({
         return report;
     },
 
-    _load_orders: function(){
-        var jsons = this.db.get_unpaid_orders();
-        var orders = [];
-        var not_loaded_count = 0;
-
-        for (var i = 0; i < jsons.length; i++) {
-            var json = jsons[i];
-            if (json.pos_session_id === this.pos_session.id) {
-                orders.push(new exports.Order({},{
-                    pos:  this,
-                    json: json,
-                }));
-            } else {
-                not_loaded_count += 1;
-            }
-        }
-
-        if (not_loaded_count) {
-            console.info('There are '+not_loaded_count+' locally saved unpaid orders belonging to another session');
-        }
-
-        orders = orders.sort(function(a,b){
-            return a.sequence_number - b.sequence_number;
-        });
-
-        if (orders.length) {
-            this.get('orders').add(orders);
-        }
-    },
-
     electronic_payment_interfaces: {},
 });
 
