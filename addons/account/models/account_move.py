@@ -1349,6 +1349,9 @@ class AccountMove(models.Model):
                     elif self.is_purchase_document(include_receipts=True):
                         line.account_id = self.journal_id.default_debit_account_id
 
+            if not line.tax_ids:
+                line.tax_ids = line._get_computed_taxes()
+
         self.line_ids._onchange_price_subtotal()
         self._recompute_dynamic_lines(recompute_all_taxes=True)
 
