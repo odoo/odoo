@@ -2727,9 +2727,6 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'one2many' || field.type === 'many2many') {
                 var fieldInfo = record.fieldsInfo[viewType][fieldName];
                 var rawContext = fieldInfo && fieldInfo.context;
-                rawContext = _.pick(rawContext, function (value, key) {
-                    return key.indexOf('_view_ref') === -1;
-                });
                 var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                 var fieldsInfo = view ? view.fieldsInfo : (fieldInfo.fieldsInfo || {});
                 var ids = record.data[fieldName] || [];
@@ -2750,6 +2747,27 @@ var BasicModel = AbstractModel.extend({
                     viewType: view ? view.type : fieldInfo.viewType,
                 });
                 record.data[fieldName] = list.id;
+
+                // remove _view_ref from rawContext else datapoint will have context with *_view_ref
+                // which will propagated to x2m datapoint and further(e.g. button clicked in o2m form)
+                // will have *_view_ref which may lead to traceback
+                // need to evaluate context here because rawContext will be in string form but here
+                // we want to iterate it and want to remove *_view_ref key from it
+                if (rawContext) {
+                    var context = new Context();
+                    context.set_eval_context(self._getEvalContext(list));
+                    var rawContext = new Context(rawContext);
+                    var evalContext = self._getEvalContext(self.localData[list.parentID]);
+                    evalContext.id = evalContext.id || false;
+                    rawContext.set_eval_context(evalContext);
+                    context.add(rawContext);
+                    rawContext = context.eval();
+                    rawContext = _.pick(rawContext, function (value, key) {
+                        return key.indexOf('_view_ref') === -1;
+                    });
+                    list.rawContext = rawContext;
+                }
+
                 if (!fieldInfo.__no_fetch) {
                     var def = self._readUngroupedList(list).then(function () {
                         return $.when(
