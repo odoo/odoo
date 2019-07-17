@@ -213,8 +213,19 @@
                             <page string="Preferences">
                                 <group>
                                     <group string="Localization" name="preferences">
-                                        <field name="lang"/>
+                                        <label for="lang" placeholder="System (English)"/>
                                         <field name="active" invisible="1"/>
+                                        <div class="o_row">
+                                            <field name="lang"/>
+                                            <button
+                                                type="action"
+                                                name="%(base.res_lang_act_window)d"
+                                                class="btn-sm btn-link mb4 fa fa-globe"
+                                                aria-label="More languages"
+                                                groups="base.group_system"
+                                                title="More languages"
+                                            />
+                                        </div>
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
                                         <field name="tz_offset" invisible="1"/>
                                     </group>
@@ -344,7 +355,18 @@
                                 groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="lang" readonly="0" placeholder="System (English)"/>
+                            <label for="lang"/>
+                            <div class="o_row">
+                                <field name="lang" placeholder="System (English)"/>
+                                <button
+                                    type="action"
+                                    name="%(base.res_lang_act_window)d"
+                                    class="btn-sm btn-link mb4 fa fa-globe"
+                                    aria-label="More languages"
+                                    groups="base.group_system"
+                                    title="More languages"
+                                />
+                            </div>
                             <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                             <field name="tz_offset" invisible="1"/>
                         </group>
