@@ -205,21 +205,6 @@
                                                         ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
-    <record id="payment_acquirer_custom" model="payment.acquirer">
-        <field name="name">Custom</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="module_id" ref="base.module_payment_transfer"/>
-        <field name="description" type="html">
-            <p>
-                A generic payment acquirer to send payment instructions to any payment acquirer.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-            </ul>
-        </field>
-    </record>
-
     <record id="payment_acquirer_payu" model="payment.acquirer">
         <field name="name">PayUmoney</field>
         <field name="image_128" type="base64" file="payment_payumoney/static/src/img/payumoney_icon.png"/>
