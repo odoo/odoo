@@ -19,7 +19,6 @@ var QWeb = core.qweb;
 var MessagingMenu = Widget.extend({
     name: 'messaging_menu',
     template:'mail.systray.MessagingMenu',
-    jsLibs: [],
     events: {
         'click .o_mail_preview': '_onClickPreview',
         'click .o_filter_button': '_onClickFilterButton',
@@ -27,15 +26,6 @@ var MessagingMenu = Widget.extend({
         'click .o_mail_preview_mark_as_read': '_onClickPreviewMarkAsRead',
         'click .o_thread_window_expand': '_onClickExpand',
         'show.bs.dropdown': '_onShowDropdown',
-    },
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        if (this.isMobile()) {
-            this.jsLibs.push("/mail/static/src/lib/jquery.listswipe/jquery.listswipe.js");
-        }
     },
     /**
      * @override
@@ -378,7 +368,7 @@ var MessagingMenu = Widget.extend({
                 thread.markAsRead();
             }
         }
-    }
+    },
 });
 
 // Systray menu items display order matches order in the list

@@ -25,10 +25,7 @@
         function getTouchDelta (touch, data, settings) {
             var xDelta = touch.x - data.touchStart.x + data.startLeft;
             var yDelta = touch.y - data.touchStart.y;
-            if (!settings.rightAction && xDelta < 0) {
-                xDelta = 0;
-            }
-            if (!settings.leftAction && xDelta > 0) {
+            if ((!settings.rightAction && xDelta < 0) || (!settings.leftAction && xDelta > 0)) {
                 xDelta = 0;
             }
             return {
@@ -41,11 +38,7 @@
             var touchDelta = getTouchDelta(touch, data, settings);
             var xThreshold = Math.abs(touchDelta.xDelta) / settings.itemActionWidth;
             if (xThreshold >= settings.snapThreshold) {
-                if (touchDelta.xDelta < 0) {
-                    touchDelta.xDelta = -settings.itemActionWidth;
-                } else {
-                    touchDelta.xDelta = settings.itemActionWidth;
-                }
+                touchDelta.xDelta = (touchDelta.xDelta < 0) ? -settings.itemActionWidth : settings.itemActionWidth;
             } else {
                 touchDelta.xDelta = 0;
             }
@@ -76,7 +69,6 @@
                 var $item = $(this);
                 var data = $item.data('listSwipe');
                 var touch = getTouchPosition(ev);
-
                 if (data.maxYDeltaReached) {
                     return;
                 }
@@ -91,7 +83,6 @@
                     $item.css('left', touchDelta.xDelta + 'px');
                 }
                 $item.data('listSwipe', data);
-
                 var touchDelta = calculateTouchDelta(touch, data, settings);
                 if (settings.onElementMoving) {
                     var action = touchDelta.xDelta > 0 ? 'right' : touchDelta.xDelta < 0 ? 'left' : false;
@@ -101,14 +92,11 @@
                 var $item = $(this);
                 var data = $item.data('listSwipe');
                 var touch = getTouchPosition(ev);
-
                 if (data.maxYDeltaReached) {
                     return;
                 }
-
                 var touchDelta = calculateTouchDelta(touch, data, settings);
                 $item.animate({ left: touchDelta.xDelta + 'px' }, settings.snapDuration);
-
                 if (touchDelta.xDelta > 0 && settings.onRightSwipe) {
                     settings.onRightSwipe(ev);
                 }

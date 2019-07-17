@@ -28,7 +28,7 @@ var READ_LESS = _lt("read less");
  */
 var ThreadWidget = Widget.extend({
     className: 'o_mail_thread',
-    jsLibs: [],
+
     events: {
         'click a': '_onClickRedirect',
         'click img': '_onClickRedirect',
@@ -90,11 +90,6 @@ var ThreadWidget = Widget.extend({
         this._messageSeenPopover = null;
         // used to track popover IDs to destroy on re-rendering of popovers
         this._openedSeenPopoverIDs = [];
-
-        // JS Dependancy for allowing swipe actions for read and star
-        if (config.device.isMobile) {
-            this.jsLibs.push("/mail/static/src/lib/jquery.listswipe/jquery.listswipe.js");
-        }
     },
     /**
      * The message mail popover may still be shown at this moment. If we do not
