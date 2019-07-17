@@ -16,7 +16,7 @@ class ChannelUsersRelation(models.Model):
     _table = 'slide_channel_partner'
 
     channel_id = fields.Many2one('slide.channel', index=True, required=True)
-    completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
+    completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.', compute='_compute_completion', store=True)
     # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
     completion = fields.Integer('# Completed Slides', compute='_compute_completion', store=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
@@ -39,30 +39,22 @@ class ChannelUsersRelation(models.Model):
         for record in self:
             slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
             record.completion = slide_done
+            if record.completed is False:
+                record.completed = record.completion >= record.channel_id.total_slides
 
     def _write(self, values):
         partner_karma = False
-        to_complete = self.env['slide.channel.partner']
-        if values.get('completion'):
-            incomplete_self = self.filtered(lambda cp: not cp.completed)
-            channels_data = {result['id']: result['total_slides'] for result in incomplete_self.mapped('channel_id').read(['total_slides'])}
-            for cp in incomplete_self:
-                if values.get('completion') >= channels_data[cp.channel_id.id]:
-                    to_complete |= cp
 
-            partner_karma = dict.fromkeys(to_complete.mapped('partner_id').ids, 0)
-            for channel_partner in to_complete:
+        if values.get('completed') is True:
+            partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
+            for channel_partner in self:
                 partner_karma[channel_partner.partner_id.id] += channel_partner.channel_id.karma_gen_channel_finish
             partner_karma = {partner_id: karma_to_add
                              for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
 
-        if to_complete:
-            result = super(ChannelUsersRelation, (self - to_complete))._write(values)
-            completion_values = dict(values, completed=True)
-            super(ChannelUsersRelation, to_complete)._write(completion_values)
-            to_complete._post_completion_hook()
-        else:
-            result = super(ChannelUsersRelation, self)._write(values)
+        result = super(ChannelUsersRelation, self)._write(values)
+        if values.get('completed') is True:
+            self._post_completion_hook()
 
         if partner_karma:
             users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
