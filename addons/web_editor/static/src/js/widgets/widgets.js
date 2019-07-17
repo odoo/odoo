@@ -949,7 +949,7 @@ var VideoWidget = MediaWidget.extend({
             $video.attr('src', vinMatch[0] + '/embed/simple');
             videoType = 'vin';
         } else if (vimMatch && vimMatch[3].length) {
-            $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay);
+            $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay.replace('mute', 'muted'));
             videoType = 'vim';
         } else if (dmMatch && dmMatch[2].length) {
             var just_id = dmMatch[2].replace('video/','');
