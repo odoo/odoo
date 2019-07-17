@@ -901,6 +901,7 @@ class HttpCase(TransactionCase):
         self.opener.cookies['session_id'] = self.session_id
 
     def url_open(self, url, data=None, files=None, timeout=10, headers=None):
+        self.env['res.users'].flush()
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
         if data or files:
