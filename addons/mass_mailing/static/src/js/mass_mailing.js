@@ -16,7 +16,7 @@ KanbanRecord.include({
     _openRecord: function () {
         if (this.modelName === 'mail.mass_mailing.campaign') {
             this.$('.oe_mailings').click();
-        } else if (this.modelName === 'mail.mass_mailing.list' &&
+        } else if (this.modelName === 'mailing.list' &&
             this.$('.o_mailing_list_kanban_boxes a')) {
             this.$('.o_mailing_list_kanban_boxes a').first().click();
         } else {

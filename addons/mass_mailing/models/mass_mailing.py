@@ -24,8 +24,8 @@ MASS_MAILING_BUSINESS_MODELS = [
     'res.partner',
     'event.track',
     'sale.order',
-    'mail.mass_mailing.list',
-    'mail.mass_mailing.contact'
+    'mailing.list',
+    'mailing.contact'
 ]
 
 # Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
@@ -205,7 +205,7 @@ class MassMailing(models.Model):
     def default_get(self, fields):
         res = super(MassMailing, self).default_get(fields)
         if 'reply_to_mode' in fields and not 'reply_to_mode' in res and res.get('mailing_model_real'):
-            if res['mailing_model_real'] in ['res.partner', 'mail.mass_mailing.contact']:
+            if res['mailing_model_real'] in ['res.partner', 'mailing.contact']:
                 res['reply_to_mode'] = 'email'
             else:
                 res['reply_to_mode'] = 'thread'
@@ -240,15 +240,15 @@ class MassMailing(models.Model):
     reply_to = fields.Char(string='Reply To', help='Preferred Reply-To Address',
         default=lambda self: self.env['mail.message']._get_default_from())
     # recipients
-    mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mail.mass_mailing.contact', required=True)
+    mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mailing.contact', required=True)
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
-        default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
+        default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
-    contact_list_ids = fields.Many2many('mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
+    contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel',
         string='Mailing Lists')
     contact_ab_pc = fields.Integer(string='A/B Testing percentage',
         help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
@@ -292,7 +292,7 @@ class MassMailing(models.Model):
     @api.depends('mailing_model_id')
     def _compute_model(self):
         for record in self:
-            record.mailing_model_real = (record.mailing_model_name != 'mail.mass_mailing.list') and record.mailing_model_name or 'mail.mass_mailing.contact'
+            record.mailing_model_real = (record.mailing_model_name != 'mailing.list') and record.mailing_model_name or 'mailing.contact'
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
@@ -349,7 +349,7 @@ class MassMailing(models.Model):
     def _onchange_model_and_list(self):
         mailing_domain = []
         if self.mailing_model_name:
-            if self.mailing_model_name == 'mail.mass_mailing.list':
+            if self.mailing_model_name == 'mailing.list':
                 if self.contact_list_ids:
                     mailing_domain.append(('list_ids', 'in', self.contact_list_ids.ids))
                 else:
@@ -488,9 +488,9 @@ class MassMailing(models.Model):
 
     def update_opt_out(self, email, list_ids, value):
         if len(list_ids) > 0:
-            model = self.env['mail.mass_mailing.contact'].with_context(active_test=False)
+            model = self.env['mailing.contact'].with_context(active_test=False)
             records = model.search([('email_normalized', '=', tools.email_normalize(email))])
-            opt_out_records = self.env['mail.mass_mailing.list_contact_rel'].search([
+            opt_out_records = self.env['mailing.contact.subscription'].search([
                 ('contact_id', 'in', records.ids),
                 ('list_id', 'in', list_ids),
                 ('opt_out', '!=', value)
@@ -514,11 +514,11 @@ class MassMailing(models.Model):
         self.ensure_one()
         opt_out = {}
         target = self.env[self.mailing_model_real]
-        if self.mailing_model_real == "mail.mass_mailing.contact":
+        if self.mailing_model_real == "mailing.contact":
             # if user is opt_out on One list but not on another
             # or if two user with same email address, one opted in and the other one opted out, send the mail anyway
             # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
-            target_list_contacts = self.env['mail.mass_mailing.list_contact_rel'].search(
+            target_list_contacts = self.env['mailing.contact.subscription'].search(
                 [('list_id', 'in', self.contact_list_ids.ids)])
             opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
             opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')

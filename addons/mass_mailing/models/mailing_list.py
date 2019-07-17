@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class MassMailingList(models.Model):
     """Model of a contact list. """
-    _name = 'mail.mass_mailing.list'
+    _name = 'mailing.list'
     _order = 'name'
     _description = 'Mailing List'
 
@@ -14,9 +14,9 @@ class MassMailingList(models.Model):
     active = fields.Boolean(default=True)
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
     contact_ids = fields.Many2many(
-        'mail.mass_mailing.contact', 'mail_mass_mailing_contact_list_rel', 'list_id', 'contact_id',
+        'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
         string='Mailing Lists')
-    subscription_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id',
+    subscription_ids = fields.One2many('mailing.contact.subscription', 'list_id',
         string='Subscription Information')
     is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
                                                   " page to allows him to update his subscription preferences.")
@@ -27,8 +27,8 @@ class MassMailingList(models.Model):
             select
                 list_id, count(*)
             from
-                mail_mass_mailing_contact_list_rel r
-                left join mail_mass_mailing_contact c on (r.contact_id=c.id)
+                mailing_contact_list_rel r
+                left join mailing_contact c on (r.contact_id=c.id)
                 left join mail_blacklist bl on c.email_normalized = bl.email and bl.active
             where
                 list_id in %s
@@ -73,30 +73,30 @@ class MassMailingList(models.Model):
         # Put destination is sources lists if not already the case
         src_lists |= self
         self.env.cr.execute("""
-            INSERT INTO mail_mass_mailing_contact_list_rel (contact_id, list_id)
+            INSERT INTO mailing_contact_list_rel (contact_id, list_id)
             SELECT st.contact_id AS contact_id, %s AS list_id
             FROM
                 (
                 SELECT
                     contact.id AS contact_id,
                     contact.email AS email,
-                    mailing_list.id AS list_id,
+                    list.id AS list_id,
                     row_number() OVER (PARTITION BY email ORDER BY email) AS rn
                 FROM
-                    mail_mass_mailing_contact contact,
-                    mail_mass_mailing_contact_list_rel contact_list_rel,
-                    mail_mass_mailing_list mailing_list
+                    mailing_contact contact,
+                    mailing_contact_list_rel contact_list_rel,
+                    mailing_list list
                 WHERE contact.id=contact_list_rel.contact_id
                 AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
                 AND contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)
-                AND mailing_list.id=contact_list_rel.list_id
-                AND mailing_list.id IN %s
+                AND list.id=contact_list_rel.list_id
+                AND list.id IN %s
                 AND NOT EXISTS
                     (
                     SELECT 1
                     FROM
-                        mail_mass_mailing_contact contact2,
-                        mail_mass_mailing_contact_list_rel contact_list_rel2
+                        mailing_contact contact2,
+                        mailing_contact_list_rel contact_list_rel2
                     WHERE contact2.email = contact.email
                     AND contact_list_rel2.contact_id = contact2.id
                     AND contact_list_rel2.list_id = %s

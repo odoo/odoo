@@ -68,7 +68,7 @@ class TestMassMail(MassMailingCase):
 class TestAccessRights(TransactionCase):
 
     def test_01_mass_mail_blacklist(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
+        mass_mailing_contacts = self.env['mailing.contact']
         mass_mailing = self.env['mail.mass_mailing']
         mail_blacklist = self.env['mail.blacklist']
 
@@ -110,9 +110,9 @@ class TestAccessRights(TransactionCase):
                          'blacklist ignored email number incorrect, should be equals to 2')
 
     def test_02_mass_mail_simple_opt_out(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing_lists = self.env['mail.mass_mailing.list']
-        mass_mailing_optout = self.env['mail.mass_mailing.list_contact_rel']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing_lists = self.env['mailing.list']
+        mass_mailing_optout = self.env['mailing.contact.subscription']
         mass_mailing = self.env['mail.mass_mailing']
 
         # create mailing contact record
@@ -159,9 +159,9 @@ class TestAccessRights(TransactionCase):
                          'Opt Out ignored email number incorrect, should be equals to 1')
 
     def test_03_mass_mail_multi_opt_out(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing_lists = self.env['mail.mass_mailing.list']
-        mass_mailing_optout = self.env['mail.mass_mailing.list_contact_rel']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing_lists = self.env['mailing.list']
+        mass_mailing_optout = self.env['mailing.contact.subscription']
         mass_mailing = self.env['mail.mass_mailing']
 
         # create mailing contact record
@@ -216,9 +216,9 @@ class TestAccessRights(TransactionCase):
                          'Opt Out ignored email number incorrect, should be equals to 0')
 
     def test_04_mass_mail_multi_users_different_opt_out(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing_lists = self.env['mail.mass_mailing.list']
-        mass_mailing_optout = self.env['mail.mass_mailing.list_contact_rel']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing_lists = self.env['mailing.list']
+        mass_mailing_optout = self.env['mailing.contact.subscription']
         mass_mailing = self.env['mail.mass_mailing']
 
         # create mailing contact record
