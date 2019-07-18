@@ -37,6 +37,7 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
             messages = test_record._message_sms('<p>Mega SMS<br/>Top moumoutte</p>', partner_ids=self.partner_1.ids)
 
         self.assertEqual(messages.body, '<p>Mega SMS<br>Top moumoutte</p>')
+        self.assertEqual(messages.subtype_id, self.env.ref('mail.mt_note'))
         self.assertSMSNotification([{'partner': self.partner_1}], 'Mega SMS\nTop moumoutte', messages)
 
     def test_message_sms_internals_check_existing(self):
@@ -57,6 +58,15 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
             messages = test_record._message_sms(self._test_body, partner_ids=self.partner_1.ids, sms_numbers=self.random_numbers)
 
         self.assertSMSNotification([{'partner': self.partner_1}, {'number': self.random_numbers_san[0]}, {'number': self.random_numbers_san[1]}], self._test_body, messages)
+
+    def test_message_sms_internals_subtype(self):
+        with self.sudo('employee'), self.mockSMSGateway():
+            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+            messages = test_record._message_sms('<p>Mega SMS<br/>Top moumoutte</p>', subtype_id=self.env.ref('mail.mt_comment').id, partner_ids=self.partner_1.ids)
+
+        self.assertEqual(messages.body, '<p>Mega SMS<br>Top moumoutte</p>')
+        self.assertEqual(messages.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertSMSNotification([{'partner': self.partner_1}], 'Mega SMS\nTop moumoutte', messages)
 
     def test_message_sms_internals_pid_to_number(self):
         pid_to_number = {

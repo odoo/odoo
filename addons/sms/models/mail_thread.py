@@ -182,7 +182,7 @@ class MailThread(models.AbstractModel):
                 sms_numbers = [info_number] + (sms_numbers or [])
 
         if subtype_id is False:
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
         return self.message_post(
             body=body, partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py

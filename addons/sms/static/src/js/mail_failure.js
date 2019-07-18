@@ -18,7 +18,7 @@ MailFailure.include({
         var preview = this._super.apply(this, arguments);
         if (this._failureType === 'sms') {
             _.extend(preview, {
-                body: _t('An error occurred when sending SMS'),
+                body: _t('An error occurred when sending an SMS'),
                 id: 'sms_failure',
             });
         }
