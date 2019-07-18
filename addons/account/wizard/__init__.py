@@ -12,3 +12,4 @@ from . import account_report_print_journal
 from . import setup_wizards
 from . import wizard_tax_adjustments
 from . import account_invoice_send
+from . import base_document_layout

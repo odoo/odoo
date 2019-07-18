@@ -94,8 +94,9 @@ class Company(models.Model):
     base_onboarding_company_state = fields.Selection([
         ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
     favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
-
-
+    font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
+    primary_color = fields.Char()
+    secondary_color = fields.Char()
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
@@ -309,3 +310,24 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    def update_scss(self):
+        """ update the company scss stylesheet """
+        scss_properties = []
+        if self.primary_color:
+            scss_properties.append('$o-company-primary-color:%s;' % self.primary_color)
+        if self.secondary_color:
+            scss_properties.append('$o-company-secondary-color:%s;' % self.secondary_color)
+        if self.font:
+            scss_properties.append('$o-company-font:%s;' % self.font)
+        scss_string = '\n'.join(scss_properties)
+
+        if not len(scss_string):
+            scss_string = ""
+
+        scss_data = base64.b64encode((scss_string).encode('utf-8'))
+
+        attachment = self.env['ir.attachment'].search([('name', '=', 'res.company.scss')])
+        attachment.write({'datas': scss_data})
+
+        return ''

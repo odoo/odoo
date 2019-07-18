@@ -460,13 +460,6 @@ Best Regards,'''))
         self.env.company.account_dashboard_onboarding_state = 'closed'
 
     @api.model
-    def action_open_account_onboarding_invoice_layout(self):
-        """ Onboarding step for the invoice layout. """
-        action = self.env.ref('account.action_open_account_onboarding_invoice_layout').read()[0]
-        action['res_id'] = self.env.company.id
-        return action
-
-    @api.model
     def action_open_account_onboarding_sale_tax(self):
         """ Onboarding step for the invoice layout. """
         action = self.env.ref('account.action_open_account_onboarding_sale_tax').read()[0]

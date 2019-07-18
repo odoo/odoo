@@ -791,18 +791,7 @@ class IrActionsReport(models.Model):
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and ((not self.env.company.external_report_layout_id) or (not discard_logo_check and not self.env.company.logo)) and config:
-            template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
-            return {
-                'name': _('Choose Your Document Layout'),
-                'type': 'ir.actions.act_window',
-                'context': {'default_report_name': self.report_name, 'discard_logo_check': True},
-                'view_mode': 'form',
-                'res_id': self.env.company.id,
-                'res_model': 'res.company',
-                'views': [(template.id, 'form')],
-                'view_id': template.id,
-                'target': 'new',
-            }
+            return self.env.ref('base.action_base_document_layout_configurator').read()[0]
 
         context = self.env.context
         if docids:

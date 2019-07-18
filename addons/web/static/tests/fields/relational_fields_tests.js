@@ -2131,6 +2131,42 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldSelectionFont');
+
+    QUnit.test('FieldSelectionFont displays the correct fonts on options', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.fonts = {
+            type: "selection",
+            selection: [['Lato', "Lato"], ['Oswald', "Oswald"]],
+            default: 'Lato',
+            string: "Fonts",
+        };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="fonts" widget="font"/>' +
+                '</form>',
+        });
+        var options = form.$('.o_field_widget[name="fonts"] > option');
+
+        assert.strictEqual(form.$('.o_field_widget[name="fonts"]').css('fontFamily'), 'Lato',
+            "Widget font should be default (Lato)");
+        assert.strictEqual($(options[0]).css('fontFamily'), 'Lato',
+            "Option 0 should have the correct font (Lato)");
+        assert.strictEqual($(options[1]).css('fontFamily'), 'Oswald',
+            "Option 1 should have the correct font (Oswald)");
+
+        await testUtils.fields.editSelect(form.$('.o_field_widget[name="fonts"]'), '"Oswald"');
+        assert.strictEqual(form.$('.o_field_widget[name="fonts"]').css('fontFamily'), 'Oswald',
+            "Widget font should be updated (Oswald)");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyCheckBoxes');
 
     QUnit.test('widget many2many_checkboxes', async function (assert) {

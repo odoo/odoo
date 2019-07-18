@@ -42,6 +42,7 @@ QUnit.module('basic_fields', {
                     selection: {string: "Selection", type: "selection", searchable:true,
                         selection: [['normal', 'Normal'],['blocked', 'Blocked'],['done', 'Done']]},
                     document: {string: "Binary", type: "binary"},
+                    hex_color: {string: "hexadecimal color", type: "char"},
                 },
                 records: [{
                     id: 1,
@@ -57,6 +58,7 @@ QUnit.module('basic_fields', {
                     trululu: 4,
                     selection: 'blocked',
                     document: 'coucou==\n',
+                    hex_color: '#ff0000',
                 }, {
                     id: 2,
                     display_name: "second record",
@@ -2940,7 +2942,7 @@ QUnit.module('basic_fields', {
 
         await testUtils.form.clickEdit(form);
         await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
-        
+
         assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be opened");
 
         form.el.dispatchEvent(new Event('scroll'));
@@ -5811,6 +5813,68 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '999 / 5',
             'The value of the progress bar should be correct after the update');
+
+        form.destroy();
+    });
+
+    QUnit.module('FieldColor');
+
+    QUnit.test('Field Color: default widget state', async function (assert) {
+        assert.expect(3);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="hex_color" widget="color" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        await testUtils.dom.click(form.$('.o_field_color'));
+        await testUtils.nextTick();
+        assert.containsOnce($, '.modal');
+        assert.containsNone($('.modal'), '.o_opacity_slider',
+            "Opacity slider should not be present");
+        assert.containsNone($('.modal'), '.o_opacity_input',
+            "Opacity input should not be present");
+
+        await testUtils.dom.click($('.modal .btn:contains("Discard")'));
+
+        form.destroy();
+    });
+
+    QUnit.test('Field Color: pick and reset colors', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="hex_color" widget="color" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual($('.o_field_color').css('backgroundColor'), 'rgb(255, 0, 0)',
+            "Background of the color field should be initially red");
+
+        await testUtils.dom.click(form.$('.o_field_color'));
+        await testUtils.fields.editAndTrigger($('.modal .o_hex_input'), '#00ff00', ['change']);
+        await testUtils.dom.click($('.modal .btn:contains("Choose")'));
+
+        assert.strictEqual($('.o_field_color').css('backgroundColor'), 'rgb(0, 255, 0)',
+            "Background of the color field should be updated to green");
 
         form.destroy();
     });
