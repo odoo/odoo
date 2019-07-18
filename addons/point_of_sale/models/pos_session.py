@@ -13,6 +13,7 @@ class PosSession(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     POS_SESSION_STATE = [
+        ('new_session', 'New Session'),
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
         ('opened', 'In Progress'),               # method action_pos_session_closing_control
         ('closing_control', 'Closing Control'),  # method action_pos_session_close
@@ -41,7 +42,7 @@ class PosSession(models.Model):
             orders_to_reconcile.sudo()._reconcile_payments()
 
     company_id = fields.Many2one('res.company', related='config_id.company_id', string="Company", readonly=True)
-    
+
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
         help="The physical point of sale you will use.",
@@ -62,7 +63,7 @@ class PosSession(models.Model):
     state = fields.Selection(
         POS_SESSION_STATE, string='Status',
         required=True, readonly=True,
-        index=True, copy=False, default='opening_control')
+        index=True, copy=False, default='new_session')
 
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
@@ -253,7 +254,7 @@ class PosSession(models.Model):
     def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
         # we only open sessions that haven't already been opened
-        for session in self.filtered(lambda session: session.state == 'opening_control'):
+        for session in self.filtered(lambda session: session.state in ('new_session', 'opening_control')):
             values = {}
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()

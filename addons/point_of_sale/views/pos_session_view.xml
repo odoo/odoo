@@ -6,7 +6,10 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Session" create="0">
                 <header>
-                    <button name="action_pos_session_open" type="object" string="Open Session"
+                    <button name="open_cashbox_pos" type="object" string="Open Session"
+                        attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'new_session')]}" class="oe_highlight"
+                         context="{'balance': 'start'}"/>
+                    <button name="action_pos_session_open" type="object" string="Start Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
                     <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
                         class="oe_highlight"/>
@@ -19,8 +22,7 @@
                     <button name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
                         class="oe_highlight"/>
 
-                    <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
-
+                    <field name="state" widget="statusbar" statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
@@ -81,7 +83,7 @@
                                 </group>
                             </div>
                         </page>
-                        <page string="Payments" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                        <page string="Payments" attrs="{'invisible' : [('state', 'in', ('new_session', 'opening_control'))]}">
                             <field name="statement_ids">
                                 <tree string="Statements">
                                     <field name="name" />
