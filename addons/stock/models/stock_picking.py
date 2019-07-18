@@ -52,7 +52,9 @@ class PickingType(models.Model):
         'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
     show_reserved = fields.Boolean(
-        'Show Reserved', default=True, help="If this checkbox is ticked, Odoo will show which products are reserved (lot/serial number, source location, source package).")
+        'Pre-fill Detailed Operations', default=True,
+        help="If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
+        "operations with the corresponding products, locations and lot/serial numbers.")
 
     # Statistics for the kanban view
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
