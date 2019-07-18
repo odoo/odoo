@@ -476,11 +476,12 @@
                     </div>
                     <div role="form" class="js_surveyform mb-3" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (survey.access_token, answer.token)">
                         <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                            <div t-if="question.is_page" t-attf-class="o_page_header pt-4 #{'border-top mt-4' if question.is_page and question != survey.page_ids[0] else ''} mb-4">
+                            <div t-if="question.is_page" t-attf-class="pt-4 #{'border-top mt-4' if question.is_page and question != survey.page_ids[0] else ''} mb-4">
                                 <h1 t-field='question.title' />
                                 <span t-if="question.description" t-field='question.description' class="oe_no_empty text-muted"/>
+                                <hr/>
                             </div>
-                            <t t-if="not question.is_page and not answer or (question in answer.question_ids)" >
+                            <t t-if="not question.is_page and answer or (question in answer.question_ids)" >
                                 <t t-set="prefix" t-value="'%s_%s' % (survey.id, question.id)" />
                                 <div t-attf-class="js_question-wrapper form-group mb-3 pt-2" t-att-id="prefix">
                                         <label t-field='question.question' class="font-weight-bold"/>
@@ -519,7 +520,7 @@
                     </p>
                 </div>
                 <div t-if="answers" class="d-print-none">
-                    <div class="o_page_header">
+                    <div class="border-bottom pb-2 mb-3">
                         <span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span>
                     </div>
                     <div class="">
