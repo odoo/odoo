@@ -20,6 +20,9 @@
                     <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url + '?active_tab=review'" title="Reviews" t-if="slide.channel_id.allow_comment">
                         <i class="fa fa-pencil"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
                     </a>
+                    <a class="o_wslides_fs_share d-flex align-items-center px-3" href="#" title="Share">
+                        <i class="fa fa-share-alt"/><span class="d-none d-md-inline-block ml-1">Share</span>
+                    </a>
                 </div>
                 <div class="d-flex ml-auto">
                     <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}">

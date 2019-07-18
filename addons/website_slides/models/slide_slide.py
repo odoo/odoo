@@ -356,15 +356,24 @@ class Slide(models.Model):
             )
         return True
 
-    def _send_share_email(self, email):
+    def _generate_signed_token(self, partner_id):
+        """ Lazy generate the acces_token and return it signed by the given partner_id
+            :rtype tuple (string, int)
+            :return (signed_token, partner_id)
+        """
+        if not self.access_token:
+            self.write({'access_token': self._default_access_token()})
+        return self._sign_token(partner_id)
+
+    def _send_share_email(self, email, fullscreen):
         # TDE FIXME: template to check
         mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
             if self.env.user.has_group('base.group_portal'):
-                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url).sudo().send_mail(record.id, notif_layout='mail.mail_notification_light', email_values={'email_from': self.env['res.company'].catchall or self.env['res.company'].email}))
+                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url, fullscreen=fullscreen).sudo().send_mail(record.id, notif_layout='mail.mail_notification_light', email_values={'email_from': self.env['res.company'].catchall or self.env['res.company'].email}))
             else:
-                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url).send_mail(record.id, notif_layout='mail.mail_notification_light'))
+                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url, fullscreen=fullscreen).send_mail(record.id, notif_layout='mail.mail_notification_light'))
         return mail_ids
 
     def action_like(self):
