@@ -18,11 +18,11 @@
 ^FO100,50
 ^A0N,44,33^FD<t t-esc="move_line.product_id.display_name"/>^FS
 ^FO100,100
-<t t-if="move_line.product_id.tracking != 'none' and move_line.lot_name">
-^A0N,44,33^FDLN/SN: <t t-esc="move_line.lot_name"/>^FS
+<t t-if="move_line.product_id.tracking != 'none' and (move_line.lot_id or move_line.lot_name)">
+^A0N,44,33^FDLN/SN: <t t-esc="move_line.lot_id.name or move_line.lot_name"/>^FS
 ^FO100,150^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="move_line.lot_name"/>^FS
+^FD<t t-esc="move_line.lot_id.name or move_line.lot_name"/>^FS
 </t>
 <t t-if="move_line.product_id.tracking == 'none' and move_line.product_id.barcode">
 ^BCN,100,Y,N,N
