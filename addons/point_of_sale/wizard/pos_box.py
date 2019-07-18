@@ -23,18 +23,6 @@ class PosBox(CashBox):
             return super(PosBox, self).run()
 
 
-class PosBoxIn(PosBox):
-    _inherit = 'cash.box.in'
-
-    def _calculate_values_for_statement_line(self, record):
-        values = super(PosBoxIn, self)._calculate_values_for_statement_line(record=record)
-        active_model = self.env.context.get('active_model', False)
-        active_ids = self.env.context.get('active_ids', [])
-        if active_model == 'pos.session' and active_ids:
-            values['ref'] = self.env[active_model].browse(active_ids)[0].name
-        return values
-
-
 class PosBoxOut(PosBox):
     _inherit = 'cash.box.out'
 
