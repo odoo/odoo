@@ -57,7 +57,7 @@ odoo.define('website_form.animation', function (require) {
             // Because, using t-att- inside form make it non-editable
             var $values = $('[data-for=' + this.$target.attr('id') + ']');
             if ($values.length) {
-                var values = JSON.parse($values.data('values').replace(/'/g, '"'));
+                var values = JSON.parse($values.data('values').replace('False', '""').replace('None', '""').replace(/'/g, '"'));
                 var fields = _.pluck(this.$target.serializeArray(), 'name');
                 _.each(fields, function (field) {
                     if (_.has(values, field)) {
