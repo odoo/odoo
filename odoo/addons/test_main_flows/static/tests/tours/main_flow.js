@@ -140,11 +140,11 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  ".modal-footer .btn-primary:first",
+    trigger: 'label:contains("Vendor Taxes")',
     extra_trigger: ".o_field_widget[name=name] > .o_external_button", // Wait name_create
-    content: _t('Save & Close'),
-    position: 'bottom',
-}, {
+    // click somewhere else to exit cell focus
+},
+{
     trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
@@ -195,12 +195,10 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  ".modal-footer .btn-primary:first",
-    content: _t('Save & Close'),
-    position: 'bottom',
-}, {
+    trigger: 'label:contains("Vendor Taxes")',
+    // click somewhere else to exit cell focus
+},{
     trigger: ".modal-footer .btn-primary",
-    // Wait Save & Close and check value
     extra_trigger: ".o_field_widget[name=seller_ids] .o_data_row td:nth-child(2):contains('the_flow.vendor')",
     content: _t('Save'),
     position: 'bottom',
