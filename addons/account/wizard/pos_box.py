@@ -5,7 +5,7 @@ class CashBox(models.TransientModel):
     _register = False
 
     name = fields.Char(string='Reason', required=True)
-    # Attention, we don't set a domain, because there is a journal_type key 
+    # Attention, we don't set a domain, because there is a journal_type key
     # in the context of the action
     amount = fields.Float(string='Amount', digits=0, required=True)
 
@@ -36,26 +36,6 @@ class CashBox(models.TransientModel):
             record.write({'line_ids': [(0, False, values)]})
 
 
-class CashBoxIn(CashBox):
-    _name = 'cash.box.in'
-    _description = 'Cash Box In'
-
-    ref = fields.Char('Reference')
-
-    def _calculate_values_for_statement_line(self, record):
-        if not record.journal_id.company_id.transfer_account_id:
-            raise UserError(_("You have to define an 'Internal Transfer Account' in your cash register's journal."))
-        return {
-            'date': record.date,
-            'statement_id': record.id,
-            'journal_id': record.journal_id.id,
-            'amount': self.amount or 0.0,
-            'account_id': record.journal_id.company_id.transfer_account_id.id,
-            'ref': '%s' % (self.ref or ''),
-            'name': self.name,
-        }
-
-
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
     _description = 'Cash Box Out'
@@ -68,7 +48,7 @@ class CashBoxOut(CashBox):
             'date': record.date,
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
-            'amount': -amount if amount > 0.0 else amount,
+            'amount': amount,
             'account_id': record.journal_id.company_id.transfer_account_id.id,
             'name': self.name,
         }
