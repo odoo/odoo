@@ -495,13 +495,14 @@ class AccountAssetDepreciationLine(models.Model):
             current_currency = line.asset_id.currency_id
             amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
+            partner = self.env['res.partner']._find_accounting_partner(line.asset_id.partner_id)
             move_line_1 = {
                 'name': asset_name,
                 'account_id': category_id.account_depreciation_id.id,
                 'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
                 'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'partner_id': partner.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
@@ -512,7 +513,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
                 'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'partner_id': partner.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and line.amount or 0.0,

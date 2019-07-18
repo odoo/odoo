@@ -487,6 +487,11 @@ on the extended template to select *context nodes* to which the specified
     the node's body replaces the context node's children
 ``replace``
     the node's body is used to replace the context node itself
+``attributes``
+    the nodes's body should be any number of ``attribute`` elements,
+    each with a ``name`` attribute and some textual content, the named
+    attribute of the context node will be set to the specified value
+    (either replaced if it already existed or added if not)
 No operation
     if no ``t-operation`` is specified, the template body is interpreted as
     javascript code and executed with the context node as ``this``
