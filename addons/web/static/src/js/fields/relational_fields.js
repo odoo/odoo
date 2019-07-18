@@ -2786,6 +2786,32 @@ var FieldSelectionBadge = FieldSelection.extend({
     },
 });
 
+var FieldSelectionFont = FieldSelection.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes CSS for all options according to their value.
+     * Also removes empty labels.
+     *
+     * @private
+     * @override
+     */
+    _renderEdit: function () {
+        this._super.apply(this, arguments);
+
+        this.$('option').each(function (i, option) {
+            if (! option.label) {
+                $(option).remove();
+            }
+            $(option).css('font-family', option.value);
+        });
+        this.$el.css('font-family', this.value);
+    },
+});
+
 /**
  * The FieldReference is a combination of a select (for the model) and
  * a FieldMany2one for its value.
@@ -2953,6 +2979,7 @@ return {
     FieldSelectionBadge: FieldSelectionBadge,
     FieldSelection: FieldSelection,
     FieldStatus: FieldStatus,
+    FieldSelectionFont: FieldSelectionFont,
 
     FieldReference: FieldReference,
 };

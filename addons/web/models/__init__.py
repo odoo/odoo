@@ -4,4 +4,3 @@
 from . import ir_qweb
 from . import ir_http
 from . import models
-from . import report_layout
