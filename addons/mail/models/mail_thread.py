@@ -2067,12 +2067,17 @@ class MailThread(models.AbstractModel):
             base_template = False
 
         mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
+        try:
+            parent_id = message.parent_id.message_id if message.parent_id else False
+        except exceptions.AccessError:
+            parent_id = False
+
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id, # 2 query, check acces + read, may be useless, Falsy, when will it be used?
             'auto_delete': mail_auto_delete,
-            'references': message.parent_id.message_id if message.parent_id else False,
+            'references': parent_id,
             'subject': mail_subject,
         }
         headers = self._notify_email_headers()
