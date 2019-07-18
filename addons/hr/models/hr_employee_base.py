@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -30,6 +30,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define')
     last_activity = fields.Date(compute="_compute_last_activity")
 
+    @api.depends('user_id.im_status')
     def _compute_presence_state(self):
         """
         This method is overritten in several other modules which add additional
@@ -46,9 +47,11 @@ class HrEmployeeBase(models.AbstractModel):
                     state = 'absent'
             employee.hr_presence_state = state
 
+    @api.depends('user_id')
     def _compute_last_activity(self):
-        employees = self.filtered(lambda e: e.user_id)
-        presences = self.env['bus.presence'].search([('user_id', 'in', employees.mapped('user_id.id'))])
+        presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
+        # transform the result to a dict with this format {user.id: last_presence}
+        presences = {p['user_id']: p['last_presence'] for p in presences}
 
-        for presence in presences:
-            presence.user_id.employee_ids.last_activity = presence.last_presence.date()
+        for employee in self:
+            employee.last_activity = presences.get(employee.user_id.id, False)
