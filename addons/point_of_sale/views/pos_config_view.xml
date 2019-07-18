@@ -345,6 +345,10 @@
                                         <field name="default_cashbox_id" domain="[('is_a_template', '=', True)]" context="{'default_is_a_template': True}"/>
                                     </div>
                                 </div>
+                                <div attrs="{'invisible': [('cash_control', '=', False)]}">
+                                    <label for="amount_authorized_diff" string="Authorized Difference" class="font-weight-normal"/>
+                                    <field name="amount_authorized_diff"/>
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
