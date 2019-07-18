@@ -20,7 +20,7 @@
         </a>
         <div class="dropdown-menu" role="menu">
             <t t-foreach="widget.getApps()" t-as="app">
-            <a role="menuitem"
+            <a role="menuitem" t-attf-href="#menu_id=#{app.menuID}"
                 class="dropdown-item o_app"
                 t-att-data-menu-id="app.menuID"
                 t-att-data-menu-xmlid="app.xmlID"
