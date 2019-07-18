@@ -87,7 +87,7 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     getPreview: function () {
         var preview = {
-            body: _t("An error occured when sending an email"),
+            body: _t("An error occurred when sending an email"),
             date: this._lastMessageDate,
             documentID: this._documentID,
             documentModel: this._documentModel,
