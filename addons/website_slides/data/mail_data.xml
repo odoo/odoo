@@ -38,12 +38,12 @@
                         Hello<br/><br/>
                         ${ctx['user'].name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
-                            <a href="${object.website_url}">
+                            <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}">
                                 <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
-                            <a href="${object.website_url}"
+                            <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}"
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong>${object.name}</strong></a>
                         </div>
                     </p>

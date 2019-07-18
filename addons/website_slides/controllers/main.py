@@ -164,7 +164,8 @@ class WebsiteSlides(WebsiteProfile):
         if not request.env.user._is_public() and channel.is_member:
             slide_partners = request.env['slide.slide.partner'].sudo().search([
                 ('channel_id', '=', channel.id),
-                ('partner_id', '=', request.env.user.partner_id.id)
+                ('partner_id', '=', request.env.user.partner_id.id),
+                ('slide_id.active', '=', True)
             ])
             for slide_partner in slide_partners:
                 channel_progress[slide_partner.slide_id.id].update(slide_partner.read()[0])
@@ -666,9 +667,9 @@ class WebsiteSlides(WebsiteProfile):
         return slide.is_preview
 
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
-    def slide_send_share_email(self, slide_id, email):
+    def slide_send_share_email(self, slide_id, email, fullscreen=False):
         slide = request.env['slide.slide'].browse(int(slide_id))
-        result = slide._send_share_email(email)
+        result = slide._send_share_email(email, fullscreen)
         return result
 
     # --------------------------------------------------
