@@ -1731,6 +1731,73 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
     form.destroy();
 });
 
+QUnit.test('form activity widget: do not close activity popover on click', async function (assert) {
+    assert.expect(3);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        create_user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    const form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `<form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>`,
+        res_id: 2,
+        mockRPC(route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            do_action(ev) {
+                ev.data.options.on_close();
+            },
+        },
+    });
+
+    //Schedule next activity
+    await testUtils.dom.click(form.$('.o_mail_activity .o_mark_as_done[data-activity-id=1]'));
+
+    for (let i = 0; i < 2; i++) {
+        // click twice in feedback area
+        await testUtils.dom.click(form.$('.o_mail_activity_feedback.popover textarea'));
+        const $popover = form.$('.o_mail_activity_feedback.popover');
+        const $PopoverInDom = form.$(`#${$popover.attr('id')}`);
+        assert.isVisible(
+            $PopoverInDom,
+            "the feedback popover should still be visible on click");
+    }
+    await concurrency.delay(250); // wait for popover transition
+    const $popover = form.$('.o_mail_activity_feedback.popover');
+    if (!$popover) {
+        throw new Error("popover should be in DOM");
+    }
+    const $PopoverInDom = form.$(`#${$popover.attr('id')}`);
+    assert.isVisible(
+        $PopoverInDom,
+        "the feedback popover should still be visible on click");
+
+    form.destroy();
+});
+
 
 QUnit.test('form activity widget: edit next activity', function (assert) {
     assert.expect(3);
