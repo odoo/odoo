@@ -576,9 +576,8 @@ class StockQuant(models.Model):
             'domain': domain or [],
             'help': """
                 <p class="o_view_nocontent_empty_folder">No Stock On Hand</p>
-                <p>This analysis gives you an overview on the current stock
-                level of your products.<br/>
-                Click on create to update the quantity on hand</p>
+                <p>This analysis gives you an overview of the current stock
+                level of your products.</p>
                 """
         }
 
