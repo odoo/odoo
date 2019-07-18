@@ -37,7 +37,7 @@ class PaymentAcquirer(models.Model):
     to have required fields that depend on a specific acquirer.
 
     Each acquirer has a link to an ir.ui.view record that is a template of
-    a button used to display the payment form. See examples in ``payment_ogone``
+    a button used to display the payment form. See examples in ``payment_ingenico``
     and ``payment_paypal`` modules.
 
     Methods that should be added in an acquirer-specific implementation:
@@ -855,7 +855,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def create(self, values):
-        # call custom create method if defined (i.e. ogone_create for ogone)
+        # call custom create method if defined
         acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
         if values.get('partner_id'):
             partner = self.env['res.partner'].browse(values['partner_id'])
@@ -1019,7 +1019,7 @@ class PaymentToken(models.Model):
 
     @api.model
     def create(self, values):
-        # call custom create method if defined (i.e. ogone_create for ogone)
+        # call custom create method if defined
         if values.get('acquirer_id'):
             acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
 
