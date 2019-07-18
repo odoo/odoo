@@ -2019,8 +2019,8 @@ class MailThread(models.AbstractModel):
             message_values = False
             if inbox_pids:
                 message_values = message.message_format()[0]
-                for partner in self.env['res.partner'].browse(inbox_pids):
-                    notifications.append([(self._cr.dbname, 'ir.needaction', partner), dict(message_values)])
+                for partner_id in inbox_pids:
+                    notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_values)])
             if channel_ids:
                 notifications += self.env['mail.channel'].sudo().browse(channel_ids)._channel_message_notifications(message, message_values)
         if partner_email_rdata:
