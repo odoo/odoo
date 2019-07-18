@@ -336,6 +336,8 @@ class MailMail(models.Model):
                         'failure_type': 'UNKNOWN',
                         'failure_reason': notif_msg,
                     })
+                    # test_mail_bounce_during_send
+                    notifs.flush()
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
