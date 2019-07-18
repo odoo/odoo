@@ -233,7 +233,6 @@ class MailActivity(models.Model):
             valid = self.env[self._name]
         return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules')
 
-    @api.multi
     def _filter_access_rules_python(self, operation):
         # write / unlink: valid for creator / assigned
         if operation in ('write', 'unlink'):
@@ -244,7 +243,6 @@ class MailActivity(models.Model):
             valid = self.env[self._name]
         return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules_python')
 
-    @api.multi
     def _filter_access_rules_remaining(self, valid, operation, filter_access_rules_method):
         """ Return the subset of ``self`` for which ``operation`` is allowed.
         A custom implementation is done on activities as this document has some

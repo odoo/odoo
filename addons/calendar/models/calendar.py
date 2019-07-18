@@ -1610,7 +1610,6 @@ class Meeting(models.Model):
         records = self.browse(set(get_real_ids(self.ids)))
         return super(Meeting, records).export_data(fields_to_export, raw_data)
 
-    @api.multi
     def _read(self, fields):
         select = [(x, calendar_id2real_id(x)) for x in self.ids]
         result = super(Meeting, self.browse(real_id for calendar_id, real_id in select))._read(fields)

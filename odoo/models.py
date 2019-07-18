@@ -3274,7 +3274,6 @@ Fields:
         return self._write_no_override(vals)
 
     # DLE P146
-    @api.multi
     def _write_no_override(self, vals):
         if not self:
             return True
