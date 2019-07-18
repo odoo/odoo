@@ -89,7 +89,7 @@ class AcquirerBuckaroo(models.Model):
             'Brq_amount': values['amount'],
             'Brq_currency': values['currency'] and values['currency'].name or '',
             'Brq_invoicenumber': values['reference'],
-            'brq_test': False if self.environment == 'prod' else True,
+            'brq_test': True if self.state == 'test' else False,
             'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
             'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
             'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
@@ -101,7 +101,9 @@ class AcquirerBuckaroo(models.Model):
         return buckaroo_tx_values
 
     def buckaroo_get_form_action_url(self):
-        return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_buckaroo_urls(environment)['buckaroo_form_url']
 
 
 class TxBuckaroo(models.Model):

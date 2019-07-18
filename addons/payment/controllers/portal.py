@@ -111,7 +111,7 @@ class WebsitePayment(http.Controller):
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
     def payment_method(self, **kwargs):
         acquirers = list(request.env['payment.acquirer'].search([
-            ('website_published', '=', True), ('registration_view_template_id', '!=', False),
+            ('state', '=', 'enabled'), ('registration_view_template_id', '!=', False),
             ('payment_flow', '=', 's2s'), ('company_id', '=', request.env.company.id)
         ]))
         partner = request.env.user.partner_id
@@ -178,7 +178,7 @@ class WebsitePayment(http.Controller):
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
         if not acquirers:
-            acquirers = env['payment.acquirer'].search([('website_published', '=', True), ('company_id', '=', user.company_id.id)])
+            acquirers = env['payment.acquirer'].search([('state', '=', 'enabled'), ('company_id', '=', user.company_id.id)])
 
         # Check partner
         partner_id = user.partner_id.id if not user._is_public() else False
