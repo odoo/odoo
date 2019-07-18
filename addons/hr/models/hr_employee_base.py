@@ -11,6 +11,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     name = fields.Char()
     active = fields.Boolean("Active")
+    color = fields.Integer('Color Index', default=0)
     department_id = fields.Many2one('hr.department', 'Department')
     job_id = fields.Many2one('hr.job', 'Job Position')
     job_title = fields.Char("Job Title")
