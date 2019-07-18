@@ -4,7 +4,6 @@
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
-from odoo.osv import expression
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -113,12 +112,6 @@ class Applicant(models.Model):
             company_id = self.env.company
         return company_id
 
-    def _get_stage_id_domain(self):
-        domain = [('job_ids', '=', False)]
-        if self.job_id:
-            domain = expression.OR([domain, [('job_ids', 'in', self.job_id)]])
-        return domain
-
     name = fields.Char("Subject / Application Name", required=True)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
@@ -127,7 +120,7 @@ class Applicant(models.Model):
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
-                               domain=_get_stage_id_domain,
+                               domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids',
                                default=_default_stage_id)
