@@ -13,6 +13,7 @@ class SmsSms(models.Model):
     _name = 'sms.sms'
     _description = 'Outgoing SMS'
     _rec_name = 'number'
+    _order = 'id DESC'
 
     number = fields.Char('Number', required=True)
     body = fields.Text()
@@ -41,7 +42,8 @@ class SmsSms(models.Model):
         """
         for batch_ids in self._split_batch():
             self.browse(batch_ids)._send(delete_all=delete_all, raise_exception=raise_exception)
-            if auto_commit is True:
+            # auto-commit if asked except in testing mode
+            if auto_commit is True and not getattr(threading.currentThread(), 'testing', False):
                 self._cr.commit()
 
     @api.model

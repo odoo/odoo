@@ -106,7 +106,7 @@ class MailThread(models.AbstractModel):
                 result[record.id] = {'partner': self.env['res.partner'], 'sanitized': False, 'number': False}
         return result
 
-    def _message_sms_schedule_mass(self, body='', template=False, active_domain=None):
+    def _message_sms_schedule_mass(self, body='', template=False, active_domain=None, **composer_values):
         """ Shortcut method to schedule a mass sms sending on a recordset.
 
         :param template: an optional sms.template record;
@@ -125,7 +125,14 @@ class MailThread(models.AbstractModel):
         else:
             composer_context['default_res_ids'] = self.ids
 
-        composer = self.env['sms.composer'].with_context(**composer_context).create({})
+        create_vals = {
+            'mass_force_send': False,
+            'mass_keep_log': False,
+        }
+        if composer_values:
+            create_vals.update(composer_values)
+
+        composer = self.env['sms.composer'].with_context(**composer_context).create(create_vals)
         return composer._action_send_sms()
 
     def _message_sms_with_template(self, template=False, template_xmlid=False, template_fallback='', partner_ids=False, **kwargs):
@@ -175,7 +182,7 @@ class MailThread(models.AbstractModel):
                 sms_numbers = [info_number] + (sms_numbers or [])
 
         if subtype_id is False:
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
         return self.message_post(
             body=body, partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
