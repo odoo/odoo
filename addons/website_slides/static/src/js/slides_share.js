@@ -41,7 +41,8 @@ var ShareMail = publicWidget.Widget.extend({
 publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
     selector: '#wrapwrap',
     events: {
-        'click a.o_slides_social_share': '_onSlidesSocialShare',
+        'click a.o_wslides_js_social_share': '_onSlidesSocialShare',
+        'click .o_clipboard_button': '_onShareLinkCopy',
     },
 
     /**
@@ -72,6 +73,30 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
                 $(window).off('focus');
             }
         });
+    },
+
+    _onShareLinkCopy: function (ev) {
+        ev.preventDefault();
+        var $clipboardBtn = this.$('.o_clipboard_button');
+        $clipboardBtn.tooltip({title: "Copied !", trigger: "manual", placement: "bottom"});
+        var self = this;
+        var clipboard = new ClipboardJS('.o_clipboard_button', {
+            target: function () {
+                return self.$('.o_wslides_js_share_link')[0];
+            },
+            container: this.el
+        });
+        clipboard.on('success', function () {
+            clipboard.destroy();
+            $clipboardBtn.tooltip('show');
+            _.delay(function () {
+                $clipboardBtn.tooltip("hide");
+            }, 800);
+        });
+        clipboard.on('error', function (e) {
+            console.log(e);
+            clipboard.destroy();
+        })
     },
 });
 });
