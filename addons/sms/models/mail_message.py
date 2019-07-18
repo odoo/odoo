@@ -25,7 +25,7 @@ class MailMessage(models.Model):
             ('mail_message_id', 'in', self.ids),
             ('notification_status', '=', 'exception')]).mapped('mail_message_id')
         for message in self:
-            message.has_error = message in sms_error_from_notification
+            message.has_sms_error = message in sms_error_from_notification
 
     def _search_has_sms_error(self, operator, operand):
         if operator == '=' and operand:
