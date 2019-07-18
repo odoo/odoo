@@ -622,6 +622,7 @@ if tax > result:result=tax</field>
         <field name="account_id" ref="p10051"/>
         <field name="refund_account_id" ref="p11232"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax')])]"/>
         <field name="tax_group_id" ref="sgst_group"/>
     </record>
 
