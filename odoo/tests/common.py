@@ -1064,6 +1064,11 @@ def warmup(func, *args, **kwargs):
     self = args[0]
     # run once to warm up the caches
     self.warm = False
+    # DLE P154: `test_composer_mass_active_domain`
+    # invalidate the cache before the warmup, otherwise it could benefit of the previous test(s) cache and do less
+    # queries in order to fill the orm cache (e.g. access rights rules)
+    self.env['res.users'].flush()
+    self.env.cache.invalidate()
     self.cr.execute('SAVEPOINT test_warmup')
     func(*args, **kwargs)
     self.env['res.users'].flush()
