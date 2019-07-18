@@ -64,7 +64,7 @@ class PaymentWizard(models.TransientModel):
 
         if 'payment_paypal' in installed_modules:
             acquirer = self.env.ref('payment.payment_acquirer_paypal')
-            self._payment_acquirer_onboarding_cache['paypal_email_account'] = acquirer['paypal_email_account']
+            self._payment_acquirer_onboarding_cache['paypal_email_account'] = acquirer['paypal_email_account'] or self.env.user.email or ''
             self._payment_acquirer_onboarding_cache['paypal_seller_account'] = acquirer['paypal_seller_account']
             self._payment_acquirer_onboarding_cache['paypal_pdt_token'] = acquirer['paypal_pdt_token']
 
