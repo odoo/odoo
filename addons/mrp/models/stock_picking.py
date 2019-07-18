@@ -21,6 +21,9 @@ class StockPickingType(models.Model):
     )
 
     def _get_mo_count(self):
+        self.count_mo_waiting = 0
+        self.count_mo_todo = 0
+        self.count_mo_late = 0
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
         if not mrp_picking_types:
             return
