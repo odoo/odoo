@@ -155,6 +155,9 @@ class MockSMS(common.BaseCase):
                     self.assertSMSFailed(partner, number, recipient_info['failure_type'], content)
                 elif state == 'canceled':
                     self.assertSMSCanceled(partner, number, recipient_info.get('failure_type', False), content)
+                else:
+                    raise NotImplementedError('Not implemented')
 
-        for message in messages:
-            self.assertEqual(content, tools.html2plaintext(message.body).rstrip('\n'))
+        if messages is not None:
+            for message in messages:
+                self.assertEqual(content, tools.html2plaintext(message.body).rstrip('\n'))
