@@ -20,7 +20,7 @@ class AcquirerPaypal(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('paypal', 'Paypal')])
-    paypal_email_account = fields.Char('Email', required_if_provider='paypal', groups='base.group_user', default=lambda self: self.env.user.email or '')
+    paypal_email_account = fields.Char('Email', required_if_provider='paypal', groups='base.group_user')
     paypal_seller_account = fields.Char(
         'Merchant Account ID', groups='base.group_user',
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
