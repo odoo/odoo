@@ -3036,6 +3036,7 @@ var FieldDomain = AbstractField.extend({
         new view_dialogs.SelectCreateDialog(this, {
             title: _t("Selected records"),
             res_model: this._domainModel,
+            context: this.record.getContext({fieldName: this.name, viewType: this.viewType}),
             domain: this.value || "[]",
             no_create: true,
             readonly: true,

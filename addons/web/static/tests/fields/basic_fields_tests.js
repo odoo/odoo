@@ -5743,6 +5743,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('field context is propagated when opening selection', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].foo = "[]";
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="foo" widget="domain" options="{'model': 'partner_type'}" context="{'tree_view_ref': 3}"/>
+                </form>
+            `,
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,3,list': '<tree><field name="id"/></tree>',
+                'partner_type,false,search': '<search><field name="name" string="Name"/></search>',
+            },
+            res_id: 1,
+        });
+
+        await testUtils.dom.click(form.$(".o_domain_show_selection_button"));
+
+        assert.strictEqual($('.modal .o_data_row').text(), '1214',
+            "should have picked the correct list view");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldProgressBar');
 
     QUnit.test('Field ProgressBar: max_value should update', async function (assert) {
