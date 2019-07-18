@@ -113,7 +113,8 @@ class test(models.Model):
         })
 
         self.recompute()
-        crash_here_to_rollback          # noqa
+        # Crash here to rollback
+        1/0          # noqa
 
 
 class test_line(models.Model):
