@@ -184,7 +184,9 @@ class PaymentAcquirerOgone(models.Model):
         return ogone_tx_values
 
     def ogone_get_form_action_url(self):
-        return self._get_ogone_urls(self.environment)['ogone_standard_order_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_ogone_urls(environment)['ogone_standard_order_url']
 
     def ogone_s2s_form_validate(self, data):
         error = dict()
@@ -380,7 +382,7 @@ class PaymentTxOgone(models.Model):
 
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -414,7 +416,7 @@ class PaymentTxOgone(models.Model):
         }
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % (self.acquirer_id.environment)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -506,7 +508,7 @@ class PaymentTxOgone(models.Model):
             'PSWD': account.ogone_password,
         }
 
-        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (self.acquirer_id.environment)
+        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -553,7 +555,7 @@ class PaymentToken(models.Model):
                 'PROCESS_MODE': 'CHECKANDPROCESS',
             }
 
-            url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (acquirer.environment,)
+            url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
             _logger.info("ogone_create: Creating new alias %s via url %s", alias, url)
             result = requests.post(url, data=data).content
 

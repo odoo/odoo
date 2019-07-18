@@ -59,12 +59,13 @@ class PaymentAcquirer(models.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
-    _order = 'website_published desc, sequence, name'
+    _order = 'state desc, sequence, name'
 
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
 
     name = fields.Char('Name', required=True, translate=True)
+    color = fields.Integer('Color', compute='_compute_color', store=True)
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
@@ -91,14 +92,14 @@ class PaymentAcquirer(models.Model):
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
-    environment = fields.Selection([
-        ('test', 'Test'),
-        ('prod', 'Production')], string='Environment',
-        default='test', required=True)
-    website_published = fields.Boolean(
-        'Visible in Portal / Website', copy=False,
-        help="Make this payment acquirer available (Customer invoices, etc.)")
-    # Formerly associated to `authorize` option from auto_confirm
+    state = fields.Selection([
+        ('disabled', 'Disabled'),
+        ('enabled', 'Enabled'),
+        ('test', 'Test Mode')], required=True, default='disabled',
+        help="""In test mode, a fake payment is processed through a test
+             payment interface. This mode is advised when setting up the
+             acquirer. Watch out, test and production modes require
+             different credentials.""")
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
     journal_id = fields.Many2one(
@@ -154,7 +155,7 @@ class PaymentAcquirer(models.Model):
 
     # TDE FIXME: remove that brol
     module_id = fields.Many2one('ir.module.module', string='Corresponding Module')
-    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', readonly=False)
+    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', store=True)
 
     image_128 = fields.Image("Image", max_width=128, max_height=128)
 
@@ -174,12 +175,18 @@ class PaymentAcquirer(models.Model):
         elif electronic in self.inbound_payment_method_ids:
             self.inbound_payment_method_ids = [(2, electronic.id)]
 
+    @api.onchange('state')
+    def onchange_state(self):
+        """Disable dashboard display for test acquirer journal."""
+        self.journal_id.update({'show_on_dashboard': self.state == 'enabled'})
+
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
         if (operator, value) in [('=', True), ('!=', False)]:
             return [('provider', 'in', tokenized)]
         return [('provider', 'not in', tokenized)]
 
+    @api.depends('provider')
     def _compute_feature_support(self):
         feature_support = self._get_feature_support()
         for acquirer in self:
@@ -187,15 +194,28 @@ class PaymentAcquirer(models.Model):
             acquirer.authorize_implemented = acquirer.provider in feature_support['authorize']
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
+    @api.depends('state', 'module_state')
+    def _compute_color(self):
+        for acquirer in self:
+            if acquirer.module_id and not acquirer.module_state == 'installed':
+                acquirer.color = 4  # blue
+            elif acquirer.state == 'disabled':
+                acquirer.color = 3  # yellow
+            elif acquirer.state == 'test':
+                acquirer.color = 2  # orange
+            elif acquirer.state == 'enabled':
+                acquirer.color = 7  # green
+
     def _check_required_if_provider(self):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
         field_names = []
+        enabled_acquirers = self.filtered(lambda acq: acq.state in ['enabled', 'test'])
         for k, f in self._fields.items():
             provider = getattr(f, 'required_if_provider', None)
             if provider and any(
                 acquirer.provider == provider and not acquirer[k]
-                for acquirer in self
+                for acquirer in enabled_acquirers
             ):
                 ir_field = self.env['ir.model.fields']._get(self._name, k)
                 field_names.append(ir_field.field_description)
@@ -234,7 +254,7 @@ class PaymentAcquirer(models.Model):
             'default_debit_account_id': account.id,
             'default_credit_account_id': account.id,
             # Show the journal on dashboard if the acquirer is published on the website.
-            'show_on_dashboard': self.website_published,
+            'show_on_dashboard': self.state == 'enabled',
             # Don't show payment methods in the backend.
             'inbound_payment_method_ids': inbound_payment_method_ids,
             'outbound_payment_method_ids': [],
@@ -277,16 +297,6 @@ class PaymentAcquirer(models.Model):
         self._check_required_if_provider()
         return result
 
-    def toggle_website_published(self):
-        ''' When clicking on the website publish toggle button, the website_published is reversed and
-        the acquirer journal is set or not in favorite on the dashboard.
-        '''
-        self.ensure_one()
-        self.website_published = not self.website_published
-        if self.journal_id:
-            self.journal_id.show_on_dashboard = self.website_published
-        return True
-
     def get_acquirer_extra_fees(self, amount, currency_id, country_id):
         extra_fees = {
             'currency_id': currency_id
@@ -318,7 +328,7 @@ class PaymentAcquirer(models.Model):
             company = self.env.company
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
+        active_acquirers = self.sudo().search([('state', '=', 'enabled'), ('company_id', '=', company.id)])
         acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                                (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
@@ -480,11 +490,6 @@ class PaymentAcquirer(models.Model):
             method = getattr(self, cust_method_name)
             return method(data)
         return True
-
-    def toggle_environment_value(self):
-        prod = self.filtered(lambda acquirer: acquirer.environment == 'prod')
-        prod.write({'environment': 'test'})
-        (self-prod).write({'environment': 'prod'})
 
     def button_immediate_install(self):
         # TDE FIXME: remove that brol

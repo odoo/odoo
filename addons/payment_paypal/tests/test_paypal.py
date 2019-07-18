@@ -18,6 +18,10 @@ class PaypalCommon(PaymentAcquirerCommon):
         super(PaypalCommon, self).setUp()
 
         self.paypal = self.env.ref('payment.payment_acquirer_paypal')
+        self.paypal.write({
+            'paypal_email_account': 'dummy',
+            'state': 'test',
+        })
 
         # some CC
         self.amex = (('378282246310005', '123'), ('371449635398431', '123'))
@@ -39,7 +43,7 @@ class PaypalForm(PaypalCommon):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         # be sure not to do stupid things
         self.paypal.write({'paypal_email_account': 'tde+paypal-facilitator@odoo.com', 'fees_active': False})
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -88,7 +92,7 @@ class PaypalForm(PaypalCommon):
 
     def test_11_paypal_form_with_fees(self):
         # be sure not to do stupid things
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.state, 'test', 'test without test environment')
 
         # update acquirer: compute fees
         self.paypal.write({
@@ -120,7 +124,7 @@ class PaypalForm(PaypalCommon):
     @mute_logger('odoo.addons.payment_paypal.models.payment', 'ValidationError')
     def test_20_paypal_form_management(self):
         # be sure not to do stupid things
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.state, 'test', 'test without test environment')
 
         # typical data posted by paypal after client has successfully paid
         paypal_post_data = {

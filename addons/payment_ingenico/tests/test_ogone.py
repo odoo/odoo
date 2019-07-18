@@ -17,11 +17,19 @@ class OgonePayment(PaymentAcquirerCommon):
         super(OgonePayment, self).setUp()
 
         self.ogone = self.env.ref('payment.payment_acquirer_ogone')
+        self.ogone.write({
+            'ogone_pspid': 'dummy',
+            'ogone_userid': 'dummy',
+            'ogone_password': 'dummy',
+            'ogone_shakey_in': 'dummy',
+            'ogone_shakey_out': 'dummy',
+            'state': 'test',
+        })
 
     def test_10_ogone_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         # be sure not to do stupid thing
-        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering + shasign
@@ -92,13 +100,13 @@ class OgonePayment(PaymentAcquirerCommon):
             self.assertEqual(
                 form_input.get('value'),
                 form_values[form_input.get('name')],
-                'ogone: wrong value for form input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
+                'ingenico: wrong value for form input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
     @mute_logger('odoo.addons.payment_ingenico.models.payment', 'ValidationError')
     def test_20_ogone_form_management(self):
         # be sure not to do stupid thing
-        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.state, 'test', 'test without test environment')
 
         # typical data posted by ogone after client has successfully paid
         ogone_post_data = {
@@ -161,7 +169,7 @@ class OgonePayment(PaymentAcquirerCommon):
     def test_30_ogone_s2s(self):
         test_ref = 'test_ref_%.15f' % time.time()
         # be sure not to do stupid thing
-        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.state, 'test', 'test without test environment')
 
         # create a new draft tx
         tx = self.env['payment.transaction'].create({
