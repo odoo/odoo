@@ -70,7 +70,6 @@ var ThreadWidget = Widget.extend({
             displayReplyIcons: false,
             loadMoreOnScroll: false,
         });
-
         // options when the thread is disabled
         this._disabledOptions = {
             displayOrder: this._enabledOptions.displayOrder,
@@ -148,7 +147,6 @@ var ThreadWidget = Widget.extend({
                 displayMarkAsRead: false,
             });
         }
-
         options = _.extend({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
         });

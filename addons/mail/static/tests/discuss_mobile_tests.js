@@ -4,7 +4,7 @@ odoo.define('mail.discuss_mobile_tests', function (require) {
 var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
-
+var concurrency = require('web.concurrency');
 var createDiscuss = mailTestUtils.createDiscuss;
 
 QUnit.module('mail', {}, function () {
@@ -103,5 +103,127 @@ QUnit.test('on_{attach/detach}_callback', function (assert) {
     });
 });
 
+QUnit.test('mobile discuss swipe [Mark as Read and Toggle Star]', async function (assert) {
+    var done = assert.async();
+    assert.expect(7);
+
+    this.data['mail.message'].records = [{
+        author_id: ["1", "John Doe 1"],
+        body: '<p>Test Message</p>',
+        date: "2019-03-20 09:35:40",
+        id: 1,
+        is_discussion: true,
+        is_starred: false,
+        res_id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }];
+    var objectDiscuss;
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'set_message_done') {
+                assert.step('mark_as_read');
+                console.log("STEP mark_as_read DONE");
+            }
+            if (args.method === 'toggle_message_starred') {
+                assert.step('toggle_star_status');
+                var messageData = _.findWhere(
+                    this.data['mail.message'].records,
+                    { id: args.args[0][0] }
+                );
+                messageData.is_starred = !messageData.is_starred;
+                var data = {
+                    info: false,
+                    message_ids: [messageData.id],
+                    starred: messageData.is_starred,
+                    type: 'toggle_star',
+                };
+                var notification = [[false, 'res.partner'], data];
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                return Promise.resolve();
+            }
+            return this._super.apply(this, arguments);
+        },
+    }).then(function (discuss) {
+        objectDiscuss = discuss;
+        var $message = discuss.$('.o_thread_message_mobile.list_swipe_actions').eq(0);
+        assert.ok($message.find('.swipe-action.left').length, 'Thread message should have left action for mark as read');
+        assert.ok($message.find('.swipe-action.right').length, 'Thread message should have right action for toggle star');
+
+        var topOffset = $message.offset().top - 30;
+
+        new Promise(function (resolve) {
+            var rightOffset = $message.width() - 50;
+            $message = discuss.$('.o_thread_message_mobile.list_swipe_actions').eq(0);
+            // Left side swipe for Toggle Star
+            var touchStart = $.Event( "touchstart", {
+                changedTouches: [{
+                    clientX: rightOffset,
+                    clientY: topOffset
+                }]
+            });
+            testUtils.dom.triggerEvents($message, [touchStart, 'click']);
+
+            var touchMove = $.Event( "touchmove", {
+                changedTouches: [{
+                    clientX: rightOffset - 100,
+                    clientY: topOffset
+                }]
+            });
+            testUtils.dom.triggerEvents($message, [touchMove, 'click']);
+
+            var touchEnd = $.Event( "touchend", {
+                changedTouches: [{
+                    clientX: 400,
+                    clientY: topOffset
+                }]
+            });
+            testUtils.dom.triggerEvents($message, [touchEnd, 'click']);
+            concurrency.delay(750).then(function () {
+                assert.verifySteps(['toggle_star_status'], "thread message should starred");
+                assert.ok(discuss.$('.o_thread_message .o_thread_message_star.fa-star').length, "messages should be starred");
+                resolve();
+            });
+        }).then(function () {
+            // Right side swipe for mark as read
+            $message = discuss.$('.o_thread_message_mobile.list_swipe_actions').eq(0);
+            var touchStart = $.Event( "touchstart", {
+                changedTouches: [{
+                    clientX: 20,
+                    clientY: topOffset
+                }]
+            });
+            testUtils.dom.triggerEvents($message, [touchStart, 'click']);
+
+            var touchMove = $.Event( "touchmove", {
+                changedTouches: [{
+                    clientX: 200,
+                    clientY: topOffset
+                }]
+            });
+            testUtils.dom.triggerEvents($message, [touchMove, 'click']);
+
+            var touchEnd = $.Event( "touchend", {
+                changedTouches: [{
+                    clientX: 400,
+                    clientY: topOffset
+                }]
+            });
+            testUtils.dom.triggerEvents($message, [touchEnd, 'click']);
+
+            concurrency.delay(750).then(function () {
+                assert.verifySteps(['mark_as_read'], "thread should marked as read");
+                discuss.destroy();
+                done();
+            });
+        });
+    });
+});
 });
 });
