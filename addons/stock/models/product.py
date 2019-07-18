@@ -364,6 +364,15 @@ class Product(models.Model):
         action['domain'] = [('product_id', '=', self.id)]
         return action
 
+    # Be aware that the exact same function exists in product.template
+    def action_open_quants(self):
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
+        action = self.env.ref('stock.product_open_quants').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = {'search_default_internal_loc': 1}
+        return action
+
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
@@ -576,6 +585,7 @@ class ProductTemplate(models.Model):
                     'context': {'default_product_id': self.env.context.get('default_product_id')}
                 }
 
+    # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
         self.env['stock.quant']._merge_quants()
         self.env['stock.quant']._unlink_zero_quants()
