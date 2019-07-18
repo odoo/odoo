@@ -3,9 +3,12 @@
 
 import base64
 
-from odoo import http,tools, _
+from odoo import http, SUPERUSER_ID, tools, _
+from odoo import registry as registry_get
+from odoo.api import Environment
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.bus.controllers.main import BusController
 
 
 class LivechatController(http.Controller):
@@ -148,3 +151,27 @@ class LivechatController(http.Controller):
         Channel = request.env['mail.channel']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
         channel.notify_typing(is_typing=is_typing, is_website_user=True)
+
+
+class ImLiveChatController(BusController):
+    # --------------------------
+    # Extends BUS Controller Poll
+    # --------------------------
+    def _poll(self, dbname, channels, last, options):
+        res = super(ImLiveChatController, self)._poll(dbname, channels, last, options)
+        registry = registry_get(dbname)
+        with registry.cursor() as cr:
+            env = Environment(cr, SUPERUSER_ID, {})
+            notifications = []
+            for mail_channel in env['mail.channel'].sudo().search([('channel_type', '=', 'livechat'), ('uuid', 'in', list(channels))]):
+                im_status = mail_channel.livechat_operator_id.im_status
+                if im_status != options.get('im_status'):
+                    notifications.append({
+                        'channel': mail_channel.uuid,
+                        'message': {
+                            '_type': 'operator_status',
+                            'im_status': im_status
+                        }
+                    })
+            res.extend(notifications)
+        return res

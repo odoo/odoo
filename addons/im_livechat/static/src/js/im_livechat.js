@@ -149,6 +149,7 @@ var LivechatButton = Widget.extend({
      * @private
      */
     _closeChat: function () {
+        this.call('bus_service', 'deleteChannel', this._livechat.getUUID());
         this._chatWindow.destroy();
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
@@ -177,6 +178,13 @@ var LivechatButton = Widget.extend({
                 } else {
                     this._livechat.unregisterTyping({ partnerID: partnerID });
                 }
+            } else if (notification[1]._type === 'operator_status') {
+                if (notification[1].im_status === 'offline') {
+                    this._chatWindow.$el.find('.o_thread_window_header').after(QWeb.render('im_livechat.ThreadWindow.NoOperatorMessage'));
+                } else {
+                    this._chatWindow.$el.find('.o_no_operator_available').remove();
+                }
+                this.call('bus_service', 'updateOption', 'im_status', notification[1].im_status);
             } else { // normal message
                 this._addMessage(notification[1]);
                 this._renderMessages();
