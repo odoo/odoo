@@ -2,6 +2,27 @@
 <odoo>
 
         <!-- Product Suppliers-->
+        <record id="product_supplierinfo_tree_view2" model="ir.ui.view">
+            <field name="name">product.supplierinfo.tree.view2</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+            </field>
+        </record>
 
         <record id="view_product_supplier_inherit" model="ir.ui.view">
             <field name="name">product.template.supplier.form.inherit</field>
@@ -12,8 +33,8 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <group name="purchase" position="before">
-                    <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)]}"/>
-                    <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}"/>
+                    <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)]}"/>
+                    <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id), 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}"/>
                 </group>
                 <group name="bill" position="attributes">
                     <attribute name="groups">purchase.group_purchase_manager</attribute>
