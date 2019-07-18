@@ -281,7 +281,7 @@ class IrModel(models.Model):
         if model._module == self._context.get('module'):
             # self._module is the name of the module that last extended self
             xmlid = '%s.model_%s' % (model._module, model._name.replace('.', '_'))
-            self.env['ir.model.data']._update_xmlids([{'xml_id': xmlid, 'record': record, 'noupdate': True}])
+            self.env['ir.model.data']._update_xmlids([{'xml_id': xmlid, 'record': record}])
         return record
 
     @api.model
