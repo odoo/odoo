@@ -13,10 +13,40 @@
                 </xpath>
                 <group name="purchase" position="before">
                     <group string="Vendor Prices" name="vendors" attrs="{'invisible': [('product_variant_count','&gt;',1)]}">
-                        <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True}" nolabel="1"/>
+                        <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True}" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" optional="show"/>
+                                <field name="price" optional="show"/>
+                                <field name="min_qty" optional="hide"/>
+                                <field name="delay" optional="hide"/>
+                                <field name="product_name" optional="hide"/>
+                                <field name="product_code" optional="hide"/>
+                                <field name="date_start" string="Validity" optional="hide"/>
+                                <field name="date_end" optional="hide"/>
+                                <field name="product_tmpl_id" invisible="1"/>
+                                <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}" optional="hide"/>
+                                <field name="company_id" options="{'no_create': True}" optional="hide"/>
+                            </tree>
+                        </field>
                     </group>
                     <group string="Vendor Prices" name="variant_vendors" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}">
-                        <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
+                        <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" optional="show"/>
+                                <field name="price" optional="show"/>
+                                <field name="min_qty" optional="hide"/>
+                                <field name="delay" optional="hide"/>
+                                <field name="product_name" optional="hide"/>
+                                <field name="product_code" optional="hide"/>
+                                <field name="date_start" string="Validity" optional="hide"/>
+                                <field name="date_end" optional="hide"/>
+                                <field name="product_tmpl_id" invisible="1"/>
+                                <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}" optional="hide"/>
+                                <field name="company_id" options="{'no_create': True}" optional="hide"/>
+                            </tree>
+                        </field>
                     </group>
                 </group>
                 <group name="bill" position="attributes">

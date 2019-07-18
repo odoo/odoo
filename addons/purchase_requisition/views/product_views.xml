@@ -34,6 +34,12 @@
                     <field name="purchase_requisition" widget="radio"/>
                 </group>
             </group>
+            <xpath expr="//field[@name='seller_ids']/tree" position="inside">
+                <field name="purchase_requisition_id" attrs="{'invisible': [('purchase_requisition_id', '=', False)]}" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='variant_seller_ids']/tree" position="inside">
+                <field name="purchase_requisition_id" attrs="{'invisible': [('purchase_requisition_id', '=', False)]}" optional="hide"/>
+            </xpath>
         </field>
     </record>
 
