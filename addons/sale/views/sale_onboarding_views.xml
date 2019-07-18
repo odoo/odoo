@@ -8,8 +8,8 @@
             <t t-set="done_icon" t-value="'fa-star'" />
             <t t-set="done_text">Looks great!</t>
             <t t-set="btn_text">Customize</t>
-            <t t-set="method" t-value="'action_open_sale_onboarding_quotation_layout'" />
-            <t t-set="model" t-value="'res.company'" />
+            <t t-set="model" t-value="'base.document.layout'" />
+            <t t-set="method" t-value="'action_open_base_document_layout'" />
             <t t-set="state" t-value="state.get('account_onboarding_invoice_layout_state')" />
         </t>
     </template>
@@ -66,30 +66,6 @@
         <field name="res_model">sale.payment.acquirer.onboarding.wizard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="sale_onboarding_order_confirmation_form" />
-        <field name="target">new</field>
-    </record>
-    <!-- QUOTATION LAYOUT -->
-    <record id="sale_onboarding_quotation_layout_form" model="ir.ui.view">
-        <field name="name">sale.onboarding.quotation.layout.form</field>
-        <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_document_template_form" />
-        <field name="mode">primary</field>
-        <field name="priority">1000</field>
-        <field name="arch" type="xml">
-            <xpath expr="//button[@special='save']" position="after">
-                <button string="Preview" type="action" class="btn btn-secondary" name="web.action_report_externalpreview"/>
-            </xpath>
-            <xpath expr="//button[@special='save']" position="replace">
-                <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_quotation_layout" />
-            </xpath>
-        </field>
-    </record>
-    <record id="action_open_sale_onboarding_quotation_layout" model="ir.actions.act_window">
-        <field name="name">Configure your document layout</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.company</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="sale_onboarding_quotation_layout_form" />
         <field name="target">new</field>
     </record>
     <!-- SAMPLE QUOTATION -->
