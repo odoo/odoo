@@ -440,20 +440,6 @@ class ProductTemplate(models.Model):
              "is selected, the system will create a draft call for tender.")
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
-
-    requistion_line_ids = fields.One2many('purchase.requisition.line', 'move_dest_id')
-
-
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    @api.model
-    def _get_exceptions_domain(self):
-        return super(ProcurementGroup, self)._get_exceptions_domain() + [('requistion_line_ids', '=', False)]
-
-
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
