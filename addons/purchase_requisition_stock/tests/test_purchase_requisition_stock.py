@@ -100,6 +100,11 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'currency_id': self.env.ref("base.USD").id,
         })
         requisition_blanket.action_in_progress()
+        # DLE P155: test_02_purchase_requisition_stock
+        # Creating the requisition calls `create_supplier_info` which create a new supplier for the product
+        # Then the code expects to have the sellers in the natural/db order.
+        product_test.product_tmpl_id.invalidate_cache(['seller_ids'])
+        product_test.invalidate_cache(['seller_ids'])
 
         # Second stock move
         move2 = self.env['stock.move'].create({
@@ -168,6 +173,9 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'vendor_id': vendor1.id,
             'currency_id': self.env.ref("base.USD").id,
         })
+        # DLE P155
+        (product_1 + product_2).product_tmpl_id.invalidate_cache(['seller_ids'])
+        (product_1 + product_2).invalidate_cache(['seller_ids'])
         requisition_1.action_in_progress()
         requisition_2.action_in_progress()
         # Stock moves

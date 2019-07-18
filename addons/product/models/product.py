@@ -821,28 +821,3 @@ class SupplierInfo(models.Model):
             'label': _('Import Template for Vendor Pricelists'),
             'template': '/product/static/xls/product_supplierinfo.xls'
         }]
-
-    # DLE P155
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super(SupplierInfo, self).create(vals_list)
-        records._cache_sort_seller_ids()
-        return records
-
-    # DLE P155
-    def write(self, vals):
-        res = super(SupplierInfo, self).write(vals)
-        if 'product_tmpl_id' in vals or 'product_id' in vals:
-            self._cache_sort_seller_ids()
-        return res
-
-    # DLE P155: test_02_purchase_requisition_stock
-    # Creating the requisition calls `create_supplier_info` which create a new supplier for the product
-    # Then the code expects to have the sellers in the natural/db order.
-    def _cache_sort_seller_ids(self):
-        products = self.mapped('product_id')
-        templates = self.mapped('product_tmpl_id') | products.mapped('product_tmpl_id')
-        for templates in templates:
-            templates.invalidate_cache(['seller_ids'])
-        for product in products:
-            product.invalidate_cache(['seller_ids'])
