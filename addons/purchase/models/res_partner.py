@@ -36,6 +36,7 @@ class res_partner(models.Model):
                     ('type', 'in', ('in_invoice', 'in_refund'))],
             fields=['partner_id'], groupby=['partner_id']
         )
+        self.supplier_invoice_count = 0
         for group in supplier_invoice_groups:
             partner = self.browse(group['partner_id'][0])
             while partner:
