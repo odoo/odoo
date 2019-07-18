@@ -83,6 +83,7 @@ class MrpWorkorder(models.Model):
     duration_percent = fields.Integer(
         'Duration Deviation (%)', compute='_compute_duration',
         group_operator="avg", readonly=True, store=True)
+    progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
 
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation')  # Should be used differently as BoM can change in the meantime
@@ -231,6 +232,15 @@ class MrpWorkorder(models.Model):
                 order.duration_percent = 100 * (order.duration_expected - order.duration) / order.duration_expected
             else:
                 order.duration_percent = 0
+
+    def _compute_progress(self):
+        for order in self:
+            if order.state == 'done':
+                order.progress = 100
+            elif order.duration_expected:
+                order.progress = order.duration * 100 / order.duration_expected
+            else:
+                order.progress = 0
 
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """
