@@ -53,7 +53,7 @@
         <template id="authorize_s2s_form">
             <input type="hidden" name="data_set" value="/payment/authorize/s2s/create_json_3ds"/>
             <input type="hidden" name="acquirer_id" t-att-value="id"/>
-            <input type="hidden" name="acquirer_environment" t-att-value="acq.environment"/>
+            <input type="hidden" name="acquirer_state" t-att-value="acq.state"/>
             <input type="hidden" name="login_id" t-att-value="acq.sudo().authorize_login"/>
             <input type="hidden" name="client_key" t-att-value="acq.sudo().authorize_client_key"/>
             <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>

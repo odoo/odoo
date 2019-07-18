@@ -60,7 +60,7 @@ class PaypalController(http.Controller):
         tx = None
         if reference:
             tx = request.env['payment.transaction'].search([('reference', '=', reference)])
-        paypal_urls = request.env['payment.acquirer']._get_paypal_urls(tx and tx.acquirer_id.environment or 'prod')
+        paypal_urls = tx.acquirer_id.paypal_get_form_action_url()
         pdt_request = bool(post.get('amt'))  # check for spefific pdt param
         if pdt_request:
             # this means we are in PDT instead of DPN like before

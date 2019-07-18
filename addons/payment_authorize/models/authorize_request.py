@@ -30,12 +30,12 @@ class AuthorizeAPI():
 
         :param record acquirer: payment.acquirer account that will be contacted
         """
-        if acquirer.environment == 'test':
+        if acquirer.state == 'test':
             self.url = 'https://apitest.authorize.net/xml/v1/request.api'
         else:
             self.url = 'https://api.authorize.net/xml/v1/request.api'
 
-        self.environment = acquirer.environment
+        self.state = acquirer.state
         self.name = acquirer.authorize_login
         self.transaction_key = acquirer.authorize_transaction_key
 
@@ -99,7 +99,7 @@ class AuthorizeAPI():
                         }
                     }
                 },
-                'validationMode': 'liveMode' if self.environment == 'prod' else 'testMode'
+                'validationMode': 'liveMode' if self.state == 'enabled' else 'testMode'
             }
         }
 

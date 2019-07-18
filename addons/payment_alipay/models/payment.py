@@ -110,7 +110,9 @@ class PaymentAcquirer(models.Model):
         return values
 
     def alipay_get_form_action_url(self):
-        return self._get_alipay_urls(self.environment)
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_alipay_urls(environment)
 
 
 class PaymentTransaction(models.Model):

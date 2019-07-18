@@ -191,7 +191,9 @@ class AcquirerAdyen(models.Model):
         return values
 
     def adyen_get_form_action_url(self):
-        return self._get_adyen_urls(self.environment)['adyen_form_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_adyen_urls(environment)['adyen_form_url']
 
 
 class TxAdyen(models.Model):

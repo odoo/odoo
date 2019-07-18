@@ -66,7 +66,8 @@ class PaymentAcquirerPayulatam(models.Model):
 
     def payulatam_get_form_action_url(self):
         self.ensure_one()
-        return self._get_payulatam_urls(self.environment)
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_payulatam_urls(environment)
 
 
 class PaymentTransactionPayulatam(models.Model):

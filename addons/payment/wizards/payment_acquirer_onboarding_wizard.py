@@ -115,15 +115,13 @@ class PaymentWizard(models.TransientModel):
                     'paypal_email_account': self.paypal_email_account,
                     'paypal_seller_account': self.paypal_seller_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
-                    'website_published': True,
-                    'environment': 'prod',
+                    'state': 'enabled',
                 })
             if self.payment_method == 'stripe':
                 new_env.ref('payment.payment_acquirer_stripe').write({
                     'stripe_secret_key': self.stripe_secret_key,
                     'stripe_publishable_key': self.stripe_publishable_key,
-                    'website_published': True,
-                    'environment': 'prod',
+                    'state': 'enabled',
                 })
             if self.payment_method == 'manual':
                 manual_acquirer = self._get_manual_payment_acquirer(new_env)
@@ -134,8 +132,7 @@ class PaymentWizard(models.TransientModel):
                     ))
                 manual_acquirer.name = self.manual_name
                 manual_acquirer.post_msg = self.manual_post_msg
-                manual_acquirer.website_published = True
-                manual_acquirer.environment = 'prod'
+                manual_acquirer.state = 'enabled'
 
                 journal = manual_acquirer.journal_id
                 if journal:
