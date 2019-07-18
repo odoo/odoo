@@ -67,25 +67,11 @@ class ResPartner(models.Model):
         help='Computed field that returns RUT or nothing if this one is not'
         ' set for the partner',
     )
-    l10n_cl_county_id = fields.Many2one(
-        "l10n_cl.county", 'County')
     country_id = fields.Many2one(
         'res.country',
         default=lambda self: self.env.ref('base.cl'))
 
-    # comuna = fields.Char()
-    # region -> state
-
-    @api.onchange('l10n_cl_county_id', 'city', 'state_id')
-    def _change_city_province(self):
-        if self.country_id != self.env.ref('base.cl'):
-            return
-        if self.l10n_cl_county_id.state_id.parent_id:
-            self.state_id = self.l10n_cl_county_id.state_id.parent_id
-        if self.state_id == self.env.ref('l10n_cl_base.CL13'):
-            self.city = 'Santiago'
-        else:
-            self.city = self.l10n_cl_county_id.name
+    comuna = fields.Char("Comuna")
 
     @api.constrains('vat', 'l10n_latam_identification_type_id')
     def check_vat(self):
