@@ -2648,6 +2648,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         elif 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
 
+        # DLE P153: `test_lp1071710`
+        # If _rec_name is translatable, display_name depends on the lang in the context
+        # e.g.
+        #  - env['res.country'].browse(20).display_name == Belgium
+        #  - env['res.country'].with_context(lang='fr_FR').browse(20).display_name == Belgique
+        # Actually, you should be able to specify @api.depends_context for `display_name`,
+        # but this is currently not possible, and for the regular api.depends as well, because
+        # most of the time, you override name_get and not _compute_display_name, for which @api.depends doesnt apply.
+        if cls._rec_name:
+            rec_name_field = cls._fields[cls._rec_name]
+            if rec_name_field.translate:
+                display_name_field = cls._fields['display_name']
+                display_name_field.depends_context = (display_name_field.depends_context or ()) + ('lang',)
+
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         """ fields_get([fields][, attributes])

@@ -631,7 +631,6 @@ class TestExpression(TransactionCase):
 
     def test_lp1071710(self):
         """ Check that we can exclude translated fields (bug lp:1071710) """
-        return
         # first install french language
         self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
         self.env.ref('base.res_partner_2').country_id = self.env.ref('base.be')
