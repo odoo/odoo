@@ -1122,7 +1122,7 @@
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
-                    <xpath expr="//group[@name='sale_info_group']" position="inside">
+                    <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                         <field name="team_id"/>
                     </xpath>
                     <xpath expr="//group[@id='other_tab_group']" position="inside">
