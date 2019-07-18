@@ -180,11 +180,7 @@ class AccountMove(models.Model):
         help="Keep empty to use the current date")
     invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]},
-        help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries.\n The Payment terms may compute several due dates, for example 50% "
-             "now and 50% in one month, but if you want to force a due date, make sure that the payment "
-             "term is not set on the invoice.\n If you keep the Payment terms and the due date empty, it "
-             "means direct payment.")
+        help="The due date is computed from payment terms. You can split in several due dates (e.g. 50% now, balance in one month). Keep empty to request a direct payment.")
     invoice_payment_ref = fields.Char(string='Payment Reference', index=True, copy=False, readonly=True,
         states={'draft': [('readonly', False)]},
         help="The payment reference to set on journal items.")
@@ -194,11 +190,7 @@ class AccountMove(models.Model):
         help="The document(s) that generated the invoice.")
     invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms',
         readonly=True, states={'draft': [('readonly', False)]},
-        help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries.\n The Payment terms may compute several due dates, for example 50% "
-             "now and 50% in one month, but if you want to force a due date, make sure that the payment "
-             "term is not set on the invoice.\n If you keep the Payment terms and the due date empty, it "
-             "means direct payment.")
+        help="The due date is computed from payment terms. You can split in several due dates (e.g. 50% now, balance in one month). Keep empty to request a direct payment.")
     # /!\ invoice_line_ids is just a subset of line_ids.
     invoice_line_ids = fields.One2many('account.move.line', 'move_id', string='Invoice lines',
         copy=False, readonly=True,
