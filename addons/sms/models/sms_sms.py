@@ -13,6 +13,7 @@ class SmsSms(models.Model):
     _name = 'sms.sms'
     _description = 'Outgoing SMS'
     _rec_name = 'number'
+    _order = 'id DESC'
 
     number = fields.Char('Number', required=True)
     body = fields.Text()
