@@ -974,8 +974,8 @@ class IrModelConstraint(models.Model):
     type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
                        help="Type of the constraint: `f` for a foreign key, "
                             "`u` for other constraints.")
-    date_update = fields.Datetime(string='Update Date')
-    date_init = fields.Datetime(string='Initialization Date')
+    write_date = fields.Datetime(oldname='date_update')
+    create_date = fields.Datetime(oldname='date_init')
 
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)',
@@ -1049,20 +1049,26 @@ class IrModelConstraint(models.Model):
         cons = cr.dictfetchone()
         if not cons:
             query = """ INSERT INTO ir_model_constraint
-                            (name, date_init, date_update, module, model, type, definition, message)
-                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
-                            (SELECT id FROM ir_module_module WHERE name=%s),
-                            (SELECT id FROM ir_model WHERE model=%s), %s, %s, %s)
+                            (name, create_date, write_date, create_uid, write_uid, module, model, type, definition, message)
+                        VALUES (%s,
+                                now() AT TIME ZONE 'UTC',
+                                now() AT TIME ZONE 'UTC',
+                                %s, %s,
+                                (SELECT id FROM ir_module_module WHERE name=%s),
+                                (SELECT id FROM ir_model WHERE model=%s),
+                                %s, %s, %s)
                         RETURNING id"""
-            cr.execute(query, (conname, module, model._name, type, definition, message))
+            cr.execute(query,
+                (conname, self.env.uid, self.env.uid, module, model._name, type, definition, message))
             return self.browse(cr.fetchone()[0])
 
         cons_id = cons.pop('id')
         if cons != dict(type=type, definition=definition, message=message):
             query = """ UPDATE ir_model_constraint
-                        SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s, message=%s
+                        SET write_date=now() AT TIME ZONE 'UTC',
+                            write_uid=%s, type=%s, definition=%s, message=%s
                         WHERE id=%s"""
-            cr.execute(query, (type, definition, message, cons_id))
+            cr.execute(query, (type, self.env.uid, definition, message, cons_id))
         return self.browse(cons_id)
 
     def _reflect_model(self, model):
@@ -1102,8 +1108,8 @@ class IrModelRelation(models.Model):
                        help="PostgreSQL table name implementing a many2many relation.")
     model = fields.Many2one('ir.model', required=True, index=True)
     module = fields.Many2one('ir.module.module', required=True, index=True)
-    date_update = fields.Datetime(string='Update Date')
-    date_init = fields.Datetime(string='Initialization Date')
+    write_date = fields.Datetime(oldname='date_update')
+    create_date = fields.Datetime(oldname='date_init')
 
     def _module_data_uninstall(self):
         """
@@ -1143,11 +1149,15 @@ class IrModelRelation(models.Model):
                     WHERE r.module=m.id AND r.name=%s AND m.name=%s """
         cr.execute(query, (table, module))
         if not cr.rowcount:
-            query = """ INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
-                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+            query = """ INSERT INTO ir_model_relation
+                            (name, create_date, write_date, create_uid, write_uid, module, model)
+                        VALUES (%s,
+                                now() AT TIME ZONE 'UTC',
+                                now() AT TIME ZONE 'UTC',
+                                %s, %s,
                                 (SELECT id FROM ir_module_module WHERE name=%s),
                                 (SELECT id FROM ir_model WHERE model=%s)) """
-            cr.execute(query, (table, module, model._name))
+            cr.execute(query, (table, self.env.uid, self.env.uid, module, model._name))
             self.invalidate_cache()
 
 
