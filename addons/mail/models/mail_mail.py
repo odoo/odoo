@@ -313,7 +313,8 @@ class MailMail(models.Model):
                         headers.update(safe_eval(mail.headers))
                     except Exception:
                         pass
-
+                if smtp_session:
+                    headers['Sender'] = smtp_session.user if tools.email_validate(smtp_session.user) else smtp_session.user + '@' + smtp_session._host.replace('smtp.', '')
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
