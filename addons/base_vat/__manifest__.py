@@ -34,7 +34,7 @@ Supported countries currently include EU countries, and a few non-EU countries
 such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,
 only the country code will be validated.
     """,
-    'depends': ['account'],
+    'depends': ['base'],
     'data': [
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
