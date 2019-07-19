@@ -67,7 +67,11 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="sms_template_menu" parent="sms_menu_main" action="sms_template_action"/>
+    <menuitem id="sms_template_menu"
+        name="SMS Templates"
+        parent="phone_validation.phone_menu_main"
+        sequence="2"
+        action="sms_template_action"/>
 
 </data>
 </odoo>

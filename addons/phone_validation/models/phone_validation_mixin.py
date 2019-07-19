@@ -9,6 +9,11 @@ class PhoneValidationMixin(models.AbstractModel):
     _name = 'phone.validation.mixin'
     _description = 'Phone Validation Mixin'
 
+    def _phone_get_country_field(self):
+        if 'country_id' in self:
+            return 'country_id'
+        return False
+
     def _phone_get_country(self):
         if 'country_id' in self and self.country_id:
             return self.country_id
@@ -31,3 +36,17 @@ class PhoneValidationMixin(models.AbstractModel):
             force_format='INTERNATIONAL' if always_international else 'NATIONAL',
             raise_exception=False
         )
+
+    def phone_get_sanitized_numbers(self, number_fname='mobile', force_format='E164'):
+        res = dict.fromkeys(self.ids, False)
+        country_fname = self._phone_get_country_field()
+        for record in self:
+            number = record[number_fname]
+            res[record.id] = phone_validation.phone_sanitize_numbers_w_record([number], record, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
+        return res
+
+    def phone_get_sanitized_number(self, number_fname='mobile', force_format='E164'):
+        self.ensure_one()
+        country_fname = self._phone_get_country_field()
+        number = self[number_fname]
+        return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']

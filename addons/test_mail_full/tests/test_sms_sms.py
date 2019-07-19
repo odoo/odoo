@@ -7,11 +7,10 @@ from unittest.mock import DEFAULT
 from odoo import exceptions
 from odoo.addons.sms.models.sms_sms import SmsSms as SmsSms
 from odoo.addons.sms.tests import common as sms_common
-from odoo.addons.test_mail.tests import common as test_mail_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
-class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_common.MockEmails, test_mail_common.TestRecipients):
+class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS):
 
     @classmethod
     def setUpClass(cls):
