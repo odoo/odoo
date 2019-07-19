@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
+from math import floor
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -147,14 +148,6 @@ class MrpWorkorder(models.Model):
             'date_to': date_to,
         })
 
-    @api.onchange('date_planned_start')
-    def _onchange_date_planned_start(self):
-        if self.duration_expected:
-            time_delta = timedelta(minutes=self.duration_expected)
-        else:
-            time_delta = timedelta(hours=1)
-        self.update({'date_planned_finished': self.date_planned_start + time_delta})
-
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
         """When the user changes the lot being currently produced, suggest
@@ -166,6 +159,12 @@ class MrpWorkorder(models.Model):
             line = previous_wo.finished_workorder_line_ids.filtered(lambda line: line.product_id == self.product_id and line.lot_id == self.finished_lot_id)
             if line:
                 self.qty_producing = line.qty_done
+
+    @api.onchange('date_planned_finished')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.date_planned_finished:
+            diff = self.date_planned_finished - self.date_planned_start
+            self.duration_expected = diff.total_seconds() / 60
 
     @api.depends('production_id.workorder_ids.finished_workorder_line_ids',
     'production_id.workorder_ids.finished_workorder_line_ids.qty_done',
@@ -233,6 +232,7 @@ class MrpWorkorder(models.Model):
             else:
                 order.duration_percent = 0
 
+    @api.depends('duration', 'duration_expected', 'state')
     def _compute_progress(self):
         for order in self:
             if order.state == 'done':
