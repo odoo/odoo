@@ -63,7 +63,7 @@
                                        t-att-class="'d-none' if (acquirers_count==1 and pms_count==0) else ''"
                                        t-att-checked="acquirers_count==1 and pms_count==0 or acquirers[0] == acq"/>
                             </t>
-                            <span class="payment_option_name" t-esc="acq.name"/>
+                            <span class="payment_option_name" t-esc="acq.display_as or acq.name"/>
                             <t t-if="acq_extra_fees and acq_extra_fees.get(acq)">
                                 <span class="badge badge-pill badge-secondary"> + <t t-esc="acq_extra_fees[acq]" t-options='{"widget": "monetary", "display_currency": acq_extra_fees["currency_id"]}'/> Fee </span>
                             </t>
@@ -86,7 +86,7 @@
                                 <t t-set="i" t-value="i+1"/>
                             </t>
                         </ul>
-                        <div><t t-raw="acq.pre_msg"/></div>
+                        <div t-raw="acq.pre_msg" class="text-muted ml-3"/>
                     </div>
                     <t t-if="acq.payment_flow == 'form'">
                         <div t-attf-id="o_payment_form_acq_{{acq.id}}"

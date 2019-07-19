@@ -66,10 +66,11 @@ class PaymentAcquirer(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color', compute='_compute_color', store=True)
+    display_as = fields.Char('Displayed as', translate=True, help="How the acquirer is displayed to the customers.")
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
-        selection=[('manual', 'Manual Configuration')], string='Provider',
+        selection=[('manual', 'Custom Payment Form')], string='Provider',
         default='manual', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -116,9 +117,10 @@ class PaymentAcquirer(models.Model):
     pre_msg = fields.Html(
         'Help Message', translate=True,
         help='Message displayed to explain and help the payment process.')
-    post_msg = fields.Html(
-        'Thanks Message', translate=True,
-        help='Message displayed after having done the payment process.')
+    auth_msg = fields.Html(
+        'Authorize Message', translate=True,
+        default=lambda s: _('Your payment has been authorized.'),
+        help='Message displayed if payment is authorized.')
     pending_msg = fields.Html(
         'Pending Message', translate=True,
         default=lambda s: _('Your payment has been successfully processed but is waiting for approval.'),
@@ -131,10 +133,6 @@ class PaymentAcquirer(models.Model):
         'Cancel Message', translate=True,
         default=lambda s: _('Your payment has been cancelled.'),
         help='Message displayed, if order is cancel during the payment process.')
-    error_msg = fields.Html(
-        'Error Message', translate=True,
-        default=lambda s: _('<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.'),
-        help='Message displayed, if error is occur during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),
         ('ask', 'Let the customer decide'),
