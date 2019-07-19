@@ -51,10 +51,12 @@
                 <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
             </ul>
         </field>
         <!-- https://payment-services.ingenico.com/~/media/files/130806_product_sheet_ingenico_collect_en.ashx?la=en -->
-        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_ideal"),
+                                                        ref("payment.payment_icon_cc_bancontact"),
                                                         ref("payment.payment_icon_cc_maestro"),
                                                         ref("payment.payment_icon_cc_mastercard"),
                                                         ref("payment.payment_icon_cc_visa")])]'/>
@@ -103,6 +105,7 @@
                 <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Manual Capture</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
             </ul>
         </field>
         <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
