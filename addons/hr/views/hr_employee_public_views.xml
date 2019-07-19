@@ -16,6 +16,10 @@
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                        <field name="department_id" icon="fa-users"/>
+                    </searchpanel>
                 </search>
              </field>
         </record>
@@ -139,10 +143,6 @@
                         </div>
                         </t>
                     </templates>
-                    <searchpanel>
-                        <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
-                        <field name="department_id" icon="fa-users"/>
-                    </searchpanel>
                 </kanban>
             </field>
         </record>

@@ -367,6 +367,7 @@ var SelectCreateDialog = ViewDialog.extend({
             modelName: this.res_model,
             readonly: true,
             withBreadcrumbs: false,
+            withSearchPanel: false,
         }, this.options.list_view_options));
         listView.setController(SelectCreateListController);
         return listView.getController(this).then(function (controller) {

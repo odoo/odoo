@@ -689,6 +689,7 @@ ActionManager.include({
                 };
             }
             var options = {on_close: ev.data.on_closed};
+            action.flags = _.extend({}, action.flags, {withSearchPanel: false});
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
     },
@@ -711,8 +712,10 @@ ActionManager.include({
             // only switch to the requested view if the controller that
             // triggered the request is the current controller
             var action = this.actions[currentController.actionID];
+            var currentControllerState = currentController.widget.exportState();
+            action.controllerState = _.extend({}, action.controllerState, currentControllerState);
             var options = {
-                controllerState: currentController.widget.exportState(),
+                controllerState: action.controllerState,
                 currentId: ev.data.res_id,
             };
             if (ev.data.mode) {

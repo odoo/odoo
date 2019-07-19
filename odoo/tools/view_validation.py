@@ -1,11 +1,15 @@
 """ View validation code (using assertions, not the RNG schema). """
 
+import ast
 import collections
 import logging
 import os
+import re
 
+from functools import partial
 from lxml import etree
 from odoo import tools
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -13,9 +17,140 @@ _logger = logging.getLogger(__name__)
 _validators = collections.defaultdict(list)
 _relaxng_cache = {}
 
-def valid_view(arch):
+# attributes in views that may contain references to field names
+ATTRS_WITH_FIELD_NAMES = {
+    'context',
+    'domain',
+    'decoration-bf',
+    'decoration-it',
+    'decoration-danger',
+    'decoration-info',
+    'decoration-muted',
+    'decoration-primary',
+    'decoration-success',
+    'decoration-warning',
+}
+
+READONLY = re.compile(r"\breadonly\b")
+
+
+def _get_attrs_symbols():
+    """ Return a set of predefined symbols for evaluating attrs. """
+    return {
+        'True', 'False', 'None',    # those are identifiers in Python 2.7
+        'self',
+        'parent',
+        'id',
+        'uid',
+        'context',
+        'context_today',
+        'active_id',
+        'active_ids',
+        'allowed_company_ids',
+        'current_company_id',
+        'active_model',
+        'time',
+        'datetime',
+        'relativedelta',
+        'current_date',
+        'abs',
+        'len',
+        'bool',
+        'float',
+        'str',
+        'unicode',
+    }
+
+
+def _view_is_editable(node):
+    """ Return whether the node is an editable view. """
+    return node.tag == 'form' or node.tag == 'tree' and node.get('editable')
+
+
+def field_is_editable(field, node):
+    """ Return whether a field is editable (not always readonly). """
+    return (
+        (not field.readonly or READONLY.search(str(field.states or ""))) and
+        (node.get('readonly') != "1" or READONLY.search(node.get('attrs') or ""))
+    )
+
+
+def get_attrs_field_names(env, arch, model, editable):
+    """ Retrieve the field names appearing in context, domain and attrs, and
+        return a list of triples ``(field_name, attr_name, attr_value)``.
+    """
+    VIEW_TYPES = {item[0] for item in type(env['ir.ui.view']).type.selection}
+    symbols = _get_attrs_symbols() | {None}
+    result = []
+
+    def get_name(node):
+        """ return the name from an AST node, or None """
+        if isinstance(node, ast.Name):
+            return node.id
+
+    def get_subname(get, node):
+        """ return the subfield name from an AST node, or None """
+        if isinstance(node, ast.Attribute) and get(node.value) == 'parent':
+            return node.attr
+
+    def process_expr(expr, get, key, val):
+        """ parse `expr` and collect triples """
+        for node in ast.walk(ast.parse(expr.strip(), mode='eval')):
+            name = get(node)
+            if name not in symbols:
+                result.append((name, key, val))
+
+    def process_attrs(expr, get, key, val):
+        """ parse `expr` and collect field names in lhs of conditions. """
+        for domain in safe_eval(expr).values():
+            if not isinstance(domain, list):
+                continue
+            for arg in domain:
+                if isinstance(arg, (tuple, list)):
+                    process_expr(str(arg[0]), get, key, expr)
+
+    def process(node, model, editable, get=get_name):
+        """ traverse `node` and collect triples """
+        if node.tag in VIEW_TYPES:
+            # determine whether this view is editable
+            editable = editable and _view_is_editable(node)
+        elif node.tag in ('field', 'groupby'):
+            # determine whether the field is editable
+            field = model._fields.get(node.get('name'))
+            if field:
+                editable = editable and field_is_editable(field, node)
+
+        for key, val in node.items():
+            if not val:
+                continue
+            if key in ATTRS_WITH_FIELD_NAMES:
+                process_expr(val, get, key, val)
+            elif key == 'attrs':
+                process_attrs(val, get, key, val)
+
+        if node.tag in ('field', 'groupby') and field and field.relational:
+            if editable and not node.get('domain'):
+                domain = field._description_domain(env)
+                # process the field's domain as if it was in the view
+                if isinstance(domain, str):
+                    process_expr(domain, get, 'domain', domain)
+            # retrieve subfields of 'parent'
+            model = env[field.comodel_name]
+            get = partial(get_subname, get)
+
+        for child in node:
+            if node.tag == 'search' and child.tag == 'searchpanel':
+                # searchpanel part has to be validated independently
+                continue
+            process(child, model, editable, get)
+
+    process(arch, model, editable)
+    return result
+
+
+def valid_view(arch, **kwargs):
     for pred in _validators[arch.tag]:
-        check = pred(arch)
+        check = pred(arch, **kwargs)
         if not check:
             _logger.error("Invalid XML: %s", pred.__doc__)
             return False
@@ -49,7 +184,7 @@ def relaxng(view_type):
 
 
 @validate('calendar', 'diagram', 'gantt', 'graph', 'pivot', 'search', 'tree', 'activity')
-def schema_valid(arch):
+def schema_valid(arch, **kwargs):
     """ Get RNG validator and validate RNG file."""
     validator = relaxng(arch.tag)
     if validator and not validator.validate(arch):
@@ -60,14 +195,48 @@ def schema_valid(arch):
         return result
     return True
 
+
+@validate('search')
+def valid_searchpanel(arch, **kwargs):
+    """ There must be at most one ``searchpanel`` node in search view archs. """
+    return len(arch.xpath('/search/searchpanel')) <= 1
+
+
+@validate('search')
+def valid_searchpanel_domain_select(arch, **kwargs):
+    """ In the searchpanel, the attribute ``domain`` can only be used on ``field`` nodes with
+        ``select`` attribute set to ``multi``. """
+    for child in arch.xpath('/search/searchpanel/field'):
+        if child.get('domain') and child.get('select') != 'multi':
+            return False
+    return True
+
+
+@validate('search')
+def valid_searchpanel_domain_fields(arch, **kwargs):
+    """ In the searchpanel, fields used in the ``domain`` attribute must be present inside the
+        ``searchpanel`` node with ``select`` attribute not set to ``multi``. """
+    searchpanel = arch.xpath('/search/searchpanel')
+    if searchpanel:
+        env = kwargs['env']
+        model = kwargs['model']
+        attrs_fields = [r[0] for r in get_attrs_field_names(env, searchpanel[0], env[model], False)]
+        non_multi_fields = [
+            c.get('name') for c in arch.xpath('/search/searchpanel/field')
+            if c.get('select') != 'multi'
+        ]
+        return len(set(attrs_fields) - set(non_multi_fields)) == 0
+    return True
+
+
 @validate('form')
-def valid_page_in_book(arch):
+def valid_page_in_book(arch, **kwargs):
     """A `page` node must be below a `notebook` node."""
     return not arch.xpath('//page[not(ancestor::notebook)]')
 
 
 @validate('graph')
-def valid_field_in_graph(arch):
+def valid_field_in_graph(arch, **kwargs):
     """ Children of ``graph`` can only be ``field`` """
     return all(
         child.tag == 'field'
@@ -76,7 +245,7 @@ def valid_field_in_graph(arch):
 
 
 @validate('tree')
-def valid_field_in_tree(arch):
+def valid_field_in_tree(arch, **kwargs):
     """ Children of ``tree`` view must be ``field`` or ``button`` or ``control`` or ``groupby``."""
     return all(
         child.tag in ('field', 'button', 'control', 'groupby')
@@ -85,24 +254,24 @@ def valid_field_in_tree(arch):
 
 
 @validate('form', 'graph', 'tree', 'activity')
-def valid_att_in_field(arch):
+def valid_att_in_field(arch, **kwargs):
     """ ``field`` nodes must all have a ``@name`` """
     return not arch.xpath('//field[not(@name)]')
 
 
 @validate('form')
-def valid_att_in_label(arch):
+def valid_att_in_label(arch, **kwargs):
     """ ``label`` nodes must have a ``@for`` """
     return not arch.xpath('//label[not(@for) and not(descendant::input)]')
 
 
 @validate('form')
-def valid_att_in_form(arch):
+def valid_att_in_form(arch, **kwargs):
     return True
 
 
 @validate('form')
-def valid_type_in_colspan(arch):
+def valid_type_in_colspan(arch, **kwargs):
     """A `colspan` attribute must be an `integer` type."""
     return all(
         attrib.isdigit()
@@ -111,22 +280,24 @@ def valid_type_in_colspan(arch):
 
 
 @validate('form')
-def valid_type_in_col(arch):
+def valid_type_in_col(arch, **kwargs):
     """A `col` attribute must be an `integer` type."""
     return all(
         attrib.isdigit()
         for attrib in arch.xpath('//@col')
     )
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_alternative_image_text(arch):
+def valid_alternative_image_text(arch, **kwargs):
     """An `img` tag must have an alt value."""
     if arch.xpath('//img[not(@alt or @t-att-alt or @t-attf-alt)]'):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_alternative_icon_text(arch):
+def valid_alternative_icon_text(arch, **kwargs):
     """An icon with fa- class or in a button must have aria-label in its tag, parents, descendants or have text."""
     valid_aria_attrs = {
         'aria-label', 'aria-labelledby', 't-att-aria-label', 't-attf-aria-label',
@@ -166,8 +337,9 @@ def valid_alternative_icon_text(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_title_icon(arch):
+def valid_title_icon(arch, **kwargs):
     """An icon with fa- class or in a button must have title in its tag, parents, descendants or have text."""
     valid_title_attrs = {'title', 't-att-title', 't-attf-title'}
     valid_t_attrs = {'t-value', 't-raw', 't-field', 't-esc'}
@@ -205,8 +377,9 @@ def valid_title_icon(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_simili_button(arch):
+def valid_simili_button(arch, **kwargs):
     """A simili button must be tagged with "role='button'"."""
     # Select elements with class 'btn'
     xpath = '//a[contains(concat(" ", @class), " btn")'
@@ -217,8 +390,9 @@ def valid_simili_button(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_simili_dropdown(arch):
+def valid_simili_dropdown(arch, **kwargs):
     """A simili dropdown must be tagged with "role='menu'"."""
     xpath = '//*[contains(concat(" ", @class, " "), " dropdown-menu ")'
     xpath += ' or contains(concat(" ", @t-att-class, " "), " dropdown-menu ")'
@@ -228,8 +402,9 @@ def valid_simili_dropdown(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_simili_progressbar(arch):
+def valid_simili_progressbar(arch, **kwargs):
     """A simili progressbar must be tagged with "role='progressbar'" and have
     aria-valuenow, aria-valuemin and aria-valuemax attributes."""
     # Select elements with class 'btn'
@@ -245,8 +420,9 @@ def valid_simili_progressbar(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_dialog(arch):
+def valid_dialog(arch, **kwargs):
     """A dialog must use role="dialog" and its header, body and footer contents must use <header/>, <main/> and <footer/>."""
     # Select elements with class 'btn'
     xpath = '//*[contains(concat(" ", @class, " "), " modal ")'
@@ -278,8 +454,9 @@ def valid_dialog(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_simili_tabpanel(arch):
+def valid_simili_tabpanel(arch, **kwargs):
     """A tab panel with tab-pane class must have role="tabpanel"."""
     # Select elements with class 'btn'
     xpath = '//*[contains(concat(" ", @class, " "), " tab-pane ")'
@@ -290,8 +467,9 @@ def valid_simili_tabpanel(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_simili_tab(arch):
+def valid_simili_tab(arch, **kwargs):
     """A tab link must have role="tab", a link to an id (without #) by aria-controls."""
     # Select elements with class 'btn'
     xpath = '//*[@data-toggle="tab"]'
@@ -302,8 +480,9 @@ def valid_simili_tab(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_simili_tablist(arch):
+def valid_simili_tablist(arch, **kwargs):
     """A tab list with class nav-tabs must have role="tablist"."""
     # Select elements with class 'btn'
     xpath = '//*[contains(concat(" ", @class, " "), " nav-tabs ")'
@@ -314,8 +493,9 @@ def valid_simili_tablist(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_focusable_button(arch):
+def valid_focusable_button(arch, **kwargs):
     """A simili button must be with a `button`, an `input` (with type `button`, `submit` or `reset`) or a `a` tag."""
     xpath = '//*[contains(concat(" ", @class), " btn")'
     xpath += ' or contains(concat(" ", @t-att-class), " btn")'
@@ -339,16 +519,18 @@ def valid_focusable_button(arch):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_prohibited_none_role(arch):
+def valid_prohibited_none_role(arch, **kwargs):
     """A role can't be `none` or `presentation`. All your elements must be accessible with screen readers, describe it."""
     xpath = '//*[@role="none" or @role="presentation"]'
     if arch.xpath(xpath):
         return "Warning"
     return True
 
+
 @validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-def valid_alerts(arch):
+def valid_alerts(arch, **kwargs):
     """An alert (class alert-*) must have an alert, alertdialog or status role. Please use alert and alertdialog only for what expects to stop any activity to be read immediatly."""
     xpath = '//*[contains(concat(" ", @class), " alert-")'
     xpath += ' or contains(concat(" ", @t-att-class), " alert-")'

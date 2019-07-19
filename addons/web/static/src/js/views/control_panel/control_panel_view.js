@@ -201,7 +201,15 @@ var ControlPanelView = Factory.extend({
      */
     _parseSearchArch: function (arch) {
         var self = this;
-        var preFilters = _.flatten(arch.children.map(function (child) {
+        // a searchview arch may contain a 'searchpanel' node, but this isn't
+        // the concern of the ControlPanelView (the SearchPanel will handle it).
+        // Ideally, this code should whitelist the tags to take into account
+        // instead of blacklisting the others, but with the current (messy)
+        // structure of a searchview arch, it's way simpler to do it that way.
+        var children = arch.children.filter(function (child) {
+            return child.tag !== 'searchpanel';
+        });
+        var preFilters = _.flatten(children.map(function (child) {
             return child.tag !== 'group' ?
                     self._evalArchChild(child) :
                     child.children.map(self._evalArchChild);

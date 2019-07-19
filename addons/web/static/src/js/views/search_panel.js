@@ -8,9 +8,59 @@ odoo.define('web.SearchPanel', function (require) {
 
 var core = require('web.core');
 var Domain = require('web.Domain');
+var pyUtils = require('web.py_utils');
+var viewUtils = require('web.viewUtils');
 var Widget = require('web.Widget');
 
 var qweb = core.qweb;
+
+// defaultViewTypes is the list of view types for which the searchpanel is
+// present by default (if not explicitly stated in the 'view_types' attribute
+// in the arch)
+var defaultViewTypes = ['kanban', 'tree'];
+
+/**
+ * Given a <searchpanel> arch node, iterate over its children to generate the
+ * description of each section (being either a category or a filter).
+ *
+ * @param {Object} node a <searchpanel> arch node
+ * @param {Object} fields the fields of the model
+ * @returns {Object}
+ */
+function _processSearchPanelNode(node, fields) {
+    var sections = {};
+    node.children.forEach((childNode, index) => {
+        if (childNode.tag !== 'field') {
+            return;
+        }
+        if (childNode.attrs.invisible === "1") {
+            return;
+        }
+        var fieldName = childNode.attrs.name;
+        var type = childNode.attrs.select === 'multi' ? 'filter' : 'category';
+
+        var sectionId = _.uniqueId('section_');
+        var section = {
+            color: childNode.attrs.color,
+            description: childNode.attrs.string || fields[fieldName].string,
+            fieldName: fieldName,
+            icon: childNode.attrs.icon,
+            id: sectionId,
+            index: index,
+            type: type,
+        };
+        if (section.type === 'category') {
+            section.icon = section.icon || 'fa-folder';
+        } else if (section.type === 'filter') {
+            section.disableCounters = !!pyUtils.py_eval(childNode.attrs.disable_counters || '0');
+            section.domain = childNode.attrs.domain || '[]';
+            section.groupBy = childNode.attrs.groupby;
+            section.icon = section.icon || 'fa-filter';
+        }
+        sections[sectionId] = section;
+    });
+    return sections;
+}
 
 var SearchPanel = Widget.extend({
     className: 'o_search_panel',
@@ -29,8 +79,10 @@ var SearchPanel = Widget.extend({
      *   default, for each filter and category
      * @param {Object} params.fields
      * @param {string} params.model
-     * @param {Object} params.sections
      * @param {Array[]} params.searchDomain domain coming from controlPanel
+     * @param {Object} params.sections
+     * @param {Object} [params.state] state exported by another searchpanel
+     *   instance
      */
     init: function (parent, params) {
         this._super.apply(this, arguments);
@@ -42,6 +94,8 @@ var SearchPanel = Widget.extend({
             return section.type === 'filter';
         });
 
+        this.initialState = params.state;
+        this.scrollTop = this.initialState && this.initialState.scrollTop || null;
         this.defaultValues = params.defaultValues || {};
         this.fields = params.fields;
         this.model = params.model;
@@ -52,10 +106,16 @@ var SearchPanel = Widget.extend({
      */
     willStart: function () {
         var self = this;
-        var loadProm = this._fetchCategories().then(function () {
-            return self._fetchFilters().then(self._applyDefaultFilterValues.bind(self));
-        });
-        return Promise.all([loadProm, this._super.apply(this, arguments)]);
+        var loadCategoriesProm;
+        if (this.initialState) {
+            this.filters = this.initialState.filters;
+            this.categories = this.initialState.categories;
+        } else {
+            loadCategoriesProm = this._fetchCategories().then(function () {
+                return self._fetchFilters().then(self._applyDefaultFilterValues.bind(self));
+            });
+        }
+        return Promise.all([loadCategoriesProm, this._super.apply(this, arguments)]);
     },
     /**
      * @override
@@ -64,17 +124,88 @@ var SearchPanel = Widget.extend({
         this._render();
         return this._super.apply(this, arguments);
     },
+    /**
+     * Called each time the searchPanel is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        if (this.scrollTop !== null) {
+            this.el.scrollTop = this.scrollTop;
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     /**
+     * Parse a given search view arch to extract the searchpanel information
+     * (i.e. a description of each filter/category). Note that according to the
+     * 'view_types' attribute on the <searchpanel> node, and the given viewType,
+     * it may return undefined, meaning that no searchpanel should be rendered
+     * for the current view.
+     *
+     * Note that this is static method, called by AbstractView, *before*
+     * instantiating the SearchPanel, as depending on what it returns, we may
+     * or may not instantiate a SearchPanel.
+     *
+     * @static
+     * @params {Object} viewInfo the viewInfo of a search view
+     * @params {string} viewInfo.arch
+     * @params {Object} viewInfo.fields
+     * @params {string} viewType the type of the current view (e.g. 'kanban')
+     * @returns {Object|undefined}
+     */
+    computeSearchPanelParams: function (viewInfo, viewType) {
+        var searchPanelSections;
+        if (viewInfo) {
+            var arch = viewUtils.parseArch(viewInfo.arch);
+            viewType = viewType === 'list' ? 'tree' : viewType;
+            arch.children.forEach(function (node) {
+                if (node.tag === 'searchpanel') {
+                    var attrs = node.attrs;
+                    var viewTypes = defaultViewTypes;
+                    if (attrs.view_types) {
+                        viewTypes = attrs.view_types.split(',');
+                    }
+                    if (viewTypes.indexOf(viewType) !== -1) {
+                        searchPanelSections = _processSearchPanelNode(node, viewInfo.fields);
+                    }
+                }
+            });
+        }
+        return searchPanelSections;
+    },
+    /**
+     * Export the current state (categories and filters) of the searchpanel.
+     *
+     * @returns {Object}
+     */
+    exportState: function () {
+        return {
+            categories: this.categories,
+            filters: this.filters,
+            scrollTop: this.el ? this.el.scrollTop : null,
+        };
+    },
+    /**
      * @returns {Array[]} the current searchPanel domain based on active
      *   categories and checked filters
      */
     getDomain: function () {
         return this._getCategoryDomain().concat(this._getFilterDomain());
+    },
+    /**
+     * Import a previously exported state (see exportState).
+     *
+     * @param {Object} state
+     * @param {Object} state.filters.
+     * @param {Object} state.categories
+     */
+    importState: function (state) {
+        this.categories = state.categories || this.categories;
+        this.filters = state.filters || this.filters;
+        this.scrollTop = state.scrollTop;
+        this._render();
     },
     /**
      * Reload the filters and re-render. Note that we only reload the filters if
@@ -145,10 +276,10 @@ var SearchPanel = Widget.extend({
             }
         });
         category.rootIds = _.filter(_.map(values, function (value) {
-                return value.id;
-            }), function (valueId) {
-                var value = category.values[valueId];
-                return value.parentId === false;
+            return value.id;
+        }), function (valueId) {
+            var value = category.values[valueId];
+            return value.parentId === false;
         });
 
         // set active value
@@ -317,15 +448,17 @@ var SearchPanel = Widget.extend({
      */
     _getCategoryDomain: function () {
         var self = this;
+
         function categoryToDomain(domain, categoryId) {
             var category = self.categories[categoryId];
             if (category.activeValueId) {
                 var field = self.fields[category.fieldName];
-                var op = field.type === 'many2one' ? 'child_of' : '=';
+                var op = (field.type === 'many2one' && category.parentField) ? 'child_of' : '=';
                 domain.push([category.fieldName, op, category.activeValueId]);
             }
             return domain;
         }
+
         return Object.keys(this.categories).reduce(categoryToDomain, []);
     },
     /**
@@ -341,6 +474,7 @@ var SearchPanel = Widget.extend({
      */
     _getFilterDomain: function () {
         var self = this;
+
         function getCheckedValueIds(values) {
             return Object.keys(values).reduce(function (checkedValues, valueId) {
                 if (values[valueId].checked) {
@@ -349,6 +483,7 @@ var SearchPanel = Widget.extend({
                 return checkedValues;
             }, []);
         }
+
         function filterToDomain(domain, filterId) {
             var filter = self.filters[filterId];
             if (filter.groups) {
@@ -367,6 +502,7 @@ var SearchPanel = Widget.extend({
             }
             return domain;
         }
+
         return Object.keys(this.filters).reduce(filterToDomain, []);
     },
     /**
