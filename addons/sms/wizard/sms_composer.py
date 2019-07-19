@@ -114,7 +114,8 @@ class SendSMS(models.TransientModel):
     def _compute_sanitized_numbers(self):
         if self.numbers:
             record = self._get_records() if self.res_model and self.res_id else self.env.user
-            sanitize_res = phone_validation.phone_sanitize_numbers_string_w_record(self.numbers, record)
+            numbers = [number.strip() for number in self.numbers.split(',')]
+            sanitize_res = phone_validation.phone_sanitize_numbers_w_record(numbers, record)
             sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
             invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
             if invalid_numbers:
