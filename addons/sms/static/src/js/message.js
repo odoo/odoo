@@ -33,6 +33,14 @@ Message.include({
         return this._smsStatus;
     },
     /**
+     * Whether message has nay SMS-related notification
+     *
+     * @returns {boolean}
+     */
+    hasSmsData: function () {
+        return !!(this._smsIds && (this._smsIds.length > 0));
+    },
+    /**
      * Does the message contains at least one SMS failure
      *
      * @returns {boolean}
