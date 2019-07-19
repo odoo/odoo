@@ -338,6 +338,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"ប្រសិនបើសកម្មភាពស្រាវជ្រាវត្រូវបានកំណត់ទៅមិនពិត,វានិងអនុញ្ញាតអោយអ្នកលាក់គណនីដោយមិនយកវាចេញ"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -347,6 +348,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"ក្នុង Odoo,ការបញ្ជាទិញលក់និងគម្រោងត្រូវបានអនុវត្តដោយប្រើប្រាស់\n"
+"គណនីវិភាគ.អ្នកអាចតាមដានតម្លៃនិងប្រាក់ចំណូលដើម្បីវិភាគ\n"
+"កម្រិតរបស់អ្នកយ៉ាងងាយស្រួល"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -482,16 +486,20 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"ចំណូលនិងបង្កើតដោយស្វ័យប្រវត្តិនៅពេលអ្នកបង្កើតអតិថិជន\n"
+"វិក័យប័ត្រ.វិក័យប័ត្រអតិថិជនអាចបានបង្កើតអាស្រ័យលើការបញ្ជាទិញ\n"
+"(វិក័យប័ត្រថ្លៃដើម),នៅលើសន្លឹកកិច្ចការ(អាស្រ័យលើការងារសំរេច)ឬ\n"
+"លើការចំណាយ(ឧទាហរណ៍.រៀបរាប់ពីចំណាយធ្វើដំណើរ)."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr ""
+msgstr "ស្វែងរកបន្ទាត់វិភាគ"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
-msgstr ""
+msgstr "កំណត់សកម្មទៅជាមិនពិតដើម្បីលាក់ស្លាកវិភាគដោយមិនយកវាចេញ"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -501,13 +509,13 @@ msgstr "ធែក"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Tasks Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទការងារ"
 
 #. module: analytic
 #: sql_constraint:account.analytic.distribution:0
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "ភាគរយនៃការវិភាគការចែកចាយគួរតែចន្លោះពី0និង100"
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:195
@@ -516,11 +524,12 @@ msgid ""
 "The selected account belongs to another company that the one you're trying "
 "to create an analytic item for"
 msgstr ""
+"ជ្រើសរើសគណនីកម្មសិទ្ធក្រុមហ៊ុនផ្សេងណាមួយដែលអ្នកកំពុងព្យាយាមបង្កើតកាវិភាគរបស់អោយ"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows to classify your analytic accounts."
-msgstr ""
+msgstr "អនុញ្ញាតការចាត់ថ្នាក់វិភាគគណនីរបស់អ្នកនេះ"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -560,4 +569,4 @@ msgstr "ប្រវត្តិទំនាក់ទំនងវែបសាយ
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr ""
+msgstr "ឧទាហរណ៍.គម្រោងXYZ"

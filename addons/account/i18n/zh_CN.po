@@ -21,7 +21,6 @@
 # neter ji <jifuyi@qq.com>, 2018
 # yuan wenpu <1140021222@qq.com>, 2018
 # 敬洪 甘 <349220879@qq.com>, 2018
-# 演奏王 <wangwhai@qq.com>, 2018
 # p too <totopo@163.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # Youfu Sheng <wdmsyf@sina.com>, 2018
@@ -40,14 +39,15 @@
 # 红瑜 陶 <823103015@qq.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# 演奏王 <wangwhai@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-21 11:06+0000\n"
+"POT-Creation-Date: 2019-07-10 09:57+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
+"Last-Translator: 演奏王 <wangwhai@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -454,8 +454,10 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Rounding Method</span>"
-msgstr "<span class=\"o_form_label\">舍入方法</span>"
+msgid ""
+"<span class=\"o_form_label\">Rounding Method</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -860,6 +862,11 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"‎用户‎‎不能同时拥有税 B2B 和税 B2C‎.\n"
+"‎有问题的‎‎用户‎(s): %s\n"
+"‎您应该‎‎进入\"常规‎‎设置\",并选择显示‎‎产品‎‎价格‎\n"
+"‎要么处于\"含税\"或\"除税\"模式‎\n"
+"‎(或切换两倍的模式,‎‎如果你‎‎已经在所需的一个)。‎"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -3457,6 +3464,12 @@ msgstr "创建第一个现金舍入"
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
 msgid "Created by"
 msgstr "创建人"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:419
+#, python-format
+msgid "Created by: %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date

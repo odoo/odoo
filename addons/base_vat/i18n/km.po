@@ -27,6 +27,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -49,6 +52,8 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"ប្រសិនបើប្រអប់ធីកនេះត្រូវបានធីកអ្នកនឹងមិនអាចរក្សាទុកទំនាក់ទំនងប្រសិនបើលេខ "
+"VAT របស់វាមិនអាចត្រូវបានផ្ទៀងផ្ទាត់ដោយសេវាកម្ម VIES របស់អឺរ៉ុប។"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:154
@@ -57,6 +62,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"លេខពន្ឋ [%s] សំរាបដៃគូ[%s] មិនត្រូវបានឃើញកាលបរិច្ឆេទ\n"
+"ចំណំា មិនផ្តោតទៅលើទម្រង់ទំពឹងទុក%s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:153
@@ -65,6 +72,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"លេខទូរស័ព្ទ [%s] សម្រាប់ដៃគូ [%s] បានបរាជ័យក្នុងការពិនិត្យសុពលភាព VAT VIES "
+"ឬមិនគោរពតាមទម្រង់ដែលរំពឹងទុក។%s"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -77,9 +86,9 @@ msgstr "អាករ"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "បញ្ជាក់ពីពន្ឋលេខ"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "ផ្ទៀងផ្ទាត់លេខពន្ធអាករដោយប្រើសេវាកម្ម VIES អឺរ៉ុប"
