@@ -22,7 +22,6 @@ Base Module for Chilean Localization
         'views/res_bank_view.xml',
         'views/res_company_view.xml',
         'views/res_country_view.xml',
-        'views/res_partner_view.xml',
     ],
     'installable': True,
     'auto_install': False,

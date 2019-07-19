@@ -71,7 +71,7 @@ class ResPartner(models.Model):
         'res.country',
         default=lambda self: self.env.ref('base.cl'))
 
-    comuna = fields.Char("Comuna")
+    # comuna = fields.Char("Comuna")
 
     @api.constrains('vat', 'l10n_latam_identification_type_id')
     def check_vat(self):
