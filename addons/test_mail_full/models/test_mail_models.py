@@ -26,6 +26,28 @@ class MailTestSMS(models.Model):
         return ['phone_nbr', 'mobile_nbr']
 
 
+class MailTestSMSBL(models.Model):
+    """ A model inheriting from mail.thread with some fields used for SMS
+    gateway, like a partner, a specific mobile phone, ... """
+    _description = 'Chatter Model for SMS Gateway'
+    _name = 'mail.test.sms.bl'
+    _inherit = ['mail.thread.phone']
+    _order = 'name asc, id asc'
+
+    name = fields.Char()
+    subject = fields.Char()
+    email_from = fields.Char()
+    phone_nbr = fields.Char()
+    mobile_nbr = fields.Char()
+    customer_id = fields.Many2one('res.partner', 'Customer')
+
+    def _sms_get_default_partners(self):
+        return self.mapped('customer_id')
+
+    def _sms_get_number_fields(self):
+        return ['phone_nbr', 'mobile_nbr']
+
+
 class MailTestSMSSoLike(models.Model):
     """ A model like sale order having only a customer, not specific phone
     or mobile fields. """

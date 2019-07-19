@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sms.tests import common as sms_common
-from odoo.addons.test_mail.tests import common as test_mail_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
-class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_common.MockEmails, test_mail_common.TestRecipients):
+class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_full_common.TestRecipients):
 
     @classmethod
     def setUpClass(cls):

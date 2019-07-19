@@ -2,15 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sms.tests import common as sms_common
-from odoo.addons.test_mail.tests import common as test_mail_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
-class TestSmsTemplate(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_common.TestRecipients):
+class TestServerAction(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_full_common.TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestSmsTemplate, cls).setUpClass()
+        super(TestServerAction, cls).setUpClass()
         cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
@@ -21,16 +20,10 @@ class TestSmsTemplate(test_mail_full_common.BaseFunctionalTest, sms_common.MockS
             'phone_nbr': cls.test_numbers[0],
         })
 
-        model_id = cls.env['ir.model']._get('mail.test.sms').id
-        cls.sms_template = cls.env['sms.template'].create({
-            'name': 'Test Template',
-            'model_id': model_id,
-            'body': 'Dear ${object.display_name} this is an SMS.'
-        })
-
+        cls.sms_template = cls._create_sms_template('mail.test.sms')
         cls.action = cls.env['ir.actions.server'].create({
             'name': 'Test SMS Action',
-            'model_id': model_id,
+            'model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'state': 'sms',
             'sms_template_id': cls.sms_template.id,
         })

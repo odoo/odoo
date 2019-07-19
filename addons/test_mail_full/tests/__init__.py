@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from . import common
+from . import test_phone_blacklist
 from . import test_sms_composer
 from . import test_sms_management
 from . import test_sms_performance

@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.tests import common as sms_common
-from odoo.addons.test_mail.tests import common as test_mail_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
-class TestSMSComposerComment(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_common.MockEmails, test_mail_common.TestRecipients):
+class TestSMSComposerComment(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_full_common.TestRecipients):
     """ TODO LIST
 
      * add test for default_res_model / default_res_id and stuff like that;
@@ -20,11 +18,6 @@ class TestSMSComposerComment(test_mail_full_common.BaseFunctionalTest, sms_commo
     def setUpClass(cls):
         super(TestSMSComposerComment, cls).setUpClass()
         cls._test_body = 'VOID CONTENT'
-
-        cls.partner_numbers = [
-            phone_validation.phone_format(partner.mobile, partner.country_id.code, partner.country_id.phone_code, force_format='E164')
-            for partner in (cls.partner_1 | cls.partner_2)
-        ]
 
         cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
             'name': 'Test',
@@ -159,7 +152,7 @@ class TestSMSComposerComment(test_mail_full_common.BaseFunctionalTest, sms_commo
     #     self.assertSMSSent((self.partner_1 | self.partner_2).mapped('mobile'), test_body)
 
 
-class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_common.MockEmails, test_mail_common.TestRecipients):
+class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS):
     """ TODO LIST
 
     * add test for mass with log note
@@ -170,28 +163,8 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
         super(TestSMSComposerMass, cls).setUpClass()
         cls._test_body = 'Zizisse an SMS.'
 
-        records = cls.env['mail.test.sms']
-        partners = cls.env['res.partner']
-        country_id = cls.env.ref('base.be').id,
-        for x in range(3):
-            partners += cls.env['res.partner'].with_context(**cls._test_context).create({
-                'name': 'Partner_%s' % (x),
-                'email': '_test_partner_%s@example.com' % (x),
-                'country_id': country_id,
-                'mobile': '047500%s%s99' % (x, x)
-            })
-            records += cls.env['mail.test.sms'].with_context(**cls._test_context).create({
-                'name': 'Test_%s' % (x),
-                'customer_id': partners[x].id,
-            })
-        cls.records = cls._reset_mail_context(records)
-        cls.partners = partners
-
-        cls.sms_template = cls.env['sms.template'].create({
-            'name': 'Test Template',
-            'model_id': cls.env['ir.model']._get('mail.test.sms').id,
-            'body': 'Dear ${object.display_name} this is an SMS.',
-        })
+        cls._create_records_for_batch('mail.test.sms', 3)
+        cls.sms_template = cls._create_sms_template('mail.test.sms')
 
     def test_composer_mass_active_domain(self):
         with self.sudo('employee'):
@@ -291,35 +264,3 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 self.assertSMSOutgoing(record.customer_id, None, 'Cher·e· %s ceci est un SMS.' % record.display_name)
             else:
                 self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
-
-    def test_message_schedule_sms(self):
-        with self.sudo('employee'):
-            with self.mockSMSGateway():
-                self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(body=self._test_body)
-
-        for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, self._test_body)
-
-    def test_message_schedule_sms_w_log(self):
-        with self.sudo('employee'):
-            with self.mockSMSGateway():
-                self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(body=self._test_body, mass_keep_log=True)
-
-        for record in self.records:
-            self.assertSMSNotification([{'partner': record.customer_id, 'state': 'ready'}], self._test_body)
-
-    def test_message_schedule_sms_w_template(self):
-        with self.sudo('employee'):
-            with self.mockSMSGateway():
-                self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(template=self.sms_template)
-
-        for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
-
-    def test_message_schedule_sms_w_template_and_log(self):
-        with self.sudo('employee'):
-            with self.mockSMSGateway():
-                self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(template=self.sms_template, mass_keep_log=True)
-
-        for record in self.records:
-            self.assertSMSNotification([{'partner': record.customer_id, 'state': 'ready'}], 'Dear %s this is an SMS.' % record.display_name)
