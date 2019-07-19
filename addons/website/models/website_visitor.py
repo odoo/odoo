@@ -97,33 +97,39 @@ class WebsiteVisitor(models.Model):
         # But the side effect is that the last_connection_date is updated ONLY on tracked pages.
         if website_page and website_page.track:
             visitor = self.env['website.visitor'].browse(self._decode())
-            vals = {
-                'last_connection_date': datetime.now(),
-            }
             if not visitor.exists():
                 # If visitor does not exist
-                country_code = request.session.geoip and request.session.geoip.get('country_code')
-                country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
-                lang_id = request.env['res.lang'].sudo().search([('code', '=', request.lang)], limit=1).id
-                vals.update({
-                    'lang_id': lang_id,
-                    'country_id': country_id,
-                    'page_ids': [(0, 0, {'page_id': website_page.id, 'visit_date': datetime.now()})],
-                    'website_id': request.website.id
-                })
-                # Set signed visitor id in cookie
-                visitor_sudo = self.sudo().create(vals)
+                visitor_sudo = self._create_visitor(website_page.id)
                 sign = self._encode(visitor_sudo.id)
                 response.set_cookie('visitor_id', sign)
             else:
                 visitor_sudo = visitor.sudo()
+                # Add page even if already in page_ids as checks on relations are done in many2many write method
+                vals = {
+                    'last_connection_date': datetime.now(),
+                    'page_ids': [(0, 0, {'page_id': website_page.id, 'visit_date': datetime.now()})],
+                }
                 # Would need to round on current day midnight and check if today is another day
                 if visitor_sudo.last_connection_date < (datetime.now() - timedelta(seconds=10)):
                     vals['visit_count'] = visitor_sudo.visit_count + 1
-                # Add page even if already in page_ids as checks on relations are done in many2many write method
-                vals['page_ids'] = [(0, 0, {'page_id': website_page.id, 'visit_date': datetime.now()})]
                 visitor_sudo.write(vals)
         return response
+
+    def _create_visitor(self, website_page_id=False):
+        country_code = request.session.geoip and request.session.geoip.get('country_code')
+        country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
+        lang_id = request.env['res.lang'].sudo().search([('code', '=', request.lang)], limit=1).id
+        vals = {
+            'last_connection_date': datetime.now(),
+            'lang_id': lang_id,
+            'country_id': country_id,
+            'website_id': request.website.id
+        }
+        if website_page_id:
+            vals['page_ids'] = [(0, 0, {'page_id': website_page_id, 'visit_date': datetime.now()})]
+        # Set signed visitor id in cookie
+        visitor_sudo = self.sudo().create(vals)
+        return visitor_sudo
 
 
 class WebsitVisitorPage(models.Model):
