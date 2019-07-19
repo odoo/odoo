@@ -877,6 +877,41 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('lazy loaded multi record view with failing mono record one', function (assert) {
+        assert.expect(4);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read') {
+                    return $.Deferred().reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.loadState({
+            action: 3,
+            id: 2,
+            view_type: 'form',
+        }).then(function () {
+            assert.ok(false, 'should not resolve the deferred');
+        }).fail(function () {
+            assert.ok(true, 'should reject the deferred');
+        });
+
+        assert.containsNone(actionManager, '.o_form_view');
+        assert.containsNone(actionManager, '.o_list_view');
+
+        actionManager.doAction(1);
+
+        assert.containsOnce(actionManager, '.o_kanban_view');
+
+        actionManager.destroy();
+    });
+
     QUnit.test('change the viewType of the current action', function (assert) {
         assert.expect(13);
 
