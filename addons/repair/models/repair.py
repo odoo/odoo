@@ -105,6 +105,7 @@ class Repair(models.Model):
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     internal_notes = fields.Text('Internal Notes')
     quotation_notes = fields.Text('Quotation Notes')
+    user_id = fields.Many2one('res.users', string="Responsible", default=lambda self: self.env.user)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company)
