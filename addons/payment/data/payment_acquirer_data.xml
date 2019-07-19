@@ -14,6 +14,7 @@
 
     <record id="payment_acquirer_buckaroo" model="payment.acquirer">
         <field name="name">Buckaroo</field>
+        <field name="display_as">Credit Card (powered by Buckaroo)</field>
         <field name="image_128" type="base64" file="payment_buckaroo/static/src/img/buckaroo_icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_buckaroo"/>
@@ -36,6 +37,7 @@
 
     <record id="payment_acquirer_ingenico" model="payment.acquirer">
         <field name="name">Ingenico</field>
+        <field name="display_as">Credit Card (powered by Ingenico)</field>
         <field name="sequence">2</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image_128" type="base64" file="payment_ingenico/static/src/img/ingenico_icon.png"/>
@@ -60,6 +62,7 @@
 
     <record id="payment_acquirer_adyen" model="payment.acquirer">
         <field name="name">Adyen</field>
+        <field name="display_as">Credit Card (powered by Adyen)</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image_128" type="base64" file="payment_adyen/static/src/img/adyen_icon.png"/>
         <field name="module_id" ref="base.module_payment_adyen"/>
@@ -85,6 +88,7 @@
 
     <record id="payment_acquirer_authorize" model="payment.acquirer">
         <field name="name">Authorize.net</field>
+        <field name="display_as">Credit Card (powered by Authorize)</field>
         <field name="sequence">3</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image_128" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
@@ -126,6 +130,7 @@
 
     <record id="payment_acquirer_sips" model="payment.acquirer">
         <field name="name">Sips</field>
+        <field name="display_as">Credit Card (powered by Sips)</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image_128" type="base64" file="payment_sips/static/src/img/sips_icon.png"/>
         <field name="module_id" ref="base.module_payment_sips"/>
@@ -178,6 +183,7 @@
 
     <record id="payment_acquirer_stripe" model="payment.acquirer">
         <field name="name">Stripe</field>
+        <field name="display_as">Credit Card (powered by Stripe)</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image_128" type="base64" file="payment_stripe/static/src/img/stripe_icon.png"/>
         <field name="module_id" ref="base.module_payment_stripe"/>
@@ -207,6 +213,7 @@
 
     <record id="payment_acquirer_payu" model="payment.acquirer">
         <field name="name">PayUmoney</field>
+        <field name="display_as">Credit Card (powered by PayUmoney)</field>
         <field name="image_128" type="base64" file="payment_payumoney/static/src/img/payumoney_icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_payumoney"/>
@@ -230,6 +237,7 @@
 
     <record id="payment_acquirer_payulatam" model="payment.acquirer">
         <field name="name">PayU Latam</field>
+        <field name="display_as">Credit Card (powered by PayU Latam)</field>
         <field name="image_128" type="base64" file="payment_payulatam/static/src/img/payulatam_icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_payulatam"/>
@@ -252,6 +260,7 @@
 
     <record id="payment_acquirer_alipay" model="payment.acquirer">
         <field name="name">Alipay</field>
+        <field name="display_as">Credit Card (powered by Alipay)</field>
         <field name="image_128" type="base64" file="payment_alipay/static/description/icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_alipay"/>

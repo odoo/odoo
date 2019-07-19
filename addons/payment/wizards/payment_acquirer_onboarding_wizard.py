@@ -77,7 +77,7 @@ class PaymentWizard(models.TransientModel):
         journal = manual_payment.journal_id
 
         self._payment_acquirer_onboarding_cache['manual_name'] = manual_payment['name']
-        self._payment_acquirer_onboarding_cache['manual_post_msg'] = manual_payment['post_msg']
+        self._payment_acquirer_onboarding_cache['manual_post_msg'] = manual_payment['pending_msg']
         self._payment_acquirer_onboarding_cache['journal_name'] = journal.name if journal.name != "Bank" else ""
         self._payment_acquirer_onboarding_cache['acc_number'] = journal.bank_acc_number
 
@@ -131,7 +131,7 @@ class PaymentWizard(models.TransientModel):
                         'Please create one from the Payment Acquirer menu.'
                     ))
                 manual_acquirer.name = self.manual_name
-                manual_acquirer.post_msg = self.manual_post_msg
+                manual_acquirer.pending_msg = self.manual_post_msg
                 manual_acquirer.state = 'enabled'
 
                 journal = manual_acquirer.journal_id

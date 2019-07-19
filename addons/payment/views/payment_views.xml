@@ -48,6 +48,7 @@
                             <page string="Configuration">
                                 <group name="acquirer_config">
                                     <group string="Payment Form" name="payment_form">
+                                        <field name="display_as" placeholder="If not defined, the acquirer name will be used."/>
                                         <field name="payment_icon_ids" widget="many2many_tags"/>
                                         <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
                                         <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
@@ -76,12 +77,11 @@
                             </page>
                             <page string="Messages" attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
                                 <group>
-                                    <field name="pre_msg" invisible="1"/>
-                                    <field name="post_msg"/>
+                                    <field name="pre_msg"/>
+                                    <field name="auth_msg" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
                                     <field name="pending_msg"/>
                                     <field name="done_msg"/>
                                     <field name="cancel_msg"/>
-                                    <field name="error_msg"/>
                                 </group>
                             </page>
                         </notebook>
