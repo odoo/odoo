@@ -34,14 +34,22 @@ var InventoryReportListController = ListController.extend({
      * inventory at a given date.
      */
     _onOpenWizard: function () {
+        var state = this.model.get(this.handle, {raw: true});
+        var stateContext = state.getContext();
+        var context = {
+            active_model: this.modelName,
+        };
+        if (stateContext.default_product_id) {
+            context.product_id = stateContext.default_product_id;
+        } else if (stateContext.product_tmpl_id) {
+            context.product_tmpl_id = stateContext.product_tmpl_id;
+        }
         this.do_action({
             res_model: 'stock.quantity.history',
             views: [[false, 'form']],
             target: 'new',
             type: 'ir.actions.act_window',
-            context: {
-                active_model: this.modelName,
-            }
+            context: context,
         });
     },
 });
