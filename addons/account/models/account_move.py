@@ -1352,6 +1352,9 @@ class AccountMove(models.Model):
             if not line.tax_ids:
                 line.tax_ids = line._get_computed_taxes()
 
+            if not line.product_uom_id:
+                line.product_uom_id = line._get_computed_uom()
+
         self.line_ids._onchange_price_subtotal()
         self._recompute_dynamic_lines(recompute_all_taxes=True)
 
