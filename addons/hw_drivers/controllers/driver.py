@@ -125,13 +125,6 @@ iot_devices = {}
 class DriverMetaClass(type):
     def __new__(cls, clsname, bases, attrs):
         newclass = super(DriverMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        #  We only add concrete classes to `drivers`.
-        try:
-            newclass.supported('test')
-        except NotImplementedError:
-            return newclass
-        except Exception:
-            pass
         # Some drivers must be tried only when all the others have been ruled out. These are kept at the bottom of the list.
         if newclass.is_tested_last:
             drivers.append(newclass)
@@ -184,7 +177,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         On specific driver override this method to check if device is supported or not
         return True or False
         """
-        raise NotImplementedError
+        pass
 
     def get_message(self):
         return ''
