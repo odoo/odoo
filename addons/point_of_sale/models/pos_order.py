@@ -205,8 +205,9 @@ class PosOrder(models.Model):
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
+            'account_id': order_line._compute_income_account().id,
             'name': order_line.product_id.display_name,
-            'tax_ids': [(6, 0, order_line.tax_ids.ids)],
+            'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
         }
 
     def _prepare_account_move_line(self, line, partner_id, current_company, currency_id, rounding_method):
@@ -1007,6 +1008,15 @@ class PosOrderLine(models.Model):
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+
+    def _compute_income_account(self):
+        self.ensure_one()
+        product = self.product_id
+        income_account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
+        if not income_account:
+            raise UserError(_('Please define income account for this product: "%s" (id:%d).')
+                            % (product.name, product.id))
+        return self.order_id.fiscal_position_id.map_account(income_account)
 
     @api.model
     def _prepare_refund_data(self, refund_order_id):
