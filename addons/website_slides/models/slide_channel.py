@@ -28,7 +28,8 @@ class ChannelUsersRelation(models.Model):
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
              ('completed', '=', True),
-             ('slide_id.is_published', '=', True)],
+             ('slide_id.is_published', '=', True),
+             ('slide_id.active', '=', True)],
             ['channel_id', 'partner_id'],
             groupby=['channel_id', 'partner_id'], lazy=False)
         mapped_data = dict()
