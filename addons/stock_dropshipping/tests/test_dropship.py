@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, Form
+from odoo.tests import Form
 from odoo.tools import mute_logger
 
+from odoo.addons.stock_dropshipping.tests.common import TestStockDropshippingCommon
 
-class TestDropship(common.TransactionCase):
+
+class TestDropship(TestStockDropshippingCommon):
     def test_change_qty(self):
         # enable the dropship and MTO route on the product
-        prod = self.env.ref('product.product_product_8')
+        prod = self.env['product.product'].create({'name': 'Large Desk', 'type': 'consu'})
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         prod.write({'route_ids': [(6, 0, [dropshipping_route.id, mto_route.id])]})
 
         # add a vendor
-        vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
+        vendor1 = self.supplier
         seller1 = self.env['product.supplierinfo'].create({
             'name': vendor1.id,
             'price': 8,
@@ -22,7 +24,7 @@ class TestDropship(common.TransactionCase):
         prod.write({'seller_ids': [(6, 0, [seller1.id])]})
 
         # sell one unit of this product
-        cust = self.env['res.partner'].create({'name': 'customer1'})
+        cust = self.customer
         so = self.env['sale.order'].create({
             'partner_id': cust.id,
             'partner_invoice_id': cust.id,
@@ -67,7 +69,7 @@ class TestDropship(common.TransactionCase):
     def test_00_dropship(self):
 
         # Create a vendor
-        supplier_dropship = self.env['res.partner'].create({'name': 'Vendor of Dropshipping test'})
+        supplier_dropship = self.supplier
 
         # Create new product without any routes
         drop_shop_product = self.env['product.product'].create({
@@ -87,8 +89,8 @@ class TestDropship(common.TransactionCase):
 
         # Create a sales order with a line of 200 PCE incoming shipment, with route_id drop shipping
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_2')
-        so_form.payment_term_id = self.env.ref('account.account_payment_term_end_following_month')
+        so_form.partner_id = self.customer
+        so_form.payment_term_id = self.payment_term
         with mute_logger('odoo.tests.common.onchange'):
             # otherwise complains that there's not enough inventory and
             # apparently that's normal according to @jco and @sle

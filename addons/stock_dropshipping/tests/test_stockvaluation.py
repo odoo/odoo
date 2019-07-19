@@ -10,8 +10,12 @@ class TestStockValuation(AccountingTestCase):
         super(TestStockValuation, self).setUp()
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.partner_id = self.env.ref('base.res_partner_1')
-        self.product1 = self.env.ref('product.product_product_8')
+        self.partner_id = self.env['res.partner'].create({'name': 'Demo Partner'})
+        self.product1 = self.env['product.product'].create({
+            'name': "Pen drive", 'type': "product",
+            'taxes_id': False,
+            'supplier_taxes_id': False
+        })
         self.categ_id = self.product1.categ_id
 
         self.acc_payable = self.partner_id.property_account_payable_id.id
