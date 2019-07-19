@@ -286,4 +286,31 @@
         <field name="tax_group_id" ref="tax_group_others"/>
     </record>
 
+    <!-- PERCEPTIONS-->
+    <record id="sale_tax_intern_sale_perception" model="account.tax">
+      <field name="name">Percepción Venta Interna (Porcentaje 2%)</field>
+      <field name="description">Percepción Venta Interna (Porcentaje 2%)</field>
+      <field name="amount">2</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="tax_group_id" ref="tax_group_perceptions"/>
+    </record>
+
+    <record id="sale_tax_perception_fuel" model="account.tax">
+      <field name="name">Percepción a la adquisición de combustible (Porcentaje 1%)</field>
+      <field name="description">Percepción a la adquisición de combustible (Porcentaje 1%)</field>
+      <field name="amount">1</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="tax_group_id" ref="tax_group_perceptions"/>
+    </record>
+
+    <record id="sale_tax_perception_agent" model="account.tax">
+      <field name="name">Percepción realizada al agente de percepción con tasa especial (Porcentaje 0.5%)</field>
+      <field name="description">Percepción realizada al agente de percepción con tasa especial (Porcentaje 0.5%)</field>
+      <field name="amount">0.5</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="tax_group_id" ref="tax_group_perceptions"/>
+    </record>
 </odoo>
