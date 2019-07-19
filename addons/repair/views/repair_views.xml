@@ -267,6 +267,7 @@
                         ]"/>
                   <group expand="0" string="Group By">
                       <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                      <filter string="Create Date" name="createDate" domain="[]" context="{'group_by': 'create_date'}"/>
                       <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                       <filter string="Warranty Expiration" name="guarantee_limit" domain="[]" context="{'group_by':'guarantee_limit'}"/>
@@ -276,13 +277,33 @@
           </field>
     </record>
 
+    <record id="view_repair_graph" model="ir.ui.view">
+        <field name="name">repair.graph</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <graph string="Repair Orders">
+                <field name="create_date"/>
+                <field name="product_id"/>
+            </graph>
+        </field>
+    </record>
 
+    <record id="view_repair_pivot" model="ir.ui.view">
+        <field name="name">repair.pivot</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Repair Orders">
+                <field name="create_date" type="row"/>
+                <field name="product_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
 
          <record id="action_repair_order_tree" model="ir.actions.act_window">
             <field name="name">Repair Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">repair.order</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">tree,kanban,graph,pivot,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -297,6 +318,19 @@
                 customer or not.
               </p>
             </field>
+        </record>
+
+        <record id="action_repair_order_graph" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="context">{
+                'search_default_product': 1,
+                'search_default_createDate': 1,
+            }
+            </field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">tree,kanban,graph,pivot,form</field>
+            <field name="view_id" ref="view_repair_graph"/>
         </record>
 
         <record id="view_repair_tag_form" model="ir.ui.view">
@@ -345,6 +379,10 @@
 
         <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="36"
             web_icon="repair,static/description/icon.png"/>
+
+        <menuitem id="repair_menu_reporting" name="Reporting" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+
+        <menuitem id="repair_menu" name="Repairs" parent="repair_menu_reporting" action="action_repair_order_graph"/>
 
         <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager"/>
 
