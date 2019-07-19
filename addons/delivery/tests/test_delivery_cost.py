@@ -4,7 +4,7 @@ from odoo.tests import common
 from odoo.tools import float_compare
 
 
-@common.tagged('post_install', '-at_install')
+@common.tagged('post_install', '-at_install', 'jev')
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
@@ -34,6 +34,9 @@ class TestDeliveryCost(common.TransactionCase):
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [self.env.ref('base.USD').id, self.env.user.company_id.id])
         self.pricelist.currency_id = self.env.ref('base.USD').id
+
+        self.product_4f = self.env.ref('sale.product_product_4f')
+        self.product_uom_kg = self.env.ref('uom.product_uom_kgm')
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
@@ -132,3 +135,46 @@ class TestDeliveryCost(common.TransactionCase):
         self.default_delivery_policy = self.SaleConfigSetting.create({})
 
         self.default_delivery_policy.execute()
+
+    def test_01_product_qty_with_section_line_in_so(self):
+        # I add at least 2 sales orders lines (can be same product)
+        line_product_data = {
+            'name':            'Customizable Desk',
+            'product_id':      self.product_4f.id,
+            'product_uom_qty': 2,
+            'product_uom':     self.product_uom_unit.id,
+            'price_unit':      750.00,
+        }
+        # and a section
+        line_section_data = {
+            'name':         'line_section',
+            'display_type': 'line_section'
+        }
+        lines = [
+            (0, 0, line_product_data),
+            (0, 0, line_section_data),
+            (0, 0, line_product_data)
+        ]
+        # section could be place in any position but the last. In this test, it will be product-section-product
+
+        # I create a sale order
+        sale_order_with_section_line = self.SaleOrder.create({
+            'partner_id':          self.partner_18.id,
+            'partner_invoice_id':  self.partner_18.id,
+            'partner_shipping_id': self.partner_18.id,
+            'pricelist_id':        self.pricelist.id,
+            'order_line':          lines,
+            'carrier_id':          self.normal_delivery.id
+        })
+
+        # I force the compute of the product_qty
+        lines = sale_order_with_section_line.order_line.sorted()
+        lines._compute_product_qty()
+        # sale_order_with_section_line.recompute()
+
+        # I check if sum of product quantities is equal to 4 (2x2 products)
+        total = 0
+        for line in sale_order_with_section_line.order_line:
+            total += line.product_qty
+
+        self.assertEqual(total, 4, 'Sum of quantity of products in sale_order_lines missmatch')

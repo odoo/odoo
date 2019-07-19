@@ -138,6 +138,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
+        print('Enter Compute')
+        for line in self:
+            print(str(line.id) + ' ', line.display_type)
         for line in self:
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 return 0.0
