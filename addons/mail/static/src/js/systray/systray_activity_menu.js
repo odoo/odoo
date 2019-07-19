@@ -70,7 +70,7 @@ var ActivityMenu = Widget.extend({
         var self = this;
         self._getActivityData().then(function (){
             self._$activitiesPreview.html(QWeb.render('mail.systray.ActivityMenu.Previews', {
-                activities : self._activities
+                widget: self
             }));
         });
     },

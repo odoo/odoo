@@ -60,9 +60,11 @@
     </t>
 
     <!--
-        @param {Object[]} activities
+        @param {mail.systray.ActivityMenu} widget
+        @param {Object[]} widget.activities
     -->
     <t t-name="mail.systray.ActivityMenu.Previews">
+        <t t-set="activities" t-value="widget._activities"/>
         <t t-if="_.isEmpty(activities)">
             <div class="dropdown-item-text text-center o_no_activity">
                 <span>No activities planned.</span>
