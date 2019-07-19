@@ -3442,6 +3442,9 @@ QUnit.module('ActionManager', {
                 active_id: 1,
                 active_ids: [1],
             },
+            flags: {
+                withSearchPanel: false,
+            },
         });
         var checkSessionStorage = false;
         var actionManager = await createActionManager({

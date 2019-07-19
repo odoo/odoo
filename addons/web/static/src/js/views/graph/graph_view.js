@@ -25,11 +25,11 @@ var GraphView = AbstractView.extend({
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
     ],
-    config: {
+    config: _.extend({}, AbstractView.prototype.config, {
         Model: GraphModel,
         Controller: Controller,
         Renderer: GraphRenderer,
-    },
+    }),
     viewType: 'graph',
     searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
 

@@ -23,11 +23,11 @@ var CalendarView = AbstractView.extend({
     icon: 'fa-calendar',
     jsLibs: ['/web/static/lib/fullcalendar/js/fullcalendar.js'],
     cssLibs: ['/web/static/lib/fullcalendar/css/fullcalendar.css'],
-    config: {
+    config: _.extend({}, AbstractView.prototype.config, {
         Model: CalendarModel,
         Controller: CalendarController,
         Renderer: CalendarRenderer,
-    },
+    }),
     viewType: 'calendar',
     searchMenuTypes: ['filter', 'favorite'],
 

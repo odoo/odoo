@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import ast
 import collections
 import copy
 import datetime
 import fnmatch
 import logging
-import os
 import re
 import time
 import uuid
 
 import itertools
 from dateutil.relativedelta import relativedelta
-from functools import partial
 from difflib import HtmlDiff
 from operator import itemgetter
 
@@ -22,7 +19,7 @@ from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
@@ -31,7 +28,7 @@ from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES, py
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
-from odoo.tools.view_validation import valid_view
+from odoo.tools.view_validation import valid_view, get_attrs_field_names, field_is_editable
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.image import image_data_uri
 
@@ -42,20 +39,6 @@ MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpa
 # First sort criterion for inheritance is priority, second is chronological order of installation
 # Note: natural _order has `name`, but only because that makes list browsing easier
 INHERIT_ORDER = 'priority,id'
-
-# attributes in views that may contain references to field names
-ATTRS_WITH_FIELD_NAMES = {
-    'context',
-    'domain',
-    'decoration-bf',
-    'decoration-it',
-    'decoration-danger',
-    'decoration-info',
-    'decoration-muted',
-    'decoration-primary',
-    'decoration-success',
-    'decoration-warning',
-}
 
 
 def keep_query(*keep_params, **additional_params):
@@ -181,7 +164,6 @@ xpath_utils['hasclass'] = _hasclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
-READONLY = re.compile(r"\breadonly\b")
 
 
 class View(models.Model):
@@ -375,7 +357,7 @@ actual arch.
                     # A <data> element is a wrapper for multiple root nodes
                     view_docs = view_docs[0]
                 for view_arch in view_docs:
-                    check = valid_view(view_arch)
+                    check = valid_view(view_arch, env=self.env, model=view.model)
                     if not check:
                         raise ValidationError(_('Invalid view %s definition in %s') % (view.name, view.arch_fs))
                     if check == "Warning":
@@ -876,7 +858,7 @@ actual arch.
                 attrs = {}
                 field = Model._fields.get(node.get('name'))
                 if field:
-                    editable = self.env.context.get('view_is_editable', True) and self._field_is_editable(field, node)
+                    editable = self.env.context.get('view_is_editable', True) and field_is_editable(field, node)
                     children = False
                     views = {}
                     for f in node:
@@ -939,6 +921,15 @@ actual arch.
                 if f.tag == 'filter':
                     fields[f.get('name')] = {}
 
+        elif node.tag == 'search':
+            searchpanel = [c for c in node if c.tag == 'searchpanel']
+            if searchpanel:
+                self.with_context(
+                    base_model_name=model,
+                    check_field_names=False,  # field validation is a bit more tricky and done apart
+                    view_is_editable=False,
+                ).postprocess_and_fields(model, searchpanel[0], view_id)
+
         if not self._apply_group(model, node, modifiers, fields):
             # node must be removed, no need to proceed further with its children
             return fields
@@ -948,6 +939,9 @@ actual arch.
         orm.transfer_node_to_modifiers(node, modifiers, self._context, in_tree_view)
 
         for f in node:
+            if node.tag == 'search' and f.tag == 'searchpanel':
+                # searchpanel part has to be validated independently
+                continue
             if children or (node.tag == 'field' and f.tag in ('filter', 'separator')):
                 fields.update(self.postprocess(model, f, view_id, in_tree_view, model_fields))
 
@@ -984,113 +978,6 @@ actual arch.
 
         return arch
 
-    def _view_is_editable(self, node):
-        """ Return whether the node is an editable view. """
-        return node.tag == 'form' or node.tag == 'tree' and node.get('editable')
-
-    def _field_is_editable(self, field, node):
-        """ Return whether a field is editable (not always readonly). """
-        return (
-            (not field.readonly or READONLY.search(str(field.states or ""))) and
-            (node.get('readonly') != "1" or READONLY.search(node.get('attrs') or ""))
-        )
-
-    def get_attrs_symbols(self):
-        """ Return a set of predefined symbols for evaluating attrs. """
-        return {
-            'True', 'False', 'None',    # those are identifiers in Python 2.7
-            'self',
-            'parent',
-            'id',
-            'uid',
-            'context',
-            'context_today',
-            'active_id',
-            'active_ids',
-            'allowed_company_ids',
-            'current_company_id',
-            'active_model',
-            'time',
-            'datetime',
-            'relativedelta',
-            'current_date',
-            'abs',
-            'len',
-            'bool',
-            'float',
-            'str',
-            'unicode',
-        }
-
-    def get_attrs_field_names(self, arch, model, editable):
-        """ Retrieve the field names appearing in context, domain and attrs, and
-            return a list of triples ``(field_name, attr_name, attr_value)``.
-        """
-        VIEW_TYPES = {item[0] for item in type(self).type.selection}
-        symbols = self.get_attrs_symbols() | {None}
-        result = []
-
-        def get_name(node):
-            """ return the name from an AST node, or None """
-            if isinstance(node, ast.Name):
-                return node.id
-
-        def get_subname(get, node):
-            """ return the subfield name from an AST node, or None """
-            if isinstance(node, ast.Attribute) and get(node.value) == 'parent':
-                return node.attr
-
-        def process_expr(expr, get, key, val):
-            """ parse `expr` and collect triples """
-            for node in ast.walk(ast.parse(expr.strip(), mode='eval')):
-                name = get(node)
-                if name not in symbols:
-                    result.append((name, key, val))
-
-        def process_attrs(expr, get, key, val):
-            """ parse `expr` and collect field names in lhs of conditions. """
-            for domain in safe_eval(expr).values():
-                if not isinstance(domain, list):
-                    continue
-                for arg in domain:
-                    if isinstance(arg, (tuple, list)):
-                        process_expr(str(arg[0]), get, key, expr)
-
-        def process(node, model, editable, get=get_name):
-            """ traverse `node` and collect triples """
-            if node.tag in VIEW_TYPES:
-                # determine whether this view is editable
-                editable = editable and self._view_is_editable(node)
-            elif node.tag in ('field', 'groupby'):
-                # determine whether the field is editable
-                field = model._fields.get(node.get('name'))
-                if field:
-                    editable = editable and self._field_is_editable(field, node)
-
-            for key, val in node.items():
-                if not val:
-                    continue
-                if key in ATTRS_WITH_FIELD_NAMES:
-                    process_expr(val, get, key, val)
-                elif key == 'attrs':
-                    process_attrs(val, get, key, val)
-
-            if node.tag in ('field', 'groupby') and field and field.relational:
-                if editable and not node.get('domain'):
-                    domain = field._description_domain(self.env)
-                    # process the field's domain as if it was in the view
-                    if isinstance(domain, str):
-                        process_expr(domain, get, 'domain', domain)
-                # retrieve subfields of 'parent'
-                model = self.env[field.comodel_name]
-                get = partial(get_subname, get)
-
-            for child in node:
-                process(child, model, editable, get)
-
-        process(arch, model, editable)
-        return result
-
     @api.model
     def postprocess_and_fields(self, model, node, view_id):
         """ Return an architecture and a description of all the fields.
@@ -1124,7 +1011,7 @@ actual arch.
         attrs_fields = []
         if self.env.context.get('check_field_names'):
             editable = self.env.context.get('view_is_editable', True)
-            attrs_fields = self.get_attrs_field_names(node, Model, editable)
+            attrs_fields = get_attrs_field_names(self.env, node, Model, editable)
 
         fields_def = self.postprocess(model, node, view_id, False, fields)
         self._postprocess_access_rights(model, node)
