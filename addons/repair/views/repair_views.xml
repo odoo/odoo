@@ -78,6 +78,7 @@
                             <field name="invoice_method"/>
                             <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}" attrs="{'invisible':[('invoice_method','=', 'none')]}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
                 <notebook>
@@ -222,6 +223,7 @@
                             <div class="row">
                                 <div class="col-6 text-muted">
                                     <span><t t-esc="record.product_id.value"/></span>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div class="col-6">
                                     <span class="float-right">
@@ -297,8 +299,55 @@
             </field>
         </record>
 
+        <record id="view_repair_tag_form" model="ir.ui.view">
+            <field name="name">repair.tag.form</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <form string="Repair Tags">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_repair_tag_tree" model="ir.ui.view">
+            <field name="name">repair.tag.tree</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <tree string="Tags" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_repair_tag_search" model="ir.ui.view">
+            <field name="name">repair.tag.search</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <search string="Tags">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_repair_order_tag" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">repair.tags</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Create a new tag
+              </p>
+            </field>
+        </record>
+
         <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="36"
             web_icon="repair,static/description/icon.png"/>
 
+        <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+
+        <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config" action="action_repair_order_tag"/>
     </data>
 </odoo>
