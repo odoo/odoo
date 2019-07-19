@@ -425,3 +425,28 @@ class SaleOrderLine(models.Model):
             # If company_id is set, always filter taxes by the company
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
+
+    # DLE P156: `test_program_rules_validity_dates_and_uses`,
+    # well, the trigger of `sale.coupon.program.order_count` was a complete hack
+    # It relied on `order_line_ids.product_id`, while the `order_line_ids` field was a fake, unstored, many2many, defined as
+    # ```
+    # order_line_ids = fields.Many2many('sale.order.line', store=False, search='_search_order_line_ids')
+    # def _search_order_line_ids(self, operator, arg):
+        # return []
+    # ```
+    # Overriding modified is quite hardcore as you need to know how works the cache and the invalidation system,
+    # but at least the below works and should be efficient.
+    # Another possibility is to add on product.product a one2many to sale.order.line 'order_line_ids',
+    # and then add the depends @api.depends('discount_line_product_id.order_line_ids'),
+    # but I am not sure this will as efficient as the below.
+    def modified(self, fnames, modified=None):
+        super(SaleOrderLine, self).modified(fnames, modified=modified)
+        if 'product_id' in fnames:
+            Program = self.env['sale.coupon.program']
+            field_order_count = Program._fields['order_count']
+            programs = self.env.cache.get_records(Program, field_order_count)
+            if programs:
+                products = self.filtered('is_reward_line').mapped('product_id')
+                for program in programs:
+                    if program.discount_line_product_id in products:
+                        self.env.cache.invalidate([(field_order_count, program.ids)])
