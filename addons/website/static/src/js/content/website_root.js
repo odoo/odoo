@@ -43,6 +43,7 @@ var WebsiteRoot = BodyManager.extend({
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
+        animation_stop_demand: '_onAnimationStopDemand',
         ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
 
