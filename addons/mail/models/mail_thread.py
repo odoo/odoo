@@ -32,6 +32,7 @@ from odoo.osv import expression
 from odoo.tools import pycompat, ustr
 from odoo.tools.misc import clean_context, split_every
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -126,7 +127,9 @@ class MailThread(models.AbstractModel):
         Do not use with operator 'not in'. Use instead message_is_followers
         """
         # TOFIX make it work with not in
-        assert operator != "not in", "Do not search message_follower_ids with 'not in'"
+        if ((operand or operand == "") and operator in ['not ilike', '!=', 'not in']) or (not operand and operator == '='):
+            # Not implemented with 'not in', Do not search message_follower_ids with 'not in'
+            raise UserError('This filter option is not supported.')
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('partner_id', operator, operand)])
@@ -140,7 +143,9 @@ class MailThread(models.AbstractModel):
         Do not use with operator 'not in'. Use instead message_is_followers
         """
         # TOFIX make it work with not in
-        assert operator != "not in", "Do not search message_follower_ids with 'not in'"
+        if ((operand or operand == "") and operator in ['not ilike', '!=', 'not in']) or (not operand and operator == '='):
+            # Not implemented with 'not in', Do not search message_follower_ids with 'not in'
+            raise UserError('This filter option is not supported.')
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('channel_id', operator, operand)])
