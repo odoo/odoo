@@ -523,10 +523,12 @@ class ProductTemplate(models.Model):
             #   deleted
             valid_value_ids = tmpl_id.valid_product_attribute_value_wnva_ids
             valid_attribute_ids = tmpl_id.valid_product_attribute_wnva_ids
+            seen_attributes = set(p.attribute_value_ids for p in tmpl_id.product_variant_ids if p.active)
             for product_id in tmpl_id.product_variant_ids:
                 if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
-                    if not product_id.active:
+                    if not product_id.active and product_id.attribute_value_ids not in seen_attributes:
                         variants_to_activate += product_id
+                        seen_attributes.add(product_id.attribute_value_ids)
                 else:
                     variants_to_unlink += product_id
 
