@@ -79,7 +79,7 @@ class PaymentProcessing(http.Controller):
         }
         # populate the returned dictionnary with the transactions data
         for tx in payment_transaction_ids:
-            message_to_display = tx.acquirer_id[tx.state + '_msg'] if tx.state in ['done', 'pending', 'cancel', 'error'] else None
+            message_to_display = tx.acquirer_id[tx.state + '_msg'] if tx.state in ['done', 'pending', 'cancel'] else None
             result['transactions'].append({
                 'reference': tx.reference,
                 'state': tx.state,
@@ -280,9 +280,6 @@ class WebsitePayment(http.Controller):
             elif tx.state == 'pending':
                 status = 'warning'
                 message = tx.acquirer_id.pending_msg
-            else:
-                status = 'danger'
-                message = tx.acquirer_id.error_msg
             PaymentProcessing.remove_payment_transaction(tx)
             return request.render('payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:

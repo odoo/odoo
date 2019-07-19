@@ -75,7 +75,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "finish",
-            trigger: '.oe_website_sale:contains("Pending... The order will be validated after the payment.")',
+            trigger: '.oe_website_sale:contains("Please make a payment to:")',
             timeout: 30000,
         }
     ]
