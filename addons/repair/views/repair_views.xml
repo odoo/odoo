@@ -249,6 +249,7 @@
                   <separator/>
                   <filter string="Invoiced" name="invoiced" domain="[('invoiced','=',True)]"/>
                   <field name="product_id"/>
+                  <field name="operations"/>
                   <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                   <separator/>
                   <filter string="My Activities" name="activities_my"
