@@ -30,11 +30,11 @@
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # Firas Asad <firas101@gmail.com>, 2018
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Osoul <baruni@osoul.ly>, 2018
 # Martin Trigaux, 2019
-# Osoul <baruni@osoul.ly>, 2019
 # Ali Alrehawi <alrehawi@hotmail.com>, 2019
 # Firas Fraxnet <firas@fraxnet.com>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 09:57+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Firas Fraxnet <firas@fraxnet.com>, 2019\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +61,7 @@ msgid ""
 msgstr ""
 " * تُستخدم الحالة 'مسودة' عند إدخال المستخدم فاتورة جديدة وغير مؤكدة.\n"
 "* تُستخدم الحالة 'مفتوحة' عند إنشاء المستخدم فاتورة وإصدار رقم لها، تبقى في تلك الحالة حتى يتم سداد الفاتورة.\n"
-"* تُستخدم الحالة 'جاري السداد' عند تسجيل مدفوعات الفاتورة كاملة في دفتر يومية لا تُرحل قيوده إلا بعد التسوية البنكية فقط، ويكون بعض تلك المدفوعات لم يسوَ ببند كشف الحساب البنكي بعد.\n"
+"* تُستخدم الحالة 'جاري السداد' عند تسجيل مدفوعات الفاتورة كاملة في دفتر يومية لا تُرحل قيوده إلا بعد التسوية البنكية فقط، ويكون بعض تلك المدفوعات لم تسوَ ببند كشف الحساب البنكي بعد.\n"
 "* تُسجل الحالة 'مدفوعة' تلقائيًا عند سداد الفاتورة. قد تكون قيود اليومية المرتبطة بالفاتورة تمت تسويتها أو لم تتم. \n"
 "* تُستخدم الحالة 'ملغية' عند إلغاء المستخدم للفاتورة."
 
@@ -473,6 +473,8 @@ msgid ""
 "<span class=\"o_form_label\">Rounding Method</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">طريقة التقريب</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"القيم المحددة هنا خاصة بكل مؤسسة.\" aria-label=\"القيم المحددة هنا خاصة بكل مؤسسة.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -499,7 +501,7 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">القيمة</span>\n"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">المبلغ</span>\n"
 "                                    <span groups=\"account.group_show_line_subtotals_tax_included\">السعر الإجمالي</span>"
 
 #. module: account
@@ -804,8 +806,8 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"كشف الحساب البنكي هو ملخص لكل المعاملات المالية\n"
-"                التي تحدث في الحساب البنكي خلال فترة زمنية معينة. ينبغي أن\n"
+"كشف الحساب البنكي هو موجز لكل المعاملات المالية\n"
+"                التي تحدث على الحساب البنكي خلال فترة زمنية معينة. ينبغي أن\n"
 "                تحصل على كشف الحساب بشكل دوري من بنكك."
 
 #. module: account
@@ -819,8 +821,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"يتكون قيد اليومية من عدة عناصر يومية. كل\n"
-"                واحد منها إما معاملة دائن أو مدين."
+"يتكون قيد اليومية من عدة عناصر يومية؛ كل\n"
+"                واحد منها إما أن يكون معاملة دائنة أو مدينة."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -828,7 +830,7 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
-"يُستخدم دفتر اليومية لتسجيل معاملات كل البيانات المحاسبية\n"
+"يُستخدم دفتر اليومية لتسجيل كافة المعاملات المحاسبية\n"
 "                المتعلقة بالأعمال اليومية."
 
 #. module: account
@@ -840,9 +842,9 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
-"لا يمكن ترحيل قيد يومية إحدى المدفوعات يدويًا إذا كان دفتر اليومية مضبوطًا "
-"على ترحيل القيود بعدما يتم تسوية المدفوعات بكشف حساب. سيتم ترحيل تلك القيود "
-"تلقائيًا بعد إتمام التسوية البنكية."
+"لا يمكن ترحيل قيود اليومية الناشئة عن المدفوعات يدوياً في دفتر يومية تم ضبطه"
+" لئلا يقوم بترحيل السداد إلا مع التسوية البنكية. سيتم ترحيل هذه القيود آلياً"
+" عند إجراء التسوية البنكية."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -870,12 +872,12 @@ msgstr "تمت تسوية إحدى بنود الحركة المُختارة با
 #: code:addons/account/models/account_bank_statement.py:538
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr "تمت تسوية أحد بنود كشف الحساب المُختارة بالفعل بحركة محاسبية."
+msgstr "تمت تسوية أحد بنود كشف الحساب المُختارة بالفعل مع قيد محاسبي آخر."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "لا يمكن تحديد الموقف الضريبي لبعض الضرائب إلا مرة واحدة فقط."
+msgstr "لا يمكن ضبط الموقف الضريبي لنفس الضريبة أكثر من مرة."
 
 #. module: account
 #: code:addons/account/models/res_users.py:17
@@ -887,16 +889,16 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"المستخدم لايمكن أن يتحمل ضرائب B2B ,و ضرائب B2C \n"
-"المستخدم (ين) عليهم إشكالية:%s\n"
-" اذهب الى الإعدادات العامة، واختر لعرض  أسعار المنتج \n"
-"إما  وضع ’شامل الضرائب’ أو ’غير شامل الضرائب’ \n"
-"(أو حول الوضع مرتين إذا كنت في الوضع المطلوب )."
+"لا يمكن للمستخدم أن يستخدم ضرائب الشركات B2B وضرائب الأفراد B2C في نفس الوقت.\n"
+"المستخدمـ(ين) بهذه المشكلة: %s\n"
+"يتوجب عليك أن تذهب إلى الإعدادات العامة، وأن تختار عرض أسعار المنتجات\n"
+"إما 'شاملة الضرائب' أو 'غير شاملة الضرائب'\n"
+"(أو التبديل بين الاختيارين مرتين إذا كان الاختيار المطلوب محدد مسبقاً)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "يمكن ضبط تحذير خاص بشريك (بحسابه)"
+msgstr "يمكن ضبط تحذير خاص بشريك (الحساب)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_warning
@@ -1194,8 +1196,8 @@ msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
 msgstr ""
-"الحساب الذي سيُستخدم في بنود ضرائب فاتورة إشعارات الخصم. اتركه فارغًا "
-"لاستخدام حساب المصروفات."
+"الحساب الذي سيستخدم في بنود ضرائب الفاتورة عند إصدار إشعارات الخصم. اتركه "
+"فارغاً لاستخدام حساب المصروف."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__account_id
@@ -1204,8 +1206,8 @@ msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
 msgstr ""
-"الحساب الذي سيُستخدم في بنود ضرائب فاتورة الفواتير. اتركه فارغًا لاستخدام "
-"حساب المصروفات."
+"الحساب الذي سيستخدم في بنود ضرائب الفاتورة عند إصدار الفواتير. اتركه فارغاً "
+"لاستخدام حساب المصروف."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template__refund_account_id
@@ -1213,8 +1215,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
-"الحساب الذي سيُستخدم في بنود ضرائب فاتورة المرتجعات. اتركه فارغًا لاستخدام "
-"حساب المصروفات."
+"الحساب الذي سيستخدم في بنود ضرائب الفاتورة عند إصدار فواتير المردودات. اتركه"
+" فارغاً لاستخدام حساب المصروف."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_base_account_id
@@ -2095,7 +2097,7 @@ msgstr "إكمال تلقائي من فاتورة سابقة."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-detect"
-msgstr "كشف تلقائي"
+msgstr "اكتشاف تلقائي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -2121,13 +2123,13 @@ msgstr "تطبيق آلي لقيود الأرباح المُرحلة للعقو�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automated Entries"
-msgstr "ادخال آلي للقيود"
+msgstr "القيود الآلية"
 
 #. module: account
 #: code:addons/account/models/company.py:407
 #, python-format
 msgid "Automatic Balancing Line"
-msgstr "بند الترصيد التلقائي"
+msgstr "بند التوازن الآلي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_currency_rate_live
@@ -2164,7 +2166,7 @@ msgstr "فاتورة"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr "مدين سيئ"
+msgstr "ديون معدومة"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -3554,7 +3556,7 @@ msgstr "أنشئ بواسطة"
 #: code:addons/account/models/account_invoice.py:419
 #, python-format
 msgid "Created by: %s"
-msgstr ""
+msgstr "أنشئ بواسطة: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
