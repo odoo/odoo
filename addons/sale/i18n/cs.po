@@ -426,7 +426,7 @@ msgstr "Jediná prodejní cena pro každý produkt"
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "Upozornění na produkt nebo zákazníka (Prodej)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -434,6 +434,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Schopnost vybrat typ balíku v zakázkách odběratele a vynutit množství, které"
+" je násobkem počtu jednotek na balení."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -546,7 +548,7 @@ msgstr "Analytické značky"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Za cenu"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -870,7 +872,7 @@ msgstr "Doručovací adresa současné zakázky."
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "Vklad"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_deposit_product_id
@@ -908,12 +910,12 @@ msgstr "Sleva (%)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_discount_policy
 msgid "Discount Policy"
-msgstr ""
+msgstr "slevová politika"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Discount included in the price"
-msgstr ""
+msgstr "Sleva v ceně"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -1043,7 +1045,7 @@ msgstr "Budoucí činnosti"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "Získejte varování v objednávkách produktů nebo zákazníků"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
@@ -1080,6 +1082,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Pokud je prodej uzamčen, již jej nemůžete měnit. Stále však budete moci "
+"fakturovat nebo dodat."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_product_image
@@ -1100,7 +1104,7 @@ msgstr "Účet příjmů"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
-msgstr ""
+msgstr "Sem vložte své smluvní podmínky ..."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:216
@@ -1172,11 +1176,14 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Výnosy z faktur za aktuální měsíc. Toto je částka, kterou tento měsíc "
+"fakturoval prodejní kanál. Používá se pro výpočet poměru progresu aktuálního"
+" a cílového příjmu na kanbanovém pohledu."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr ""
+msgstr "Faktura, co je dodáno"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1203,7 +1210,7 @@ msgstr "Fakturováno"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "Fakturované množství"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
@@ -1234,12 +1241,14 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Faktury budou vytvořeny v návrhu, abyste je mohli zkontrolovat\n"
+"před validací."
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr ""
+msgstr "Faktury: celkem bez daně"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1260,7 +1269,7 @@ msgstr "Fakturační zvyklosti"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "Cíl fakturace"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1270,7 +1279,7 @@ msgstr "Fakturační adresa:"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr ""
+msgstr "Invoicing and Shipping Address:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_is_downpayment
@@ -1822,7 +1831,7 @@ msgstr "Kategorie výrobku"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Obrázek produktu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_qty

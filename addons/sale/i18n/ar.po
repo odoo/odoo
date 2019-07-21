@@ -6,7 +6,6 @@
 # Nasma Elazrag <n.azrak@gmail.com>, 2017
 # hoxhe Aits <hoxhe0@gmail.com>, 2017
 # Khalid Aljahil <khalid@tarkeeb.sa>, 2017
-# nle_odoo, 2017
 # Akram Alfusayal <akram_ma@hotmail.com>, 2017
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2017
@@ -14,6 +13,7 @@
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # amrnegm <amrnegm.01@gmail.com>, 2017
+# nle_odoo, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018
 # Amer Hazaa <eng.amer.it@gmail.com>, 2018
@@ -448,7 +448,7 @@ msgstr "سعر بيع واحد لكل صنف"
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "يمكن تعيين تحذير على منتج أو عميل معين (المبيعات)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -456,6 +456,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"القدرة علي تحديد نوع الحزمة في أوامر البيع وفرض كمية تُقدر بمضاعفات عدد "
+"الوحدات لكل حزمة."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -513,12 +515,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr ""
+msgstr "يسمح لك بإرسال فاتورة مبدئية لعملائك"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr ""
+msgstr "يسمح لك بإرسال فاتورة مبدئية."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -594,6 +596,9 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"حسّن مبيعاتك بنوعين من برامج الخصم: العروض وأكواد الكوبونات. يمكن تعيين شروط"
+" معينة (المنتجات، العملاء، الحد الأدنى لمبلغ الشراء، المدة الزمنية). وقد "
+"تكون المكافآت خصومات (نسبة مئوية أو مبالغ) أو منتجات مجانية."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -623,7 +628,7 @@ msgstr "السماح بتعديل ما تم تسليمه"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "يمكنه تحرير المنتج"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -648,6 +653,8 @@ msgid ""
 "confirming orders straight away. This will add specific action buttons to "
 "your dashboard."
 msgstr ""
+"قم بتحديد هذا المربع إذا كنت ترسل عروض الأسعار لعملائك بدلًا من تأكيد "
+"الطلبات مباشرةً. سيؤدي ذلك لإضافة أزرار إجراءت محددة للوحة تحكمك."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
@@ -657,7 +664,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a target"
-msgstr ""
+msgstr "اضغط لتحديد هدف"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -706,7 +713,7 @@ msgstr "احتساب كلفة الشحن واتمام الشحن عبر  bpost"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr ""
+msgstr "حساب تكاليف الشحن للطلبات"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -732,7 +739,7 @@ msgstr "جهة الاتصال"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_coupon
 msgid "Coupons & Promotions"
-msgstr ""
+msgstr "الكوبونات والعروض"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -994,6 +1001,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"يتم تسجيل الدفعة المقدّمة عند إنشاء الفواتير من أمر البيع. لا يتم نسخه عند "
+"إنشاء نسخة من أمر البيع."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1043,6 +1052,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"من خلال هذا التقرير, يمكنك تكوين فكرة عامة عن المبالغ المفوترة من عملاءك. "
+"كما يمكنك استخدام أداة البحث لإضافة الطابع الشخصي على تقارير فواتيرك وبهذا "
+"تشكل هذا التحليل حسب احتياجاتك."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1058,7 +1070,7 @@ msgstr "الأنشطة القادمة"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "إظهار تحذيرات في طلبات المنتجات أو العملاء"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
@@ -1095,6 +1107,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"إذا تم إقفال أمر البيع، لن تستطيع تعديله. لكن سيكون بإمكانك فوترته أو "
+"تسليمه."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_product_image
@@ -1114,7 +1128,7 @@ msgstr "حساب الدخل"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
-msgstr ""
+msgstr "أدخل هنا شروطك وأحكامك..."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:216
@@ -1186,6 +1200,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"أرباح الشهر الحالي المفوترة. هذه هي الكمية التي قامت قناة المبيعات بفوترتها "
+"خلال هذا الشهر. وتُستخدم لحساب نسبة التقدم للأرباح الحالية والأرباح "
+"المستهدفة في واجهة عرض كانبان."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1248,12 +1265,14 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"سيتم إنشاء الفواتير في حالة المسودة لتتمكن من مراجعتهم\n"
+"                        قبل اعتمادهم."
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr ""
+msgstr "الفواتير: الإجمالي بدون ضرائب"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1303,12 +1322,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"غير مسموح بتعديل قيمة الحقول التالية في أمر مُقفل:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:551
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "غير مسموح بتأكيد أمر في الحالة التالية: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1381,12 +1402,12 @@ msgstr "مغلق"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "إدارة العروض وبرامج الكوبونات"
 
 #. module: sale
 #: selection:product.template,service_type:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "تحديد الكميات في الطلب يدويًا"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_service_type
@@ -1396,6 +1417,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"تعيين الكمية يدويًا على الطلب: يتم احتساب الفاتورة حسب الكمية المُدخلة يدويًا، بدون إنشاء حساب تحليلي.\n"
+"سجلات الأنشطة على العقود: تُحتسب الفاتورة حسب الساعات المتتبعة على سجل النشاط ذي الصلة.\n"
+"إنشاء مهمة وتتبع الساعات: أنشئ مهمة عند اعتماد أمر البيع وتتبع ساعات العمل."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1430,13 +1454,13 @@ msgstr "رسالة لخط طلب المبيعات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_multi_sales_price
 msgid "Multiple Sales Prices per Product"
-msgstr ""
+msgstr "أسعار متعددة لكل منتج"
 
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Multiple prices per product (e.g. customer segments, currencies)"
-msgstr ""
+msgstr "أسعار متعددة لكل منتج (مثلًا: شرائح العملاء، عملات)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1508,7 +1532,7 @@ msgstr "عدد العروض المبدئية للفوترة"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr ""
+msgstr "عدد أوامر البيع المُراد فوترتها"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1616,7 +1640,7 @@ msgstr "تم توقيع الأمر بواسطة %s"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr ""
+msgstr "الطلب المراد فوترته"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1739,12 +1763,12 @@ msgstr "تخفيض السعر"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "الخصم بدون إضافة الضريبة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "الخصم بإضافة الضريبة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_subtotal
@@ -1754,7 +1778,7 @@ msgstr "المجموع"
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Price computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "السعر محسوبًا بالمعادلات (الخصومات، الهوامش، التقريب)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -1780,7 +1804,7 @@ msgstr "قوائم الاسعار"
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
 msgid "Prices computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "السعر محسوبًا بالمعادلات (الخصومات، الهوامش، التقريب)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2231,7 +2255,7 @@ msgstr "بيع وشراء المنتجات بوحدات قياس مختلفة"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr ""
+msgstr "بيع المنتجات بمضاعفات عدد الوحدات لكل حزمة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2255,6 +2279,9 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"من المفيد إرسال رسالة بريد إلكتروني إذا كنت بحاجة لمشاركة معلومات معينة أو "
+"محتوى يخص منتج ما (تعليمات، قواعد، روابط، وسائط، إلخ). قم بإنشاء وضبط قالب "
+"الرسالة من نموذج تفاصيل المنتج (في تبويب المبيعات)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2270,7 +2297,7 @@ msgstr "الخدمات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 msgid "Set Invoicing Target"
-msgstr ""
+msgstr "تحديد القيمة المستهدف فوترتها"
 
 #. module: sale
 #. openerp-web
@@ -2282,17 +2309,17 @@ msgstr "حدد هدف الفواتير:"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
+msgstr "تعيين أسعار متعددة حسب المنتج، أو الخصومات التلقائية، إلخ."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
-msgstr ""
+msgstr "قم بتعديل خصائص المنتج ( مثل اللون والحجم) لبيع موديلات مختلفة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set specific billing and shipping addresses"
-msgstr ""
+msgstr "تعيين عناوين محددة للفوترة والشحن"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2318,7 +2345,7 @@ msgstr "الشحن"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery
 msgid "Shipping Costs"
-msgstr ""
+msgstr "تكاليف الشحن"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2339,17 +2366,17 @@ msgstr "عرض إجمالي بند السعر غير شامل الضريبة"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr ""
+msgstr "إظهار الهوامش علي أوامر البيع"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "إظهار السعر العام والخصم للعميل"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
-msgstr ""
+msgstr "عرض الشروط والأحكام القياسية في الأوامر"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_subtotal
@@ -2370,7 +2397,7 @@ msgstr "التوقيع"
 #: code:addons/sale/controllers/portal.py:211
 #, python-format
 msgid "Signature is missing."
-msgstr ""
+msgstr "التوقيع مفقود."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2385,7 +2412,7 @@ msgstr "المستند المصدر"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_product_email_template
 msgid "Specific Email"
-msgstr ""
+msgstr "بريد إلكتروني معين"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:88
@@ -2413,11 +2440,13 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales channel estimates to be able to invoice this month."
 msgstr ""
+"الإيرادات المستهدف فوترتها خلال الشهر الحالي. هذا هو المبلغ الذي تستطيع قناة"
+" المبيعات فوترته هذا الشهر حسب تقديراتهم."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "عرض الضريبة"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
@@ -2451,7 +2480,7 @@ msgstr "ضرائب"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "الضرائب المُطبقة على الدفعات"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_module_sale_payment
@@ -2475,6 +2504,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"أمر البيع %s المرتبط بالحساب التحليلي %s ملغي. لا يمكنك تسجيل مصروفات على "
+"أمر بيع ملغي."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:133
@@ -2484,6 +2515,8 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"أمر البيع %s المرتبط بالحساب التحليلي %s مقفل حاليًا. لا يمكنك تسجيل مصروفات"
+" على أمر بيع مقفل. برجاء إنشاء أمر بيع جديد مرتبط بهذا الحساب التحليلي."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:129
@@ -2492,11 +2525,12 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"يجب اعتماد أمر البيع %s المرتبط بالحساب التحليلي %s قبل تسجيل المصروفات."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "الكمية المطلوب فوترتها مقدمًا، غير شاملة الضرائب."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_analytic_account_id
@@ -2509,6 +2543,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"يُحسب الهامش من مجموع أسعار مبيعات المنتجات مطروحًا منه التكلفة المحددة في "
+"نموذج تفاصيلهم."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:151
@@ -2517,6 +2553,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
+"يجب أن يكون نوع المنتج المستخدم لفوترة الدفعة المقدّمة هي 'الكميات "
+"المطلوبة'. برجاء استخدام منتج آخر أو تحديث هذا المنتج."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:149
@@ -2526,12 +2564,14 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"يجب أن تكون سياسة فاتورة المنتج المستخدم لفوترة الدفعة المقدّمة هي \"الكميات"
+" المطلوبة\". برجاء تحديث منتج الإيداع لتتمكن من إنشاء فاتورة إيداع."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "يجب أن تكون قيمة مبلغ الدفعة المقدّمة قيمة موجبة."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -2541,7 +2581,7 @@ msgstr "لا توجد حاليا طلبات لحسابك."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "لا توجد عروض أسعار حاليًا بحسابك."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2550,6 +2590,9 @@ msgid ""
 "must be set in the Sales tab of the product detail form. 2) Price computed "
 "from formulas: must be set in the pricelist form."
 msgstr ""
+"هناك طريقتان لإدارة قوائم الأسعار: 1) أسعار متعددة لكل منتج: يجب تعيين هذا "
+"الاختيار بتبويب المبيعات في نموذج تفاصيل المنتج. 2) يُحسب السعر من "
+"المعادلات: يجب تعيين هذا الاختيار في نموذج قائمة الأسعار."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74
@@ -2558,6 +2601,8 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
+"لا يوجد حساب دخل مُعرف لهذا المنتج: \"%s\". قد تكون بحاجة لتثبيت دليل محاسبي"
+" من تطبيق المحاسبة، قائمة الإعدادات."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:438 code:addons/sale/models/sale.py:442
@@ -2632,7 +2677,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr ""
+msgstr "سجلات الأنشطة الخاصة بالمشروع (أجرة واحدة لكل أمر بيع أو مشروع)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
