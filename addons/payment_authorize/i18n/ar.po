@@ -5,15 +5,16 @@
 # Translators:
 # hoxhe Aits <hoxhe0@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:20+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,17 +25,17 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
 msgid "API Login Id"
-msgstr ""
+msgstr "معرف تسجيل الدخول لواجهة برمجة التطبيقات API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "مفتاح معاملة واجهة برمجة التطبيقات API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr ""
+msgstr "معرف ملف Authorize.net الشخصي"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:167
@@ -43,11 +44,13 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Authorize: البيانات المستلمة ينقصها رقم إشارة (%s) أو trans_id (%s) أو بصمة "
+"(%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "رمز التحقق من البطاقة"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -57,17 +60,17 @@ msgstr "رقم البطاقة"
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "اسم حامل البطاقة"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "تنتهي صلاحيته في (MM / YY)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "كيفية تلقي أموال من خلال Authorize.Net"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
@@ -76,6 +79,7 @@ msgid ""
 "If you don't have any account, please ask your salesperson to update your "
 "profile. "
 msgstr ""
+"إذا لم تملك أي حساب، برجاء التحدث مع موظف المبيعات لتحديث ملفك الشخصي. "
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -91,7 +95,7 @@ msgstr "معاملة السداد"
 #: code:addons/payment_authorize/controllers/main.py:63
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "برجاء إكمال ملفك الشخصي. "
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:58
@@ -107,13 +111,13 @@ msgstr "المزود"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "حفظ البطاقات"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:372
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "فشلت عملية إنشاء حساب العميل الشخصي في Authorize.NET."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:55
@@ -122,6 +126,7 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"لم نتمكن من معالجة المعاملة لأن بعض تفاصيل الاتصال مفقودة أو غير صالحة: "
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -129,6 +134,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"يحتوي هذا على رقم الإشارة الفريد الخاص بخليط الشريك ورمز السداد السري في "
+"الواجهة الخلفية لـAuthorize.net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
@@ -138,6 +145,9 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"يسمح هذا الخيار للعملاء بحفظ بطاقاتك الائتمانية كرمز سداد سري وإعادة "
+"استخدامه في عمليات شراء لاحقة. إذا كنت تقدم خدمة الاشتراكات (فواتير متكررة)،"
+" ستحتاج لتحصيل رسوم تلقائيًا عند إصدار فاتورة."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

@@ -41,6 +41,8 @@ msgstr "${(object.name or '').replace('/','_')}"
 #: model:mail.template,subject:mrp_repair.mail_template_mrp_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.partner_id.name} أوامر التصليح (رقم الإشارة ${object.name or 'n/a' "
+"})"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -62,6 +64,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* تستخدم الحالة 'مسودة' عندما ينشئ المستخدم أمر تصليح جديد غير مؤكد.\n"
+"* تستخدم الحالة 'مؤكد' عندما يقوم المستخدم بتأكيد أمر التصليح.\n"
+"* تستخدم الحالة 'جاهز للتصليح' لبدء التصليح، لا يمكن للمستخدم بدء التصليح سوى بعد تأكيد أمر التصليح.\n"
+"* تستخدم الحالة 'ينتظر الفوترة' لإنشاء الفاتورة قبل أو بعد انتهاء عملية التصليح.\n"
+"* ينتقل أمر التصليح للحالة 'منتهي' عند إكتمال عملية التصليح.\n"
+"* تستخدم الحالة 'ملغي' عندما يقوم المستخدم بإلغاء أمر التصليح."
 
 #. module: mrp_repair
 #: model:mail.template,body_html:mrp_repair.mail_template_mrp_repair_quotation
@@ -90,17 +98,17 @@ msgstr "<i>(إضافة)</i>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr ""
+msgstr "<strong>رقم اللوط/الرقم المسلسل:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operations</strong>"
-msgstr ""
+msgstr "</strong>العمليات</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Parts</strong>"
-msgstr ""
+msgstr "<strong>الأجزاء</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -115,7 +123,7 @@ msgstr "<strong>منتج للتعديل:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>عنوان الشحن:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -130,7 +138,7 @@ msgstr "<strong>الإجمالي</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong>الضمان:</strong>"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -190,7 +198,7 @@ msgstr "ملغى "
 #: code:addons/mrp_repair/models/mrp_repair.py:249
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "لا يمكن إلغاء عملية تصليح مكتملة."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -275,7 +283,7 @@ msgstr "العميل"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "العنوان الافتراضي"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -394,7 +402,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:215
 #, python-format
 msgid "Insufficient Quantity"
-msgstr ""
+msgstr "كمية غير كافية"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
@@ -576,7 +584,7 @@ msgstr "الشريك"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "الأجزاء"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -596,7 +604,7 @@ msgstr "لائحة الأسعار للشريك المحدد. "
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "طباعة عرض السعر"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
@@ -724,25 +732,25 @@ msgstr "مرجع التصليح"
 #: code:addons/mrp_repair/models/mrp_repair.py:203
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
+msgstr "يجب أن يكون أمر التصليح ملغيًا لكي يُعين كمسودة."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:408
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "يجب تأكيد أمر التصليح قبل بدء عملية التصليح."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:436
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "يجب تنفيذ أمر التصليح لتتمكن من إنشاء تحركات المنتج."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:419
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "يجب أن يكون أمر التصليح قيد العمل لتتمكن من إنهاءه."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:251
@@ -776,7 +784,7 @@ msgstr "امر التصليحات"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "البحث في أوامر التصليح"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -792,7 +800,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "إرسال عرض السعر"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:540
@@ -884,6 +892,7 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"تحدد حالة بند أمر التصليح تلقائيًا تبعًا لحالة أمر التصليح المرتبط به."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -980,6 +989,8 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"يجب اختيار قائمة أسعار فى نموذج التصليح!\n"
+"برجاء تعيين واحدة قبل اختيار المنتج."
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_traceability_report

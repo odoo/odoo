@@ -47,12 +47,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "<b>Total</b>"
-msgstr ""
+msgstr "<b>الإجمالي</b>"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
 msgid "<span class=\"o_label\">Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">نظرة عامة</span>"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -109,22 +109,22 @@ msgstr "التكلفة"
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_report_cost_revenue
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_report_cost_revenue
 msgid "Costs and Revenues"
-msgstr ""
+msgstr "التكاليف والإيرادات"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a new project but no task"
-msgstr ""
+msgstr "إنشاء مشروع جديد لكن بدون مهمة"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a task in a new project"
-msgstr ""
+msgstr "إنشاء مهمة في مشروع جديد"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a task in an existing project"
-msgstr ""
+msgstr "إنشاء مهمة في مشروع موجود"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_currency_id
@@ -134,7 +134,7 @@ msgstr "العملة"
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Don't create task"
-msgstr ""
+msgstr "لا تنشئ مهمة"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -149,7 +149,7 @@ msgstr "ثابت"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Fixed Price Projects"
-msgstr ""
+msgstr "مشروعات بسعر ثابت"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
@@ -176,7 +176,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr ""
+msgstr "الفاتورة المنشأة من سجل الأنشطة"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -186,7 +186,7 @@ msgstr "فاتوره محرره "
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_is_service
 msgid "Is a Service"
-msgstr ""
+msgstr "خدمة"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
@@ -202,7 +202,7 @@ msgstr ""
 #: selection:account.analytic.line,timesheet_invoice_type:0
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "No task found"
-msgstr ""
+msgstr "لم يُعثر على مهمة"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -223,7 +223,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
 msgid "Number of timesheets"
-msgstr ""
+msgstr "عدد سجلات النشاط"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
@@ -232,6 +232,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or "
 "task. From those, you can track the service you are selling."
 msgstr ""
+"عند تأكيد أمر المبيعات، يمكن أن ينشئ هذا المنتج مشروعًا و/أو مهمة. ومن "
+"خلالهم، يمكنك تتبع الخدمة التي تبيعها."
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -276,7 +278,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project(s) Overview"
-msgstr ""
+msgstr "نظرة عامة على المشروعات"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:107
@@ -288,7 +290,7 @@ msgstr "المشروعات"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "المشروعات المستخدمة في أمر المبيعات هذا."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -310,7 +312,7 @@ msgstr "الربح"
 msgid ""
 "Sale order line from which the project has been created. Used for "
 "tracability."
-msgstr ""
+msgstr "بند أمر البيع الذي أُنشئ منه المشروع. يُستخدم للتتبع."
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
@@ -321,7 +323,7 @@ msgstr "أمر البيع"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "عنصر أمر البيع"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -334,7 +336,7 @@ msgstr "سطر أمر المبيعات"
 msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
-msgstr ""
+msgstr "يجب أن ينتج عنصر أمر المبيعات مهمة و/أو مشروع، حسب إعدادات المنتج."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
@@ -348,12 +350,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_tracking
 msgid "Service Tracking"
-msgstr ""
+msgstr "تتبع الخدمة"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your fixed price services"
-msgstr ""
+msgstr "قم بإعداد خدماتك ثابتة السعر"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -377,11 +379,13 @@ msgstr "المهمة"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"تم إنشاء المهمة (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_task_id
 msgid "Task generated by the sales order item"
-msgstr ""
+msgstr "المهمة الناشئة عن عنصر أمر المبيعات"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:109
@@ -400,7 +404,7 @@ msgstr "المهام المربوطة بهذا البيع"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There is no timesheet for now."
-msgstr ""
+msgstr "لا توجد سجلات أنشطة حاليًا."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:251
@@ -409,6 +413,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"أنشأت هذه المهمة من: <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a>"
+" (%s)"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -439,12 +445,12 @@ msgstr "تكلفة سجل النشاط"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "أنشطة سجل النشاط"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "أنشطة سجل النشاط المرتبطة بعملية البيع هذه"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:104
@@ -462,12 +468,12 @@ msgstr "الجداول الزمنيه "
 #: code:addons/sale_timesheet/models/project.py:20
 #, python-format
 msgid "Timesheets of %s"
-msgstr ""
+msgstr "جدول نشاط %s"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Timesheets on tasks"
-msgstr ""
+msgstr "سجلات الأنشطة التابعة للمهام"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -481,6 +487,8 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
+"لا يمكنك تعديل سجلات الأنشطة المفوترة بالفعل (المرتطبة بعناصر أمر مبيعات "
+"مفوترة بالنسبة للوقت والمواد)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:74
