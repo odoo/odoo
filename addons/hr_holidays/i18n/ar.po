@@ -17,8 +17,8 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # amal ahmed <amalalhashemy88@hotmail.com>, 2018
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Martin Trigaux, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,11 +42,11 @@ msgid ""
 "request leaves and allocations;\tNo allocation: no allocation by default, "
 "users can freely request leaves;"
 msgstr ""
-"\tمثبت من قبل الموارد البشرية: قام قسم الموارد البشرية بتحديده ولا يمكن "
+"\tمثبت من قبل الموارد البشرية: قام قسم الموارد البشرية بتثبيته ولا يمكن "
 "تجاوزه؛ يمكن للمستخدمين طلب إجازات؛\tمثبت من قبل الموارد البشرية مع إمكانية "
-"طلب إضافة رصيد إجازات: قام قسم الموارد البشرية بإضافته ويمكن للمستخدمين طلب "
-"إجازات ومخصصات؛\tلا توجد مخصصات: لا توجد مخصصات افتراضيًا؛ يمكن للمستخدمين "
-"طلب إجازات حسب الرغبة؛"
+"طلب التخصيص: قام قسم الموارد البشرية بتثبيته ويمكن للمستخدمين طلب إجازات "
+"ومخصصات؛\tلا توجد مخصصات: لا توجد مخصصات افتراضيًا؛ يمكن للمستخدمين طلب "
+"إجازات حسب الرغبة؛"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:265
@@ -1793,13 +1793,13 @@ msgstr "طلب جديد"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "الموعد النهائي للنشاط القادم"
+msgstr "الموعد النهائي للنشاط التالي"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_summary
 msgid "Next Activity Summary"
-msgstr "ملخص النشاط القادم"
+msgstr "ملخص النشاط التالي"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
@@ -2112,7 +2112,7 @@ msgstr "إعادة التعيين لحالة مسودة"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Leaves Detail"
-msgstr "تفاصيل الإجازات"
+msgstr "تفاصيل إجازات المورد"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -2280,7 +2280,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
 msgid ""
 "The type with the smallest sequence is the default value in leave request"
-msgstr "النوع ذو الترتيب الأدنى سيكون القيمة الافتراضية في طلبات الإجازات"
+msgstr "النوع الذي يحمل أصغر تسلسل هو القيمة الافتراضية في طلب الإجازة"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -2622,7 +2622,7 @@ msgstr "مثلًا: ترحيلها للشهر التالي..."
 #: code:addons/hr_holidays/models/hr_leave.py:398
 #, python-format
 msgid "hour(s)"
-msgstr ""
+msgstr "ساعة"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:222
