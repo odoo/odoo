@@ -3,38 +3,39 @@
 # * delivery
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
 # David Halgand <david.halgand@gmail.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
 # Clo <clo@odoo.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
-# Miguel Vidali <mvidali129@gmail.com>, 2017
 # Fabri Yohann <psn@fabri.pw>, 2017
-# Florian Hatat, 2017
 # Tony Galmiche <tony.galmiche@infosaone.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Laura Piraux <lap@odoo.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Nancy Bolognesi <nb@microcom.ca>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Not Telling <levequevincel2@gmail.com>, 2017
+# Miguel Vidali <mvidali129@gmail.com>, 2017
 # Simon CARRIER <carrier.sim@gmail.com>, 2017
-# fr trans <e2ftrans1@yahoo.com>, 2017
-# fr rev <e2ffr02@hotmail.com>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Florian Hatat, 2017
+# 6534c450c77b2549e41c52e2051f5839, 2017
+# Martin Trigaux, 2017
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Cécile Collart <cco@odoo.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Xavier Belmere <Info@cartmeleon.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-07-17 15:01+0000\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Xavier Belmere <Info@cartmeleon.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -353,6 +354,13 @@ msgid "Debug logging"
 msgstr "Enregistrement de débogage"
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:13
+#, python-format
+msgid "Debug requests"
+msgstr ""
+
+#. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
 msgstr "Livraison"
@@ -436,6 +444,13 @@ msgid "Determine the display order"
 msgstr "Détermine l'ordre d'affichage"
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:14
+#, python-format
+msgid "Disable debug"
+msgstr ""
+
+#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
 msgstr "Annuler"
@@ -459,12 +474,18 @@ msgstr ""
 "règles de tarification pour chaque méthode."
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:16
+#, python-format
+msgid "Enable debug"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
 msgid "Environment"
 msgstr "Environnement"
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_grid.py:50
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
@@ -690,6 +711,13 @@ msgid "No carrier set for this order."
 msgstr "Aucun transporteur fixé pour cette commande."
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:15
+#, python-format
+msgid "No debug"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:100
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
@@ -792,6 +820,13 @@ msgstr "Règles de tarification"
 #: model:ir.model,name:delivery.model_product_template
 msgid "Product Template"
 msgstr "Modèle d'article"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:9
+#, python-format
+msgid "Production Environment"
+msgstr "Environnement de production"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
@@ -909,6 +944,27 @@ msgstr "États"
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Mouvement de stock"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:12
+#, python-format
+msgid "Switch to production environment"
+msgstr "Changer d'environnement de production"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:10
+#, python-format
+msgid "Switch to test environment"
+msgstr "Passer à l'environnement de test"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:11
+#, python-format
+msgid "Test Environment"
+msgstr "Environnement de test"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier

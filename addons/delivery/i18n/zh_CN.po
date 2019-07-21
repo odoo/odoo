@@ -3,31 +3,32 @@
 # * delivery
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# Ted Wang <feiyuwang2012@gmail.com>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# Martin Trigaux, 2017
 # Jonathon Li <jonathonli@gmail.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# 珠海-杜哥 <liangjia@qq.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # THL <wt39181819@gmail.com>, 2017
 # v2exerer <9010446@qq.com>, 2017
 # Xiaoming Deng <sumandeng@hotmail.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
+# Ted Wang <feiyuwang2012@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Martin Trigaux, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # John Lin <linyinhuan@139.com>, 2018
 # keecome <7017511@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: keecome <7017511@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-07-17 15:01+0000\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -341,6 +342,13 @@ msgid "Debug logging"
 msgstr "调试记录"
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:13
+#, python-format
+msgid "Debug requests"
+msgstr ""
+
+#. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
 msgstr "交货"
@@ -424,6 +432,13 @@ msgid "Determine the display order"
 msgstr "决定显示顺序"
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:14
+#, python-format
+msgid "Disable debug"
+msgstr ""
+
+#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
 msgstr "放弃"
@@ -446,12 +461,18 @@ msgstr ""
 "UPS快运, UPS 标准)并且每种方式都有相应的一套定价规则。"
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:16
+#, python-format
+msgid "Enable debug"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
 msgid "Environment"
 msgstr "环境"
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_grid.py:50
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
@@ -671,6 +692,13 @@ msgid "No carrier set for this order."
 msgstr "此订单没有设置承运商。"
 
 #. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:15
+#, python-format
+msgid "No debug"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:100
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
@@ -769,6 +797,13 @@ msgstr "定价规则"
 #: model:ir.model,name:delivery.model_product_template
 msgid "Product Template"
 msgstr "产品模板"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:9
+#, python-format
+msgid "Production Environment"
+msgstr "生产环境"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
@@ -880,6 +915,27 @@ msgstr "状态"
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "库存移动"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:12
+#, python-format
+msgid "Switch to production environment"
+msgstr "切换到生产环境"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:10
+#, python-format
+msgid "Switch to test environment"
+msgstr "切换到测试环境"
+
+#. module: delivery
+#. openerp-web
+#: code:addons/delivery/static/src/js/delivery_translations.js:11
+#, python-format
+msgid "Test Environment"
+msgstr "测试环境"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier

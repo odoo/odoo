@@ -13,13 +13,13 @@
 # Akram Alfusayal <akram_ma@hotmail.com>, 2017
 # Ahmed Salah <a.salah@puzzlewebworx.com>, 2017
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2017
-# Waleed Mohsen <mohsen.waleed@gmail.com>, 2017
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # amrnegm <amrnegm.01@gmail.com>, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # Khalid Aljahil <khalid@tarkeeb.sa>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
 # Martin Trigaux, 2017
+# Waleed Mohsen <mohsen.waleed@gmail.com>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
 # Amer Hazaa <eng.amer.it@gmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
@@ -627,7 +627,7 @@ msgstr "سياسة التحكم"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_move_created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr ""
+msgstr "بند أمر الشراء الناتج"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
@@ -731,7 +731,7 @@ msgstr "مبلغ الاعتماد المزدوج"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_dest_ids
 msgid "Downstream Moves"
-msgstr ""
+msgstr "حركات السيولة"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -746,7 +746,7 @@ msgstr "عنوان الشحن المباشر"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "بيع عبر سلسلة التجزئة"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -899,7 +899,7 @@ msgstr "تم الاستلام"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr ""
+msgstr "هل موديول المبيعات مثبت"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
@@ -1620,7 +1620,7 @@ msgstr "طلب شراء مبدئي #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr ""
+msgstr "مطالبة مورديك بتسليم المنتج لعملائك"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1648,7 +1648,7 @@ msgstr "ترجيع الشحنة"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+msgstr "قم بتحديد مواعيد مبكرة للاستلام لتتفادى التأخير"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
@@ -1781,7 +1781,7 @@ msgstr "الضرائب:"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "حقل تقني يستخدم لعرض عنوان الشحن"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1816,6 +1816,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"الكميات المدرجة في أمر الشراء الخاص بك أقل من الكميات المفوترة. ينبغي أن "
+"تطلب استرجاع الفارق. "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1842,7 +1844,7 @@ msgstr ""
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
-msgstr ""
+msgstr "لا يوجد مورد مرتبط بالمنتج %s. برجاء تعريف مورد لهذا المنتج."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1868,6 +1870,11 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"سيضيف هذا مسار التوصيل المباشر لينطبق على المنتجات لتتمكن من أن تطلب من "
+"مورديك أن يسلموها مباشرة إلى العملاء. المنتجات في التوصيل المباشر ستقوم "
+"بإنشاء طلب عرض سعر ما أن يتم تأكيد أمر البيع؛ وهو ما يمثل أسلوب الشراء عند "
+"الطلب. عنوان التسليم سيكون هو عنوان الشحن الخاص بالعميل، وليس المخزن الخاص "
+"بمؤسستك."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1919,7 +1926,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "سيحدد هذا نوع العملية للشحنة التالية"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1967,7 +1974,7 @@ msgstr "نقل"
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
-msgstr ""
+msgstr "تعذّر إلغاء أمر الشراء %s لأن بعض الاستلامات قد تمت بالفعل."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:366
@@ -2183,7 +2190,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:408
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "يجب أن تحدد مكان مورد لهذا الشريك %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
