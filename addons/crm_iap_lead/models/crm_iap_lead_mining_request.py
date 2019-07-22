@@ -62,18 +62,17 @@ class CRMLeadMiningRequest(models.Model):
     # Fields for the blue tooltip
     lead_credits = fields.Char(compute='_compute_tooltip', readonly=True)
     lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
+    lead_total_credits = fields.Char(compute='_compute_tooltip', readonly=True)
 
     @api.onchange('lead_number', 'contact_number')
     def _compute_tooltip(self):
         for record in self:
-            total_credits = CREDIT_PER_COMPANY * record.lead_number
+            company_credits = CREDIT_PER_COMPANY * record.lead_number
             contact_credits = CREDIT_PER_CONTACT * record.contact_number
             total_contact_credits = contact_credits * record.lead_number
-            message_contact = _("""Up to %d additional credits will be consumed
-                                per company to identify its contacts (making a
-                                total of %d credits for this request).""")
-            record.lead_credits = _('%d credits will be consumed to find %d companies.') % (total_credits, record.lead_number)
-            record.lead_contacts_credits = message_contact % (contact_credits, total_contact_credits)
+            record.lead_contacts_credits = _("Up to %d additional credits will be consumed to identify %d contacts per company.") % (contact_credits*company_credits, record.contact_number)
+            record.lead_credits = _('%d credits will be consumed to find %d companies.') % (company_credits, record.lead_number)
+            record.lead_total_credits = _("This makes a total of %d credits for this request.") % (total_contact_credits + company_credits)
 
     @api.depends('lead_ids')
     def _compute_leads_count(self):
