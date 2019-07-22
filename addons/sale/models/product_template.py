@@ -257,6 +257,7 @@ class ProductTemplate(models.Model):
             product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
             list_price = product_template.price_compute('list_price')[product_template.id]
             price = product_template.price if pricelist else list_price
+            display_image = bool(product_template.image)
 
         filtered_combination = combination._without_no_variant_attributes()
         if filtered_combination:

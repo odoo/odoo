@@ -1071,14 +1071,18 @@ var HelperPlugin = AbstractPlugin.extend({
             If this error appears, the carret is moved to the beginning
             of the focused node.*/
             console.error(e);
-            console.error('Informations for debugging', [
+            var log = [
                 ['textContent', textContent],
                 ['trimmed', trimmed],
                 ['cleanContents', cleanContents],
-                ['start', range.sc.outerHTML || range.sc.textContent, range.so],
-                ['end', range.ec.outerHTML || range.ec.textContent, range.eo],
-                ['parent', range.sc.parentNode && range.sc.parentNode.outerHTML],
-            ]);
+            ];
+            if (range) {
+                log.push(
+                    ['start', range.sc.outerHTML || range.sc.textContent, range.so],
+                    ['end', range.ec.outerHTML || range.ec.textContent, range.eo],
+                    ['parent', range.sc.parentNode && range.sc.parentNode.outerHTML]);
+            }
+            console.error('Informations for debugging', log);
         }
         this.context.invoke('editor.saveRange');
     },
