@@ -93,7 +93,6 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id')
 
-    @api.multi
     def write(self, values):
         ''' Archive/Unarchive  Wishlist Items when product is archive/unarchived'''
         res = super(ProductProduct, self).write(values)
