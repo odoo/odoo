@@ -298,7 +298,7 @@ taken at the moment of the failure and written in
 
   '/tmp/odoo_tests/{db_name}/screenshots/'
 
-Two new command line arguments were added since Odoo 13.0 to control this behavior:
+Two new command line arguments were backported from Odoo 13.0 to control this behavior:
 :option:`--screenshots <odoo-bin --screenshots>` and :option:`--screencasts <odoo-bin --screencasts>`
 
 
