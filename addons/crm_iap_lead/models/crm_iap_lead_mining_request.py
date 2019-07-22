@@ -6,6 +6,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.addons.iap import jsonrpc, InsufficientCreditError
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -156,7 +157,7 @@ class CRMLeadMiningRequest(models.Model):
             self.error = 'Insufficient credits. Recharge your account and retry.'
             self.state = 'error'
             self._cr.commit()
-            raise e
+            raise UserError(self.error)
 
     def _create_leads_from_response(self, result):
         """ This method will get the response from the service and create the leads accordingly """
