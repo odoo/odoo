@@ -8,4 +8,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     website_slide_google_app_key = fields.Char(related='website_id.website_slide_google_app_key', readonly=False)
-    module_website_sale_slides = fields.Boolean("Sell courses")
+    module_website_sale_slides = fields.Boolean(string="Sell courses")
+    module_website_slides_forum = fields.Boolean(string="Forum on Courses")
+    module_website_slides_survey = fields.Boolean(string="Certifications")

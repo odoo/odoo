@@ -20,14 +20,14 @@
             <field name="name">slide.tag.tree</field>
             <field name="model">slide.tag</field>
             <field name="arch" type="xml">
-                <tree string="Tags">
+                <tree string="Tags" editable="bottom">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record id="action_slide_tag" model="ir.actions.act_window">
-            <field name="name">Tags</field>
+            <field name="name">Content Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">slide.tag</field>
             <field name="view_mode">tree,form</field>
@@ -38,7 +38,7 @@
             <field name="name">slide.slide.form</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <form string="Slide">
+                <form string="Lesson">
                     <sheet>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
@@ -141,34 +141,11 @@
             </field>
         </record>
 
-          <record id="view_slide_question_form" model="ir.ui.view">
-            <field name="name">slide.question.form</field>
-            <field name="model">slide.question</field>
-            <field name="arch" type="xml">
-                <form string="Slide">
-                    <sheet>
-                        <div class="oe_edit_only">
-                            <label for="question" string="Question Name"/>
-                        </div>
-                        <h1>
-                            <field name="question" default_focus="1" placeholder="Name"/>
-                        </h1>
-                        <field name="answer_ids">
-                            <tree editable="bottom" create="true" delete="true">
-                                <field name="text_value"/>
-                                <field name="is_correct"/>
-                            </tree>
-                        </field>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="view_slide_slide_tree" model="ir.ui.view">
             <field name="name">slide.slide.tree</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <tree string="Slides">
+                <tree string="Contents">
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
@@ -176,6 +153,10 @@
                     <field name="channel_id"/>
                     <field name="category_id"/>
                     <field name="date_published"/>
+                    <field name="slide_views"/>
+                    <field name="public_views"/>
+                    <field name="total_views"/>
+                    <field name="completion_time"/>
                 </tree>
             </field>
         </record>
@@ -184,42 +165,50 @@
             <field name="name">slide.slide.filter</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <search string="Search Slides">
+                <search string="Search Contents">
                     <field name="name"/>
                     <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
                     <filter name="not_published" string="Waiting for validation" domain="[('is_published', '=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Channel" name="channel" domain="[]" context="{'group_by': 'channel_id'}"/>
-                        <filter string="Category" name="category" domain="[]" context="{'group_by': 'category_id'}"/>
-                        <filter string="Type" name="type" domain="[]" context="{'group_by': 'slide_type'}"/>
+                        <filter string="Channel" name="groupby_channel" domain="[]" context="{'group_by': 'channel_id'}"/>
+                        <filter string="Category" name="groupby_category" domain="[]" context="{'group_by': 'category_id'}"/>
+                        <filter string="Type" name="groupby_type" domain="[]" context="{'group_by': 'slide_type'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-        <record id="view_slide_slide_graph" model="ir.ui.view">
-            <field name="name">slide.slide.graph</field>
+        <record id="slide_slide_view_graph" model="ir.ui.view">
+            <field name="name">slide.slide.view.graph</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <graph string="Graph of Slides">
-                    <field name="date_published" interval="month" type="col"/>
+                <graph string="Graph of Contents" stacked="False">
                     <field name="channel_id" type="row"/>
+                    <field name="total_views" type="measure"/>
                 </graph>
             </field>
         </record>
 
-        <record id="action_slides_slides" model="ir.actions.act_window">
-            <field name="name">Slides</field>
+        <record id="slide_slide_action" model="ir.actions.act_window">
+            <field name="name">Contents</field>
             <field name="res_model">slide.slide</field>
-            <field name="view_mode">tree,form,graph</field>
-            <field name="context">{'search_default_channel': 1}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_groupby_channel': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Add a new slide
+                    Add a new lesson
                 </p>
             </field>
+        </record>
+
+        <record id="slide_slide_action_report" model="ir.actions.act_window">
+            <field name="name">Contents</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.slide</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="view_id" ref="slide_slide_view_graph"/>
         </record>
     </data>
 </odoo>
