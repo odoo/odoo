@@ -22,13 +22,16 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published')
+    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed',
+                 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published',
+                 'channel_id.slide_partner_ids.slide_id.active')
     def _compute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
              ('completed', '=', True),
-             ('slide_id.is_published', '=', True)],
+             ('slide_id.is_published', '=', True),
+             ('slide_id.active', '=', True)],
             ['channel_id', 'partner_id'],
             groupby=['channel_id', 'partner_id'], lazy=False)
         mapped_data = dict()
@@ -200,7 +203,7 @@ class Channel(models.Model):
     def _compute_slides_statistics(self):
         result = dict((cid, dict(total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
-            [('active', '=', True),('is_published', '=', True),('channel_id', 'in', self.ids)],
+            [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_type'],
             lazy=False)
