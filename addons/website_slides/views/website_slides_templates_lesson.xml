@@ -337,9 +337,20 @@
                     The social sharing module will be unlocked when a moderator will allow your publication.
                 </h4>
                 <t t-if="slide.website_published">
-                    <t t-call="website_slides.slide_social_media">
-                        <t t-set="slide" t-value="slide"/>
-                    </t>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <h5 class="mt16">Share on Social Networks</h5>
+                            <t t-call="website_slides.slide_share_social">
+                                <t t-set="record" t-value="slide"/>
+                            </t>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <t t-call="website_slides.slide_share_link">
+                                <t t-set="record" t-value="slide"/>
+                                <t t-set="website_url" t-value="slide.website_url"/>
+                            </t>
+                        </div>
+                    </div>
                     <div class="row">
                         <div t-attf-class="col-12 #{'col-lg-6' if slide.embed_code else ''}">
                             <t t-call="website_slides.slide_social_email">

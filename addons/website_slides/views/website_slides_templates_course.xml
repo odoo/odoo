@@ -131,7 +131,7 @@
                                 <div t-if="channel.channel_type == 'documentation'" class="my-1">
                                     <button role="button" class="btn text-white pl-0" title="Share Channel"
                                         aria-label="Share Channel"
-                                        data-toggle="modal" data-target="#slideChannelShareModal">
+                                        data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
                                         <i class="fa fa-share-square"></i> Share
                                     </button>
                                 </div>
@@ -157,6 +157,11 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Share modal : here to avoid having text-white from o_wslides_course_header -->
+            <t t-call="website_slides.slide_share_modal" t-if="channel.channel_type == 'documentation'">
+                <t t-set="record" t-value="channel"/>
+            </t>
 
             <div class="o_wslides_course_main">
                 <!-- ========== TRAINING COURSE ========== -->
@@ -250,36 +255,9 @@
             </div>
         </div>
 
-        <div class="modal fade" id="slideChannelShareModal" tabindex="-1" role="dialog" aria-labelledby="slideChannelShareModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="slideChannelShareModalLabel">
-                            Share
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span>&amp;times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h5>Share on Social Networks</h5>
-                        <t t-call="website_slides.slides_share">
-                            <t t-set="record" t-value="channel"/>
-                        </t>
-                        <h5 class="mt16">Share Link</h5>
-                        <div class="input-group">
-                            <input type="text" class="form-control o_wslides_js_share_link" readonly="readonly" onclick="this.select();"
-                                t-att-value="channel.website_url"/>
-                            <div class="input-group-append">
-                                <button class="btn btn-sm btn-primary o_clipboard_button" >
-                                    <span class="fa fa-clipboard"> Copy Text</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <t t-call="website_slides.slide_share_modal">
+            <t t-set="record" t-value="channel"/>
+        </t>
     </t>
 </template>
 
@@ -339,7 +317,7 @@
             <div class="mt-3">
                 <button role="button" class="btn btn-link btn-block" title="Share Channel"
                     aria-label="Share Channel"
-                    data-toggle="modal" data-target="#slideChannelShareModal">
+                    data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
                     <i class="fa fa-share-square fa-fw"/> Share
                 </button>
             </div>
