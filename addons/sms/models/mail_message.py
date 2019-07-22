@@ -29,7 +29,7 @@ class MailMessage(models.Model):
 
     def _search_has_sms_error(self, operator, operand):
         if operator == '=' and operand:
-            return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', True)]
+            return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', 'sms')]
         raise NotImplementedError()
 
     def _format_mail_failures(self):
