@@ -257,9 +257,9 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
+                            <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
-                            <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
