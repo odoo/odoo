@@ -206,7 +206,7 @@
                         <group>
                             <field name="date" string="Invoice Date"/>
                             <field name="start_date"/>
-                            <field name="expiration_date" />
+                            <field name="expiration_date" attrs="{'required': [('cost_frequency', '!=', 'no')]}"/>
                         </group>
                         <group>
                             <field name="insurer_id" context="{'default_supplier': True}"/>

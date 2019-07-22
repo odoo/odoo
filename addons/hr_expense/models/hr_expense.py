@@ -65,7 +65,7 @@ class HrExpense(models.Model):
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
         ("company_account", "Company")
-    ], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)], 'submitted': [('readonly', True)]}, string="Paid By")
+    ], default='own_account', states={'done': [('readonly', True)], 'approved': [('readonly', True)], 'reported': [('readonly', True)]}, string="Paid By")
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -312,8 +312,8 @@ class HrExpense(models.Model):
                 'currency_id': expense.currency_id.id if different_currency else False,
             }
             move_line_values.append(move_line_src)
-            total_amount -= move_line_src['debit']
-            total_amount_currency -= move_line_src['amount_currency'] or move_line_src['debit']
+            total_amount += -move_line_src['debit'] or move_line_src['credit']
+            total_amount_currency += -move_line_src['amount_currency'] if move_line_src['currency_id'] else (-move_line_src['debit'] or move_line_src['credit'])
 
             # taxes move lines
             for tax in taxes['taxes']:
