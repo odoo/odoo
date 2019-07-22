@@ -23,12 +23,19 @@ ProductConfiguratorWidget.include({
 
     /**
      * Set restoreProductTemplateId for further backtrack.
+     * Saves the optional products in the widget for future application
+     * post-line configuration.
+     *
+     * {OdooEvent ev}
+     *    {Array} ev.data.optionalProducts the various selected optional products
+     *     with their configuration
      *
      * @override
      * @private
      */
     _onFieldChanged: function (ev) {
         this.restoreProductTemplateId = this.recordData.product_template_id;
+        this.optionalProducts = (ev.data && ev.data.optionalProducts) || this.optionalProducts;
 
         this._super.apply(this, arguments);
     },
@@ -58,7 +65,7 @@ ProductConfiguratorWidget.include({
                 productTemplateId
             ]
         }).then(function (result) {
-            if (result) {
+            if (result && !result.has_optional_products) {
                 self.trigger_up('field_changed', {
                     dataPointID: dataPointId,
                     changes: {
@@ -67,17 +74,10 @@ ProductConfiguratorWidget.include({
                             operation: 'DELETE_ALL'
                         }
                     },
-                    onSuccess: function () {
-                        if (result.has_optional_products) {
-                            // VFE WARNING optional products and configurable product_id don't go well
-                            // together for the moment...
-                            self._openOptionsConfigurator(productTemplateId, dataPointId);
-                        }
-                    }
                 });
             } else {
                 self._openProductConfigurator({
-                        configuratorMode: 'add',
+                        configuratorMode: (result && result.has_optional_products ? 'options' : 'add'),
                         default_pricelist_id: self._getPricelistId(),
                         default_product_template_id: productTemplateId
                     },
@@ -89,14 +89,30 @@ ProductConfiguratorWidget.include({
         });
     },
 
-    _openOptionsConfigurator: function (productTemplateId, dataPointId) {
-        this._openProductConfigurator({
-                configuratorMode: 'options',
-                default_pricelist_id: this._getPricelistId(),
-                default_product_template_id: productTemplateId
-            },
-            dataPointId
-        );
+    /**
+     *  When line is configured, apply the options defined earlier.
+     *  @override
+     *  @private
+     */
+    _onLineConfigured: function () {
+        var self = this;
+        this._super.apply(this, arguments);
+        var parentList = self.getParent();
+        if (self.optionalProducts && self.optionalProducts.length !== 0) {
+            self.trigger_up('add_record', {
+                context: self._productsToRecords(self.optionalProducts),
+                forceEditable: 'bottom',
+                allowWarning: true,
+                onSuccess: function () {
+                    // Leave edit mode of one2many list.
+                    parentList.unselectRow();
+                }
+            });
+        } else if (!self._isConfigurableLine() && self._isConfigurableProduct()) {
+            // Leave edit mode of current line if line was configured
+            // only through the product configurator.
+            parentList.unselectRow();
+        }
     },
 
     /**
@@ -121,15 +137,15 @@ ProductConfiguratorWidget.include({
      * @private
      */
     _openProductConfigurator: function (data, dataPointId) {
+        this.optionalProducts = undefined;
         var self = this;
         this.do_action('sale_product_configurator.sale_product_configurator_action', {
             additional_context: data,
             on_close: function (result) {
                 if (result && result !== 'special') {
-                    // TODO if mode == 'options'
-                    // if no options chosen, don't trigger events...
                     self._addProducts(result, dataPointId);
                 } else {
+                    // is this restoreProductTemplateId ability useful ???
                     if (self.restoreProductTemplateId) {
                         self.trigger_up('field_changed', {
                             dataPointID: dataPointId,
@@ -198,30 +214,11 @@ ProductConfiguratorWidget.include({
      * @private
      */
     _addProducts: function (result, dataPointId) {
-        var self = this;
         this.trigger_up('field_changed', {
             dataPointID: dataPointId,
             preventProductIdCheck: true,
-            changes: this._getMainProductChanges(result.mainProduct),
-            onSuccess: function () {
-                var parentList = self.getParent();
-                if (result.options && result.options.length !== 0) {
-                    self.trigger_up('add_record', {
-                        context: self._productsToRecords(result.options),
-                        forceEditable: 'bottom',
-                        allowWarning: true,
-                        onSuccess: function () {
-                            // Leave edit mode of the last line added.
-                            parentList.unselectRow();
-                        }
-                    });
-
-                } else if (!self._isConfigurableLine()) {
-                    // Leave edit mode of current line if no other wizard
-                    // will be opened by the field_changed event.
-                    parentList.unselectRow();
-                }
-            }
+            optionalProducts: result.options,
+            changes: this._getMainProductChanges(result.mainProduct)
         });
     },
 
@@ -322,28 +319,28 @@ ProductConfiguratorWidget.include({
             };
 
             if (product.no_variant_attribute_values) {
-                var default_product_no_variant_attribute_values = [];
-                _.each(product.no_variant_attribute_values, function (attribute_value) {
-                        default_product_no_variant_attribute_values.push(
-                            [4, parseInt(attribute_value.value)]
+                var defaultProductNoVariantAttributeValues = [];
+                _.each(product.no_variant_attribute_values, function (attributeValue) {
+                        defaultProductNoVariantAttributeValues.push(
+                            [4, parseInt(attributeValue.value)]
                         );
                 });
                 record['default_product_no_variant_attribute_value_ids']
-                    = default_product_no_variant_attribute_values;
+                    = defaultProductNoVariantAttributeValues;
             }
 
             if (product.product_custom_attribute_values) {
-                var default_custom_attribute_values = [];
-                _.each(product.product_custom_attribute_values, function (attribute_value) {
-                    default_custom_attribute_values.push(
+                var defaultCustomAttributeValues = [];
+                _.each(product.product_custom_attribute_values, function (attributeValue) {
+                    defaultCustomAttributeValues.push(
                             [0, 0, {
-                                attribute_value_id: attribute_value.attribute_value_id,
-                                custom_value: attribute_value.custom_value
+                                attribute_value_id: attributeValue.attribute_value_id,
+                                custom_value: attributeValue.custom_value
                             }]
                         );
                 });
                 record['default_product_custom_attribute_value_ids']
-                    = default_custom_attribute_values;
+                    = defaultCustomAttributeValues;
             }
 
             records.push(record);

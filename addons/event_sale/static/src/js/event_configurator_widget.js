@@ -74,7 +74,7 @@ ProductConfiguratorWidget.include({
      * @override
      * @private
      */
-    _onEditProductConfiguration: function () {
+    _onEditLineConfiguration: function () {
         if (this.recordData.event_ok) {
             var defaultValues = {
                 default_product_id: this.recordData.product_id.data.id
@@ -117,17 +117,19 @@ ProductConfiguratorWidget.include({
                     self.trigger_up('field_changed', {
                         dataPointID: dataPointId,
                         changes: result.eventConfiguration,
-                        // VFE NOTE : Do we unselect the row after event config?
-                        // event_sale tour is made to work without unselectRow
-                        /*onSuccess: function (){
-                            self.getParent().unselectRow();
-                        }*/
+                        onSuccess: function () {
+                            // Call post-init function.
+                            self._onLineConfigured();
+                        }
                     });
                 } else {
                     if (!self.recordData.event_id || !self.recordData.event_ticket_id) {
                         self.trigger_up('field_changed', {
                             dataPointID: dataPointId,
-                            changes: {product_id: false},
+                            changes: {
+                                product_id: false,
+                                name: ''
+                            },
                         });
                     }
                 }

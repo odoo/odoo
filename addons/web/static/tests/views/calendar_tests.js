@@ -34,10 +34,8 @@ function _preventScroll(ev) {
 }
 
 QUnit.module('Views', {
-    before: function () {
-        window.addEventListener('scroll', _preventScroll, true);
-    },
     beforeEach: function () {
+        window.addEventListener('scroll', _preventScroll, true);
         session.uid = -1; // TO CHECK
         this.data = {
             event: {
@@ -106,7 +104,7 @@ QUnit.module('Views', {
             },
         };
     },
-    after: function () {
+    afterEach: function () {
         window.removeEventListener('scroll', _preventScroll, true);
     },
 }, function () {
