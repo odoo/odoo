@@ -122,8 +122,11 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @override
      */
     canBeRemoved: function () {
-        // AAB: get rid of this option when on_hashchange mechanism is improved
-        return this.discardChanges(undefined, { readonlyIfRealDiscard: true });
+        // AAB: get rid of 'readonlyIfRealDiscard' option when on_hashchange mechanism is improved
+        return this.discardChanges(undefined, {
+            noAbandon: true,
+            readonlyIfRealDiscard: true,
+        });
     },
     /**
      * Discards the changes made on the record associated to the given ID, or
@@ -137,9 +140,10 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      *
      * @param {string} [recordID]
      *        if not given, we consider all the changes made by the controller
+     * @param {Object} [options]
      * @returns {Promise} resolved if properly discarded, rejected otherwise
      */
-    discardChanges: function (recordID) {
+    discardChanges: function (recordID, options) {
         return Promise.resolve();
     },
     /**

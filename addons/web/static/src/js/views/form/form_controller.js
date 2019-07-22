@@ -50,13 +50,18 @@ var FormController = BasicController.extend({
         this.autofocus();
     },
     /**
-     * Force mode back to readonly. Whenever we leave a form view, it is saved,
-     * and should no longer be in edit mode.
+     * This hook is called when a form view is restored (by clicking on the
+     * breadcrumbs). In general, we force mode back to readonly, because
+     * whenever we leave a form view by stacking another action on the top of
+     * it, it is saved, and should no longer be in edit mode. However, there is
+     * a special case for new records for which we still want to be in 'edit'
+     * as no record has been created (changes have been discarded before
+     * leaving).
      *
      * @override
      */
     willRestore: function () {
-        this.mode = 'readonly';
+        this.mode = this.model.isNew(this.handle) ? 'edit' : 'readonly';
     },
 
     //--------------------------------------------------------------------------
