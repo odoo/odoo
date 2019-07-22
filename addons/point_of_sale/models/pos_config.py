@@ -423,6 +423,8 @@ class PosConfig(models.Model):
     def open_ui(self):
         """ open the pos interface """
         self.ensure_one()
+        # check all constraints, raises if any is not met
+        self._validate_fields(self._fields)
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',
