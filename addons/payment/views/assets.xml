@@ -13,4 +13,11 @@
             <script type="text/javascript" src="/payment/static/src/js/payment_processing.js"></script>
         </xpath>
     </template>
+
+    <template id="assets_backend" name="payment_assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/payment/static/src/js/payment_translations.js"></script>
+        </xpath>
+    </template>
+
 </odoo>
