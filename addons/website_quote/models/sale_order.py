@@ -122,7 +122,11 @@ class SaleOrder(models.Model):
                 price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, line.product_uom_qty, False)
                 if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
                     discount = (line.price_unit - price) / line.price_unit * 100
-                    price = line.price_unit
+                    # negative discounts (= surcharge) are included in the display price
+                    if discount < 0:
+                        discount = 0
+                    else:
+                        price = line.price_unit
 
             else:
                 price = line.price_unit
