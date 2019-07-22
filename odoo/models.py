@@ -290,6 +290,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
+    def __call__(self):
+        return self._build_domain()
+
     @api.model
     def view_init(self, fields_list):
         """ Override this method to do specific things when a form view is
@@ -1500,6 +1503,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         that could be different from the current user.
         """
         return self[0].get_formview_action(access_uid=access_uid)
+
+    @api.model
+    def _build_domain(self):
+        return expression.DomainConstructor(self)
 
     @api.model
     def search_count(self, args):

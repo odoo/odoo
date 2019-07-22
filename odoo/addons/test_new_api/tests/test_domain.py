@@ -1,5 +1,89 @@
 # -*- coding: utf-8 -*-
-from odoo.tests import common
+from odoo.tests import common, tagged
+
+
+@tagged('domains')
+class TestDomainNewApi(common.TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.Cat = self.env['test_new_api.category']
+        self.spam = self.Cat.create({
+            'name': 'spam',
+            'color': 1,
+        })
+        self.ham = self.Cat.create({
+            'name': 'ham',
+            'color': 2,
+        })
+        self.eggs = self.Cat.create({
+            'name': 'eggs',
+            'color': 3,
+        })
+        self.all_ids = self.spam | self.ham | self.eggs
+
+    def _assertEqualDomain(self, domain_obj, domain_str):
+        self.assertEquals(domain_obj.serialize(), domain_str)
+
+    def test_sql_ops(self):
+        self._assertEqualDomain(self.Cat().name == 'spam', [('name', '=', 'spam')])
+        self._assertEqualDomain(self.Cat().name != 'ham', [('name', '!=', 'ham')])
+        self._assertEqualDomain(self.Cat().color >= 1, [('color', '>=', 1)])
+        self._assertEqualDomain(self.Cat().color > 2, [('color', '>', 2)])
+        self._assertEqualDomain(self.Cat().color <= 3, [('color', '<=', 3)])
+        self._assertEqualDomain(self.Cat().color < 2, [('color', '<', 2)])
+        self._assertEqualDomain(self.Cat().color.has([1, 2]), [('color', 'in', [1, 2])])
+        self._assertEqualDomain(self.Cat().color.hasnt([1, 2]), [('color', 'not in', [1, 2])])
+        self._assertEqualDomain(self.Cat().name.maybe('foo'), [('name', '=?', 'foo')])
+        self._assertEqualDomain(self.Cat().name.slike('eggs'), [('name', '=like', 'eggs')])
+        self._assertEqualDomain(self.Cat().name.like('egg'), [('name', 'like', 'egg')])
+        self._assertEqualDomain(self.Cat().name.not_like('ham'), [('name', 'not like', 'ham')])
+        self._assertEqualDomain(self.Cat().name.silike('SPAM'), [('name', '=ilike', 'SPAM')])
+        self._assertEqualDomain(self.Cat().name.ilike('EGG'), [('name', 'ilike', 'EGG')])
+        self._assertEqualDomain(self.Cat().name.not_ilike('HAM'), [('name', 'not ilike', 'HAM')])
+        self._assertEqualDomain(self.Cat().parent.child_of(1), [('parent', 'child_of', 1)])
+
+    def test_domain_op_and(self):
+        self._assertEqualDomain(
+            (self.Cat().name == 'eggs') & (self.Cat().color > 2),
+            ['&', ('name', '=', 'eggs'), ('color', '>', 2)],
+        )
+
+    def test_domain_op_or(self):
+        self._assertEqualDomain(
+            (self.Cat().name == 'ham') | (self.Cat().name == 'spam'),
+            ['|', ('name', '=', 'ham'), ('name', '=', 'spam')],
+        )
+
+    def test_domain_op_not(self):
+        self._assertEqualDomain(
+            ~(self.Cat().color < 2), ['!', ('color', '<', 2)],
+        )
+
+    def test_domain_obj_search(self):
+        self.assertEquals(self.Cat.search(self.Cat().name == 'spam'),
+                self.spam)
+
+    def test_domain_obj_search_count(self):
+        self.assertEquals(self.Cat.search_count(self.Cat().name == 'eggs'), 1)
+
+    def test_domain_obj_read_group(self):
+        self.assertEquals(self.Cat.read_group(
+            self.Cat().id.has(self.all_ids.ids), ['color'], ['name']),
+            self.Cat.read_group(
+                [('id', 'in', self.all_ids.ids)], ['color'], ['name'],
+            )
+        )
+
+    def test_domain_obj_search_read(self):
+        rec = self.Cat.search_read(self.Cat().name == 'eggs', ['name'])
+        self.assertEquals(len(rec), 1)
+        self.assertEquals(rec[0]['name'], 'eggs')
+
+    def test_domain_obj_name_search(self):
+        rec = self.Cat.name_search('eggs', self.Cat().id.has(self.all_ids.ids))
+        self.assertEquals(len(rec), 1)
+        self.assertEquals(rec[0][0], self.eggs.id)
 
 
 class test_domain(common.TransactionCase):

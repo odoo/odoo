@@ -188,7 +188,9 @@ def normalize_domain(domain):
        have been made explicit. One property of normalized domain expressions is that they
        can be easily combined together as if they were single domain components.
     """
-    assert isinstance(domain, (list, tuple)), "Domains to normalize must have a 'domain' form: a list or tuple of domain components"
+    assert isinstance(domain, DOMAIN_TYPES),\
+        "Domains to normalize must have a 'domain' form: a list or tuple of domain components " +\
+        "or a Domain object"
     if not domain:
         return TRUE_DOMAIN
     result = []
@@ -199,7 +201,7 @@ def normalize_domain(domain):
             result[0:0] = [AND_OPERATOR]             # put an extra '&' in front
             expected = 1
         result.append(token)
-        if isinstance(token, (list, tuple)):  # domain term
+        if isinstance(token, DOMAIN_TYPES):  # domain term
             expected -= 1
         else:
             expected += op_arity.get(token, 0) - 1
@@ -254,6 +256,8 @@ def combine(operator, unit, zero, domains):
     if domains == [unit]:
         return unit
     for domain in domains:
+        if isinstance(domain, Domain):
+            domain = domain.serialize()
         if domain == unit:
             continue
         if domain == zero:
@@ -397,7 +401,7 @@ def normalize_leaf(element):
     if isinstance(right, bool) and operator in ('in', 'not in'):
         _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % ((left, original, right),))
         operator = '=' if operator == 'in' else '!='
-    if isinstance(right, (list, tuple)) and operator in ('=', '!='):
+    if isinstance(right, DOMAIN_TYPES) and operator in ('=', '!='):
         _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
         operator = 'in' if operator == '=' else 'not in'
     return left, operator, right
@@ -423,7 +427,7 @@ def is_leaf(element, internal=False):
     INTERNAL_OPS = TERM_OPERATORS + ('<>',)
     if internal:
         INTERNAL_OPS += ('inselect', 'not inselect')
-    return (isinstance(element, tuple) or isinstance(element, list)) \
+    return (isinstance(element, DOMAIN_TYPES)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
         and ((isinstance(element[0], str) and element[0])
@@ -727,7 +731,7 @@ class expression(object):
             names = []
             if isinstance(value, str):
                 names = [value]
-            elif value and isinstance(value, (tuple, list)) and all(isinstance(item, str) for item in value):
+            elif value and isinstance(value, DOMAIN_TYPES) and all(isinstance(item, str) for item in value):
                 names = value
             elif isinstance(value, int):
                 if not value:
@@ -1205,7 +1209,7 @@ class expression(object):
                 else:
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
-            elif isinstance(right, (list, tuple)):
+            elif isinstance(right, (tuple, list)):
                 params = [it for it in right if it != False]
                 check_null = len(params) < len(right)
                 if params:
@@ -1301,3 +1305,105 @@ class expression(object):
 
         params.reverse()
         return query, params
+
+# ----------------------------
+# Domain syntactic sugar (AST)
+# ----------------------------
+
+class DomainConstructor(object):
+
+    def __init__(self, recordset):
+        self.recordset = recordset
+
+    def __getattr__(self, attr):
+        return Domain(self.recordset, left=attr)
+
+
+class Domain(object):
+
+    def __init__(self, recordset, left=None, op=None, right=None):
+        # TODO: recordset not really needed BUT could be useful for checking field validity
+        self.recordset = recordset
+        self.left = left
+        self.op = op
+        self.right = right
+
+    def serialize(self):
+        if self.op in ('|', '&'):
+            assert isinstance(self.left, Domain) and isinstance(self.right, Domain),\
+                "Both operands must be Domains when using domain operators"
+            return [self.op] + self.left.serialize() + self.right.serialize()
+        if self.op == '!':
+            assert self.right is None, "The NOT (~) operator is unary, it only accepts one operand"
+            return [self.op] + self.left.serialize()
+        return [(self.left, self.op, self.right)]
+
+    # SQL operators
+
+    def __eq__(self, other):
+        return Domain(self.recordset, self.left, '=', other)
+
+    def __ne__(self, other):
+        return Domain(self.recordset, self.left, '!=', other)
+
+    def __lt__(self, other):
+        return Domain(self.recordset, self.left, '<', other)
+
+    def __le__(self, other):
+        return Domain(self.recordset, self.left, '<=', other)
+
+    def __gt__(self, other):
+        return Domain(self.recordset, self.left, '>', other)
+
+    def __ge__(self, other):
+        return Domain(self.recordset, self.left, '>=', other)
+
+    # TODO: find better names for the following methods and maybe a shorthand for some of them
+
+    def has(self, other):
+        return Domain(self.recordset, self.left, 'in', other)
+
+    def hasnt(self, other):
+        return Domain(self.recordset, self.left, 'not in', other)
+
+    def maybe(self, other):
+        return Domain(self.recordset, self.left, '=?', other)
+
+    def slike(self, other):
+        # stands for strict like
+        return Domain(self.recordset, self.left, '=like', other)
+
+    def like(self, other):
+        return Domain(self.recordset, self.left, 'like', other)
+
+    def not_like(self, other):
+        return Domain(self.recordset, self.left, 'not like', other)
+
+    def silike(self, other):
+        return Domain(self.recordset, self.left, '=ilike', other)
+
+    def ilike(self, other):
+        return Domain(self.recordset, self.left, 'ilike', other)
+
+    def not_ilike(self, other):
+        return Domain(self.recordset, self.left, 'not ilike', other)
+
+    def child_of(self, other):
+        return Domain(self.recordset, self.left, 'child_of', other)
+
+    # Domain operators
+
+    def __and__(self, other):
+        return Domain(self.recordset, self, '&', other)
+
+    def __or__(self, other):
+        return Domain(self.recordset, self, '|', other)
+
+    def __invert__(self):
+        return Domain(self.recordset, self, '!')
+
+    def __iter__(self):
+        yield from self.serialize()
+
+
+DOMAIN_TYPES = (list, tuple, Domain)
