@@ -9,6 +9,7 @@ from lxml import etree
 import os
 import subprocess
 import time
+from threading import Lock
 from usb import util
 try:
     from queue import Queue, Empty
@@ -46,6 +47,7 @@ class KeyboardUSBDriver(Driver):
             self._barcodes = Queue()
             self._current_barcode = ''
             self.input_device.grab()
+            self.read_barcode_lock = Lock()
 
     @classmethod
     def supported(cls, device):
@@ -217,12 +219,18 @@ class KeyboardUSBDriver(Driver):
         Returns:
             str: The next barcode to be read or an empty string.
         """
-        try:
-            timestamp, barcode = self._barcodes.get(True, 55)
-            if timestamp > time.time() - 5:
-                return barcode
-        except Empty:
-            return ''
+
+        # Previous query still running, stop it by sending a fake barcode
+        if self.read_barcode_lock.locked():
+            self._barcodes.put((time.time(), ""))
+
+        with self.read_barcode_lock:
+            try:
+                timestamp, barcode = self._barcodes.get(True, 55)
+                if timestamp > time.time() - 5:
+                    return barcode
+            except Empty:
+                return ''
 
 
 old_drivers['scanner'] = KeyboardUSBDriver
