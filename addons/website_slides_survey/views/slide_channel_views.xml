@@ -16,7 +16,7 @@
         <field name="model">slide.channel</field>
         <field name="inherit_id" ref="website_slides.slide_channel_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='members_running_count']" position="after">
+            <xpath expr="//field[@name='website_published']" position="after">
                 <field name="nbr_certification"/>
             </xpath>
             <xpath expr="//a[@name='action_redirect_to_done_members']/span" position="replace">
