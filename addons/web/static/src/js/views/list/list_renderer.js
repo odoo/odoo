@@ -620,7 +620,7 @@ var ListRenderer = BasicRenderer.extend({
             var $pager = this._renderGroupPager(group);
             $lastCell.addClass('o_group_pager').append($pager);
         }
-        if (group.isOpen && this.groupbys[groupBy]) {
+        if (groupLevel === 0 && group.isOpen && this.groupbys[groupBy]) {
             var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
             if ($buttons.length) {
                 var $buttonSection = $('<div>', {

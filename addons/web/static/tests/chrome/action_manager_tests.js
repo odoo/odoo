@@ -3377,6 +3377,80 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('execute action from dirty, new record, and come back', async function (assert) {
+        assert.expect(19);
+
+        this.data.partner.fields.bar.default = 1;
+        this.archs['partner,false,form'] = '<form>' +
+                                                '<field name="foo"/>' +
+                                                '<field name="bar" readonly="1"/>' +
+                                            '</form>';
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'get_formview_action') {
+                    return Promise.resolve({
+                        res_id: 1,
+                        res_model: 'partner',
+                        type: 'ir.actions.act_window',
+                        views: [[false, 'form']],
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                do_action: function (ev) {
+                    actionManager.doAction(ev.data.action, {});
+                },
+            },
+        });
+
+        // execute an action and create a new record
+        await actionManager.doAction(3);
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
+        assert.containsOnce(actionManager, '.o_form_uri:contains(First record)');
+        assert.strictEqual(actionManager.$('.o_control_panel .breadcrumb-item').text(),
+            "PartnersNew");
+
+        // set form view dirty and open m2o record
+        await testUtils.fields.editInput(actionManager.$('input[name=foo]'), 'val');
+        await testUtils.dom.click(actionManager.$('.o_form_uri:contains(First record)'));
+        assert.containsOnce($('body'), '.modal'); // confirm discard dialog
+
+        // confirm discard changes
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
+        assert.strictEqual(actionManager.$('.o_control_panel .breadcrumb-item').text(),
+            "PartnersNewFirst record");
+
+        // go back to New using the breadcrumbs
+        await testUtils.dom.click(actionManager.$('.o_control_panel .breadcrumb-item:nth(1) a'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
+        assert.strictEqual(actionManager.$('.o_control_panel .breadcrumb-item').text(),
+            "PartnersNew");
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // views of action 3
+            '/web/dataset/search_read', // list
+            'default_get', // form (create)
+            'name_get', // m2o in form
+            'get_formview_action', // click on m2o
+            'load_views', // form view of dynamic action
+            'read', // form
+            'default_get', // form (create)
+            'name_get', // m2o in form
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Actions in target="new"');
 
     QUnit.test('can execute act_window actions in target="new"', async function (assert) {

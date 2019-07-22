@@ -106,7 +106,8 @@ var TextPlugin = AbstractPlugin.extend({
      * @returns {Node[]}
      */
     prepareClipboardData: function (clipboardData) {
-        var $clipboardData = this._removeIllegalClipboardElements($(clipboardData));
+        var $html = $('<wrapper>' + clipboardData + '</wrapper>').contents();
+        var $clipboardData = this._removeIllegalClipboardElements($html);
 
         var $all = $clipboardData.find('*').addBack();
         $all.filter('table').addClass('table table-bordered');
