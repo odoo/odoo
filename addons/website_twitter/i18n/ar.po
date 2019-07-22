@@ -3,20 +3,21 @@
 # * website_twitter
 # 
 # Translators:
-# hoxhe Aits <hoxhe0@gmail.com>, 2017
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
 # Akram Alfusayal <akram_ma@hotmail.com>, 2017
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2017
 # amrnegm <amrnegm.01@gmail.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: amrnegm <amrnegm.01@gmail.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:28+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr "API Key"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr ""
+msgstr "الرمز السري لواجهة برمجة التطبيق"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
@@ -48,6 +49,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr ""
+"بيانات الاعتماد المطلوبة للمصادقة مفقودة أو غير صحيحة. قد تكون التغريدات "
+"محمية."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
@@ -68,7 +71,7 @@ msgstr "الاسم المعروض"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
-msgstr ""
+msgstr "المفضلات من"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
@@ -79,7 +82,7 @@ msgstr "الحصول على مفضلات إسم الظهور هذا"
 #: code:addons/website_twitter/models/res_config_settings.py:48
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
-msgstr ""
+msgstr "خطأ HTTP: هناك مشكلة في الإعدادات"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
@@ -90,7 +93,7 @@ msgstr "المعرف"
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "Internet connection refused"
-msgstr ""
+msgstr "الاتصال بالإنترنت مرفوض"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
@@ -112,7 +115,7 @@ msgstr "آخر تحديث في"
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
-msgstr ""
+msgstr "برجاء مراجعة مفتاح واجهة برمجة تطبيق تويتر ورمزها السري!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:27
@@ -144,7 +147,7 @@ msgstr "إعادة تحميل"
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
-msgstr ""
+msgstr "لا يمكن تنفيذ الطلب نظرًا لاستنفاد حد معدل التطبيقات للمورد."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
@@ -171,6 +174,7 @@ msgstr "أرني كيفية الحصول على مفتاح واجهة برمجة
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
+"سيرفرات تويتر تعمل، لكنها محملة بالكثير من الطلبات. حاول مرة أخرى لاحقًا."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:22
@@ -179,6 +183,8 @@ msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
+"سيرفرات تويتر تعمل، لكن تعذّر تنفيذ الطلب بسبب مشكلة في بياناتنا. حاول مرة "
+"أخرى لاحقًا."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:17
@@ -187,6 +193,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
+"تم فهم الطلب، لكن تم رفضه أو قد يكون الوصول ممنوع. برجاء التحقق من كلمة سر "
+"واجهة برمجة تطبيق تويتر ورمزها السري."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:15
@@ -195,12 +203,14 @@ msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
+"الطلب غير صالح أو مستحيل التنفيذ. تعتبر الطلبات غير صالحة إذا لم تتم "
+"المُصادقة عليها وينتج عنها هذه الرسالة."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:14
 #, python-format
 msgid "There was no new data to return."
-msgstr ""
+msgstr "لا توجد بيانات حديثة لإعادتها."
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -220,7 +230,7 @@ msgstr "تغريدات"
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
-msgstr ""
+msgstr "بيانات اعتماد واجهة برمجة تطبيق تويتر"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
@@ -241,6 +251,7 @@ msgstr "واجهة برمجة التطبيق لتويتر"
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
+"يمكنك الحصول على مفتاح واجهة برمجة تطبيق تويتر من https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
@@ -251,6 +262,8 @@ msgstr "سر واجهة برمجة التطبيق لتويتر"
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
+"يمكنك الحصول على الرمز السري لواجهة برمجة تطبيق تويتر من "
+"https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
@@ -274,7 +287,7 @@ msgstr "خطأ مصادقة تويتر!"
 #: code:addons/website_twitter/models/res_config_settings.py:20
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr ""
+msgstr "تويتر معطل أو جاري تحديثه."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:19
@@ -283,6 +296,8 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
+"يبدو أن تويتر معطل. برجاء المحاولة مرة أخرى لاحقًا. ربما عليك كتابة منشور عن"
+" مشكلتك على منتديات تويتر للحصول على المساعدة."
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -299,14 +314,14 @@ msgstr ""
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
+msgstr "تويتر: البحث عن مفضلات جديدة"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:58
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "We failed to reach a twitter server."
-msgstr ""
+msgstr "تعذّر الوصول لسيرفر تويتر."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
