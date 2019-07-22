@@ -835,8 +835,8 @@ class WebsiteSlides(WebsiteProfile):
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
         if slide.slide_type == "quiz":
-            action_id = request.env.ref('website_slides.action_slides_slides').id
-            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' % (slide.id, action_id)
+            action_id = request.env.ref('website_slides.slide_slide_action').id
+            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' %( slide.id, action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,

@@ -116,12 +116,11 @@ class Slide(models.Model):
         'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
         help="Subscriber information for the current logged in user")
     # Quiz related fields
-    question_ids = fields.One2many("slide.question","slide_id", string="Questions")
+    question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
     quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
     quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
     quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
     quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
-
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
