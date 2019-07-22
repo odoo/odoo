@@ -873,12 +873,12 @@
             </field>
         </record>
 
-        <record id="view_account_invoice_filter" model="ir.ui.view">
-            <field name="name">account.invoice.select</field>
+        <record id="view_account_common_filter" model="ir.ui.view">
+            <field name="name">account.common.select</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <search string="Search Invoice">
-                    <field name="name" string="Invoice"
+                <search>
+                    <field name="name"
                            filter_domain="['|','|','|', '|', ('name','ilike',self), ('invoice_origin','ilike',self), ('ref', 'ilike', self), ('invoice_payment_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter domain="[('invoice_user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
                     <field name="journal_id"/>
@@ -913,6 +913,48 @@
                         <filter string="Due Date" name="duedate" context="{'group_by':'invoice_date_due'}"/>
                     </group>
                </search>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="account.view_account_common_filter"/>
+            <field name="arch" type="xml">
+                <search position="attributes">
+                    <attribute name="string">Search Invoice</attribute>
+                </search>
+                <field name="name" position="attributes">
+                    <attribute name="string">Invoice</attribute>
+                </field>
+                <filter name="myinvoices" position="attributes">
+                    <attribute name="help">My Invoices</attribute>
+                </filter>
+                <field name="partner_id" position="attributes">
+                    <attribute name="string">Customer</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_bill_filter" model="ir.ui.view">
+            <field name="name">account.bill.select</field>
+            <field name="model">account.move</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="account.view_account_common_filter"/>
+            <field name="arch" type="xml">
+                <search position="attributes">
+                    <attribute name="string">Search Bill</attribute>
+                </search>
+                <field name="name" position="attributes">
+                    <attribute name="string">Bill</attribute>
+                </field>
+                <filter name="myinvoices" position="attributes">
+                    <attribute name="help">My Bills</attribute>
+                </filter>
+                <field name="partner_id" position="attributes">
+                    <attribute name="string">Vendor</attribute>
+                </field>
             </field>
         </record>
 
@@ -1145,7 +1187,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_invoice_tree"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('type', '=', 'in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice'}</field>
             <field name="help" type="html">
@@ -1162,7 +1204,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_invoice_tree"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('type', '=', 'in_refund')]</field>
             <field name="context">{'default_type': 'in_refund'}</field>
             <field name="help" type="html">
@@ -1197,7 +1239,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_invoice_tree"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('type', '=', 'in_receipt')]</field>
             <field name="context">{'default_type': 'in_receipt'}</field>
             <field name="help" type="html">
