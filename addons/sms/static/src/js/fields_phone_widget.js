@@ -32,7 +32,7 @@ Phone.include({
             default_number_field_name: this.name,
             default_composition_mode: 'comment',
         });
-
+        var self = this;
         return this.do_action({
             title: _t('Send SMS Text Message'),
             type: 'ir.actions.act_window',
@@ -40,7 +40,10 @@ Phone.include({
             target: 'new',
             views: [[false, 'form']],
             context: context,
-        });
+        }, {
+        on_close: function () {
+            self.trigger_up('reload');
+        }});
     },
 
     /**
