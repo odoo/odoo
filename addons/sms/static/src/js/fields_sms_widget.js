@@ -37,6 +37,7 @@ var SmsWidget = FieldText.extend({
         var def = this._super.apply(this, arguments);
 
         this._compute();
+        $('.o_sms_container').remove();
         var $sms_container = $('<div class="o_sms_container"/>');
         $sms_container.append(this._renderSMSInfo());
         $sms_container.append(this._renderIAPButton());

@@ -16,7 +16,7 @@ class SMSCancel(models.TransientModel):
         for wizard in self:
             wizard.help_message = _("Are you sure you want to discard %s SMS delivery failures. You won't be able to re-send these SMS later!") % (wizard._context.get('unread_counter'))
 
-    def action_cancel(self):
+    def cancel_resend_action(self):
         # TDE CHECK: delete pending SMS
         author_id = self.env.user.partner_id.id
         for wizard in self:
