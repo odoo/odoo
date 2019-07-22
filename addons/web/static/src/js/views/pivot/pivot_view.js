@@ -86,7 +86,7 @@ var PivotView = AbstractView.extend({
                 measures[field.attrs.name] = self.fields[field.attrs.name];
             }
 
-            if (field.attrs.string) {
+            if (field.attrs.type === 'measure' && field.attrs.string) {
               measures[name].string = field.attrs.string;
             }
 
