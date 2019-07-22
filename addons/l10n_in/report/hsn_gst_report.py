@@ -36,7 +36,7 @@ class L10nInProductHsnReport(models.Model):
             aml.partner_id AS partner_id,
             aml.product_id,
             aml.product_uom_id AS uom_id,
-            aml.date_maturity AS date,
+            am.date,
             am.journal_id,
             aj.company_id,
             CASE WHEN pt.l10n_in_hsn_code IS NULL THEN '' ELSE pt.l10n_in_hsn_code END AS hsn_code,
@@ -93,8 +93,7 @@ class L10nInProductHsnReport(models.Model):
             LEFT JOIN account_tax_report_line_tags_rel tag_rep_ln ON aat.id = tag_rep_ln.account_account_tag_id
             LEFT JOIN account_move_line_account_tax_rel mt ON mt.account_move_line_id = aml.id
             LEFT JOIN uom_uom uom ON uom.id = aml.product_uom_id
-            LEFT JOIN account_move ai ON ai.id = aml.move_id
-            WHERE aa.internal_type = 'other' AND (aml.tax_line_id IS NOT NULL OR mt.account_tax_id IS NULL) AND (ai.type IS NULL OR ai.type in ('in_invoice', 'out_invoice'))
+            WHERE aa.internal_type = 'other' AND (aml.tax_line_id IS NOT NULL OR mt.account_tax_id IS NULL) AND (am.type IS NULL OR am.type in ('in_invoice', 'out_invoice'))
         """
         return from_str
 

@@ -31,7 +31,7 @@ class L10nInPaymentReport(models.AbstractModel):
     def _compute_l10n_in_tax(self, taxes, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         """common method to compute gst tax amount base on tax group"""
         res = {'igst_amount': 0.0, 'sgst_amount': 0.0, 'cgst_amount': 0.0, 'cess_amount': 0.0}
-        AccountTag = self.env['account.account.tag']
+        AccountTaxRepartitionLine = self.env['account.tax.repartition.line']
         tax_report_line_igst = self.env.ref('l10n_in.tax_report_line_igst', False)
         tax_report_line_cgst = self.env.ref('l10n_in.tax_report_line_cgst', False)
         tax_report_line_sgst = self.env.ref('l10n_in.tax_report_line_sgst', False)
@@ -39,7 +39,7 @@ class L10nInPaymentReport(models.AbstractModel):
         filter_tax = taxes.filtered(lambda t: t.type_tax_use != 'none')
         tax_compute = filter_tax.compute_all(price_unit, currency=currency, quantity=quantity, product=product, partner=partner)
         for tax_data in tax_compute['taxes']:
-            tax_report_lines = AccountTag.browse(tax_data['tag_ids'][0][2]).mapped('tax_report_line_ids')
+            tax_report_lines = AccountTaxRepartitionLine.browse(tax_data['tax_repartition_line_id']).mapped('tag_ids.tax_report_line_ids')
             if tax_report_line_sgst in tax_report_lines:
                 res['sgst_amount'] += tax_data['amount']
             if tax_report_line_cgst in tax_report_lines:
