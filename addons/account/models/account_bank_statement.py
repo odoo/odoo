@@ -92,8 +92,11 @@ class AccountBankStatement(models.Model):
                 ('journal_id', '=', bank_stmt.journal_id.id)
             ]
             if bank_stmt._origin:
+                # For onchange methods, `_origin` property always holds actual ID of the record(which is not the case with
+                # `self` when record is being created), and since previous statement's ID will always going to have
+                # lower value that current record(due to default ordering), we are checking it with `_origin` instead of `self`.
                 domain = expression.AND([domain, [('id', '<', bank_stmt._origin.id)]])
-            previous_stmt = self.search(domain, limit=1)
+            previous_stmt = self.search(domain, order="date desc, id desc", limit=1)
             balance_comparision = bank_stmt.currency_id.compare_amounts(bank_stmt.balance_start, previous_stmt.balance_end_real)
             bank_stmt.is_valid_balance_start = not previous_stmt or bank_stmt.journal_id.type != 'bank' or balance_comparision == 0
 
