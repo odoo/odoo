@@ -233,7 +233,7 @@ class WebsiteProfile(http.Controller):
                 'pager': pager
             }
         else:
-            values = {'top3_users': [], 'users': [], 'pager': dict(page_count=0)}
+            values = {'top3_users': [], 'users': [], 'search': search_term, 'pager': dict(page_count=0)}
 
         return request.render("website_profile.users_page_main", values)
 
