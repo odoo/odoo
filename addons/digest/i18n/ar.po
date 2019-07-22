@@ -12,7 +12,7 @@
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2018\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,7 +186,7 @@ msgstr ""
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid "${', '.join(users.mapped('name'))} signed up. Say hello in the"
-msgstr ""
+msgstr "قام ${', '.join(users.mapped('name'))} بالاشتراك. رحب به في"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
@@ -195,12 +195,15 @@ msgid ""
 "    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
 "    <strong style=\"font-size: 16px;\">Did you know...?</strong>"
 msgstr ""
+"% set users = object.env['res.users'].search([], limit=10, order='id desc')\n"
+"    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
+"    <strong style=\"font-size: 16px;\">هل تعلم...؟</strong>"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
 msgid ""
 "<strong style=\"font-size: 16px;\">Get things done with activities</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">أنجز مشروعاتك من خلال الأنشطة</strong>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -216,16 +219,17 @@ msgstr "مفعل"
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
+"إدراج المستخدمين الجدد في قائمة استلام رسالة البريد الدورية بمقاييس رئيسية"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
 msgid "Authorized Group"
-msgstr ""
+msgstr "المجموعة المعتمدة"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
 msgid "Available Fields"
-msgstr ""
+msgstr "الحقول المتاحة"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -240,12 +244,12 @@ msgstr "ضبط الإعدادات"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr ""
+msgstr "إعداد رسائل البريد التلخيصية"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
 msgid "Connected Users"
-msgstr ""
+msgstr "المستخدمون المتصلون"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -253,6 +257,8 @@ msgid ""
 "Create or edit the mail template: you may get computed KPI's value using "
 "these fields:"
 msgstr ""
+"إنشاء أو تحرير قالب رسالة البريد الإلكتروني: قد تحصل على قيمة المؤشر الرئيسي"
+" المحسوبة باستخدام هذه الحقول:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
@@ -274,12 +280,12 @@ msgstr "العملة"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate for everyone"
-msgstr ""
+msgstr "تعطيل للجميع"
 
 #. module: digest
 #: selection:digest.digest,state:0
 msgid "Deactivated"
-msgstr ""
+msgstr "معطل"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
@@ -290,7 +296,7 @@ msgstr "الملخص"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
-msgstr ""
+msgstr "رسالة البريد التلخيصية"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
@@ -300,23 +306,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr ""
+msgstr "رسائل البريد التلخيصية"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr ""
+msgstr "اشتراكات الرسائل التلخيصية"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_tip
 msgid "Digest Tips"
-msgstr ""
+msgstr "ملاحظات الملخص"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__template_id
@@ -336,44 +342,44 @@ msgstr "تجميع حسب"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "How to customize your digest?"
-msgstr ""
+msgstr "كيف تعدل رسالتك التلخيصية؟"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
 #: model:ir.model.fields,field_description:digest.field_digest_tip__id
 msgid "ID"
-msgstr "المعرف"
+msgstr "المُعرف"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "In order to build your customized digest, follow these steps:"
-msgstr ""
+msgstr "اتبع هذه الخطوات لتكوين رسالتك التلخيصية المعدلة:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
 msgid "Is user subscribed"
-msgstr ""
+msgstr "هو مستخدم مشترك"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr ""
+msgstr "ملخص مؤشرات الأداء"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "KPIs"
-msgstr ""
+msgstr "مؤشرات الأداء الرئيسية"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr ""
+msgstr "قيمة مؤشر الأداء لعدد الرسائل"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr ""
+msgstr "مؤشر الأداء لعدد المستخدمين المتصلين"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest____last_update
@@ -401,7 +407,7 @@ msgstr "الرسائل"
 #. module: digest
 #: selection:digest.digest,periodicity:0
 msgid "Monthly"
-msgstr "شهريًا"
+msgstr "شهرياً"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__name
@@ -414,11 +420,13 @@ msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
 msgstr ""
+"تلقائيًا، يتم إدراج المستخدمين الجدد في قائمة استلام الرسائل التلخيصية "
+"التالية."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
 msgid "Next Send Date"
-msgstr ""
+msgstr "تاريخ الإرسال التالي"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__periodicity
@@ -440,7 +448,7 @@ msgstr "المستلمون"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Select your KPIs in the KPI's tab."
-msgstr ""
+msgstr "اختر مؤشراتك الرئيسية في تبويب المؤشر الرئيسي."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -465,17 +473,17 @@ msgstr "اشتراك"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
 msgid "Tip description"
-msgstr ""
+msgstr "وصف تلميحي"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
-msgstr ""
+msgstr "إلغاء اشتراكي"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
-msgstr ""
+msgstr "تستخدم لعرض ملاحظة تلخيصية في قالب البريد حسب الطلب"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -485,7 +493,7 @@ msgstr "المستخدمون"
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__user_ids
 msgid "Users having already received this tip"
-msgstr ""
+msgstr "المستخدمون الذين استلموا بالفعل هذه الملحوظة"
 
 #. module: digest
 #: selection:digest.digest,periodicity:0
@@ -495,7 +503,7 @@ msgstr "أسبوعيًا"
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Weekly Digest"
-msgstr ""
+msgstr "الملخص الأسبوعي"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
@@ -503,6 +511,8 @@ msgid ""
 "You can ping colleagues by tagging them in your messages using \"@\". They "
 "will be instantly notified.<br>"
 msgstr ""
+"يمكنك إشعار زملاءك من خلال الإشارة إليهم في رسالتك باستخدام علامة \"@\". "
+"سيتم إخطارهم فورًا.<br>"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
@@ -510,21 +520,23 @@ msgid ""
 "You don't have any activity scheduled. Use activities on any business "
 "document to schedule meetings, calls and todos."
 msgstr ""
+"ليس لديك نشاطات مجدولة. استخدم الأنشطة في أي مستند عمل لجدولة الاجتماعات "
+"والمكالمات والإجراءات المطلوبة."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from"
-msgstr ""
+msgstr "ألغيت بنجاح اشتراكك من"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "You may want to add new computed fields with Odoo Studio:"
-msgstr ""
+msgstr "ربما تحتاج لإضافة حقول محسوبة جديدة باستديو أودو:"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid "company's discussion channel."
-msgstr ""
+msgstr "قناة النقاش الخاصة بالمؤسسة."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -533,6 +545,9 @@ msgid ""
 "                                                <code>kpi_myfield</code>\n"
 "                                                and display it in the KPI's tab;"
 msgstr ""
+"قم أولًا بإنشاء حقل منطقي يُسمى\n"
+"                                                <code>kpi_myfield</code>\n"
+"                                                واعرضه في تبويب المؤشر الرئيسي؛"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -541,6 +556,9 @@ msgid ""
 "                                                <code>kpi_myfield_value</code>\n"
 "                                                that will compute your customized KPI."
 msgstr ""
+"ثم أنشئ حقل محسوب يُسمى\n"
+"                                                <code>kpi_myfield_value</code>\n"
+"                                                ليحسب قيمة مؤشرك الرئيسي المعدلة."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -549,3 +567,6 @@ msgid ""
 "                                                <code>digest</code>\n"
 "                                                object:"
 msgstr ""
+"يجب إنشاء حقلين في\n"
+"                                                الكائن\n"
+"                                                التلخيصي:"

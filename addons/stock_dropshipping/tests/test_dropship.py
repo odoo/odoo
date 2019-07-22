@@ -11,7 +11,7 @@ class TestDropship(common.TransactionCase):
         prod = self.env.ref('product.product_product_8')
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         mto_route = self.env.ref('stock.route_warehouse0_mto')
-        prod.write({'route_ids': [(6, 0, [dropshipping_route.id, mto_route.id])]})
+        prod.write({'route_ids': [(6, 0, [dropshipping_route.id, mto_route.id])], 'service_to_purchase': True})
 
         # add a vendor
         vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
