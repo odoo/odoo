@@ -70,7 +70,7 @@ class SendSMS(models.TransientModel):
     def _compute_description(self):
         if self.partner_ids:
             description = ''
-            description = ','.join('%s - %s' % (partner.display_name, partner.mobile or partner.phone) for partner in self.partner_ids[:self._RECIPIENTS_DISPLAY_NBR])
+            description = ','.join('%s - %s' % (partner.display_name, partner.mobile or partner.phone or _('Missing number')) for partner in self.partner_ids[:self._RECIPIENTS_DISPLAY_NBR])
             if len(self.partner_ids) > self._RECIPIENTS_DISPLAY_NBR:
                 description += _(' (and %s more)') % (len(self.partner_ids) - self._RECIPIENTS_DISPLAY_NBR)
             self.recipient_description = description
@@ -163,7 +163,7 @@ class SendSMS(models.TransientModel):
 
     def _action_send_sms_comment(self, records=None):
         records = records if records is not None else self._get_records()
-        subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+        subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.note')
 
         messages = self.env['mail.message']
         for record in records:
