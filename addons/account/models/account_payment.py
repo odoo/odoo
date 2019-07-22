@@ -560,20 +560,25 @@ class account_payment(models.Model):
 
     @api.multi
     def button_invoices(self):
-        if self.partner_type == 'supplier':
-            views = [(self.env.ref('account.invoice_supplier_tree').id, 'tree'), (self.env.ref('account.invoice_supplier_form').id, 'form')]
-        else:
-            views = [(self.env.ref('account.invoice_tree').id, 'tree'), (self.env.ref('account.invoice_form').id, 'form')]
-        return {
+        action = {
             'name': _('Paid Invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
-            'views': views,
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', [x.id for x in self.reconciled_invoice_ids])],
         }
+        if self.partner_type == 'supplier':
+            action['views'] = [(self.env.ref('account.invoice_supplier_tree').id, 'tree'), (self.env.ref('account.invoice_supplier_form').id, 'form')]
+            action['context'] = {
+                'journal_type': 'purchase',
+                'type': 'in_invoice',
+                'default_type': 'in_invoice',
+            }
+        else:
+            action['views'] = [(self.env.ref('account.invoice_tree').id, 'tree'), (self.env.ref('account.invoice_form').id, 'form')]
+        return action
 
     @api.multi
     def button_dummy(self):
