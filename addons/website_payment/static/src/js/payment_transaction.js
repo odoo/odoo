@@ -17,21 +17,10 @@ $payment.on("click", 'button[type="submit"],button[name="submit"]', function (ev
   $(ev.currentTarget).prepend('<i class="fa fa-refresh fa-spin"></i> ');
   var $form = $(ev.currentTarget).parents('form');
   var data =$("div[class~='o_website_payment_new_payment']").data();
-  console.log(data);
   ajax.jsonRpc('/website_payment/transaction/', 'call', data).then(function (result) {
     $form.submit();
   });
 
-  function getFormData($form){
-      var unindexed_array = $form.serializeArray();
-      var indexed_array = {};
-
-      $.map(unindexed_array, function(n, i){
-          indexed_array[n.name] = n.value;
-      });
-
-      return indexed_array;
-  }
 });
 
 

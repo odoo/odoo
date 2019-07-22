@@ -1342,7 +1342,7 @@
                                         <t t-foreach="acquirers or []" t-as="acquirer">
                                           <li>
                                             <label t-if="acquirer.button">
-                                                <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
+                                                <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" t-att-provider="acquirer.provider"/>
                                                 <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-field-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
                                                 <span t-field="acquirer.name" />
                                                 <span t-if="acquirer.fees_active">(processing fees apply)</span>
