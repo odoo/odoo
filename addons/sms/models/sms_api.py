@@ -46,7 +46,7 @@ class SmsApi(models.AbstractModel):
 
         :return: return of /iap/sms/1/send controller which is a list of dict [{
             'res_id': integer: ID of sms.sms,
-            'state':  string: 'insufficient_credit' or 'wrong_format_number' or 'success',
+            'state':  string: 'insufficient_credit' or 'wrong_number_format' or 'success',
             'credit': integer: number of credits spent to send this SMS,
         }]
 

@@ -35,8 +35,8 @@ class MockSMS(common.BaseCase):
                     error = sim_error or (nbr_t_error and nbr_t_error.get(to_send['number']))
                     if error and error == 'credit':
                         res.update(credit=0, state='insufficient_credit')
-                    elif error and error == 'wrong_format_number':
-                        res.update(state='wrong_format_number')
+                    elif error and error == 'wrong_number_format':
+                        res.update(state='wrong_number_format')
                     elif error and error == 'jsonrpc_exception':
                         raise exceptions.AccessError(
                             'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint

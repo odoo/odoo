@@ -100,7 +100,7 @@ class SmsSms(models.Model):
     def _postprocess_sent_sms(self, iap_results, failure_reason=None, delete_all=False):
         sms_to_notif_status = {
             'success': False, 'insufficient_credit': 'sms_credit',
-            'wrong_format_number': 'sms_number_format', 'server_error': 'sms_server'}
+            'wrong_number_format': 'sms_number_format', 'server_error': 'sms_server'}
         if delete_all:
             todelete_sms_ids = [item['res_id'] for item in iap_results]
         else:

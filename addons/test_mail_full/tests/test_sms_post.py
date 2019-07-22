@@ -41,7 +41,7 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
         self.assertSMSNotification([{'partner': self.partner_1}], 'Mega SMS\nTop moumoutte', messages)
 
     def test_message_sms_internals_check_existing(self):
-        with self.sudo('employee'), self.mockSMSGateway(sim_error='wrong_format_number'):
+        with self.sudo('employee'), self.mockSMSGateway(sim_error='wrong_number_format'):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms(self._test_body, partner_ids=self.partner_1.ids)
 
@@ -326,7 +326,7 @@ class TestSMSPostException(test_mail_full_common.BaseFunctionalTest, sms_common.
         ], self._test_body, messages)
 
     def test_message_sms_crash_wrong_number(self):
-        with self.sudo('employee'), self.mockSMSGateway(sim_error='wrong_format_number'):
+        with self.sudo('employee'), self.mockSMSGateway(sim_error='wrong_number_format'):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2).ids)
 
@@ -336,7 +336,7 @@ class TestSMSPostException(test_mail_full_common.BaseFunctionalTest, sms_common.
         ], self._test_body, messages)
 
     def test_message_sms_crash_wrong_number_single(self):
-        with self.sudo('employee'), self.mockSMSGateway(nbr_t_error={phone_validation.phone_get_sanitized_record_number(self.partner_2): 'wrong_format_number'}):
+        with self.sudo('employee'), self.mockSMSGateway(nbr_t_error={phone_validation.phone_get_sanitized_record_number(self.partner_2): 'wrong_number_format'}):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 
