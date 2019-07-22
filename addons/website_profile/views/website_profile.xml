@@ -499,8 +499,8 @@
                     <t t-call="website_profile.all_user_card"/>
                 </tr>
             </table>
-            <t else=''>
-                <div class='alert alert-warning'>No results matched</div>
+            <t t-if='search'>
+                <div class='alert alert-warning'>No user found for <strong><t t-esc="search"/></strong>. Try another search.</div>
             </t>
             <div class="form-inline justify-content-center">
                 <t t-call="website_profile.pager_nobox"/>
