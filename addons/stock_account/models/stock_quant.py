@@ -11,7 +11,7 @@ class StockQuant(models.Model):
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
     currency_id = fields.Many2one(related='product_id.currency_id', groups='stock.group_stock_manager')
 
-    @api.depends('quantity')
+    @api.depends('company_id', 'location_id', 'owner_id', 'product_id', 'quantity')
     def _compute_value(self):
         """ For standard and AVCO valuation, compute the current accounting
         valuation of the quants by multiplying the quantity by
@@ -21,6 +21,11 @@ class StockQuant(models.Model):
         a estimation more than a real value).
         """
         for quant in self:
+            # If the user didn't enter a location yet while enconding a quant.
+            if not quant.location_id:
+                quant.value = 0
+                return
+
             if not quant.location_id._should_be_valued() or\
                     (quant.owner_id and quant.owner_id != quant.company_id.partner_id):
                 quant.value = 0
