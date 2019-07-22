@@ -205,8 +205,15 @@
             <!-- OpenGraph tags for Facebook sharing -->
             <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
             <t t-if="opengraph_meta">
-                <t t-foreach="opengraph_meta" t-as="og_meta">
-                    <meta t-att-property="og_meta" t-att-content="opengraph_meta[og_meta]"/>
+                <t t-foreach="opengraph_meta" t-as="property">
+                    <t t-if="isinstance(opengraph_meta[property], list)">
+                        <t t-foreach="opengraph_meta[property]" t-as="meta_content">
+                            <meta t-att-property="property" t-att-content="meta_content"/>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <meta t-att-property="property" t-att-content="opengraph_meta[property]"/>
+                    </t>
                 </t>
             </t>
             <!-- Twitter tags for sharing -->
