@@ -17,7 +17,7 @@ its sub-called methods.
 
 .. code:: python
 
-    from odoo.tools.profiler import profile
+    from odoo.tools.misc import profile
     [...]
     @profile('/temp/prof.profile')
     @api.multi
@@ -37,10 +37,15 @@ A tool called *xdot* will display the resulting graph:
     
     xdot /temp/prof.xdot
     
-The profiler can be also used without saving data in a file:
+Log a method
+============
+
+Another profiler can be used to log statistics on a method:
 
 .. code:: python
 
+    from odoo.tools.profiler import profile
+    [...]
     @profile
     @api.model
     def mymethod(...):
