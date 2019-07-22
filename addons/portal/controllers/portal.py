@@ -8,7 +8,7 @@ import re
 
 from werkzeug import urls
 
-from odoo import fields as odoo_fields, tools, _
+from odoo import fields as odoo_fields, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, AccessError, MissingError, UserError
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
@@ -242,7 +242,7 @@ class CustomerPortal(Controller):
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         document = request.env[model_name].browse([document_id])
-        document_sudo = document.sudo().exists()
+        document_sudo = document.with_user(SUPERUSER_ID).exists()
         if not document_sudo:
             raise MissingError("This document does not exist.")
         try:
