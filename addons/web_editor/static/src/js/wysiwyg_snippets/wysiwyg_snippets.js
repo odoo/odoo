@@ -253,6 +253,26 @@ $.fn.extend({
         if (this.length) {
             Wysiwyg.setRangeFromNode(this[0]);
             var range = $.summernote.range.create();
+
+            try {
+                range.so;
+            } catch (e) {
+                /* Under certain unknown conditions, the range cannot be
+                applied and triggered an error. In order to allow the user to
+                keep editing, we need to prevent the dialog from showing, hence
+                the use of `console.error`.
+                If this error appears, the carret is moved to the beginning
+                of the focused node.*/
+                console.error(e);
+                console.error('Informations for debugging', [
+                    ['elements', this],
+                    ['outerHTML', this[0].outerHTML],
+                    ['textContent', this[0].textContent],
+                    ['html', this.html()],
+                    ['previous selection', this.end().html()],
+                ]);
+            }
+
             if (!range.sc.tagName && range.so === 0 && range.sc.textContent[range.so] === '\u200B') {
                 range.so += 1;
             }
