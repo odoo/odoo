@@ -87,7 +87,9 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         mixins.EventDispatcherMixin.init.call(this);
 
         // crash manager integration
-        core.bus.on('rpc_error', this, this.rpc_error);
+        core.bus.on('rpc_error', this, function () {
+            self.rpc_error.apply(self, arguments);
+        });
         window.onerror = function (message, file, line, col, error) {
             // Scripts injected in DOM (eg: google API's js files) won't return a clean error on window.onerror.
             // The browser will just give you a 'Script error.' as message and nothing else for security issue.
