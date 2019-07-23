@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <data>
+    <!-- Tag used only to generate the CFDI (Mexican e-invoice). -->
+    <record id="tag_iva" model="account.account.tag">
+        <field name="name">IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_isr" model="account.account.tag">
+        <field name="name">ISR</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ieps" model="account.account.tag">
+        <field name="name">IEPS</field>
+        <field name="applicability">taxes</field>
+    </record>
+
     <!-- Account Tags -->
     <record id="tag_diot_16" model="account.account.tag">
         <field name="name">DIOT: 16%</field>
@@ -55,6 +69,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta208_01'),
             }),
         ]"/>
@@ -67,6 +82,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta209_01'),
             }),
         ]"/>
@@ -92,6 +108,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta208_01'),
             }),
         ]"/>
@@ -104,6 +121,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta209_01'),
             }),
         ]"/>
@@ -470,6 +488,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta208_01'),
             }),
         ]"/>
@@ -482,6 +501,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta209_01'),
             }),
         ]"/>
