@@ -157,7 +157,7 @@ class CRMLeadMiningRequest(models.Model):
             self.error = 'Insufficient credits. Recharge your account and retry.'
             self.state = 'error'
             self._cr.commit()
-            raise UserError(self.error)
+            raise e
 
     def _create_leads_from_response(self, result):
         """ This method will get the response from the service and create the leads accordingly """
