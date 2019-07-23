@@ -176,10 +176,23 @@ class Product(models.Model):
             company_id = self.env.user.company_id.id
             return (
                 [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
-                [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
-                [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
-            ])
-
+                ['&',
+                     ('location_dest_id.company_id', '=', company_id),
+                     '|',
+                         ('location_id.company_id', '=', False),
+                         '&',
+                             ('location_id.usage', 'in', ['inventory', 'production']),
+                             ('location_id.company_id', '=', company_id),
+                 ],
+                ['&',
+                     ('location_id.company_id', '=', company_id),
+                     '|',
+                         ('location_dest_id.company_id', '=', False),
+                         '&',
+                             ('location_dest_id.usage', 'in', ['inventory', 'production']),
+                             ('location_dest_id.company_id', '=', company_id),
+                 ]
+            )
         def _search_ids(model, values, force_company_id):
             ids = set()
             domain = []
@@ -392,6 +405,7 @@ class Product(models.Model):
         action['context'] = {'default_product_id': self.id}
         return action
 
+    # Be aware that the exact same function exists in product.template
     def action_open_quants(self):
         self.ensure_one()
         self.env['stock.quant']._quant_tasks()
@@ -605,6 +619,7 @@ class ProductTemplate(models.Model):
                     'context': {'default_product_id': self.env.context.get('default_product_id')}
                 }
 
+    # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
         self.env['stock.quant']._quant_tasks()
         products = self.mapped('product_variant_ids')

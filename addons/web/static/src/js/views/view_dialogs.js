@@ -241,8 +241,13 @@ var FormViewDialog = ViewDialog.extend({
      * @override
      */
     _focusOnClose: function() {
-        this.trigger_up('form_dialog_discarded');
-        return true;
+        var isFocusSet = false;
+        this.trigger_up('form_dialog_discarded', {
+            callback: function (isFocused) {
+                isFocusSet = isFocused;
+            },
+        });
+        return isFocusSet;
     },
 
     /**
@@ -425,8 +430,13 @@ var SelectCreateDialog = ViewDialog.extend({
      * @override
      */
     _focusOnClose: function() {
-        this.trigger_up('form_dialog_discarded');
-        return true;
+        var isFocusSet = false;
+        this.trigger_up('form_dialog_discarded', {
+            callback: function (isFocused) {
+                isFocusSet = isFocused;
+            },
+        });
+        return isFocusSet;
     },
 });
 
