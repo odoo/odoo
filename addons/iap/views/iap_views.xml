@@ -10,7 +10,7 @@
                 <sheet>
                     <group name="account" string="Account Information">
                         <field name="service_name"/>
-                        <field name="company_id"/>
+                        <field name="company_ids" widget="many2many_tags" domain="[('id', 'in', allowed_company_ids)]"/>
                         <field name="account_token"/>
                     </group>
                 </sheet>
@@ -23,7 +23,7 @@
         <field name="arch" type="xml">
             <tree string="IAP Accounts">
                 <field name="service_name"/>
-                <field name="company_id"/>
+                <field name="company_ids" widget="many2many_tags"/>
                 <field name="account_token" readonly="1"/>
             </tree>
         </field>

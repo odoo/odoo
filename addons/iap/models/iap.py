@@ -158,17 +158,28 @@ class IapAccount(models.Model):
 
     service_name = fields.Char()
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    company_ids = fields.Many2many('res.company')
 
     @api.model
     def get(self, service_name, force_create=True):
-        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.company.id, False])], limit=1, order='company_id desc, id desc')
-        if not account and force_create:
+        accounts = self.search([
+            ('service_name', '=', service_name), 
+            '|',
+                ('company_ids', 'in', self.env.context['allowed_company_ids']),
+                ('company_ids','=',False)],
+            order='id desc')
+        if not accounts and force_create:
             account = self.create({'service_name': service_name})
             # Since the account did not exist yet, we will encounter a NoCreditError,
             # which is going to rollback the database and undo the account creation,
             # preventing the process to continue any further.
             self.env.cr.commit()
+        else:
+            accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
+            if accounts_with_company:
+                account = accounts_with_company[0]
+            else:
+                account = accounts[0]
         return account
 
     @api.model
