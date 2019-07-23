@@ -83,6 +83,8 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
 
+    def _get_selected_wishlist_product(self, attributes):
+        return self.env['product.template.attribute.value'].search([('id', 'in', list(attributes))])
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -90,3 +92,10 @@ class ProductProduct(models.Model):
     def _is_in_wishlist(self):
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id')
+
+    def write(self, values):
+        ''' Archive/Unarchive  Wishlist Items when product is archive/unarchived'''
+        res = super(ProductProduct, self).write(values)
+        if 'active' in values:
+            self.env['product.wishlist'].with_context(active_test=False).search([('product_id', 'in', self.ids)]).write({'active': values['active']})
+        return res
