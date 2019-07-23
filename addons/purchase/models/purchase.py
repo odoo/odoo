@@ -31,18 +31,6 @@ class PurchaseOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
             })
 
-    @api.depends('order_line.date_planned', 'date_order')
-    def _compute_date_planned(self):
-        for order in self:
-            min_date = False
-            for line in order.order_line:
-                if not min_date or line.date_planned and line.date_planned < min_date:
-                    min_date = line.date_planned
-            if min_date:
-                order.date_planned = min_date
-            else:
-                order.date_planned = order.date_order
-
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -109,7 +97,7 @@ class PurchaseOrder(models.Model):
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
+    date_planned = fields.Datetime(string='Scheduled Date', index=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -167,7 +155,16 @@ class PurchaseOrder(models.Model):
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
+        if vals.get('date_planned'):
+            for line in vals.get('order_line'):
+                line[2]['date_planned'] = vals.get('date_planned')
         return super(PurchaseOrder, self).create(vals)
+
+    def write(self, vals):
+        res = super(PurchaseOrder, self).write(vals)
+        if vals.get('date_planned'):
+            self.order_line.update({'date_planned': self.date_planned})
+        return res
 
     def unlink(self):
         for order in self:
@@ -408,10 +405,6 @@ class PurchaseOrder(models.Model):
         result['context']['default_origin'] = self.name
         result['context']['default_reference'] = self.partner_ref
         return result
-
-    def action_set_date_planned(self):
-        for order in self:
-            order.order_line.update({'date_planned': order.date_planned})
 
 
 class PurchaseOrderLine(models.Model):
