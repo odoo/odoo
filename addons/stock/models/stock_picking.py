@@ -540,6 +540,7 @@ class Picking(models.Model):
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
+        self.multicompany_check()
         return True
 
     def action_assign(self):
@@ -617,6 +618,17 @@ class Picking(models.Model):
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now()})
         return True
+
+    def multicompany_check(self):
+        """ Sanity check on multicompany. This method ensure the picking's company
+        is the same than all the sub objects ones"""
+        for picking in self:
+            if picking.mapped('move_lines.company_id') != picking.company_id:
+                raise UserError(_('Some stock moves are recorded in another company than this transfer'))
+            if picking.location_dest_id.company_id not in [False, picking.company_id]\
+                    or picking.location_id.company_id not in [False, picking.company_id]:
+                raise UserError(_('The locations are not recorded in the same company than this transfer'))
+
 
     @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
     def _compute_move_without_package(self):
