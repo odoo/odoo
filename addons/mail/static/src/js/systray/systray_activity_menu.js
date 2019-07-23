@@ -119,7 +119,7 @@ var ActivityMenu = Widget.extend({
                 views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
                 view_mode: 'activity',
                 res_model: targetAction.data('res_model'),
-                context: { search_default_activities_my: true },
+                domain: [['activity_ids.user_id', '=', session.uid]],
             });
         }
     },

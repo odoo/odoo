@@ -388,15 +388,12 @@
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
-                    <filter string="My Activities" name="activities_my"
-                        domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>

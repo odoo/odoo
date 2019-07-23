@@ -23,16 +23,12 @@
                 <filter string="Top Priorities" name="top_priority" domain="[('priority', '=', '3')]"/>
                 <separator/>
                 <filter string="Unscheduled Maintenance" domain="[('schedule_date', '=', False)]" name="unscheduled"/>
-                <separator/>
-                <filter string="My Activities" name="activities_my"
-                    domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <separator/>
@@ -512,16 +508,12 @@
                 <separator/>
                 <filter string="My Equipments" name="my" domain="[('owner_user_id', '=', uid)]"/>
                 <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
-                <separator/>
-                <filter string="My Activities" name="activities_my"
-                    domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <separator/>

@@ -341,13 +341,12 @@
                 <filter string="In Progress" name="open" domain="[('state', 'in', ['open','diesoon'])]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
                 <filter string="Expiring Soon" name="expire_soon" domain="[('state', '=', 'diesoon')]"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="0" string="Group By">
