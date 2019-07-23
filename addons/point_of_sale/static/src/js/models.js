@@ -836,6 +836,19 @@ exports.PosModel = Backbone.Model.extend({
 
         if (order) {
             this.db.add_order(order.export_as_JSON());
+            var pos = {
+                dp:order.pos.dp,
+                currency:order.pos.currency,
+                config:order.pos.config
+            };
+            var receipt = order.export_for_printing();
+            var receipt_ticket_data = {
+                pos: pos,
+                receipt: receipt,
+                orderlines: receipt.orderlines,
+                paymentlines: receipt.paymentlines,
+            };
+            opts['receipt_ticket_data'] = receipt_ticket_data;
         }
 
         return new Promise(function (resolve, reject) {
@@ -964,7 +977,8 @@ exports.PosModel = Backbone.Model.extend({
         var args = [_.map(orders, function (order) {
                 order.to_invoice = options.to_invoice || false;
                 order.to_email = options.to_email || false;
-                order.data.receipt_html = receipt_ticket;
+                order.data.receipt_html = receipt_ticket || false;
+                order.data.receipt_data = options.receipt_ticket_data || false;
                 return order;
             })];
         return rpc.query({

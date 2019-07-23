@@ -2,13 +2,11 @@
 
 <templates>
     <t t-extend="XmlReceipt" t-name="OrderXmlReceipt">
-        <t t-jquery="t[t-foreach='paymentlines']" t-operation="replace">
-            <t t-foreach='receipt.paymentlines' t-as='line'>
-                <line>
-                    <left><t t-esc='line.name' /></left>
-                    <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.amount'/></value></right>
-                </line>
-            </t>
+        <t t-jquery="t[t-esc='line.get_amount()']" t-operation="replace">
+            <t t-esc='line.amount'/>
+        </t>
+        <t t-jquery="t[t-esc='line.name']" t-operation="replace">
+            <t t-esc='line.journal'/>
         </t>
     </t>
 </templates>
