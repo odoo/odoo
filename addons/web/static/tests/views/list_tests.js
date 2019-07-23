@@ -2039,8 +2039,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('tbody:eq(1) .o_group_header:eq(0)'));
 
-        assert.containsNone(list, '.o_group_header button',
-            "there should be no button in the header");
+        assert.containsOnce(list, '.o_group_header button',
+            "there should be one button in the header");
 
         list.destroy();
     });

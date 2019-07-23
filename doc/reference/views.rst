@@ -345,7 +345,7 @@ Possible children elements of the list view are:
 
   ``name``
       the name of a many2one field (on the current model). Custom header will be
-      displayed when grouping the view on this field name (only for first level).
+      displayed when grouping the view on this field name.
 
   .. code-block:: xml
 
