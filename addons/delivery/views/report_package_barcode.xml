@@ -13,7 +13,7 @@
     <template id="report_package_barcode_small_delivery" inherit_id="stock.report_package_barcode_small">
         <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
             <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
-                <div class="col-12 text-center" style="font-size:24px; font-weight:bold;">Shipping Weight: <span t-field="o.shipping_weight"/> <t t-esc="env['product.template']._get_weight_uom_id_from_ir_config_parameter().display_name"/></div>
+                <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Shipping Weight: </span><span t-field="o.shipping_weight"/> <t t-esc="env['product.template']._get_weight_uom_id_from_ir_config_parameter().display_name"/></div>
             </div>
         </xpath>
     </template>
