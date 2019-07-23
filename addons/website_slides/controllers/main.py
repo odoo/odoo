@@ -733,28 +733,15 @@ class WebsiteSlides(WebsiteProfile):
 
         rank_progress = {}
         if not user_bad_answers:
-            old_lower_bound = request.env.user.rank_id.karma_min
-            old_upper_bound = request.env.user.next_rank_id.karma_min
-            old_karma = request.env.user.karma
-            old_motivational = request.env.user.next_rank_id.description_motivational
+            rank_progress['previous_rank'] = self._get_rank_values(request.env.user)
             slide._action_set_quiz_done()
             slide.action_set_completed()
-            new_lower_bound = request.env.user.rank_id.karma_min
-            new_upper_bound = request.env.user.next_rank_id.karma_min
-            level_up = old_lower_bound != new_lower_bound
-            rank_progress = {
-                'oldLowerBound': old_lower_bound,
-                'oldUpperBound': old_upper_bound,
-                'oldKarma': old_karma,
-                'oldMotivational': old_motivational,
-                'oldProgress': 100 * ((old_karma - old_lower_bound) / (old_upper_bound - old_lower_bound)),
-                'levelUp': level_up,
-                'newLowerBound': new_lower_bound,
-                'newUpperBound': new_upper_bound,
-                'newKarma': request.env.user.karma,
-                'newMotivational': request.env.user.next_rank_id.description_motivational,
-                'newProgress': 100 * ((request.env.user.karma - new_lower_bound) / (new_upper_bound - new_lower_bound)),
-            }
+            rank_progress['new_rank'] = self._get_rank_values(request.env.user)
+            rank_progress.update({
+                'description': request.env.user.rank_id.description,
+                'last_rank': not request.env.user.next_rank_id,
+                'level_up': rank_progress['previous_rank']['lower_bound'] != rank_progress['new_rank']['lower_bound']
+            })
         return {
             'goodAnswers': user_good_answers.ids,
             'badAnswers': user_bad_answers.ids,
@@ -764,6 +751,17 @@ class WebsiteSlides(WebsiteProfile):
             'quizKarmaGain': quiz_info['quiz_karma_gain'],
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
             'rankProgress': rank_progress,
+        }
+
+    def _get_rank_values(self, user):
+        lower_bound = user.rank_id.karma_min
+        upper_bound = user.next_rank_id.karma_min
+        return {
+            'lower_bound': lower_bound,
+            'upper_bound': upper_bound,
+            'karma': user.karma,
+            'motivational': user.next_rank_id.description_motivational,
+            'progress': 100 if not user.next_rank_id else 100 * ((user.karma - lower_bound) / (upper_bound - lower_bound))
         }
 
     # --------------------------------------------------

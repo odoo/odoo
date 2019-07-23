@@ -48,6 +48,7 @@ odoo.define('website_slides.quiz', function (require) {
             this.quiz = quiz_data || false;
             this.readonly = slide_data.readonly || false;
             this.publicUser = session.is_website_user;
+            this.userId = session.user_id;
             this.redirectURL = encodeURIComponent(document.URL);
             this.channel = channel_data;
             return this._super.apply(this, arguments);
@@ -174,33 +175,9 @@ odoo.define('website_slides.quiz', function (require) {
             }
             var self = this;
             $modal.on('shown.bs.modal', function () {
-                if (self.quiz.rankProgress.levelUp) {
-                    $modal.find('.progress-bar').animate({
-                        width: '100%'
-                    }, 600, function () {
-                        $modal.find('.o_wslides_rank_motivational').animate({
-                            opacity: 0
-                        }, 600, function () {
-                            $modal.find('.o_wslides_rank_motivational').html(self.quiz.rankProgress.newMotivational);
-                            $modal.find('.o_wslides_rank_motivational').animate({
-                                opacity: 1
-                            }, 600);
-                        });
-                        $modal.find('.progress-bar').animate({
-                            width: '0%'
-                        }, 0, function () {
-                            $modal.find('.o_wslides_rank_lower_bound').html(self.quiz.rankProgress.newLowerBound);
-                            $modal.find('.o_wslides_rank_upper_bound').html(self.quiz.rankProgress.newUpperBound);
-                            $modal.find('.progress-bar').animate({
-                                width: self.quiz.rankProgress.newProgress + '%'
-                            }, 600);
-                        });
-                    });
-                } else {
-                    $modal.find('.progress-bar').animate({
-                        width: self.quiz.rankProgress.newProgress + '%'
-                    }, 600);
-                }
+                var rankProgress = self.quiz.rankProgress;
+                self._animateText($modal, rankProgress);
+                self._animateProgressBar($modal, rankProgress);
             });
             $modal.modal({
                 'show': true,
@@ -208,6 +185,87 @@ odoo.define('website_slides.quiz', function (require) {
             $modal.on('hidden.bs.modal', function () {
                 $modal.remove();
             });
+        },
+
+        /**
+         * Handles the animation of the karma gain in the following steps:
+         * 1. Initiate the tooltip which will display the actual Karma
+         *    over the progress bar.
+         * 2. Animate the tooltip text to increment smoothly from the old
+         *    karma value to the new karma value and updates it to make it
+         *    move as the progress bar moves.
+         * 3a. The user doesn't level up
+         *    I.   When the user doesn't level up the progress bar simply goes
+         *         from the old karma value to the new karma value.
+         * 3b. The user levels up
+         *    I.   The first step makes the progress bar go from the old karma
+         *         value to 100%.
+         *    II.  The second step makes the progress bar go from 100% to 0%.
+         *    III. The third and final step makes the progress bar go from 0%
+         *         to the new karma value. It also changes the lower and upper
+         *         bound to match the new rank.
+         * @param $modal
+         * @param rankProgress
+         * @private
+         */
+        _animateProgressBar: function ($modal, rankProgress) {
+            var firstStepXpGainDelay = 750;
+            var secondStepXpGainDelay = 0;
+            var thirdStepXpGainDelay = 750;
+            var totalStepXpGainDelay = firstStepXpGainDelay + secondStepXpGainDelay + thirdStepXpGainDelay;
+            this.$('[data-toggle="tooltip"]').tooltip({
+                trigger: 'manual',
+                container: '.progress-bar-tooltip',
+            }).tooltip('show');
+            $modal.find('.tooltip-inner').prop('Counter', rankProgress.previous_rank.karma).animate({
+                Counter: rankProgress.new_rank.karma
+            }, {
+                duration: totalStepXpGainDelay,
+                step: function (now) {
+                    $modal.find('.tooltip-inner').text(Math.ceil(now));
+                    self.$('[data-toggle="tooltip"]').tooltip('update');
+                }
+            });
+            if (rankProgress.level_up) {
+                $modal.find('.o_wslides_quiz_modal_title').text(_('You Level Up!'));
+                $modal.find('.o_wslides_quiz_modal_title').css('font-size', '3rem');
+                $modal.find('.progress-bar').animate({
+                    width: '100%'
+                }, firstStepXpGainDelay, function () {
+                    $modal.find('.progress-bar').animate({
+                        width: '0%'
+                    }, secondStepXpGainDelay, function () {
+                        $modal.find('.o_wslides_rank_lower_bound').text(rankProgress.new_rank.lower_bound);
+                        $modal.find('.o_wslides_rank_upper_bound').text(rankProgress.new_rank.upper_bound || "");
+                        $modal.find('.progress-bar').animate({
+                            width: rankProgress.new_rank.progress + '%'
+                        }, thirdStepXpGainDelay);
+                    });
+                });
+            } else {
+                $modal.find('.progress-bar').animate({
+                    width: rankProgress.new_rank.progress + '%'
+                }, totalStepXpGainDelay);
+            }
+        },
+
+        _animateText: function ($modal, rankProgress) {
+            if (rankProgress.level_up) {
+                $modal.find('.o_wslides_rank_motivational').delay(750).animate({
+                    opacity: 0
+                }, 600, function () {
+                    $modal.find('.o_wslides_rank_motivational').html(rankProgress.description);
+                    $modal.find('.o_wslides_rank_motivational').animate({
+                        opacity: 1
+                    }, 600);
+                });
+            }
+            $modal.find('h4.o_wslides_xp_gained').delay(1000).animate({
+                opacity: 1
+            }, 500);
+            setTimeout(function () {
+               $modal.find('.o_wslides_quiz_dismiss_btn').removeClass('d-none');
+            }, 1500);
         },
 
         /*
