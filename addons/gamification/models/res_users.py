@@ -11,19 +11,12 @@ class Users(models.Model):
     _inherit = 'res.users'
 
     karma = fields.Integer('Karma', default=0)
-    karma_position = fields.Integer('Karma position', compute="_compute_karma_position", store=False)
     badge_ids = fields.One2many('gamification.badge.user', 'user_id', string='Badges', copy=False)
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
     silver_badge = fields.Integer('Silver badges count', compute="_get_user_badge_level")
     bronze_badge = fields.Integer('Bronze badges count', compute="_get_user_badge_level")
     rank_id = fields.Many2one('gamification.karma.rank', 'Rank', index=False)
     next_rank_id = fields.Many2one('gamification.karma.rank', 'Next Rank', index=False)
-
-    @api.depends('karma')
-    def _compute_karma_position(self):
-        _logger.warning("The field karma_position from res.users is deprecated. Don't use it anymore.")
-        for user in self:
-            user.karma_position = 0
 
     @api.depends('badge_ids')
     def _get_user_badge_level(self):
