@@ -1,7 +1,7 @@
 odoo.define('root.widget', function (require) {
 'use strict';
 
-require('web.dom_ready');
+var lazyloader = require('web.public.lazyloader');
 var rootData = require('web.public.root');
 
 /**
@@ -11,7 +11,10 @@ var rootData = require('web.public.root');
  * been consumed.
  */
 var publicRoot = new rootData.PublicRoot(null);
-return publicRoot.attachTo(document.body).then(function () {
-    return publicRoot;
+return lazyloader.allScriptsLoaded.then(function () {
+    return publicRoot.attachTo(document.body).then(function () {
+        return publicRoot;
+    });
 });
+
 });
