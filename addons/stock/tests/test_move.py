@@ -4199,3 +4199,97 @@ class StockMove(SavepointCase):
         picking.button_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 2)
+
+    def test_put_in_pack_2(self):
+        """Check that reserving moves without done quantity
+        adding in same package.
+        """
+        product1 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(product1, self.stock_location, 2)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking.id,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': 'test_transit_2',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, self.stock_location), 0)
+        picking.put_in_pack()
+        self.assertEqual(len(picking.move_line_ids), 2)
+        self.assertEqual(picking.move_line_ids[0].qty_done, 1, "Stock move line should have 1 quantity as a done quantity.")
+        self.assertEqual(picking.move_line_ids[1].qty_done, 2, "Stock move line should have 2 quantity as a done quantity.")
+        line1_result_package = picking.move_line_ids[0].result_package_id
+        line2_result_package = picking.move_line_ids[1].result_package_id
+        self.assertEqual(line1_result_package, line2_result_package, "Product and Product1 should be in a same package.")
+
+    def test_put_in_pack_3(self):
+        """Check that one reserving move without done quantity and
+        another reserving move with done quantity adding in different
+        package.
+        """
+        product1 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(product1, self.stock_location, 2)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking.id,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': 'test_transit_2',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, self.stock_location), 0)
+        move1.quantity_done = 1
+        picking.put_in_pack()
+        move2.quantity_done = 2
+        picking.put_in_pack()
+        self.assertEqual(len(picking.move_line_ids), 2)
+        line1_result_package = picking.move_line_ids[0].result_package_id
+        line2_result_package = picking.move_line_ids[1].result_package_id
+        self.assertNotEqual(line1_result_package, line2_result_package, "Product and Product1 should be in a different package.")
