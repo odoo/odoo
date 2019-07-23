@@ -4,6 +4,7 @@ odoo.define('web.pivot_tests', function (require) {
 var core = require('web.core');
 var PivotView = require('web.PivotView');
 var testUtils = require('web.test_utils');
+var testUtilsDom = require('web.test_utils_dom');
 
 var createActionManager = testUtils.createActionManager;
 var patchDate = testUtils.mock.patchDate;
@@ -16,7 +17,7 @@ QUnit.module('Views', {
         this.data = {
             partner: {
                 fields: {
-                    foo: {string: "Foo", type: "integer"},
+                    foo: {string: "Foo", type: "integer", searchable: true},
                     bar: {string: "bar", type: "boolean"},
                     date: {string: "Date", type: "date", store: true, sortable: true},
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
@@ -1838,6 +1839,71 @@ QUnit.module('Views', {
         assert.strictEqual($('.o_pivot_header_cell_closed').length, 3, "there should be exactly three closed header ('Total','First', 'Second')");
 
         unpatchDate();
+        actionManager.destroy();
+    });
+
+    QUnit.test('Navigation list view for a group and back with breadcrumbs', function (assert) {
+        assert.expect(16);
+        // create an action manager to test the interactions with the search view
+        var readGroupCount = 0;
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="customer" type="row"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search><filter name="bayou" string="Bayou" domain="[(\'foo\',\'=\', 12)]"/></search>',
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+                'partner,false,form': '<form><field name="foo"/></form>',
+            },
+            intercepts: {
+                do_action: function (event) {
+                    var action = event.data.action;
+                    actionManager.doAction(action);
+                }
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.step('read_group');
+                    var domain = args.kwargs.domain;
+                    if ([0,1].indexOf(readGroupCount) !== -1) {
+                        assert.deepEqual(domain, [], 'initial domain empty');
+                    } else if ([2,3,4,5].indexOf(readGroupCount) !== -1) {
+                        assert.deepEqual(domain, [['foo', '=', 12]],
+                            'domain conserved when back with breadcrumbs');
+                    }
+                    readGroupCount++;
+                }
+                if (route === '/web/dataset/search_read') {
+                    assert.step('search_read');
+                    var domain = args.domain;
+                    assert.deepEqual(domain, [['foo', '=', 12], ['customer', '=', 1], ['foo', '=', 12]],
+                        'list domain is correct');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+        });
+
+        testUtilsDom.click(actionManager.$('.o_filters_menu_button'));
+        testUtilsDom.click(actionManager.$('.o_menu_item:contains("Bayou")'));
+
+        testUtilsDom.click(actionManager.$('.o_pivot_cell_value:nth(1)'))
+
+        assert.containsOnce(actionManager, '.o_list_view');
+
+        testUtilsDom.click(actionManager.$('.o_control_panel .breadcrumb-item:first() a'));
+
+        assert.verifySteps([
+            'read_group', 'read_group',
+            'read_group', 'read_group',
+            'search_read',
+            'read_group', 'read_group'])
         actionManager.destroy();
     });
 
