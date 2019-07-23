@@ -1265,56 +1265,36 @@ QUnit.module('Search View', {
 
     QUnit.module('Autocompletion');
 
-    QUnit.test('selection via autocompletion and deletion modifies appropriately submenus', async function (assert) {
-        assert.expect(6);
+    QUnit.test('select an autocomplete field', async function (assert) {
+        assert.expect(3);
 
+        var searchRead = 0;
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchRead === 1) {
+                        assert.deepEqual(args.domain, [["foo", "ilike", "a"]]);
+                    }
+                    searchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
-        const unpatchDate = patchDate(2019,6,31,13,43,0);
-
-        await actionManager.doAction(9);
+        await actionManager.doAction(11);
 
         await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 97);
-        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
-        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 103);
-        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+        assert.strictEqual(actionManager.$('.o_searchview_autocomplete li').length, 2,
+            "there should be 2 result for 'a' in search bar autocomplete");
 
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
         assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
-            "Date Field Filter: July 2019",
-            "There should be a filter facet with label 'Date Field Filter: July 2019'");
-        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
-            "Date Field Groupby: Day",
-            "There should be a filter facet with label 'Date Field Groupby: Day'");
-
-        await testUtils.dom.click($('button .fa-filter'));
-        await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
-        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "July2019",
-            "The item 'July 2019' should be selected in the filters menu");
-
-        await testUtils.dom.click($('button .fa-bars'));
-        await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
-        assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
-            "The item 'Day' should be selected in the groupby menu");
-
-        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
-        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
-
-        await testUtils.dom.click($('button .fa-filter'));
-        await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
-        assert.containsNone($('.o_filters_menu .o_item_option a.selected'),
-            "The item 'This Month' should have unselected in the filters menu");
-
-        await testUtils.dom.click($('button .fa-bars'));
-        await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
-        assert.containsNone($('.o_group_by_menu .o_item_option a.selected'),
-            "The item 'Day' should have been unselected in the groupby menu");
+            "a", "There should be a field facet with label 'a'");
 
         actionManager.destroy();
-        unpatchDate();
     });
 
     QUnit.test('select an autocomplete field with `context` key', async function (assert) {
