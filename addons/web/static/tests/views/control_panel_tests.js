@@ -355,7 +355,7 @@ QUnit.module('Views', {
         });
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
+        assert.containsOnce(controlPanel, '.o_menu_item.d-none a:contains("B")');
 
         controlPanel.destroy();
     });
@@ -413,7 +413,7 @@ QUnit.module('Views', {
         });
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
+        assert.containsOnce(controlPanel, '.o_menu_item.d-none a:contains("B")');
 
         controlPanel.destroy();
     });
