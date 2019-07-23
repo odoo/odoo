@@ -4244,6 +4244,43 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: contexts with multiple edit', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/foo/write' ||
+                    route === '/web/dataset/call_kw/foo/read') {
+                    var context = args.kwargs.context;
+                    assert.strictEqual(context.active_field, 2, "context should be correct");
+                    assert.strictEqual(context.someKey, 'some value', "context should be correct");
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {someKey: 'some value'},
+            },
+            viewOptions: {
+                context: {active_field: 2},
+            },
+        });
+
+        // Uses the main selector to select all lines.
+        await testUtils.dom.click(list.$('.o_content input:first'));
+        await testUtils.dom.click(list.$('.o_data_cell:first'));
+        // Edits first record then confirms changes.
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'legion');
+        await testUtils.dom.click($('.modal-dialog button.btn-primary'));
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition', async function (assert) {
         assert.expect(19);
 
