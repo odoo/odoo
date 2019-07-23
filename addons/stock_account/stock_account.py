@@ -10,6 +10,27 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+class stock_return_picking_line(osv.osv_memory):
+    _inherit = "stock.return.picking.line"
+    _columns = {
+        'to_refund': fields.boolean('To Refund (update SO/PO)', help="Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order"),
+    }
+
+
+class stock_return_picking(osv.osv_memory):
+    _inherit = "stock.return.picking"
+
+    def _create_returns(self, cr, uid, ids, context=None):
+        new_picking_id, pick_type_id = super(stock_return_picking, self)._create_returns(cr, uid, ids, context)
+        return_picking = self.pool['stock.return.picking'].browse(cr, uid, ids, context=context)
+        new_picking = self.pool['stock.picking'].browse(cr, uid, [new_picking_id], context=context)
+        for move in new_picking.move_lines:
+            return_picking_line = return_picking.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            if return_picking_line and return_picking_line.to_refund:
+                move.to_refund = True
+        return new_picking_id, pick_type_id
+
+
 class stock_inventory(osv.osv):
     _inherit = "stock.inventory"
     _columns = {
@@ -470,6 +491,12 @@ class stock_move(osv.osv):
             if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
                 #store the average price of the move on the move and product form
                 self._store_average_cost_price(cr, uid, move, context=context)
+
+    _columns = {
+        'to_refund': fields.boolean('To Refund (update SO/PO)', copy=False,
+                                    help="Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order"),
+    }
+
 
 class AccountChartTemplate(models.Model):
     _inherit = "account.chart.template"

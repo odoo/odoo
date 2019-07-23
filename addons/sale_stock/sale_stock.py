@@ -194,11 +194,11 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
-            #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
-            #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
-                if not move.origin_returned_move_id:
+                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+            elif move.location_dest_id.usage != "customer" and move.to_refund:
+                qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
