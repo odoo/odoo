@@ -82,7 +82,9 @@ class IrRule(models.Model):
             return []
 
         # browse user and rules as SUPERUSER_ID to avoid access errors!
-        eval_context = self._eval_context()
+        # Clean context since that this method has a ormcache then we can't
+        # affect the result of ir.rule domain
+        eval_context = self.with_context({})._eval_context()
         user_groups = self.env.user.groups_id
         global_domains = []                     # list of domains
         group_domains = []                      # list of domains
