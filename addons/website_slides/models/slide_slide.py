@@ -591,7 +591,9 @@ class Slide(models.Model):
             'partner_id': target_partner.id,
             'vote': 0,
             'completed': True} for new_slide in new_slides])
-
+        self.env['slide.channel.partner'].sudo().search(
+            [('channel_id', 'in', (self_sudo | existing_sudo.mapped('slide_id')).mapped('channel_id').ids), ('partner_id', '=', target_partner.id)]
+        ).compute_completed()
         return True
 
     def _action_set_quiz_done(self):

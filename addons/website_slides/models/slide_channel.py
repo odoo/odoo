@@ -17,12 +17,25 @@ class ChannelUsersRelation(models.Model):
 
     channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
-    # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
-    completion = fields.Integer('# Completed Slides')
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    def _compute_completion(self):
+    def compute_completed(self):
+        mapped_data = self._get_slide_channel_data()
+        users = self.env['res.users']
+        for record in self.exists().filtered(lambda cp: not cp.completed):
+            slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
+            total_slides = record.channel_id.read(['total_slides'])[0]['total_slides']
+            if slide_done >= total_slides:
+                partner_karma = record.channel_id.karma_gen_channel_finish
+                record.completed = True
+                record._post_completion_hook()
+                users.sudo().search([('partner_id', '=', record.partner_id.id)]).add_karma(partner_karma)
+
+    def _post_completion_hook(self):
+        pass
+
+    def _get_slide_channel_data(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -36,27 +49,11 @@ class ChannelUsersRelation(models.Model):
             mapped_data.setdefault(item['channel_id'][0], dict())
             mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
 
-        partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
-        for record in self:
-            slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
-            record.completion = slide_done
-            if not record.completed and record.completion >= record.channel_id.total_slides:
-                record.completed = True
-                partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
+        return mapped_data
 
-        partner_karma = {partner_id: karma_to_add
-                         for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
-
-        self._post_completion_hook()
-
-        if partner_karma:
-            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
-            for user in users:
-                users.add_karma(partner_karma[user.partner_id.id])
-
-
-    def _post_completion_hook(self):
-        pass
+    def get_completion(self):
+        self.ensure_one()
+        return self._get_slide_channel_data().get(self.channel_id.id, dict()).get(self.partner_id.id, 0)
 
     def unlink(self):
         """
@@ -262,10 +259,11 @@ class Channel(models.Model):
         current_user_info = self.env['slide.channel.partner'].sudo().search(
             [('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]
         )
-        mapped_data = dict((info.channel_id.id, (info.completed, info.completion)) for info in current_user_info)
+        mapped_completion_data = current_user_info._get_slide_channel_data()
+        mapped_completed_data = dict((info.channel_id.id, info.completed) for info in current_user_info)
         for record in self:
-            completed, completion = mapped_data.get(record.id, (False, 0))
-            record.completed = completed
+            completion = mapped_completion_data.get(record.id, dict()).get(self.env.user.partner_id.id, 0)
+            record.completed = mapped_completed_data.get(record.id)
             record.completion = round(100.0 * completion / (record.total_slides or 1))
 
     @api.depends('upload_group_ids', 'user_id')
