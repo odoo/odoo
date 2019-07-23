@@ -3,10 +3,12 @@
 
 import ctypes
 import evdev
+import json
 from keysym_to_ucs import keysym_mapping
 import logging
 from lxml import etree
 import os
+from pathlib import Path
 import subprocess
 import time
 from threading import Lock
@@ -36,7 +38,8 @@ class KeyboardUSBDriver(Driver):
         super(KeyboardUSBDriver, self).__init__(device)
         self._device_type = 'keyboard'
         self._device_connection = 'direct'
-        self._device_name = self._get_name()
+        self._device_name = self._set_name()
+        self.load_layout()
 
         for device in [evdev.InputDevice(path) for path in evdev.list_devices()]:
             if (self.dev.idVendor == device.info.vendor) and (self.dev.idProduct == device.info.product):
@@ -79,6 +82,7 @@ class KeyboardUSBDriver(Driver):
                 'variant': data.get('variant'),
             }
             self._change_keyboard_layout(layout)
+            self.save_layout(layout)
         else:
             self.data['value'] = ''
             event_manager.device_changed(self)
@@ -120,6 +124,38 @@ class KeyboardUSBDriver(Driver):
         # Close then re-open display to refresh the mapping
         xlib.XCloseDisplay(KeyboardUSBDriver.display)
         KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":0.0", "utf-8"))
+
+    def save_layout(self, layout):
+        """Save the layout to a file on the box to read it when restarting it.
+        We need that in order to keep the selected layout after a reboot.
+
+        Args:
+            new_layout (dict): A dict containing two keys:
+                - layout (str): The layout code
+                - variant (str): An optional key to represent the variant of the
+                                 selected layout
+        """
+        file_path = Path.home() / 'odoo-keyboard-layouts.conf'
+        if file_path.exists():
+            data = json.loads(file_path.read_text())
+        else:
+            data = {}
+        data[self.device_identifier] = layout
+        subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+        file_path.write_text(json.dumps(data))
+        subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+
+    def load_layout(self):
+        """Read the layout from the saved filed and set it as current layout.
+        If no file or no layout is found we use 'us' by default.
+        """
+        file_path = Path.home() / 'odoo-keyboard-layouts.conf'
+        if file_path.exists():
+            data = json.loads(file_path.read_text())
+            layout = data.get(self.device_identifier, {'layout': 'us'})
+        else:
+            layout = {'layout': 'us'}
+        self._change_keyboard_layout(layout)
 
     def _keyboard_input(self, scancode):
         """Deal with a keyboard input. Send the character corresponding to the
