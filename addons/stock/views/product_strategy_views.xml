@@ -11,7 +11,7 @@
                        attrs="{'readonly': [('category_id', '!=', False)], 'required': [('category_id', '=', False)]}"
                        options="{'no_create': True, 'no_open': True}"
                        readonly="context.get('single_product', False)"
-                       domain="[('type', '!=', 'service')]"
+                       domain="[('type', '!=', 'service'), ('company_id', 'in', [company_id, False])]"
                        force_save="1"/>
                 <field name="category_id"
                        attrs="{'readonly': [('product_id', '!=', False)], 'required': [('product_id', '=', False)]}"
@@ -21,10 +21,13 @@
                 <field name="location_in_id"
                        options="{'no_create': True}"
                        readonly="context.get('fixed_location', False)"
-                       domain="[('child_ids', '!=', False)]"/>
+                       domain="[('child_ids', '!=', False), ('company_id', 'in', [company_id, False])]"/>
                 <field name="location_out_id" attrs="{'readonly': [('location_in_id', '=', False)]}"
                        options="{'no_create': True}"
-                       domain="[('id', 'child_of', location_in_id), ('id', '!=', location_in_id)]"/>
+                       domain="[('id', 'child_of', location_in_id), ('id', '!=', location_in_id), ('company_id', 'in', [company_id, False])]"/>
+                <field name="company_id"
+                       group="base.group_multi_company"
+                       options="{'no_create': True, 'no_edit': True}"/>
             </tree>
         </field>
     </record>

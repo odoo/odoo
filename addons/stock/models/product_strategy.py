@@ -57,6 +57,12 @@ class StockPutawayRule(models.Model):
     location_out_id = fields.Many2one('stock.location', 'Store to',
         required=True, ondelete='cascade')
     sequence = fields.Integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
+    company_id = fields.Many2one(
+        'res.company',
+        'Company',
+        readonly=True,
+        default=lambda self: self.env.company
+    )
 
     @api.onchange('location_in_id')
     def _onchange_location_in(self):
