@@ -52,17 +52,19 @@ odoo.define('web.ListModel', function (require) {
             var model = records[0].model;
             var recordResIds = _.pluck(records, 'res_id');
             var fieldNames = records[0].getFieldNames();
+            var context = records[0].getContext();
 
             return this._rpc({
                 model: model,
                 method: 'write',
                 args: [recordResIds, changes],
-                context: records[0].getContext(),
+                context: context,
             }).then(function () {
                 return self._rpc({
                     model: model,
                     method: 'read',
                     args: [recordResIds, fieldNames],
+                    context: context,
                 });
             }).then(function (results) {
                 results.forEach(function (data) {
