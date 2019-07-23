@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view" />
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='update_cost_price']" position="inside">
+                <xpath expr="//span[@name='update_cost_price']" position="inside">
                     <button name="button_bom_cost"
                         string="Compute Price from BoM" type="object"
                         attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
@@ -24,7 +24,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='update_cost_price']" position="inside">
+                <xpath expr="//span[@name='update_cost_price']" position="inside">
                     <button name="button_bom_cost"
                         string="Compute Price from BoM" type="object"
                         attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"

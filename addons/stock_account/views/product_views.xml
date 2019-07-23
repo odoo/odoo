@@ -40,14 +40,16 @@
                         <field name="standard_price"
                             attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
                             widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
-                            class="float-left oe_inline"/>
-                        <div name="update_cost_price">
+                            class="oe_inline"/>
+                    </field>
+                    <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                        <span name="update_cost_price">
                             <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
                                 attrs="{'invisible':['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '>', 1)]}"
-                                class="oe_link pt-0 float-left oe_inline"/>
-                        </div>
-                    </field>
+                                class="oe_link pt-0 oe_inline"/>
+                        </span>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -62,14 +64,16 @@
                         <field name="standard_price"
                             attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
                             widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
-                            class="float-left oe_inline"/>
-                        <div name="update_cost_price">
+                            class="oe_inline"/>
+                    </field>
+                    <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                        <span name="update_cost_price">
                             <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
                                 attrs="{'invisible':['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '=', 1)]}"
                                 class="oe_link pt-0 oe_inline"/>
-                        </div>
-                    </field>
+                        </span>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -83,15 +87,18 @@
                     <field name="standard_price" position="replace">
                         <field name="valuation" invisible="1" readonly="1"/>
                         <field name="cost_method" invisible="1" readonly="1"/>
-                        <field name="standard_price"
-                            attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
-                            widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
-                            class="oe_inline"/>
-                        <div name="update_cost_price">
+                        <div class="o_td_label" name="update_cost_price">
+                            <label for="standard_price"/>
                             <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
                                 attrs="{'invisible':[('cost_method', '=', 'fifo')]}"
                                 class="oe_link oe_inline"/>
+                        </div>
+                        <div class="o_row">
+                            <field name="standard_price"
+                                attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
+                                widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
+                                class="oe_inline"/>
                         </div>
                     </field>
                 </data>
