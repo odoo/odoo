@@ -94,9 +94,9 @@
                         </tbody>
                     </table>
                     <p>
-                        <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
+                        <span t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
                             All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
-                        </t>
+                        </span>
                     </p>
                 </div>
             </t>

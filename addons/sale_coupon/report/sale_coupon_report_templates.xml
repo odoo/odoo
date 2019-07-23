@@ -48,11 +48,11 @@
                                     <strong class="bg-success" t-esc="o.code"></strong>
                                 </h3>
                                 <h4 t-if="o.program_id.rule_min_quantity > 1">
-                                    Minimum purchase of
-                                    <strong t-esc="o.program_id.rule_min_quantity"/> products
+                                    <span>Minimum purchase of</span>
+                                    <strong t-esc="o.program_id.rule_min_quantity"/> <span>products</span>
                                 </h4>
                                 <h4 t-if="o.program_id.rule_minimum_amount">
-                                    Valid for purchase above
+                                    <span>Valid for purchase above</span>
                                     <strong t-esc="o.program_id.rule_minimum_amount" t-options="{'widget': 'monetary', 'display_currency': o.program_id.currency_id}"/>
                                 </h4>
                                 <p t-if="display_specific_products">
