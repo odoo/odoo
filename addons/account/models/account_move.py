@@ -1360,7 +1360,9 @@ class AccountMove(models.Model):
             line.currency_id = line_currency
 
             # Shortcut to load the demo data.
-            if not line.account_id:
+            # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
+            # A section / note must not have an account_id set.
+            if 'account_id' not in line._cache and not line.display_type:
                 line.account_id = line._get_computed_account()
                 if not line.account_id:
                     if self.is_sale_document(include_receipts=True):
