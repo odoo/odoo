@@ -31,18 +31,6 @@ class PurchaseOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
             })
 
-    @api.depends('order_line.date_planned', 'date_order')
-    def _compute_date_planned(self):
-        for order in self:
-            min_date = False
-            for line in order.order_line:
-                if not min_date or line.date_planned and line.date_planned < min_date:
-                    min_date = line.date_planned
-            if min_date:
-                order.date_planned = min_date
-            else:
-                order.date_planned = order.date_order
-
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -109,7 +97,7 @@ class PurchaseOrder(models.Model):
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
+    date_planned = fields.Datetime(string='Receipt Date', index=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -169,6 +157,12 @@ class PurchaseOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
         return super(PurchaseOrder, self).create(vals)
 
+    def write(self, vals):
+        res = super(PurchaseOrder, self).write(vals)
+        if vals.get('date_planned'):
+            self.order_line.write({'date_planned': vals['date_planned']})
+        return res
+
     def unlink(self):
         for order in self:
             if not order.state == 'cancel':
@@ -178,10 +172,13 @@ class PurchaseOrder(models.Model):
     def copy(self, default=None):
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
-            seller = line.product_id._select_seller(
-                partner_id=line.partner_id, quantity=line.product_qty,
-                date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
-            line.date_planned = line._get_date_planned(seller)
+            if new_po.date_planned:
+                line.date_planned = new_po.date_planned
+            else:
+                seller = line.product_id._select_seller(
+                    partner_id=line.partner_id, quantity=line.product_qty,
+                    date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
+                line.date_planned = line._get_date_planned(seller)
         return new_po
 
     def _track_subtype(self, init_values):
@@ -409,10 +406,6 @@ class PurchaseOrder(models.Model):
         result['context']['default_reference'] = self.partner_ref
         return result
 
-    def action_set_date_planned(self):
-        for order in self:
-            order.order_line.update({'date_planned': order.date_planned})
-
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
@@ -549,6 +542,11 @@ class PurchaseOrderLine(models.Model):
         if values.get('display_type', self.default_get(['display_type'])['display_type']):
             values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom=False, date_planned=False)
 
+        order_id = values.get('order_id')
+        if 'date_planned' not in values:
+            order = self.env['purchase.order'].browse(order_id)
+            if order.date_planned:
+                values['date_planned'] = order.date_planned
         line = super(PurchaseOrderLine, self).create(values)
         if line.order_id.state == 'purchase':
             msg = _("Extra line with %s ") % (line.product_id.display_name,)

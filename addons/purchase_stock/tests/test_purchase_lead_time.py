@@ -33,7 +33,7 @@ class TestPurchaseLeadTime(TestPurchase):
 
         # Check scheduled date of purchase order
         schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
-        self.assertEqual(purchase.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
+        self.assertEqual(purchase.order_line.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
         # check the picking created or not
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
@@ -78,7 +78,7 @@ class TestPurchaseLeadTime(TestPurchase):
 
         # Check scheduled date of purchase order
         po_schedule_date = min(schedule_date_1, schedule_date_2)
-        self.assertEqual(purchase2.date_planned, po_schedule_date, 'Schedule date of purchase order should be minimum of schedule dates of purchase order lines.')
+        self.assertEqual(purchase2.order_line[1].date_planned, po_schedule_date, 'Schedule date of purchase order should be minimum of schedule dates of purchase order lines.')
 
         # Check the picking created or not
         self.assertTrue(purchase2.picking_ids, "Picking should be created.")
