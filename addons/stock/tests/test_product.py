@@ -65,3 +65,19 @@ class TestVirtualAvailable(TestStockCommon):
         self.picking_out.action_assign()
         self.picking_out_2.action_assign()
         self.assertAlmostEqual(5.0, prod_context.virtual_available)
+
+    def test_free_quantity(self):
+        """ Test the value of product.free_qty. Free_qty = qty_on_hand - qty_reserved"""
+        self.assertAlmostEqual(40.0, self.product_3.free_qty)
+        self.picking_out.action_confirm()
+        self.picking_out_2.action_confirm()
+        # No reservation so free_qty is unchanged
+        self.assertAlmostEqual(40.0, self.product_3.free_qty)
+        self.picking_out.action_assign()
+        self.picking_out_2.action_assign()
+        # 8 units are now reserved
+        self.assertAlmostEqual(32.0, self.product_3.free_qty)
+        self.picking_out.do_unreserve()
+        self.picking_out_2.do_unreserve()
+        # 8 units are available again
+        self.assertAlmostEqual(40.0, self.product_3.free_qty)
