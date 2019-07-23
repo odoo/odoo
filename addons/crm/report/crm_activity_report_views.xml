@@ -47,7 +47,6 @@
                     <field name="user_id" string="Salesperson"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="author_id" string="Assigned To"/>
-                    <filter string="My Activities" name="activities_my" domain="[('user_id', '=', uid)]"/>
                     <separator groups="crm.group_use_lead"/>
                     <filter name="lead" string="Leads" domain="[('lead_type','=', 'lead')]" help="Show only lead" groups="crm.group_use_lead"/>
                     <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity" groups="crm.group_use_lead"/>
@@ -79,14 +78,13 @@
            <field name="res_model">crm.activity.report</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{
-                'search_default_activities_my': 1,
                 'search_default_completion_date': 1,
                 'pivot_column_groupby': ['subtype_id', 'mail_activity_type_id'],
                 'pivot_row_groupby': ['date:month'],
                 'graph_mode': 'bar',
                 'graph_groupbys': ['date:month', 'subtype_id'],
             }</field>
-           <field name="domain">[]</field>
+           <field name="domain">[('user_id', '=', uid)]</field>
        </record>
 
        <menuitem
