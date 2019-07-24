@@ -54,13 +54,45 @@ MailManager.include({
     updateImStatus: function (statusList) {
         var updatedIDs = [];
         var self = this;
+        var dmChat;
+        var toUpdateOutOfOfficeChatIDs = [];
         _.each(statusList, function (status) {
             if (self._imStatus[status.id] === status.im_status) {
                 return;
             }
+            if (
+                status.im_status.indexOf('leave') !== -1 ||
+                (
+                    self._imStatus[status.id] &&
+                    self._imStatus[status.id].indexOf('leave') !== -1
+                )
+            ) {
+                dmChat = self.getDMChatFromPartnerID(status.id);
+                if (dmChat) {
+                    toUpdateOutOfOfficeChatIDs.push(dmChat.getID());
+                }
+            }
             updatedIDs.push(status.id);
             self._imStatus[status.id] = status.im_status;
         });
+        if (!_.isEmpty(toUpdateOutOfOfficeChatIDs)) {
+            this._rpc({
+                model: 'mail.channel',
+                method: 'channel_info',
+                args: [toUpdateOutOfOfficeChatIDs],
+            }).then(function (channelsInfo) {
+                _.each(channelsInfo, function (channelInfo) {
+                    dmChat = self.getChannel(channelInfo.id);
+                    if (!dmChat) {
+                        return;
+                    }
+                    dmChat.updateOutOfOfficeInfo({
+                        outOfOfficeMessage: channelInfo.direct_partner[0].out_of_office_message,
+                        outOfOfficeDateEnd: channelInfo.direct_partner[0].out_of_office_date_end,
+                    });
+                });
+            });
+        }
         if (! _.isEmpty(updatedIDs)) {
             this._mailBus.trigger('updated_im_status', updatedIDs); // useful for thread window header
             this._renderImStatus(updatedIDs);
