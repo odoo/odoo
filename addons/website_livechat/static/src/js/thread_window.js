@@ -21,7 +21,7 @@ ThreadWindow.include({
     close: function () {
         var self = this;
         if (this.hasThread() && this._thread._type === "livechat" && this._threadWidget._messages.length == 0) {
-            var ready = session.rpc('/im_livechat/close_empty_livechat', {uuid: this._thread._uuid});
+            session.rpc('/im_livechat/close_empty_livechat', {uuid: this._thread._uuid});
         }
         else {
             this._super();

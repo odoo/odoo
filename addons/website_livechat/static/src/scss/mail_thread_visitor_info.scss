@@ -1,0 +1,38 @@
+.o_web_client {
+    &:not(.o_no_thread_window) {
+        .o_website_visitor_info {
+            display:none !important;
+        }
+    }
+    &.o_no_thread_window {
+        .o_mail_thread {
+            position: sticky;
+        }
+        .o_website_visitor_info {
+            height: 87px;
+            border-bottom: 1px solid #ced4da;
+            position: fixed;
+            background: white;
+            width: 100%;
+            z-index: 1;
+            .o_country_flag {
+                width:24px;
+                height: 16px;
+            }
+            .o_visitor_status {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                &.o_visitor_disconnected {
+                    color: red;
+                }
+                &.o_visitor_connected {
+                    color: #00A09D;
+                }
+            }
+        }
+        .o_sub_visitor_info {
+            padding-top: 80px;
+        }
+    }
+}
