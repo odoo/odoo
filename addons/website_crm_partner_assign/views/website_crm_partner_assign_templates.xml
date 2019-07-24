@@ -170,18 +170,12 @@
 <template id="references_block" name="Partner References Block">
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
-        <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
-          <t t-if="reference.website_published">
-            <a class="pull-left" t-attf-href="/customers/#{slug(reference)}">
-                <span t-field="reference.image_small" t-options='{"widget": "image", "class": "center-block"}'/>
-            </a>
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media">
+            <span t-field="reference.image_small" t-options='{"widget": "image", "class": "center-block pull-left"}'/>
             <div class="media-body" style="min-height: 64px;">
-                <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.self"/>
-                </a>
+                <span class="media-heading" t-field="reference.self"/>
                 <div t-field='reference.website_short_description'/>
             </div>
-          </t>
         </div>
     </t>
 </template>

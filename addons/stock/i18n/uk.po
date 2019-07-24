@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s --> Товар UoM є %s (%s) - Рух UoM є %s (%s)"
+"%s --> Одиниця вимірювання товару %s (%s) - Одиниця вимірювання переміщення %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:341
@@ -1133,12 +1133,12 @@ msgstr "Придбати"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr "По партіях"
+msgstr "За партіями"
 
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr "По унікальному серійному номеру"
+msgstr "За унікальним серійним номером"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:644
@@ -1748,12 +1748,12 @@ msgstr "Дата створення, зазвичай дата замовлен�
 #: code:addons/stock/models/stock_warehouse.py:437
 #, python-format
 msgid "Cross-Dock"
-msgstr "Борт-до-борту"
+msgstr "Крос-докінг"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Маршрут борт-до-борту"
+msgstr "Маршрут крос-докінгу"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_cumulative_quantity
@@ -1803,7 +1803,7 @@ msgstr ""
 "Поточна кількість товару.\n"
 "В контексті розташування запасів буде включено запаси по цьому розташуванню та по всіх підпорядкованих розташуваннях.\n"
 "В контексті складу, буде включено запаси на всіх розташуваннях запасів цього складу та на всіх підпорядкованих до нього.\n"
-"В інших випадках буде по казано запаси по всіх  складах з типом 'Внутрішній'."
+"В інших випадках включені товари складуються на будь-якому місцехнаходженні складу з типом 'Внутрішній'."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:111
@@ -3477,7 +3477,7 @@ msgstr "Ноутбук E5023"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_last_done_picking
 msgid "Last 10 Done Pickings"
-msgstr "10 останніх виконаних відборів"
+msgstr "10 останніх виконаних комплектувань"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group___last_update
@@ -3629,7 +3629,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
 msgid "Left Parent"
-msgstr "Залишений батько "
+msgstr "Лівий батьківський елемент"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_company_id
@@ -3828,7 +3828,7 @@ msgstr "під замовлення"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
 msgid "MTO rule"
-msgstr "Правило ВПЗ"
+msgstr "Правило ВНЗ"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:479
@@ -3946,7 +3946,7 @@ msgstr "Максимальна кількість"
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Повідомлення для збирання запасів"
+msgstr "Повідомлення для складського комплектування"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal_method
@@ -5693,7 +5693,7 @@ msgstr "Зворотнє переміщення"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
 msgid "Right Parent"
-msgstr "Правий батько"
+msgstr "Правий батьківський елемент"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_route_id
@@ -5921,7 +5921,7 @@ msgstr "Внутрішня черга"
 #: code:addons/stock/models/stock_warehouse.py:704
 #, python-format
 msgid "Sequence out"
-msgstr "Зовнішня послідовність"
+msgstr "Вихідна послідовність"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:709

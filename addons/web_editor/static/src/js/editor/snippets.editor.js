@@ -337,6 +337,9 @@ var SnippetEditor = Widget.extend({
      */
     _onCloneClick: function (ev) {
         ev.preventDefault();
+
+        this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
+
         var $clone = this.$target.clone(false);
 
         this.trigger_up('request_history_undo_record', {$target: this.$target});
@@ -352,7 +355,7 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
-        this.trigger_up('snippet_cloned', {$target: $clone});
+        this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.

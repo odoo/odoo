@@ -3,6 +3,7 @@ odoo.define('website_sale_comparison.comparison', function (require) {
 
 require('web.dom_ready');
 var ajax = require('web.ajax');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var _t = core._t;
 var utils = require('web.utils');
@@ -26,6 +27,7 @@ var ProductComparison = Widget.extend({
     init: function(){
         this.comparelist_product_ids = JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
+        this.guard = new concurrency.Mutex();
     },
     start:function(){
         var self = this;
@@ -113,6 +115,9 @@ var ProductComparison = Widget.extend({
         }
     },
     add_new_products:function(product_id){
+        this.guard.exec(this._add_new_products.bind(this, product_id));
+    },
+    _add_new_products: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').show();
         if (!_.contains(self.comparelist_product_ids, product_id)) {
@@ -120,8 +125,9 @@ var ProductComparison = Widget.extend({
             if(_.has(self.product_data, product_id)){
                 self.update_content([product_id], false);
             } else {
-                self.load_products([product_id]).then(function(){
+                return self.load_products([product_id]).then(function () {
                     self.update_content([product_id], false);
+                    self.update_cookie();
                 });
             }
         }
@@ -139,6 +145,9 @@ var ProductComparison = Widget.extend({
         this.refresh_panel();
     },
     rm_from_comparelist: function(e){
+        this.guard.exec(this._rm_from_comparelist.bind(this, e));
+    },
+    _rm_from_comparelist: function (e) {
         this.comparelist_product_ids = _.without(this.comparelist_product_ids, $(e.currentTarget).data('product_product_id'));
         $(e.currentTarget).parents('.o_product_row').remove();
         this.update_cookie();

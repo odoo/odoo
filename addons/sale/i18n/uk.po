@@ -168,7 +168,8 @@ msgid ""
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Пропозиція' or 'Замовлення'} (Референс ${object.name or 'немає' })"
+"'Комерційна пропозиція' or 'Замовлення'} (Референс ${object.name or 'немає' "
+"})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -731,7 +732,7 @@ msgstr "По товарах"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr "По продавцю"
+msgstr "За продавцем"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
@@ -790,7 +791,7 @@ msgstr "Натисніть, щоби визначити ціль."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Перспективний"
+msgstr "Юридична особа"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company

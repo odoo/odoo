@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:56+0000\n"
+"POT-Creation-Date: 2019-05-09 13:56+0000\n"
 "PO-Revision-Date: 2015-09-08 05:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/"
@@ -21,13 +21,20 @@ msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_partner_out_inv_comm_algorithm
+#: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_users_out_inv_comm_algorithm
 msgid "Communication Algorithm"
 msgstr "Communicatiealgoritme"
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_partner_out_inv_comm_type
+#: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_users_out_inv_comm_type
 msgid "Communication Type"
 msgstr "Communicatietype"
+
+#. module: l10n_be_invoice_bba
+#: model:ir.model,name:l10n_be_invoice_bba.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
@@ -40,7 +47,7 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:149
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:145
 #, python-format
 msgid ""
 "Empty BBA Structured Communication!\n"
@@ -50,7 +57,14 @@ msgstr ""
 "Gelieve een unieke gestructureerde mededeling in te vullen."
 
 #. module: l10n_be_invoice_bba
-#: constraint:account.invoice:0
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:26
+#, python-format
+msgid "Free Communication"
+msgstr "Vrije mededeling"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:37
+#, python-format
 msgid "Invalid BBA Structured Communication !"
 msgstr "Ongeldige gestructureerde mededeling"
 
@@ -60,9 +74,9 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: l10n_be_invoice_bba
-#: model:ir.model,name:l10n_be_invoice_bba.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
+#: model:ir.ui.view,arch_db:l10n_be_invoice_bba.report_invoice_document_inherit
+msgid "Please use the following communication for your payment :"
+msgstr "Gelieve de volgende mededeling te gebruiken bij betaling :"
 
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
@@ -71,6 +85,7 @@ msgstr "Willekeurig"
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_partner_out_inv_comm_algorithm
+#: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_users_out_inv_comm_algorithm
 msgid ""
 "Select Algorithm to generate the Structured Communication on Outgoing "
 "Invoices."
@@ -79,12 +94,13 @@ msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_partner_out_inv_comm_type
+#: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_users_out_inv_comm_type
 msgid "Select Default Communication Type for Outgoing Invoices."
 msgstr "Kies het standaard communicatietype voor uitgaande facturen"
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:158
-#: code:addons/l10n_be_invoice_bba/invoice.py:179
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:152
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:171
 #, python-format
 msgid ""
 "The BBA Structured Communication has already been used!\n"
@@ -94,7 +110,7 @@ msgstr ""
 "Gelieve manueel een unieke gestructureerde mededeling te maken."
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:102
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:97
 #, python-format
 msgid ""
 "The Partner should have a 3-7 digit Reference Number for the generation of "
@@ -106,8 +122,8 @@ msgstr ""
 "Gelieve de relatie aan te passen."
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:91
-#: code:addons/l10n_be_invoice_bba/invoice.py:115
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:86
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:109
 #, python-format
 msgid ""
 "The daily maximum of outgoing invoices with an automatically generated BBA "
@@ -119,7 +135,7 @@ msgstr ""
 "Gelieve manueel een unieke gestructureerde mededeling te maken."
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:130
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:124
 #, python-format
 msgid ""
 "Unsupported Structured Communication Type Algorithm '%s' !\n"

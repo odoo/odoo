@@ -1228,6 +1228,7 @@ var AbstractFieldBinary = AbstractField.extend({
         }
     },
     on_clear: function () {
+        this.$('.o_input_file').val('');
         this.set_filename('');
         this._setValue(false);
         this._render();
@@ -1346,7 +1347,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'id': this.res_id,
                     'field': this.name,
                     'filename_field': filename_fieldname,
-                    'filename': this.recordData[filename_fieldname] || null,
+                    'filename': this.recordData[filename_fieldname] || "",
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },

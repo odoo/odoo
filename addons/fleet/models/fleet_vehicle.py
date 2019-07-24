@@ -225,7 +225,7 @@ class FleetVehicle(models.Model):
                 changes.append(_("License Plate: from '%s' to '%s'") % (old_license_plate, vals['license_plate']))
 
             if len(changes) > 0:
-                self.message_post(body=", ".join(changes))
+                vehicle.message_post(body=", ".join(changes))
 
             return super(FleetVehicle, self).write(vals)
 

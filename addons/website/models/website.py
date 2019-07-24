@@ -913,6 +913,6 @@ class WebsiteRedirect(models.Model):
     type = fields.Selection([('301', 'Moved permanently'), ('302', 'Moved temporarily')], string='Redirection Type', default='301')
     url_from = fields.Char('Redirect From')
     url_to = fields.Char('Redirect To')
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=0)

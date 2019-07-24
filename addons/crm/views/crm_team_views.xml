@@ -203,7 +203,7 @@
                         </div>
                         <div class="row" t-if="record.opportunities_count.raw_value">
                             <div class="col-xs-8">
-                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"> <!-- context="{'search_default_probability': NOT or < 100}" -->
+                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" context="{'search_default_open_opportunities': True}"> <!-- context="{'search_default_probability': NOT or < 100}" -->
                                     <field name="opportunities_count"/>
                                     <t t-if="record.opportunities_count.raw_value == 1">Open Opportunity</t>
                                     <t t-else="">Open Opportunities</t>

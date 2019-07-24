@@ -4,9 +4,11 @@
 import base64
 from xml.etree import ElementTree as ET
 from collections import namedtuple
+from functools import partial
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools.pycompat import text_type
+from odoo.tools import float_round, float_is_zero
 
 INTRASTAT_XMLNS = 'http://www.onegate.eu/2010-01-01'
 
@@ -103,7 +105,21 @@ class XmlDeclaration(models.TransientModel):
             'res_id': self.id,
         }
 
+    def _get_rounding_digits(self):
+        """A hook to not break behavior
+        Allows to programmatically set with what precision
+        the price, weight and values will be rounded"""
+        return 0
+
     def _build_intrastat_line(self, numlgn, item, linekey, amounts, dispatchmode, extendedmode):
+        round_digits = self._get_rounding_digits()
+        _round = partial(float_round, precision_digits=round_digits)
+
+        value, weight, supply_units = amounts
+        # Assuming weight cannot be negative
+        if weight >= 0 and weight < 0.01:
+            weight = 0.01
+
         self._set_Dim(item, 'EXSEQCODE', text_type(numlgn))
         self._set_Dim(item, 'EXTRF', text_type(linekey.EXTRF))
         self._set_Dim(item, 'EXCNT', text_type(linekey.EXCNT))
@@ -113,9 +129,9 @@ class XmlDeclaration(models.TransientModel):
         if extendedmode:
             self._set_Dim(item, 'EXTPC', text_type(linekey.EXTPC))
             self._set_Dim(item, 'EXDELTRM', text_type(linekey.EXDELTRM))
-        self._set_Dim(item, 'EXTXVAL', text_type(round(amounts[0], 0)).replace(".", ","))
-        self._set_Dim(item, 'EXWEIGHT', text_type(round(amounts[1], 0)).replace(".", ","))
-        self._set_Dim(item, 'EXUNITS', text_type(round(amounts[2], 0)).replace(".", ","))
+        self._set_Dim(item, 'EXTXVAL', text_type(_round(value, 0)).replace(".", ","))
+        self._set_Dim(item, 'EXWEIGHT', text_type(_round(weight, 0)).replace(".", ","))
+        self._set_Dim(item, 'EXUNITS', text_type(_round(supply_units, 0)).replace(".", ","))
 
     def _get_intrastat_linekey(self, declcode, inv_line, dispatchmode, extendedmode):
         IntrastatRegion = self.env['l10n_be_intrastat.region']
@@ -297,7 +313,7 @@ class XmlDeclaration(models.TransientModel):
         numlgn = 0
         for linekey in entries:
             amounts = entries[linekey]
-            if round(amounts[0], 0) == 0:
+            if float_is_zero(amounts[0], precision_digits=self._get_rounding_digits()):
                 continue
             numlgn += 1
             item = ET.SubElement(datas, 'Item')
