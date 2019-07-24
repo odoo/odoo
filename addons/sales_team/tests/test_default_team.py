@@ -1,4 +1,5 @@
 from odoo.tests import common
+from odoo.exceptions import AccessError
 
 
 class TestDefaultTeam(common.SavepointCase):
@@ -46,3 +47,16 @@ class TestDefaultTeam(common.SavepointCase):
         self.team_2.active = False
         team = self.CrmTeam.sudo(self.user)._get_default_team_id()
         self.assertEqual(team, self.CrmTeam)
+
+    def test_03_no_access_team(self):
+        """Get fallback team, when user team can't be accessed."""
+        self.team_1.team_type = 'website'
+        rule_teams = self.env.ref('sales_team.crm_rule_all_salesteam')
+        # Make rule to allow accessing only sales teams.
+        rule_teams.domain_force = "[('team_type','=', 'sales')]"
+        team = self.CrmTeam.sudo(self.user)._get_default_team_id()
+        try:
+            team.sudo(self.user).check_access_rule('read')
+        except AccessError:
+            self.fail("Got default team where user has no access to.")
+        self.assertEqual(team, self.team_2)
