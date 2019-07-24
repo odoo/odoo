@@ -10,6 +10,7 @@ odoo.define('web.KanbanController', function (require) {
 var BasicController = require('web.BasicController');
 var Context = require('web.Context');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var Domain = require('web.Domain');
 var view_dialogs = require('web.view_dialogs');
 var viewUtils = require('web.viewUtils');
@@ -265,9 +266,11 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onButtonClicked: function (ev) {
+        var self = this;
         ev.stopPropagation();
         var attrs = ev.data.attrs;
         var record = ev.data.record;
+        var def = Promise.resolve();
         if (attrs.context) {
             attrs.context = new Context(attrs.context)
                 .set_eval_context({
@@ -276,15 +279,25 @@ var KanbanController = BasicController.extend({
                     active_model: record.model,
                 });
         }
-        this.trigger_up('execute_action', {
-            action_data: attrs,
-            env: {
-                context: record.getContext(),
-                currentID: record.res_id,
-                model: record.model,
-                resIDs: record.res_ids,
-            },
-            on_closed: this._reloadAfterButtonClick.bind(this, ev.target, ev.data),
+        if (attrs.confirm) {
+            def = new Promise(function (resolve, reject) {
+                Dialog.confirm(this, attrs.confirm, {
+                    confirm_callback: resolve,
+                    cancel_callback: reject,
+                }).on("closed", null, reject);
+            });
+        }
+        def.then(function () {
+            self.trigger_up('execute_action', {
+                action_data: attrs,
+                env: {
+                    context: record.getContext(),
+                    currentID: record.res_id,
+                    model: record.model,
+                    resIDs: record.res_ids,
+                },
+                on_closed: self._reloadAfterButtonClick.bind(self, ev.target, ev.data),
+            });
         });
     },
     /**
