@@ -1068,7 +1068,7 @@ class IrModelConstraint(models.Model):
                         SET write_date=now() AT TIME ZONE 'UTC',
                             write_uid=%s, type=%s, definition=%s, message=%s
                         WHERE id=%s"""
-            cr.execute(query, (type, self.env.uid, definition, message, cons_id))
+            cr.execute(query, (self.env.uid, type, definition, message, cons_id))
         return self.browse(cons_id)
 
     def _reflect_model(self, model):
