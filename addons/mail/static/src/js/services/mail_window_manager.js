@@ -344,6 +344,7 @@ MailManager.include({
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onUnsubscribeFromChannel)
             .on('updated_im_status', this, this._onUpdatedImStatus)
+            .on('updated_out_of_office', this, this._onUpdatedOutOfOffice)
             .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter);
 
         core.bus.on('resize', this, _.debounce(this._repositionThreadWindows.bind(this), 100));
@@ -699,6 +700,18 @@ MailManager.include({
             }
             threadWindow.renderHeader();
         });
+    },
+    /**
+     * @private
+     * @param {Object} data
+     * @param {integer} data.threadID
+     */
+    _onUpdatedOutOfOffice: function (data) {
+        var threadWindow = this._getThreadWindow(data.threadID);
+        if (!threadWindow) {
+            return;
+        }
+        threadWindow.renderOutOfOffice();
     },
     /**
      * Called when a thread has its unread counter that has changed.

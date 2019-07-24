@@ -250,7 +250,6 @@ class WebsiteProfile(http.Controller):
 
         Users = request.env['res.users']
         where_query = Users._where_calc(domain)
-        Users._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
 
         # we search on every user in the DB to get the real positioning (not the one inside the subset)

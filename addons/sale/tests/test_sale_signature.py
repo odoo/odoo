@@ -15,6 +15,7 @@ class TestSaleSignature(odoo.tests.HttpCase):
             'name': 'test SO',
             'partner_id': portal_user.id,
             'state': 'sent',
+            'require_payment': False,
         })
         self.env['sale.order.line'].create({
             'order_id': sales_order.id,
