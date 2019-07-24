@@ -104,7 +104,7 @@ class SerialDriver(Driver):
 
         try:
             with self._device_lock:
-                self._actions[data]()
+                self._actions[data['action']](data)
                 time.sleep(self._protocol.commandDelay)
         except Exception:
             msg = _('An error occured while performing action %s on %s') % (data, self.device_name)
