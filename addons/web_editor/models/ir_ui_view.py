@@ -203,7 +203,7 @@ class IrUiView(models.Model):
             self.write({'arch': self._pretty_arch(new_arch)})
 
     @api.model
-    def _view_get_inherited_children(self, view, options):
+    def _view_get_inherited_children(self, view):
         return view.inherit_children_ids
 
     @api.model
@@ -220,7 +220,7 @@ class IrUiView(models.Model):
     # Used by translation mechanism, SEO and optional templates
 
     @api.model
-    def _views_get(self, view_id, options=True, bundles=False, root=True):
+    def _views_get(self, view_id, get_children=True, bundles=False, root=True):
         """ For a given view ``view_id``, should return:
                 * the view itself
                 * all views inheriting from it, enabled or not
@@ -249,17 +249,17 @@ class IrUiView(models.Model):
             except ValueError:
                 continue
             if called_view and called_view not in views_to_return:
-                views_to_return += self._views_get(called_view, options=options, bundles=bundles)
+                views_to_return += self._views_get(called_view, get_children=get_children, bundles=bundles)
 
-        extensions = self._view_get_inherited_children(view, options)
-        if not options:
+        extensions = self._view_get_inherited_children(view)
+        if not get_children:
             # only active children
             extensions = extensions.filtered(lambda view: view.active)
 
-        # Keep options in a deterministic order regardless of their applicability
+        # Keep children in a deterministic order regardless of their applicability
         for extension in extensions.sorted(key=lambda v: v.id):
             # only return optional grandchildren if this child is enabled
-            for ext_view in self._views_get(extension, options=extension.active, root=False):
+            for ext_view in self._views_get(extension, get_children=extension.active, root=False):
                 if ext_view not in views_to_return:
                     views_to_return += ext_view
         return views_to_return
