@@ -16,45 +16,40 @@
         </t>
     </template>
 
-    <!-- "Thank you" message when the survey is completed -->
+   <!-- "Thank you" message when the survey is completed -->
     <template id="sfinished" name="Survey Finished">
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <t t-if="answer.test_entry" t-call="survey.back" />
-                    <div class="jumbotron mt32">
+                    <div class="jumbotron mt-5">
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" class="oe_no_empty" />
-                        <div class="row">
-                            <div class="col">
-                                <t t-if="survey.scoring_type != 'no_scoring'">
-                                    <div>You scored <t t-esc="answer.quizz_score" />%</div>
-                                    <t t-if="answer.quizz_passed">
-                                        <div>Congratulations, you have passed the test!</div>
-
-                                        <div t-if="survey.certificate" class="mt16 mb16">
-                                            <a role="button"
-                                                class="btn btn-primary btn-lg"
-                                                t-att-href="'/survey/%s/get_certification' % survey.id">
-                                                <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
-                                                Download certification
-                                            </a>
-                                        </div>
-                                    </t>
-                                    <t t-else="">
-                                        <div>Unfortunately, you have failed the test.</div>
-                                    </t>
-                                </t>
-                                <t t-call="survey.retake_survey_button"/>
-                                <div t-if="survey.scoring_type != 'scoring_without_answers'">
-                                    If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.token)">review your answers</a>
+                        <t t-if="survey.scoring_type != 'no_scoring'">
+                            <p>You scored <span t-attf-class=" font-weight-bold #{'text-success' if answer.quizz_passed else 'text-danger'}"><t t-esc="answer.quizz_score" />%</span></p>
+                            <t t-if="answer.quizz_passed">
+                                <div>Congratulations, you have passed the test!</div>
+                                <div class="col-6 text-center" t-if="survey.certification_give_badge">
+                                    <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
+                                    <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
                                 </div>
-                            </div>
-                            <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.quizz_passed">
-                                <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
-                                <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
-                            </div>
-                        </div>
+                                <div t-if="survey.certificate" class="mt16 mb16">
+                                    <a role="button"
+                                        class="btn btn-primary btn-lg"
+                                        t-att-href="'/survey/%s/get_certification' % survey.id">
+                                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                        Download certification
+                                    </a>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <p>Unfortunately, you have failed the test.</p>
+                            </t>
+                        </t>
+                        <t t-call="survey.retake_survey_button"/>
+                        <p t-if="survey.scoring_type != 'scoring_without_answers'">
+                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.token)">review your answers</a>.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -85,7 +80,7 @@
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
-                    <div class="jumbotron mt32">
+                    <div class="jumbotron">
                         <h1><span t-field="survey.title"/> survey expired</h1>
                         <p>This survey is now closed. Thank you for your interest !</p>
                     </div>
@@ -99,7 +94,7 @@
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
-                    <div class="jumbotron mt32">
+                    <div class="jumbotron">
                         <h1>Login required</h1>
                         <p>This survey is open only to registered people. Please
                             <a t-att-href="redirect_url">log in</a>.
@@ -116,7 +111,7 @@
             <div class="wrap">
                 <div class="container">
                     <t t-if="answer.test_entry" t-call="survey.back" />
-                    <div class="jumbotron mt32">
+                    <div class="jumbotron">
                         <h1><span t-field="survey.title"/> survey is void</h1>
                         <p>Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />
                             <a t-att-href="'/web#view_type=form&amp;model=survey.survey&amp;id=%s&amp;action=survey.action_survey_form' % survey.id"
@@ -160,14 +155,12 @@
                 <div class="oe_structure" id="oe_structure_survey_init_1"/>
                 <div class="container">
                     <t t-if="answer.test_entry" t-call="survey.back" />
-                    <div class='jumbotron mt32'>
+                    <div class='jumbotron'>
                         <h1 t-field='survey.title' />
-                        <div t-field='survey.description' class="oe_no_empty"/>
-                        <div t-if="survey.is_time_limited">
-                            <p>
+                        <span t-field='survey.description' class="oe_no_empty text-muted"/>
+                        <div t-if="survey.is_time_limited" class="mb-4">
                                 <span>Time limit for this survey: </span>
                                 <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
-                            </p>
                         </div>
                         <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.access_token, answer.token)">
                             <t t-if="survey.certificate">
@@ -201,8 +194,7 @@
 
     <!-- The survey header -->
     <template id="survey_header" name="Header">
-        <div class="o_page_header o_survey_header">
-            <div class="container m-0 p-0">
+        <div t-attf-class="mt-3 #{'py-4 border-bottom mb-4' if survey.questions_layout != 'page_per_section' else ''} ">
                 <div class="row">
                     <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>
                     <div
@@ -213,8 +205,7 @@
                         <h1 class="timer text-right">00:00</h1>
                     </div>
                 </div>
-            </div>
-            <ol t-if="survey.questions_layout == 'page_per_section'" class="breadcrumb mt8 justify-content-end">
+            <ol t-if="survey.questions_layout == 'page_per_section'" class="breadcrumb mt-3 justify-content-end">
                 <t t-set="can_go_back" t-value="survey.users_can_go_back" />
                 <t t-foreach='survey.page_ids' t-as='breadcrumb_page'>
                     <li t-attf-class="breadcrumb-item #{'active' if breadcrumb_page == page else ''}">
@@ -243,7 +234,7 @@
         <t t-if="survey.questions_layout == 'page_per_section'" t-set="page_or_question_id" t-value="page.id" />
         <t t-if="survey.questions_layout == 'page_per_question'" t-set="page_or_question_id" t-value="question.id" />
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="survey.id"
+        <form role="form" method="post" t-attf-class="js_surveyform  mb-3" t-att-name="survey.id"
                 t-att-action="'/survey/fill/%s/%s' % (survey.access_token, answer.token)"
                 t-att-data-prefill="'/survey/prefill/%s/%s?page_or_question_id=%s' % (survey.access_token, answer.token, page_or_question_id)"
                 t-att-data-validate="'/survey/validate/%s/%s' % (survey.access_token, answer.token)"
@@ -253,25 +244,30 @@
 
             <t t-if="survey.questions_layout == 'one_page'">
                 <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                    <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
-                    <t t-if="not question.is_page and question in answer.question_ids" t-call="survey.question" />
+                    <div t-if="question.is_page" class="mt-5 mb-4 p-3 o_survey_section">
+                        <h2 t-field='question.title' />
+                        <span t-if="question.description" t-field='question.description' class="oe_no_empty text-muted"/>
+                    </div>
+                        <t t-if="not question.is_page and question in answer.question_ids" t-call="survey.question" />
                 </t>
 
-                <div class="text-center mt16 mb256">
+                <div class="text-center mb-5">
                     <button type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Survey</button>
                 </div>
             </t>
 
             <t t-if="survey.questions_layout == 'page_per_section'">
-                <h2 t-field='page.title' class="o_survey_title" />
-                <div t-field='page.description' class="oe_no_empty"/>
+                <div class="mb-4 p-3 o_survey_section">
+                    <h2 t-field='page.title' />
+                    <span t-field='page.description' class="oe_no_empty text-muted"/>
+                </div>
 
                 <input type="hidden" name="page_id" t-att-value="page.id" />
                 <t t-foreach='page.question_ids' t-as='question'>
                     <t t-if="question in answer.question_ids" t-call="survey.question" />
                 </t>
 
-                <div class="text-center mt16 mb256">
+                <div class="text-center mb-5">
                     <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
                     <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
                     <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Survey</button>
@@ -282,7 +278,7 @@
                 <input type="hidden" name="question_id" t-att-value="question.id" />
                 <t t-call="survey.question" />
 
-                <div class="text-center mt16 mb256">
+                <div class="text-center mb-5">
                     <button t-if="survey.users_can_go_back and question != answer.question_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous question</button>
                     <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next question</button>
                     <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Survey</button>
@@ -307,21 +303,21 @@
 
     <template id="question" name="Question">
         <t t-set="prefix" t-value="'%s_%s' % (survey.id, question.id)" />
-        <div class="js_question-wrapper" t-att-id="prefix">
-            <h4>
-                <span t-field='question.question' />
-                <span t-if="question.constr_mandatory" class="text-danger">*</span>
-            </h4>
-            <div t-field='question.description' class="text-muted oe_no_empty"/>
-            <t t-if="question.question_type == 'free_text'"><t t-call="survey.free_text"/></t>
-            <t t-if="question.question_type == 'textbox'"><t t-call="survey.textbox"/></t>
-            <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
-            <t t-if="question.question_type == 'date'"><t t-call="survey.date"/></t>
-            <t t-if="question.question_type == 'datetime'"><t t-call="survey.datetime"/></t>
-            <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
-            <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
-            <t t-if="question.question_type == 'matrix'"><t t-call="survey.matrix"/></t>
-            <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
+        <div t-attf-class="js_question-wrapper form-group mb-3 pt-2" t-att-id="prefix">
+
+                    <label t-field='question.question' class="font-weight-bold"/><span t-if="question.constr_mandatory" class="text-danger">*</span>
+                    <span t-if="question.description" t-field='question.description' class="text-muted oe_no_empty"/>
+
+
+                <t t-if="question.question_type == 'free_text'"><t t-call="survey.free_text"/></t>
+                <t t-if="question.question_type == 'textbox'"><t t-call="survey.textbox"/></t>
+                <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
+                <t t-if="question.question_type == 'date'"><t t-call="survey.date"/></t>
+                <t t-if="question.question_type == 'datetime'"><t t-call="survey.datetime"/></t>
+                <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
+                <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
+                <t t-if="question.question_type == 'matrix'"><t t-call="survey.matrix"/></t>
+                <div class="js_errzone alert alert-danger mt-2" style="display:none;" role="alert"></div>
         </div>
     </template>
 
@@ -335,14 +331,16 @@
     </template>
 
     <template id="numerical_box" name="Numerical box">
-        <input type="number" step="any" class="form-control" t-att-name="prefix"/>
+        <div class="row">
+            <div class="col-lg-4">
+                <input type="number" step="any" class="form-control" t-att-name="prefix"/>
+            </div>
+        </div>
     </template>
 
     <template id="date" name="Date box">
-        <div class="form-group">
-            <div class="input-group date" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest"
-                    t-att-data-mindate="question.validation_min_date"
-                    t-att-data-maxdate="question.validation_max_date">
+        <div class="row">
+            <div class="input-group date col-lg-4" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest" t-att-data-mindate="question.validation_min_date" t-att-data-maxdate="question.validation_max_date">
                 <input type="text" class="form-control datetimepicker-input" t-attf-data-target="#datetimepicker_#{question.id}" t-att-name="prefix"/>
                 <div class="input-group-append" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -352,8 +350,8 @@
     </template>
 
     <template id="datetime" name="DateTime box">
-        <div class="form-group">
-            <div class="input-group date" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest"
+        <div class="row">
+            <div class="input-group date col-lg-4" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest"
                     t-att-data-mindate="question.validation_min_datetime"
                     t-att-data-maxdate="question.validation_max_datetime"
                     t-att-data-questiontype="question.question_type">
@@ -367,7 +365,7 @@
 
     <template id="simple_choice" name="Simple choice">
         <div t-if="question.display_mode == 'dropdown' and answer.token" class="js_drop row">
-            <div class="col-lg-12">
+            <div class="col-lg-4">
                 <select class="form-control" t-att-name="prefix">
                     <option disabled="1" selected="1" value="">Choose...</option>
                     <t t-foreach='question.labels_ids' t-as='label'>
@@ -376,61 +374,72 @@
                     <t t-if='question.comments_allowed and question.comment_count_as_answer'>
                         <option class="js_other_option" value="-1"><span t-esc="question.comments_message" /></option>
                     </t>
+
                 </select>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-lg-6">
-                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+            <div class="col">
+                <textarea t-if='question.comments_allowed and question.comment_count_as_answer'  type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 mt16">
-                <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="mt-2 row">
+                <div class="col">
+                    <label t-field="question.comments_message"/>
+                    <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+                </div>
             </div>
         </div>
-        <div t-if="question.display_mode == 'columns' or not answer.token" class="row js_radio">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
-                    <input type="radio" t-att-name="prefix" t-att-value='label.id' />
-                    <span t-field='label.value'/>
+        <div t-if="question.display_mode == 'columns' or not answer.token" class="js_radio  ">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb} form-check">
+                <label>
+                    <input type="radio" t-att-name="prefix" t-att-value='label.id' class="form-check-input"/>
+                    <span t-field='label.value' class="form-check-label"/>
+                    <span t-if="quizz_correction and label.answer_score > 0" class="fa fa-check text-success"/>
                 </label>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col" >
                 <label>
-                    <input type="radio" t-att-name="prefix" value="-1"/>
+                    <input type="radio" t-att-name="prefix" value="-1" class="form-check-input"/>
                     <span t-field="question.comments_message" />
                 </label>
                 <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
-                <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="mt-2 row">
+                <div class="col">
+                    <label t-field="question.comments_message"/>
+                    <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+                </div>
             </div>
         </div>
     </template>
 
     <template id="multiple_choice" name="Multiple choice">
-        <div class="row">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
-                    <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
-                    <span t-field='label.value'/>
-                </label>
+        <div class="container">
+            <div>
+                <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb} form-check">
+                    <label>
+                        <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' class="form-check-input"/>
+                        <span class="form-check-label" t-field='label.value'/>
+                       <span t-if="quizz_correction and label.answer_score > 0.0" class="fa fa-check text-success"/>
+                    </label>
+                </div>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
+        </div>
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col form-check" >
                 <label>
-                    <input type="checkbox" t-att-name="'%s_%s' % (prefix, -1)" value="-1" />
+                    <input type="checkbox" t-att-name="'%s_%s' % (prefix, -1)" value="-1" class="form-check-input"/>
                     <span t-field="question.comments_message" />
                 </label>
                 <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
-                <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="mt-2 row">
+                <div class="col">
+                    <label t-field="question.comments_message"/>
+                    <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+                </div>
             </div>
-        </div>
     </template>
 
     <template id="matrix" name="Matrix">
-        <table class="table table-hover">
+        <table class="table border table-hover">
             <thead>
                 <tr>
                     <th> </th>
@@ -447,9 +456,11 @@
                 </tr>
             </tbody>
         </table>
-        <div t-if='question.comments_allowed'>
-            <span t-field="question.comments_message"/>
-            <textarea class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" />
+        <div t-if='question.comments_allowed' class="row">
+            <div class="col">
+                <label t-field="question.comments_message"/>
+                <textarea class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" />
+            </div>
         </div>
     </template>
 
@@ -459,27 +470,25 @@
             <div class="wrap">
                 <div class="container">
                     <t t-if="answer.test_entry" t-call="survey.back" />
-                    <div class='jumbotron mt32'>
-                        <h1><span t-field='survey.title'/></h1>
-                        <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
+                    <div class='mt-4 p-3 border rounded'>
+                        <h1 t-field='survey.title'/>
+                        <t t-if="survey.description"><span t-field='survey.description' class="oe_no_empty text-muted"/></t>
                         <t t-if="review" t-call="survey.retake_survey_button"/>
                     </div>
-                    <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (survey.access_token, answer.token)">
+                    <div role="form" class="js_surveyform mb-3" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (survey.access_token, answer.token)">
                         <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                            <hr t-if="question.is_page and question != survey.page_ids[0]" />
-                            <div t-if="question.is_page" class="o_page_header">
+                            <div t-if="question.is_page" t-attf-class="pt-4 #{'border-top mt-4' if question.is_page and question != survey.page_ids[0] else ''} mb-4">
                                 <h1 t-field='question.title' />
-                                <div t-if="question.description" t-field='question.description' class="oe_no_empty"/>
+                                <span t-if="question.description" t-field='question.description' class="oe_no_empty text-muted"/>
+                                <hr/>
                             </div>
-                            <t t-if="not question.is_page and not answer or (question in answer.question_ids)" >
+                            <t t-if="not question.is_page and answer or (question in answer.question_ids)" >
                                 <t t-set="prefix" t-value="'%s_%s' % (survey.id, question.id)" />
-                                <div class="js_question-wrapper" t-att-id="prefix">
-                                    <h2>
-                                        <span t-field='question.question' />
+                                <div t-attf-class="js_question-wrapper form-group mb-3 pt-2" t-att-id="prefix">
+                                        <label t-field='question.question' class="font-weight-bold"/>
                                         <span t-if="question.constr_mandatory" class="text-danger">*</span>
                                         <span t-if="quizz_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
-                                    </h2>
-                                    <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
+                                    <t t-if="question.description"><span class="text-muted oe_no_empty" t-field='question.description'/></t>
                                     <t t-if="question.question_type == 'free_text'"><t t-call="survey.free_text"/></t>
                                     <t t-if="question.question_type == 'textbox'"><t t-call="survey.textbox"/></t>
                                     <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
@@ -488,7 +497,7 @@
                                     <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
                                     <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
                                     <t t-if="question.question_type == 'matrix'"><t t-call="survey.matrix"/></t>
-                                    <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
+                                    <div class="js_errzone alert alert-danger mt-2" style="display:none;" role="alert"></div>
                                 </div>
                             </t>
                         </t>
@@ -501,28 +510,30 @@
     <template id="result" name="Survey Result">
         <t t-call="survey.layout">
             <div class="oe_structure" id="oe_structure_survey_result_1"/>
-            <div class="container js_surveyresult">
+            <div class="container js_surveyresult mb-4">
                 <t t-call="survey.back" />
-                <div class="jumbotron mt32">
-                    <h1><span t-field="survey.title" />
-                    <span style="font-size:1.5em;" t-attf-class="fa fa-bar-chart-o #{'fa-bar-chart-o' if survey.scoring_type == 'no_scoring' else 'fa-trophy' if survey.certificate else 'fa-question-circle-o'} float-right " role="img" aria-label="Chart" title="Chart"/></h1>
-                    <div t-field="survey.description" class="oe_no_empty" />
-                    <h2 t-if="not answers">
-                        Sorry, no one answered this survey yet.
-                    </h2>
+                <div class="p-3 mb-4 border rounded">
+                    <h1>Results for : <span t-field="survey.title" />
+                    <!-- <span style="font-size:1.5em;" t-attf-class="fa fa-bar-chart-o #{'fa-bar-chart-o' if survey.scoring_type == 'no_scoring' else 'fa-trophy' if survey.certificate else 'fa-question-circle-o'} float-right " role="img" aria-label="Chart" title="Chart"/> --></h1>
+                    <span t-field="survey.description" class="oe_no_empty text-muted" />
+                    <p class="text-danger" t-if="not answers">
+                        Sorry, no one has answered this survey yet.
+                    </p>
                 </div>
-                <div t-if="answers" class="card d-print-none">
-                    <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
-                    <div class="card-body">
-                        <span t-if="filter_finish == True">
-                            <span class="badge badge-secondary only_left_radius filter-all">All surveys</span><span class="badge badge-primary only_right_radius filter-finished">Finished surveys</span>
-                        </span>
-                        <span t-if="filter_finish == False">
-                            <span class="badge badge-primary only_left_radius filter-all">All surveys</span><span class="badge badge-secondary only_right_radius filter-finished">Finished surveys</span>
-                        </span>
-                        <span t-foreach="filter_display_data" t-as="filter_data">
-                            <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question_text']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
-                        </span>
+                <div t-if="answers" class="d-print-none">
+                    <div class="border-bottom pb-2 mb-3">
+                        <span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span>
+                    </div>
+                    <div class="">
+                        <div t-if="filter_finish == True">
+                            <span class="btn border mr-2 filter-all">All surveys</span><span class="btn btn-primary ml-2 filter-finished">Finished surveys</span>
+                        </div>
+                        <div t-if="filter_finish == False">
+                            <span class="btn btn-primary mr-2 filter-all">All surveys</span><span class="btn border ml-2 filter-finished">Finished surveys</span>
+                        </div>
+                        <div t-foreach="filter_display_data" t-as="filter_data">
+                            <span class="btn btn-primary mr-2"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="btn btn-primary no_radius" t-esc="filter_data['question_text']"></span><span class="btn btn-success ml-2" t-esc="' > '.join(filter_data['labels'])"></span>
+                        </div>
                     </div>
                 </div>
                 <div t-if="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']">
@@ -530,45 +541,48 @@
                     <div>Success rate: <mark class="font-weight-bold"><t t-esc="survey_dict['success_rate']"></t>%</mark></div>
                     <div id="scoring_results_chart" t-att-data-graph_data="survey_dict['scoring_graph_data']">
                         <!-- canvas element for drawing pie chart -->
-                        <canvas/>
+                        <canvas class="mt-3 mb-3"/>
                     </div>
                     <hr/>
                 </div>
                 <div t-if="answers" t-foreach="survey_dict['page_ids']" t-as='page_ids'>
                     <t t-set="page" t-value="page_ids['page']"/>
-                    <h1 class="mt16" t-field='page.title'></h1>
-                    <div t-field="page.description" class="oe_no_empty" />
+                    <div class="mt-5">
+                        <h1 class="" t-field='page.title'></h1>
+                        <span t-field="page.description" class="oe_no_empty text-muted" />
+                    </div>
                     <hr/>
-                    <div t-foreach="page_ids['question_ids']" t-as='question_ids' class="mt16">
+                    <div t-foreach="page_ids['question_ids']" t-as='question_ids' class="mt-3 card">
                         <t t-set="input_summary" t-value="question_ids['input_summary']"/>
                         <t t-set="question" t-value="question_ids['question']"/>
                         <t t-set="graph_data" t-value="question_ids['graph_data']"/>
                         <t t-set="prepare_result" t-value="question_ids['prepare_result']"/>
                         <t t-set="question_with_correct_answers" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type in ['simple_choice', 'multiple_choice']" />
-                        <h4>
-                            <b>Question </b>
-                            <span t-field='question.question'></span>
+                        <h4 class="card-header">
+                            Question :
+                            <label t-field='question.question' class="font-weight-bold"/>
+                            <span class="float-right">
+                                <span class="badge badge-pill badge-success"><span t-esc="input_summary['answered']"></span> Answered</span>
+                                <span class="badge badge-pill badge-warning"><span t-esc="input_summary['skipped']"></span> Skipped</span>
+                            </span>
                             <t t-if="question.question_type == 'matrix'">
-                                <small><span class="badge badge-secondary">Matrix: <span t-field='question.matrix_subtype'/></span></small>
+                                <br/><small><span class="badge badge-pill badge-secondary">Matrix: <span t-field='question.matrix_subtype'/></span></small>
                             </t>
                             <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
-                                <small><span t-field='question.question_type' class="badge badge-secondary"></span></small>
+                                <br/><small><span t-field='question.question_type' class="badge badge-pill badge-secondary"></span></small>
                             </t>
-                            <span class="float-right">
-                                <span class="badge badge-success"><span t-esc="input_summary['answered']"></span> Answered</span>
-                                <span class="badge badge-warning"><span t-esc="input_summary['skipped']"></span> Skipped</span>
-                            </span>
                         </h4>
                         <t t-if="question_with_correct_answers">
                             <t t-set="correct_answers" t-value="question.get_correct_answer_ids()" />
-                            <div t-if="correct_answers">
+                            <div t-if="correct_answers" class="p-3">
                                 <t t-if="question.question_type == 'simple_choice'">
-                                    <p><span>Correct answer</span>: <span class="font-weight-bold" t-esc="correct_answers[0].value"></span></p>
+                                    <h6 class="font-weight-bold">Correct answer :</h6>
+                                    <p class="p-3 border-top" t-esc="correct_answers[0].value"/>
                                 </t>
                                 <t t-if="question.question_type == 'multiple_choice'">
-                                    <span>Correct answers</span>:
-                                    <ul>
-                                        <li t-foreach="correct_answers" t-as="correct_answer">
+                                    <h6 class="font-weight-bold">Correct answers :</h6>
+                                    <ul class="list-group list-group-flush">
+                                        <li t-foreach="correct_answers" class="list-group-item" t-as="correct_answer">
                                             <t t-esc="correct_answer.value" />
                                         </li>
                                     </ul>
@@ -577,7 +591,7 @@
                         </t>
                         <t t-if="input_summary['answered'] != 0">
                             <t t-if="question.description">
-                                <div class="text-muted oe_no_empty" t-field="question.description" />
+                                <span class="text-muted oe_no_empty" t-field="question.description" />
                             </t>
                             <t t-if="question.question_type in ['textbox', 'free_text', 'date', 'datetime']">
                                 <t t-call="survey.result_text"></t>
@@ -604,8 +618,8 @@
 
     <!-- Result for free_text,textbox and date -->
     <template id="result_text" name="Text Result">
-        <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
-            <thead>
+        <table class="table table-hover" t-att-id="'table_question_%d' % question.id">
+            <thead class="thead-light">
                 <tr>
                     <th>#</th>
                     <th>User Responses</th>
@@ -614,25 +628,33 @@
             <tbody>
                 <t t-set="text_result" t-value="prepare_result"/>
                 <tr t-foreach="text_result" t-as="user_input">
-                    <td><a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                    <td>
+                        <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)">
+                            <t t-esc="user_input_index + 1"></t>
+                        </a>
+                    </td>
                     <t t-if="question.question_type == 'free_text'">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)" t-field="user_input.value_free_text"></a><br/>
+                            <span t-field="user_input.value_free_text"/>
+                            <br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'textbox'">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)" t-field="user_input.value_text"></a><br/>
+                            <span t-field="user_input.value_text"/>
+                            <br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'date'">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
+                            <span t-field="user_input.value_date"/>
+                            <br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'datetime'">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)" t-field="user_input.value_datetime"></a><br/>
+                            <span t-field="user_input.value_datetime"/>
+                            <br/>
                         </td>
                     </t>
                 </tr>
@@ -644,8 +666,8 @@
     <!-- Result for comments -->
     <template id="result_comments" name="Text Result">
         <!-- a 'comments' variable must be set an must contain a list of browse records of user input lines -->
-        <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
-            <thead>
+        <table class="table table-hover" t-att-id="'table_question_%d' % question.id">
+            <thead class="thead-light">
                 <tr>
                     <th>#</th>
                     <th>Comment</th>
@@ -686,15 +708,15 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.question_type != 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="bar" t-att-graph-data="graph_data">
                     <!-- canvas element for drawing bar chart -->
-                    <canvas/>
+                    <canvas class="mt-3 mb-3"/>
                 </div>
                 <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.question_type == 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="pie" t-att-graph-data="graph_data">
                     <!-- canvas element for drawing pie chart -->
-                    <canvas/>
+                    <canvas class="mt-3 mb-3"/>
                 </div>
                 <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                    <table class="table table-hover table-sm">
-                        <thead>
+                    <table class="table table-hover">
+                        <thead class="thead-light">
                             <tr>
                                 <th>Answer Choices</th>
                                 <th>User Responses</th>
@@ -750,23 +772,23 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id= "question.id" data-graph_type= "multi_bar" t-att-graph-data="graph_data">
                 <!-- canvas element for drawing Multibar chart -->
-                <canvas/>
+                <canvas class="mt-3 mb-3"/>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                <table class="table table-hover table-sm text-right">
-                    <thead>
+                <table class="table table-hover">
+                    <thead class="thead-light">
                         <tr>
                             <th></th>
-                            <th class="text-right" t-foreach="matrix_result['answers']" t-as="answer_id">
+                            <th t-foreach="matrix_result['answers']" t-as="answer_id">
                                 <span t-esc="matrix_result['answers'][answer_id]"></span>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr t-foreach="matrix_result['rows']" t-as="row_id">
-                            <td>
+                            <th>
                                 <span t-esc="matrix_result['rows'][row_id]"></span>
-                            </td>
+                            </th>
                             <td class="survey_answer" t-foreach="matrix_result['answers']" t-as="answer_id">
                                 <span t-esc="round(matrix_result['result'][(row_id,answer_id)]*100.0/(input_summary['answered'] or 1),2)"></span> %
                                 <span class="badge badge-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" role="img" aria-label="Survey filter" title="Survey filter"></i>
@@ -789,7 +811,7 @@
     <template id="result_number" name="Number Result">
         <t t-set="number_result" t-value="prepare_result"/>
         <t t-set="text_result" t-value="number_result['input_lines']" />
-        <span class="float-right mt8">
+        <span class="float-right p-3">
             <span class="badge badge-secondary only_left_radius">Sum </span> <span class="badge badge-info only_right_radius" t-esc="number_result['sum']"></span>
             <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="number_result['max']"></span>
             <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="number_result['min']"></span>
@@ -811,8 +833,8 @@
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_%d' % question.id">
-                <table class="table table-hover table-sm">
-                     <thead>
+                <table class="table table-hover">
+                     <thead class="thead-light">
                          <tr>
                              <th>User Responses</th>
                              <th>Occurence</th>
@@ -831,8 +853,8 @@
                 </table>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
-                    <thead>
+                <table class="table table-hover" t-att-id="'table_question_%d' % question.id">
+                    <thead class="thead-light">
                         <tr>
                             <th>#</th>
                             <th>User Responses</th>
