@@ -518,7 +518,8 @@ action = model.setting_init_bank_account_action()
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
                 <div class="alert alert-danger" role="alert" attrs="{'invisible': [('is_valid_balance_start','=',True)]}">
-                    The starting balance <b>doesn't match</b> with the ending balance of the previous bank statement.
+                    The starting balance <strong>doesn't match</strong> with the ending balance of the previous bank statement which was
+                    <strong><field name="previous_statement_balance_end_real"/></strong>.
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

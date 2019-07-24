@@ -97,6 +97,7 @@ class AccountBankStatement(models.Model):
                 # lower value that current record(due to default ordering), we are checking it with `_origin` instead of `self`.
                 domain = expression.AND([domain, [('id', '<', bank_stmt._origin.id)]])
             previous_stmt = self.search(domain, order="date desc, id desc", limit=1)
+            bank_stmt.previous_statement_balance_end_real = previous_stmt.balance_end_real
             balance_comparision = bank_stmt.currency_id.compare_amounts(bank_stmt.balance_start, previous_stmt.balance_end_real)
             bank_stmt.is_valid_balance_start = not previous_stmt or bank_stmt.journal_id.type != 'bank' or balance_comparision == 0
 
@@ -184,6 +185,8 @@ class AccountBankStatement(models.Model):
     # Technical field to show warning message on form view if starting balance is not matched with ending balance of previous statement.
     is_valid_balance_start = fields.Boolean(compute='_compute_is_valid_balance_start', string="Valid Starting Balance",
         help="If True, it indicates the `Starting Balance` of current statement has matched with the `Ending Balance` of previous statement, False otherwise.")
+    # Technical field to show previous statement's balance in warning message
+    previous_statement_balance_end_real = fields.Monetary("Previous Statement's Ending Balance", compute='_compute_is_valid_balance_start')
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
