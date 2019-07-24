@@ -665,8 +665,10 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'action':
             case 'object':
+                var attrs = $action.data();
+                attrs.confirm = $action.attr('confirm');
                 this.trigger_up('button_clicked', {
-                    attrs: $action.data(),
+                    attrs: attrs,
                     record: this.state,
                 });
                 break;
