@@ -126,33 +126,33 @@ class ScaleDriver(SerialDriver):
             'stop_reading': self._stop_reading_action,
         })
 
-    def _start_reading_action(self):
+    def _start_reading_action(self, data):
         """Starts asking for the scale value."""
         self._is_reading = True
 
-    def _stop_reading_action(self):
+    def _stop_reading_action(self, data):
         """Stops asking for the scale value."""
         self._is_reading = False
 
-    def _clear_tare_action(self):
+    def _clear_tare_action(self, data):
         """Clears the scale current tare weight."""
 
         # if the protocol has no clear tare command, we can just tare again
         clearCommand = self._protocol.clearCommand or self._protocol.tareCommand
         self._connection.write(clearCommand + self._protocol.commandTerminator)
 
-    def _read_once_action(self):
+    def _read_once_action(self, data):
         """Reads the scale current weight value and pushes it to the frontend."""
 
         self._read_weight()
         event_manager.device_changed(self)
 
-    def _set_zero_action(self):
+    def _set_zero_action(self, data):
         """Makes the weight currently applied to the scale the new zero."""
 
         self._connection.write(self._protocol.zeroCommand + self._protocol.commandTerminator)
 
-    def _set_tare_action(self):
+    def _set_tare_action(self, data):
         """Sets the scale's current weight value as tare weight."""
 
         self._connection.write(self._protocol.tareCommand + self._protocol.commandTerminator)
