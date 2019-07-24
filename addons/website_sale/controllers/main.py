@@ -338,9 +338,11 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):
         redirect = post.get('r', '/shop/cart')
-        pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
-        if not pricelist or (pricelist and not request.website.is_pricelist_available(pricelist.id)):
-            return request.redirect("%s?code_not_available=1" % redirect)
+        # empty promo code is used to reset/remove pricelist (see `sale_get_order()`)
+        if promo:
+            pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
+            if (not pricelist or (pricelist and not request.website.is_pricelist_available(pricelist.id))):
+                return request.redirect("%s?code_not_available=1" % redirect)
 
         request.website.sale_get_order(code=promo)
         return request.redirect(redirect)
