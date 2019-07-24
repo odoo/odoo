@@ -883,11 +883,11 @@ class HttpCase(TransactionCase):
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
 
-    def url_open(self, url, data=None, timeout=10, headers=None):
+    def url_open(self, url, data=None, files=None, timeout=10, headers=None):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
-        if data:
-            return self.opener.post(url, data=data, timeout=timeout, headers=headers)
+        if data or files:
+            return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers)
         return self.opener.get(url, timeout=timeout, headers=headers)
 
     def _wait_remaining_requests(self):
