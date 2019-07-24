@@ -114,6 +114,11 @@ class XmlDeclaration(models.TransientModel):
         round_digits = self._get_rounding_digits()
         _round = partial(float_round, precision_digits=round_digits)
 
+        value, weight, supply_units = amounts
+        # Assuming weight cannot be negative
+        if weight >= 0 and weight < 0.01:
+            weight = 0.01
+
         self._set_Dim(item, 'EXSEQCODE', unicode(numlgn))
         self._set_Dim(item, 'EXTRF', unicode(linekey.EXTRF))
         self._set_Dim(item, 'EXCNT', unicode(linekey.EXCNT))
@@ -123,9 +128,9 @@ class XmlDeclaration(models.TransientModel):
         if extendedmode:
             self._set_Dim(item, 'EXTPC', unicode(linekey.EXTPC))
             self._set_Dim(item, 'EXDELTRM', unicode(linekey.EXDELTRM))
-        self._set_Dim(item, 'EXTXVAL', unicode(_round(amounts[0])).replace(".", ","))
-        self._set_Dim(item, 'EXWEIGHT', unicode(_round(amounts[1])).replace(".", ","))
-        self._set_Dim(item, 'EXUNITS', unicode(_round(amounts[2])).replace(".", ","))
+        self._set_Dim(item, 'EXTXVAL', unicode(_round(value)).replace(".", ","))
+        self._set_Dim(item, 'EXWEIGHT', unicode(_round(weight)).replace(".", ","))
+        self._set_Dim(item, 'EXUNITS', unicode(_round(supply_units)).replace(".", ","))
 
     def _get_intrastat_linekey(self, declcode, inv_line, dispatchmode, extendedmode):
         IntrastatRegion = self.env['l10n_be_intrastat.region']
