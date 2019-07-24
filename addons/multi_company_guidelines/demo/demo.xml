@@ -1,0 +1,21 @@
+<odoo>  
+    <record id="res_partner_not_main_company" model="res.partner">
+        <field name="name">TheirCompany</field>
+        <field eval="1" name="customer"/>
+        <field eval="1" name="supplier"/>
+        <field name="is_company">1</field>
+        <field eval="1" name="active"/>
+        <field name="street">Rue des Bourlottes 9</field>
+        <field model="res.country" name="country_id" search="[('code','ilike','be')]"/>
+        <field name="zip">1367</field>
+        <field name="city">Grand-Rosière</field>
+        <field name="email">g-r@theircompany.com</field>
+    </record>
+
+    <record id="not_main_company" model="res.company">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="partner_id" ref="res_partner_not_main_company"/>
+        <field name="name">TheirCompany</field>
+        <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
+    </record>
+</odoo>

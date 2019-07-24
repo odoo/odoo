@@ -1,0 +1,156 @@
+<odoo>
+  <data>
+    <!-- shared model -->
+    <record model="ir.ui.view" id="shared_list">
+      <field name="name">multi_company_guidelines shared list</field>
+      <field name="model">multi_company.shared</field>
+      <field name="arch" type="xml">
+        <tree string="Shared Model" editable="bottom">
+          <field name="name" />
+          <field name="company_id" />
+          <field name="property_field" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- main model -->
+    <record model="ir.ui.view" id="main_list">
+      <field name="name">multi_company_guidelines main list</field>
+      <field name="model">multi_company.main</field>
+      <field name="arch" type="xml">
+        <tree string="Main Model">
+          <field name="name" />
+          <field name="company_id" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="main_form" model="ir.ui.view">
+      <field name="name">multi_company_guidelines main form</field>
+      <field name="model">multi_company.main</field>
+      <field name="arch" type="xml">
+        <form string="Main Model">
+          <header>
+            <button type="object" name="action_draft" string="Reset to Draft" states="confirmed" />
+            <button type="object" name="action_confirm" string="Confirm" states="draft" class="oe_highlight" />
+            <button type="object" name="action_post" states="confirmed" string="Post" class="oe_highlight" />
+            <field name="state" widget="statusbar" />
+          </header>
+          <sheet>
+            <!--<div class="oe_button_box" name="button_box">
+              <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-money"
+                attrs="{'invisible': [('invoice_ids_nbr', '=', 0)]}">
+                <field name="invoice_ids_nbr" widget="statinfo" string="Invoice(s)" />
+              </button>
+            </div>-->
+            <group>
+              <group>
+                <field name="partner_id"/>
+                <field name="name" />
+                <field name="company_id" />
+              </group>
+            </group>
+            <group string="Lines">
+              <field name="line_ids" nolabel="1" >
+                <tree editable="bottom">
+                  <field name="shared_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                  <field name="name"/>
+                </tree>
+              </field>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- next model -->
+    <record model="ir.ui.view" id="next_list">
+      <field name="name">multi_company_guidelines next list</field>
+      <field name="model">multi_company.next</field>
+      <field name="arch" type="xml">
+        <tree string="Next Step Model" editable="bottom">
+          <field name="name" />
+          <field name="company_id" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- related source model -->
+    <record model="ir.ui.view" id="source_list">
+      <field name="name">multi_company_guidelines source list</field>
+      <field name="model">multi_company.source</field>
+      <field name="arch" type="xml">
+        <tree string="Source Model" editable="bottom">
+          <field name="name" />
+          <field name="company_id" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- related magic model -->
+    <record model="ir.ui.view" id="related_list">
+      <field name="name">multi_company_guidelines related list</field>
+      <field name="model">multi_company.related</field>
+      <field name="arch" type="xml">
+        <tree string="Related Magic Model" editable="bottom">
+          <field name="name" />
+          <field name="source_id"/>
+          <field name="company_id" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions -->
+    <record model="ir.actions.act_window" id="multi_company_guidelines.shared_action">
+      <field name="name">Shared Records (Master Data)</field>
+      <field name="res_model">multi_company.shared</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="multi_company_guidelines.main_action">
+      <field name="name">Main Records (Business Object w/ Lines)</field>
+      <field name="res_model">multi_company.main</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+  
+    <record model="ir.actions.act_window" id="multi_company_guidelines.next_action">
+      <field name="name">Next Records (Next Business Object)</field>
+      <field name="res_model">multi_company.next</field>
+      <field name="view_mode">tree</field>
+    </record>
+  
+    <record model="ir.actions.act_window" id="multi_company_guidelines.source_action">
+      <field name="name">Source Records (Master Data)</field>
+      <field name="res_model">multi_company.source</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="multi_company_guidelines.related_action">
+      <field name="name">Related-Company Records</field>
+      <field name="res_model">multi_company.related</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <!-- menu items -->
+
+    <menuitem name="Multi-Company" id="multi_company_guidelines.menu_root" />
+
+    <menuitem name="Main Model (e.g. Quote)" id="multi_company_guidelines.main_model_menu"
+      parent="multi_company_guidelines.menu_root" sequence="10" action="main_action" />
+
+
+    <menuitem name="Next Step Model (e.g. Picking)" id="multi_company_guidelines.next_model_menu"
+      parent="multi_company_guidelines.menu_root" sequence="20" action="next_action" />
+
+
+    <menuitem name="Related Company Model (e.g. Invoice)" id="multi_company_guidelines.related_model_menu"
+      parent="multi_company_guidelines.menu_root" sequence="10" action="related_action" />
+    <menuitem name="Master Data" id="multi_company_guidelines.master_data_menu"
+      parent="multi_company_guidelines.menu_root" sequence="100" />
+    <menuitem name="Shared Model (Master Data, e.g. Product))" id="multi_company_guidelines.shared_model_menu"
+      parent="multi_company_guidelines.master_data_menu" sequence="10" action="shared_action" />
+
+    <menuitem name="Related Source (Master Data, e.g. Journal)" id="multi_company_guidelines.source_model_menu"
+      parent="multi_company_guidelines.master_data_menu" sequence="20" action="source_action" />
+  </data>
+</odoo>

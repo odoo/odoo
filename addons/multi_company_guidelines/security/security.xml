@@ -1,0 +1,43 @@
+<odoo>
+    <record model="ir.rule" id="shared_comp_rule">
+        <field name="name">Shared: multi-company</field>
+        <field name="model_id" ref="model_multi_company_shared"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="main_comp_rule">
+        <field name="name">Main: multi-company</field>
+        <field name="model_id" ref="model_multi_company_main"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="line_comp_rule">
+        <field name="name">Line: multi-company</field>
+        <field name="model_id" ref="model_multi_company_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="next_comp_rule">
+        <field name="name">Shared: multi-company</field>
+        <field name="model_id" ref="model_multi_company_shared"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="source_comp_rule">
+        <field name="name">Related Source: multi-company</field>
+        <field name="model_id" ref="model_multi_company_source"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="related_comp_rule">
+        <field name="name">Related: multi-company</field>
+        <field name="model_id" ref="model_multi_company_related"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+</odoo>
