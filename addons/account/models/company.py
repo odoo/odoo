@@ -320,7 +320,7 @@ Best Regards,'''))
 
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Fiscal Year'),
+            'name': _('Accounting Periods'),
             'view_mode': 'form',
             'res_model': 'account.financial.year.op',
             'target': 'new',

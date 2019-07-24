@@ -476,6 +476,22 @@ class AccountAccount(models.Model):
             'context': action_context,
         }
 
+    def action_read_account(self):
+        self.ensure_one()
+        return {
+            'name': self.display_name,
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.account',
+            'res_id': self.id,
+            'target': 'new',
+        }
+
+    def action_duplicate_accounts(self):
+        for account in self.browse(self.env.context['active_ids']):
+            account.copy()
+
 
 class AccountGroup(models.Model):
     _name = "account.group"
