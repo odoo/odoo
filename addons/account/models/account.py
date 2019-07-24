@@ -39,6 +39,7 @@ class AccountAccountType(models.Model):
         ('liability', 'Liability'),
         ('income', 'Income'),
         ('expense', 'Expense'),
+        ('off_balance', 'Off Balance'),
     ], string="Internal Group",
        help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
     note = fields.Text(string='Description')
@@ -231,6 +232,15 @@ class AccountAccount(models.Model):
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
 
+    @api.constrains('reconcile', 'internal_group', 'tax_ids')
+    def _constrains_reconcile(self):
+        for record in self:
+            if record.internal_group == 'off_balance':
+                if record.reconcile:
+                    raise UserError(_('An Off-Balance account can not be reconcilable'))
+                if record.tax_ids:
+                    raise UserError(_('An Off-Balance account can not have taxes'))
+
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
         for num in range(1, 10000):
@@ -330,11 +340,15 @@ class AccountAccount(models.Model):
         account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(account_ids).name_get()
 
-    @api.onchange('internal_type')
-    def onchange_internal_type(self):
+    @api.onchange('user_type_id')
+    def _onchange_user_type_id(self):
         self.reconcile = self.internal_type in ('receivable', 'payable')
         if self.internal_type == 'liquidity':
             self.reconcile = False
+
+        if self.internal_group == 'off_balance':
+            self.reconcile = False
+            self.tax_ids = False
 
     @api.onchange('code')
     def onchange_code(self):
