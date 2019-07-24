@@ -282,6 +282,12 @@ class MailActivity(models.Model):
         activity = super(MailActivity, self.sudo()).create(values_w_defaults)
         activity_user = activity.sudo(self.env.user)
         activity_user._check_access('create')
+        need_sudo = False
+        try:  # in multicompany, reading the partner might break
+            partner_id = activity_user.user_id.partner_id.id
+        except exceptions.AccessError:
+            need_sudo = True
+            partner_id = activity_user.user_id.sudo().partner_id.id
 
         # send a notification to assigned user; in case of manually done activity also check
         # target has rights on document otherwise we prevent its creation. Automated activities
@@ -290,9 +296,12 @@ class MailActivity(models.Model):
             if not activity_user.automated:
                 activity_user._check_access_assignation()
             if not self.env.context.get('mail_activity_quick_update', False):
-                activity_user.action_notify()
+                if need_sudo:
+                    activity_user.sudo().action_notify()
+                else:
+                    activity_user.action_notify()
 
-        self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[activity_user.user_id.partner_id.id])
+        self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[partner_id])
         if activity.date_deadline <= fields.Date.today():
             self.env['bus.bus'].sendone(
                 (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
