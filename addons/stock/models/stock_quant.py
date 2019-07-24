@@ -21,7 +21,7 @@ class StockQuant(models.Model):
     def _domain_location_id(self):
         if not self._is_inventory_mode():
             return
-        return ['&', ('company_id', '=', self.env.user.company_id.id), ('usage', 'in', ['internal', 'transit'])]
+        return ['&', ('company_id', '=', self.env.company.id), ('usage', 'in', ['internal', 'transit'])]
 
     def _domain_product_id(self):
         if not self._is_inventory_mode():
@@ -170,7 +170,7 @@ class StockQuant(models.Model):
             # fixme: erase the following condition when it'll be possible to create a new record
             # from a empty grouped editable list without go through the form view.
             if self.search_count([
-                ('company_id', '=', self.env.user.company_id.id),
+                ('company_id', '=', self.env.company.id),
                 ('location_id.usage', 'in', ['internal', 'transit'])
             ]):
                 self = self.with_context(
@@ -178,7 +178,7 @@ class StockQuant(models.Model):
                     search_default_locationgroup=1
                 )
         if not self.user_has_groups('stock.group_stock_multi_locations'):
-            company_user = self.env.user.company_id
+            company_user = self.env.company
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
                 self = self.with_context(default_location_id=warehouse.lot_stock_id.id)

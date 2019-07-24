@@ -422,7 +422,7 @@ class Product(models.Model):
             self = self.with_context(inventory_mode=True)
             # Set default location id if multilocations is inactive
             if not self.user_has_groups('stock.group_stock_multi_locations'):
-                user_company = self.env.user.company_id
+                user_company = self.env.company
                 warehouse = self.env['stock.warehouse'].search(
                     [('company_id', '=', user_company.id)], limit=1
                 )
