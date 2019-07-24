@@ -5,6 +5,7 @@ var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 var core = require('web.core');
 var web_editor = require('web_editor.editor');
+var LinkDialog = require('web_editor.widget').LinkDialog;
 
 var _t = core._t;
 
@@ -318,6 +319,66 @@ QUnit.test('html_frame saving in edit mode (editor and content fully loaded)', f
 
     writeDeferred.then( function () { // html_frame is async with write
         assert.verifySteps(['read', 'write']);
+        form.destroy();
+        done();
+    });
+
+});
+
+QUnit.test('discard on link dialog should select content of link in web_editor', function (assert) {
+    var done = assert.async();
+    assert.expect(5);
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<field name="body"/>' +
+            '</form>',
+        res_id: 1,
+    });
+
+    form.$buttons.find('.o_form_button_edit').click();
+
+    assert.strictEqual(form.$('.note-editable').html(), '<div class="field_body">yep</div>',
+            "should have rendered the field correctly in edit");
+
+    var $fieldEdit = form.$('.oe_form_field[name="body"]');
+    var $editable = $fieldEdit.find('.field_body');
+
+    // create range, default startoffset:0, endOffset:length of element
+    var range = document.createRange();
+    var selection = window.getSelection();
+    range.selectNodeContents($editable[0].childNodes[0]);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    var content = selection.getRangeAt(range);
+    assert.strictEqual(content.startOffset, 0, "selection starts at index 0");
+    assert.strictEqual(content.endOffset, 3, "selection ends at index 3");
+
+    var defLinkDialog = $.Deferred();
+    testUtils.patch(LinkDialog, {
+        init: function () {
+            this._super.apply(this, arguments);
+            this.opened(defLinkDialog.resolve.bind(defLinkDialog));
+        }
+    });
+
+    // click on 'link' button
+    $fieldEdit.find('.note-toolbar button[data-event="showLinkDialog"]').click();
+
+    defLinkDialog.then(function () {
+        $('.modal .modal-footer .btn-default').click(); // click on 'discard'
+
+        var content = selection.getRangeAt(range);
+        assert.strictEqual(content.startOffset, 0,
+            "selection should remain same after discarding modal, starts at index 0");
+        assert.strictEqual(content.endOffset, 3,
+            "selection should remain same after discarding modal, ends at index 3");
+
+        testUtils.unpatch(LinkDialog);
         form.destroy();
         done();
     });

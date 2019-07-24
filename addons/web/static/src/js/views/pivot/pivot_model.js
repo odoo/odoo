@@ -950,8 +950,8 @@ var PivotModel = AbstractModel.extend({
                             }
                             if (measureComparisonValue instanceof Array) {
                                 dataPoints[groupIdentifier][measureName + 'Aggregate'].comparisonData = 1;
-                                dataPoints[groupIdentifier][measureName].variation = computeVariation(
-                                    dataPoints[groupIdentifier][measureName].data,
+                                dataPoints[groupIdentifier][measureName + 'Aggregate'].variation = computeVariation(
+                                    dataPoints[groupIdentifier][measureName + 'Aggregate'].data,
                                     1
                                 );
 

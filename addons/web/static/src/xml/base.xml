@@ -1359,16 +1359,17 @@
         <div role="menuitem" class="dropdown-item-text o_save_name">
             <input type="text" class="o_input"></input>
         </div>
+        <t t-set="favId" t-value="_.uniqueId('_checkbox_')" />
         <div role="menuitem" class="dropdown-item-text o_save_name">
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" id="o_fav_menu_use_by_default" class="custom-control-input"/>
-                <label for="o_fav_menu_use_by_default" class="custom-control-label">Use by default</label>
+                <input type="checkbox" t-attf-id="o_fav_menu_use_by_default#{favId}" class="custom-control-input"/>
+                <label t-attf-for="o_fav_menu_use_by_default#{favId}" class="custom-control-label">Use by default</label>
             </div>
         </div>
         <div role="menuitem" class="dropdown-item-text o_save_name">
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" id="o_fav_menu_share_all_users" class="custom-control-input"/>
-                <label for="o_fav_menu_share_all_users" class="custom-control-label">Share with all users <span class="fa fa-users" role="img" aria-label="Users" title="Users"/></label>
+                <input type="checkbox" t-attf-id="o_fav_menu_share_all_users#{favId}" class="custom-control-input"/>
+                <label t-attf-for="o_fav_menu_share_all_users#{favId}" class="custom-control-label">Share with all users <span class="fa fa-users" role="img" aria-label="Users" title="Users"/></label>
             </div>
         </div>
         <div class="dropdown-item-text o_save_name">
@@ -1553,7 +1554,7 @@
 
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
-        <a role="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu"/>

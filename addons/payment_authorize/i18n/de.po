@@ -4,19 +4,31 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:62
+#, python-format
+msgid ""
+" If you don't have any account, ask your salesperson to grant you a portal "
+"access. "
+msgstr ""
+"Wenn Sie noch kein Konto haben, bitten Sie Ihren Verkäufer, Ihnen einen "
+"Portalzugang zu gewähren."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -100,6 +112,8 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Ungültiges Token gefunden: Das Berechtigungsprofil fehlt. Stellen Sie "
+"sicher, dass das Token eine gültige Erwerberreferenz hat."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -145,8 +159,8 @@ msgstr "Bitte vervollständigen Sie Ihr Profil."
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
-msgid "Please sign in to complete your profile."
-msgstr "Bitte loggen Sie sich ein, um Ihr Profil zu vervollständigen."
+msgid "Please sign in to complete the payment."
+msgstr "Bitte melden Sie sich an, um die Zahlung abzuschließen."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider

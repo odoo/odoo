@@ -26,18 +26,27 @@ class TestEncoding(ImportCase):
         options.setdefault('separator', '\t')
         test_text = "text\tnumber\tdate\tdatetime\n%s\t1.23.45,67\t\t\n" % text
         for encoding in ['utf-8', 'utf-16', 'utf-32', *encodings]:
+            if isinstance(encoding, tuple):
+                encoding, es = encoding
+            else:
+                es = [encoding]
             preview = self._make_import(
                 test_text.encode(encoding)).parse_preview(dict(options))
 
             self.assertIsNone(preview.get('error'))
             guessed = preview['options']['encoding']
-            self.assertIsNotNone(guessed, encoding)
-            self.assertEqual(codecs.lookup(guessed).name, codecs.lookup(encoding).name)
+            self.assertIsNotNone(guessed)
+            self.assertIn(
+                codecs.lookup(guessed).name, [
+                    codecs.lookup(e).name
+                    for e in es
+                ]
+            )
 
     def test_autodetect_encoding(self):
         """ Check that import preview can detect & return encoding
         """
-        self._check_text("Iñtërnâtiônàlizætiøn", ['iso-8859-1'])
+        self._check_text("Iñtërnâtiônàlizætiøn", [('iso-8859-1', ['iso-8859-1', 'iso-8859-2'])])
 
         self._check_text("やぶら小路の藪柑子。海砂利水魚の、食う寝る処に住む処、パイポパイポ パイポのシューリンガン。", ['eucjp', 'shift_jis', 'iso2022_jp'])
 

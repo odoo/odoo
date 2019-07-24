@@ -33,7 +33,7 @@ class PosMakePayment(models.TransientModel):
     journal_id = fields.Many2one('account.journal', string='Payment Mode', required=True, default=_default_journal)
     amount = fields.Float(digits=0, required=True, default=_default_amount)
     payment_name = fields.Char(string='Payment Reference')
-    payment_date = fields.Date(string='Payment Date', required=True, default=lambda *a: fields.Date.today())
+    payment_date = fields.Date(string='Payment Date', required=True, default=lambda self: fields.Date.context_today(self))
 
     @api.onchange('session_id')
     def _on_change_session(self):

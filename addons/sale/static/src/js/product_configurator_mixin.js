@@ -1,6 +1,7 @@
 odoo.define('sale.ProductConfiguratorMixin', function (require) {
 'use strict';
 
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var utils = require('web.utils');
 var ajax = require('web.ajax');
@@ -8,11 +9,11 @@ var _t = core._t;
 
 var ProductConfiguratorMixin = {
     events: {
-        'click .css_attribute_color input': '_onChangeColorAttribute',
+        'change .css_attribute_color input': '_onChangeColorAttribute',
         'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
-        'click button.js_add_cart_json': 'onClickAddCartJSON',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
+    // isSelectedVariantAllowed deprecated
     isSelectedVariantAllowed: true,
 
     //--------------------------------------------------------------------------
@@ -20,23 +21,11 @@ var ProductConfiguratorMixin = {
     //--------------------------------------------------------------------------
 
     /**
-     * When a product is added or when the quantity is changed,
-     * we need to refresh the total price row
-     * TODO awa: add a container context to avoid global selectors ?
+     * This method is only useful in the configurator modal.
+     *
+     * @deprecated
      */
-    computePriceTotal: function () {
-        if ($('.js_price_total').length){
-            var price = 0;
-            $('.js_product.in_cart').each(function (){
-                var quantity = parseInt($('input[name="add_qty"]').first().val());
-                price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
-            });
-
-            $('.js_price_total .oe_currency_value').html(
-                this._priceToStr(parseFloat(price))
-            );
-        }
-    },
+    computePriceTotal: function () {},
 
     /**
      * When a variant is changed, this will check:
@@ -49,6 +38,20 @@ var ProductConfiguratorMixin = {
      * @param {MouseEvent} ev
      */
     onChangeVariant: function (ev) {
+        var $parent = $(ev.target).closest('.js_product');
+        if (!$parent.data('uniqueId')) {
+            $parent.data('uniqueId', _.uniqueId());
+        }
+        this._throttledGetCombinationInfo($parent.data('uniqueId'))(ev);
+    },
+    /**
+     * @see onChangeVariant
+     *
+     * @private
+     * @param {Event} ev
+     * @returns {Deferred}
+     */
+    _getCombinationInfo: function (ev) {
         var self = this;
 
         var $component;
@@ -64,16 +67,21 @@ var ProductConfiguratorMixin = {
         var qty = $component.find('input[name="add_qty"]').val();
 
         var $parent = $(ev.target).closest('.js_product');
+
         var combination = this.getSelectedVariantValues($parent);
+        var parentCombination = $parent.find('ul[data-attribute_exclusions]').data('attribute_exclusions').parent_combination;
+
+        var productTemplateId = parseInt($parent.find('.product_template_id').val());
 
         self._checkExclusions($parent, combination);
 
-        ajax.jsonRpc(this._getUri('/product_configurator/get_combination_info'), 'call', {
-            product_template_id: parseInt($parent.find('.product_template_id').val()),
-            product_id: this._getProductId($parent),
-            combination: combination,
-            add_qty: parseInt(qty),
-            pricelist_id: this.pricelistId || false,
+        return ajax.jsonRpc(this._getUri('/product_configurator/get_combination_info'), 'call', {
+            'product_template_id': productTemplateId,
+            'product_id': this._getProductId($parent),
+            'combination': combination,
+            'add_qty': parseInt(qty),
+            'pricelist_id': this.pricelistId || false,
+            'parent_combination': parentCombination,
         }).then(function (combinationData) {
             self._onChangeCombination(ev, $parent, combinationData);
         });
@@ -149,10 +157,13 @@ var ProductConfiguratorMixin = {
         var $input = $link.closest('.input-group').find("input");
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
-        var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val() || 0, 10);
+        var previousQty = parseFloat($input.val() || 0, 10);
+        var quantity = ($link.has(".fa-minus").length ? -1 : 1) + previousQty;
         var newQty = quantity > min ? (quantity < max ? quantity : max) : min;
 
-        $input.val(newQty).trigger('change');
+        if (newQty !== previousQty) {
+            $input.val(newQty).trigger('change');
+        }
         return false;
     },
 
@@ -343,40 +354,12 @@ var ProductConfiguratorMixin = {
      * @param {Array} combination the selected combination of product attribute values
      */
     _checkExclusions: function ($parent, combination) {
-
-        function areCombinationsEqual(c1, c2) {
-            return c1.length === c2.length && _.every(c1, function (ptav) {
-                return c2.indexOf(ptav) > -1;
-            });
-        }
-
-        function isCombinationInList(c1, list) {
-            return _.some(list, function (c2) {
-                return areCombinationsEqual(c1, c2);
-            });
-        }
-
-        function isPtavInCombination(ptav, combination) {
-            return combination.indexOf(ptav) > -1;
-        }
-
         var self = this;
         var combinationData = $parent
             .find('ul[data-attribute_exclusions]')
             .data('attribute_exclusions');
 
         $parent.find('option, input, label').removeClass('css_not_available');
-
-        var disable = false;
-
-        // compatibility 12.0
-        var filteredCombination = combination;
-        if (combinationData.no_variant_product_template_attribute_value_ids !== undefined) {
-            var no_variants = combinationData.no_variant_product_template_attribute_value_ids;
-            filteredCombination = _.filter(combination, function (ptav) {
-                return !isPtavInCombination(ptav, no_variants);
-            });
-        }
 
         // exclusion rules: array of ptav
         // for each of them, contains array with the other ptav they exclude
@@ -386,11 +369,6 @@ var ProductConfiguratorMixin = {
                 if (combinationData.exclusions.hasOwnProperty(current_ptav)) {
                     // for each exclusion of the current attribute:
                     _.each(combinationData.exclusions[current_ptav], function (excluded_ptav) {
-                        // disable if it excludes any other attribute already in the combination
-                        if (isPtavInCombination(excluded_ptav, combination)) {
-                            disable = true;
-                        }
-
                         // disable the excluded input (even when not already selected)
                         // to give a visual feedback before click
                         self._disableInput($parent, excluded_ptav);
@@ -401,37 +379,11 @@ var ProductConfiguratorMixin = {
 
         // parent exclusions (tell which attributes are excluded from parent)
         _.each(combinationData.parent_exclusions, function (ptav) {
-            if (isPtavInCombination(ptav, combination)) {
-                disable = true;
-            }
             // disable the excluded input (even when not already selected)
             // to give a visual feedback before click
             self._disableInput($parent, ptav);
         });
-
-        // archived variants
-        if (isCombinationInList(filteredCombination, combinationData.archived_combinations)) {
-            disable = true;
-        }
-
-        // if not using dynamic attributes, exclude variants that are deleted
-        if (filteredCombination.length && // compatibility 12.0 list view of variants
-            combinationData.has_dynamic_attributes === false &&
-            combinationData.existing_combinations !== undefined &&
-            !isCombinationInList(filteredCombination, combinationData.existing_combinations)
-        ) {
-            disable = true;
-        }
-
-        this.isSelectedVariantAllowed = !disable;
-        $parent.toggleClass('css_not_available', disable);
-        $parent.find("#add_to_cart").toggleClass('disabled', disable);
-        $parent
-            .parents('.modal')
-            .find('.o_sale_product_configurator_add')
-            .toggleClass('disabled', disable);
     },
-
     /**
      * Extracted to a method to be extendable by other modules
      *
@@ -440,7 +392,6 @@ var ProductConfiguratorMixin = {
     _getProductId: function ($parent) {
         return parseInt($parent.find('.product_id').val());
     },
-
     /**
      * Will disable the input/option that refers to the passed attributeValueId.
      * This is used for showing the user that some combinations are not available.
@@ -455,7 +406,6 @@ var ProductConfiguratorMixin = {
         $input.addClass('css_not_available');
         $input.closest('label').addClass('css_not_available');
     },
-
     /**
      * @see onChangeVariant
      *
@@ -469,6 +419,15 @@ var ProductConfiguratorMixin = {
         var $price = $parent.find(".oe_price:first .oe_currency_value");
         var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
         var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
+
+        var isCombinationPossible = this.isSelectedVariantAllowed;
+
+        if (combination.is_combination_possible !== undefined) {
+            isCombinationPossible = combination.is_combination_possible;
+        }
+
+        this._toggleDisable($parent, isCombinationPossible);
+
         $price.html(self._priceToStr(combination.price));
         $default_price.html(self._priceToStr(combination.list_price));
 
@@ -505,7 +464,8 @@ var ProductConfiguratorMixin = {
                 $parent.closest(rootComponentSelectors.join(', ')),
                 combination.product_id,
                 combination.product_template_id,
-                combination.carousel
+                combination.carousel,
+                isCombinationPossible
             );
         }
 
@@ -525,7 +485,6 @@ var ProductConfiguratorMixin = {
             .first()
             .html(combination.price);
 
-        this.computePriceTotal();
         this.handleCustomValues($(ev.target));
     },
 
@@ -546,7 +505,46 @@ var ProductConfiguratorMixin = {
         formatted[0] = utils.insert_thousand_seps(formatted[0]);
         return formatted.join(l10n.decimal_point);
     },
-
+    /**
+     * Returns a throttled `_getCombinationInfo` with a leading and a trailing
+     * call, which is memoized per `uniqueId`, and for which previous results
+     * are dropped.
+     *
+     * The uniqueId is needed because on the configurator modal there might be
+     * multiple elements triggering the rpc at the same time, and we need each
+     * individual product rpc to be executed, but only once per individual
+     * product.
+     *
+     * The leading execution is to keep good reactivity on the first call, for
+     * a better user experience. The trailing is because ultimately only the
+     * information about the last selected combination is useful. All
+     * intermediary rpc can be ignored and are therefore best not done at all.
+     *
+     * The DropMisordered is to make sure slower rpc are ignored if the result
+     * of a newer rpc has already been received.
+     *
+     * @private
+     * @param {string} uniqueId
+     * @returns {function}
+     */
+    _throttledGetCombinationInfo: _.memoize(function (uniqueId) {
+        var dropMisordered = new concurrency.DropMisordered();
+        var _getCombinationInfo = _.throttle(this._getCombinationInfo.bind(this), 500);
+        return function (ev) {
+            return dropMisordered.add(_getCombinationInfo(ev));
+        };
+    }),
+    /**
+     * Toggles the disabled class depending on the $parent element
+     * and the possibility of the current combination.
+     *
+     * @private
+     * @param {$.Element} $parent
+     * @param {boolean} isCombinationPossible
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        $parent.toggleClass('css_not_available', !isCombinationPossible);
+    },
     /**
      * Updates the product image.
      * This will use the productId if available or will fallback to the productTemplateId.

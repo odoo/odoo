@@ -8,6 +8,7 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2018
 # Eneli Õigus <enelioigus@gmail.com>, 2018
 # Martin Aavastik <martin@avalah.ee>, 2018
+# Maidu Targama <m.targama@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:16+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
+"Last-Translator: Maidu Targama <m.targama@gmail.com>, 2019\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,17 +78,17 @@ msgstr "Uus"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr ""
+msgstr "Ava Kassa Sessioon"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
 msgid "Open Sessions"
-msgstr ""
+msgstr "Ava Sessioon"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__dashboard_graph_group_pos
 msgid "POS Grouping"
-msgstr ""
+msgstr "Kassa Grupeering"
 
 #. module: pos_sale
 #: selection:sale.report,state:0
@@ -98,27 +99,27 @@ msgstr "Makstud"
 #: selection:crm.team,dashboard_graph_group_pos:0
 #: model:crm.team,name:pos_sale.pos_sales_team selection:crm.team,team_type:0
 msgid "Point of Sale"
-msgstr "Müügikoht"
+msgstr "Kassa"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Kassa seadistused"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Müügikoha tellimused"
+msgstr "Kassa tellimused"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Kassa Sessioon"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
-msgstr ""
+msgstr "Kassad"
 
 #. module: pos_sale
 #: selection:sale.report,state:0
@@ -139,7 +140,7 @@ msgstr "Müük"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Müügi Raportid"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -149,12 +150,12 @@ msgstr "Müügitiimid"
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr "Sales Done"
+msgstr "Tehtud Müügid"
 
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Sales Order"
-msgstr "Müügitellimus"
+msgstr "Müügi tellimus"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
@@ -166,7 +167,7 @@ msgstr "Müügi meeskond"
 #: code:addons/pos_sale/models/crm_team.py:119
 #, python-format
 msgid "Sales: Untaxed Amount"
-msgstr "Müük: maksudeta summa"
+msgstr "Müük: Maksudeta summa"
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
@@ -176,17 +177,17 @@ msgstr "Müügiesindaja"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
 msgid "Session Running"
-msgstr ""
+msgstr "Sessioon Avatud"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
-msgstr ""
+msgstr "Sessiooni müügi kogus"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
 msgid "Sessions Running"
-msgstr ""
+msgstr "Avatud Sessioonid"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -196,14 +197,14 @@ msgstr "Staatus"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
 msgid "Team Type"
-msgstr ""
+msgstr "Meeskonna Tüüp"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
+msgstr "Kursi määra seos kursiga kohaldatakse vastavalt tellimuse kuupäeval"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_crm_team__team_type
@@ -216,7 +217,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
-msgstr ""
+msgstr "See Kassa määratakse sellele Müügi meeskonnale"
 
 #. module: pos_sale
 #: selection:crm.team,team_type:0

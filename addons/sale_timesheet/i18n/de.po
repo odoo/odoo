@@ -4,25 +4,28 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2018
-# DE R1 <e2fes1@hotmail.com>, 2018
+# 4e7311735ad180fde514b5b19202d965, 2018
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2018
 # Ralf Hilgenstock <rh@dialoge.info>, 2018
-# Martin Trigaux, 2018
-# e2f_de_t6 <e2f_de_t6@outlook.com>, 2018
+# b4d8887ced18b222d41dc1101b082e15, 2018
 # Renzo Meister, 2018
 # darenkster <inactive+darenkster@transifex.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # e2f FFE <e2f_de_FFE@outlook.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
+# Martin Trigaux, 2018
 # Wolfgang Taferner, 2018
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
+# Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +72,7 @@ msgstr "<b>Gesamt</b>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Time Billing</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Zeitabrechnung</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
@@ -101,11 +104,16 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Je nach Produktkonfiguration kann die Liefermenge automatisch durch einen Mechanismus berechnet werden:\n"
+"  - Manuell: Die Menge wird manuell auf der Linie eingestellt\n"
+"  - Analytik von Aufwendungen: Die Menge ist die Mengensumme aus gebuchten Aufwendungen\n"
+"  - Arbeitszeitblatt: Die Menge ist die Summe der Stunden, die für Aufgaben erfasst wurden, die mit dieser Verkaufslinie verbunden sind.\n"
+"  - Lagerbewegungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
 msgid "Amount to invoice"
-msgstr ""
+msgstr "Rechnungsbetrag"
 
 #. module: sale_timesheet
 #: sql_constraint:project.create.sale.order.line:0
@@ -579,7 +587,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Methode zum Aktualisieren der gelieferten Menge"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -589,7 +597,7 @@ msgstr "Meilensteine (manuell festgelegte Menge bei Bestellung)"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "My Project"
-msgstr ""
+msgstr "Mein Projekt"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
@@ -1247,12 +1255,12 @@ msgstr "Einheit(en)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Unbesteuerter Rechnungsbetrag"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Unbesteuerter Rechnungsbetrag"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
@@ -1281,6 +1289,8 @@ msgstr "Assistent"
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Sie finden einen Kunden anhand seines Namens, seiner TIN, seiner E-Mail-"
+"Adresse oder seiner internen Referenz."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:62

@@ -8,8 +8,8 @@
 # Martin Trigaux, 2018
 # krnkris, 2018
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
-# gezza <geza.nagy@oregional.hu>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,22 +28,22 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "# Days to Deadline"
-msgstr "# Napok a határidőig"
+msgstr "# Nap a határidőig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
 msgid "# Tasks"
-msgstr "# Feladatok"
+msgstr "# Feladat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "# Working Days to Assign"
-msgstr "# Munkanapok a hozzárendelésig"
+msgstr "# Munkanap a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "# Working Days to Close"
-msgstr "# Munkanapok a lezárásig"
+msgstr "# Munkanap a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
@@ -53,12 +53,12 @@ msgstr "# Feladatok száma"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr "Elégedettségi felmérés"
+msgstr "${object.project_id.company_id.name}: Elégedettség felmérés"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "%"
 
 #. module: project
 #: code:addons/project/models/project.py:302
@@ -165,6 +165,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Üdvözöljük ${partner.name},<br/>\n"
+"            Kérjük, fordítson egy percet a következő feladathoz kapcsolódó szolgáltatásunk értékelésére: \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                a feladathoz rendelt személy: <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Mondja el, mit érez a szolgáltatásunkkal kapcsolatban:</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(kattintson ezen hangulatjelek egyikére)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Köszönjük a visszajelzését, ami segít nekünk a folyamatos fejlődésben.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Ez az ügyfélelégedettségi felmérés azért került elküldésre, mert az Ön feladata átmozgatásra került a következő szakaszba: <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Ez az ügyfélelégedettségi felmérés <b>${object.project_id.rating_status_period}</b> elküldésre kerül addig, amíg a feladat a(z) <b>${object.stage_id.name}</b> szakaszban van.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -247,6 +303,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        A dokumentumok a projekt feladataihoz kerülnek csatolásra.</p><p>\n"
+"                        Küldjön üzeneteket, vagy rögzítsen belső megjegyzéseket mellékletekkel a dokumentumok\n"
+"                        projekthez való hozzáfűzéséhez.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:149
@@ -263,7 +324,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:66
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr "<p>Amint a feladata készen van, menteni tudja azt.</p>"
+msgstr "<p>El tudja menteni a feladatot, amikor elkészült.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -406,7 +467,7 @@ msgstr "Haladó"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:34
 #, python-format
 msgid "Agile"
-msgstr ""
+msgstr "Agilis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -466,7 +527,7 @@ msgstr "Hozzám rendelés"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_start
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Assignation Date"
-msgstr "Hozzárendelve"
+msgstr "Hozzárendelés dátuma"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -488,7 +549,7 @@ msgstr "Hozzárendelve"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
 msgid "Assigning Date"
-msgstr "Hozzárendelve"
+msgstr "Hozzárendelés dátuma"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -497,7 +558,7 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
-"Az alkalmazottak mindegyik szakaszban blokkolhatják vagy késszé tehetik a következő szakaszba lépésre a feladatokat/ügyeket. \n"
+"Az alkalmazottak mindegyik szakaszban blokkolhatják vagy készre tehetik a következő szakaszba lépésre a feladatokat. \n"
 "                                Meghatározhatja itt az egyes állapotok számára megjelenítendő címkéket\n"
 "                                az alapértelmezett címkék helyett."
 
@@ -528,7 +589,7 @@ msgstr "Mellékletek"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr "Automatikus kanbanállapot"
+msgstr "Automatikus kanban állapot"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
@@ -537,9 +598,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
-"Automatikusan módosítja a kanbanállapotot, amikor az ügyfél válaszol ezen szakasz visszajelzés-igénylésére.\n"
-" * A jó ügyféli visszajelzés frissíti a kanbanállapotot a 'készen áll a következő szakaszra' állapotra (zöld pont).\n"
-" * A közepes vagy rossz visszajelzés a kanbanállapot 'blokkolt' állapotba helyezi (piros pont).\n"
+"Automatikusan módosítja a kanban állapotot, amikor az ügyfél válaszol ezen szakaszhoz tartozó visszajelzésre.\n"
+" * Az ügyfél általi pozitív visszajelzés frissíti a kanbanállapotot a 'készen áll a következő szakaszra' állapotra (zöld pont).\n"
+" * A közepes vagy rossz visszajelzés a kanban állapotot 'blokkolt' állapotba helyezi (piros pont).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -552,7 +613,7 @@ msgstr "Átlagos"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:35
 #, python-format
 msgid "Backlog"
-msgstr "Elvégzésre váró munka"
+msgstr "Munkahátralék"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -597,7 +658,7 @@ msgstr "Blokkolva"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Brainstorm"
-msgstr ""
+msgstr "Ötletelés"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -631,8 +692,8 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
-"Válasszon egy <b>projektnevet</b>. (pl. Weboldalindítás, Termékfejlesztés, "
-"Irodai rendezvény, stb.)"
+"Válasszon egy <b>projektnevet</b>. (pl. Weboldal indítása, Termékfejlesztés,"
+" Irodai rendezvény, stb.)"
 
 #. module: project
 #. openerp-web
@@ -640,8 +701,8 @@ msgstr ""
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
 msgstr ""
-"Válasszon egy <b>feladatnevet</b>. (pl. weboldaldizájn, termékek vásárlása, "
-"stb.)"
+"Válasszon egy <b>feladatnevet</b>. (pl. weboldal dizájn, termékek vásárlása,"
+" stb.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -655,6 +716,8 @@ msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
 msgstr ""
+"Az alfeladat projekt kiválasztása mind bekapcsolja az alfeladatokat, mind "
+"beállítja az alapértelmezett projektet (magát a projektet)"
 
 #. module: project
 #: constraint:project.task:0
@@ -664,7 +727,7 @@ msgstr "Körkörös hivatkozás feladat és alfeladat között nem lehetséges"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Click <i>Create</i> to start a new task."
-msgstr "Kattintson a <i>Létrehozásra</i> egy új feladat elkezdéséhez."
+msgstr "Kattintson a <i>Létrehozás</i> gombra egy új feladat elkezdéséhez."
 
 #. module: project
 #. openerp-web
@@ -707,6 +770,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Kommunikáljon az ügyfelekkel a feladatról a levélátjáró használatával. "
+"Mellékeljen logó dizájnokat a feladathoz abból a célból, hogy áramoljon az "
+"információ a dizájnerektől a pólót nyomtató dolgozók felé. Rendezze a "
+"rendelések prioritását %s ikon használatával."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -723,6 +790,9 @@ msgid ""
 "Computed using sum of hours planned of all subtasks created from main task. "
 "Usually these hours are less or equal to the Planned Hours (of main task)."
 msgstr ""
+"A fő feladatból létrehozott alfeladatok tervezett órái összegének "
+"felhasználásával kerül kiszámításra. Ezek az órák rendszerint kevesebbek "
+"vagy egyenlőek a fő feladat tervezett óráival."
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -757,7 +827,7 @@ msgstr "Kapcsolat"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "Reklámszöveg írása"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -783,7 +853,7 @@ msgstr "Új projekt létrehozása"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr "Új szakasz létrehozása a feladatfolyamatban"
+msgstr "Új szakasz létrehozása a feladat folyamatban"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -879,7 +949,7 @@ msgstr "Ügyfélportál webcíme"
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Customer Ratings"
-msgstr "Ügyféli értékelések"
+msgstr "Ügyfél általi értékelések"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -888,13 +958,13 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
-"Ügyféli értékelések a feladatokon. Ha nem kap értékeléseket, változtassa meg"
-" a projektbeállításokat az aktiválásuk érdekében."
+"Ügyfél általi értékelések a feladatokon. Ha nem kap értékeléseket, "
+"változtassa meg a projektbeállításokat az aktiválásuk érdekében."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer(s) Ratings"
-msgstr "Ügyféli értékelések"
+msgstr "Ügyfél általi értékelések"
 
 #. module: project
 #. openerp-web
@@ -908,7 +978,7 @@ msgid ""
 msgstr ""
 "Az ügyfelek e-mailen keresztül nyújtanak be visszajelzéseket; az Odoo "
 "automatikusan hoz létre feladatokat, és közvetlenül lehet kommunikálni a "
-"feladatról. A menedzserek döntenek arról, hogy melyi visszajelzés kerül "
+"feladatról. A menedzserek döntenek arról, hogy melyik visszajelzés kerül "
 "elfogadásra %s és melyik visszajelzés kerül átmozgatásra a "
 "\"Visszautasított\" oszlopba."
 
@@ -920,7 +990,7 @@ msgstr "Naponta"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr "Napok"
+msgstr "Nap"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
@@ -942,9 +1012,9 @@ msgid ""
 "                solving a task or an issue."
 msgstr ""
 " Határozza meg a projektben felhasználásra kerülő lépéseket a\n"
-"                feladat létrehozásától egészen a feladat vagy ügy lezárásáig.\n"
+"                feladat létrehozásától egészen a feladat lezárásáig.\n"
 "                Ezeket a szakaszokat használhatja fel az előrehaladás nyomon\n"
-"                követésére a feladatok vagy ügyek megoldása során."
+"                követésére a feladatok megoldása során."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -956,7 +1026,7 @@ msgstr "Törlés"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Delivered"
-msgstr "Kiszállított"
+msgstr "Kiszállítva"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__description
@@ -970,7 +1040,7 @@ msgstr "Leírás"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Design"
-msgstr "Terv"
+msgstr "Tervezés"
 
 #. module: project
 #. openerp-web
@@ -1068,7 +1138,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "Szerkesztés"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -1094,13 +1164,13 @@ msgstr "E-mailek"
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_end
 msgid "Ending Date"
-msgstr "Befejezési dátum"
+msgstr "Befejezés dátuma"
 
 #. module: project
 #: code:addons/project/models/project.py:631
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
+msgstr "Hiba! Nem hozható létre a feladat(ok) rekurzív hierarchiában."
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -1118,15 +1188,15 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized."
 msgstr ""
-"Mindenki felvethet ötleteket, és a szerkesztő a következőként jelöli meg a "
-"legjobbakat: %s. Mellékeljen minden dokumentumot vagy hivatkozást a "
+"Mindenki felvethet ötleteket, és a szerkesztő megjelöli a legjobbakat a "
+"következőképp: %s. Mellékeljen minden dokumentumot vagy hivatkozást a "
 "feladathoz közvetlenül, hogy a kutatásról szóló összes információ "
 "központosítva álljon rendelkezésre."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
-msgstr "Lejárati idő"
+msgstr "Lejárat dátuma"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__legend_priority
@@ -1135,7 +1205,7 @@ msgid ""
 "stage."
 msgstr ""
 "Magyarázó szöveg, amely segíti a felhasználókat a csillag használatában az "
-"ezen szakaszban lévő feladatokon vagy ügyeken."
+"ezen szakaszban lévő feladatokon."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1157,18 +1227,23 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"Töltse meg a bejövő postaládáját könnyedén az e-mail átjáró használatával. "
+"Nézze át időszakosan a bejövő leveleit, és ütemezze a feladatait azok más "
+"oszlopokba való átmozgatásával. Nézze át minden nap az \"Ez a hét\" "
+"oszlopot, és mozgassa át a fontos feladatokat a \"Ma\" oszlopba. Nézze át "
+"minden hétfőn az \"Ez a hónap\" oszlopot."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "Végleges dokumentum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr "Kanbannézetben behajtott"
+msgstr "Kanban nézetben behajtott"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1177,7 +1252,7 @@ msgid ""
 "and issues of this project."
 msgstr ""
 "Kövesse ezt a projektet annak érdekében, hogy automatikusan nyomon kövesse "
-"az ezen projekt feladataihoz és ügyeihez kapcsolódó eseményeket."
+"az ezen projekt feladataihoz kapcsolódó eseményeket."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1215,19 +1290,19 @@ msgstr "Jövőbeli tevékenységek"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr "GTD /Munkaidő-beosztás/"
+msgstr "GTD"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:50
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr ""
+msgstr "Dolgok elintézése - Getting Things Done (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr "Címkéket ad a feladatokhoz a projekt kanbannézetében."
+msgstr "Címkéket ad a feladatokhoz a projekt kanban nézetében."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1302,12 +1377,12 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
-"A jelenlegi projekt feladatai vagy ügyei láthatóságának korlátozása:\n"
-"- Kizárólag a meghívottak láthatják: Az alkalmazottak kizárólag a követett projekteket, feladatokat vagy ügyeket láthatják\n"
-"- Minden alkalmazott láthatja: Az alkalmazottak láthatják az összes projektet, feladatot vagy ügyet\n"
+"A jelenlegi projekt feladatai láthatóságának korlátozása:\n"
+"- Kizárólag a meghívottak láthatják: Az alkalmazottak kizárólag a követett projekteket vagy feladatokat láthatják\n"
+"- Minden alkalmazott láthatja: Az alkalmazottak láthatják az összes projektet vagy feladatot\n"
 "- A követő ügyfelek láthatják: Az alkalmazottak mindent láthatnak;\n"
 "   ha a weboldal aktiválásra kerül, akkor a portál felhasználói láthatják az általuk vagy a vállalatuk egyik munkaktársa által követett\n"
-"   projekteket, feladatokat vagy ügyeket\n"
+"   projekteket vagy feladatokat\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1324,7 +1399,7 @@ msgid ""
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
 "Hogyan kaphat ügyféli visszajelzéseket?\n"
-"- Értékelés szakaszváltoztatáskor: egy e-mail kerül elküldésre, amikor egy feladat/ügy áthúzásra kerül a következő szakaszba\n"
+"- Értékelés szakaszváltoztatáskor: egy e-mail kerül elküldésre, amikor egy feladat áthúzásra kerül a következő szakaszba\n"
 "- Időszakos értékelés: egy e-mail kerül elküldésre időszakosan\n"
 "\n"
 "Ne felejtse el az e-mail sablonok beállítását azon szakaszokra, melyekre az ügyféli visszajelzéseket kapni szeretné."
@@ -1386,7 +1461,7 @@ msgid ""
 "this step."
 msgstr ""
 "Ha beállításra kerül, egy e-mail kerül elküldésre az ügyfélnek, amikor a "
-"feladat vagy ügy eléri ezt a szakaszt."
+"feladat eléri ezt a szakaszt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -1396,8 +1471,8 @@ msgid ""
 "this step."
 msgstr ""
 "Ha beállításra kerül, és ha a projekt értékelési konfigurációja 'Értékelés "
-"szakaszváltoztatáskor'-ra van állítva, akkor egy e-mail kerül elküldésre az "
-"ügyfélnek, amikor a feladat eléri ezt a szakaszt."
+"szakasz változtatásakor'-ra van állítva, akkor egy e-mail kerül elküldésre "
+"az ügyfélnek, amikor a feladat eléri ezt a szakaszt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1478,19 +1553,18 @@ msgid ""
 "Tracker module is installed)."
 msgstr ""
 "Ezen projekthez társított belső e-mail. A bejövő e-mailek automatikusan "
-"szinkronizálásra kerülnek a feladatokkal (vagy lehetőségként az ügyekkel, ha"
-" az ügyek nyomkövetése modul telepítésre került)."
+"szinkronizálásra kerülnek a feladatokkal."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 msgid "Is Follower"
-msgstr "Ő egy követő"
+msgstr "Követő"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "Ügy verziója"
+msgstr "Verzió"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__planned_hours
@@ -1505,28 +1579,28 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Kanbanszakasz blokkolásának magyarázata"
+msgstr "Kanban szakasz blokkolásának magyarázata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr "Kanbanszakaszból való továbbhaladás magyarázata"
+msgstr "Kanban szakaszból való továbbhaladás magyarázata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
 msgid "Kanban State"
-msgstr "Kanbanállapot"
+msgstr "Kanban állapot"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr "Kanbanállapot címkéje"
+msgstr "Kanba nállapot címkéje"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Kanban tényleges magyarázata"
+msgstr "Kanban érvényes magyarázat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -1608,7 +1682,7 @@ msgstr "Legutóbbi értékelés: Elégedett"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Legend priority"
-msgstr "Előzmények prioritása"
+msgstr "Jelzés prioritása"
 
 #. module: project
 #. openerp-web
@@ -1767,7 +1841,7 @@ msgstr "Új"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "Új rendelések"
 
 #. module: project
 #. openerp-web
@@ -1810,7 +1884,7 @@ msgstr "Következő tevékenység összegzése"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 msgid "Next Activity Type"
-msgstr "Következő tevékenységtípus"
+msgstr "Következő tevékenység típusa"
 
 #. module: project
 #: code:addons/project/models/project.py:852
@@ -1866,7 +1940,7 @@ msgstr "Megjegyzések"
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Műveletek száma"
+msgstr "Akciók száma"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
@@ -1887,7 +1961,7 @@ msgstr "Mellékelt dokumentumok száma"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of error"
-msgstr "Hiba száma"
+msgstr "Hibák száma"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -1913,6 +1987,8 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
 "                    You can track progress, discuss on tasks, attach documents, etc."
 msgstr ""
+"Az Odoo projektkezelési rendszere lehetővé teszi a folyamatban lévő feladatok hatékony kezelését.<br>\n"
+"                    Nyomon követheti az előrehaladást, megbeszélést folytathat a feladatokról, mellékelhet dokumentumokat, stb."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
@@ -1933,11 +2009,15 @@ msgid ""
 "developers know they can pull it. If you work in sprints, use %s to mark "
 "tasks of the current sprint."
 msgstr ""
+"Amint egy feladat meghatározásra kerül, állítsa be a következőre a Leírás "
+"oszlopban: %s. Így a fejlesztők tudni fogják, hogy áthúzhatják. Ha "
+"sprintekben dolgozik, használja a következőt a jelenlegi sprint feladatainak"
+" megjelölésére: %s."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr ""
+msgstr "Feladatok megnyitása"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -1961,20 +2041,19 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
-"Szervezze meg a belső, személyes vagy ügyféli projektek tevékenységeit "
-"(tervezzen feladatokat, kövesse nyomon az ügyeket, számlázzon "
-"időkimutatásokat)."
+"Szervezze meg a belső, személyes vagy ügyfél projektek tevékenységeit "
+"(tervezzen feladatokat, számlázzon időkimutatásokat)."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:129
 #, python-format
 msgid "Others"
-msgstr ""
+msgstr "Egyebek"
 
 #. module: project
 #: selection:project.task,activity_state:0
 msgid "Overdue"
-msgstr "lejárt"
+msgstr "Lejárt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -1988,8 +2067,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Írja felül az alapértelmezett kanban kiválasztás blokkolt állapotú kijelzett"
-" értéket, ha a feladat vagy ügy ebben az állapotban van."
+"A kanban kiválasztás blokkolt állapota számára kijelzett alapértelmezett "
+"érték felülírása, amikor a feladat ebben a szakaszban van."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -1998,8 +2077,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Írja felül a kanban kiválasztás alapértelmezett értékét elkészült állapot "
-"esetén, ha a feladat vagy ügy ebben a szakaszban van."
+"A kanban kiválasztás kész állapota számára kijelzett alapértelmezett érték "
+"felülírása, amikor a feladat ebben a szakaszban van."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -2008,8 +2087,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Írja felül az alapértelmezett kanban kiválasztás normál állapotú kijelzett "
-"értéket, ha a feladat vagy ügy ebben a szakaszban van."
+"A kanban kiválasztás normál állapota számára kijelzett alapértelmezett érték"
+" felülírása, amikor a feladat ebben a szakaszban van."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
@@ -2021,17 +2100,17 @@ msgstr "Tulajdonos"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "Oldal ötletek"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Forrásmodell"
+msgstr "Szülő modell"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Szülő rekord folyamat azonosító"
+msgstr "Szülő rekord üzenetlista azonosítója"
 
 #. module: project
 #: code:addons/project/models/project.py:919
@@ -2039,7 +2118,7 @@ msgstr "Szülő rekord folyamat azonosító"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "Szülő feladat"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -2048,9 +2127,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Szülő modell, mely foglalja az álnevet. Az álnév hivatkozást megfogó modell\n"
-"nem szükségszerűen a megadott modell az alias_model_id -ben.\n"
-"(például: projekt (parent_model) és feladat (model))"
+"Az álnevet tartalmazó szülő modell. Az álnév hivatkozást tartalmazó modell "
+"nem feltétlenül azonos az alias_model_id által megadott modellel (például: "
+"projekt (parent_model) és feladat (model))."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2070,7 +2149,7 @@ msgstr "Időszakos értékelés"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Placeholder"
-msgstr ""
+msgstr "Helyörző"
 
 #. module: project
 #: selection:project.task,activity_state:0
@@ -2090,16 +2169,16 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó üzenetek kiküldéséhez.\n"
+"A levélátjáró használatával a dokumentumra küldött üzenetek szabályai.\n"
 "- mindenki: mindenki tud üzenni\n"
 "- ügyfelek: csak a hitelesített partnerek\n"
-"- követők: csak az idevonatkozó dokumentum követői vagy a következő csatornák tagjai\n"
+"- követők: csak a kapcsolódó dokumentum követői vagy a következő csatornák tagjai\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr "Portálelérés URL-je"
+msgstr "Portálelérés URL"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2152,18 +2231,18 @@ msgstr "Projekt neve"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "Project Satisfaction"
-msgstr "Elégedettség projekt téma"
+msgstr "Projekt elégedettség"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "Projekt címkék"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
-msgstr "Projektfeladatok"
+msgstr "Projekt feladatok"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2173,14 +2252,14 @@ msgstr "Projekt feladatai"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Projekt: mintaprojekt aktiválása"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projekt: értékelés küldése"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2204,18 +2283,18 @@ msgstr "Projektek és feladatok"
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
-msgstr "Negyedévente"
+msgstr "Negyedéves"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Rated partner"
-msgstr ""
+msgstr "Értékelt partner"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rated tasks"
-msgstr ""
+msgstr "Értékelt feladatok"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
@@ -2237,37 +2316,37 @@ msgstr "Értékelés gyakorisága"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Legutóbbi visszajelzés értékelése"
+msgstr "Legutóbbi értékelés visszajelzés"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr "Legutóbbi kép értékelése"
+msgstr "Legutóbbi értékelés kép"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr "Utolsó érték értékelése"
+msgstr "Legutóbbi értékelés érték"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Értékelési kérés határideje"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr "Érték számolás"
+msgstr "Értékelések száma"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "Az értékelés nyilvánosan látható"
 
 #. module: project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr "Értékelés szakaszváltoztatáskor"
+msgstr "Értékelés szakasz változtatásakor"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_rating
@@ -2278,7 +2357,7 @@ msgstr "Értékelések"
 #: code:addons/project/models/project.py:388
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "A(z) %s értékelései"
 
 #. module: project
 #: code:addons/project/models/project.py:32
@@ -2310,7 +2389,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Készen áll a következő szakaszra"
 
 #. module: project
 #: selection:report.project.task.user,state:0
@@ -2331,12 +2410,12 @@ msgstr "Értékelés oka"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr "A következő fogadása: ${object.name}"
+msgstr "A(z) ${object.name} fogadása"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Rekord-üzenetlista azonosítója"
+msgstr "Rekord üzenetlista azonosító"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2346,7 +2425,7 @@ msgstr "Piros"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Piros kanban címke"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2370,35 +2449,35 @@ msgstr "Borítókép eltávolítása"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr "Riportkészítés"
+msgstr "Kimutatás készítés"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "Kutatás"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:60
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "Kutatási projekt"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "Kutatás"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Erőforrások kiosztása"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
@@ -2416,6 +2495,8 @@ msgstr "Szomorú arc"
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
 msgstr ""
+"Készítsen ütemtervet a csapatainak a projekteken keresztül, és becsülje meg "
+"hatékonyabban a határidőket."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:114
@@ -2438,19 +2519,19 @@ msgstr "Keresés mindenben"
 #: code:addons/project/controllers/portal.py:116
 #, python-format
 msgid "Search in Customer"
-msgstr "Keresés az ügyfelek között"
+msgstr "Keresés ügyfelek között"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:115
 #, python-format
 msgid "Search in Messages"
-msgstr "Keresés az üzenetek között"
+msgstr "Keresés üzenetek között"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:117
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Keresés szakaszok között"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -2480,12 +2561,12 @@ msgstr "Borítókép beállítása"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "E-mail álnevek beállítása"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "E-mail sablon beállítása szakaszokhoz"
 
 #. module: project
 #. openerp-web
@@ -2518,27 +2599,29 @@ msgstr "Projekt megjelenítése a kezelőpulton"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Mutassa az összes rekordot melyre a következő műveleti dátum a mai nap "
-"előtti"
+"Az összes olyan rekord megjelenítése, amelynek a következő akció dátuma a "
+"mai nap előtti"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:28
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "Szoftverfejlesztés"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Specifikációk"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
 msgstr ""
+"Ossza fel a feladatait annak érdekében, hogy al-mérföldkövekbe szervezze a "
+"munkáját"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:107
@@ -2559,7 +2642,7 @@ msgstr "Szakasz megváltoztatva"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr "Szakaszleírás és helyi súgók"
+msgstr "Szakasz leírása és súgók"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
@@ -2580,12 +2663,12 @@ msgstr "Szakaszok"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr "Kedvenc"
+msgstr "Csillagozott"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "Csillagozás magyarázata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -2595,7 +2678,7 @@ msgstr "Kezdő dátum"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_start
 msgid "Starting Date"
-msgstr "Kezdési dátum"
+msgstr "Kezdés dátuma"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_state
@@ -2614,12 +2697,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Alfeladat projekt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Alfeladatok száma"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -2627,24 +2710,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_subtask_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Alfeladatok"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "Alfeladatok"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:66
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Póló nyomtatás"
 
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "A címke név már létezik!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -2666,7 +2749,7 @@ msgstr "Feladat"
 #: code:addons/project/models/project.py:616
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr ""
+msgstr "A(z) %s feladatnak nem lehet több alfeladat szintje."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2682,19 +2765,19 @@ msgstr "Feladat blokkolva"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "Feladatok száma"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Feladat létrehozva"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Feladat naplózás"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -2723,7 +2806,7 @@ msgstr "Feladat szakasza"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "A feladat szakasza megváltozott"
+msgstr "Feladat szakasza megváltoztatva"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
@@ -2745,11 +2828,14 @@ msgstr "Feladat blokkolva"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
+"A feladat folyamatban van. Kattintson a blokkolásához, vagy állítsa készre."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"A feladat blokkolva van. Kattintson a blokkolás megszüntetéséhez, vagy "
+"állítsa készre."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2791,7 +2877,7 @@ msgstr "Feladatok elemzése"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "Feladatok kezelése"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -2811,7 +2897,7 @@ msgstr "Tesztelés"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Tests"
-msgstr "Teszts"
+msgstr "Tesztek"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -2820,9 +2906,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"a modell (Odoo rendszer Dokumentum féle), amelyhez ez az álnév tartozik. "
-"Bármely bejövő email, mely nem válaszol egy meglévő feljegyzésre egy új "
-"feljegyzést fog létrehozni ehhez a modellhez (pl. egy projekt ügyet)"
+"A modell (Odoo dokumentum típus), amelyre ez az álnév vonatkozik. Bármely "
+"bejövő e-mail, amely nem válaszol egy meglévő rekordra, ezen modell egy új "
+"rekordjának létrehozását fogja előidézni (pl. egy projekt feladatot)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -2830,8 +2916,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Az email álnév neve, pl. 'állások' ha erre az emailcímre szeretné kapni "
-"<allasok@pelda.odoo.com>"
+"Az e-mail álnév neve, pl. 'állások', ha az <allasok@pelda.odoo.com> "
+"e-mailcímre szeretne leveleket kapni"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -2841,11 +2927,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"A feljegyzés tulajdonosa létrehozva amikor erre az álnévre e-mailek  "
-"érkeznek. Ha ez a mező nincs kialakítva akkor a rendszer megpróbálja "
-"megkeresni a jogos tulajdonost a elküldési (űrlap) címről, vagy az "
-"adminisztrátor felhasználót fogja használni ha nem talált rendszer "
-"felhasználót azzal a címmel."
+"Az e-mailek ezen álnévre történő beérkezésekor létrehozásra kerülő rekordok "
+"tulajdonosa. Ha ez a mező nem kerül beállításra, akkor a rendszer "
+"megpróbálja megtalálni a megfelelő tulajdonost a küldő (Feladó) címe "
+"alapján, vagy az adminisztrátor fiókot használja, ha nem található "
+"rendszerfelhasználó ahhoz a címhez."
 
 #. module: project
 #: code:addons/project/models/project.py:253
@@ -2855,6 +2941,10 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"A projekt nem osztható meg a címzett(ekk)el, mert a projekt adatvédelmi "
+"beállításai túl korlátozottak. Állítsa be az adatvédelmi beállításokat a "
+"'Látható a következő felhasználók számára' értékre annak érdekében, hogy "
+"hozzáférhetővé váljon a címzett(ek) számára."
 
 #. module: project
 #: code:addons/project/models/project.py:571
@@ -2864,28 +2954,32 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"A feladat nem osztható meg a címzett(ekk)el, mert a projekt adatvédelmi "
+"beállításai túl korlátozottak. Állítsa be a projekt adatvédelmi beállításait"
+" a 'Látható a következő felhasználók számára' értékre annak érdekében, hogy "
+"hozzáférhetővé váljon a címzett(ek) számára."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "Nincsenek projektek."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "Nincsenek feladatok."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/xml/project.xml:11
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Nem áll rendelkezésre borítóként beállítható kép."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment"
-msgstr ""
+msgstr "Ezen objektumnak jelenleg nincsenek értékelései"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2893,13 +2987,13 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
-"Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ \n"
-"        mezőhöz minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel küld. Több email felsorolását vesszővel elválasztva adja meg."
+"Ezen e-mail címek hozzáadásra fognak kerülni ezen rekord összes\n"
+"        kimenő és bejövő e-mailjének CC /másolat/ mezőjéhez elküldés előtt. Több e-mail cím esetén vesszővel elválasztva adja meg azokat."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
 msgid "These people will receive email."
-msgstr "Ezek az emberek fogják megkapni az e-mailt."
+msgstr "Ezek az emberek fognak e-mailt kapni."
 
 #. module: project
 #. openerp-web
@@ -2922,10 +3016,10 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
-"Ez a kimutatás a projektek és a felhasználók teljesítményének elemzését "
-"teszi lehetővé. Elemezni lehet a feladatok mennyiségét, a ráfordított órák "
-"számát a tervezett órákkal összehasonlítva, a feladat megnyitásához vagy "
-"lezárásához szükséges napok átlagos számát, stb."
+"Ez a kimutatás lehetővé teszi a projektek és a felhasználók teljesítményének"
+" elemzését. Elemezni lehet a feladatok mennyiségét, a ráfordított órák "
+"számát a tervezett órákhoz képest, a feladat megnyitásához vagy lezárásához "
+"szükséges napok átlagos számát, stb."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__fold
@@ -2933,13 +3027,15 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ez a szakasz behajtott kanbannézetben, ha nincsenek benne megjeleníthető "
+"Ez a szakasz behajtott a kanban nézetben, ha nincsenek benne megjeleníthető "
 "rekordok."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
+"Ez a lépés készen van. Kattintson a blokkoláshoz, vagy állítsa be "
+"folyamatban lévőként."
 
 #. module: project
 #. openerp-web
@@ -2947,11 +3043,12 @@ msgstr ""
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
 msgstr ""
+"Ez létre fog hozni egy projektet, és visszairányít minket a szakaszaihoz."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Idő menedzsment"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2961,26 +3058,26 @@ msgstr "Idő ütemezés"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__resource_calendar_id
 msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr "Munka órák időbeosztása a gantt diagram jelentés igazításához"
+msgstr "Munkaórák időbeosztása a gantt diagram kimutatás beállításához"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:106
 #: model:ir.model.fields,field_description:project.field_project_task__name
 #, python-format
 msgid "Title"
-msgstr "Megsz."
+msgstr "Név"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_0
 msgid "To Do"
-msgstr "Teendők"
+msgstr "Teendő"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "Nyomtatandó"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2988,6 +3085,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"A dolgok elintézéséhez használja az aktivitásokat és az állapotot a feladatokon.<br>\n"
+"                    Csevegjen valós időben vagy e-mailen keresztül a hatékony együttműködés érdekében."
 
 #. module: project
 #. openerp-web
@@ -3000,17 +3099,17 @@ msgstr "Ma"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr "Mai napi tevékenységek"
+msgstr "Mai tevékenységek"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "Top 5 partner ratings of last 15 days."
-msgstr ""
+msgstr "Az utóbbi 15 nap 5 legjobb partner általi értékelése."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr "Ügyfélelégedettség nyomon követése a feladatoknál"
+msgstr "Ügyfélelégedettség nyomon követése a feladatokon"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -3042,28 +3141,28 @@ msgstr "Olvasatlan üzenetek számlálója"
 #: code:addons/project/static/src/js/project.js:72
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "Feltöltés és beállítás"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "Értékelés használata a projekten"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr ""
+msgstr "Alfeladatok használata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr "Használja a Feladatokat mint"
+msgstr "Feladatok használata mint"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Kollaboratív, formázott szövegszerkesztők használata a feladatokon"
 
 #. module: project
 #. openerp-web
@@ -3071,13 +3170,14 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
-"Használja a morzsákat <b>az értékesítési folyamatához való "
-"visszatéréshez</b>."
+"Használja a morzsákat <b>a feladatok folyamatához való visszatéréshez</b>."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the star for tasks related to gold customers"
 msgstr ""
+"Használja a csillagot az arany fokozatú ügyfelekkel kapcsolatos feladatok "
+"esetében"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3087,7 +3187,7 @@ msgstr "Felhasználó"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_email
 msgid "User Email"
-msgstr "Felhasználó  email címe"
+msgstr "Felhasználó e-mail"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
@@ -3097,14 +3197,14 @@ msgstr "Az összes alkalmazott láthatja"
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by following customers"
-msgstr "A következő ügyfelek láthatják"
+msgstr "A követő ügyfelek láthatják"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:36
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr ""
+msgstr "Várakozás a következő szakaszra: %s és %s használata."
 
 #. module: project
 #. openerp-web
@@ -3113,12 +3213,12 @@ msgstr ""
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr "Jobban szeretné <b>kezelni a projekt témáit</b>? <i>Itt kezdje.</i>"
+msgstr "Jobban szeretné <b>kezelni a projektjeit</b>? <i>Kezdje itt.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Watchers Emails"
-msgstr "Követők Emailjei"
+msgstr "Követők e-mailjei"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
@@ -3131,23 +3231,23 @@ msgstr "Weboldal üzenetek"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:63
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "Weboldal újratervezése"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 msgid "Website communication history"
-msgstr "Weboldal  kommunikáció történet"
+msgstr "Weboldali kommunikációs előzmények"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Weekly"
-msgstr "Hetente"
+msgstr "Heti"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr "A projekt megjelenítésre kerül a műszerfalon"
+msgstr "A projekt megjelenítésre kerül a kezelőpulton"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3157,32 +3257,32 @@ msgstr "Munkaidő"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Munkaidő a hozzárendelésig"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Munkaidő a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Munkanapok a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Munkanapok a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Munkaórák a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Munkaórák a lezárásig"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -3194,12 +3294,12 @@ msgstr "Munkamennyiség"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "Írás"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
-msgstr "Évente"
+msgstr "Évenkénti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3207,8 +3307,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Leírást is hozzáadhat, hogy a munkatársainak segítséget nyújtson a találkozó"
-" és a szakasz céljának a megértéséhez."
+"Hozzáadhat leírást is, hogy segítse a munkatársait a szakasz értelmének és "
+"céljának megértésében."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3226,6 +3326,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"Nem törölhet feladatokat tartalmazó projekteket. Vagy archiválja azokat, "
+"vagy először törölje azoknak az összes feladatát."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3235,12 +3337,12 @@ msgstr "minta projekt aktiválása"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "average"
-msgstr ""
+msgstr "átlagos"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "bad"
-msgstr ""
+msgstr "rossz"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -3250,12 +3352,12 @@ msgstr "pl. Irodai rendezvény"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "for project:"
-msgstr ""
+msgstr "ehhez a projekthez:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "happy"
-msgstr ""
+msgstr "boldog"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -3266,7 +3368,7 @@ msgstr "oe_kanban_text_red"
 #: code:addons/project/models/project.py:635
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "feladat"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

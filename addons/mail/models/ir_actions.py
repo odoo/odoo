@@ -70,7 +70,7 @@ class ServerActions(models.Model):
 
     @api.model
     def run_action_followers_multi(self, action, eval_context=None):
-        Model = self.env[action.model_id.model]
+        Model = self.env[action.model_name]
         if self.partner_ids or self.channel_ids and hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
             records.message_subscribe(self.partner_ids.ids, self.channel_ids.ids)
@@ -83,7 +83,7 @@ class ServerActions(models.Model):
         When need to know it to skip these steps.
         Except if the computed field is supposed to trigger the action
         """
-        records = self.env[action.model_id.model].browse(
+        records = self.env[action.model_name].browse(
             self._context.get('active_ids', self._context.get('active_id')))
         old_values = action._context.get('old_values')
         if old_values:
@@ -121,7 +121,7 @@ class ServerActions(models.Model):
         if not action.activity_type_id or not self._context.get('active_id') or self._is_recompute(action):
             return False
 
-        records = self.env[action.model_id.model].browse(self._context.get('active_ids', self._context.get('active_id')))
+        records = self.env[action.model_name].browse(self._context.get('active_ids', self._context.get('active_id')))
 
         vals = {
             'summary': action.activity_summary or '',

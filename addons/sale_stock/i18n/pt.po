@@ -5,7 +5,7 @@
 # Translators:
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2018
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2018
-# MS <manuelarodsilva@gmail.com>, 2018
+# Manuela Silva <manuelarodsilva@gmail.com>, 2018
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2018
 # Martin Trigaux, 2018
 # Nuno Silva <nuno.silva@arxi.pt>, 2019
@@ -187,6 +187,13 @@ msgstr "Mostrar incoterms nas Ordens de Venda e faturas relacionadas"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:101
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
 
 #. module: sale_stock
@@ -544,6 +551,12 @@ msgstr "Armazém"
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:100
+#, python-format
+msgid "Warning!"
+msgstr "Aviso!"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

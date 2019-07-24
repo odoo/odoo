@@ -96,26 +96,25 @@ class AccountInvoice(models.Model):
                     interim_account_price = valuation_price_unit * line['quantity']
                     invoice_cur_prec = inv.currency_id.decimal_places
 
-                    if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
+                    # price with discount and without tax included
+                    price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
+                    tax_ids = []
+                    if line['tax_ids']:
+                        #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
+                        taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
+                        price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
+                        for tax in taxes:
+                            tax_ids.append((4, tax.id, None))
+                            for child in tax.children_tax_ids:
+                                if child.type_tax_use != 'none':
+                                    tax_ids.append((4, child.id, None))
 
-                        # price with discount and without tax included
-                        price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
-                        tax_ids = []
-                        if line['tax_ids']:
-                            #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
-                            taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
-                            price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
-                            for tax in taxes:
-                                tax_ids.append((4, tax.id, None))
-                                for child in tax.children_tax_ids:
-                                    if child.type_tax_use != 'none':
-                                        tax_ids.append((4, child.id, None))
-
+                    if float_compare(valuation_price_unit, price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
                         price_before = line.get('price', 0.0)
                         price_unit_val_dif = price_unit - valuation_price_unit
 
                         price_val_dif = price_before - interim_account_price
-                        if inv.currency_id.compare_amounts(i_line.price_unit, valuation_price_unit) != 0 and acc:
+                        if inv.currency_id.compare_amounts(price_unit, valuation_price_unit) != 0 and acc:
                             # If the unit prices have not changed and we have a
                             # valuation difference, it means this difference is due to exchange rates,
                             # so we don't create anything, the exchange rate entries will
@@ -133,9 +132,12 @@ class AccountInvoice(models.Model):
                                 'tax_ids': tax_ids,
                             }
                             # We update the original line accordingly
-                            line['price_unit'] = line['price_unit'] - diff_line['price_unit']
-                            line['price'] = inv.currency_id.round(line['quantity'] * line['price_unit'])
-                            line['price_unit'] = inv.currency_id.round(line['price_unit'])
+                            # line['price_unit'] doesn't contain the discount, so use price_unit
+                            # instead. It could make sense to include the discount in line['price_unit'],
+                            # but that doesn't seem a good idea in stable since it is done in
+                            # "invoice_line_move_line_get" of "account.invoice".
+                            line['price_unit'] = inv.currency_id.round(price_unit - diff_line['price_unit'])
+                            line['price'] = inv.currency_id.round(line['price'] - diff_line['price'])
                             diff_res.append(diff_line)
             return diff_res
         return []

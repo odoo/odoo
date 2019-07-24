@@ -605,8 +605,12 @@ class WebsiteSale(ProductConfiguratorController):
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
         new_values['user_id'] = request.website.salesperson_id and request.website.salesperson_id.id
-        new_values['company_id'] = request.website.company_id.id
-        new_values['website_id'] = request.website.id
+
+        if request.website.specific_user_account:
+            new_values['website_id'] = request.website.id
+
+        if mode[0] == 'new':
+            new_values['company_id'] = request.website.company_id.id
 
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
         if lang:
@@ -677,6 +681,8 @@ class WebsiteSale(ProductConfiguratorController):
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
                     order.onchange_partner_id()
+                    # This is the *only* thing that the front end user will see/edit anyway when choosing billing address
+                    order.partner_invoice_id = partner_id
                     if not kw.get('use_same'):
                         kw['callback'] = kw.get('callback') or \
                             (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))

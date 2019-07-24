@@ -47,7 +47,7 @@
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
-# 菜小蛇 <lttlsnk@gmail.com>, 2018
+# lttlsnk <lttlsnk@gmail.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # F4NNIU <sparkamax@gmail.com>, 2018
@@ -56,20 +56,20 @@
 # 卫安琪 <weianqi1991@gmail.com>, 2018
 # jian liu <lj1989419@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Maie <m@maie.name>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -929,7 +929,7 @@ msgstr ""
 "\n"
 "        在“注册付款”向导中选择银行账户时，\n"
 "        针对未付清发票，还可以使用专用的“SEPA 直接付款”付款方式。\n"
-"        如果您在验证后为其货主添加了授权，则可以使用其为发票\n"
+"        如果您在验证后为其所有者添加了授权，则可以使用其为发票\n"
 "       生成 SDD 付款。如果您尝试在没有被赋予授权的发票上使用此方法，\n"
 "       您将看到一条错误消息，其付款方式可能无法使用。\n"
 "    "
@@ -4366,7 +4366,7 @@ msgstr ""
 "\n"
 "CODA银行帐户配置为类型“Info”只会产生CODA银行报表.\n"
 "\n"
-"在CODA处理的结果中移除一个对象将导致相关对象的移除。 一个包含多个银行报表的CODA文件的移除，也将删除与此文件相关的报表.\n"
+"在CODA处理的结果中移除一个对象将导致相关对象的移除。 一个包含多个银行报表的CODA文件的移除，也将移除与此文件相关的报表.\n"
 "\n"
 "取而代之的是产生银行对帐单手动核销，也可以重新导入CODA与信息更新的OpenERP数据库后失踪允许自动核销.\n"
 "\n"
@@ -7396,7 +7396,7 @@ msgstr "%A - 星期几全称。"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%B - Full month name.\""
-msgstr "%B - 完整月份名称.\""
+msgstr "%B - 月份全称.\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -7426,12 +7426,12 @@ msgstr "%Y - 四位数的年份.\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%a - Abbreviated weekday name."
-msgstr "%a - 星期几缩写。"
+msgstr "%a - 星期天缩写。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%b - Abbreviated month name."
-msgstr "%b - 月份名称缩写。"
+msgstr "%b - 月份缩写。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9556,9 +9556,7 @@ msgid "Application"
 msgstr "应用"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "应用程序访问"
 
@@ -10602,6 +10600,12 @@ msgid "Cannot aggregate field %r."
 msgstr "无法聚合字段 %r."
 
 #. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:228
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
@@ -10695,7 +10699,7 @@ msgid ""
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
 msgstr ""
-"只有在没有被正确设置的情况下，才能改变联系人的公司。如果一个已经存在的联系人加入了新公司，则必须在这个新公司里创建一个新联系人，你可以使用“取消”按钮来放弃这个改变。"
+"只有在没有被正确设置的情况下，才能改变联系人的公司。如果一个已经存在的联系人加入了新公司，则必须在这个新公司里创建一个新联系人，你可以使用“丢弃”按钮来丢弃这个改变。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:705
@@ -12361,7 +12365,7 @@ msgid ""
 "                             Once they are loaded, they cannot be removed!"
 msgstr ""
 "Demo数据仅用于测试数据库\n"
-"                         一旦这些数据加载，就不能被删除！"
+"                         一旦这些数据加载，就不能被移除！"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -12727,7 +12731,7 @@ msgstr "吉布提"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Do you want to remove this configuration panel?"
-msgstr "您想删除这个配置面板吗？"
+msgstr "您想移除这个配置面板吗？"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -20998,8 +21002,7 @@ msgid "Original currency"
 msgstr "原始货币"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -21087,7 +21090,7 @@ msgstr "覆盖现有术语"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Owner"
-msgstr "货主"
+msgstr "所有者"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
@@ -23092,7 +23095,7 @@ msgstr ""
 "选定的联系人将被合并在一起。\n"
 "所有的文件链接到其中的一个联系人\n"
 "将会被重定向到生成的目的地联系人。\n"
-"你可以从这个列表中删除联系人以避免合并它们。"
+"你可以从这个列表中移除联系人以避免合并它们。"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:30
@@ -24679,6 +24682,7 @@ msgstr "技术名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技术设置"
 
@@ -24920,7 +24924,7 @@ msgstr "这个演示数据"
 #: code:addons/base/models/ir_model.py:598
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
-msgstr "字段 '%s' 不能删除，因为字段 '%s' 与其相关。"
+msgstr "字段 '%s' 不能移除，因为字段 '%s' 与其相关。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -25288,7 +25292,7 @@ msgstr "本窗口"
 #: code:addons/base/models/ir_model.py:634
 #, python-format
 msgid "This column contains module data and cannot be removed!"
-msgstr "此字段包含模组数据，不能删除！"
+msgstr "此字段包含模组数据，不能移除！"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__logo
@@ -26314,9 +26318,7 @@ msgid "User Login"
 msgstr "用户 登录"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "用户类型"
 
@@ -27019,7 +27021,7 @@ msgstr "您正尝试在类别“%s”中安装不兼容的模块："
 #, python-format
 msgid ""
 "You are trying to remove a module that is installed or will be installed."
-msgstr "正在试图删除一个已安装或正要安装的模块"
+msgstr "正在试图移除一个已安装或正要安装的模块"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -27050,7 +27052,7 @@ msgstr "用户名必须唯一！"
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by Odoo (updates, module installation, ...)"
-msgstr "你不能删除 admin 用户，因为其由 Odoo 创建并被系统内部使用(更新，模块安装－)"
+msgstr "你不能移除 admin 用户，因为其由 Odoo 创建并被系统内部使用(更新，模块安装－)"
 
 #. module: base
 #: code:addons/base/models/report_paperformat.py:193

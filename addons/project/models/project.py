@@ -292,7 +292,7 @@ class Project(models.Model):
             defaults = self._map_tasks_default_valeus(task)
             if task.parent_id:
                 # set the parent to the duplicated task
-                defaults['parent_id'] = old_to_new_tasks[task.parent_id.id]
+                defaults['parent_id'] = old_to_new_tasks.get(task.parent_id.id, False)
             new_task = task.copy(defaults)
             old_to_new_tasks[task.id] = new_task.id
             tasks += new_task

@@ -20,12 +20,14 @@ class TestAccrualAllocations(TestHrHolidaysBase):
         self.accrual_type = LeaveType.create({
             'name': 'accrual',
             'allocation_type': 'fixed',
+            'validity_start': False,
         })
 
         self.unpaid_type = LeaveType.create({
             'name': 'unpaid',
             'allocation_type': 'no',
             'unpaid': True,
+            'validity_start': False,
         })
 
         self.set_employee_create_date(self.employee_emp_id, '2010-02-03 00:00:00')

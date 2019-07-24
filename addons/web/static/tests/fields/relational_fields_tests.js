@@ -14,6 +14,7 @@ var Widget = require('web.Widget');
 var fieldUtils = require('web.field_utils');
 
 var createView = testUtils.createView;
+var createAsyncView = testUtils.createAsyncView;
 
 QUnit.module('fields', {}, function () {
 
@@ -2979,8 +2980,8 @@ QUnit.module('relational_fields', {
         // Open many2one modal
         form.$buttons.find('.btn.o_form_button_edit').click();
         form.$('.o_external_button').click();
-        var $originalModal = $('.modal-dialog');
-        var $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $originalModal = $('.modal');
+        var $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($originalModal.length, 1, 'There should be one modal');
         assert.equal($originalModal[0], $focusedModal[0], 'Modal is focused');
@@ -2988,8 +2989,8 @@ QUnit.module('relational_fields', {
 
         // Open many2one modal of field in many2one modal
         $originalModal.find('.o_external_button').click();
-        var $modals = $('.modal-dialog');
-        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $modals = $('.modal');
+        $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($modals.length, 2, 'There should be two modals');
         assert.equal($modals[1], $focusedModal[0], 'Last modal is focused');
@@ -2997,8 +2998,8 @@ QUnit.module('relational_fields', {
 
         // Close second modal
         $modals.last().find('button[class="close"]').click();
-        var $modal = $('.modal-dialog');
-        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $modal = $('.modal');
+        $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($modal.length, 1, 'There should be one modal');
         assert.equal($modal[0], $originalModal[0], 'First modal is still opened');
@@ -11133,6 +11134,58 @@ QUnit.module('relational_fields', {
         readDefs[2].resolve();
 
         assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_data_cell').text(), 'raphael');
+
+        form.destroy();
+    });
+
+    // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+    QUnit.test('many2manys inside a one2many are fetched in batch after onchange', async function (assert) {
+        assert.expect(7);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [
+                    [5],
+                    [1, 1, {
+                        turtle_foo: "leonardo",
+                        partner_ids: [[4, 2]],
+                    }],
+                    [1, 2, {
+                        turtle_foo: "donatello",
+                        partner_ids: [[4, 2], [4, 4]],
+                    }],
+                ];
+            },
+        };
+
+        var form = await createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                                '<field name="partner_ids" widget="many2many_tags"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</form>',
+            enableBasicModelBachedRPCs: true,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'read') {
+                    assert.deepEqual(args.args[0], [2, 4],
+                        'should read the partner_ids once, batched');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsN(form, '.o_data_row', 2);
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"]').text().replace(/\s/g, ''),
+            "secondrecordsecondrecordaaa");
+
+        assert.verifySteps(['default_get', 'onchange', 'read']);
 
         form.destroy();
     });

@@ -21,3 +21,7 @@ class MailMessage(models.Model):
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
         return message_values
+
+    @api.model
+    def _non_employee_message_domain(self):
+        return ['&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
