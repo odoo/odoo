@@ -40,9 +40,6 @@
       <field name="model">account.journal</field>
       <field name="inherit_id" ref="account.view_account_journal_form"/>
       <field name="arch" type="xml">
-          <xpath expr="//field[@name='type']" position="after">
-              <field name="journal_user" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
-          </xpath>
           <xpath expr="//notebook[last()]" position="inside">
               <page string="Point of Sale" name="point_of_sale" invisible="1"/>
           </xpath>

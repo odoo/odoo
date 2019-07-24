@@ -35,12 +35,7 @@
             </field>
             <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
-                <button name="website_publish_button"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-globe">
-                    <field name="is_published" widget="website_button"/>
-                </button>
+                <field name="is_published" widget="website_redirect_button"/>
             </div>
             <label for="is_online" position="after">
                 <field name="website_menu"/>

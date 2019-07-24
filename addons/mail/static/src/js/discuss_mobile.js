@@ -71,7 +71,7 @@ Discuss.include({
      * @returns {Boolean} true iff we currently are in the Inbox tab
      */
     _isInInboxTab: function () {
-        return _.contains(['mailbox_inbox', 'mailbox_starred'], this._currentState);
+        return _.contains(['mailbox_inbox', 'mailbox_starred', 'mailbox_history'], this._currentState);
     },
     /**
      * @override
@@ -160,7 +160,7 @@ Discuss.include({
      */
     _updateContent: function (type) {
         var self = this;
-        var inMailbox = type === 'mailbox_inbox' || type === 'mailbox_starred';
+        var inMailbox = _.contains(['mailbox_inbox', 'mailbox_starred', 'mailbox_history'], type);
         if (!inMailbox && this._isInInboxTab()) {
             // we're leaving the inbox, so store the thread scrolltop
             this._storeThreadState();
@@ -230,8 +230,8 @@ Discuss.include({
 
             // update bottom buttons
             self.$('.o_mail_mobile_tab').removeClass('active');
-            // mailbox_inbox and mailbox_starred share the same tab
-            type = type === 'mailbox_starred' ? 'mailbox_inbox' : type;
+            // mailbox_inbox, mailbox_starred and mailbox_history share the same tab
+            type = _.contains(['mailbox_inbox', 'mailbox_starred', 'mailbox_history'], type) ? 'mailbox_inbox' : type;
             self.$('.o_mail_mobile_tab[data-type=' + type + ']').addClass('active');
         });
     },

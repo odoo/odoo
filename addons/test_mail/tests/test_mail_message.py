@@ -336,7 +336,7 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
 
         # mark all as read clear needactions
         group_private.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
-        emp_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        emp_partner.env['mail.message'].mark_all_as_read(domain=[])
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
@@ -353,7 +353,7 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
-        emp_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        emp_partner.env['mail.message'].mark_all_as_read(domain=[])
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 
@@ -364,7 +364,7 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
 
         # mark all as read clear needactions
         self.group_pigs.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[portal_partner.id])
-        portal_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        portal_partner.env['mail.message'].mark_all_as_read(domain=[])
         na_count = portal_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
@@ -380,7 +380,7 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         na_count = portal_partner.get_needaction_count()
         self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
-        portal_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        portal_partner.env['mail.message'].mark_all_as_read(domain=[])
         na_count = portal_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 

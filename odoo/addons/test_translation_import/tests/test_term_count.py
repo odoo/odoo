@@ -172,8 +172,8 @@ class TestTermCount(common.TransactionCase):
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
 
-        lang_count = self.env['res.lang'].search_count([('code', '=', 'tlh')])
-        self.assertEqual(lang_count, 1, "The imported language was not creates")
+        tlh_lang = self.env['res.lang']._lang_get('tlh')
+        self.assertTrue(tlh_lang, "The imported language was not creates")
 
         trans_count = self.env['ir.translation'].search_count([('lang', '=', 'tlh')])
         self.assertEqual(trans_count, 1, "The imported translations were not created")
@@ -221,8 +221,8 @@ class TestTermCount(common.TransactionCase):
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
 
-        lang_count = self.env['res.lang'].search_count([('code', '=', 'dot')])
-        self.assertEqual(lang_count, 1, "The imported language was not creates")
+        dot_lang = self.env['res.lang']._lang_get('dot')
+        self.assertTrue(dot_lang, "The imported language was not creates")
 
         trans_count = self.env['ir.translation'].search_count([('lang', '=', 'dot')])
         self.assertEqual(trans_count, 1, "The imported translations were not created")

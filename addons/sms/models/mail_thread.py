@@ -36,7 +36,7 @@ class MailThread(models.AbstractModel):
         return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
     def _sms_get_default_partners(self):
-        """ This method will likely need to be overriden by inherited models.
+        """ This method will likely need to be overridden by inherited models.
                :returns partners: recordset of res.partner
         """
         partners = self.env['res.partner']

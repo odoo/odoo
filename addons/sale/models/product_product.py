@@ -71,7 +71,7 @@ class ProductAttributeValue(models.Model):
 
     is_custom = fields.Boolean('Is custom value', help="Allow users to input custom values for this attribute value")
     html_color = fields.Char(
-        string='HTML Color Index', oldname='color',
+        string='HTML Color Index',
         help="""Here you can set a
         specific HTML color index (e.g. #ff0000) to display the color if the
         attribute type is 'Color'.""")
@@ -88,6 +88,7 @@ class ProductAttributeCustomValue(models.Model):
     _name = "product.attribute.custom.value"
     _rec_name = 'custom_value'
     _description = 'Product Attribute Custom Value'
+    _order = 'attribute_value_id, id'
 
     attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sale order line')

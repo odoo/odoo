@@ -16,7 +16,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
     product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True)
     qty_producing = fields.Float(string='Currently Produced Quantity', digits='Product Unit of Measure')
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
-    finished_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]", oldname='final_lot_id')
+    finished_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]")
     product_tracking = fields.Selection(related="product_id.tracking")
     consumption = fields.Selection([
         ('strict', 'Strict'),

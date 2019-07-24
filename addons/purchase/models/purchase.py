@@ -103,7 +103,7 @@ class PurchaseOrder(models.Model):
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position')
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position')
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms')
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
@@ -598,8 +598,17 @@ class PurchaseOrderLine(models.Model):
         # Reset date, price and quantity since _onchange_quantity will provide default values
         self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.price_unit = self.product_qty = 0.0
-        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
 
+        self._product_id_change()
+
+        self._suggest_quantity()
+        self._onchange_quantity()
+
+    def _product_id_change(self):
+        if not self.product_id:
+            return
+
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         product_lang = self.product_id.with_context(
             lang=self.partner_id.lang,
             partner_id=self.partner_id.id,
@@ -610,9 +619,6 @@ class PurchaseOrderLine(models.Model):
             self.name += '\n' + product_lang.description_purchase
 
         self._compute_tax_id()
-
-        self._suggest_quantity()
-        self._onchange_quantity()
 
     @api.onchange('product_id')
     def onchange_product_id_warning(self):

@@ -96,6 +96,7 @@ ActivityMenu.include({
         }
         this.noteDateTimeWidget.appendTo(this.$('.o_note_datetime')).then(function() {
             self.noteDateTimeWidget.$input.attr('placeholder', _t("Today"));
+            self.noteDateTimeWidget.setValue(false);
             self.$('.o_note_show, .o_note').toggleClass('d-none');
             self.$('.o_note_input').val('').focus();
         });
@@ -120,7 +121,7 @@ ActivityMenu.include({
     _onNoteDateTimeSetClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.noteDateTimeWidget.$input.select();
+        this.noteDateTimeWidget.$input.click();
     },
     /**
      * Saving note (quick create) and updating activity preview

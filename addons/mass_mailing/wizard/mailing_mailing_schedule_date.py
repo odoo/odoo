@@ -10,7 +10,7 @@ class MailingMailingScheduleDate(models.TransientModel):
     _description = 'Mass Mailing Scheduling'
 
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    mass_mailing_id = fields.Many2one('mailing.mailing', required=True)
+    mass_mailing_id = fields.Many2one('mailing.mailing', required=True, ondelete='cascade')
 
     @api.constrains('schedule_date')
     def _check_schedule_date(self):

@@ -24,10 +24,10 @@ class ResConfigSettings(models.TransientModel):
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
     website_default_lang_id = fields.Many2one(
         string='Default language', related='website_id.default_lang_id', readonly=False,
-        relation='res.lang', oldname='default_lang_id')
+        relation='res.lang')
     website_default_lang_code = fields.Char(
         'Default language code', related='website_id.default_lang_code', readonly=False,
-        oldname='default_lang_code')
+        )
     specific_user_account = fields.Boolean(related='website_id.specific_user_account', readonly=False,
                                            help='Are newly created user accounts website specific')
 

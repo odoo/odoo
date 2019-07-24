@@ -24,7 +24,7 @@ class MrpWorkcenter(models.Model):
         'Description',
         help="Description of the Work Center.")
     capacity = fields.Float(
-        'Capacity', default=1.0, oldname='capacity_per_cycle',
+        'Capacity', default=1.0,
         help="Number of pieces that can be produced in parallel.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,

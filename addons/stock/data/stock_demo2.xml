@@ -333,6 +333,7 @@
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_9').name,
                 'product_id': ref('product.product_product_9'),
@@ -341,6 +342,7 @@
                 'picking_type_id': ref('stock.chi_picking_type_in'),
                 'location_id': ref('stock.stock_location_suppliers'),
                 'location_dest_id': ref('stock.stock_location_shop0'),
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 
@@ -351,6 +353,7 @@
             <field name="date" eval="DateTime.today() - timedelta(days=5)"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_01').name,
                 'product_id': ref('product.product_delivery_01'),
@@ -366,6 +369,7 @@
                     'location_id': ref('stock.stock_location_suppliers'),
                     'location_dest_id': ref('stock.stock_location_shop0'),
                 })],
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 
@@ -375,6 +379,7 @@
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_01').name,
                 'product_id': ref('product.product_delivery_01'),
@@ -383,6 +388,7 @@
                 'picking_type_id': ref('stock.chi_picking_type_in'),
                 'location_id': ref('stock.stock_location_suppliers'),
                 'location_dest_id': ref('stock.stock_location_shop0'),
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 
@@ -394,6 +400,7 @@
             <field name="date" eval="DateTime.today() - timedelta(days=2)"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_22').name,
                 'product_id': ref('product.product_product_22'),
@@ -402,6 +409,7 @@
                 'picking_type_id': ref('stock.chi_picking_type_in'),
                 'location_id': ref('stock.stock_location_suppliers'),
                 'location_dest_id': ref('stock.stock_location_shop0'),
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 
@@ -414,6 +422,7 @@
             <field name="date" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_27').name,
                 'product_id': ref('product.product_product_27'),
@@ -422,6 +431,7 @@
                 'picking_type_id': ref('stock.chi_picking_type_out'),
                 'location_id': ref('stock.stock_location_shop0'),
                 'location_dest_id': ref('stock.stock_location_customers'),
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 
@@ -433,6 +443,7 @@
             <field name="date" eval="DateTime.today() - timedelta(days=10)"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_6').name,
                 'product_id': ref('product.product_product_6'),
@@ -448,6 +459,7 @@
                     'location_id': ref('stock.stock_location_shop0'),
                     'location_dest_id': ref('stock.stock_location_customers'),
                 })],
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 
@@ -459,6 +471,7 @@
             <field name="date" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_02').name,
                 'product_id': ref('product.product_delivery_02'),
@@ -467,6 +480,7 @@
                 'picking_type_id': ref('stock.chi_picking_type_out'),
                 'location_id': ref('stock.stock_location_shop0'),
                 'location_dest_id': ref('stock.stock_location_customers'),
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 
@@ -478,6 +492,7 @@
             <field name="date" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_5').name,
                 'product_id': ref('product.product_product_5'),
@@ -486,6 +501,7 @@
                 'picking_type_id': ref('stock.chi_picking_type_out'),
                 'location_id': ref('stock.stock_location_shop0'),
                 'location_dest_id': ref('stock.stock_location_customers'),
+                'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
 

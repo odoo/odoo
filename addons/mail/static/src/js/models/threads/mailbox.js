@@ -128,7 +128,6 @@ var Mailbox = SearchableThread.extend({
                 model: 'mail.message',
                 method: 'mark_all_as_read',
                 kwargs: {
-                    channel_ids: [],
                     domain: domain,
                 },
             });
@@ -183,6 +182,8 @@ var Mailbox = SearchableThread.extend({
             return [['needaction', '=', true]];
         } else if (this._id === 'mailbox_starred') {
             return [['starred', '=', true]];
+        } else if (this._id === 'mailbox_history') {
+            return [['needaction', '=', false]];
         } else if (this._id === 'mailbox_moderation') {
             return [['need_moderation', '=', true]];
         } else {

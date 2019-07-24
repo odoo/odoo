@@ -74,6 +74,7 @@ registry
     .add('many2many', relational_fields.FieldMany2Many)
     .add('many2many_binary', relational_fields.FieldMany2ManyBinaryMultiFiles)
     .add('many2many_tags', relational_fields.FieldMany2ManyTags)
+    .add('many2many_tags_avatar', relational_fields.FieldMany2ManyTagsAvatar)
     .add('form.many2many_tags', relational_fields.FormFieldMany2ManyTags)
     .add('kanban.many2many_tags', relational_fields.KanbanFieldMany2ManyTags)
     .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)

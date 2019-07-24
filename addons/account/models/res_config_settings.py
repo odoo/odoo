@@ -48,8 +48,6 @@ class ResConfigSettings(models.TransientModel):
         ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
         required=True, default='tax_excluded',
         config_parameter='account.show_line_subtotals_tax_selection')
-    module_account_asset = fields.Boolean(string='Assets Management')
-    module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
     module_account_payment = fields.Boolean(string='Invoice Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
@@ -88,7 +86,6 @@ class ResConfigSettings(models.TransientModel):
     invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
-        oldname='default_use_sale_note',
         config_parameter='account.use_invoice_terms')
 
     def set_values(self):

@@ -46,7 +46,7 @@
                         <group>
                             <field name="is_won"/>
                             <field name="fold"/>
-                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
+                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                         </group>
                         <field name="team_count" invisible="1"/>
                     </group>

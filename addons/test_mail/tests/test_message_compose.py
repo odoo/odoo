@@ -45,7 +45,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(msg.subject, _subject)
         self.assertEqual(msg.body, _body)
         self.assertEqual(msg.partner_ids, self.partner_1 | self.partner_2)
-        self.assertEqual(msg.needaction_partner_ids, self.user_admin.partner_id | self.partner_1 | self.partner_2)
+        self.assertEqual(msg.notified_partner_ids, self.user_admin.partner_id | self.partner_1 | self.partner_2)
         self.assertEqual(msg.channel_ids, self.env['mail.channel'])
 
         # notifications emails should have been deleted
@@ -161,7 +161,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
                 body='<p>Test</p>', subject='Subject',
                 message_type='comment', subtype='mt_comment')
 
-        self.assertEqual(new_msg.sudo().needaction_partner_ids, (self.partner_1 | self.user_employee.partner_id))
+        self.assertEqual(new_msg.sudo().notified_partner_ids, (self.partner_1 | self.user_employee.partner_id))
         self.assertEmails(portal_user.partner_id, [[self.partner_1], [self.user_employee.partner_id]])
 
     def test_post_portal_crash(self):
@@ -179,7 +179,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
             body='My Body', subject='My Subject',
             message_type='comment', subtype='mt_note')
         self.assertEqual(msg.partner_ids, self.env['res.partner'])
-        self.assertEqual(msg.needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(msg.notified_partner_ids, self.env['res.partner'])
 
         self.format_and_process(
             MAIL_TEMPLATE_PLAINTEXT, self.user_admin.email, 'not_my_businesss@example.com',
@@ -189,7 +189,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         reply = self.test_record.message_ids - msg
         self.assertTrue(reply)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(reply.needaction_partner_ids, self.user_employee.partner_id)
+        self.assertEqual(reply.notified_partner_ids, self.user_employee.partner_id)
         self.assertEqual(reply.parent_id, msg)
 
     def test_post_log(self):
@@ -201,7 +201,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(new_note.body, '<p>Labrador</p>')
         self.assertEqual(new_note.author_id, self.user_employee.partner_id)
         self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
-        self.assertEqual(new_note.needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(new_note.notified_partner_ids, self.env['res.partner'])
 
     def test_post_notify(self):
         self.user_employee.write({'notification_type': 'inbox'})
@@ -216,7 +216,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(new_notification.body, '<p>You have received a notification</p>')
         self.assertEqual(new_notification.author_id, self.env.user.partner_id)
         self.assertEqual(new_notification.email_from, formataddr((self.env.user.name, self.env.user.email)))
-        self.assertEqual(new_notification.needaction_partner_ids, self.partner_1 | self.user_employee.partner_id)
+        self.assertEqual(new_notification.notified_partner_ids, self.partner_1 | self.user_employee.partner_id)
         self.assertNotIn(new_notification, self.test_record.message_ids)
         # todo xdo add test message_notify on thread with followers and stuff
 

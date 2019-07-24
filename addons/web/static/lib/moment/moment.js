@@ -2213,13 +2213,13 @@ function dayOfYearFromWeekInfo(config) {
                 weekdayOverflow = true;
             }
         } else if (w.e != null) {
-            // local weekday -- counting starts from begining of week
+            // local weekday -- counting starts from beginning of week
             weekday = w.e + dow;
             if (w.e < 0 || w.e > 6) {
                 weekdayOverflow = true;
             }
         } else {
-            // default to begining of week
+            // default to beginning of week
             weekday = dow;
         }
     }

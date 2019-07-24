@@ -19,7 +19,7 @@ class MrpRouting(models.Model):
     note = fields.Text('Description')
     operation_ids = fields.One2many(
         'mrp.routing.workcenter', 'routing_id', 'Operations',
-        copy=True, oldname='workcenter_lines')
+        copy=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company)

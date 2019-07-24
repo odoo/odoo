@@ -1801,6 +1801,40 @@ class TestSinglePicking(TestStockCommon):
         back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
         self.assertFalse(back_order, 'There should be no back order')
 
+    def test_owner_1(self):
+        """Make a receipt, set an owner and validate"""
+        owner1 = self.env['res.partner'].create({'name': 'owner'})
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        receipt.action_confirm()
+        receipt = Form(receipt)
+        receipt.owner_id = owner1
+        receipt = receipt.save()
+        wiz = receipt.button_validate()
+        self.env['stock.immediate.transfer'].browse(wiz['res_id']).process()
+
+        supplier_location = self.env['stock.location'].browse(self.supplier_location)
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        supplier_quant = self.env['stock.quant']._gather(self.productA, supplier_location)
+        stock_quant = self.env['stock.quant']._gather(self.productA, stock_location)
+
+        self.assertEqual(supplier_quant.owner_id, owner1)
+        self.assertEqual(supplier_quant.quantity, -1)
+        self.assertEqual(stock_quant.owner_id, owner1)
+        self.assertEqual(stock_quant.quantity, 1)
+
 
 class TestStockUOM(TestStockCommon):
     def setUp(self):

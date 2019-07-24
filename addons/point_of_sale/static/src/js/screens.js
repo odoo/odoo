@@ -1669,10 +1669,10 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
         this.pos.get_order()._printed = true;
     },
-    print_xml: function() {
-        var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
+    print_html: function () {
+        var receipt = QWeb.render('OrderReceipt', this.get_receipt_render_env());
 
-        this.pos.proxy.print_receipt(receipt);
+        this.pos.proxy.printer.print_receipt(receipt);
         this.pos.get_order()._printed = true;
     },
     print: function() {
@@ -1703,8 +1703,8 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             }, 1000);
 
             this.print_web();
-        } else {    // proxy (xml) printing
-            this.print_xml();
+        } else {    // proxy (html) printing
+            this.print_html();
             this.lock_screen(false);
         }
     },
@@ -1761,7 +1761,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
     },
     render_receipt: function() {
-        this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
+        this.$('.pos-receipt-container').html(QWeb.render('OrderReceipt', this.get_receipt_render_env()));
     },
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
@@ -1901,7 +1901,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 	}
 
 	if (! open_paymentline) {
-            this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
+            this.pos.get_order().add_paymentline( this.pos.payment_methods[0]);
             this.render_paymentlines();
         }
 
@@ -1971,14 +1971,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
         lines.appendTo(this.$('.paymentlines-container'));
     },
     click_paymentmethods: function(id) {
-        var cashregister = null;
-        for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
-            if ( this.pos.cashregisters[i].journal_id[0] === id ){
-                cashregister = this.pos.cashregisters[i];
-                break;
-            }
-        }
-        this.pos.get_order().add_paymentline( cashregister );
+        var payment_method = this.pos.payment_methods_by_id[id]
+        this.pos.get_order().add_paymentline(payment_method);
         this.reset_input();
         this.render_paymentlines();
     },
@@ -2062,7 +2056,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         });
 
         this.$('.js_cashdrawer').click(function(){
-            self.pos.proxy.open_cashbox();
+            self.pos.proxy.printer.open_cashbox();
         });
 
     },
@@ -2132,8 +2126,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
         // The exact amount must be paid if there is no cash payment method defined.
         if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
             var cash = false;
-            for (var i = 0; i < this.pos.cashregisters.length; i++) {
-                cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
+            for (var i = 0; i < this.pos.payment_methods.length; i++) {
+                cash = cash || (this.pos.payment_methods[i].is_cash_count);
             }
             if (!cash) {
                 this.gui.show_popup('error',{
@@ -2173,7 +2167,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
         if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
 
-                this.pos.proxy.open_cashbox();
+                this.pos.proxy.printer.open_cashbox();
         }
 
         order.initialize_validation_date();

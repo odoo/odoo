@@ -442,7 +442,7 @@
         <button class="btn btn-secondary fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
     </div>
 </t>
-<t t-name="PivotView.FieldSelection">
+<t t-name="PivotView.GroupBySelection">
     <div class="dropdown-menu o_pivot_field_menu" role="menu">
         <t t-foreach="fields" t-as="field">
             <t t-if="(field[1].type === 'date') || (field[1].type === 'datetime')">
@@ -741,6 +741,11 @@
         </div>
     </t>
 </t>
+<t t-name="FieldMany2ManyTagAvatar" t-extend="FieldMany2ManyTag">
+    <t t-jquery="span:first" t-operation="prepend">
+        <img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" class="rounded-circle"/>
+    </t>
+</t>
 <t t-name="FieldMany2ManyTag.colorpicker">
     <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
         <ul>
@@ -1012,8 +1017,8 @@
     <t t-if="widget.items.length !== 0">
         <t t-set="group" t-value="0"/>
         <t t-foreach="widget.items" t-as="item">
-            <div t-if="group !== item.groupNumber" role="separator" class="dropdown-divider" data-removable="1"/>
-            <div class="o_menu_item"
+            <div t-if="group !== item.groupNumber and !item.invisible" role="separator" class="dropdown-divider" data-removable="1"/>
+            <div t-attf-class="o_menu_item #{item.invisible ? 'd-none' : ''}"
                 t-att-data-id="item.id">
                 <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
                     <t t-esc="item.description"/>

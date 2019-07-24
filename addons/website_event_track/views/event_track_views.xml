@@ -16,7 +16,7 @@
                         <field name="activity_state"/>
                         <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
 
                                     <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
@@ -62,9 +62,11 @@
             <field name="model">event.track</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id">
-                    <field name="name"/>
+                <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id" event_limit="5">
+                    <field name="location_id"/>
                     <field name="event_id"/>
+                    <field name="partner_id" avatar_field="image_small"/>
+                    <field name="user_id" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>
@@ -82,18 +84,16 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <separator/>
-                    <filter string="My Activities" name="activities_my"
-                        domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
@@ -116,10 +116,7 @@
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <field name="website_url" invisible="1"/>
-                            <button class="oe_stat_button" name="website_publish_button"
-                                type="object" icon="fa-globe">
-                                <field name="is_published" widget="website_button"/>
-                            </button>
+                            <field name="is_published" widget="website_redirect_button"/>
                         </div>
                         <field name="kanban_state" widget="state_selection"/>
                         <div class="oe_title">
@@ -127,30 +124,38 @@
                             <h1>
                                 <field name="name" placeholder="e.g. Inspiring Business Talk"/>
                             </h1>
-                            <label for="event_id" class="oe_edit_only"/>
-                            <h3>
-                                <field name="event_id"/>
-                            </h3>
                         </div>
                         <group>
                             <group>
-                                <field name="user_id"/>
+                                <field name="date"/>
+                                <field name="location_id"/>
+                                <label for="duration"/>
+                                <div class="o_row">
+                                    <field name="duration" widget="float_time"/>
+                                    <span>hours</span>
+                                </div>
                                 <field name="active" invisible="1"/>
-                                <field name="partner_id"/>
-                                <field name="partner_name"/>
-                                <field name="partner_email"/>
-                                <field name="partner_phone"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <label for="duration"/>
-                                <div>
-                                    <field name="duration" class="oe_inline" widget="float_time"/> hours
-                                </div>
-                                <field name="location_id"/>
+                                <field name="user_id"/>
+                                <field name="event_id"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Speakers">
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="partner_name"/>
+                                    <field name="partner_email"/>
+                                    <field name="partner_phone"/>
+                                    <field name="partner_biography"/>
+                                </group>
+                            </page>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -169,6 +174,7 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="event_id"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>

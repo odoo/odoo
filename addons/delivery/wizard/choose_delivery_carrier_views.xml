@@ -7,17 +7,21 @@
             <form>
                 <field name='available_carrier_ids' invisible="1"/>
                 <group>
-                    <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]"/>
-                    <field name="delivery_type" invisible="1"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="order_id" invisible="1"/>
-                    <field name='delivery_price' invisible="1"/>
-                    <field name='display_price' string="Cost" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('carrier_id','=', False)]}"/>
+                    <group>
+                        <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" widget='radio'/>
+                        <field name="delivery_type" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="order_id" invisible="1"/>
+                        <field name='delivery_price' invisible="1"/>
+                        <label for="display_price"/>
+                        <div class="o_row">
+                            <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('carrier_id','=', False)]}"/>
+                            <button name="update_price" type="object" attrs="{'invisible': [('delivery_type','in', ('fixed', 'base_on_rule'))]}">
+                                <i class="fa fa-arrow-right mr-1"/>Get rate
+                            </button>
+                        </div>
+                    </group>
                 </group>
-                <button name="update_price" type="object" attrs="{'invisible': [('delivery_type','in', ('fixed', 'base_on_rule'))]}">
-                    <i class="fa fa-arrow-right"/>
-                    Get rate
-                </button>
                 <div role="alert" class="alert alert-warning" attrs="{'invisible': [('invoicing_message', '=', '')]}">
                     <field name="invoicing_message" nolabel="1"/>
                 </div>
@@ -25,7 +29,8 @@
                     <field name="delivery_message" nolabel="1"/>
                 </div>
                 <footer>
-                    <button name="button_confirm" type="object" string="Add" class="btn-primary"/>
+                    <button name="button_confirm" invisible="not context.get('carrier_recompute')" type="object" string="Update" class="btn-primary"/>
+                    <button name="button_confirm" invisible="context.get('carrier_recompute')" type="object" string="Add" class="btn-primary"/>
                     <button string="Discard" special="cancel" class="btn-secondary"/>
                 </footer>
             </form>

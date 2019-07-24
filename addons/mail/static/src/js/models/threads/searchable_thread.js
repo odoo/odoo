@@ -135,11 +135,12 @@ var SearchableThread = Thread.extend({
      * @override
      * @private
      * @param {mail.model.Message} message
-     * @param {Object} options
+     * @param {Object} [options={}]
      * @param {Array} [options.domain=[]]
      * @param {boolean} [options.incrementUnread=false]
      */
     _addMessage: function (message, options) {
+        options = options || {};
         this._super.apply(this, arguments);
         var cache = this._getCache(options.domain || []);
         var index = _.sortedIndex(cache.messages, message, function (msg) {

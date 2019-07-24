@@ -567,6 +567,9 @@ system. Available semantic components are:
   ``password``
     indicates that a :class:`~odoo.fields.Char` field stores a password and
     that its data shouldn't be displayed
+  ``kanban_view_ref``
+    for opening specific kanban view when selecting records from m2o/m2m in mobile
+    environment
 
 .. todo:: classes for forms
 
@@ -1106,6 +1109,11 @@ Possible children of the view element are:
     self-explanatory
   ``read_only_mode``
     self-explanatory
+  ``selection_mode``
+    set to true when kanban view is opened in mobile environment from m2o/m2m field
+    for selecting records.
+
+    .. note:: clicking on m2o/m2m field in mobile environment opens kanban view
 
 
     .. rubric:: buttons and fields
@@ -1168,8 +1176,6 @@ calendar view are:
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
     Displayed the display_name/avatar of the visible record in the sidebar
-``readonly_form_view_id``
-    view to open in readonly mode
 ``form_view_id``
     view to open when the user create or edit an event. Note that if this attribute
     is not set, the calendar view will fall back to the id of the form view in the
@@ -1974,7 +1980,7 @@ Search defaults
 
 Search fields and filters can be configured through the action's ``context``
 using :samp:`search_default_{name}` keys. For fields, the value should be the
-value to set in the field, for filters it's a boolean value. For instance,
+value to set in the field, for filters it's a boolean value or a number. For instance,
 assuming ``foo`` is a field and ``bar`` is a filter an action context of:
 
 .. code-block:: python
@@ -1986,6 +1992,18 @@ assuming ``foo`` is a field and ``bar`` is a filter an action context of:
 
 will automatically enable the ``bar`` filter and search the ``foo`` field for
 *acro*.
+
+A numeric value (between 1 and 99) can be used to describe the order of default groupbys.
+For instance if ``foo`` and ``bar`` refer to two groupbys
+
+.. code-block:: python
+
+  {
+    'search_default_foo': 2,
+    'search_default_bar': 1
+  }
+
+has the effect to activate first ``bar`` then ``foo``.
 
 .. _reference/views/map:
 
