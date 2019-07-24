@@ -36,6 +36,11 @@
         <field name="applicability">taxes</field>
     </record>
 
+    <record id="tax_tag_sale_icbper" model="account.account.tag">
+        <field name="name">ICBPER Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
     <record id="tax_tag_sale_exportation" model="account.account.tag">
         <field name="name">EXPORTACIÓN Venta</field>
         <field name="applicability">taxes</field>
@@ -61,6 +66,43 @@
         <field name="applicability">taxes</field>
     </record>
 
+    <record id="tax_tag_code_igv" model="account.account.tag">
+        <field name="name">IGV</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_ivap" model="account.account.tag">
+        <field name="name">IVAP</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_isc" model="account.account.tag">
+        <field name="name">ISC</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_icbper" model="account.account.tag">
+        <field name="name">ICBPER</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_exp" model="account.account.tag">
+        <field name="name">EXP</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_free" model="account.account.tag">
+        <field name="name">GRA</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_exo" model="account.account.tag">
+        <field name="name">EXO</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_ina" model="account.account.tag">
+        <field name="name">INA</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_code_others" model="account.account.tag">
+        <field name="name">OTROS</field>
+        <field name="applicability">taxes</field>
+    </record>
+
     <record id="ITAX_18" model="account.tax.template">
       <field name="chart_template_id" ref="pe_chart_template"/>
       <field name="name">IGV 18% Venta</field>
@@ -70,7 +112,7 @@
       <field name="type_tax_use">sale</field>
       <field name="account_id" ref="401110"/>
       <field name="refund_account_id" ref="401110"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_18')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_18'), ref('tax_tag_code_igv')])]"/>
       <field name="tax_group_id" ref="tax_group_18"/>
     </record>
 
@@ -151,7 +193,8 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="401110"/>
         <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_ivap')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_ivap'), ref('tax_tag_code_ivap')])]"/>
+        <field name="tax_group_id" ref="tax_group_ivap"/>
     </record>
 
     <record id="sale_tax_isc_50" model="account.tax.template">
@@ -162,9 +205,20 @@
         <field name="amount_type">percent</field>
         <field name="price_include">False</field>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_isc')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_isc'), ref('tax_tag_code_isc')])]"/>
         <field name="account_id" ref="401110"/>
         <field name="refund_account_id" ref="401110"/>
+        <field name="tax_group_id" ref="tax_group_isc"/>
+    </record>
+
+    <record id="sale_tax_icbper" model="account.tax">
+      <field name="name">ICBPER .10 Venta</field>
+      <field name="description">ICBPER .10</field>
+      <field name="amount">.1</field>
+      <field name="amount_type">fixed</field>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_icbper'), ref('tax_tag_code_icbper')])]"/>
+      <field name="tax_group_id" ref="tax_group_icbper"/>
     </record>
 
     <record id="sale_tax_exportation_17" model="account.tax.template">
@@ -176,19 +230,21 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="401110"/>
         <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exportation')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exportation'), ref('tax_tag_code_exp')])]"/>
+        <field name="tax_group_id" ref="tax_group_exp"/>
     </record>
 
     <record id="sale_tax_free_0" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
-        <field name="name">FREE 0% Venta</field>
-        <field name="description">FREE 0%</field>
+        <field name="name">GRATUITO 0% Venta</field>
+        <field name="description">GRATUITO 0%</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="401110"/>
         <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_free')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_free'), ref('tax_tag_code_free')])]"/>
+        <field name="tax_group_id" ref="tax_group_free"/>
     </record>
 
     <record id="sale_tax_exonerate_0" model="account.tax.template">
@@ -200,7 +256,8 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="401110"/>
         <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exonerated')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exonerated'), ref('tax_tag_code_exo')])]"/>
+        <field name="tax_group_id" ref="tax_group_exo"/>
     </record>
 
     <record id="sale_tax_inafected_0" model="account.tax.template">
@@ -212,7 +269,8 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="401110"/>
         <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_inafected')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_inafected'), ref('tax_tag_code_ina')])]"/>
+        <field name="tax_group_id" ref="tax_group_ina"/>
     </record>
 
     <record id="sale_tax_others_30" model="account.tax.template">
@@ -224,7 +282,8 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="401110"/>
         <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_others')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_others'), ref('tax_tag_code_others')])]"/>
+        <field name="tax_group_id" ref="tax_group_others"/>
     </record>
 
 </odoo>
