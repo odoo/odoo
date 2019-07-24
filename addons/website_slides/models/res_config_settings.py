@@ -11,3 +11,4 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_slides = fields.Boolean(string="Sell on eCommerce")
     module_website_slides_forum = fields.Boolean(string="Forum")
     module_website_slides_survey = fields.Boolean(string="Certifications")
+    module_mass_mailing_slides = fields.Boolean(string="Mailing")
