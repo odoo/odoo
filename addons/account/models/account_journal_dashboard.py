@@ -135,14 +135,14 @@ class account_journal(models.Model):
     def get_bar_graph_datas(self):
         data = []
         today = fields.Datetime.now(self)
-        data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
+        data.append({'label': _('Due'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
             if i==0:
                 label = _('This Week')
             elif i==3:
-                label = _('Future')
+                label = _('Not Due')
             else:
                 start_week = first_day_of_week + timedelta(days=i*7)
                 end_week = start_week + timedelta(days=6)
@@ -391,13 +391,25 @@ class account_journal(models.Model):
     def create_cash_statement(self):
         ctx = self._context.copy()
         ctx.update({'journal_id': self.id, 'default_journal_id': self.id, 'default_journal_type': 'cash'})
-        return {
+        open_statements = self.env['account.bank.statement'].search([('journal_id', '=', self.id), ('state', '=', 'open')])
+        action = {
             'name': _('Create cash statement'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.bank.statement',
             'context': ctx,
         }
+        if len(open_statements) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': open_statements.id,
+            })
+        elif len(open_statements) > 1:
+            action.update({
+                'view_mode': 'tree,form',
+                'domain': [('id', 'in', open_statements.ids)],
+            })
+        return action
 
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:

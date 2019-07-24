@@ -121,6 +121,17 @@
 
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_user" sequence="2"/>
 
+        <record id="action_duplicate_account" model="ir.actions.server">
+            <field name="name">Duplicate</field>
+            <field name="model_id" ref="model_account_account"/>
+            <field name="binding_model_id" ref="account.model_account_account"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_duplicate_accounts()
+            </field>
+        </record>
+
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
@@ -554,6 +565,7 @@ action = model.setting_init_bank_account_action()
                     <field name="all_lines_reconciled" invisible="1" />
                     <button name="action_bank_reconcile_bank_statements" string="Reconcile" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
                 <sheet>
