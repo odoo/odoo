@@ -587,6 +587,9 @@ class Picking(models.Model):
         also impact the state of the picking as it is computed based on move's states.
         @return: True
         """
+        # when a non-admin user try to validate an intercompany move, he's not going to see things in other companies
+        if self.mapped('move_lines.move_orig_ids') != self.sudo().mapped('move_lines.move_orig_ids'):
+            self = self.sudo()
         self.filtered(lambda picking: picking.state == 'draft').action_confirm()
         moves = self.mapped('move_lines').filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))
         if not moves:
