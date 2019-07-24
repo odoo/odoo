@@ -600,6 +600,8 @@ odoo.define('website_slides.fullscreen', function (require) {
             var slide = this.get('slide');
             self._pushUrlState();
             return this._fetchSlideContent().then(function() { // render content
+                var websiteName = document.title.split(" | ")[1]; // get the website name from title
+                document.title =  (websiteName) ? slide.name + ' | ' + websiteName : slide.name;
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
