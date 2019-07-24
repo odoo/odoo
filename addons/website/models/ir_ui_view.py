@@ -134,12 +134,8 @@ class View(models.Model):
                     ('website_id', '!=', None),
                 ])
                 for specific_parent_view in specific_parent_views:
-                    record.copy({
-                        # Set key to avoid copy() to generate an unique key as
-                        # we want the specific view to have the same key
-                        'key': record.key,
+                    record.with_context(website_id=specific_parent_view.website_id.id).write({
                         'inherit_id': specific_parent_view.id,
-                        'website_id': specific_parent_view.website_id.id,
                     })
         return records
 
