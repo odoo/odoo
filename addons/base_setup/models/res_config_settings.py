@@ -31,10 +31,6 @@ class ResConfigSettings(models.TransientModel):
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
     module_sms = fields.Boolean("Send SMS")
     module_base_geolocalize = fields.Boolean("GeoLocalize")
-    company_share_partner = fields.Boolean(string='Share partners to all companies',
-        help="Share your partners to all companies defined in your instance.\n"
-             " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-             " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
     report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
@@ -47,18 +43,6 @@ class ResConfigSettings(models.TransientModel):
     language_count = fields.Integer('Number of Languages', compute="_compute_language_count")
     company_name = fields.Char(related="company_id.display_name", string="Company Name")
     company_informations = fields.Text(compute="_compute_company_informations")
-
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        res.update({
-            'company_share_partner': not self.env.ref('base.res_partner_rule').active,
-        })
-        return res
-
-    def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        self.env.ref('base.res_partner_rule').write({'active': not self.company_share_partner})
 
     def open_company(self):
         return {

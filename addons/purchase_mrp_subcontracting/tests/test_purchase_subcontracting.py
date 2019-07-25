@@ -45,6 +45,7 @@ class TestPurchaseSubcontractingFlows(TransactionCase):
             'name': 'subcontractor_partner',
             'type': 'subcontractor',
             'parent_id': company_partner.id,
+            'company_id': self.env.ref('base.main_company').id
         })
 
         self.stock_location = self.env.ref('stock.stock_location_stock')

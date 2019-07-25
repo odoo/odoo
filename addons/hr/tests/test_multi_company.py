@@ -20,6 +20,7 @@ class TestMultiCompany(TestHrCommon):
             (4, self.company_1.id),
             (4, self.company_2.id),
         ]
+        self.res_users_hr_officer.company_id = self.company_1.id
 
     def test_multi_company_report(self):
         content, content_type = self.env.ref('hr.hr_employee_print_badge').with_user(self.res_users_hr_officer).with_context(
