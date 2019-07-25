@@ -68,10 +68,12 @@
         <field name="model">utm.medium</field>
         <field name="arch" type="xml">
             <form string="Medium">
-                <group>
-                    <field name="name"/>
-                    <field name="active"/>
-                </group>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -108,9 +110,11 @@
         <field name="model">utm.source</field>
         <field name="arch" type="xml">
             <form string="Source">
-                <group>
-                    <field name="name"/>
-                </group>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>

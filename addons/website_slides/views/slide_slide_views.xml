@@ -7,7 +7,11 @@
             <field name="model">slide.tag</field>
             <field name="arch" type="xml">
                 <form string="Tag">
-                    <field name="name"/>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
