@@ -27,7 +27,7 @@ odoo.define('web.test.constraint', function (require) {
         trigger: 'button.o_form_button_save',
     }, { // check popup content
         content: "check notification box",
-        trigger: '.o_notification_content:contains(The color code must be positive !)',
+        trigger: '.o_dialog_warning pre:contains(The color code must be positive !)',
         run: function () {}, // it's a check
     }]);
 });
