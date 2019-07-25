@@ -119,13 +119,16 @@ class WebsitePublishedMixin(models.AbstractModel):
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is published', copy=False)
-    can_publish = fields.Boolean('Can publish', compute='_compute_can_publish')
+    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published())
+    can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
     def _compute_website_url(self):
         for record in self:
             record.website_url = '#'
+
+    def _default_is_published(self):
+        return False
 
     def website_publish_button(self):
         self.ensure_one()
