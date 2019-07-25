@@ -218,11 +218,103 @@
             </field>
         </record>
 
+        <record id="slide_channel_view_kanban" model="ir.ui.view">
+            <field name="name">slide.channel.view.kanban</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_slide_channel_kanban breadcrumb_item active" edit="false">
+                    <field name="color"/>
+                    <field name="website_published"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v" aria-hidden="false"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        <t t-if="widget.deletable">
+                                            <a class="dropdown-item" role="menuitem" type="delete">Delete</a>
+                                        </t>
+                                        <a class="dropdown-item" role="menuitem" type="edit">
+                                            Edit
+                                        </a>
+                                        <a class="dropdown-item" name="action_view_slides" role="menuitem" type="object">
+                                            Lessons
+                                        </a>
+                                        <a class="dropdown-item" name="action_channel_invite" role="menuitem" type="object">
+                                            Invite
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title mb16">
+                                        <div class="o_primary">
+                                            <a name="action_view" type="object" class="mr-auto">
+                                                <span><field name="name" class="o_primary"/></span>
+                                            </a>
+                                        </div>
+                                        <div t-if="record.tag_ids">
+                                            <field name="tag_ids" widget="many2many_tags"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content mt0">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary" name="open_website_url" type="object">View course</button>
+                                        </div>
+                                        <div class="col-6 o_kanban_primary_right">
+                                            <div class="d-flex">
+                                                <span class="mr-auto"><label for="rating_avg" class="mb0">Rating</label></span>
+                                                <a name="action_view_ratings" type="object">
+                                                    <field name="rating_count"/><span class="ml-2">reviews</span> (<field name="rating_avg_stars"/>/5)
+                                                </a>
+                                            </div>
+                                            <div class="d-flex">
+                                                <span class="mr-auto"><label for="total_views" class="mb0">Views</label></span>
+                                                <field name="total_views"/>
+                                            </div>
+                                            <div class="d-flex">
+                                                <span class="mr-auto"><label for="total_time" class="mb0">Watch Time</label></span>
+                                                <field name="total_time" widget="float_time"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt3">
+                                        <div class="col-4 border-right">
+                                            <a name="action_view_slides" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="total_slides"/></span>
+                                                <span class="text-secondary">Contents</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 border-right">
+                                            <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="members_count"/></span>
+                                                <span class="text-secondary">Attendees</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4">
+                                            <a name="action_redirect_to_done_members" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="members_done_count"/></span>
+                                                <span class="text-secondary">Finished</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="slide_channel_action_overview" model="ir.actions.act_window">
             <field name="name">eLearning Overview</field>
             <field name="res_model">slide.channel</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="slide_channel_view_tree"/>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="slide_channel_view_kanban"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a course
