@@ -249,12 +249,7 @@ var CrashManager = AbstractService.extend({
         var message = error.data ? error.data.message : error.message;
         var title = _.str.capitalize(error.type) || _t("Oops Something went wrong !");
         var subtitle = error.data ? error.data.title : error.title;
-        this.displayNotification(_.extend({
-            title: title,
-            message: message,
-            subtitle: subtitle,
-            sticky: true,
-        }, options));
+        return this._displayWarning(message, title, subtitle, options);
     },
     show_error: function (error) {
         if (!active) {
@@ -310,6 +305,27 @@ var CrashManager = AbstractService.extend({
             message: exception,
             data: {debug: ""}
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} message
+     * @param {string} title
+     * @param {string} subtitle
+     * @param {Object} options
+     */
+    _displayWarning: function (message, title, subtitle, options) {
+        return new WarningDialog(this, {
+            ...options,
+            title,
+            subtitle,
+        }, {
+            message,
+        }).open();
     },
 });
 
@@ -384,8 +400,6 @@ core.crash_registry.add('504', function (cm) {
         }
     };
 });
-
-core.serviceRegistry.add('crash_manager', CrashManager);
 
 return {
     CrashManager: CrashManager,
