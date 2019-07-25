@@ -351,7 +351,7 @@ var utils = {
      * @param {Number} size number of bytes
      */
     human_size: function (size) {
-        var units = _t("Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb").split(',');
+        var units = _t("Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb").split('|');
         var i = 0;
         while (size >= 1024) {
             size /= 1024;
