@@ -17,17 +17,17 @@ odoo.define('web.test_utils_file', function () {
 //------------------------------------------------------------------------------
 
 /**
- * Create a fake object 'dataTransfer', linked to a file, which is passed to
+ * Create a fake object 'dataTransfer', linked to some files, which is passed to
  * drag and drop events.
  *
- * @param {Object} file
+ * @param {Object[]} files
  * @returns {Object}
  */
-function _createFakeDataTransfer(file) {
+function _createFakeDataTransfer(files) {
     return {
         dropEffect: 'all',
         effectAllowed: 'all',
-        files: [file],
+        files,
         getData: function () {
             return file;
         },
@@ -96,7 +96,21 @@ function dragoverFile($el, file) {
 function dropFile($el, file) {
     var ev = new Event('drop', { bubbles: true, });
     Object.defineProperty(ev, 'dataTransfer', {
-        value: _createFakeDataTransfer(file),
+        value: _createFakeDataTransfer([file]),
+    });
+    $el[0].dispatchEvent(ev);
+}
+
+/**
+ * Drop some files on a DOM element.
+ *
+ * @param {$.Element} $el
+ * @param {Object[]} files must have been created beforehand (@see createFile)
+ */
+function dropFiles($el, files) {
+    var ev = new Event('drop', { bubbles: true, });
+    Object.defineProperty(ev, 'dataTransfer', {
+        value: _createFakeDataTransfer(files),
     });
     $el[0].dispatchEvent(ev);
 }
@@ -109,6 +123,7 @@ return {
     createFile: createFile,
     dragoverFile: dragoverFile,
     dropFile: dropFile,
+    dropFiles,
 };
 
 });
