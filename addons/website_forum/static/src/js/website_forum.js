@@ -2,7 +2,6 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
@@ -190,7 +189,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             msg = _t("Sorry you must be logged in to perform this action");
             title = _t("Access Denied");
         }
-        crash_manager.show_warning({
+        this.call('crash_manager', 'show_warning', {
             message: msg,
             title: title,
         }, {
@@ -237,6 +236,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFlagAlertClick: function (ev) {
+        var self = this;
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
@@ -251,7 +251,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'post_non_flaggable') {
                     message = _t("This post can not be flagged");
                 }
-                crash_manager.show_warning({
+                self.call('crash_manager', 'show_warning', {
                     message: message,
                     title: _t("Access Denied"),
                 }, {
@@ -278,6 +278,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onVotePostClick: function (ev) {
+        var self = this;
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
@@ -290,7 +291,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'anonymous_user') {
                     message = _t('Sorry you must be logged to vote');
                 }
-                crash_manager.show_warning({
+                self.call('crash_manager', 'show_warning', {
                     message: message,
                     title: _t("Access Denied"),
                 }, {
@@ -334,6 +335,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onAcceptAnswerClick: function (ev) {
+        var self = this;
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
@@ -343,7 +345,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (data.error === 'anonymous_user') {
                     var message = _t("Sorry, anonymous users cannot choose correct answer.");
                 }
-                crash_manager.show_warning({
+                self.call('crash_manager', 'show_warning', {
                     message: message,
                     title: _t("Access Denied"),
                 }, {
