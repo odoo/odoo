@@ -60,8 +60,9 @@
                                     <div class="row mt16" attrs="{'invisible': [('use_mail_schedule', '=', False)]}">
                                         <div class="col-lg-9">
                                             <field name="event_type_mail_ids">
-                                                <tree string="Email Schedule" editable="bottom">
-                                                    <field name="template_id"/>
+                                                <tree string="Communication" editable="bottom">
+                                                    <field name="notification_type" invisible="1"/>
+                                                    <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                                                     <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
                                                     <field name="interval_unit"/>
                                                     <field name="interval_type"/>
@@ -253,11 +254,12 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Email Schedule" name="event_mail_schedule">
+                            <page string="Communication" name="event_communication">
                                 <field name="event_mail_ids">
-                                    <tree string="Email Schedule" editable="bottom">
+                                    <tree string="Communication" editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="template_id" />
+                                        <field name="notification_type" invisible="1"/>
+                                        <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
@@ -482,8 +484,9 @@
                             <group string="Attendee" name="attendee">
                                 <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                 <field name="name"/>
-                                <field name="phone"/>
                                 <field name="email"/>
+                                <field name="phone"/>
+                                <field name="mobile"/>
                             </group>
                             <group string="Event Information" name="event">
                                 <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_open': True, 'no_create': True}"/>
@@ -596,7 +599,8 @@
                         <group>
                             <group>
                                 <field name="event_id"/>
-                                <field name="template_id"/>
+                                <field name="notification_type" invisible="1"/>
+                                <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                                 <field name="mail_sent"/>
                             </group>
                             <group>
@@ -631,7 +635,8 @@
             <field name="arch" type="xml">
                 <tree string="Event Mail Schedulers">
                     <field name="event_id"/>
-                    <field name="template_id"/>
+                    <field name="notification_type" invisible="1"/>
+                    <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                     <field name="scheduled_date"/>
                     <field name="mail_sent"/>
                     <field name="done"/>
