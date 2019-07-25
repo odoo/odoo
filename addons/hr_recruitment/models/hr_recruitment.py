@@ -144,7 +144,6 @@ class Applicant(models.Model):
     partner_mobile = fields.Char("Mobile", size=32)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one('hr.department', "Department")
-    reference = fields.Char("Referred By")
     day_open = fields.Float(compute='_compute_day', string="Days to Open")
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
