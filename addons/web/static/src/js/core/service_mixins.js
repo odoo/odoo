@@ -36,6 +36,16 @@ var ServiceProviderMixin = {
             self._deployServices();
         });
     },
+    /**
+     * @override
+     */
+    destroy(...args) {
+        for (const serviceName in this.services) {
+            const service = this.services[serviceName];
+            service.destroy();
+        }
+        this._super(...args);
+    },
 
     //--------------------------------------------------------------------------
     // Private
