@@ -654,7 +654,9 @@ class Picking(models.Model):
             picking.move_ids_without_package = move_ids_without_package.filtered(lambda ml: ml.scrapped == False)
 
     def _set_move_without_package(self):
-        self.move_lines |= self.move_ids_without_package
+        package_move_lines = self.move_lines.filtered(lambda m: m.package_level_id or (m.state in ('assigned', 'done') and all(ml.package_level_id for ml in m.move_line_ids)))
+        (self.move_lines - (self.move_ids_without_package | package_move_lines)).unlink()
+        self.move_lines = self.move_ids_without_package | package_move_lines
 
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """

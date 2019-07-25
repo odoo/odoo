@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 
 
 class StockMove(TransactionCase):
@@ -3976,6 +3976,33 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'partially_available')
         picking.action_assign()
         self.assertEqual(move1.state, 'assigned')
+
+    def test_initial_demand_5(self):
+        """ Test the picking edition by removing a stock move after picking
+        confirmation.
+        """
+        partner = self.env['res.partner'].create({'name': 'Piet Masrele'})
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product1
+            move.location_id = self.stock_location
+            move.location_dest_id = self.customer_location
+            move.product_uom_qty = 5
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product2
+            move.location_id = self.stock_location
+            move.location_dest_id = self.customer_location
+            move.product_uom_qty = 5
+        picking = picking_form.save()
+        self.assertEqual(len(picking.move_ids_without_package), 2)
+        picking.action_confirm()
+
+        picking_form = Form(picking)
+        picking_form.move_ids_without_package.remove(index=0)
+        with self.assertRaises(UserError):
+            picking_form.save()
 
     def test_change_product_type(self):
         """ Changing type of an existing product will raise a user error if some move
