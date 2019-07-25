@@ -76,7 +76,7 @@ class AccountMove(models.Model):
 
     # ==== Business fields ====
     name = fields.Char(string='Number', required=True, readonly=True, copy=False, default='/')
-    rate = fields.Float(digits=(12, 6), default=1.0, help='The between this currency and company currency')
+    rate = fields.Float(digits=(12, 6), help='The between this currency and company currency')
     has_foreign_currency = fields.Boolean(compute='_compute_has_foreign_currency')
     date = fields.Date(string='Date', required=True, index=True, readonly=True,
         states={'draft': [('readonly', False)]},
@@ -316,7 +316,7 @@ class AccountMove(models.Model):
 
     @api.onchange('date', 'currency_id')
     def _onchange_currency(self):
-        self.rate = self.currency_id._convert(1.0, self.company_id.currency_id, self.company_id, self.date,)
+        self.rate = self.currency_id._convert(1.0, self.company_id.currency_id, self.company_id, self.date, round=False)
         self._onchange_rate()
 
     @api.onchange('rate')
