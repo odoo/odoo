@@ -6235,8 +6235,8 @@ QUnit.module('relational_fields', {
             mockRPC: function (method, args) {
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].p, [
-                        [0, args.args[1].p[0][1], {display_name: 'z'}],
-                        [2, 2, false],
+                        [5, false, false],
+                        [0, args.args[1].p[1][1], {display_name: 'z'}],
                     ], "correct commands should be sent");
                 }
                 return this._super.apply(this, arguments);

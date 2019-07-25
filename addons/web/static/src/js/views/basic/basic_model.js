@@ -2825,6 +2825,7 @@ var BasicModel = AbstractModel.extend({
                 var oldResIDs = list.res_ids.slice(0);
                 var relRecordAdded = [];
                 var relRecordUpdated = [];
+                var hasRemoveAll = false;
                 _.each(list._changes, function (change) {
                     if (change.operation === 'ADD' && change.id) {
                         relRecordAdded.push(self.localData[change.id]);
@@ -2833,6 +2834,8 @@ var BasicModel = AbstractModel.extend({
                         // afterwards, as all their changes would already
                         // be aggregated in the CREATE command
                         relRecordUpdated.push(self.localData[change.id]);
+                    } else if (change.operation === 'REMOVE_ALL') {
+                        hasRemoveAll = true;
                     }
                 });
                 list = this._applyX2ManyOperations(list);
@@ -2910,11 +2913,15 @@ var BasicModel = AbstractModel.extend({
                         commands[fieldName] = [];
                     }
                     // add delete commands
-                    for (i = 0; i < removedIds.length; i++) {
-                        if (list._forceM2MUnlink) {
-                            commands[fieldName].push(x2ManyCommands.forget(removedIds[i]));
-                        } else {
-                            commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
+                    if (hasRemoveAll && removedIds.length > 0 && removedIds.length === oldResIDs.length) {
+                        commands[fieldName].unshift(x2ManyCommands.delete_all());
+                    } else {
+                        for (i = 0; i < removedIds.length; i++) {
+                            if (list._forceM2MUnlink) {
+                                commands[fieldName].push(x2ManyCommands.forget(removedIds[i]));
+                            } else {
+                                commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
+                            }
                         }
                     }
                 }
