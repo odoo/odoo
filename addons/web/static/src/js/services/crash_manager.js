@@ -1,12 +1,10 @@
 odoo.define('web.CrashManager', function (require) {
 "use strict";
 
+var AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var mixins = require('web.mixins');
-var ServicesMixin = require('web.ServicesMixin');
-var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -78,13 +76,12 @@ var WarningDialog = CrashManagerDialog.extend({
     },
 });
 
-var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, ServiceProviderMixin,{
-    init: function () {
+var CrashManager = AbstractService.extend({
+    init: function (...args) {
+        this._super(...args);
         var self = this;
         this.active = true;
         this.isConnected = true;
-
-        mixins.EventDispatcherMixin.init.call(this);
 
         // crash manager integration
         core.bus.on('rpc_error', this, this.rpc_error);
@@ -144,7 +141,6 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
                 ev.preventDefault();
             }
         });
-        ServiceProviderMixin.init.call(this);
     },
     enable: function () {
         this.active = true;
