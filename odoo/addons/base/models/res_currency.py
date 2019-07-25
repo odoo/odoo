@@ -175,7 +175,7 @@ class Currency(models.Model):
         res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
         return res
 
-    def _convert(self, from_amount, to_currency, company, date, round=True):
+    def _convert(self, from_amount, to_currency, company, date, round=True, force_rate=None):
         """Returns the converted amount of ``from_amount``` from the currency
            ``self`` to the currency ``to_currency`` for the given ``date`` and
            company.
@@ -193,7 +193,7 @@ class Currency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
+            to_amount = from_amount * (force_rate or self._get_conversion_rate(self, to_currency, company, date))
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 

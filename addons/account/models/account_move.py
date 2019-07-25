@@ -76,6 +76,8 @@ class AccountMove(models.Model):
 
     # ==== Business fields ====
     name = fields.Char(string='Number', required=True, readonly=True, copy=False, default='/')
+    rate = fields.Float(digits=(12, 6), default=1.0, help='The between this currency and company currency')
+    has_foreign_currency = fields.Boolean(compute='_compute_has_foreign_currency')
     date = fields.Date(string='Date', required=True, index=True, readonly=True,
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
@@ -314,11 +316,13 @@ class AccountMove(models.Model):
 
     @api.onchange('date', 'currency_id')
     def _onchange_currency(self):
-        company_currency = self.company_id.currency_id
-        has_foreign_currency = self.currency_id and self.currency_id != company_currency
+        self.rate = self.currency_id._convert(1.0, self.company_id.currency_id, self.company_id, self.date,)
+        self._onchange_rate()
 
+    @api.onchange('rate')
+    def _onchange_rate(self):
         for line in self.line_ids:
-            new_currency = has_foreign_currency and self.currency_id
+            new_currency = self.has_foreign_currency and self.currency_id
             line.currency_id = new_currency
             line._onchange_currency()
         self._recompute_dynamic_lines()
@@ -581,7 +585,7 @@ class AccountMove(models.Model):
                 diff_amount_currency = 0.0
             else:
                 diff_amount_currency = self.invoice_cash_rounding_id.compute_difference(self.currency_id, total_amount_currency)
-                diff_balance = self.currency_id._convert(diff_amount_currency, self.company_id.currency_id, self.company_id, self.date)
+                diff_balance = self.currency_id._convert(diff_amount_currency, self.company_id.currency_id, self.company_id, self.date, force_rate=self.rate)
             return diff_balance, diff_amount_currency
 
         def _apply_cash_rounding(self, diff_balance, diff_amount_currency, cash_rounding_line):
@@ -844,6 +848,11 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('currency_id', 'company_id.currency_id')
+    def _compute_has_foreign_currency(self):
+        for rec in self:
+            rec.has_foreign_currency = rec.currency_id and rec.currency_id != rec.company_id.currency_id
+
     @api.depends('type')
     def _compute_invoice_filter_type_domain(self):
         for move in self:
@@ -966,7 +975,7 @@ class AccountMove(models.Model):
 
             if move.currency_id != move.company_id.currency_id:
                 amount_currency = abs(move.amount_total)
-                balance = move.currency_id._convert(amount_currency, move.currency_id, move.company_id, move.date)
+                balance = move.currency_id._convert(amount_currency, move.currency_id, move.company_id, move.date, force_rate=move.rate)
             else:
                 balance = abs(move.amount_total)
                 amount_currency = 0.0
@@ -1104,7 +1113,7 @@ class AccountMove(models.Model):
                     else:
                         currency = line.company_id.currency_id
                         amount_to_show = currency._convert(abs(line.amount_residual), move.currency_id, move.company_id,
-                                                           line.date or fields.Date.today())
+                                                           line.date or fields.Date.today(), force_rate=move.rate)
                     if float_is_zero(amount_to_show, precision_rounding=move.currency_id.rounding):
                         continue
                     info['content'].append({
@@ -1133,7 +1142,7 @@ class AccountMove(models.Model):
             if foreign_currency and partial.currency_id == foreign_currency:
                 amount = partial.amount_currency
             else:
-                amount = partial.company_currency_id._convert(partial.amount, self.currency_id, self.company_id, self.date)
+                amount = partial.company_currency_id._convert(partial.amount, self.currency_id, self.company_id, self.date, force_rate=self.rate)
 
             if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
                 continue
@@ -2262,7 +2271,7 @@ class AccountMoveLine(models.Model):
         company = self.move_id.company_id
         if self.move_id.currency_id != company.currency_id:
             price_unit = company.currency_id._convert(
-                price_unit, self.move_id.currency_id, company, self.move_id.date)
+                price_unit, self.move_id.currency_id, company, self.move_id.date, force_rate=self.move_id.rate)
         return price_unit
 
     def _get_computed_account(self):
@@ -2373,10 +2382,11 @@ class AccountMoveLine(models.Model):
             currency=currency or self.currency_id,
             company=company or self.move_id.company_id,
             date=date or self.move_id.date,
+            force_rate=self.move_id.rate,
         )
 
     @api.model
-    def _get_fields_onchange_subtotal_model(self, price_subtotal, move_type, currency, company, date):
+    def _get_fields_onchange_subtotal_model(self, price_subtotal, move_type, currency, company, date, force_rate):
         ''' This method is used to recompute the values of 'amount_currency', 'debit', 'credit' due to a change made
         in some business fields (affecting the 'price_subtotal' field).
 
@@ -2397,7 +2407,7 @@ class AccountMoveLine(models.Model):
 
         if currency and currency != company.currency_id:
             # Multi-currencies.
-            balance = currency._convert(price_subtotal, company.currency_id, company, date)
+            balance = currency._convert(price_subtotal, company.currency_id, company, date, force_rate=force_rate)
             return {
                 'amount_currency': price_subtotal,
                 'debit': balance > 0.0 and balance or 0.0,
@@ -2806,6 +2816,7 @@ class AccountMoveLine(models.Model):
                         currency,
                         move.company_id,
                         move.date,
+                        move.rate,
                     ))
 
             # Ensure consistency between taxes & tax exigibility fields.
@@ -2996,7 +3007,7 @@ class AccountMoveLine(models.Model):
             # Convert in currency if we only have one currency and no amount_currency
             if not aml.amount_currency and currency:
                 multiple_currency = True
-                total_amount_currency += aml.company_id.currency_id._convert(aml.balance, currency, aml.company_id, aml.date)
+                total_amount_currency += aml.company_id.currency_id._convert(aml.balance, currency, aml.company_id, aml.date, force_rate=aml.move_id.rate)
             # If we still have residual value, it means that this move might need to be balanced using an exchange rate entry
             if aml.amount_residual != 0 or aml.amount_residual_currency != 0:
                 if not to_balance.get(aml.currency_id):

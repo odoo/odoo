@@ -514,6 +514,7 @@
                         <field name="invoice_sequence_number_next" invisible="1"/>
                         <field name="invoice_has_matching_supsense_amount" invisible="1"/>
                         <field name="has_reconciled_entries" invisible="1"/>
+                        <field name="has_foreign_currency"/>
 
                         <div>
                             <!-- Invoice draft header -->
@@ -602,6 +603,9 @@
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                                <field name="rate"
+                                       groups="base.group_multi_currency"
+                                       attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('has_foreign_currency', '=', False)]}"/>
                             </group>
                         </group>
                         <notebook>
