@@ -338,35 +338,38 @@ class Module(models.Model):
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
             raise UserError(msg % (module_name, e.args[0]))
 
-    def _state_update(self, newstate, states_to_update, level=100):
+    def _state_update(self, newstate, states_to_update, level=100, checked=False):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies !'))
 
         # whether some modules are installed with demo data
         demo = False
-
-        for module in self:
+        if not checked:
+            checked = self.browse()
+        for module in (self - checked):
             # determine dependency modules to update/others
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise UserError(_("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
                 if dep.depend_id.state == newstate:
-                    ready_mods += dep.depend_id
+                    ready_mods |= dep.depend_id
                 else:
-                    update_mods += dep.depend_id
+                    update_mods |= dep.depend_id
 
             # update dependency modules that require it, and determine demo for module
-            update_demo = update_mods._state_update(newstate, states_to_update, level=level-1)
+            update_demo, now_checked = update_mods._state_update(
+                newstate, states_to_update, level=level-1, checked=checked)
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
+            checked |= now_checked
 
             # check dependencies and update module itself
             self.check_external_dependencies(module.name, newstate)
             if module.state in states_to_update:
                 module.write({'state': newstate, 'demo': module_demo})
 
-        return demo
+        return demo, checked | self
 
     @assert_log_admin_access
     def button_install(self):
