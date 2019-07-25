@@ -3397,6 +3397,12 @@ Fields:
         other_fields = []               # list of non-column fields
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
         has_translation = self.env.lang and self.env.lang != 'en_US'
+        # when there is only one language, update existing translations but
+        # do not create new ones
+        if single_lang:
+            process_translations = self.env['ir.translation']._update_translations
+        else:
+            process_translations = self.env['ir.translation']._upsert_translations
 
         for name, val in vals.items():
             field = self._fields[name]
@@ -3411,7 +3417,7 @@ Fields:
                     val = field.convert_to_column(val, self, vals)
                     columns.append((name, field.column_format, val))
                     tname = "%s,%s" % (self._name, name)
-                    if field.translate is True and not single_lang:
+                    if field.translate is True and self.env.lang:
                         self.env['ir.translation']._set_source(tname, self.ids, val)
                 updated.append(name)
             else:
@@ -3451,7 +3457,7 @@ Fields:
                     # synchronize translated terms when possible.
                     self.env['ir.translation']._sync_terms_translations(field, self)
 
-                elif has_translation and field.translate:
+                elif self.env.lang and field.translate:
                     # The translated value of a field has been modified.
                     src_trans = self.with_context(lang=None).read([name])[0][name]
                     if not src_trans:
@@ -3469,7 +3475,8 @@ Fields:
                         state='translated',
                         res_id=res_id) for res_id in self.ids]
 
-            self.env['ir.translation']._upsert_translations(translation_values)
+            if translation_values:
+                process_translations(translation_values)
 
         # mark fields to recompute; do this before setting other fields, because
         # the latter can require the value of computed fields, e.g., a one2many
