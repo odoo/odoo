@@ -508,10 +508,29 @@ QUnit.module('Views', {
             hasSelectors: false,
         });
 
-        assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
-            "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 column");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "1",
+            "the header should not span the whole table");
+        list.destroy();
+    });
+
+    QUnit.test('basic grouped list rendering 3 cols without selector', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree ><field name="foo"/><field name="bar"/><field name="text"/></tree>',
+            groupBy: ['bar'],
+            hasSelectors: false,
+        });
+
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 columns");
         assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "2",
-            "the header should span the whole table");
+            "the first header should  span two columns");
         list.destroy();
     });
 
@@ -527,10 +546,29 @@ QUnit.module('Views', {
             hasSelectors: true,
         });
 
-        assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
-            "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 columns");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "2",
+            "the header should not span the whole table");
+        list.destroy();
+    });
+
+    QUnit.test('basic grouped list rendering 3 cols with selector', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree ><field name="foo"/><field name="bar"/><field name="text"/></tree>',
+            groupBy: ['bar'],
+            hasSelectors: true,
+        });
+
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 columns");
         assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "3",
-            "the header should span the whole table");
+            "the header should not span the whole table");
         list.destroy();
     });
 
@@ -2742,8 +2780,8 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_group_header'));
         assert.strictEqual(list.$('.o_group_header').css('height'), headerHeight,
             "height of group header shouldn't have changed");
-        assert.hasClass(list.$('.o_group_header th'), 'o_group_pager',
-            "last cell of open group header should have classname 'o_group_header'");
+        assert.hasClass(list.$('.o_group_header th:eq(1) > div'), 'o_pager',
+            "last cell of open group header should have classname 'o_pager'");
         assert.strictEqual(list.$('.o_group_header .o_pager_value').text(), '1-3',
             "pager's value should be correct");
         assert.containsN(list, '.o_data_row', 3,

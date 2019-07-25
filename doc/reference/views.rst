@@ -338,6 +338,14 @@ Possible children elements of the list view are:
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
 
+    .. note:: When a list view is grouped, numeric fields are aggregated and
+              displayed for each group.  Also, if there are too many records in
+              a group, a pager will appear on the right of the group row. For
+              this reason, it is not a good practice to have a numeric field in
+              the last column, when the list view is in a situation where it can
+              be grouped (it is however fine for x2manys field in a form view:
+              they cannot be grouped).
+
 ``groupby``
   defines custom headers (with buttons) for the current view when grouping
   records on many2one fields. It is also possible to add `field`, inside the
