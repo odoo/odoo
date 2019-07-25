@@ -122,18 +122,18 @@
                 padding-bottom: 0;
             }
         }
-        .o_group_pager {
-            position: relative;
+        .o_pager {
+            cursor: text;
+            user-select: none;
+            text-align: right;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: -2px;
+            margin-bottom: -2px;
 
-            .o_pager {
-                @include o-position-absolute(0, 16px);
-                cursor: text;
-                user-select: none;
-                padding-top: 3px !important;
-                padding-bottom: 0 !important;
-            }
             .o_pager_previous, .o_pager_next {
                 max-height: 30px;
+                padding: 0 5px;
                 background-color: $o-list-group-header-color;
                 &:hover {
                     background-color: darken($o-list-group-header-color, 10%);
