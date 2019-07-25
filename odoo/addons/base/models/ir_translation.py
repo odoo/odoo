@@ -649,6 +649,30 @@ class IrTranslation(models.Model):
             """.format(", ".join(["%s"] * len(rows_by_type['model_terms'])))
             self.env.cr.execute(query, rows_by_type['model_terms'])
 
+    def _update_translations(self, vals_list):
+        """ Update translations of type 'model' or 'model_terms'.
+
+            This method is used for update of translations where the given
+            ``vals_list`` is trusted to be the right values
+            No new translation will be created
+        """
+        grouped_rows = {}
+        for vals in vals_list:
+            key = (vals['lang'], vals['type'], vals['name'])
+            grouped_rows.setdefault(key, [vals['value'], vals['src'], vals['state'], []])
+            grouped_rows[key][3].append(vals['res_id'])
+
+        for where, values in grouped_rows.items():
+            self._cr.execute(
+                """ UPDATE ir_translation
+                    SET value=%s,
+                        src=%s,
+                        state=%s
+                    WHERE lang=%s AND type=%s AND name=%s AND res_id in %s
+                """,
+                (values[0], values[1], values[2], where[0], where[1], where[2], tuple(values[3]))
+            )
+
     @api.model
     def translate_fields(self, model, id, field=None):
         """ Open a view for translating the field(s) of the record (model, id). """
