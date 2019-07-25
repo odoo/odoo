@@ -253,19 +253,21 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
     def test_so_create_multicompany(self):
         # Preparing test Data
-        user_demo = self.env.ref('base.user_demo')
         company_1 = self.env.ref('base.main_company')
         company_2 = self.env['res.company'].create({
             'name': 'company 2',
             'parent_id': company_1.id,
         })
-        user_demo.write({
-            'groups_id': [(4, self.env.ref('sales_team.group_sale_manager').id, False)],
+        self.demo_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
+            'name': 'Pauline Poivraisselle',
+            'login': 'pauline',
+            'email': 'p.p@example.com',
+            'groups_id': [(6, 0, [self.env.ref('sales_team.group_sale_manager').id])],
             'company_ids': [(6, False, [company_1.id])],
             'company_id': company_1.id,
         })
 
-        so_partner = self.env.ref('base.res_partner_2')
+        so_partner = self.env['res.partner'].create({'name': 'Deco Addict Test'})
         so_partner.write({
             'property_account_position_id': False,
         })
@@ -288,7 +290,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         })
 
         # Use case
-        so_1 = self.env['sale.order'].with_user(user_demo.id).create({
+        so_1 = self.env['sale.order'].with_user(self.demo_user.id).create({
             'partner_id': so_partner.id,
             'company_id': company_1.id,
         })
