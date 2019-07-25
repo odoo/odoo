@@ -10,7 +10,6 @@ class ResPartnerGrade(models.Model):
     _inherit = ['website.published.mixin']
     _description = 'Partner Grade'
 
-    website_published = fields.Boolean(default=True)
     sequence = fields.Integer('Sequence')
     active = fields.Boolean('Active', default=lambda *args: 1)
     name = fields.Char('Level Name', translate=True)
@@ -21,6 +20,9 @@ class ResPartnerGrade(models.Model):
         super(ResPartnerGrade, self)._compute_website_url()
         for grade in self:
             grade.website_url = "/partners/grade/%s" % (slug(grade))
+
+    def _default_is_published(self):
+        return True
 
 
 class ResPartnerActivation(models.Model):
