@@ -10,17 +10,6 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var _lt = core._lt;
 
-var map_title ={
-    user_error: _lt("User Error"),
-    warning: _lt("Warning"),
-    access_error: _lt("Access Error"),
-    missing_error: _lt("Missing Record"),
-    validation_error: _lt("Validation Error"),
-    except_orm: _lt("Global Business Error"),
-    access_denied: _lt("Access Denied"),
-    karma_error: _lt("Karma Error"),
-};
-
 // Register this eventlistener before qunit does.
 // Some errors needs to be negated by the crash_manager.
 window.addEventListener('unhandledrejection', ev =>
@@ -157,6 +146,20 @@ var CrashManager = AbstractService.extend({
     disable: function () {
         active = false;
     },
+    /**
+     * @return {Object}
+     */
+    getMapTitle() {
+        return {
+            access_denied: _lt("Access Denied"),
+            access_error: _lt("Access Error"),
+            except_orm: _lt("Global Business Error"),
+            missing_error: _lt("Missing Record"),
+            user_error: _lt("User Error"),
+            validation_error: _lt("Validation Error"),
+            warning: _lt("Warning"),
+        };
+    },
     handleLostConnection: function () {
         var self = this;
         if (!this.isConnected) {
@@ -185,6 +188,7 @@ var CrashManager = AbstractService.extend({
         if (!document.body) {
             return;
         }
+        var map_title = this.getMapTitle();
         if (!active) {
             return;
         }
