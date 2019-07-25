@@ -149,14 +149,16 @@ class WebsitePublishedMixin(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         records = super(WebsitePublishedMixin, self).create(vals_list)
-        is_publish_modified = any('website_published' in values for values in vals_list)
+        is_publish_modified = any(
+            [set(v.keys()) & {'is_published', 'website_published'} for v in vals_list]
+        )
         if is_publish_modified and not all(record.can_publish for record in records):
             raise AccessError(self._get_can_publish_error_message())
 
         return records
 
     def write(self, values):
-        if 'website_published' in values and not all(record.can_publish for record in self):
+        if 'is_published' in values and not all(record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
         return super(WebsitePublishedMixin, self).write(values)
