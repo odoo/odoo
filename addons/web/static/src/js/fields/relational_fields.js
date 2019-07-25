@@ -1645,6 +1645,7 @@ var FieldOne2Many = FieldX2Many.extend({
             { additionalContext: params.context }
         ));
         this.trigger_up('open_one2many_record', _.extend(params, {
+            parent: this,
             domain: this.record.getDomain(this.recordParams),
             context: context,
             field: this.field,

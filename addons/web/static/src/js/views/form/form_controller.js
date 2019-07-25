@@ -691,7 +691,7 @@ var FormController = BasicController.extend({
         // Sync with the mutex to wait for potential onchanges
         await this.model.mutex.getUnlockedDef();
 
-        new dialogs.FormViewDialog(this, {
+        new dialogs.FormViewDialog(data.parent || this, {
             context: data.context,
             domain: data.domain,
             fields_view: data.fields_view,
