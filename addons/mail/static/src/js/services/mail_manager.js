@@ -44,6 +44,8 @@ var _t = core._t;
 
 var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 
+let isMailManagerStarted = false;
+
 var MailManager =  AbstractService.extend({
     dependencies: ['ajax', 'bus_service', 'local_storage'],
     _ODOOBOT_ID: ["ODOOBOT", "ODOOBOT"], // authorID for transient messages
@@ -52,6 +54,12 @@ var MailManager =  AbstractService.extend({
      * @override
      */
     start: function () {
+        if (isMailManagerStarted) {
+            throw new Error("Mail manager already started. This may be caused by having multiple service providers.");
+        } else {
+            isMailManagerStarted = true;
+        }
+
         this._super.apply(this, arguments);
 
         this._throttleNotifyChannelFetched = _.throttle(this._notifyChannelFetched.bind(this), 3000);
@@ -62,6 +70,13 @@ var MailManager =  AbstractService.extend({
         this._initializeInternalState();
         this._listenOnBuses();
         this._fetchMailStateFromServer();
+    },
+
+    /**
+     * @override
+     */
+    destroy() {
+        isMailManagerStarted = false;
     },
 
     //--------------------------------------------------------------------------
