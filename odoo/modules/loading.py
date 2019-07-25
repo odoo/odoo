@@ -377,22 +377,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
-            # auto-install module second pass: recursive bit in db.py handles
-            # auto_install modules with no dependencies or where all
-            # dependencies are auto_install, couldn't get it to work with
-            # non-required auto_install deps so here
-            cr.execute("""
-            SELECT m.name FROM ir_module_module m
-            WHERE m.auto_install
-            AND m.state != 'installed'
-            AND NOT EXISTS (
-                SELECT 1 FROM ir_module_module_dependency d
-                JOIN ir_module_module mdep ON (d.name = mdep.name)
-                WHERE d.module_id = m.id
-                  AND d.auto_install_required
-                  AND mdep.state NOT IN ('installed', 'to install')
-            )""")
-            module_names = [k for k, v in tools.config['init'].items() if v] + [x[0] for x in cr.fetchall()]
+            module_names = [k for k, v in tools.config['init'].items() if v]
             if module_names:
                 modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
                 if modules:
