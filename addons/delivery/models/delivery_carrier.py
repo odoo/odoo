@@ -71,7 +71,7 @@ class DeliveryCarrier(models.Model):
     @api.depends('delivery_type')
     def _compute_can_generate_return(self):
         for carrier in self:
-            carrier.can_generate_return = hasattr(self, '%s_get_return_label' % carrier.delivery_type)
+            carrier.can_generate_return = False
 
     def toggle_prod_environment(self):
         for c in self:
