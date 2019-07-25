@@ -14,15 +14,25 @@
             groups="account.group_account_invoice"
         />
 
+        <record id="action_account_original_vendor_bill" model="ir.actions.report">
+            <field name="name">Original Bills</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="file">account.report_original_vendor_bill</field>
+            <field name="attachment">'original_vendor_bill.pdf'</field>
+            <field name="attachment_use">True</field>
+            <field name="binding_view_types">list</field>
+        </record>
+
         <report
             id="action_account_original_vendor_bill"
             model="account.move"
-            string="Original vendor bills"
+            string="Original Bills"
             report_type="qweb-pdf"
             name="account.report_original_vendor_bill"
             file="account.report_original_vendor_bill"
             attachment="'original_vendor_bill.pdf'"
             attachment_use="True"
+            multi="True"
         />
 
         <report

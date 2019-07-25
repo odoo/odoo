@@ -50,7 +50,7 @@
             <table>
                 <tr>
                     <td><strong>Amount: </strong></td>
-                    <td style="text-align:right;">
+                    <td>
                         <t t-if="position === 'before'">
                             <t t-esc="currency"/>
                         </t>
@@ -62,15 +62,15 @@
                 </tr>
                 <tr>
                     <td><strong>Memo: </strong></td>
-                    <td style="text-align:right;"><t t-esc="ref"/></td>
+                    <td><t t-esc="ref"/></td>
                 </tr>
                 <tr>
                     <td><strong>Date: </strong></td>
-                    <td style="text-align:right;"><t t-esc="date"/></td>
+                    <td><t t-esc="date"/></td>
                 </tr>
                 <tr>
                     <td><strong>Payment Method: </strong></td>
-                    <td style="text-align:right;"><t t-esc="journal_name"/></td>
+                    <td><t t-esc="journal_name"/></td>
                 </tr>
             </table>
         </div>

@@ -204,7 +204,7 @@
                 <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="tag_ids" position="attributes">
                     <attribute name="optional">show</attribute>
-                    <attribute name="string">Tax Grid</attribute>
+                    <attribute name="string">Tax Grids</attribute>
                     <attribute name="domain">[('applicability', '=', 'taxes')]</attribute>
                 </field>
             </field>
@@ -555,6 +555,20 @@
                                            'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
                                        }"/>
 
+                                <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
+                                <label for="invoice_payment_term_id"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <div class="d-flex" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                    <field name="invoice_payment_term_id"
+                                           placeholder="Terms"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                    <span class="o_form_label mx-3 oe_edit_only"
+                                          attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
+                                    <field name="invoice_date_due" force_save="1"
+                                           placeholder="Date"
+                                           attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                </div>
+
                                 <field name="ref"
                                        attrs="{'invisible': [('type', '=', 'out_invoice')]}"/>
                                 <field name="invoice_vendor_bill_id"
@@ -576,20 +590,6 @@
 
                                 <field name="date" string="Accounting Date"
                                        attrs="{'invisible': ['|', ('type', 'in', ('out_invoice', 'out_refund', 'out_receipt')), ('state', '=', 'draft')]}"/>
-
-                                <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
-                                <label for="invoice_payment_term_id"
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                <div class="d-flex" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
-                                    <field name="invoice_payment_term_id"
-                                           placeholder="Computed"
-                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                    <span class="o_form_label mx-3 oe_edit_only"
-                                          attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
-                                    <field name="invoice_date_due" force_save="1"
-                                           placeholder="Pick a Date"
-                                           attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                </div>
 
                                 <field name="journal_id"
                                        invisible="context.get('default_journal_id') and context.get('type', 'entry') != 'entry'"
@@ -701,7 +701,7 @@
                                         <field name="partner_id"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
-                                        <field name="name" widget="section_and_note_text"/>
+                                        <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="analytic_account_id"
                                                optional="show"
                                                groups="analytic.group_analytic_accounting"
@@ -711,17 +711,15 @@
                                                groups="analytic.group_analytic_tags"
                                                widget="many2many_tags"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="date_maturity"
+                                               optional="hide"
+                                               invisible="context.get('view_no_maturity')"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="amount_currency"
                                                groups="base.group_multi_currency"/>
                                         <field name="currency_id" options="{'no_create': True}"
                                                groups="base.group_multi_currency"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
-                                        <field name="debit"
-                                               sum="Total Debit"
-                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
-                                        <field name="credit"
-                                               sum="Total Credit"
-                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="tax_ids" widget="many2many_tags"
                                                optional="hide"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain)]"
@@ -736,10 +734,13 @@
                                                     ('parent.type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
                                                     ('account_internal_type', 'in', ('receivable', 'payable')),
                                                 ]}"/>
-                                        <field name="date_maturity"
-                                               optional="show"
-                                               invisible="context.get('view_no_maturity')"
+                                        <field name="debit"
+                                               sum="Total Debit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="credit"
+                                               sum="Total Credit"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="tag_ids" widget="many2many_tags" string="Tax Grids"/>
 
                                         <!-- Others fields -->
                                         <field name="payment_id" invisible="1"/>
@@ -755,7 +756,6 @@
                                         <field name="sequence" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
-                                        <field name="tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
                                         <field name="tax_exigible" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
@@ -794,8 +794,8 @@
                                     <group string="Invoice"
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
-                                        <field name="invoice_user_id"/>
                                         <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="invoice_user_id"/>
                                     </group>
                                     <group string="Accounting"
                                            name="accounting_info_group"
@@ -873,18 +873,19 @@
             </field>
         </record>
 
-        <record id="view_account_common_filter" model="ir.ui.view">
-            <field name="name">account.common.select</field>
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <search>
-                    <field name="name"
+                <search string="Search Invoice">
+                    <field name="name" string="Invoice"
                            filter_domain="['|','|','|', '|', ('name','ilike',self), ('invoice_origin','ilike',self), ('ref', 'ilike', self), ('invoice_payment_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter domain="[('invoice_user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
                     <field name="journal_id"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="unpaid" string="Posted" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
+                    <separator/>
                     <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
                     <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]" help="Overdue invoices, maturity date passed"/>
@@ -913,48 +914,6 @@
                         <filter string="Due Date" name="duedate" context="{'group_by':'invoice_date_due'}"/>
                     </group>
                </search>
-            </field>
-        </record>
-
-        <record id="view_account_invoice_filter" model="ir.ui.view">
-            <field name="name">account.invoice.select</field>
-            <field name="model">account.move</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="account.view_account_common_filter"/>
-            <field name="arch" type="xml">
-                <search position="attributes">
-                    <attribute name="string">Search Invoice</attribute>
-                </search>
-                <field name="name" position="attributes">
-                    <attribute name="string">Invoice</attribute>
-                </field>
-                <filter name="myinvoices" position="attributes">
-                    <attribute name="help">My Invoices</attribute>
-                </filter>
-                <field name="partner_id" position="attributes">
-                    <attribute name="string">Customer</attribute>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_account_bill_filter" model="ir.ui.view">
-            <field name="name">account.bill.select</field>
-            <field name="model">account.move</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="account.view_account_common_filter"/>
-            <field name="arch" type="xml">
-                <search position="attributes">
-                    <attribute name="string">Search Bill</attribute>
-                </search>
-                <field name="name" position="attributes">
-                    <attribute name="string">Bill</attribute>
-                </field>
-                <filter name="myinvoices" position="attributes">
-                    <attribute name="help">My Bills</attribute>
-                </filter>
-                <field name="partner_id" position="attributes">
-                    <attribute name="string">Vendor</attribute>
-                </field>
             </field>
         </record>
 
@@ -1187,7 +1146,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_invoice_tree"/>
-            <field name="search_view_id" ref="view_account_bill_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('type', '=', 'in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice'}</field>
             <field name="help" type="html">
@@ -1204,7 +1163,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_invoice_tree"/>
-            <field name="search_view_id" ref="view_account_bill_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('type', '=', 'in_refund')]</field>
             <field name="context">{'default_type': 'in_refund'}</field>
             <field name="help" type="html">
@@ -1239,7 +1198,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_invoice_tree"/>
-            <field name="search_view_id" ref="view_account_bill_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('type', '=', 'in_receipt')]</field>
             <field name="context">{'default_type': 'in_receipt'}</field>
             <field name="help" type="html">

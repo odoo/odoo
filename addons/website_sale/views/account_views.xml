@@ -26,7 +26,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_info_group']" position="inside">
-                <field name="website_id" groups="website.group_multi_website" attrs="{'invisible': True}"/>
+                <field name="website_id" groups="website.group_multi_website" attrs="{'invisible': [('website_id', '=', False)]}"/>
             </xpath>
         </field>
     </record>

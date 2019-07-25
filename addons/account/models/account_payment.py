@@ -49,7 +49,7 @@ class account_payment(models.Model):
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
     move_reconciled = fields.Boolean(compute="_get_move_reconciled", readonly=True)
 
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Validated'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, readonly=True, states={'draft': [('readonly', False)]}, oldname="payment_method",
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
@@ -667,7 +667,7 @@ class account_payment(models.Model):
                     raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
             moves = AccountMove.create(rec._prepare_payment_moves())
-            moves.filtered(lambda move: not move.journal_id.post_at_bank_rec).post()
+            moves.filtered(lambda move: move.journal_id.post_at_bank_rec != 'bank reconciliation').post()
 
             # Update the state / move before performing any reconciliation.
             rec.write({'state': 'posted', 'move_name': moves[0].name})

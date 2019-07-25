@@ -176,11 +176,9 @@ class AccountMove(models.Model):
         ], string='Payment', store=True, readonly=True, copy=False, tracking=True,
         compute='_compute_amount')
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)]},
-        help="Keep empty to use the current date")
+        states={'draft': [('readonly', False)]})
     invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)]},
-        help="The due date is computed from payment terms. You can split in several due dates (e.g. 50% now, balance in one month). Keep empty to request a direct payment.")
+        states={'draft': [('readonly', False)]})
     invoice_payment_ref = fields.Char(string='Payment Reference', index=True, copy=False, readonly=True,
         states={'draft': [('readonly', False)]},
         help="The payment reference to set on journal items.")
@@ -189,8 +187,7 @@ class AccountMove(models.Model):
     invoice_origin = fields.Char(string='Origin', readonly=True, tracking=True,
         help="The document(s) that generated the invoice.")
     invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms',
-        readonly=True, states={'draft': [('readonly', False)]},
-        help="The due date is computed from payment terms. You can split in several due dates (e.g. 50% now, balance in one month). Keep empty to request a direct payment.")
+        readonly=True, states={'draft': [('readonly', False)]})
     # /!\ invoice_line_ids is just a subset of line_ids.
     invoice_line_ids = fields.One2many('account.move.line', 'move_id', string='Invoice lines',
         copy=False, readonly=True,
@@ -882,7 +879,7 @@ class AccountMove(models.Model):
                     JOIN account_payment payment ON payment.id = rec_line.payment_id
                     JOIN account_journal journal ON journal.id = rec_line.journal_id
                     WHERE payment.state IN ('posted', 'sent')
-                    AND journal.post_at_bank_rec IS TRUE
+                    AND journal.post_at_bank_rec = 'bank reconciliation'
                     AND move.id IN %s
                 ''', [tuple(invoice_ids)]
             )
@@ -1883,7 +1880,7 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        if self.mapped('line_ids.payment_id') and any(self.mapped('journal_id.post_at_bank_rec')):
+        if self.mapped('line_ids.payment_id') and any(post_at_bank_rec == 'bank reconciliation' for post_at_bank_rec in self.mapped('journal_id.post_at_bank_rec')):
             raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
         return self.post()
 

@@ -10,9 +10,9 @@ class PaymentWizard(models.TransientModel):
     _description = 'Payment acquire onboarding wizard'
 
     payment_method = fields.Selection([
-        ('paypal', "Pay with PayPal"),
-        ('stripe', "Pay with credit card (via Stripe)"),
-        ('other', "Pay with another payment acquirer"),
+        ('paypal', "PayPal"),
+        ('stripe', "Credit card (via Stripe)"),
+        ('other', "Other payment acquirer"),
         ('manual', "Custom payment instructions"),
     ], string="Payment Method", default=lambda self: self._get_default_payment_acquirer_onboarding_value('payment_method'))
 
