@@ -121,6 +121,11 @@
                         </div>
                     </div>
                     <div class="col-lg-9 pr-lg-5 order-lg-1">
+                        <div class="o_wslides_home_content_section mb-3"
+                            t-if="not channels_popular">
+                            <p class="h2">No Course created yet.</p>
+                            <p groups="website.group_website_designer">Click on "New" in the top-right corner to write your first course.</p>
+                        </div>
                         <t t-if="channels_my">
                             <t t-set="void_count" t-value="3 - len(channels_my[:3])"/>
                             <div class="o_wslides_home_content_section mb-3">
@@ -138,7 +143,8 @@
                                 </div>
                             </div>
                         </t>
-                        <div class="o_wslides_home_content_section mb-3">
+                        <div class="o_wslides_home_content_section mb-3"
+                            t-if="channels_popular">
                             <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
@@ -152,7 +158,8 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="o_wslides_home_content_section mb-3">
+                        <div class="o_wslides_home_content_section mb-3"
+                            t-if="channels_newest">
                             <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
@@ -266,8 +273,15 @@
                 </div>
             </div>
             <div class="container o_wslides_home_main pb-5">
-                <div t-if="search_term and not channels" class="alert alert-info mb-5">
-                    No channel was found matching your search <code><t t-esc="search_term"/></code>.
+                <div t-if="not channels and not search_term and not search_slide_type and not search_my and not search_tags and not search_channel_tag_id">
+                    <p class="h2">No Course created yet.</p>
+                    <p groups="website.group_website_designer">Click on "New" in the top-right corner to write your first course.</p>
+                </div>
+                <div t-elif="search_term and not channels" class="alert alert-info mb-5">
+                    No course was found matching your search <code><t t-esc="search_term"/></code>.
+                </div>
+                <div t-elif="not channels" class="alert alert-info mb-5">
+                    No course was found matching your search.
                 </div>
                 <div t-else="" class="row mx-n2">
                     <t t-foreach="channels" t-as="channel">

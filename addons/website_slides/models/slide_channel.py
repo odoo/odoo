@@ -15,11 +15,11 @@ class ChannelUsersRelation(models.Model):
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
 
-    channel_id = fields.Many2one('slide.channel', index=True, required=True)
+    channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
     completion = fields.Integer('# Completed Slides', compute='_compute_completion', store=True)
-    partner_id = fields.Many2one('res.partner', index=True, required=True)
+    partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
     @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published')
