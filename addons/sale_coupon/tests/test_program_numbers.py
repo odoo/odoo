@@ -12,11 +12,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
     def setUp(self):
         super(TestSaleCouponProgramNumbers, self).setUp()
 
-        self.largeCabinet = self.env.ref('product.product_product_6')
-        self.conferenceChair = self.env.ref('product.product_product_11')
-        self.pedalBin = self.env.ref('product.product_product_9')
-        self.drawerBlack = self.env.ref('product.product_product_16')
-        self.largeMeetingTable = self.env.ref('product.consu_delivery_02')
+        Product = self.env['product.product']
+        self.largeCabinet = Product.create({'name': 'Large Cabinet', 'list_price': 320.0, 'standard_price': 800.0, 'taxes_id': False})
+        self.conferenceChair = Product.create({'name': 'Conference Chair', 'list_price': 16.50, 'standard_price': 14.0, 'taxes_id': False})
+        self.pedalBin = Product.create({'name': 'Pedal Bin', 'list_price': 47.0, 'standard_price': 10.0, 'taxes_id': False})
+        self.drawerBlack = Product.create({'name': 'Drawer Black', 'list_price': 25.0, 'standard_price': 20.0, 'taxes_id': False})
+        self.largeMeetingTable = Product.create({'name': 'Large Meeting Table', 'list_price': 40000.0, 'standard_price': 45000.0, 'taxes_id': False})
         self.steve = self.env['res.partner'].create({
             'name': 'Steve Bucknor',
             'email': 'steve.bucknor@example.com',
