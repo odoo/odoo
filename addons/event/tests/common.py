@@ -6,47 +6,54 @@ from odoo import fields
 from odoo.tests import common
 
 
-class TestEventCommon(common.TransactionCase):
+class TestEventCommon(common.SavepointCase):
 
-    def setUp(self):
-        super(TestEventCommon, self).setUp()
-
-        # Usefull models
-        self.Users = self.env['res.users']
-        self.Event = self.env['event.event']
-        self.Registration = self.env['event.registration']
-        self.EventMail = self.env['event.mail']
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventCommon, cls).setUpClass()
 
         # User groups
-        self.group_employee_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
-        self.group_event_user_id = self.env['ir.model.data'].xmlid_to_res_id('event.group_event_user')
-        self.group_event_manager_id = self.env['ir.model.data'].xmlid_to_res_id('event.group_event_manager')
-        group_system = self.env.ref('base.group_system')
+        cls.group_employee_id = cls.env.ref('base.group_user').id
+        cls.group_event_user_id = cls.env.ref('event.group_event_user').id
+        cls.group_event_manager_id = cls.env.ref('event.group_event_manager').id
+        cls.group_system_id = cls.env.ref('base.group_system').id
 
         # Test users to use through the various tests
-        self.user_eventuser = self.Users.with_context({'no_reset_password': True}).create({
+        cls.user_eventuser = cls.env['res.users'].with_context({'no_reset_password': True}).create({
             'name': 'Armande EventUser',
             'login': 'Armande',
             'email': 'armande.eventuser@example.com',
             'tz': 'Europe/Brussels',
-            'groups_id': [(6, 0, [self.group_employee_id, self.group_event_user_id])]
+            'groups_id': [(6, 0, [cls.group_employee_id, cls.group_event_user_id])]
         })
-        self.user_eventmanager = self.Users.with_context({'no_reset_password': True}).create({
+        cls.user_eventmanager = cls.env['res.users'].with_context({'no_reset_password': True}).create({
             'name': 'Bastien EventManager',
             'login': 'bastien',
             'email': 'bastien.eventmanager@example.com',
             'tz': 'Europe/Brussels',
             'groups_id': [(6, 0, [
-                self.group_employee_id,
-                self.group_event_manager_id,
-                group_system.id])]
+                cls.group_employee_id,
+                cls.group_event_manager_id,
+                cls.group_system_id])]
         })
 
-        self.event_0 = self.env['event.event'].create({
+        cls.event_0 = cls.env['event.event'].create({
             'name': 'TestEvent',
+            'auto_confirm': True,
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'registration_ids': [(0, 0, {
-                'partner_id': self.user_eventuser.partner_id.id,
-            })]
         })
+
+        # set country in order to format belgium numbers
+        cls.event_0.company_id.write({'country_id': cls.env.ref('base.be').id})
+
+    @classmethod
+    def _create_registrations(cls, event, reg_count):
+        # create some registrations
+        registrations = cls.env['event.registration'].create([{
+            'event_id': event.id,
+            'name': 'Test Registration %s' % x,
+            'email': '_test_reg_%s@example.com' % x,
+            'phone': '04560000%s%s' % (x, x),
+        } for x in range(0, reg_count)])
+        return registrations

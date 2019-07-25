@@ -364,15 +364,22 @@ class EventRegistration(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name, create_date desc'
 
+    # event
     origin = fields.Char(
         string='Source Document', readonly=True,
         help="Reference of the document that created the registration, for example a sales order")
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
+    # attendee
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
+    name = fields.Char(string='Attendee Name', index=True)
+    email = fields.Char(string='Email')
+    phone = fields.Char(string='Phone')
+    mobile = fields.Char(string='Mobile')
+    # organization
     date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(string='Attended Date', readonly=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
@@ -384,9 +391,6 @@ class EventRegistration(models.Model):
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=True)
-    email = fields.Char(string='Email')
-    phone = fields.Char(string='Phone')
-    name = fields.Char(string='Attendee Name', index=True)
 
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
@@ -421,6 +425,7 @@ class EventRegistration(models.Model):
         data = {
             'name': registration.get('name', partner_id.name),
             'phone': registration.get('phone', partner_id.phone),
+            'mobile': registration.get('mobile', partner_id.mobile),
             'email': registration.get('email', partner_id.email),
             'partner_id': partner_id.id,
             'event_id': event_id and event_id.id or False,
@@ -462,6 +467,7 @@ class EventRegistration(models.Model):
                 self.name = contact.name or self.name
                 self.email = contact.email or self.email
                 self.phone = contact.phone or self.phone
+                self.mobile = contact.mobile or self.mobile
 
     def _message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self)._message_get_suggested_recipients()
