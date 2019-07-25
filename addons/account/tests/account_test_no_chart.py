@@ -43,6 +43,7 @@ class TestAccountNoChartCommon(SavepointCase):
             'email': 'customer.usd@north.com',
             'property_account_payable_id': cls.account_payable.id,
             'property_account_receivable_id': cls.account_receivable.id,
+            'company_id': cls.env.ref('base.main_company').id
         })
 
         cls.sale_journal0 = cls.env['account.journal'].create({

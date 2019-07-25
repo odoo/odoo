@@ -35,6 +35,7 @@ class TestSubcontractingBasic(TransactionCase):
         that_company = self.env['res.partner'].create({
             'is_company': True,
             'name': "That Company",
+            'company_id': self.env.ref('base.main_company').id
         })
         partner_form = Form(that_company)
         with partner_form.child_ids.new() as partner:
@@ -55,6 +56,7 @@ class TestSubcontractingBasic(TransactionCase):
         self.env.user.write({'groups_id': [(3, group_no_one.id)]})
         partner_form = Form(self.env['res.partner'])
         partner_form.name = 'subcontractor partner'
+        partner_form.company_id = self.env.ref('base.main_company')
         self.assertNotEqual(partner_form.property_stock_supplier, self.env.user.company_id.subcontracting_location_id)
         self.assertNotEqual(partner_form.property_stock_customer, self.env.user.company_id.subcontracting_location_id)
         partner_form.type = 'subcontractor'
@@ -75,6 +77,7 @@ class TestSubcontractingBasic(TransactionCase):
         that_company = self.env['res.partner'].create({
             'is_company': True,
             'name': "That Company",
+            'company_id': self.env.ref('base.main_company').id
         })
         partner_form = Form(self.env['res.partner'])
         partner_form.name = 'That Guy'
@@ -124,6 +127,7 @@ class TestSubcontractingFlows(SavepointCase):
             'name': 'subcontractor_partner',
             'type': 'subcontractor',
             'parent_id': main_partner.id,
+            'company_id': cls.env.ref('base.main_company').id
         })
 
         # 2. Create a BOM of subcontracting type
@@ -352,6 +356,7 @@ class TestSubcontractingFlows(SavepointCase):
             'name': 'subcontractor_partner',
             'type': 'subcontractor',
             'parent_id': main_partner_2.id,
+            'company_id': self.env.ref('base.main_company').id
         })
 
         # We create a different BoM for the same product
@@ -413,6 +418,7 @@ class TestSubcontractingTracking(TransactionCase):
             'name': 'Subcontractor 1',
             'type': 'subcontractor',
             'parent_id': main_company_1.id,
+            'company_id': self.env.ref('base.main_company').id
         })
 
         # 2. Create a BOM of subcontracting type
