@@ -19,6 +19,12 @@ var HistoryPlugin = Plugins.history.extend({
             console.error(e);
         }
         this.context.invoke('editor.focus');
+        var newRange = this.context.invoke('editor.createRange');
+        if (!this.options.isEditableNode(newRange.sc)) {
+            var firstEditableSel = '[contenteditable="true"]:not(":hidden")';
+            var sc = this.$editable.find(firstEditableSel)[0];
+            this.context.invoke('editor.setRange', sc, 0, sc, 0).select();
+        }
     },
     /**
      * Clear the history.

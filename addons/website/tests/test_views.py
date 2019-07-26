@@ -610,6 +610,20 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': '<div position="inside">, sub ext</div>',
             'key': 'II',
         })
+
+        #  B
+        #  |
+        #  I
+        #  |
+        #  II
+
+        # First, test that children of inactive children are not returned (not multiwebsite related)
+        self.inherit_view.active = False
+        views = View.get_related_views('B')
+        self.assertEqual(views.mapped('key'), ['B', 'I'], "As 'I' is inactive, 'II' (its own child) should not be returned.")
+        self.inherit_view.active = True
+
+        # Second, test multi-website
         self.inherit_view.with_context(website_id=1).write({'name': 'Extension'})  # Trigger cow on hierarchy
         View.create({
             'name': 'II2',

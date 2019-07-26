@@ -183,10 +183,23 @@ class Product(models.Model):
             company_id = self.env.company.id
             return (
                 [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
-                [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
-                [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
-            ])
-
+                ['&',
+                     ('location_dest_id.company_id', '=', company_id),
+                     '|',
+                         ('location_id.company_id', '=', False),
+                         '&',
+                             ('location_id.usage', 'in', ['inventory', 'production']),
+                             ('location_id.company_id', '=', company_id),
+                 ],
+                ['&',
+                     ('location_id.company_id', '=', company_id),
+                     '|',
+                         ('location_dest_id.company_id', '=', False),
+                         '&',
+                             ('location_dest_id.usage', 'in', ['inventory', 'production']),
+                             ('location_dest_id.company_id', '=', company_id),
+                 ]
+            )
         def _search_ids(model, values, force_company_id):
             ids = set()
             domain = []
@@ -411,6 +424,7 @@ class Product(models.Model):
         action['context'] = {'default_product_id': self.id}
         return action
 
+    # Be aware that the exact same function exists in product.template
     def action_open_quants(self):
         location_domain = self._get_domain_locations()[0]
         domain = expression.AND([[('product_id', 'in', self.ids)], location_domain])
@@ -641,6 +655,7 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         return super(ProductTemplate, self).write(vals)
 
+    # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
         return self.product_variant_ids.action_open_quants()
 

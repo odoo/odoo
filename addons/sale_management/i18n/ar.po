@@ -5,13 +5,12 @@
 # Translators:
 # hoxhe Aits <hoxhe0@gmail.com>, 2018
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# AMAAL RU <Fabu1410@yahoo.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Martin Trigaux, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
 # Mustafa Rawi <mustafa@cubexco.com>, 2018
@@ -39,7 +38,7 @@ msgstr "% خصم"
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr ""
+msgstr "مكتب لأربعة أشخاص"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -57,7 +56,7 @@ msgstr "<span>الخصم</span>"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Optional Products</span>"
-msgstr ""
+msgstr "<span>منتجات اختيارية</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -67,7 +66,7 @@ msgstr "نشط"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a note"
-msgstr "أضف ملاحظة"
+msgstr "إضافة ملاحظة"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -83,22 +82,22 @@ msgstr "إضافة قسم"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Add one"
-msgstr ""
+msgstr "إضافة واحدة"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Add to cart"
-msgstr ""
+msgstr "أضف إلى عربة التسوق"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "إضافته لبنود الأمر"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
 msgid "All Sales"
-msgstr ""
+msgstr "كافة المبيعات"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -108,12 +107,12 @@ msgstr "مؤرشف"
 #. module: sale_management
 #: model:ir.ui.menu,name:sale_management.menu_catalog_variants_action
 msgid "Attribute Values"
-msgstr "قيم الصفات"
+msgstr "قيم الخاصية"
 
 #. module: sale_management
 #: model:ir.ui.menu,name:sale_management.menu_product_attribute_action
 msgid "Attributes"
-msgstr "الصفات"
+msgstr "الخصائص"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -128,7 +127,7 @@ msgstr "تأكيد"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "رسالة التأكيد"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_view_form
@@ -138,12 +137,12 @@ msgstr "إنشاء فاتورة"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "إنشاء عروض قياسية بالمنتجات الافتراضية"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "إنشاء قالب عرض السعر"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -164,7 +163,7 @@ msgstr "أنشئ في"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__default_sale_order_template_id
 msgid "Default Template"
-msgstr ""
+msgstr "القالب الافتراضي"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -179,6 +178,8 @@ msgstr "الوصف"
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Design your quotation templates using building blocks<br/>"
 msgstr ""
+"تصميم قوالب عروض أسعارك باستخدام بلوكات البناء<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">تحذير: هذا الخيار سيثبت تطبيق الموقع.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -198,7 +199,7 @@ msgstr "الخصم (%)"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
@@ -216,17 +217,17 @@ msgstr ""
 msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
-msgstr ""
+msgstr "المنتج أو سعر الوحدة أو الكمية أو وحدة القياس محظور في بند غير مقبول."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
+msgstr "يعرض ترتيب التسلسل عند عرض قائمة المنتجات الاختيارية."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
+msgstr "يعرض ترتيب التسلسل عند عرض قائمة بنود عروض أسعار المبيعات."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
@@ -241,12 +242,12 @@ msgstr "المعرف"
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr ""
+msgstr "عند إلغاء اختياره، يمكنك إخفاء قالب عرض السعر دون حذفه."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "القيمة الإجمالية للمؤشر الرئيسي لكافة المبيعات"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -286,7 +287,7 @@ msgstr "البنود"
 #. module: sale_management
 #: sql_constraint:sale.order.template.line:0
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
+msgstr "المنتج ووحدة القياس فارغين في بند أمر بيع سيتم إنشاء فاتورة له."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -297,12 +298,12 @@ msgstr "ملاحظة"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "عدد أيام احتساب تاريخ الصلاحية لعرض الأسعار"
 
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
 msgid "Office Chair"
-msgstr ""
+msgstr "كرسي مكتب"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -312,7 +313,7 @@ msgstr "السداد عبر الإنترنت"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "التوقيع الإلكتروني"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
@@ -356,12 +357,12 @@ msgstr "الكمية"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "مكوّن عرض السعر"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "مدة عرض السعر"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -375,23 +376,23 @@ msgstr "قالب عرض السعر"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "بند قالب عرض السعر"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr "بنود قالب العرض"
+msgstr "بنود قالب عرض السعر"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "خيار قالب عرض السعر"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "رقم إشارة قالب عرض السعر"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
@@ -400,12 +401,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 #: model:res.groups,name:sale_management.group_sale_order_template
 msgid "Quotation Templates"
-msgstr "قوالب العرض"
+msgstr "قوالب عرض السعر"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation expires after"
-msgstr ""
+msgstr "تنتهي صلاحية عرض السعر بعد"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -415,21 +416,21 @@ msgstr "إزالة"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr ""
+msgstr "إزالة واحدة"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "طلب توقيع العميل إلكترونيًا لتأكيد الأوامر تلقائيًا."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "طلب تسديد العميل للمستحقات إلكترونيًا لتأكيد الأوامر تلقائيًا."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -449,22 +450,22 @@ msgstr "المبيعات"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "سطر أمر المبيعات"
+msgstr "بند أمر المبيعات"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "رقم إشارة أمر المبيعات"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Sales Quotation Template Lines"
-msgstr ""
+msgstr "بنود قالب عرض سعر المبيعات"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "البحث في قوالب عروض الأسعار"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -481,7 +482,7 @@ msgstr "التسلسل"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
-msgstr "حقل تقني لهدف خبرة المستخدم"
+msgstr "حقل تقني يهدف لتحسين تجربة المستخدم."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -494,6 +495,8 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"يمكن للمسؤول تعيين الشروط والأحكام الافتراضية في إعدادات المبيعات. ستظهر "
+"الشروط المعينة هنا بدلًا منها إذا اخترت قالب عرض الأسعار هذا."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -501,6 +504,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"سيتم إرسال هذا القالب البريدي عند التأكيد. اتركه خاليًا لكي لا يتم إرسال "
+"شيء."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -513,13 +518,13 @@ msgstr "سعر الوحدة"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
 msgid "Unit of Measure"
-msgstr "وحده القياس "
+msgstr "وحدة القياس"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
 msgid "Unit of Measure "
-msgstr "وحدة قياس "
+msgstr "وحده القياس "
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -528,12 +533,15 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"استخدم القوالب لإنشاء عروض أسعار احترافية منقحة في دقائق.\n"
+"                يمكنك إرسال عروض الأسعار عن طريق البريد الكتروني والسماح للعملاء بتسجيل الدخول عبر الإنترنت.\n"
+"                استخدم نظام البيع المتقاطع والخصومات لدفع وتحسين مبيعاتك."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:178
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr "لايمكن اضافه خيارات لامر موكد"
+msgstr "لا يمكنك إضافة خيارات لأمر مؤكد."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
