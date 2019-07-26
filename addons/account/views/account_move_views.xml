@@ -518,6 +518,7 @@
 
                         <div>
                             <!-- Invoice draft header -->
+                            <span class="o_form_label"><field name="type" attrs="{'invisible': ['|', ('type', '=', 'entry'), ('state', '=', 'draft')]}" readonly="1" nolabel="1"/></span>
                             <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Invoice</span>
                             <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Credit Note</span>
                             <span class="o_form_label" attrs="{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Bill</span>

@@ -129,7 +129,7 @@
                                 </div>
                                 <div>
                                     <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'action_name': 'action_move_out_refund_type'}">Credit Notes</a>
-                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'action_name': 'action_move_in_refund_type'}">Credit Notes</a>
+                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'action_name': 'action_move_in_refund_type'}">Refund</a>
                                 </div>
                                 <div>
                                     <a type="object" name="action_open_reconcile">Payments Matching</a>
@@ -152,7 +152,7 @@
                                 <div>
                                     <a type="object" name="action_create_new"  context="{'refund':True}">
                                         <span t-if="journal_type == 'sale'">Credit Note</span>
-                                        <span t-if="journal_type == 'purchase'">Credit Note Bill</span>
+                                        <span t-if="journal_type == 'purchase'">Refund</span>
                                     </a>
                                 </div>
                             </div>

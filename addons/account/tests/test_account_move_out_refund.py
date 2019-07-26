@@ -11,7 +11,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccountMoveOutRefundOnchanges, cls).setUpClass()
-        
+
         cls.invoice = cls.init_invoice('out_refund')
 
         cls.product_line_vals_1 = {
@@ -813,7 +813,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
     def test_out_refund_line_onchange_sequence_number_1(self):
         self.assertRecordValues(self.invoice, [{
             'invoice_sequence_number_next': '0001',
-            'invoice_sequence_number_next_prefix': 'INV/2019/',
+            'invoice_sequence_number_next_prefix': 'RINV/2019/',
         }])
 
         move_form = Form(self.invoice)
@@ -822,17 +822,17 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
 
         self.assertRecordValues(self.invoice, [{
             'invoice_sequence_number_next': '0042',
-            'invoice_sequence_number_next_prefix': 'INV/2019/',
+            'invoice_sequence_number_next_prefix': 'RINV/2019/',
         }])
 
         self.invoice.post()
 
-        self.assertRecordValues(self.invoice, [{'name': 'INV/2019/0042'}])
+        self.assertRecordValues(self.invoice, [{'name': 'RINV/2019/0042'}])
 
         invoice_copy = self.invoice.copy()
         invoice_copy.post()
 
-        self.assertRecordValues(invoice_copy, [{'name': 'INV/2019/0043'}])
+        self.assertRecordValues(invoice_copy, [{'name': 'RINV/2019/0043'}])
 
     def test_out_refund_create_1(self):
         # Test creating an account_move with the least information.
