@@ -186,18 +186,19 @@ var MessagingMenu = Widget.extend({
             this._$previews.listSwipe({
                 itemSelector: '.o_mail_preview_mobile',
                 rightAction: false,
+                allowAction: function (ev, action) {
+                    return $(ev.currentTarget).find(".o_mail_preview").data("unread-counter") > 0;
+                },
                 onElementMoving: function (ev, action) {
                     $(ev.currentTarget).find(".swipe-action").toggleClass("bg-success", action == "right");
                 },
                 onRightSwipe: function (ev) {
-                    var icon = $(ev.currentTarget).find("i.fa");
-                    icon.addClass("waggle");
+                    var target = $(ev.currentTarget);
                     setTimeout(function() {
-                        $(ev.currentTarget).find(".swipe-action").removeClass("bg-success");
-                        icon.removeClass("waggle");
-                        $(ev.currentTarget).animate({ left: '0px' }, 200);
+                        target.find(".swipe-action").removeClass("bg-success");
+                        target.animate({ left: '0px' }, 200);
                         self._processPreviewMarkAsRead($(ev.currentTarget).find(".o_mail_preview"));
-                    }, 700);
+                    }, 500);
                 }
             });
         }

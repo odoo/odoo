@@ -277,7 +277,7 @@ var AbstractThreadWindow = Widget.extend({
     render: function () {
         this.renderHeader();
         if (this.hasThread()) {
-            this._threadWidget.render(this._thread, { displayLoadMore: false });
+            this._threadWidget.render(this._thread, { displayLoadMore: false, type: 'thread_window' });
         }
     },
     /**

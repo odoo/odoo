@@ -13,6 +13,7 @@
             onRightSwipe: false, // When swipped Left to Right
             onLeftSwipe: false, // When swipped Right to Left
             onElementMoving: false, // Called when item moving with touch
+            allowAction: false, // Called when item moving with touch and returns true if action allowed
         }, options);
 
         function getTouchPosition (event) {
@@ -62,7 +63,11 @@
                     touchStart: touch,
                     startLeft: rawStartLeft === 'auto' ? 0 : parseInt(rawStartLeft),
                     initialXDeltaReached: false,
-                    maxYDeltaReached: false
+                    maxYDeltaReached: false,
+                    allowAction: {
+                        left: settings.leftAction,
+                        right: settings.rightAction
+                    }
                 };
                 $item.data('listSwipe', data);
             }).on('touchmove', settings.itemSelector, function (ev) {
@@ -72,7 +77,25 @@
                 if (data.maxYDeltaReached) {
                     return;
                 }
+
+                // Check for action to allow based on action and delta
+                var touchDelta = calculateTouchDelta(touch, data, settings);
+                if (settings.allowAction) {
+                    var action = touchDelta.xDelta > 0 ? 'left' : touchDelta.xDelta < 0 ? 'right' : false;
+                    if (!settings.allowAction(ev, action, touchDelta.xDelta)) {
+                        data.allowAction[action] = false;
+                        $item.data('listSwipe', data);
+                        return;
+                    } else {
+                        data.allowAction[action] = (action == "left" ? settings.leftAction : settings.rightAction);
+                    }
+                }
+
                 var touchDelta = getTouchDelta(touch, data, settings);
+                var actionButton = touchDelta.xDelta > 0 ? 'left' : touchDelta.xDelta < 0 ? 'right' : false;
+                if (actionButton) {
+                    $item.find(".swipe-action." + actionButton).css("left", -touchDelta.xDelta + 'px');
+                }
                 if (!data.maxYDeltaReached && Math.abs(touchDelta.yDelta) > settings.maxYDelta) {
                     data.maxYDeltaReached = true;
                     $item.animate({ left: '0px' }, settings.snapDuration);
@@ -96,7 +119,19 @@
                     return;
                 }
                 var touchDelta = calculateTouchDelta(touch, data, settings);
+                var actionButton = touchDelta.xDelta > 0 ? 'left' : touchDelta.xDelta < 0 ? 'right' : false;
+
+                if (actionButton && data.allowAction && !data.allowAction[actionButton]) {
+                    return;
+                }
+
                 $item.animate({ left: touchDelta.xDelta + 'px' }, settings.snapDuration);
+
+                if (actionButton) {
+                    var actionWidth = actionButton == "left" ? -touchDelta.xDelta : settings.itemActionWidth;
+                    $item.find(".swipe-action." + actionButton)
+                        .animate({left: actionWidth + 'px'}, settings.snapDuration);
+                }
                 if (touchDelta.xDelta > 0 && settings.onRightSwipe) {
                     settings.onRightSwipe(ev);
                 }

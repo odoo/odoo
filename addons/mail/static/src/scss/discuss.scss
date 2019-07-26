@@ -490,9 +490,16 @@
 @include media-breakpoint-down(sm) {
     .list_swipe_actions {
         position: relative;
+        .o_preview_unread {
+            background-color: darken(theme-color('light'), 5%);
+        }
+        .o_thread_message {
+            position: relative;
+            background: white;
+        }
         button.swipe-action {
             position: absolute;
-            width: 80px;
+            width: 100%;
             height: 100%;
             top: 0;
             border: none;
@@ -500,13 +507,14 @@
             -webkit-transition: background 1s; /* For Safari 3.0 to 6.0 */
             transition: background 1s; /* For modern browsers */
             &.left {
-                left: -80px;
+                left: 0px;
+                text-align: left;
+                padding-left: 28px;
             }
             &.right {
-                right: -80px;
-            }
-            .waggle {
-                animation: waggle 1s 0s forwards ease-out;
+                right: 0px;
+                text-align: right;
+                padding-right: 28px;
             }
         }
     }

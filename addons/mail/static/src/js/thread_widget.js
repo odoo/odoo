@@ -194,13 +194,15 @@ var ThreadWidget = Widget.extend({
             messages.reverse();
         }
 
+        var enableSwipe = config.device.isMobile && (!options.type || options.type != "thread_window");
+
         this.$el.html(QWeb.render('mail.widget.Thread', {
             thread: thread,
             displayAuthorMessages: displayAuthorMessages,
             options: options,
             ORDER: ORDER,
             dateFormat: time.getLangDatetimeFormat(),
-            isMobile: config.device.isMobile
+            enableSwipe: enableSwipe
         }));
 
         _.each(messages, function (message) {
@@ -225,7 +227,7 @@ var ThreadWidget = Widget.extend({
             this._renderMessageSeenPopover(thread, messages);
         }
 
-        if (config.device.isMobile) {
+        if (enableSwipe) {
             this.$el.listSwipe({
                 itemSelector: '.o_thread_message_mobile',
                 onElementMoving: function (ev, action) {
@@ -233,26 +235,20 @@ var ThreadWidget = Widget.extend({
                     $(ev.currentTarget).find(".swipe-action[data-key='star']").toggleClass("bg-warning", action == "left");
                 },
                 onRightSwipe: function (ev) {
-                    var icon = $(ev.currentTarget).find("i.fa");
-                    icon.addClass("waggle");
                     setTimeout(function() {
                         $(ev.currentTarget).find(".swipe-action").removeClass("bg-success");
-                        icon.removeClass("waggle");
                         $(ev.currentTarget).animate({ left: '0px' }, 200);
                         var messageID = $(ev.currentTarget).find(".o_thread_message").data("message-id");
                         self.trigger('mark_as_read', messageID);
-                    }, 700);
+                    }, 500);
                 },
                 onLeftSwipe: function (ev) {
-                    var icon = $(ev.currentTarget).find("i.fa");
-                    icon.addClass("waggle");
                     setTimeout(function() {
                         $(ev.currentTarget).find(".swipe-action").removeClass("bg-warning");
-                        icon.removeClass("waggle");
                         $(ev.currentTarget).animate({ left: '0px' }, 200);
                         var messageID = $(ev.currentTarget).find(".o_thread_message").data("message-id");
                         self.trigger('toggle_star_status', messageID);
-                    }, 700);
+                    }, 500);
                 }
             });
         }
