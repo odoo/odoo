@@ -23,6 +23,9 @@ class PaymentWizard(models.TransientModel):
     paypal_seller_account = fields.Char("Merchant Account ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_seller_account'))
     paypal_pdt_token = fields.Char("PDT Identity Token", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_pdt_token'))
 
+    stripe_user = fields.Selection([
+        ('new_user', 'Create a new Stripe account'),
+        ('existing_user', 'Use an existing Stripe account')], default='new_user')
     stripe_secret_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_secret_key'))
     stripe_publishable_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_publishable_key'))
 
@@ -117,7 +120,7 @@ class PaymentWizard(models.TransientModel):
                     'paypal_pdt_token': self.paypal_pdt_token,
                     'state': 'enabled',
                 })
-            if self.payment_method == 'stripe':
+            if self.payment_method == 'stripe' and self.stripe_user == 'existing_user':
                 new_env.ref('payment.payment_acquirer_stripe').write({
                     'stripe_secret_key': self.stripe_secret_key,
                     'stripe_publishable_key': self.stripe_publishable_key,
@@ -154,3 +157,8 @@ class PaymentWizard(models.TransientModel):
         self._set_payment_acquirer_onboarding_step_done()
         action = self.env.ref('payment.action_payment_acquirer').read()[0]
         return action
+
+    def create_sripe_account(self):
+        self.add_payment_methods()
+        acquirer = self.env['payment.acquirer'].search([('provider', '=', 'stripe')], limit=1)
+        return acquirer.create_account()

@@ -52,12 +52,14 @@
                             </div>
                             <div attrs="{'invisible': [('payment_method', '!=', 'stripe')]}">
                                 <group>
+                                    <field name="stripe_user" widget="radio" nolabel="1"/>
                                     <field name="stripe_secret_key"
-                                       attrs="{'required': [('payment_method', '=', 'stripe')]}" />
+                                       attrs="{'required': [('payment_method', '=', 'stripe'), ('stripe_user', '!=', 'new_user')], 'invisible': [('stripe_user', '=', 'new_user')]}"/>
                                     <field name="stripe_publishable_key"
-                                       attrs="{'required': [('payment_method', '=', 'stripe')]}" />
+                                       attrs="{'required': [('payment_method', '=', 'stripe'), ('stripe_user', '!=', 'new_user')], 'invisible': [('stripe_user', '=', 'new_user')]}"/>
                                 </group>
-                                <p>
+                                <button name="create_sripe_account" type="object" class="oe_highlight" string="Create account" attrs="{'invisible': [('stripe_user', '!=', 'new_user')]}"/>
+                                <p attrs="{'invisible': [('stripe_user', '=', 'new_user')]}">
                                     <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">
                                         <span class="fa fa-arrow-right"> Get my Stripe keys</span>
                                     </a>
