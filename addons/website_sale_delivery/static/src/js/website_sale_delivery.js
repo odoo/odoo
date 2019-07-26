@@ -59,7 +59,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _handleCarrierUpdateResult: function (result) {
         this._handleCarrierUpdateResultBadge(result);
-        var $payButton = $('#o_payment_form_pay .monetary_field');
+        var $payButton = $('button#o_payment_form_pay');
         var $amountDelivery = $('#order_delivery .monetary_field');
         var $amountUntaxed = $('#order_total_untaxed .monetary_field');
         var $amountTax = $('#order_total_taxes .monetary_field');
@@ -70,8 +70,10 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             $amountUntaxed.html(result.new_amount_untaxed);
             $amountTax.html(result.new_amount_tax);
             $amountTotal.html(result.new_amount_total);
+
             $payButton.data('disabled_reasons').carrier_selection = false;
             $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
+            $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
         } else {
             $amountDelivery.html(result.new_amount_delivery);
             $amountUntaxed.html(result.new_amount_untaxed);
@@ -113,6 +115,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         this._showLoading($radio);
         $radio.prop("checked", true);
         var $payButton = $('#o_payment_form_pay');
+
         $payButton.prop('disabled', true);
         $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
         $payButton.data('disabled_reasons').carrier_selection = true;
