@@ -216,6 +216,81 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
         for partner in self.partners:
             self.assertSMSOutgoing(partner, None, self._test_body)
 
+    def test_composer_mass_active_ids_w_blacklist(self):
+        self.env['phone.blacklist'].create([{
+            'number': p.phone_sanitized,
+            'active': True,
+        } for p in self.partners[:5]])
+
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='mass',
+                default_res_model='mail.test.sms',
+                active_ids=self.records.ids,
+            ).create({
+                'body': self._test_body,
+                'mass_use_blacklist': True,
+            })
+
+            with self.mockSMSGateway():
+                composer.action_send_sms()
+
+        for partner in self.partners[5:]:
+            self.assertSMSOutgoing(partner, partner.phone_sanitized, content=self._test_body)
+        for partner in self.partners[:5]:
+            self.assertSMSCanceled(partner, partner.phone_sanitized, 'sms_blacklist', content=self._test_body)
+
+    def test_composer_mass_active_ids_wo_blacklist(self):
+        self.env['phone.blacklist'].create([{
+            'number': p.phone_sanitized,
+            'active': True,
+        } for p in self.partners[:5]])
+
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='mass',
+                default_res_model='mail.test.sms',
+                active_ids=self.records.ids,
+            ).create({
+                'body': self._test_body,
+                'mass_use_blacklist': False,
+            })
+
+            with self.mockSMSGateway():
+                composer.action_send_sms()
+
+        for partner in self.partners:
+            self.assertSMSOutgoing(partner, partner.phone_sanitized, content=self._test_body)
+
+    def test_composer_mass_active_ids_w_blacklist_and_done(self):
+        self.env['phone.blacklist'].create([{
+            'number': p.phone_sanitized,
+            'active': True,
+        } for p in self.partners[:5]])
+        for p in self.partners[8:]:
+            p.mobile = self.partners[8].mobile
+            self.assertEqual(p.phone_sanitized, self.partners[8].phone_sanitized)
+
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='mass',
+                default_res_model='mail.test.sms',
+                active_ids=self.records.ids,
+            ).create({
+                'body': self._test_body,
+                'mass_use_blacklist': True,
+            })
+
+            with self.mockSMSGateway():
+                composer.action_send_sms()
+
+        for partner in self.partners[8:]:
+            self.assertSMSOutgoing(partner, partner.phone_sanitized, content=self._test_body)
+        for partner in self.partners[5:8]:
+            self.assertSMSCanceled(partner, partner.phone_sanitized, 'sms_duplicate', content=self._test_body)
+        for partner in self.partners[:5]:
+            self.assertSMSCanceled(partner, partner.phone_sanitized, 'sms_blacklist', content=self._test_body)
+
     def test_composer_mass_active_ids_w_template(self):
         with self.sudo('employee'):
             composer = self.env['sms.composer'].with_context(

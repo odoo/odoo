@@ -29,7 +29,10 @@ class SmsSms(models.Model):
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
-        ('sms_server', 'Server Error')
+        ('sms_server', 'Server Error'),
+        # mass mode specific codes
+        ('sms_blacklist', 'Blacklisted'),
+        ('sms_duplicate', 'Duplicate'),
     ])
 
     def send(self, delete_all=False, auto_commit=False, raise_exception=False):
