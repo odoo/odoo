@@ -15,9 +15,9 @@ class AccountChartTemplate(models.Model):
         return res
 
     # Write paperformat and report template used on company
-    def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
-        res = super(AccountChartTemplate, self).load_for_current_company(sale_tax_rate, purchase_tax_rate)
-        company = self.env.company
+    def load_for_company(self, sale_tax_rate, purchase_tax_rate,  company=False):
+        res = super(AccountChartTemplate, self).load_for_company(sale_tax_rate, purchase_tax_rate, company=company)
+        company = company or self.env.company
         if company.country_id.code == 'DE':
             company.write({'external_report_layout_id': self.env.ref('l10n_de.external_layout_din5008').id,
             'paperformat_id': self.env.ref('l10n_de.paperformat_euro_din').id})
