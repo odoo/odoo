@@ -1367,7 +1367,17 @@ class AccountInvoice(models.Model):
             # refuse to validate a vendor bill/credit note if there already exists one with the same reference for the same partner,
             # because it's probably a double encoding of the same bill/credit note
             if invoice.type in ('in_invoice', 'in_refund') and invoice.reference:
-                if self.search([('type', '=', invoice.type), ('reference', '=', invoice.reference), ('company_id', '=', invoice.company_id.id), ('commercial_partner_id', '=', invoice.commercial_partner_id.id), ('id', '!=', invoice.id)]):
+                date_start = fields.Date.from_string(invoice.date_invoice).replace(
+                    day=1, month=1)
+                date_end = fields.Date.from_string(invoice.date_invoice).replace(
+                    day=31, month=12)
+                if self.search([('type', '=', invoice.type),
+                                ('reference', '=', invoice.reference),
+                                ('company_id', '=', invoice.company_id.id),
+                                ('commercial_partner_id', '=', invoice.commercial_partner_id.id),
+                                ('id', '!=', invoice.id),
+                                ('date_invoice', '>=', fields.Date.to_string(date_start)),
+                                ('date_invoice', '<=', fields.Date.to_string(date_end))]):
                     raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note."))
 
     @api.multi
