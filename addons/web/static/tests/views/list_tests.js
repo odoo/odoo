@@ -553,10 +553,29 @@ QUnit.module('Views', {
             hasSelectors: false,
         });
 
-        assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
-            "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 column");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "1",
+            "the header should not span the whole table");
+        list.destroy();
+    });
+
+    QUnit.test('basic grouped list rendering 3 cols without selector', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree ><field name="foo"/><field name="bar"/><field name="text"/></tree>',
+            groupBy: ['bar'],
+            hasSelectors: false,
+        });
+
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 columns");
         assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "2",
-            "the header should span the whole table");
+            "the first header should  span two columns");
         list.destroy();
     });
 
@@ -572,10 +591,29 @@ QUnit.module('Views', {
             hasSelectors: true,
         });
 
-        assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
-            "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 columns");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "2",
+            "the header should not span the whole table");
+        list.destroy();
+    });
+
+    QUnit.test('basic grouped list rendering 3 cols with selector', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree ><field name="foo"/><field name="bar"/><field name="text"/></tree>',
+            groupBy: ['bar'],
+            hasSelectors: true,
+        });
+
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
+            "group header should have exactly 2 columns");
         assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "3",
-            "the header should span the whole table");
+            "the header should not span the whole table");
         list.destroy();
     });
 
@@ -1391,6 +1429,39 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('width of some of the fields should be hardcoded', async function (assert) {
+        const assertions = [
+            { field: 'bar', expected: 40, type: 'Boolean' },
+            { field: 'int_field', expected: 80, type: 'Integer' },
+            { field: 'qux', expected: 100, type: 'Float' },
+            { field: 'date', expected: 100, type: 'Date' },
+            { field: 'datetime', expected: 150, type: 'Datetime' },
+        ];
+        assert.expect(assertions.length + 1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
+                    '</tree>',
+        });
+
+        assertions.forEach(a => {
+            assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
+                `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
+        });
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%', "Char field should occupy the remaining space");
+
+        list.destroy();
+    });
+
     QUnit.test('row height should not change when switching mode', async function (assert) {
         // Warning: this test is css dependant
         assert.expect(3);
@@ -1414,7 +1485,7 @@ QUnit.module('Views', {
                         '<field name="int_field" readonly="1"/>' +
                         '<field name="boolean"/>' +
                         '<field name="date"/>' +
-                        '<field name="text" width_factor="2"/>' +
+                        '<field name="text" width_factor="1"/>' +
                         '<field name="amount"/>' +
                         '<field name="currency_id" invisible="1"/>' +
                         '<field name="m2o"/>' +
@@ -1424,6 +1495,11 @@ QUnit.module('Views', {
                 currencies: currencies,
             },
         });
+
+        // the width is hardcoded to make sure we have the same condition
+        // between debug mode and non debug mode (#qunit-fixture is limited to
+        // 1000px)
+        list.$el.width('1000px');
         var startHeight = list.$('.o_data_row:first').height();
 
         // start edition of first row
@@ -2094,8 +2170,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('tbody:eq(1) .o_group_header:eq(0)'));
 
-        assert.containsNone(list, '.o_group_header button',
-            "there should be no button in the header");
+        assert.containsOnce(list, '.o_group_header button',
+            "there should be one button in the header");
 
         list.destroy();
     });
@@ -2759,8 +2835,8 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_group_header'));
         assert.strictEqual(list.$('.o_group_header').css('height'), headerHeight,
             "height of group header shouldn't have changed");
-        assert.hasClass(list.$('.o_group_header th'), 'o_group_pager',
-            "last cell of open group header should have classname 'o_group_header'");
+        assert.hasClass(list.$('.o_group_header th:eq(1) > div'), 'o_pager',
+            "last cell of open group header should have classname 'o_pager'");
         assert.strictEqual(list.$('.o_group_header .o_pager_value').text(), '1-3',
             "pager's value should be correct");
         assert.containsN(list, '.o_data_row', 3,
@@ -4295,6 +4371,43 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_cell:first'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'abc');
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: contexts with multiple edit', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/foo/write' ||
+                    route === '/web/dataset/call_kw/foo/read') {
+                    var context = args.kwargs.context;
+                    assert.strictEqual(context.active_field, 2, "context should be correct");
+                    assert.strictEqual(context.someKey, 'some value', "context should be correct");
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {someKey: 'some value'},
+            },
+            viewOptions: {
+                context: {active_field: 2},
+            },
+        });
+
+        // Uses the main selector to select all lines.
+        await testUtils.dom.click(list.$('.o_content input:first'));
+        await testUtils.dom.click(list.$('.o_data_cell:first'));
+        // Edits first record then confirms changes.
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'legion');
+        await testUtils.dom.click($('.modal-dialog button.btn-primary'));
 
         list.destroy();
     });

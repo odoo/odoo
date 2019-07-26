@@ -329,7 +329,9 @@ var DocumentThread = Thread.extend({
                             .then(function (messages) {
                                 messages[0].model = resModel;
                                 messages[0].res_id = resID;
-                                self.call('mail_service', 'addMessage', messages[0]);
+                                self.call('mail_service', 'addMessage', messages[0], {
+                                    postedFromDocumentThread: true,
+                                });
                                 return messages[0];
                             });
                     });

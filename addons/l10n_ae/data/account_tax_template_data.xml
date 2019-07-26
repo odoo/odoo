@@ -386,7 +386,7 @@
         ]"/>
     </record>
     <record id="uae_sale_tax_reverse_charge_abu_dhabi" model="account.tax.template">
-        <field name="name">Reverse Charge Provision (Abi Dhabi)</field>
+        <field name="name">Reverse Charge Provision (Abu Dhabi)</field>
         <field name="type_tax_use">sale</field>
         <field name="amount">5</field>
         <field name="amount_type">percent</field>
@@ -828,6 +828,18 @@
                 'minus_report_line_ids': [ref('tax_report_line_import_uae_vat')],
             }),
         ]"/>
+    </record>
+    <record id="uae_purchase_tax_5_child_global" model="account.tax.template">
+        <field name="name">TVA 5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">TVA 5%</field>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_02')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_purchase_tax_reverse_charge" model="account.tax.template">
         <field name="name">Reverse Charge Provision</field>
