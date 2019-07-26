@@ -3466,9 +3466,6 @@ class TestStockValuation(SavepointCase):
         date2 = now - timedelta(days=7)
 
         self.product1.standard_price = 10
-        self.env['product.price.history'].search([
-                ('product_id', '=', self.product1.id)
-            ], order='datetime desc, id DESC', limit=1).datetime = date1
         self.product1.product_tmpl_id.cost_method = 'average'
         inventory_location = self.product1.property_stock_inventory
         inventory_location.company_id = self.env.company.id
@@ -3486,6 +3483,7 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10.0
         move1._action_done()
         move1.date = date1
+        move1.stock_valuation_layer_ids.write({'create_date': date1})
 
         move2 = self.env['stock.move'].create({
             'name': 'Sell 5 units',
@@ -3500,8 +3498,9 @@ class TestStockValuation(SavepointCase):
         move2.move_line_ids.qty_done = 5.0
         move2._action_done()
         move2.date = date2
+        move2.stock_valuation_layer_ids.write({'create_date': date2})
 
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).stock_value, 100)
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 5)
-        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 50)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).quantity_svl, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).value_svl, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).quantity_svl, 5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).value_svl, 50)
