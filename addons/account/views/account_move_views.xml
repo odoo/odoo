@@ -160,7 +160,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" editable="bottom" expand="context.get('expand', False)">
+                <tree string="Journal Items" create="false" expand="context.get('group_by') in ('move_id', 'account_id') and 1 or 0">
                     <field name="date" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="ref" optional="hide"/>
                     <field name="move_id" optional="show" readonly="1"/>
@@ -200,13 +200,18 @@
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                    <attribute name="readonly">1</attribute>
+                </field>
                 <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="tag_ids" position="attributes">
                     <attribute name="optional">show</attribute>
                     <attribute name="string">Tax Grid</attribute>
                     <attribute name="domain">[('applicability', '=', 'taxes')]</attribute>
+                    <attribute name="readonly">1</attribute>
                 </field>
+                <field name="name" position="attributes"><attribute name="readonly">1</attribute></field>
             </field>
         </record>
 
@@ -218,8 +223,13 @@
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="ref" position="attributes"><attribute name="optional">show</attribute></field>
+                <field name="ref" position="attributes">
+                    <attribute name="optional">show</attribute>
+                    <attribute name="readonly">1</attribute>
+                </field>
                 <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="name" position="attributes"><attribute name="readonly">1</attribute></field>
+                <field name="partner_id" position="attributes"><attribute name="readonly">1</attribute></field>
             </field>
         </record>
 
@@ -231,6 +241,10 @@
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="name" position="attributes"><attribute name="readonly">1</attribute></field>
+                <field name="account_id" position="attributes"><attribute name="readonly">1</attribute></field>
+                <field name="partner_id" position="attributes"><attribute name="readonly">1</attribute></field>
+                <field name="full_reconcile_id" position="attributes"><attribute name="readonly">1</attribute></field>
             </field>
         </record>
 
@@ -347,7 +361,7 @@
                     <field name="ref" optional="show"/>
                     <field name="journal_id"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="amount_total_signed" sum="Total Amount"/>
+                    <field name="amount_total_signed" sum="Total Amount" string="Total"/>
                     <field name="state"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
@@ -573,7 +587,7 @@
                                            class="oe_inline"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                     <span class="o_form_label oe_edit_only"
-                                          attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
+                                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False), '|', ('invoice_date_due', '!=', False), '|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
                                     <field name="invoice_date_due" force_save="1"
                                            class="oe_inline"
                                            attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
@@ -680,19 +694,25 @@
                                 </field>
 
                                 <!-- Totals (only invoices / receipts) -->
-                                <group class="oe_subtotal_footer oe_right"
+                                <group class="oe_right">
+                                    <group class="oe_subtotal_footer"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
-                                    <field name="amount_untaxed"/>
-                                    <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
-                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                    <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
-                                    <field name="amount_residual" class="oe_subtotal_footer_separator"
-                                           attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                    <field name="invoice_outstanding_credits_debits_widget"
-                                           colspan="2" nolabel="1" widget="payment"
-                                           attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('type', 'in', ('out_receipt', 'in_receipt'))]}"/>
-                                </group>
+                                        <field name="amount_untaxed"/>
+                                        <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
+                                        <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                        <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                        <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    </group>
 
+                                    <newline/>
+                                    
+                                    <group class="oe_invoice_outstanding_credits_debits" style="width: 350px !important;">
+                                        <field name="invoice_outstanding_credits_debits_widget"
+                                            colspan="2" nolabel="1" widget="payment"
+                                            attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('type', 'in', ('out_receipt', 'in_receipt'))]}"/>
+                                    </group>
+
+                                </group>
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
@@ -921,9 +941,8 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Partner" name="group_by_partner_id" context="{'group_by': 'commercial_partner_id'}"/>
-                        <filter string="Salesperson" name="salesperson" context="{'group_by': 'invoice_user_id'}"/>
-                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
+                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
                         <filter string="Invoice Date" name="invoicedate" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Due Date" name="duedate" context="{'group_by': 'invoice_date_due'}"/>
@@ -1197,6 +1216,17 @@
             <field name="res_model">account.move</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
+        </record>
+
+        <record model="ir.actions.server" id="action_move_switch_invoice_to_credit_note">
+            <field name="name">Switch into refund/credit note</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_switch_invoice_into_refund_credit_note()
+            </field>
         </record>
 
         <!-- MENUS -->

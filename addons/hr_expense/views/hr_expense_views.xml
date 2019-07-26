@@ -89,7 +89,7 @@
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
-                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="tax_ids" domain="[('default_type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </group><group>
                             <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
@@ -336,8 +336,8 @@
                             </group>
                             <group string="Accounting">
                                 <field name="property_account_expense_id" groups="account.group_account_user"/>
-                                <field name="supplier_taxes_id" widget="many2many_tags"/>
-                                <field name="taxes_id" widget="many2many_tags"/>
+                                <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase'}"/>
+                                <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale'}"/>
                             </group>
                         </group>
                     </sheet>
