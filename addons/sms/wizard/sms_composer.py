@@ -55,6 +55,7 @@ class SendSMS(models.TransientModel):
     # options for comment and mass mode
     mass_keep_log = fields.Boolean('Keep a note on document')
     mass_force_send = fields.Boolean('Send directly')
+    mass_use_blacklist = fields.Boolean('Use blacklist', default=True)
     # recipients
     recipient_description = fields.Text('Recipients (Partners)', compute='_compute_description')
     recipient_invalid = fields.Text('Invalid recipients', compute='_compute_description')
@@ -189,7 +190,7 @@ class SendSMS(models.TransientModel):
 
     def _action_send_sms_mass_w_log(self, records=None):
         records = records if records is not None else self._get_records()
-        all_bodies = self._prepare_body_values(records=records)
+        all_bodies = self._prepare_body_values(records)
         subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
         messages = self.env['mail.message']
@@ -201,13 +202,31 @@ class SendSMS(models.TransientModel):
     # Mass mode specific
     # ------------------------------------------------------------
 
-    def _prepare_recipient_values(self, records=None):
-        records = records if records is not None else self._get_records()
+    def _get_blacklist_record_ids(self, records, recipients_info):
+        """ Get a list of blacklisted records. Those will be directly canceled
+        with the right error code. """
+        if self.mass_use_blacklist:
+            bl_numbers = self.env['phone.blacklist'].sudo().search([]).mapped('number')
+            return [r.id for r in records if recipients_info[r.id]['sanitized'] in bl_numbers]
+        return []
+
+    def _get_done_record_ids(self, records, recipients_info):
+        """ Get a list of already-done records. Order of record set is used to
+        spot duplicates so pay attention to it if necessary. """
+        done_ids, done = [], []
+        for record in records:
+            sanitized = recipients_info[record.id]['sanitized']
+            if sanitized in done:
+                done_ids.append(record.id)
+            else:
+                done.append(sanitized)
+        return done_ids
+
+    def _prepare_recipient_values(self, records):
         recipients_info = records._sms_get_recipients_info(force_field=self.number_field_name)
         return recipients_info
 
-    def _prepare_body_values(self, records=None):
-        records = records if records is not None else self._get_records()
+    def _prepare_body_values(self, records):
         if self.template_id and self.body == self.template_id.body:
             lang_to_rids = self.template_id._get_ids_per_lang(records.ids)
             all_bodies = {}
@@ -220,17 +239,34 @@ class SendSMS(models.TransientModel):
 
     def _prepare_mass_sms_values(self, records=None):
         records = records if records is not None else self._get_records()
-        all_bodies = self._prepare_body_values(records=records)
-        all_recipients = self._prepare_recipient_values(records=records)
+        all_bodies = self._prepare_body_values(records)
+        all_recipients = self._prepare_recipient_values(records)
+        blacklist_ids = self._get_blacklist_record_ids(records, all_recipients)
+        done_ids = self._get_done_record_ids(records, all_recipients)
 
         result = {}
         for record in records:
             recipients = all_recipients[record.id]
+            sanitized = recipients['sanitized']
+            if sanitized and record.id in blacklist_ids:
+                state = 'canceled'
+                error_code = 'sms_blacklist'
+            elif sanitized and record.id in done_ids:
+                state = 'canceled'
+                error_code = 'sms_duplicate'
+            elif not sanitized:
+                state = 'error'
+                error_code = 'sms_number_format' if recipients['number'] else 'sms_number_missing'
+            else:
+                state = 'outgoing'
+                error_code = ''
+
             result[record.id] = {
                 'body': all_bodies[record.id],
                 'partner_id': recipients['partner'].id,
-                'number': recipients['sanitized'] or recipients['number'],
-                'state': 'outgoing' if recipients['sanitized'] else 'error',
+                'number': sanitized if sanitized else recipients['number'],
+                'state': state,
+                'error_code': error_code,
             }
         return result
 
