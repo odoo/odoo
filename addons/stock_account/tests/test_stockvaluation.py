@@ -3461,7 +3461,7 @@ class TestStockValuation(SavepointCase):
         """ Set a company on the inventory loss, take items from there then put items there, check
         the values and quantities at date.
         """
-        now = Datetime.from_string(Date.today())
+        now = Datetime.now()
         date1 = now - timedelta(days=8)
         date2 = now - timedelta(days=7)
 
@@ -3501,7 +3501,7 @@ class TestStockValuation(SavepointCase):
         move2._action_done()
         move2.date = date2
 
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 5)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 50)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 50)
