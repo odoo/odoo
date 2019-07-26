@@ -2488,9 +2488,36 @@ exports.Order = Backbone.Model.extend({
         }), 0), this.pos.currency.rounding);
     },
     get_total_tax: function() {
-        return round_pr(this.orderlines.reduce((function(sum, orderLine) {
-            return sum + orderLine.get_tax();
-        }), 0), this.pos.currency.rounding);
+        if (this.pos.company.tax_calculation_rounding_method === "round_globally") {
+            // As always, we need:
+            // 1. For each tax, sum their amount across all order lines
+            // 2. Round that result
+            // 3. Sum all those rounded amounts
+            var groupTaxes = {};
+            this.orderlines.each(function (line) {
+                var taxDetails = line.get_tax_details();
+                var taxIds = Object.keys(taxDetails);
+                for (var t = 0; t<taxIds.length; t++) {
+                    var taxId = taxIds[t];
+                    if (!(taxId in groupTaxes)) {
+                        groupTaxes[taxId] = 0;
+                    }
+                    groupTaxes[taxId] += taxDetails[taxId];
+                }
+            });
+
+            var sum = 0;
+            var taxIds = Object.keys(groupTaxes);
+            for (var j = 0; j<taxIds.length; j++) {
+                var taxAmount = groupTaxes[taxIds[j]];
+                sum += round_pr(taxAmount, this.pos.currency.rounding);
+            }
+            return sum;
+        } else {
+            return round_pr(this.orderlines.reduce((function(sum, orderLine) {
+                return sum + orderLine.get_tax();
+            }), 0), this.pos.currency.rounding);
+        }
     },
     get_total_paid: function() {
         return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
