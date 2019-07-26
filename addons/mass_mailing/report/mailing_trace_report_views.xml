@@ -51,14 +51,16 @@
         </record>
 
         <!-- Actions and Menuitems -->
-       <record id="mailing_trace_report_action" model="ir.actions.act_window">
+       <record id="mailing_trace_report_action_mail" model="ir.actions.act_window">
            <field name="name">Mass Mailing Analysis</field>
            <field name="res_model">mailing.trace.report</field>
+           <field name="domain">[('mailing_type', '=', 'mail')]</field>
            <field name="view_mode">graph,pivot</field>
-           <field name="help">Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</field>
+           <field name="help" type="html"><p>Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</p></field>
        </record>
 
-       <menuitem name="Mass Mailing" id="mass_mailing_menu_root" sequence="60"/>
        <menuitem name="Reporting" id="menu_mass_mailing_report" sequence="99"
-            parent="mass_mailing_menu_root" action="mailing_trace_report_action" groups="mass_mailing.group_mass_mailing_user"/>
+            parent="mass_mailing_menu_root"
+            action="mailing_trace_report_action_mail"
+            groups="mass_mailing.group_mass_mailing_user"/>
 </odoo>

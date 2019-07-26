@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 
+
 class UtmCampaign(models.Model):
     _inherit = 'utm.campaign'
 
