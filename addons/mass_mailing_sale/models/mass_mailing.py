@@ -26,7 +26,7 @@ class MassMailing(models.Model):
             if has_so_access and has_invoice_report_access:
                 invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
                 res = self.env['account.invoice.report'].search_read(
-                    [('invoice_id', 'in', invoices.ids), ('state', 'not in', ['draft', 'cancel'])],
+                    [('move_id', 'in', invoices.ids), ('state', 'not in', ['draft', 'cancel'])],
                     ['price_subtotal']
                 )
                 mass_mailing.sale_invoiced_amount = sum(r['price_subtotal'] for r in res)
