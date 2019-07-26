@@ -173,7 +173,7 @@ class AccountChartTemplate(models.Model):
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang, company=company)
         if not self.env.is_admin():
-            raise AccessError(_("Only administrators can load a charf of accounts"))
+            raise AccessError(_("Only administrators can load a chart of accounts"))
 
         existing_accounts = self.env['account.account'].search([('company_id', '=', company.id)])
         if existing_accounts:
@@ -648,7 +648,15 @@ class AccountChartTemplate(models.Model):
         account_tmpl_obj = self.env['account.account.template']
         acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
         template_vals = []
+        all_parents = self._get_chart_parent_ids()
+        sale_tax = self.env['account.tax.template'].search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], limit=1)
+        purchase_tax = self.env['account.tax.template'].search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], limit=1)
         for account_template in acc_template:
+            # Adding a tax by default on each income or expense account.
+            if account_template.user_type_id.internal_group == 'income':
+                account_template.tax_ids = sale_tax
+            elif account_template.user_type_id.internal_group == 'expense':
+                account_template.tax_ids = purchase_tax
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
