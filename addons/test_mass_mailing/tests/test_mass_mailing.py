@@ -91,7 +91,7 @@ class TestAccessRights(TransactionCase):
                                 [self.mailing_contact_1.id, self.mailing_contact_2.id, self.mailing_contact_3.id,
                                  self.mailing_contact_4.id, self.mailing_contact_5.id])],
             'body_html': 'This is mass mail marketing demo'})
-        self.mass_mailing.put_in_queue()
+        self.mass_mailing.action_put_in_queue()
         res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
@@ -140,7 +140,7 @@ class TestAccessRights(TransactionCase):
             'mailing_model_id': self.env['ir.model']._get(mass_mailing_contacts).id,
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id]
-        self.mass_mailing.put_in_queue()
+        self.mass_mailing.action_put_in_queue()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -196,7 +196,7 @@ class TestAccessRights(TransactionCase):
             'mailing_model_id': self.env['ir.model']._get(mass_mailing_contacts).id,
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id, mailing_list_2.id]
-        self.mass_mailing.put_in_queue()
+        self.mass_mailing.action_put_in_queue()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -246,7 +246,7 @@ class TestAccessRights(TransactionCase):
             'mailing_model_id': self.env['ir.model']._get(mass_mailing_contacts).id,
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id]
-        self.mass_mailing.put_in_queue()
+        self.mass_mailing.action_put_in_queue()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -295,7 +295,7 @@ class TestOnResPartner(TransactionCase):
             'mailing_domain': [('id', 'in', [partner_a.id, partner_b.id])],
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.mailing_model_real = 'res.partner'
-        self.mass_mailing.put_in_queue()
+        self.mass_mailing.action_put_in_queue()
         res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],

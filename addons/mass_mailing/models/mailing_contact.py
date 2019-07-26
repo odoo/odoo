@@ -19,7 +19,6 @@ class MassMailingContactListRel(models.Model):
     opt_out = fields.Boolean(string='Opt Out',
                              help='The contact has chosen not to receive mails anymore from this list', default=False)
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
-    contact_count = fields.Integer(related='list_id.contact_nbr', store=False, readonly=False)
     message_bounce = fields.Integer(related='contact_id.message_bounce', store=False, readonly=False)
     is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False, readonly=False)
 
@@ -39,19 +38,6 @@ class MassMailingContactListRel(models.Model):
             vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
         return super(MassMailingContactListRel, self).write(vals)
 
-    def action_open_mailing_list_contact(self):
-        """TODO DBE : To remove - Deprecated"""
-        contact_id = self.contact_id
-        action = {
-            'name': _(contact_id.name),
-            'type': 'ir.actions.act_window',
-            'res_model': 'mailing.contact',
-            'view_mode': 'form',
-            'target': 'current',
-            'res_id': contact_id.id
-        }
-        return action
-
 
 class MassMailingContact(models.Model):
     """Model of a contact. This model is different from the partner model
@@ -67,8 +53,7 @@ class MassMailingContact(models.Model):
     name = fields.Char()
     company_name = fields.Char(string='Company Name')
     title_id = fields.Many2one('res.partner.title', string='Title')
-    email = fields.Char(required=True)
-    is_email_valid = fields.Boolean(compute='_compute_is_email_valid', store=True)
+    email = fields.Char('Email')
     list_ids = fields.Many2many(
         'mailing.list', 'mailing_contact_list_rel',
         'contact_id', 'list_id', string='Mailing Lists')
@@ -78,12 +63,6 @@ class MassMailingContact(models.Model):
     opt_out = fields.Boolean('Opt Out', compute='_compute_opt_out', search='_search_opt_out',
                              help='Opt out flag for a specific mailing list.'
                                   'This field should not be used in a view without a unique and active mailing list context.')
-
-    @api.depends('email')
-    def _compute_is_email_valid(self):
-        for record in self:
-            normalized = tools.email_normalize(record.email)
-            record.is_email_valid = normalized if not normalized else True
 
     @api.model
     def _search_opt_out(self, operator, value):

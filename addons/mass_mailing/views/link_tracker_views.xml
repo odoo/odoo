@@ -12,7 +12,6 @@
             </xpath>
             <xpath expr="//group" position="inside">
                 <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
-                <filter string="Mailing Campaign" name="groupby_mass_mailing_campaign_id" domain="[]" context="{'group_by': 'campaign_id'}"/>
             </xpath>
         </field>
     </record>
@@ -66,7 +65,6 @@
             </xpath>
             <xpath expr="//filter[@name='groupby_country_id']" position="after">
                 <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
-                <filter string="Mailing Campaign" name="groupby_mass_mailing_campaign_id" domain="[]" context="{'group_by': 'campaign_id'}"/>
             </xpath>
         </field>
     </record>

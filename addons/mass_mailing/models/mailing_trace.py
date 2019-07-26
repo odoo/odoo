@@ -11,9 +11,11 @@ class MailingTrace(models.Model):
     without loosing the statistics about them. """
     _name = 'mailing.trace'
     _description = 'Mailing Statistics'
-    _rec_name = 'message_id'
-    _order = 'message_id'
+    _rec_name = 'id'
+    _order = 'scheduled DESC'
 
+    trace_type = fields.Selection([('mail', 'Mail')], string='Type', default='mail', required=True)
+    display_name = fields.Char(compute='_compute_display_name')
     # mail data
     mail_mail_id = fields.Many2one('mail.mail', string='Mail', index=True)
     mail_mail_id_int = fields.Integer(
@@ -23,16 +25,16 @@ class MailingTrace(models.Model):
              'However the ID is needed for several action and controllers.',
         index=True,
     )
-    email = fields.Char(string="Recipient email address")
+    email = fields.Char(string="Email")
     message_id = fields.Char(string='Message-ID')
     # document
     model = fields.Char(string='Document model')
     res_id = fields.Integer(string='Document ID')
     # campaign / wave data
-    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', index=True)
+    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', index=True)
     campaign_id = fields.Many2one(
         related='mass_mailing_id.campaign_id',
-        string='Mass Mailing Campaign',
+        string='Campaign',
         store=True, readonly=True, index=True)
     # Bounce and tracking
     ignored = fields.Datetime(help='Date when the email has been invalidated. '
@@ -55,9 +57,20 @@ class MailingTrace(models.Model):
                                         ('replied', 'Replied'),
                                         ('bounced', 'Bounced'),
                                         ('ignored', 'Ignored')], store=True)
+    failure_type = fields.Selection(selection=[
+        ("SMTP", "Connection failed (outgoing mail server problem)"),
+        ("RECIPIENT", "Invalid email address"),
+        ("BOUNCE", "Email address rejected by destination"),
+        ("UNKNOWN", "Unknown error"),
+    ], string='Failure type')
     state_update = fields.Datetime(compute="_compute_state", string='State Update',
                                    help='Last state update of the mail',
                                    store=True)
+
+    @api.depends('trace_type', 'mass_mailing_id')
+    def _compute_display_name(self):
+        for trace in self:
+            trace.display_name = '%s: %s (%s)' % (trace.trace_type, trace.mass_mailing_id.name, trace.id)
 
     @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception', 'ignored')
     def _compute_state(self):
@@ -78,12 +91,12 @@ class MailingTrace(models.Model):
             else:
                 stat.state = 'outgoing'
 
-    @api.model
-    def create(self, values):
-        if 'mail_mail_id' in values:
-            values['mail_mail_id_int'] = values['mail_mail_id']
-        res = super(MailingTrace, self).create(values)
-        return res
+    @api.model_create_multi
+    def create(self, values_list):
+        for values in values_list:
+            if 'mail_mail_id' in values:
+                values['mail_mail_id_int'] = values['mail_mail_id']
+        return super(MailingTrace, self).create(values_list)
 
     def _get_records(self, mail_mail_ids=None, mail_message_ids=None, domain=None):
         if not self.ids and mail_mail_ids:
