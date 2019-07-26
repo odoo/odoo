@@ -20,5 +20,5 @@ The service is provided by the In App Purchase Odoo platform.
         'static/src/xml/sms_widget.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }
