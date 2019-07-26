@@ -26,94 +26,12 @@
                 'repartition_type': 'base',
             }),
 
-    <record id="tax_tag_sale_ivap" model="account.account.tag">
-        <field name="name">IVAP Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_sale_isc" model="account.account.tag">
-        <field name="name">ISC Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_sale_icbper" model="account.account.tag">
-        <field name="name">ICBPER Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_sale_exportation" model="account.account.tag">
-        <field name="name">EXPORTACIÓN Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_sale_free" model="account.account.tag">
-        <field name="name">GRATUITO Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_sale_exonerated" model="account.account.tag">
-        <field name="name">EXONERADO Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_sale_inafected" model="account.account.tag">
-        <field name="name">INAFECTO Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_sale_others" model="account.account.tag">
-        <field name="name">OTROS Venta</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tax_tag_code_igv" model="account.account.tag">
-        <field name="name">IGV</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_ivap" model="account.account.tag">
-        <field name="name">IVAP</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_isc" model="account.account.tag">
-        <field name="name">ISC</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_icbper" model="account.account.tag">
-        <field name="name">ICBPER</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_exp" model="account.account.tag">
-        <field name="name">EXP</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_free" model="account.account.tag">
-        <field name="name">GRA</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_exo" model="account.account.tag">
-        <field name="name">EXO</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_ina" model="account.account.tag">
-        <field name="name">INA</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_code_others" model="account.account.tag">
-        <field name="name">OTROS</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="ITAX_18" model="account.tax.template">
-      <field name="chart_template_id" ref="pe_chart_template"/>
-      <field name="name">IGV 18% Venta</field>
-      <field name="description">IGV 18% Venta</field>
-      <field name="amount">18</field>
-      <field name="amount_type">percent</field>
-      <field name="type_tax_use">sale</field>
-      <field name="account_id" ref="401110"/>
-      <field name="refund_account_id" ref="401110"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_18'), ref('tax_tag_code_igv')])]"/>
-      <field name="tax_group_id" ref="tax_group_18"/>
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('401110'),
+            }),
+        ]"/>
     </record>
 
     <record id="OTAX_18" model="account.tax.template">
@@ -191,9 +109,6 @@
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="401110"/>
-        <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_ivap'), ref('tax_tag_code_ivap')])]"/>
         <field name="tax_group_id" ref="tax_group_ivap"/>
     </record>
 
@@ -205,20 +120,17 @@
         <field name="amount_type">percent</field>
         <field name="price_include">False</field>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_isc'), ref('tax_tag_code_isc')])]"/>
-        <field name="account_id" ref="401110"/>
-        <field name="refund_account_id" ref="401110"/>
         <field name="tax_group_id" ref="tax_group_isc"/>
     </record>
 
-    <record id="sale_tax_icbper" model="account.tax">
-      <field name="name">ICBPER .10 Venta</field>
-      <field name="description">ICBPER .10</field>
-      <field name="amount">.1</field>
-      <field name="amount_type">fixed</field>
-      <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_icbper'), ref('tax_tag_code_icbper')])]"/>
-      <field name="tax_group_id" ref="tax_group_icbper"/>
+    <record id="sale_tax_icbper" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">ICBPER .10 Venta</field>
+        <field name="description">ICBPER .10</field>
+        <field name="amount">.1</field>
+        <field name="amount_type">fixed</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_icbper"/>
     </record>
 
     <record id="sale_tax_exportation_17" model="account.tax.template">
@@ -228,9 +140,6 @@
         <field name="amount">17</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="401110"/>
-        <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exportation'), ref('tax_tag_code_exp')])]"/>
         <field name="tax_group_id" ref="tax_group_exp"/>
     </record>
 
@@ -241,9 +150,6 @@
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="401110"/>
-        <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_free'), ref('tax_tag_code_free')])]"/>
         <field name="tax_group_id" ref="tax_group_free"/>
     </record>
 
@@ -254,9 +160,6 @@
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="401110"/>
-        <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exonerated'), ref('tax_tag_code_exo')])]"/>
         <field name="tax_group_id" ref="tax_group_exo"/>
     </record>
 
@@ -267,9 +170,6 @@
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="401110"/>
-        <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_inafected'), ref('tax_tag_code_ina')])]"/>
         <field name="tax_group_id" ref="tax_group_ina"/>
     </record>
 
@@ -280,483 +180,344 @@
         <field name="amount">30</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="401110"/>
-        <field name="refund_account_id" ref="401110"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_others'), ref('tax_tag_code_others')])]"/>
         <field name="tax_group_id" ref="tax_group_others"/>
     </record>
 
     <!-- PERCEPTIONS-->
-    <record id="sale_tax_intern_sale_perception" model="account.tax">
-      <field name="name">Percepción Venta Interna (Porcentaje 2%)</field>
-      <field name="description">Percepción Venta Interna (Porcentaje 2%)</field>
-      <field name="amount">2</field>
-      <field name="amount_type">percent</field>
-      <field name="type_tax_use">sale</field>
-      <field name="tax_group_id" ref="tax_group_perceptions"/>
+    <record id="sale_tax_intern_sale_perception" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">Percepción Venta Interna (Porcentaje 2%)</field>
+        <field name="description">Percepción Venta Interna (Porcentaje 2%)</field>
+        <field name="amount">2</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_perceptions"/>
     </record>
 
-    <record id="sale_tax_perception_fuel" model="account.tax">
-      <field name="name">Percepción a la adquisición de combustible (Porcentaje 1%)</field>
-      <field name="description">Percepción a la adquisición de combustible (Porcentaje 1%)</field>
-      <field name="amount">1</field>
-      <field name="amount_type">percent</field>
-      <field name="type_tax_use">sale</field>
-      <field name="tax_group_id" ref="tax_group_perceptions"/>
+    <record id="sale_tax_perception_fuel" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">Percepción a la adquisición de combustible (Porcentaje 1%)</field>
+        <field name="description">Percepción a la adquisición de combustible (Porcentaje 1%)</field>
+        <field name="amount">1</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_perceptions"/>
     </record>
 
-    <record id="sale_tax_perception_agent" model="account.tax">
-      <field name="name">Percepción realizada al agente de percepción con tasa especial (Porcentaje 0.5%)</field>
-      <field name="description">Percepción realizada al agente de percepción con tasa especial (Porcentaje 0.5%)</field>
-      <field name="amount">0.5</field>
-      <field name="amount_type">percent</field>
-      <field name="type_tax_use">sale</field>
-      <field name="tax_group_id" ref="tax_group_perceptions"/>
+    <record id="sale_tax_perception_agent" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">Percepción realizada al agente de percepción con tasa especial (Porcentaje 0.5%)</field>
+        <field name="description">Percepción realizada al agente de percepción con tasa especial (Porcentaje 0.5%)</field>
+        <field name="amount">0.5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_perceptions"/>
     </record>
-
-    <!-- DETRACTIONS TAGS -->
-    <record id="tax_tag_detraction_001" model="account.account.tag">
-        <field name="name">Detracción (Código) 001</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_002" model="account.account.tag">
-        <field name="name">Detracción (Código) 002</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_003" model="account.account.tag">
-        <field name="name">Detracción (Código) 003</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_004" model="account.account.tag">
-        <field name="name">Detracción (Código) 004</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_005" model="account.account.tag">
-        <field name="name">Detracción (Código) 005</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_007" model="account.account.tag">
-        <field name="name">Detracción (Código) 007</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_008" model="account.account.tag">
-        <field name="name">Detracción (Código) 008</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_009" model="account.account.tag">
-        <field name="name">Detracción (Código) 009</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_010" model="account.account.tag">
-        <field name="name">Detracción (Código) 010</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_011" model="account.account.tag">
-        <field name="name">Detracción (Código) 011</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_012" model="account.account.tag">
-        <field name="name">Detracción (Código) 012</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_013" model="account.account.tag">
-        <field name="name">Detracción (Código) 013</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_014" model="account.account.tag">
-        <field name="name">Detracción (Código) 014</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_015" model="account.account.tag">
-        <field name="name">Detracción (Código) 015</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_016" model="account.account.tag">
-        <field name="name">Detracción (Código) 016</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_017" model="account.account.tag">
-        <field name="name">Detracción (Código) 017</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_019" model="account.account.tag">
-        <field name="name">Detracción (Código) 019</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_020" model="account.account.tag">
-        <field name="name">Detracción (Código) 020</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_021" model="account.account.tag">
-        <field name="name">Detracción (Código) 021</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_022" model="account.account.tag">
-        <field name="name">Detracción (Código) 022</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_023" model="account.account.tag">
-        <field name="name">Detracción (Código) 023</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_024" model="account.account.tag">
-        <field name="name">Detracción (Código) 024</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_025" model="account.account.tag">
-        <field name="name">Detracción (Código) 025</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_026" model="account.account.tag">
-        <field name="name">Detracción (Código) 026</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_027" model="account.account.tag">
-        <field name="name">Detracción (Código) 027</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_028" model="account.account.tag">
-        <field name="name">Detracción (Código) 028</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_030" model="account.account.tag">
-        <field name="name">Detracción (Código) 030</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_031" model="account.account.tag">
-        <field name="name">Detracción (Código) 031</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_034" model="account.account.tag">
-        <field name="name">Detracción (Código) 034</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_035" model="account.account.tag">
-        <field name="name">Detracción (Código) 035</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_036" model="account.account.tag">
-        <field name="name">Detracción (Código) 036</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_037" model="account.account.tag">
-        <field name="name">Detracción (Código) 037</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_039" model="account.account.tag">
-        <field name="name">Detracción (Código) 039</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_detraction_040" model="account.account.tag">
-        <field name="name">Detracción (Código) 040</field>
-        <field name="applicability">taxes</field>
-    </record>
-
     <!-- DETRACTIONS TAXES -->
-    <record id="sale_tax_detraction_001" model="account.tax">
+    <record id="sale_tax_detraction_001" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Azúcar y melaza de caña (Tasa 10%)</field>
         <field name="description">Azúcar y melaza de caña (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_001')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_001"/>
     </record>
-    <record id="sale_tax_detraction_002" model="account.tax">
+    <record id="sale_tax_detraction_002" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Arroz (Tasa 0%)</field>
         <field name="description">Arroz (Tasa 0%)</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_002')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_002"/>
     </record>
-    <record id="sale_tax_detraction_003" model="account.tax">
+    <record id="sale_tax_detraction_003" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Alcohol etílico (Tasa 10%)</field>
         <field name="description">Alcohol etílico (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_003')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_003"/>
     </record>
-    <record id="sale_tax_detraction_004" model="account.tax">
+    <record id="sale_tax_detraction_004" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Recursos hidrobiológicos (Tasa 4%)</field>
         <field name="description">Recursos hidrobiológicos (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_004')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_004"/>
     </record>
-    <record id="sale_tax_detraction_005" model="account.tax">
+    <record id="sale_tax_detraction_005" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Maíz amarillo duro (Tasa 4%)</field>
         <field name="description">Maíz amarillo duro (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_005')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_005"/>
     </record>
-    <record id="sale_tax_detraction_007" model="account.tax">
+    <record id="sale_tax_detraction_007" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Caña de azúcar (Tasa 10%)</field>
         <field name="description">Caña de azúcar (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_007')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_007"/>
     </record>
-    <record id="sale_tax_detraction_008" model="account.tax">
+    <record id="sale_tax_detraction_008" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Madera (Tasa 4%)</field>
         <field name="description">Madera (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_008')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_008"/>
     </record>
-    <record id="sale_tax_detraction_009" model="account.tax">
+    <record id="sale_tax_detraction_009" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Arena y piedra (Tasa 10%)</field>
         <field name="description">Arena y piedra (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_009')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_009"/>
     </record>
-    <record id="sale_tax_detraction_010" model="account.tax">
+    <record id="sale_tax_detraction_010" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Residuos, subproductos, desechos, recortes y desperdicios (Tasa 15%)</field>
         <field name="description">Residuos, subproductos, desechos, recortes y desperdicios (Tasa 15%)</field>
         <field name="amount">15</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_010')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_010"/>
     </record>
-    <record id="sale_tax_detraction_011" model="account.tax">
+    <record id="sale_tax_detraction_011" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Bienes gravados con el IGV, o renuncia a la exoneración (Tasa 0%)</field>
         <field name="description">Bienes gravados con el IGV, o renuncia a la exoneración (Tasa 0%)</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_011')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_011"/>
     </record>
-    <record id="sale_tax_detraction_012" model="account.tax">
+    <record id="sale_tax_detraction_012" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Intermediación laboral y tercerización (Tasa 10%)</field>
         <field name="description">Intermediación laboral y tercerización (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_012')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_012"/>
     </record>
-    <record id="sale_tax_detraction_013" model="account.tax">
+    <record id="sale_tax_detraction_013" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Animales vivos (Tasa 0%)</field>
         <field name="description">Animales vivos (Tasa 0%)</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_013')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_013"/>
     </record>
-    <record id="sale_tax_detraction_014" model="account.tax">
+    <record id="sale_tax_detraction_014" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Carnes y despojos comestibles (Tasa 4%)</field>
         <field name="description">Carnes y despojos comestibles (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_014')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_014"/>
     </record>
-    <record id="sale_tax_detraction_015" model="account.tax">
+    <record id="sale_tax_detraction_015" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Abonos, cueros y pieles de origen animal (Tasa 0%)</field>
         <field name="description">Abonos, cueros y pieles de origen animal (Tasa 0%)</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_015')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_015"/>
     </record>
-    <record id="sale_tax_detraction_016" model="account.tax">
+    <record id="sale_tax_detraction_016" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Aceite de pescado (Tasa 0%)</field>
         <field name="description">Aceite de pescado (Tasa 0%)</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_016')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_016"/>
     </record>
-    <record id="sale_tax_detraction_017" model="account.tax">
+    <record id="sale_tax_detraction_017" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Harina, polvo y “pellets” de pescado, crustáceos, moluscos y demás invertebrados acuáticos (Tasa 4%)</field>
         <field name="description">Harina, polvo y “pellets” de pescado, crustáceos, moluscos y demás invertebrados acuáticos (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_017')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_017"/>
     </record>
-    <record id="sale_tax_detraction_019" model="account.tax">
+    <record id="sale_tax_detraction_019" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Arrendamiento de bienes muebles (Tasa 10%)</field>
         <field name="description">Arrendamiento de bienes muebles (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_019')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_019"/>
     </record>
-    <record id="sale_tax_detraction_020" model="account.tax">
+    <record id="sale_tax_detraction_020" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Mantenimiento y reparación de bienes muebles (Tasa 10%)</field>
         <field name="description">Mantenimiento y reparación de bienes muebles (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_020')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_020"/>
     </record>
-    <record id="sale_tax_detraction_021" model="account.tax">
+    <record id="sale_tax_detraction_021" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Movimiento de carga (Tasa 10%)</field>
         <field name="description">Movimiento de carga (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_021')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_021"/>
     </record>
-    <record id="sale_tax_detraction_022" model="account.tax">
+    <record id="sale_tax_detraction_022" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Otros servicios empresariales (Tasa 10%)</field>
         <field name="description">Otros servicios empresariales (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_022')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_022"/>
     </record>
-    <record id="sale_tax_detraction_023" model="account.tax">
+    <record id="sale_tax_detraction_023" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Leche (Tasa 4%)</field>
         <field name="description">Leche (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_023')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_023"/>
     </record>
-    <record id="sale_tax_detraction_024" model="account.tax">
+    <record id="sale_tax_detraction_024" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Comisión mercantil (Tasa 10%)</field>
         <field name="description">Comisión mercantil (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_024')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_024"/>
     </record>
-    <record id="sale_tax_detraction_025" model="account.tax">
+    <record id="sale_tax_detraction_025" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Fabricación de bienes por encargo (Tasa 10%)</field>
         <field name="description">Fabricación de bienes por encargo (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_025')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_025"/>
     </record>
-    <record id="sale_tax_detraction_026" model="account.tax">
+    <record id="sale_tax_detraction_026" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Servicio de transporte de personas (Tasa 10%)</field>
         <field name="description">Servicio de transporte de personas (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_026')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_026"/>
     </record>
-    <record id="sale_tax_detraction_027" model="account.tax">
+    <record id="sale_tax_detraction_027" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Servicio de transporte de carga (Tasa 4%)</field>
         <field name="description">Servicio de transporte de carga (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_027')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_027"/>
     </record>
-    <record id="sale_tax_detraction_028" model="account.tax">
+    <record id="sale_tax_detraction_028" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Transporte de pasajeros (Tasa 0%)</field>
         <field name="description">Transporte de pasajeros (Tasa 0%)</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_028')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_028"/>
     </record>
-    <record id="sale_tax_detraction_030" model="account.tax">
+    <record id="sale_tax_detraction_030" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Contratos de construcción (Tasa 4%)</field>
         <field name="description">Contratos de construcción (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_030')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_030"/>
     </record>
-    <record id="sale_tax_detraction_031" model="account.tax">
+    <record id="sale_tax_detraction_031" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Oro gravado con el IGV (Tasa 10%)</field>
         <field name="description">Oro gravado con el IGV (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_031')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_031"/>
     </record>
-    <record id="sale_tax_detraction_034" model="account.tax">
+    <record id="sale_tax_detraction_034" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Minerales metálicos no auríferos (Tasa 10%)</field>
         <field name="description">Minerales metálicos no auríferos (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_034')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_034"/>
     </record>
-    <record id="sale_tax_detraction_035" model="account.tax">
+    <record id="sale_tax_detraction_035" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Bienes exonerados del IGV (Tasa 1.5%)</field>
         <field name="description">Bienes exonerados del IGV (Tasa 1.5%)</field>
         <field name="amount">1.5</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_035')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_035"/>
     </record>
-    <record id="sale_tax_detraction_036" model="account.tax">
+    <record id="sale_tax_detraction_036" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Oro y demás minerales metálicos exonerados del IGV (Tasa 1.5%)</field>
         <field name="description">Oro y demás minerales metálicos exonerados del IGV (Tasa 1.5%)</field>
         <field name="amount">1.5</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_036')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_036"/>
     </record>
-    <record id="sale_tax_detraction_037" model="account.tax">
+    <record id="sale_tax_detraction_037" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Demás servicios gravados con el IGV (Tasa 10%)</field>
         <field name="description">Demás servicios gravados con el IGV (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_037')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_037"/>
     </record>
-    <record id="sale_tax_detraction_039" model="account.tax">
+    <record id="sale_tax_detraction_039" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Minerales no metálicos (Tasa 10%)</field>
         <field name="description">Minerales no metálicos (Tasa 10%)</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_039')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_039"/>
     </record>
-    <record id="sale_tax_detraction_040" model="account.tax">
+    <record id="sale_tax_detraction_040" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">Bien inmueble gravado con IGV (Tasa 4%)</field>
         <field name="description">Bien inmueble gravado con IGV (Tasa 4%)</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_detractions" />
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_detraction_040')])]" />
+        <field name="tax_group_id" ref="tax_group_detraction_040"/>
     </record>
 </odoo>

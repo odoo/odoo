@@ -1,6 +1,6 @@
 # Copyright 2019 Vauxoo (https://www.vauxoo.com) <info@vauxoo.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
@@ -10,7 +10,6 @@ class ResPartner(models.Model):
         'res.district', string='District',
         help='Districts are part of a province or city.')
 
-    @api.multi
     def l10n_pe_edi_get_customer_vat(self):
         """Based on current vat validation and implementation, the following
         logic set the code associated and its vat without prefix
