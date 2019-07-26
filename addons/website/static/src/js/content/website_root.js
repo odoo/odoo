@@ -166,12 +166,21 @@ var WebsiteRoot = BodyManager.extend({
      * in edition mode for example.
      *
      * @private
+     * @param {jQuery} [$from]
+     *        only stop the animations linked to the given element(s) or one of
+     *        its descendants
      */
-    _stopAnimations: function () {
-        _.each(this.animations, function (animation) {
-            animation.destroy();
+    _stopAnimations: function ($from) {
+        var removedAnimations = _.map(this.animations, function (animation) {
+            if (!$from
+             || $from.filter(animation.el).length
+             || $from.find(animation.el).length) {
+                animation.destroy();
+                return animation;
+            }
+            return null;
         });
-        this.animations = [];
+        this.animations = _.difference(this.animations, removedAnimations);
     },
 
     //--------------------------------------------------------------------------
@@ -195,9 +204,10 @@ var WebsiteRoot = BodyManager.extend({
      * stopped.
      *
      * @private
+     * @param {OdooEvent} ev
      */
-    _onAnimationStopDemand: function () {
-        this._stopAnimations();
+    _onAnimationStopDemand: function (ev) {
+        this._stopAnimations(ev.data.$target);
     },
     /**
      * @todo review
