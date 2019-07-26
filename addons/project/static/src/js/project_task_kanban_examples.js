@@ -67,12 +67,12 @@ kanbanExamplesRegistry.add('project', {
     }, {
         name: _t('Research Project'),
         columns: [_t('Brainstorm'), _t('Research'), _t('Draft'), _t('Final Document')],
-        description: escFormat(_t('Handle your idea gahtering within Tasks of your new Project and discuss them in the chatter of the tasks. Use the %s and %s to signalize what is the current status of your Idea'), greenBullet, redBullet),
+        description: escFormat(_t('Handle your idea gathering within Tasks of your new Project and discuss them in the chatter of the tasks. Use the %s and %s to signalize what is the current status of your Idea'), greenBullet, redBullet),
         bullets: [greenBullet, redBullet],
     }, {
         name: _t('Website Redesign'),
         columns: [_t('Page Ideas'), _t('Copywriting'), _t('Design'), _t('Live')],
-        description: escFormat(_t('Handle your idea gahtering within Tasks of your new Project and discuss them in the chatter of the tasks. Use the %s and %s to signalize what is the current status of your Idea'), greenBullet, redBullet),
+        description: escFormat(_t('Handle your idea gathering within Tasks of your new Project and discuss them in the chatter of the tasks. Use the %s and %s to signalize what is the current status of your Idea'), greenBullet, redBullet),
     }, {
         name: _t('T-shirt Printing'),
         columns: [_t('New Orders'), _t('Logo Design'), _t('To Print'), _t('Done')],
