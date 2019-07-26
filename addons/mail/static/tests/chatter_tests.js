@@ -7,6 +7,7 @@ var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
+var concurrency = require('web.concurrency');
 
 var createView = testUtils.createView;
 
