@@ -478,7 +478,7 @@ if terminal_id:
     try:
         subprocess.check_output(["pidof", "eftdvs"])  # Check if MPD server is running
     except subprocess.CalledProcessError:
-        subprocess.Popen(["eftdvs"])  # Start MPD server
+        subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/"])  # Start MPD server
     eftapi = ctypes.CDLL("eftapi.so")  # Library given by Six
     mpdm.daemon = True
     mpdm.start()
