@@ -49,6 +49,7 @@ from stdnum.ro.cf import compact as compact_ro
 from stdnum.se.vat import compact as compact_se
 from stdnum.si.ddv import compact as compact_si
 from stdnum.sk.dph import compact as compact_sk
+from stdnum.ar.cuit import compact as compact_ar
 # tr compact vat is not in stdnum
 
 
@@ -395,6 +396,14 @@ class ResPartner(models.Model):
         try:
             import stdnum.al
             return stdnum.al.vat.is_valid(vat)
+        except ImportError:
+            return True
+
+    # Argentinian VAT validation, contributed by ADHOC
+    def check_vat_ar(self, vat):
+        try:
+            import stdnum.ar
+            return stdnum.ar.cuit.is_valid(vat)
         except ImportError:
             return True
 
