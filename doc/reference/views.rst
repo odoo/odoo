@@ -1368,6 +1368,25 @@ take the following attributes:
   is not set, the gantt view will fall back to the id of the form view in the
   current action, if any.
 
+``thumbnails``
+  This allows to display a thumbnail next to groups name if the group is a relationnal field.
+  This expects a python dict which keys are the name of the field on the active model.
+  Values are the names of the field holding the thumbnail on the related model.
+
+  Example: tasks have a field user_id that reference res.users. The res.users model has a field image that holds the avatar,
+  then:
+.. code-block:: xml
+
+      <gantt
+        date_start="date_start"
+        date_stop="date_stop"
+        thumbnails="{'user_id': 'image_64'}"
+      >
+      </gantt>
+
+
+will display the users avatars next to their names when grouped by user_id
+
 .. _reference/views/diagram:
 
 Diagram
