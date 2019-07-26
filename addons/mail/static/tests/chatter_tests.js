@@ -1866,13 +1866,14 @@ QUnit.test('form activity widget: do not close activity popover on click', async
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
         activity_type_id: 2,
     }];
 
-    const form = createView({
+    const form = await createView({
         View: FormView,
         model: 'partner',
         data: this.data,
