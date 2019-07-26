@@ -473,8 +473,8 @@ table.table_desc tr td {
     // Default
     &.s_carousel_default {
         // Controls - chevron
-        .carousel-control-prev-icon:before { content: "\f053"; margin-left: 1.5rem; }
-        .carousel-control-next-icon:before { content: "\f054"; margin-right: 1.5rem; }
+        .carousel-control-prev-icon:before { content: "\f053" #{"/*rtl:'\f054'*/"}; margin-left: 1.5rem; }
+        .carousel-control-next-icon:before { content: "\f054" #{"/*rtl:'\f053'*/"}; margin-right: 1.5rem; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             background-color: rgba(0,0,0,0);
