@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
 
@@ -58,8 +58,8 @@ class ProductReplenish(models.TransientModel):
                     self.quantity,
                     uom_reference,
                     self.warehouse_id.lot_stock_id,  # Location
-                    "Manual Replenishment",  # Name
-                    "Manual Replenishment",  # Origin
+                    _("Manual Replenishment"),  # Name
+                    _("Manual Replenishment"),  # Origin
                     self.warehouse_id.company_id,
                     self._prepare_run_values()  # Values
                 )
