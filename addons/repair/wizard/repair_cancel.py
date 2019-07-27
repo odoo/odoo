@@ -9,7 +9,6 @@ class RepairCancel(models.TransientModel):
     _name = 'repair.cancel'
     _description = 'Cancel Repair'
 
-    @api.multi
     def cancel_repair(self):
         if not self._context.get('active_id'):
             return {'type': 'ir.actions.act_window_close'}

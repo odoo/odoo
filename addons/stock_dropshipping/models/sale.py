@@ -9,7 +9,6 @@ class SaleOrderLine(models.Model):
 
     purchase_line_ids = fields.One2many('purchase.order.line', 'sale_line_id')
 
-    @api.multi
     def _get_qty_procurement(self, previous_product_uom_qty):
         # People without purchase rights should be able to do this operation
         purchase_lines_sudo = self.sudo().purchase_line_ids

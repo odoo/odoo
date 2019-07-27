@@ -7,7 +7,6 @@ from odoo import api, models
 class UserGroup(models.Model):
     _inherit = 'res.groups'
 
-    @api.multi
     def write(self, vals):
         """ Automatically subscribe new users to linked slide channels """
         write_res = super(UserGroup, self).write(vals)

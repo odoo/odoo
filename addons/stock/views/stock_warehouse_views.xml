@@ -7,20 +7,19 @@
             <field name="arch" type="xml">
                 <form string="Warehouse" create="false">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_all_routes"
                                     string="Routes"
                                     icon="fa-refresh"
                                     class="oe_stat_button"
                                     type="object"/>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="code"/>
                             </group>
                             <group>
@@ -203,11 +202,7 @@
             <field name="arch" type="xml">
                 <form string="Reordering Rules">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <div class="alert alert-info" role="alert">
                                 <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
@@ -216,6 +211,7 @@
                         <group>
                             <group>
                                 <field name="name" />
+                                <field name="active" invisible="1"/>
                                 <field name="product_id"/>
                             </group>
                             <group>

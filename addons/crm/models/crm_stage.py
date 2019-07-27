@@ -44,7 +44,6 @@ class Stage(models.Model):
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
 
-    @api.multi
     def _compute_team_count(self):
         for stage in self:
             stage.team_count = self.env['crm.team'].search_count([])

@@ -7,6 +7,7 @@ from odoo.tools.misc import find_in_path
 from odoo.tools import config
 from odoo.sql_db import TestCursor
 from odoo.http import request
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
 import time
 import base64
@@ -24,6 +25,7 @@ from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
+from collections.abc import Iterable
 from PIL import Image, ImageFile
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -88,7 +90,8 @@ class IrActionsReport(models.Model):
     name = fields.Char(translate=True)
     type = fields.Char(default='ir.actions.report')
     binding_type = fields.Selection(default='report')
-    model = fields.Char(required=True)
+    model = fields.Char(required=True, string='Model Name')
+    model_id = fields.Many2one('ir.model', string='Model', compute='_compute_model_id', search='_search_model_id')
 
     report_type = fields.Selection([
         ('qweb-html', 'HTML'),
@@ -114,7 +117,32 @@ class IrActionsReport(models.Model):
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
 
-    @api.multi
+    @api.depends('model')
+    def _compute_model_id(self):
+        for action in self:
+            action.model_id = self.env['ir.model']._get(action.model).id
+
+    def _search_model_id(self, operator, value):
+        ir_model_ids = None
+        if isinstance(value, str):
+            names = self.env['ir.model'].name_search(value, operator=operator)
+            ir_model_ids = [n[0] for n in names]
+
+        elif isinstance(value, Iterable):
+            ir_model_ids = value
+
+        elif isinstance(value, int) and not isinstance(value, bool):
+            ir_model_ids = [value]
+
+        if ir_model_ids:
+            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+            ir_model = self.env['ir.model'].browse(ir_model_ids)
+            return [('model', operator, ir_model.mapped('model'))]
+        elif isinstance(value, bool) or value is None:
+            return [('model', operator, value)]
+        else:
+            return FALSE_DOMAIN
+
     def associated_view(self):
         """Used in the ir.actions.report form view in order to search naively after the view(s)
         used in the rendering.
@@ -127,7 +155,6 @@ class IrActionsReport(models.Model):
         action_data['domain'] = [('name', 'ilike', self.report_name.split('.')[1]), ('type', '=', 'qweb')]
         return action_data
 
-    @api.multi
     def create_action(self):
         """ Create a contextual action for each report. """
         for report in self:
@@ -135,7 +162,6 @@ class IrActionsReport(models.Model):
             report.write({'binding_model_id': model.id, 'binding_type': 'report'})
         return True
 
-    @api.multi
     def unlink_action(self):
         """ Remove the contextual actions created for the reports. """
         self.check_access_rights('write', raise_exception=True)
@@ -145,7 +171,6 @@ class IrActionsReport(models.Model):
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
-    @api.multi
     def _retrieve_stream_from_attachment(self, attachment):
         #This import is needed to make sure a PDF stream can be saved in Image
         from PIL import PdfImagePlugin
@@ -156,7 +181,6 @@ class IrActionsReport(models.Model):
             return stream
         return io.BytesIO(base64.decodestring(attachment.datas))
 
-    @api.multi
     def retrieve_attachment(self, record):
         '''Retrieve an attachment for a specific record.
 
@@ -173,7 +197,6 @@ class IrActionsReport(models.Model):
                 ('res_id', '=', record.id)
         ], limit=1)
 
-    @api.multi
     def postprocess_pdf_report(self, record, buffer):
         '''Hook to handle post processing during the pdf report generation.
         The basic behavior consists to create a new attachment containing the pdf
@@ -296,7 +319,6 @@ class IrActionsReport(models.Model):
 
         return command_args
 
-    @api.multi
     def _prepare_html(self, html):
         '''Divide and recreate the header/footer html by merging all found in html.
         The bodies are extracted and added to a list. Then, extract the specific_paperformat_args.
@@ -486,7 +508,6 @@ class IrActionsReport(models.Model):
             else:
                 return self.barcode('Code128', value, width=width, height=height, humanreadable=humanreadable)
 
-    @api.multi
     def render_template(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
@@ -517,7 +538,6 @@ class IrActionsReport(models.Model):
         )
         return view_obj.render_template(template, values)
 
-    @api.multi
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         '''Merge the existing attachments by adding one by one the content of the attachments
         and then, we add the pdf_content if exists. Create the attachments for each record individually
@@ -621,7 +641,6 @@ class IrActionsReport(models.Model):
         writer.write(result_stream)
         return result_stream.getvalue()
 
-    @api.multi
     def render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
             data = {}
@@ -757,7 +776,6 @@ class IrActionsReport(models.Model):
             })
         return data
 
-    @api.multi
     def render(self, res_ids, data=None):
         report_type = self.report_type.lower().replace('-', '_')
         render_func = getattr(self, 'render_' + report_type, None)

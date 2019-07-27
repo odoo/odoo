@@ -72,7 +72,7 @@
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
             <li class="nav-item divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-            <li id="my_cart" t-attf-class="nav-item#{'' if website_sale_order and website_sale_order.cart_quantity else ' d-none'}">
+            <li t-attf-class="nav-item o_wsale_my_cart #{'' if website_sale_order and website_sale_order.cart_quantity else 'd-none'}">
                 <a href="/shop/cart" class="nav-link">
                     <i class="fa fa-shopping-cart"></i>
                     My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
@@ -258,14 +258,16 @@
                                 </table>
                             </div>
                             <t t-else="">
-                                <div class="text-center text-muted oe_product">
-                                    <h3 class="css_editable_display mt8">No product defined.</h3>
-                                    <t t-if="search">
-                                        <p>
-                                            No results found for "<strong t-esc='search'/>".
-                                        </p>
+                                <div class="text-center text-muted">
+                                    <t t-if="not search">
+                                        <h3 class="mt8">No product defined</h3>
+                                        <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
                                     </t>
-                                    <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                                    <t t-else="">
+                                        <h3 class="mt8">No results</h3>
+                                        <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
+                                    </t>
+                                    <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                                 </div>
                             </t>
                         </div>
@@ -331,7 +333,7 @@
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">
         <li class="nav-item">
-            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}">
+            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link #{'active' if c.id == category.id else ''}">
                 <span t-field="c.name"/>
             </a>
             <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy">
@@ -356,7 +358,7 @@
             <div class="collapse d-lg-block" id="wsale_products_categories_collapse">
                 <ul class="nav nav-pills flex-column mb-2">
                     <li class="nav-item">
-                        <a t-att-href="keep('/shop', category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
+                        <a t-att-href="keep('/shop', category=0)" t-attf-class="nav-link #{'' if category else 'active'} o_not_editable">All Products</a>
                     </li>
                     <t t-foreach="categories" t-as="c">
                         <t t-call="website_sale.categories_recursive" />
@@ -368,15 +370,14 @@
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <li class="nav-item">
-            <i t-if="c.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if c.id in parent_category_ids else 'fa-chevron-right'}"
-               t-attf-title="#{'Unfold' if c.id in parent_category_ids else 'Fold'}"
-               t-attf-aria-label="#{'Unfold' if c.id in parent_category_ids else 'Fold'}" role="img"/>
-            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}" t-field="c.name"></a>
-            <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if c.id in parent_category_ids else 'display:none;'">
-                <t t-foreach="c.child_id" t-as="c">
-                    <t t-if="not search or c.id in search_categories_ids">
-                        <t t-call="website_sale.option_collapse_categories_recursive"/>
-                    </t>
+            <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
+            <i t-if="children" t-attf-class="text-primary fa #{'fa-chevron-down' if c.id in category.parents_and_self.ids else 'fa-chevron-right'}"
+               t-attf-title="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
+               t-attf-aria-label="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}" role="img"/>
+            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link #{'active' if c.id == category.id else ''}" t-field="c.name"></a>
+            <ul t-if="children" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if c.id in category.parents_and_self.ids else 'display:none;'">
+                <t t-foreach="children" t-as="c">
+                    <t t-call="website_sale.option_collapse_categories_recursive"/>
                 </t>
             </ul>
         </li>
@@ -1302,7 +1303,7 @@
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
                 <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
                     <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                 </div>
                 <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
                     <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>

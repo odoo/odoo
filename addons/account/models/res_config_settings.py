@@ -91,7 +91,6 @@ class ResConfigSettings(models.TransientModel):
         oldname='default_use_sale_note',
         config_parameter='account.use_invoice_terms')
 
-    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if self.group_multi_currency:

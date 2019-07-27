@@ -25,27 +25,35 @@
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" class="oe_no_empty" />
-                        <t t-if="survey.scoring_type != 'no_scoring'">
-                            <div>You scored <t t-esc="answer.quizz_score" />%</div>
-                            <t t-if="answer.quizz_passed">
-                                <div>Congratulations, you have passed the test!</div>
+                        <div class="row">
+                            <div class="col">
+                                <t t-if="survey.scoring_type != 'no_scoring'">
+                                    <div>You scored <t t-esc="answer.quizz_score" />%</div>
+                                    <t t-if="answer.quizz_passed">
+                                        <div>Congratulations, you have passed the test!</div>
 
-                                <div t-if="survey.certificate" class="mt16 mb16">
-                                    <a role="button"
-                                        class="btn btn-primary btn-lg"
-                                        t-att-href="'/survey/%s/get_certification' % survey.id">
-                                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
-                                        Download certification
-                                    </a>
+                                        <div t-if="survey.certificate" class="mt16 mb16">
+                                            <a role="button"
+                                                class="btn btn-primary btn-lg"
+                                                t-att-href="'/survey/%s/get_certification' % survey.id">
+                                                <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                                Download certification
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div>Unfortunately, you have failed the test.</div>
+                                    </t>
+                                </t>
+                                <t t-call="survey.retake_survey_button"/>
+                                <div t-if="survey.scoring_type != 'scoring_without_answers'">
+                                    If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.token)">review your answers</a>
                                 </div>
-                            </t>
-                            <t t-else="">
-                                <div>Unfortunately, you have failed the test.</div>
-                            </t>
-                        </t>
-                        <t t-call="survey.retake_survey_button"/>
-                        <div t-if="survey.scoring_type != 'scoring_without_answers'">
-                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.token)">review your answers</a>
+                            </div>
+                            <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.quizz_passed">
+                                <img t-att-src="'/web/image/gamification.badge/%s/image_medium' % survey.certification_badge_id.id"/>
+                                <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
+                            </div>
                         </div>
                     </div>
                 </div>

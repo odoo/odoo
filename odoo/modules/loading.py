@@ -251,7 +251,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 report.record_result(load_test(idref, mode))
                 # Python tests
                 env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-                report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
+                report.record_result(odoo.modules.module.run_unit_tests(module_name))
                 # tests may have reset the environment
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 module = env['ir.module.module'].browse(module_id)

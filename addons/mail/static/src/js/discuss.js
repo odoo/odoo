@@ -167,9 +167,9 @@ var RenameConversationDialog = Dialog.extend({
             kwargs: {
                 name: name,
             }
-        }).then(function (updatedName) {
+        }).then(function () {
             var channel = self.call('mail_service', 'getThread', self._channelID);
-            channel.setName(updatedName);
+            channel.setName(name);
             self._callback();
         });
     },

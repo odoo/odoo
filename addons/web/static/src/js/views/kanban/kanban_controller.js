@@ -10,6 +10,7 @@ odoo.define('web.KanbanController', function (require) {
 var BasicController = require('web.BasicController');
 var Context = require('web.Context');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var Domain = require('web.Domain');
 var view_dialogs = require('web.view_dialogs');
 var viewUtils = require('web.viewUtils');
@@ -33,7 +34,6 @@ var KanbanController = BasicController.extend({
         kanban_load_records: '_onLoadColumnRecords',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
-        search_panel_domain_updated: '_onSearchPanelDomainUpdated',
     }),
     events: _.extend({}, BasicController.prototype.events, {
         click: '_onClick',
@@ -52,22 +52,6 @@ var KanbanController = BasicController.extend({
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
         this.quickCreateEnabled = params.quickCreateEnabled;
-
-        // the following attributes are used when there is a searchPanel
-        this._searchPanel = params.searchPanel;
-        this.controlPanelDomain = params.controlPanelDomain || [];
-        this.searchPanelDomain = this._searchPanel ? this._searchPanel.getDomain() : [];
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        if (this._searchPanel) {
-            this.$('.o_content')
-                .addClass('o_kanban_with_searchpanel')
-                .prepend(this._searchPanel.$el);
-        }
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -90,32 +74,6 @@ var KanbanController = BasicController.extend({
             return Promise.resolve(this.$buttons.appendTo($node));
         }
         return Promise.resolve();
-    },
-    /**
-     * Override to add the domain coming from the searchPanel (if any) to the
-     * domain coming from the controlPanel.
-     *
-     * @override
-     */
-    update: function (params) {
-        if (!this._searchPanel) {
-            return this._super.apply(this, arguments);
-        }
-        var self = this;
-        if (params.domain) {
-            this.controlPanelDomain = params.domain;
-        }
-        // do not re-render the view as soon as records have been fetched,  but
-        // wait for the searchPanel to be ready as well, such that the view
-        // isn't re-rendered before the searchPanel
-        params.noRender = true;
-        params.domain = this.controlPanelDomain.concat(this.searchPanelDomain);
-        var superProm = this._super.apply(this, arguments);
-        var searchPanelProm = this._updateSearchPanel();
-        return Promise.all([superProm, searchPanelProm]).then(function () {
-            // searchPanel has been re-rendered, so re-render the view
-            return self.renderer.render();
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -256,13 +214,6 @@ var KanbanController = BasicController.extend({
             this.$buttons.find('.o-kanban-button-new').toggleClass('o_hidden', createHidden);
         }
     },
-    /**
-     * @private
-     * @returns {Promise}
-     */
-    _updateSearchPanel: function () {
-        return this._searchPanel.update({searchDomain: this.controlPanelDomain});
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -315,9 +266,11 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onButtonClicked: function (ev) {
+        var self = this;
         ev.stopPropagation();
         var attrs = ev.data.attrs;
         var record = ev.data.record;
+        var def = Promise.resolve();
         if (attrs.context) {
             attrs.context = new Context(attrs.context)
                 .set_eval_context({
@@ -326,15 +279,25 @@ var KanbanController = BasicController.extend({
                     active_model: record.model,
                 });
         }
-        this.trigger_up('execute_action', {
-            action_data: attrs,
-            env: {
-                context: record.getContext(),
-                currentID: record.res_id,
-                model: record.model,
-                resIDs: record.res_ids,
-            },
-            on_closed: this._reloadAfterButtonClick.bind(this, ev.target, ev.data),
+        if (attrs.confirm) {
+            def = new Promise(function (resolve, reject) {
+                Dialog.confirm(this, attrs.confirm, {
+                    confirm_callback: resolve,
+                    cancel_callback: reject,
+                }).on("closed", null, reject);
+            });
+        }
+        def.then(function () {
+            self.trigger_up('execute_action', {
+                action_data: attrs,
+                env: {
+                    context: record.getContext(),
+                    currentID: record.res_id,
+                    model: record.model,
+                    resIDs: record.res_ids,
+                },
+                on_closed: self._reloadAfterButtonClick.bind(self, ev.target, ev.data),
+            });
         });
     },
     /**
@@ -522,15 +485,6 @@ var KanbanController = BasicController.extend({
     /**
      * @private
      * @param {OdooEvent} ev
-     * @param {Array[]} ev.data.domain the current domain of the searchPanel
-     */
-    _onSearchPanelDomainUpdated: function (ev) {
-        this.searchPanelDomain = ev.data.domain;
-        this.reload({offset: 0});
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
      * @param {boolean} [ev.data.openQuickCreate=false] if true, opens the
      *   QuickCreate in the toggled column (it assumes that we are opening it)
      */
@@ -569,12 +523,11 @@ var KanbanController = BasicController.extend({
      */
     _onToggleActiveRecords: function (ev) {
         var self = this;
-        var active = !ev.data.archive;
         var column = ev.target;
         var recordIds = _.pluck(column.records, 'db_id');
         if (recordIds.length) {
             this.model
-                .toggleActive(recordIds, active, column.db_id)
+                .toggleActive(recordIds, column.db_id)
                 .then(function (dbID) {
                     var data = self.model.get(dbID);
                     self.renderer.updateColumn(dbID, data);

@@ -22,6 +22,7 @@ var session = require('web.session');
 var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
+var time = require('web.time');
 
 require("web.zoomodoo");
 
@@ -551,6 +552,121 @@ var LinkButton = AbstractField.extend({
     _onClick: function (event) {
         event.stopPropagation();
         window.open(this.value, '_blank');
+    },
+});
+
+var FieldDateRange = InputField.extend({
+    className: 'o_field_date_range',
+    tagName: 'span',
+    jsLibs: [
+        '/web/static/lib/daterangepicker/daterangepicker.js',
+        '/web/static/src/js/libs/daterangepicker.js',
+    ],
+    cssLibs: [
+        '/web/static/lib/daterangepicker/daterangepicker.css',
+    ],
+    supportedFieldTypes: ['date', 'datetime'],
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.isDateField = this.formatType === 'date';
+        this.dateRangePickerOptions = _.defaults(
+            {},
+            this.nodeOptions.picker_options || {},
+            {
+                timePicker: !this.isDateField,
+                timePicker24Hour: _t.database.parameters.time_format.search('%H') !== -1,
+                autoUpdateInput: false,
+                timePickerIncrement: 10,
+                locale: {
+                    format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
+                },
+            }
+        );
+        this.relatedEndDate = this.nodeOptions.related_end_date;
+        this.relatedStartDate = this.nodeOptions.related_start_date;
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.$pickerContainer) {
+            this.$pickerContainer.remove();
+        }
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     * @param {Object} picker
+     */
+    _applyChanges: function (ev, picker) {
+        var changes = {};
+        var displayStartDate = field_utils.format[this.formatType](picker.startDate, {}, {timezone: false});
+        var displayEndDate = field_utils.format[this.formatType](picker.endDate, {}, {timezone: false});
+        var changedStartDate = picker.startDate;
+        var changedEndDate = picker.endDate;
+        if (this.isDateField) {
+            // In date mode, the library will give moment object of start and end date having
+            // time at 00:00:00. So, Odoo will consider it as UTC. To fix this added browser
+            // timezone offset in dates to get a correct selected date.
+            changedStartDate = picker.startDate.add(session.getTZOffset(picker.startDate), 'minutes');
+            changedEndDate = picker.endDate.startOf('day').add(session.getTZOffset(picker.endDate), 'minutes');
+        }
+        if (this.relatedEndDate) {
+            this.$el.val(displayStartDate);
+            changes[this.name] = this._parseValue(changedStartDate);
+            changes[this.relatedEndDate] = this._parseValue(changedEndDate);
+        }
+        if (this.relatedStartDate) {
+            this.$el.val(displayEndDate);
+            changes[this.name] = this._parseValue(changedEndDate);
+            changes[this.relatedStartDate] = this._parseValue(changedStartDate);
+        }
+        this.trigger_up('field_changed', {
+            dataPointID: this.dataPointID,
+            viewType: this.viewType,
+            changes: changes,
+        });
+    },
+    /**
+     * @override
+     */
+    _renderEdit: function () {
+        this._super.apply(this, arguments);
+        var self = this;
+        var startDate;
+        var endDate;
+        if (this.relatedEndDate) {
+            startDate = this._formatValue(this.value);
+            endDate = this._formatValue(this.recordData[this.relatedEndDate]);
+        }
+        if (this.relatedStartDate) {
+            startDate = this._formatValue(this.recordData[this.relatedStartDate]);
+            endDate = this._formatValue(this.value);
+        }
+        this.dateRangePickerOptions.startDate = startDate || moment();
+        this.dateRangePickerOptions.endDate = endDate || moment();
+
+        this.$el.daterangepicker(this.dateRangePickerOptions);
+        this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
+        this.$el.off('keyup.daterangepicker');
+        this.$pickerContainer = this.$el.data('daterangepicker').container;
+
+        // Prevent from leaving the edition of a row in editable list view
+        this.$pickerContainer.on('click', function (ev) {
+            ev.stopPropagation();
+            if ($(ev.target).hasClass('applyBtn')) {
+                self.$el.data('daterangepicker').hide();
+            }
+        });
     },
 });
 
@@ -2251,68 +2367,6 @@ var LabelSelection = AbstractField.extend({
     },
 });
 
-var FieldBooleanButton = AbstractField.extend({
-    className: 'o_stat_info',
-    supportedFieldTypes: ['boolean'],
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * A boolean field is always set since false is a valid value.
-     *
-     * @override
-     */
-    isSet: function () {
-        return true;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * This widget is supposed to be used inside a stat button and, as such, is
-     * rendered the same way in edit and readonly mode.
-     *
-     * @override
-     * @private
-     */
-    _render: function () {
-        this.$el.empty();
-        var text, hover;
-        switch (this.nodeOptions.terminology) {
-            case "active":
-                text = this.value ? _t("Active") : _t("Inactive");
-                hover = this.value ? _t("Deactivate") : _t("Activate");
-                break;
-            case "archive":
-                text = this.value ? _t("Active") : _t("Archived");
-                hover = this.value ? _t("Archive") : _t("Restore");
-                break;
-            case "close":
-                text = this.value ? _t("Active") : _t("Closed");
-                hover = this.value ? _t("Close") : _t("Open");
-                break;
-            default:
-                var opt_terms = this.nodeOptions.terminology || {};
-                if (typeof opt_terms === 'string') {
-                    opt_terms = {}; //unsupported terminology
-                }
-                text = this.value ? _t(opt_terms.string_true) || _t("On")
-                                  : _t(opt_terms.string_false) || _t("Off");
-                hover = this.value ? _t(opt_terms.hover_true) || _t("Switch Off")
-                                   : _t(opt_terms.hover_false) || _t("Switch On");
-        }
-        var val_color = this.value ? 'text-success' : 'text-danger';
-        var hover_color = this.value ? 'text-danger' : 'text-success';
-        var $val = $('<span>').addClass('o_stat_text o_not_hover ' + val_color).text(text);
-        var $hover = $('<span>').addClass('o_stat_text o_hover ' + hover_color).text(hover);
-        this.$el.append($val).append($hover);
-    },
-});
-
 var BooleanToggle = FieldBoolean.extend({
     description: _lt("Toggle"),
     className: FieldBoolean.prototype.className + ' o_boolean_toggle',
@@ -2982,6 +3036,7 @@ var FieldDomain = AbstractField.extend({
         new view_dialogs.SelectCreateDialog(this, {
             title: _t("Selected records"),
             res_model: this._domainModel,
+            context: this.record.getContext({fieldName: this.name, viewType: this.viewType}),
             domain: this.value || "[]",
             no_create: true,
             readonly: true,
@@ -3158,12 +3213,12 @@ return {
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
-    FieldBooleanButton: FieldBooleanButton,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
     LinkButton: LinkButton,
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
+    FieldDateRange: FieldDateRange,
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,

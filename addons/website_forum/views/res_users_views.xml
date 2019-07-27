@@ -11,12 +11,12 @@
                 <field name="signature" position="after">
                     <field name="karma" string="Forum Karma"/>
                 </field>
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="open_website_url"
                         type="object" icon="fa-globe">
                         <field name="is_published" widget="website_button"/>
                     </button>
-                </button>
+                </div>
             </field>
         </record>
 

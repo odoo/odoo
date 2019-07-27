@@ -3,19 +3,18 @@
 # * resource
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
-# Cas Vissers <c.vissers@brahoo.nl>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Martin Trigaux, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:485
+#: code:addons/resource/models/resource.py:499
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -37,11 +36,11 @@ msgstr "Actief"
 #. module: resource
 #: selection:resource.calendar.attendance,day_period:0
 msgid "Afternoon"
-msgstr "Middag"
+msgstr "Namiddag"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
-msgid "Average hour per day"
+msgid "Average Hour per Day"
 msgstr "Gemiddeld aantal uren per dag"
 
 #. module: resource
@@ -150,13 +149,13 @@ msgid "Friday"
 msgstr "Vrijdag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:166
+#: code:addons/resource/models/resource.py:167
 #, python-format
-msgid "Friday Evening"
-msgstr "Vrijdagavond"
+msgid "Friday Afternoon"
+msgstr "Vrijdagnamiddag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:165
+#: code:addons/resource/models/resource.py:166
 #, python-format
 msgid "Friday Morning"
 msgstr "Vrijdagochtend"
@@ -164,8 +163,8 @@ msgstr "Vrijdagochtend"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Global Leaves"
-msgstr "Algemene vakantie"
+msgid "Global Time Off"
+msgstr "Algemene afwezigheid"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -196,11 +195,9 @@ msgstr "ID"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
 msgid ""
-"If empty, this is a generic holiday for the company. If a resource is set, "
-"the holiday/leave is only for this resource"
+"If empty, this is a generic time off for the company. If a resource is set, "
+"the time off is only for this resource"
 msgstr ""
-"Indien leeg, dan is dit een algemene vrije dag voor het bedrijf. Als de "
-"resource is gevuld dan geldt de afwezigheid alleen voor deze resource"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -245,11 +242,6 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: resource
-#: selection:resource.calendar.leaves,time_type:0
-msgid "Leave"
-msgstr "Verlof"
-
-#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Date"
 msgstr "Verlof datum"
@@ -259,12 +251,6 @@ msgstr "Verlof datum"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
 msgstr "Afwezigheiddetail"
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Leaves"
-msgstr "Verlof"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -277,13 +263,13 @@ msgid "Monday"
 msgstr "Maandag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:158
+#: code:addons/resource/models/resource.py:159
 #, python-format
-msgid "Monday Evening"
-msgstr "Maandagavond"
+msgid "Monday Afternoon"
+msgstr "Maandagnamiddag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:157
+#: code:addons/resource/models/resource.py:158
 #, python-format
 msgid "Monday Morning"
 msgstr "Maandagochtend"
@@ -320,6 +306,7 @@ msgstr ""
 "Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_test__resource_id
@@ -332,21 +319,21 @@ msgid "Resource"
 msgstr "Resource"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
-#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
-#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
-msgid "Resource Leaves"
-msgstr "Afwezigheid resource"
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_leaves
-msgid "Resource Leaves Detail"
-msgstr "Afwezigheid resource details"
-
-#. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
 msgstr "Resource Mixin"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Time Off"
+msgstr "Resource afwezigheid"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
@@ -375,8 +362,8 @@ msgstr "Resources"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
-msgid "Resources Leaves"
-msgstr "Afwezigheid resource"
+msgid "Resources Time Off"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -402,8 +389,8 @@ msgstr "Zoek resource"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Search Working Period Leaves"
-msgstr "Zoek afwezigheid werkperiode"
+msgid "Search Working Period Time Off"
+msgstr "Zoek werkperiode afwezigheid"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -451,15 +438,15 @@ msgid "Test Resource Model"
 msgstr "Test bron model"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:464
+#: code:addons/resource/models/resource.py:478
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
 msgstr "De efficiëntie factor kan niet gelijk zijn aan 0."
 
 #. module: resource
-#: code:addons/resource/models/resource.py:519
+#: code:addons/resource/models/resource.py:533
 #, python-format
-msgid "The start date of the leave must be earlier end date."
+msgid "The start date of the time off must be earlier end date."
 msgstr "De startdatum van de verlof moet voor de einddatum liggen."
 
 #. module: resource
@@ -494,16 +481,23 @@ msgid "Thursday"
 msgstr "Donderdag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:164
+#: code:addons/resource/models/resource.py:165
 #, python-format
-msgid "Thursday Evening"
-msgstr "Donderdagavond"
+msgid "Thursday Afternoon"
+msgstr "Donderdag namiddag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:163
+#: code:addons/resource/models/resource.py:164
 #, python-format
 msgid "Thursday Morning"
 msgstr "Vrijdagochtend"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: selection:resource.calendar.leaves,time_type:0
+msgid "Time Off"
+msgstr "Afwezigheid"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -513,7 +507,7 @@ msgstr "Soort tijd"
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr "Tijdefficiëntie moet positief zijn"
+msgstr "Tijdsefficiëntie moet positief zijn"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -529,13 +523,13 @@ msgid "Tuesday"
 msgstr "Dinsdag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:160
+#: code:addons/resource/models/resource.py:161
 #, python-format
-msgid "Tuesday Evening"
-msgstr "Dinsdagavond"
+msgid "Tuesday Afternoon"
+msgstr "Dinsdagnamiddag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:159
+#: code:addons/resource/models/resource.py:160
 #, python-format
 msgid "Tuesday Morning"
 msgstr "Dinsdagochtend"
@@ -562,13 +556,13 @@ msgid "Wednesday"
 msgstr "Woensdag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:162
+#: code:addons/resource/models/resource.py:163
 #, python-format
-msgid "Wednesday Evening"
-msgstr "Woensdagavond"
+msgid "Wednesday Afternoon"
+msgstr "Woensdagnamiddag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:161
+#: code:addons/resource/models/resource.py:162
 #, python-format
 msgid "Wednesday Morning"
 msgstr "Woensdagochtend"
@@ -576,8 +570,9 @@ msgstr "Woensdagochtend"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a holiday or as work time (eg: formation)"
-msgstr "Of dit berekend moet worden als vakantie of als werktijd"
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -609,7 +604,7 @@ msgid "Working Hours"
 msgstr "Werkuren"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:152
+#: code:addons/resource/models/resource.py:153
 #, python-format
 msgid "Working Hours of %s"
 msgstr "Werkuren van %s"

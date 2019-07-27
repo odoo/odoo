@@ -18,7 +18,7 @@ class Employee(models.Model):
         return [('groups_id', 'in', group.ids)] if group else []
 
     expense_manager_id = fields.Many2one(
-        'res.users', string='Expense Responsible',
+        'res.users', string='Expense',
         domain=_group_hr_expense_user_domain,
         help="User responsible of expense approval. Should be Expense approver.")
 

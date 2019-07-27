@@ -5,16 +5,16 @@
             <field name="name">res.lang.tree</field>
             <field name="model">res.lang</field>
             <field name="arch" type="xml">
-                <tree string="Languages">
+                <tree string="Languages" limit="200">
                     <field name="name"/>
-                    <field name="code"/>
-                    <field name="iso_code"/>
-                    <field name="direction"/>
-                    <field name="translatable"/>
+                    <field name="code" groups="base.group_no_one"/>
+                    <field name="iso_code" groups="base.group_no_one"/>
+                    <field name="direction" groups="base.group_no_one"/>
                     <field name="active"/>
                     <button name="%(base.action_view_base_language_install)d"
-                    string="Update Terms" type="action" icon="fa-refresh" help="Update Language Terms"
-                    attrs="{'invisible': [('active', '=', False)]}"/>
+                        string="Activate Language and Update Translations"
+                        type="action"
+                        icon="fa-refresh"/>
                 </tree>
             </field>
         </record>
@@ -25,9 +25,11 @@
                 <form string="Languages">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
-                            </button>
+                            <button string="Activate and Translate"
+                                name="%(base.action_view_base_language_install)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-refresh" />
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -37,7 +39,7 @@
                             <group>
                                 <field name="code"/>
                                 <field name="iso_code"/>
-                                <field name="translatable"/>
+                                <field name="active"/>
                             </group>
                             <group>
                                 <field name="direction"/>
@@ -89,7 +91,6 @@
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
                         string="Language"/>
-                    <filter string="Translatable" name="translatable" domain="[('translatable','=',True)]"/>
                     <filter string="Active" name="active" domain="[('active','=',True)]"/>
                     <field name="direction"/>
                 </search>

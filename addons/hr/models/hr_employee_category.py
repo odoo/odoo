@@ -9,7 +9,7 @@ class EmployeeCategory(models.Model):
     _name = "hr.employee.category"
     _description = "Employee Category"
 
-    name = fields.Char(string="Employee Tag", required=True)
+    name = fields.Char(string="Tag Name", required=True)
     color = fields.Integer(string='Color Index')
     employee_ids = fields.Many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', string='Employees')
 

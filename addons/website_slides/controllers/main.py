@@ -113,7 +113,6 @@ class WebsiteSlides(WebsiteProfile):
         # allow rating and comments
         if slide.channel_id.allow_comment:
             values.update({
-                'message_post_hash': slide._generate_signed_token(request.env.user.partner_id.id),
                 'message_post_pid': request.env.user.partner_id.id,
             })
 
@@ -165,7 +164,8 @@ class WebsiteSlides(WebsiteProfile):
         if not request.env.user._is_public() and channel.is_member:
             slide_partners = request.env['slide.slide.partner'].sudo().search([
                 ('channel_id', '=', channel.id),
-                ('partner_id', '=', request.env.user.partner_id.id)
+                ('partner_id', '=', request.env.user.partner_id.id),
+                ('slide_id.active', '=', True)
             ])
             for slide_partner in slide_partners:
                 channel_progress[slide_partner.slide_id.id].update(slide_partner.read()[0])
@@ -257,7 +257,7 @@ class WebsiteSlides(WebsiteProfile):
         if request.env.user._is_public():
             users = request.env['res.users'].sudo().search([
                 ('karma', '>', 0),
-                ('website_published', '=', True)], limit=5, order='create_date desc')
+                ('website_published', '=', True)], limit=5, order='karma desc')
         else:
             users = None
 
@@ -323,6 +323,7 @@ class WebsiteSlides(WebsiteProfile):
     def _get_top3_users(self):
         return request.env['res.users'].sudo().search_read([
             ('karma', '>', 0),
+            ('website_published', '=', True),
             ('image', '!=', False)], ['id'], limit=3, order='karma desc')
 
     @http.route([
@@ -658,10 +659,17 @@ class WebsiteSlides(WebsiteProfile):
 
         return False
 
-    @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
-    def slide_send_share_email(self, slide_id, email):
+    @http.route('/slides/slide/toggle_is_preview', type='json', auth='user', website=True)
+    def slide_preview(self, slide_id):
         slide = request.env['slide.slide'].browse(int(slide_id))
-        result = slide._send_share_email(email)
+        if slide.channel_id.can_publish:
+            slide.is_preview = not slide.is_preview
+        return slide.is_preview
+
+    @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
+    def slide_send_share_email(self, slide_id, email, fullscreen=False):
+        slide = request.env['slide.slide'].browse(int(slide_id))
+        result = slide._send_share_email(email, fullscreen)
         return result
 
     # --------------------------------------------------

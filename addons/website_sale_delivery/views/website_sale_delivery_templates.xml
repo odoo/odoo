@@ -19,8 +19,13 @@
       <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
         <link rel="stylesheet" type="text/scss" href="/website_sale_delivery/static/src/scss/website_sale_delivery.scss"/>
-        <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_free_delivery_tour.js"></script>
       </xpath>
+    </template>
+
+    <template id="assets_tests" name="Website Sale Delivery Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale_delivery/static/tests/tours/website_free_delivery.js"></script>
+        </xpath>
     </template>
 
     <template id="payment_delivery_methods">

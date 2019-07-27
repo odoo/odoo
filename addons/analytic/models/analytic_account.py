@@ -78,7 +78,6 @@ class AccountAnalyticAccount(models.Model):
                 line['credit'] = sum(accounts.mapped('credit'))
         return res
 
-    @api.multi
     def _compute_debit_credit_balance(self):
         Curr = self.env['res.currency']
         analytic_line_obj = self.env['account.analytic.line']
@@ -140,7 +139,6 @@ class AccountAnalyticAccount(models.Model):
 
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True)
 
-    @api.multi
     def name_get(self):
         res = []
         for analytic in self:
@@ -181,7 +179,8 @@ class AccountAnalyticLine(models.Model):
     date = fields.Date('Date', required=True, index=True, default=fields.Date.context_today)
     amount = fields.Monetary('Amount', required=True, default=0.0)
     unit_amount = fields.Float('Quantity', default=0.0)
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_uom_id.category_id', readonly=True)
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='restrict', index=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
     user_id = fields.Many2one('res.users', string='User', default=_default_user)
@@ -190,7 +189,6 @@ class AccountAnalyticLine(models.Model):
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True, store=True, compute_sudo=True)
     group_id = fields.Many2one('account.analytic.group', related='account_id.group_id', store=True, readonly=True, compute_sudo=True)
 
-    @api.multi
     @api.constrains('company_id', 'account_id')
     def _check_company_id(self):
         for line in self:

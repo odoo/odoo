@@ -15,17 +15,12 @@
                         groups="product.group_product_variant"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_button_box" name="button_box"/>
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
                     <field name='attribute_line_ids' invisible='1'/>
                     <field name="id" invisible="True"/>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object"
-                                class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
                     <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                     <div class="oe_title">
                         <label class="oe_edit_only" for="name" string="Product Name"/>
@@ -45,6 +40,7 @@
                         <page string="General Information" name="general_information">
                             <group>
                                 <group name="group_general">
+                                    <field name="active" invisible="1"/>
                                     <field name="type"/>
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
@@ -268,14 +264,9 @@
             <field name="arch" type="xml">
                 <form string="Variant Information">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active"
-                                widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                                <field name="type" invisible="1"/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                         <div class="oe_title">
@@ -291,6 +282,7 @@
                             <group name="codes" string="Codes">
                                 <field name="default_code"/>
                                 <field name="barcode"/>
+                                <field name="type" invisible="1"/>
                             </group>
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>

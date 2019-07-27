@@ -19,7 +19,6 @@ class SurveyUserInput(models.Model):
         records._check_for_failed_attempt()
         return records
 
-    @api.multi
     def write(self, vals):
         res = super(SurveyUserInput, self).write(vals)
         if 'state' in vals:

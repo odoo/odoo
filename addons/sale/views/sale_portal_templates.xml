@@ -427,17 +427,15 @@
                 <table class="table table-sm" id="sales_order_table">
                     <thead class="bg-100">
                         <tr>
-                            <!-- TODO: remove in master -->
-                            <t t-set="colspan" t-value="6"/>
                             <th class="text-left">Products</th>
                             <th class="text-right">Quantity</th>
                             <th t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Unit Price</th>
                             <th t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                 <span>Disc.%</span>
-                                <!-- TODO: remove in master -->
-                                <t t-set="colspan" t-value="colspan+1"/>
                             </th>
-                            <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">Taxes</th>
+                            <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                <span>Taxes</span>
+                            </th>
                             <th class="text-right" >
                                 <span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
                                 <span groups="account.group_show_line_subtotals_tax_included">Total Price</span>

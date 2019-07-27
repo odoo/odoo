@@ -10,13 +10,12 @@ class ResPartner(models.Model):
     def _geo_localize(self, street='', zip='', city='', state='', country=''):
         geo_obj = self.env['base.geocoder']
         search = geo_obj.geo_query_address(street=street, zip=zip, city=city, state=state, country=country)
-        result = geo_obj.geo_find(search)
+        result = geo_obj.geo_find(search, force_country=country)
         if result is None:
             search = geo_obj.geo_query_address(city=city, state=state, country=country)
-            result = geo_obj.geo_find(search)
+            result = geo_obj.geo_find(search, force_country=country)
         return result
 
-    @api.multi
     def geo_localize(self):
         # We need country names in English below
         for partner in self.with_context(lang='en_US'):

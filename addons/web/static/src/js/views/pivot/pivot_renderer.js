@@ -77,7 +77,10 @@ var PivotRenderer = AbstractRenderer.extend({
     _render: function () {
         if (!this._hasContent()) {
             // display the nocontent helper
-            this._replaceElement(QWeb.render('PivotView.nodata'));
+            this._replaceElement(QWeb.render('View.NoContentHelper', {
+                description: _t("Try to add some records, or make sure that there is at least " +
+                    "one measure and no active filter in the search bar."),
+            }));
             return this._super.apply(this, arguments);
         }
 

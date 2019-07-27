@@ -15,7 +15,7 @@ class Event(models.Model):
         mass_mailing_action = dict(
             name='Mass Mail Attendees',
             type='ir.actions.act_window',
-            res_model='mail.mass_mailing',
+            res_model='mailing.mailing',
             view_mode='form',
             target='current',
             context=dict(

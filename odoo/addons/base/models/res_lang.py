@@ -28,7 +28,6 @@ class Lang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
-    translatable = fields.Boolean()
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
@@ -141,7 +140,6 @@ class Lang(models.Model):
             'iso_code': iso_lang,
             'name': lang_name,
             'active': True,
-            'translatable': True,
             'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),
@@ -212,12 +210,19 @@ class Lang(models.Model):
         langs = self.with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
+    def toggle_active(self):
+        super().toggle_active()
+        # Automatically load translation
+        active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
+        if active_lang:
+            mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
+            mods._update_translations(filter_lang=active_lang)
+
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
         return super(Lang, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         lang_codes = self.mapped('code')
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
@@ -232,7 +237,6 @@ class Lang(models.Model):
         self.clear_caches()
         return res
 
-    @api.multi
     def unlink(self):
         for language in self:
             if language.code == 'en_US':
@@ -246,7 +250,6 @@ class Lang(models.Model):
         self.clear_caches()
         return super(Lang, self).unlink()
 
-    @api.multi
     def format(self, percent, value, grouping=False, monetary=False):
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()

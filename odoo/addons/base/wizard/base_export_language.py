@@ -15,7 +15,7 @@ class BaseLanguageExport(models.TransientModel):
 
     @api.model
     def _get_languages(self):
-        langs = self.env['res.lang'].search([('translatable', '=', True)])
+        langs = self.env['res.lang'].search([])
         return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + \
                [(lang.code, lang.name) for lang in langs]
    
@@ -29,7 +29,6 @@ class BaseLanguageExport(models.TransientModel):
     state = fields.Selection([('choose', 'choose'), ('get', 'get')], # choose language or get the file
                              default='choose')
 
-    @api.multi
     def act_getfile(self):
         this = self[0]
         lang = this.lang if this.lang != NEW_LANG_KEY else False

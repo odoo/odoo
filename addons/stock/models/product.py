@@ -422,7 +422,7 @@ class Product(models.Model):
             self = self.with_context(inventory_mode=True)
             # Set default location id if multilocations is inactive
             if not self.user_has_groups('stock.group_stock_multi_locations'):
-                user_company = self.env.user.company_id
+                user_company = self.env.company
                 warehouse = self.env['stock.warehouse'].search(
                     [('company_id', '=', user_company.id)], limit=1
                 )
@@ -530,7 +530,8 @@ class ProductTemplate(models.Model):
 
     @api.depends(
         'product_variant_ids',
-        'product_variant_ids.stock_quant_ids',
+        'product_variant_ids.stock_move_ids.product_qty',
+        'product_variant_ids.stock_move_ids.state',
     )
     def _compute_quantities(self):
         res = self._compute_quantities_dict()

@@ -10,7 +10,6 @@ class MakeInvoice(models.TransientModel):
 
     group = fields.Boolean('Group by partner invoice address')
 
-    @api.multi
     def make_invoices(self):
         if not self._context.get('active_ids'):
             return {'type': 'ir.actions.act_window_close'}

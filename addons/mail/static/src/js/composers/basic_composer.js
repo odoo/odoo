@@ -438,10 +438,27 @@ var BasicComposer = Widget.extend({
      * @param {boolean} params.submitForm [optional]
      */
     _processAttachmentChange: function (params) {
-        var self = this,
-        attachments = this.get('attachment_ids'),
-        files = params.files,
-        submitForm = params.submitForm;
+        var self = this;
+        var attachments = this.get('attachment_ids');
+        var files = params.files;
+        var submitForm = params.submitForm;
+        var $form = this.$('form.o_form_binary_form');
+
+        /**
+         * makes a new formData as formData.delete() is not supported by IE or Safari Mobile.
+         *
+         * @return {FormData}
+         */
+        function makeFormDataWithoutUfile() {
+            var newFormData = new window.FormData();
+            $form.find('input').each(function (index, input) {
+                if (input.name !== 'ufile') {
+                    newFormData.append(input.name, input.value);
+                }
+            });
+            return newFormData;
+        }
+
         _.each(files, function (file) {
             var attachment = _.findWhere(attachments, {
                 name: file.name,
@@ -453,24 +470,20 @@ var BasicComposer = Widget.extend({
                 attachments = _.without(attachments, attachment);
             }
         });
-        var $form = this.$('form.o_form_binary_form');
         if (submitForm) {
             $form.submit();
             this._$attachmentButton.prop('disabled', true);
         } else {
-            var data = new FormData($form[0]);
             _.each(files, function (file) {
-                // removing existing key with blank data and appending again with file info
-                // In safari, existing key will not be updated when append with new file.
-                data.delete("ufile");
-                data.append("ufile", file, file.name);
+                var formData = makeFormDataWithoutUfile();
+                formData.append("ufile", file, file.name);
                 $.ajax({
                     url: $form.attr("action"),
                     type: "POST",
                     enctype: 'multipart/form-data',
                     processData: false,
                     contentType: false,
-                    data: data,
+                    data: formData,
                     success: function (result) {
                         var $el = $(result);
                         $.globalEval($el.contents().text());

@@ -67,7 +67,6 @@ class AccountMove(models.Model):
                                                 ensure_ascii=True, indent=None,
                                                 separators=(',',':'))
 
-    @api.multi
     def write(self, vals):
         has_been_posted = False
         for move in self:
@@ -93,7 +92,6 @@ class AccountMove(models.Model):
                 res |= super(AccountMove, move).write(vals_hashing)
         return res
 
-    @api.multi
     def button_cancel(self):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
@@ -148,7 +146,6 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
@@ -166,7 +163,6 @@ class AccountJournal(models.Model):
             field_string = self._fields['update_posted'].get_description(self.env)['string']
             raise UserError(_("According to the French law, you cannot modify a journal in order for its posted data to be updated or deleted. Unauthorized field: %s.") % field_string)
 
-    @api.multi
     def _is_journal_alterable(self):
         self.ensure_one()
         critical_domain = [('journal_id', '=', self.id),
@@ -177,7 +173,6 @@ class AccountJournal(models.Model):
             raise UserError(_('It is not permitted to disable the data inalterability in this journal (%s) since journal entries have already been protected.') % (self.name, ))
         return True
 
-    @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         for journal in self:

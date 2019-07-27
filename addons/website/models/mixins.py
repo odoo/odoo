@@ -23,7 +23,6 @@ class SeoMetadata(models.AbstractModel):
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
     website_meta_og_img = fields.Char("Website opengraph image")
 
-    @api.multi
     def _compute_is_seo_optimized(self):
         for record in self:
             record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords
@@ -105,7 +104,6 @@ class WebsiteMultiMixin(models.AbstractModel):
 
     website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
 
-    @api.multi
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
@@ -125,12 +123,10 @@ class WebsitePublishedMixin(models.AbstractModel):
     can_publish = fields.Boolean('Can publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
-    @api.multi
     def _compute_website_url(self):
         for record in self:
             record.website_url = '#'
 
-    @api.multi
     def website_publish_button(self):
         self.ensure_one()
         if self.env.user.has_group('website.group_website_publisher') and self.website_url != '#':
@@ -157,7 +153,6 @@ class WebsitePublishedMixin(models.AbstractModel):
 
         return records
 
-    @api.multi
     def write(self, values):
         if 'website_published' in values and not all(record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
@@ -167,7 +162,6 @@ class WebsitePublishedMixin(models.AbstractModel):
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url
 
-    @api.multi
     def _compute_can_publish(self):
         """ This method can be overridden if you need more complex rights management than just 'website_publisher'
         The publish widget will be hidden and the user won't be able to change the 'website_published' value
@@ -193,7 +187,6 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
                                        search='_search_website_published',
                                        related=False, readonly=False)
 
-    @api.multi
     @api.depends('is_published', 'website_id')
     def _compute_website_published(self):
         current_website_id = self._context.get('website_id')
@@ -203,7 +196,6 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             else:
                 record.website_published = record.is_published
 
-    @api.multi
     def _inverse_website_published(self):
         for record in self:
             record.is_published = record.website_published

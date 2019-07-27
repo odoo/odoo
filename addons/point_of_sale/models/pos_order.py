@@ -482,15 +482,6 @@ class PosOrder(models.Model):
             return self.filtered(lambda order: order.state in filter_states and order.partner_id)
         return self.filtered(lambda order: order.state in filter_states)
 
-    def _default_session(self):
-        return self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
-
-    def _default_pricelist(self):
-        return self._default_session().config_id.pricelist_id
-
-    def _default_company_id(self):
-        return self._default_session().config_id.company_id
-
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
@@ -506,17 +497,16 @@ class PosOrder(models.Model):
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
-                                    default=lambda self: self._default_company_id())
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
-                                   'draft': [('readonly', False)]}, readonly=True, default=_default_pricelist)
+                                   'draft': [('readonly', False)]}, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
 
     session_id = fields.Many2one(
         'pos.session', string='Session', required=True, index=True,
         domain="[('state', '=', 'opened')]", states={'draft': [('readonly', False)]},
-        readonly=True, default=_default_session)
+        readonly=True)
     config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
@@ -541,7 +531,6 @@ class PosOrder(models.Model):
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',
-        default=lambda self: self._default_session().config_id.default_fiscal_position_id,
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
@@ -591,7 +580,6 @@ class PosOrder(models.Model):
         if self.partner_id:
             self.pricelist = self.partner_id.property_product_pricelist.id
 
-    @api.multi
     def write(self, vals):
         res = super(PosOrder, self).write(vals)
         Partner = self.env['res.partner']
@@ -607,7 +595,6 @@ class PosOrder(models.Model):
                 order.statement_ids.write({'partner_id': partner_id})
         return res
 
-    @api.multi
     def unlink(self):
         for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
@@ -615,17 +602,18 @@ class PosOrder(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('session_id'):
-            # set name based on the sequence specified on the config
-            session = self.env['pos.session'].browse(values['session_id'])
-            values['name'] = session.config_id.sequence_id._next()
-            values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
-        else:
-            # fallback on any pos.order sequence
-            values['name'] = self.env['ir.sequence'].next_by_code('pos.order')
+        session = self.env['pos.session'].browse(values['session_id'])
+        values = self._complete_values_from_session(session, values)
         return super(PosOrder, self).create(values)
 
-    @api.multi
+    @api.model
+    def _complete_values_from_session(self, session, values):
+        values['name'] = session.config_id.sequence_id._next()
+        values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
+        values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
+        values.setdefault('company_id', session.config_id.company_id.id)
+        return values
+
     def action_view_invoice(self):
         return {
             'name': _('Customer Invoice'),
@@ -637,14 +625,12 @@ class PosOrder(models.Model):
             'res_id': self.account_move.id,
         }
 
-    @api.multi
     def action_pos_order_paid(self):
         if not self.test_paid():
             raise UserError(_("Order is not paid."))
         self.write({'state': 'paid'})
         return self.create_picking()
 
-    @api.multi
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
 
@@ -695,11 +681,9 @@ class PosOrder(models.Model):
         }
 
     # this method is unused, and so is the state 'cancel'
-    @api.multi
     def action_pos_order_cancel(self):
         return self.write({'state': 'cancel'})
 
-    @api.multi
     def action_pos_order_done(self):
         return self._create_account_move_line()
 
@@ -946,49 +930,40 @@ class PosOrder(models.Model):
         self.amount_paid = sum(payment.amount for payment in self.statement_ids)
         return args.get('statement_id', False)
 
-    def _prepare_refund_order_data(self, current_session=None):
-        """
-        Prepare data for the creation of refund order based on the current order's data. Inheritance may inject its own data here
-
-        @param current_session: the single pos.session record that presents the current session for refunding order.
-            If not passed, the last closed session of the same original order's sales person will be used
-        @type current_session: pos.session
-
-        @return: dictionary of default data for the creation of refund order
-        @rtype: dict
-        """
-        current_session = current_session or self.env['pos.session'].search([('state', '!=', 'closed'), ('user_id', '=', self.env.uid)], limit=1)
-        return {
-            # ot used, name forced by create
-            'name': self.name + _(' REFUND'),
-            'session_id': current_session.id,
-            'date_order': fields.Datetime.now(),
-            'pos_reference': self.pos_reference,
-            'lines': False,
-            'amount_tax': -self.amount_tax,
-            'amount_total': -self.amount_total,
-            'amount_paid': 0,
-            }
-
-    @api.multi
     def refund(self):
         """Create a copy of order  for refund order"""
-        PosOrder = self.env['pos.order']
-        current_session = self.env['pos.session'].search([('state', '!=', 'closed'), ('user_id', '=', self.env.uid)], limit=1)
-        if not current_session:
-            raise UserError(_('To return product(s), you need to open a session that will be used to register the refund.'))
+        refund_orders = self.env['pos.order']
         for order in self:
-            data_for_copy = order._prepare_refund_order_data(current_session)
-            clone = order.copy(data_for_copy)
+            # When a refund is performed, we are creating it in a session having the same config as the original
+            # order. It can be the same session, or if it has been closed the new one that has been opened.
+            current_session = order.session_id.config_id.current_session_id
+            if not current_session:
+                raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
+            refund_order = order.copy({
+                'name': order.name + _(' REFUND'),
+                'session_id': current_session.id,
+                'date_order': fields.Datetime.now(),
+                'pos_reference': order.pos_reference,
+                'lines': False,
+                'amount_tax': -order.amount_tax,
+                'amount_total': -order.amount_total,
+                'amount_paid': 0,
+            })
             for line in order.lines:
-                line.copy(line._prepare_refund_data(clone))
-            PosOrder += clone
+                line.copy({
+                    'name': line.name + _(' REFUND'),
+                    'qty': -line.qty,
+                    'order_id': refund_order.id,
+                    'price_subtotal': -line.price_subtotal,
+                    'price_subtotal_incl': -line.price_subtotal_incl,
+                    })
+            refund_orders |= refund_order
 
         return {
             'name': _('Return Products'),
             'view_mode': 'form',
             'res_model': 'pos.order',
-            'res_id': PosOrder.ids[0],
+            'res_id': refund_orders.ids[0],
             'view_id': False,
             'context': self.env.context,
             'type': 'ir.actions.act_window',
@@ -1122,7 +1097,6 @@ class PosOrderLine(models.Model):
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
-    @api.multi
     def _get_tax_ids_after_fiscal_position(self):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
@@ -1252,7 +1226,6 @@ class ReportSaleDetails(models.AbstractModel):
             } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 
-    @api.multi
     def _get_report_values(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])

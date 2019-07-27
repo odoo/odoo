@@ -17,7 +17,7 @@ var _t = core._t;
  */
 var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
     events: _.extend({}, relationalFields.FieldMany2One.prototype.events, {
-        'click .o_edit_product_configuration': '_onEditProductConfiguration'
+        'click .o_edit_product_configuration': '_onEditConfiguration'
     }),
 
      /**
@@ -26,10 +26,32 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
     _render: function () {
         this._super.apply(this, arguments);
         if (this.mode === 'edit' && this.value &&
-            (this._isConfigurableProduct() || this._isConfigurableLine())) {
-                this._addConfigurationEditButton();
+        (this._isConfigurableProduct() || this._isConfigurableLine())) {
+            this._addProductLinkButton();
+            this._addConfigurationEditButton();
+        } else if (this.mode === 'edit' && this.value) {
+            this._addProductLinkButton();
         } else {
             this.$('.o_edit_product_configuration').hide();
+        }
+    },
+
+    /**
+     * Add button linking to product_id/product_template_id form.
+     */
+    _addProductLinkButton: function () {
+        if (this.$('.o_external_button').length === 0) {
+            var $productLinkButton = $('<button>', {
+                type: 'button',
+                class: 'fa fa-external-link btn btn-secondary o_external_button',
+                tabindex: '-1',
+                draggable: false,
+                'aria-label': _t('External Link'),
+                title: _t('External Link')
+            });
+
+            var $inputDropdown = this.$('.o_input_dropdown');
+            $inputDropdown.after($productLinkButton);
         }
     },
 
@@ -98,7 +120,11 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
         if (ev.data.changes && !ev.data.preventProductIdCheck && ev.data.changes.product_template_id) {
             self._onTemplateChange(ev.data.changes.product_template_id.id, ev.data.dataPointID);
         } else if (ev.data.changes && ev.data.changes.product_id) {
-            self._onProductChange(ev.data.changes.product_id.id, ev.data.dataPointID);
+            self._onProductChange(ev.data.changes.product_id.id, ev.data.dataPointID).then(function (wizardOpened) {
+                if (!wizardOpened) {
+                    self._onLineConfigured();
+                }
+            });
         }
     },
 
@@ -134,11 +160,50 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
     },
 
     /**
-     * Hook for editing a configured line.
-     * The button triggering this function is only shown in Edit mode,
-     * when _isConfigurableProduct is True.
+     * Hook for configurator happening after line has been set
+     * (options, ...).
+     * Allows sale_product_configurator module to apply its options
+     * after line configuration has been done.
      *
      * @private
+     */
+    _onLineConfigured: function () {
+
+    },
+
+    /**
+     * Triggered on click of the configuration button.
+     * It is only shown in Edit mode,
+     * when _isConfigurableProduct or _isConfigurableLine is True.
+     *
+     * After reflexion, when a line was configured through two wizards,
+     * only the line configuration will open.
+     *
+     * Two hooks are available depending on configurator category:
+     * _onEditLineConfiguration : line configurators
+     * _onEditProductConfiguration : product configurators
+     *
+     * @private
+     */
+    _onEditConfiguration: function () {
+        if (this._isConfigurableLine()) {
+            this._onEditLineConfiguration();
+        } else if (this._isConfigurableProduct()) {
+            this._onEditProductConfiguration();
+        }
+    },
+
+    /**
+     * Hook for line configurators (rental, event)
+     * on line edition (pencil icon inside product field)
+     */
+    _onEditLineConfiguration: function () {
+
+    },
+
+    /**
+     * Hook for product configurators (matrix, product)
+     * on line edition (pencil icon inside product field)
      */
     _onEditProductConfiguration: function () {
 

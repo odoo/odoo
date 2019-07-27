@@ -24,6 +24,10 @@ class Category(models.Model):
     discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
                                    'category', 'discussion')
 
+    _sql_constraints = [
+        ('positive_color', 'CHECK(color >= 0)', 'The color code must be positive !')
+    ]
+
     @api.depends('name', 'parent.display_name')     # this definition is recursive
     def _compute_display_name(self):
         for cat in self:
@@ -56,7 +60,6 @@ class Category(models.Model):
             # assign name of last category, and reassign display_name (to normalize it)
             cat.name = names[-1].strip()
 
-    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
             raise AccessError('Sorry')
@@ -185,7 +188,6 @@ class Message(models.Model):
     def _search_author_partner(self, operator, value):
         return [('author.partner_id', operator, value)]
 
-    @api.multi
     def write(self, vals):
         if 'priority' in vals:
             vals['priority'] = 5

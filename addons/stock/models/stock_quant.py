@@ -21,7 +21,7 @@ class StockQuant(models.Model):
     def _domain_location_id(self):
         if not self._is_inventory_mode():
             return
-        return ['&', ('company_id', '=', self.env.user.company_id.id), ('usage', 'in', ['internal', 'transit'])]
+        return ['&', ('company_id', '=', self.env.company.id), ('usage', 'in', ['internal', 'transit'])]
 
     def _domain_product_id(self):
         if not self._is_inventory_mode():
@@ -141,6 +141,9 @@ class StockQuant(models.Model):
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
         if self._is_inventory_mode() and 'inventory_quantity' in vals:
+            if any(quant.location_id.usage == 'inventory' for quant in self):
+                # Do nothing when user tries to modify manually a inventory loss
+                return
             allowed_fields = self._get_inventory_fields_write()
             if any([field for field in vals.keys() if field not in allowed_fields]):
                 raise UserError(_("Quant's edition is restricted, you can't do this operation."))
@@ -162,6 +165,31 @@ class StockQuant(models.Model):
                 ('result_package_id', '=', self.package_id.id),
         ]
         return action
+
+    @api.model
+    def action_view_quants(self):
+        self = self.with_context(search_default_internal_loc=1)
+        if self.user_has_groups('stock.group_production_lot,stock.group_stock_multi_locations'):
+            # fixme: erase the following condition when it'll be possible to create a new record
+            # from a empty grouped editable list without go through the form view.
+            if self.search_count([
+                ('company_id', '=', self.env.company.id),
+                ('location_id.usage', 'in', ['internal', 'transit'])
+            ]):
+                self = self.with_context(
+                    search_default_productgroup=1,
+                    search_default_locationgroup=1
+                )
+        if not self.user_has_groups('stock.group_stock_multi_locations'):
+            company_user = self.env.company
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+            if warehouse:
+                self = self.with_context(default_location_id=warehouse.lot_stock_id.id)
+
+        # If user have rights to write on quant, we set quants in inventory mode.
+        if self.user_has_groups('stock.group_stock_manager'):
+            self = self.with_context(inventory_mode=True)
+        return self._get_quants_action(extend=True)
 
     @api.constrains('product_id')
     def check_product_id(self):
@@ -302,6 +330,18 @@ class StockQuant(models.Model):
         if vals:
             self.update(vals)
 
+    @api.onchange('inventory_quantity')
+    def _onchange_inventory_quantity(self):
+        if self.location_id and self.location_id.usage == 'inventory':
+            warning = {
+                'title': _('You cannot modify inventory loss quantity'),
+                'message': _(
+                    'Editing quantities in an Inventory Adjustment location is forbidden,'
+                    'those locations are used as counterpart when correcting the quantities.'
+                )
+            }
+            return {'warning': warning}
+
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
         """ Increase or decrease `reserved_quantity` of a set of quants for a given set of
@@ -418,7 +458,7 @@ class StockQuant(models.Model):
         this method is often called in batch and each unlink invalidate
         the cache. We defer the calls to unlink in this method.
         """
-        precision_digits = max(6, self.env.ref('product.decimal_product_uom').digits * 2)
+        precision_digits = max(6, self.sudo().env.ref('product.decimal_product_uom').digits * 2)
         # Use a select instead of ORM search for UoM robustness.
         query = """SELECT id FROM stock_quant WHERE round(quantity::numeric, %s) = 0 AND round(reserved_quantity::numeric, %s) = 0;"""
         params = (precision_digits, precision_digits)
@@ -498,7 +538,7 @@ class StockQuant(models.Model):
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': qty,
-            'company_id': self.company_id.id,
+            'company_id': self.company_id.id or self.env.user.company_id.id,
             'state': 'confirmed',
             'location_id': location_id.id,
             'location_dest_id': location_dest_id.id,
@@ -508,7 +548,7 @@ class StockQuant(models.Model):
                 'qty_done': qty,
                 'location_id': location_id.id,
                 'location_dest_id': location_dest_id.id,
-                'company_id': self.company_id.id,
+                'company_id': self.company_id.id or self.env.user.company_id.id,
                 'lot_id': self.lot_id.id,
                 'package_id': out and self.package_id.id or False,
                 'result_package_id': (not out) and self.package_id.id or False,

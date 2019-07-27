@@ -36,12 +36,12 @@
             <t t-if="!is_self">
                 <a t-att-href="employee.link" class="o_employee_redirect" t-att-data-employee-id="employee.id">
                     <h5 class="o_media_heading"><b><t t-esc="employee.name"/></b></h5>
-                    <strong><t t-esc="employee.job_name"/></strong>
+                    <strong><t t-esc="employee.job_title"/></strong>
                 </a>
             </t>
             <t t-if="is_self">
                 <h5 class="o_media_heading"><b><t t-esc="employee.name"/></b></h5>
-                <strong><t t-esc="employee.job_name"/></strong>
+                <strong><t t-esc="employee.job_title"/></strong>
             </t>
         </div>
     </div>

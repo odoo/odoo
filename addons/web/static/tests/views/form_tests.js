@@ -414,6 +414,39 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('group containing both a field and a group', async function (assert) {
+        // The purpose of this test is to check that classnames defined in a
+        // field widget and those added by the form renderer are correctly
+        // combined. For instance, the renderer adds className 'o_group_col_x'
+        // on outer group's children (an outer group being a group that contains
+        // at least a group).
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<group>' +
+                            '<field name="int_field"/>' +
+                        '</group>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_group .o_field_widget[name=foo]');
+        assert.containsOnce(form, '.o_group .o_inner_group .o_field_widget[name=int_field]');
+
+        assert.hasClass(form.$('.o_field_widget[name=foo]'), 'o_field_char');
+        assert.hasClass(form.$('.o_field_widget[name=foo]'), 'o_group_col_6');
+
+        form.destroy();
+    });
+
     QUnit.test('Form and subview with _view_ref contexts', async function (assert) {
         assert.expect(2);
 
@@ -485,6 +518,7 @@ QUnit.module('Views', {
         form.destroy();
         actionManager.destroy();
     });
+
     QUnit.test('invisible fields are properly hidden', async function (assert) {
         assert.expect(4);
 
@@ -3136,42 +3170,6 @@ QUnit.module('Views', {
         // case, there is nothing that the user could do.
         assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), 'My little Foo Value',
             "should display proper default value");
-
-        form.destroy();
-    });
-
-    QUnit.test('attrs are properly transmitted to new records', async function (assert) {
-        assert.expect(2);
-
-        // this test checks that the fieldsInfo have been transmitted to the
-        // load function when creating a new record
-
-        var terminology = {
-            string_true: "Production Environment",
-            hover_true: "Switch to test environment",
-            string_false: "Test Environment",
-            hover_false: "Switch to production environment"
-        };
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form>' +
-                    '<group>' +
-                        '<field name="bar" widget="boolean_button" options=\'{"terminology": ' +
-                            JSON.stringify(terminology) + '}\'/>' +
-                    '</group>' +
-                '</form>',
-            res_id: 2,
-        });
-
-        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Production Environment)').length, 1,
-            "button should contain correct string");
-
-        await testUtils.form.clickCreate(form);
-
-        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Test Environment)').length, 1,
-            "button should contain correct string");
 
         form.destroy();
     });
@@ -6897,7 +6895,6 @@ QUnit.module('Views', {
         form.destroy();
         delete widgetRegistry.map.test;
     });
-
 
     QUnit.test('bounce edit button in readonly mode', async function (assert) {
         assert.expect(3);

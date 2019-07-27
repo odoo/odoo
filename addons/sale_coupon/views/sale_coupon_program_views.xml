@@ -8,10 +8,8 @@
         <field name="arch" type="xml">
             <form string="Coupon Program">
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "close"}'/>
-                        </button>
                         <button class="oe_stat_button" type="object" icon="fa-usd" name="action_view_sales_orders">
                             <field name="order_count" string="Sales" widget="statinfo"/>
                         </button>
@@ -21,6 +19,7 @@
                     </div>
                     <group>
                         <group name="conditions" string="Conditions">
+                            <field name="active" invisible="1"/>
                             <field name="program_type" invisible="1"/>
                             <field name="rule_products_domain" placeholder="Select product" widget="domain" options="{'model': 'product.product'}"/>
                             <label string="Quantity" for="rule_min_quantity" attrs="{'invisible': [('rule_products_domain', '=', False)]}"/>
@@ -125,6 +124,7 @@
         <field name="model">sale.coupon.program</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
                 <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
                 <filter string="Expired" name="expired" domain="[('rule_date_to', '&lt;', datetime.datetime.now())]" help="Expired Programs"/>
@@ -164,7 +164,7 @@
     </record>
 
     <record id="sale_coupon_program_action_coupon_program" model="ir.actions.act_window">
-        <field name="name">Coupon Program</field>
+        <field name="name">Coupon Programs</field>
         <field name="res_model">sale.coupon.program</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="sale_coupon_program_view_search"/>
@@ -258,6 +258,7 @@
         <field name="model">sale.coupon.program</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
                 <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
             </search>
@@ -265,7 +266,7 @@
     </record>
 
     <record id="sale_coupon_program_action_promo_program" model="ir.actions.act_window">
-        <field name="name">Promotion Program</field>
+        <field name="name">Promotion Programs</field>
         <field name="res_model">sale.coupon.program</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_ids" eval="[

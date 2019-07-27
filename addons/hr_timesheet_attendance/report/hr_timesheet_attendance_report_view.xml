@@ -15,7 +15,7 @@
             <field name="name">HR timesheet attendance report: Pivot</field>
             <field name="model">hr.timesheet.attendance.report</field>
             <field name="arch" type="xml">
-                <pivot string="timesheet attendance">
+                <pivot string="timesheet attendance" disable_linking="True">
                     <field name="user_id" type="row"/>
                     <field name="date" interval="day" type="col"/>
                     <field name="total_difference" type="measure" widget="float_time"/>

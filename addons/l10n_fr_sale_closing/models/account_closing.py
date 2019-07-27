@@ -133,11 +133,9 @@ class AccountClosing(models.Model):
                 'date_stop': FieldDateTime.to_string(date_stop),
                 'name_interval': name_interval}
 
-    @api.multi
     def write(self, vals):
         raise UserError(_('Sale Closings are not meant to be written or deleted under any circumstances.'))
 
-    @api.multi
     def unlink(self):
         raise UserError(_('Sale Closings are not meant to be written or deleted under any circumstances.'))
 

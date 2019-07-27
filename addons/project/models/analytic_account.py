@@ -12,7 +12,6 @@ class AccountAnalyticAccount(models.Model):
     project_ids = fields.One2many('project.project', 'analytic_account_id', string='Projects')
     project_count = fields.Integer("Project Count", compute='_compute_project_count')
 
-    @api.multi
     @api.depends('project_ids')
     def _compute_project_count(self):
         project_data = self.env['project.project'].read_group([('analytic_account_id', 'in', self.ids)], ['analytic_account_id'], ['analytic_account_id'])
@@ -20,7 +19,6 @@ class AccountAnalyticAccount(models.Model):
         for account in self:
             account.project_count = mapping.get(account.id, 0)
 
-    @api.multi
     def unlink(self):
         projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
         has_tasks = self.env['project.task'].search_count([('project_id', 'in', projects.ids)])
@@ -28,7 +26,6 @@ class AccountAnalyticAccount(models.Model):
             raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
         return super(AccountAnalyticAccount, self).unlink()
 
-    @api.multi
     def action_view_projects(self):
         kanban_view_id = self.env.ref('project.view_project_kanban').id
         result = {

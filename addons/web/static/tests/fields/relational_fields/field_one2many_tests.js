@@ -1093,7 +1093,7 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.form.clickEdit(form);
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should display the records in order");
 
             await testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:first td:first'));
@@ -1102,12 +1102,12 @@ QUnit.module('fields', {}, function () {
             // the domain fail if the widget does not use the allready loaded data.
             await testUtils.form.clickDiscard(form);
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "blurp#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "blurp#21#22#23#24#25#26#27#28#29",
                 "should display the records in order with the changes");
 
             await testUtils.dom.click($('.modal .modal-footer button:first'));
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
 
             await testUtils.form.clickEdit(form);
@@ -1119,7 +1119,7 @@ QUnit.module('fields', {}, function () {
                 { position: 'top' }
             );
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#30#31#32#33#34#35#36#37#38",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#30#31#32#33#34#35#36#37#38",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             // Drag and drop the third line in second position
@@ -1129,17 +1129,17 @@ QUnit.module('fields', {}, function () {
                 { position: 'top' }
             );
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             await testUtils.form.clickDiscard(form);
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence");
 
             await testUtils.dom.click($('.modal .modal-footer button:first'));
 
-            assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
 
             form.destroy();
@@ -8418,6 +8418,57 @@ QUnit.module('fields', {}, function () {
             assert.containsN(form, '.o_data_row', 2);
             assert.strictEqual(form.$('.o_data_row:first').text(), '44');
             assert.hasClass(form.$('.o_data_row:nth(1)'), 'o_selected_row');
+
+            form.destroy();
+        });
+
+        QUnit.test('many2manys inside a one2many are fetched in batch after onchange', async function (assert) {
+            assert.expect(7);
+
+            this.data.partner.onchanges = {
+                turtles: function (obj) {
+                    obj.turtles = [
+                        [5],
+                        [1, 1, {
+                            turtle_foo: "leonardo",
+                            partner_ids: [[4, 2]],
+                        }],
+                        [1, 2, {
+                            turtle_foo: "donatello",
+                            partner_ids: [[4, 2], [4, 4]],
+                        }],
+                    ];
+                },
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                            '<field name="turtles">' +
+                                '<tree editable="bottom">' +
+                                    '<field name="turtle_foo"/>' +
+                                    '<field name="partner_ids" widget="many2many_tags"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</form>',
+                enableBasicModelBachedRPCs: true,
+                mockRPC: function (route, args) {
+                    assert.step(args.method || route);
+                    if (args.method === 'read') {
+                        assert.deepEqual(args.args[0], [2, 4],
+                            'should read the partner_ids once, batched');
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            assert.containsN(form, '.o_data_row', 2);
+            assert.strictEqual(form.$('.o_field_widget[name="partner_ids"]').text().replace(/\s/g, ''),
+                "secondrecordsecondrecordaaa");
+
+            assert.verifySteps(['default_get', 'onchange', 'read']);
 
             form.destroy();
         });

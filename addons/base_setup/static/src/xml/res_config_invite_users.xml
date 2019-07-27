@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name='res_config_invite_users'>
+        <div class="row mt16 o_settings_container">
+            <div class='col-12 col-lg-6 o_setting_box'>
+                <div class='o_setting_right_pane'>
+                    <t t-if="widget.active_users">
+                        <div class='o_form_label'>
+                            <t t-esc="widget.active_users"></t>
+                            <t t-if="widget.active_users &lt;= 1"> Active User</t>
+                            <t t-if="widget.active_users &gt; 1">Active Users</t>
+                        </div>
+                    </t>
+                    <br/>
+                    <a href="#" class="o_web_settings_access_rights d-flex">
+                        <i class='fa fa-fw o_button_icon fa-arrow-right'></i>
+                        Manage Users
+                    </a>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_right_pane">
+                    <t t-if="widget.pending_users.length">
+                        <p class="o_form_label">Pending Invitations:</p>
+                        <span t-foreach="widget.pending_users" t-as="pending">
+                            <a href="#" class="badge badge-pill o_web_settings_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/> </a>
+                        </span>
+                        <t t-if="widget.pending_users.length &lt; widget.pending_count">
+                            <br/>
+                            <a href="#" class="o_web_settings_more"><t t-esc="widget.pending_count - widget.pending_users.length"/> more </a>
+                        </t>
+                    </t>
+                </div>
+            </div>
+            <div class='col-12 col-lg-6 o_setting_box'>
+                <div class='o_setting_right_pane'>
+                    <span class="o_form_label">Invite New Users:</span>
+                    <span class="o_web_settings_invitation_form"/>
+                    <input class="o_user_emails o_input mt8" type="text" placeholder="Enter e-mail addresses"/>
+                    <button class="btn btn-primary btn-block o_web_settings_invite mt16" data-loading-text="Inviting..."><strong>Invite</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <t t-name="EmailBadge">
+        <span t-foreach="emails" t-as="email" class="badge badge-pill">
+            <span class="o_badge_text">
+                <t t-esc='email'/>
+            </span>
+            <a href="#" class="fa fa-times o_badge_remove" title="Remove Email" aria-label="Remove Email" role="button"/>
+        </span>
+    </t>
+</templates>

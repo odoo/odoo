@@ -17,7 +17,6 @@ class ResPartnerGrade(models.Model):
     partner_weight = fields.Integer('Level Weight', default=1,
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
 
-    @api.multi
     def _compute_website_url(self):
         super(ResPartnerGrade, self)._compute_website_url()
         for grade in self:

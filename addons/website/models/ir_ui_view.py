@@ -24,12 +24,10 @@ class View(models.Model):
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
 
-    @api.multi
     def _compute_first_page_id(self):
         for view in self:
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
 
-    @api.multi
     def name_get(self):
         if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
             return super(View, self).name_get()
@@ -42,7 +40,6 @@ class View(models.Model):
             res.append((view.id, view_name))
         return res
 
-    @api.multi
     def write(self, vals):
         '''COW for ir.ui.view. This way editing websites does not impact other
         websites. Also this way newly created websites will only
@@ -106,7 +103,6 @@ class View(models.Model):
 
         return True
 
-    @api.multi
     def _get_specific_views(self):
         """ Given a view, return a record set containing all the specific views
             for that view's key.
@@ -155,7 +151,6 @@ class View(models.Model):
                     })
         return records
 
-    @api.multi
     def unlink(self):
         '''This implements COU (copy-on-unlink). When deleting a generic page
         website-specific pages will be created so only the current
@@ -296,7 +291,6 @@ class View(models.Model):
             return view.id
         return super(View, self).get_view_id(xml_id)
 
-    @api.multi
     def _get_original_view(self):
         """Given a view, retrieve the original view it was COW'd from.
         The given view might already be the original one. In that case it will
@@ -306,7 +300,6 @@ class View(models.Model):
         domain = [('key', '=', self.key), ('model_data_id', '!=', None)]
         return self.with_context(active_test=False).search(domain, limit=1)  # Useless limit has multiple xmlid should not be possible
 
-    @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         new_context = dict(self._context)
@@ -383,7 +376,6 @@ class View(models.Model):
         else:
             return super(View, self).get_default_lang_code()
 
-    @api.multi
     def redirect_to_page_manager(self):
         return {
             'type': 'ir.actions.act_url',
@@ -409,7 +401,6 @@ class View(models.Model):
         if not self._context.get('website_id'):
             super(View, self)._set_noupdate()
 
-    @api.multi
     def save(self, value, xpath=None):
         self.ensure_one()
         current_website = self.env['website'].get_current_website()

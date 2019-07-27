@@ -13,7 +13,6 @@ class AccountMove(models.Model):
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
 
-    @api.multi
     def _reverse_move_vals(self, default_values, cancel=True):
         # OVERRIDE
         # Don't keep anglo-saxon lines if not cancelling an existing invoice.
@@ -22,7 +21,6 @@ class AccountMove(models.Model):
             move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
         return move_vals
 
-    @api.multi
     def post(self):
         # OVERRIDE
 
@@ -40,7 +38,6 @@ class AccountMove(models.Model):
         self._stock_account_anglo_saxon_reconcile_valuation()
         return res
 
-    @api.multi
     def button_cancel(self):
         # OVERRIDE
         res = super(AccountMove, self).button_cancel()
@@ -53,7 +50,6 @@ class AccountMove(models.Model):
     # COGS METHODS
     # -------------------------------------------------------------------------
 
-    @api.multi
     def _stock_account_prepare_anglo_saxon_out_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the Cost of Good Sold
         lines (COGS) for customer invoices.
@@ -205,7 +201,6 @@ class AccountMoveLine(models.Model):
 
     is_anglo_saxon_line = fields.Boolean(help="Technical field used to retrieve the anglo-saxon lines.")
 
-    @api.multi
     def _get_computed_account(self):
         # OVERRIDE to use the stock input account by default on vendor bills when dealing
         # with anglo-saxon accounting.
@@ -219,7 +214,6 @@ class AccountMoveLine(models.Model):
                 return accounts['stock_input']
         return super(AccountMoveLine, self)._get_computed_account()
 
-    @api.multi
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
         if not self.product_id:

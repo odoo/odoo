@@ -48,10 +48,10 @@ class MrpWorkcenter(models.Model):
         ('done', 'In Progress')], 'Workcenter Status', compute="_compute_working_state", store=True)
     blocked_time = fields.Float(
         'Blocked Time', compute='_compute_blocked_time',
-        help='Blocked hour(s) over the last month', digits=(16, 2))
+        help='Blocked hours over the last month', digits=(16, 2))
     productive_time = fields.Float(
         'Productive Time', compute='_compute_productive_time',
-        help='Productive hour(s) over the last month', digits=(16, 2))
+        help='Productive hours over the last month', digits=(16, 2))
     oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
     oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
@@ -95,7 +95,6 @@ class MrpWorkcenter(models.Model):
             workcenter.workorder_progress_count = result[workcenter.id].get('progress', 0)
             workcenter.workorder_late_count = count_data.get(workcenter.id, 0)
 
-    @api.multi
     @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
     def _compute_working_state(self):
         for workcenter in self:
@@ -116,7 +115,6 @@ class MrpWorkcenter(models.Model):
                 # the workcenter is blocked
                 workcenter.working_state = 'blocked'
 
-    @api.multi
     def _compute_blocked_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently ??
         data = self.env['mrp.workcenter.productivity'].read_group([
@@ -129,7 +127,6 @@ class MrpWorkcenter(models.Model):
         for workcenter in self:
             workcenter.blocked_time = count_data.get(workcenter.id, 0.0) / 60.0
 
-    @api.multi
     def _compute_productive_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently
         data = self.env['mrp.workcenter.productivity'].read_group([
@@ -150,7 +147,6 @@ class MrpWorkcenter(models.Model):
             else:
                 order.oee = 0.0
 
-    @api.multi
     def _compute_performance(self):
         wo_data = self.env['mrp.workorder'].read_group([
             ('date_start', '>=', fields.Datetime.to_string(datetime.datetime.now() - relativedelta.relativedelta(months=1))),
@@ -164,13 +160,11 @@ class MrpWorkcenter(models.Model):
             else:
                 workcenter.performance = 0.0
 
-    @api.multi
     @api.constrains('capacity')
     def _check_capacity(self):
         if any(workcenter.capacity <= 0.0 for workcenter in self):
             raise exceptions.UserError(_('The capacity must be strictly positive.'))
 
-    @api.multi
     def unblock(self):
         self.ensure_one()
         if self.working_state != 'blocked':
@@ -186,7 +180,6 @@ class MrpWorkcenter(models.Model):
         return super(MrpWorkcenter, self.with_context({
             'default_resource_type': 'material'})).create(vals)
 
-    @api.multi
     def action_work_order(self):
         action = self.env.ref('mrp.action_work_orders').read()[0]
         return action
@@ -220,7 +213,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
     _description = "Workcenter Productivity Losses"
     _order = "sequence, id"
 
-    name = fields.Char('Reason', required=True)
+    name = fields.Char('Blocking Reason', required=True)
     sequence = fields.Integer('Sequence', default=1)
     manual = fields.Boolean('Is a Blocking Reason', default=True)
     loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=([('loss_type', 'in', ['quality', 'availability'])]), string='Category')
@@ -264,7 +257,6 @@ class MrpWorkcenterProductivity(models.Model):
             else:
                 blocktime.duration = 0.0
 
-    @api.multi
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()

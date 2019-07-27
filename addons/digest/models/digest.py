@@ -80,21 +80,17 @@ class Digest(models.Model):
         vals['next_run_date'] = date.today() + relativedelta(days=3)
         return super(Digest, self).create(vals)
 
-    @api.multi
     def action_subscribe(self):
         if self.env.user not in self.user_ids:
             self.sudo().user_ids |= self.env.user
 
-    @api.multi
     def action_unsubcribe(self):
         if self.env.user in self.user_ids:
             self.sudo().user_ids -= self.env.user
 
-    @api.multi
     def action_activate(self):
         self.state = 'activated'
 
-    @api.multi
     def action_deactivate(self):
         self.state = 'deactivated'
 

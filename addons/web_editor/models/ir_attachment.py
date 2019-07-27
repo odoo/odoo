@@ -22,7 +22,6 @@ class IrAttachment(models.Model):
             else:
                 attachment.local_url = '/web/image/%s?unique=%s' % (attachment.id, attachment.checksum)
 
-    @api.multi
     @api.depends('mimetype', 'url', 'name')
     def _compute_image_src(self):
         for attachment in self:
@@ -34,7 +33,6 @@ class IrAttachment(models.Model):
                     url_quote(attachment.name or ''),
                 )
 
-    @api.multi
     @api.depends('datas')
     def _compute_image_size(self):
         for attachment in self:
@@ -46,7 +44,6 @@ class IrAttachment(models.Model):
                 attachment.image_width = 0
                 attachment.image_height = 0
 
-    @api.multi
     def _get_media_info(self):
         """Return a dict with the values that we need on the media dialog."""
         self.ensure_one()

@@ -86,7 +86,6 @@ class ResCompany(models.Model):
         }
         return action
 
-    @api.multi
     def action_save_onboarding_quotation_layout(self):
         """ Set the onboarding step as done """
         if bool(self.logo) and self.logo != self._get_logo():

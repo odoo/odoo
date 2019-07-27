@@ -7,39 +7,8 @@
         <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>
         <field name="arch" type="xml">
             <filter name="group_manager" position="after">
-                <filter name="group_hr_presence_state" string="Presence" domain="[]" context="{'group_by':'hr_presence_state'}"/>
+                <filter name="group_hr_presence_state" string="Presence" domain="[]" context="{'group_by':'hr_presence_state_display'}"/>
             </filter>
-        </field>
-    </record>
-
-    <record id="hr_employee_view_form" model="ir.ui.view">
-        <field name="name">hr.employee.presence.form.inherit</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>
-        <field name="arch" type="xml">
-            <xpath expr="//button[@name='toggle_active']" position="before">
-                <field name="hr_presence_state" invisible="1"/>
-                <button name="%(ir_actions_server_action_open_presence_view)d"
-                    class="oe_stat_button"
-                    type="action"
-                    attrs="{'invisible': ['|', ('hr_presence_state', '=', 'absent'), ('user_id', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
-                    <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Not available" title="Not available"/>
-
-                    <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}">
-                        <span class="o_stat_value">
-                            <field name="last_activity"/>
-                        </span>
-                        <span class="o_stat_text">
-                            Last Activity
-                        </span>
-                    </div>
-                    <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
-                        <span class="o_stat_text">Connected</span>
-                    </div>
-                </button>
-            </xpath>
         </field>
     </record>
 
@@ -54,7 +23,7 @@
                 <div class="o_kanban_record_bottom">
                     <div class="oe_kanban_bottom_left">
                         <field name="hr_presence_state" invisible="1"/>
-                        <button name="action_set_present" type="object" class="btn btn-primary btn-sm mt8 fa fa-check" title="Set as present" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}"> </button>
+                        <button name="action_set_present" type="object" class="btn btn-primary btn-sm mt8 fa fa-check" title="Set as present" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}"> </button>
                         <button name="action_open_leave_request" type="object" class="btn btn-primary btn-sm mt8">Time Off</button>
                         <button name="action_send_sms" type="object" class="btn btn-primary btn-sm mt8">SMS</button>
                         <button name="action_send_mail" type="object" class="btn btn-primary btn-sm mt8">Mail</button>
@@ -64,31 +33,4 @@
         </field>
     </record>
 
-    <record id="hr_employee_view_kanban_inherit" model="ir.ui.view">
-        <field name="name">hr.employee</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
-        <field name="priority">1</field>
-        <field name="arch" type="xml">
-            <templates position="before">
-                <field name="hr_presence_state"/>
-            </templates>
-            <field name="name" position="replace">
-                <div>
-                    <div class="float-right" t-if="record.hr_presence_state.raw_value == 'present'">
-                        <span class="fa fa-circle text-success" role="img" aria-label="Present" title="Present" name="presence_present"></span>
-                    </div>
-                    <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent'">
-                        <span class="fa fa-circle text-danger" role="img" aria-label="Absent" title="Absent" name="presence_absent"></span>
-                    </div>
-                    <div class="float-right" t-if="record.hr_presence_state.raw_value == 'to_define'">
-                        <span class="fa fa-circle text-warning" role="img" aria-label="To define" title="To define" name="presence_to_define"></span>
-                    </div>
-                    <strong>
-                        <field name="name" placeholder="Employee's Name"/>
-                    </strong>
-                </div>
-            </field>
-        </field>
-    </record>
 </odoo>

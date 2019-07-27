@@ -135,6 +135,13 @@ QUnit.module('Views', {
         var model = createModel({
             Model: KanbanModel,
             data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    this.data.partner.records[0].active = false;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         var params = _.extend(this.params, {
@@ -151,7 +158,7 @@ QUnit.module('Views', {
 
             // archive the column 'xphone'
             var recordIDs = _.pluck(xphoneGroup.data, 'id');
-            await model.toggleActive(recordIDs, false, xphoneGroup.id);
+            await model.actionArchive(recordIDs, xphoneGroup.id);
             state = model.get(resultID);
             xphoneGroup = _.findWhere(state.data, {res_id: 37});
             assert.strictEqual(xphoneGroup.count, 0, 'xphone group has no record anymore');

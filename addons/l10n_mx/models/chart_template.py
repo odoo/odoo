@@ -22,7 +22,6 @@ class AccountChartTemplate(models.Model):
         company.write({'tax_cash_basis_journal_id': journal_basis.id})
         return res
 
-    @api.multi
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         """Create the tax_cash_basis_journal_id"""
         res = super(AccountChartTemplate, self)._prepare_all_journals(

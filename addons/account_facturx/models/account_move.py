@@ -22,7 +22,6 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.multi
     def _export_as_facturx_xml(self):
         ''' Create the Factur-x xml file content.
         :return: The XML content as str.
@@ -47,7 +46,6 @@ class AccountMove(models.Model):
         content = self.env.ref('account_facturx.account_invoice_facturx_export').render(template_values)
         return b"<?xml version='1.0' encoding='UTF-8'?>" + content
 
-    @api.multi
     def _import_facturx_invoice(self, tree):
         ''' Extract invoice values from the Factur-x xml tree passed as parameter.
 
@@ -217,7 +215,6 @@ class AccountMove(models.Model):
 
         return invoice_form.save()
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         # OVERRIDE
@@ -294,7 +291,7 @@ class AccountMove(models.Model):
 
         :return: a list of triplet (xml_type, check_func, decode_func)
             * xml_type: The format name, e.g 'UBL 2.1'
-            * check_func: A function taking an etree as parameter and returning a dict:
+            * check_func: A function taking an etree and a file name as parameter and returning a dict:
                 * flag: The etree is part of this format.
                 * error: Error message.
             * decode_func: A function taking an etree as parameter and returning an invoice record.
@@ -302,7 +299,6 @@ class AccountMove(models.Model):
         # TO BE OVERWRITTEN
         return []
 
-    @api.multi
     def _create_invoice_from_xml(self, attachment):
         decoders = self._get_xml_decoders()
 
@@ -314,20 +310,20 @@ class AccountMove(models.Model):
             raise UserError(_('The xml file is badly formatted : {}').format(attachment.name))
 
         for xml_type, check_func, decode_func in decoders:
-            check_res = check_func(tree)
+            check_res = check_func(tree, attachment.name)
 
             if check_res.get('flag') and not check_res.get('error'):
-                invoice = decode_func(tree)
-                if invoice:
+                invoice_ids = decode_func(tree)
+                if invoice_ids:
                     try:
                         # don't propose to send to ocr
-                        invoice.extract_state = 'done'
+                        invoice_ids.write({'extract_state': 'done'})
                     except AttributeError:
                         # account_invoice_exctract not installed
                         pass
                     break
 
         try:
-            return invoice
+            return invoice_ids
         except UnboundLocalError:
             raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.name))

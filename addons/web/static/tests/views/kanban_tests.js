@@ -176,6 +176,20 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID; 
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         // check archive/restore all actions in kanban header's config dropdown
@@ -219,6 +233,20 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID; 
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         // check archive/restore all actions in kanban header's config dropdown
@@ -4747,6 +4775,20 @@ QUnit.module('Views', {
                     '</t></templates>' +
                 '</kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID; 
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "36",
@@ -4790,6 +4832,20 @@ QUnit.module('Views', {
                     '</t></templates>' +
                 '</kanban>',
             groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                    var partnerIDS = args.args[0];
+                    var records = this.data.partner.records
+                    _.each(partnerIDS, function(partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID; 
+                        }).active = false;
+                    })
+                    this.data.partner.records[0].active;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.deepEqual(kanban.exportState().resIds, [1, 2, 3, 4]);

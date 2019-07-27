@@ -404,7 +404,7 @@ var AbstractThreadWindow = Widget.extend({
         this._thread.postMessage(messageData)
             .then(function () {
                 self._threadWidget.scrollToBottom();
-                callback();
+                callback && callback();
             });
     },
     /**

@@ -45,7 +45,6 @@ class TemplatePreview(models.TransientModel):
     preview_lang = fields.Selection(_get_languages, string='Template Preview Language')
 
     @api.onchange('res_id', 'preview_lang')
-    @api.multi
     def on_change_res_id(self):
         if not self.res_id:
             return {}

@@ -7,7 +7,6 @@ from odoo import models, api
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
     def _action_confirm(self):
         """ If the product of an order line is a 'course', we add the client of the sale_order
         as a member of the channel(s) on which this product is configured (see slide.channel.product_id). """

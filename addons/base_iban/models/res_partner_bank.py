@@ -77,7 +77,6 @@ class ResPartnerBank(models.Model):
                 pass
         return super(ResPartnerBank, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('acc_number'):
             try:

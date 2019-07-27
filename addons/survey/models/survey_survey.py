@@ -94,14 +94,28 @@ class Survey(models.Model):
         domain="[('model', '=', 'survey.user_input')]",
         help="Automated email sent to the user when he succeeds the certification, containing his certification document.")
 
+    # Certification badge
+    #   certification_badge_id_dummy is used to have two different behaviours in the form view :
+    #   - If the certification badge is not set, show certification_badge_id and only display create option in the m2o
+    #   - If the certification badge is set, show certification_badge_id_dummy in 'no create' mode.
+    #       So it can be edited but not removed or replaced.
+    certification_give_badge = fields.Boolean('Give Badge')
+    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
+    certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
+
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
-        ('certificate_check', "CHECK( scoring_type!='no_scoring' OR certificate=False )", 'You can only create certifications for surveys that have a scoring mechanism.'),
-        ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )", 'The time limit needs to be a positive number if the survey is time limited.'),
-        ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )", 'The attempts limit needs to be a positive number if the survey has a limited number of attempts.')
+        ('certificate_check', "CHECK( scoring_type!='no_scoring' OR certificate=False )",
+            'You can only create certifications for surveys that have a scoring mechanism.'),
+        ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
+            'The time limit needs to be a positive number if the survey is time limited.'),
+        ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )",
+            'The attempts limit needs to be a positive number if the survey has a limited number of attempts.'),
+        ('badge_uniq', 'unique (certification_badge_id)', "The badge for each survey should be unique!"),
+        ('give_badge_check', "CHECK(certification_give_badge=False OR (certification_give_badge=True AND certification_badge_id is not null))",
+            'Certification badge must be configured if Give Badge is set.'),
     ]
 
-    @api.multi
     def _compute_users_can_signup(self):
         signup_allowed = self.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
         for survey in self:
@@ -181,13 +195,31 @@ class Survey(models.Model):
         selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
         return [s[0] for s in selection]
 
+    @api.onchange('users_login_required', 'certificate')
+    def _onchange_set_certification_give_badge(self):
+        if not self.users_login_required or not self.certificate:
+            self.certification_give_badge = False
+
+    # CRUD
+    @api.model
+    def create(self, vals):
+        survey = super(Survey, self).create(vals)
+        if vals.get('certification_give_badge'):
+            survey.sudo()._create_certification_badge_trigger()
+        return survey
+
+    def write(self, vals):
+        result = super(Survey, self).write(vals)
+        if 'certification_give_badge' in vals:
+            return self.sudo()._handle_certification_badges(vals)
+        return result
+
     # Public methods #
     def copy_data(self, default=None):
         title = _("%s (copy)") % (self.title)
         default = dict(default or {}, title=title)
         return super(Survey, self).copy_data(default)
 
-    @api.multi
     def _create_answer(self, user=False, partner=False, email=False, test_entry=False, check_attempts=True, **additional_vals):
         """ Main entry point to get a token back or create a new one. This method
         does check for current user access in order to explicitely validate
@@ -234,7 +266,6 @@ class Survey(models.Model):
 
         return answers
 
-    @api.multi
     def _check_answer_creation(self, user, partner, email, test_entry=False, check_attempts=True, invite_token=False):
         """ Ensure conditions to create new tokens are met. """
         self.ensure_one()
@@ -310,7 +341,6 @@ class Survey(models.Model):
             else:
                 return (pages_or_questions[current_page_index + 1][1], False)
 
-    @api.multi
     def filter_input_ids(self, filters, finished=False):
         """If user applies any filters, then this function returns list of
            filtered user_input_id and label's strings for display data in web.
@@ -435,21 +465,67 @@ class Survey(models.Model):
 
         return result
 
+    def _create_certification_badge_trigger(self):
+        self.ensure_one()
+        goal = self.env['gamification.goal.definition'].create({
+            'name': self.title,
+            'description': "%s certification passed" % self.title,
+            'domain': "['&', ('survey_id', '=', %s), ('quizz_passed', '=', True)]" % self.id,
+            'computation_mode': 'count',
+            'display_mode': 'boolean',
+            'model_id': self.env.ref('survey.model_survey_user_input').id,
+            'condition': 'higher',
+            'batch_mode': True,
+            'batch_distinctive_field': self.env.ref('survey.field_survey_user_input__partner_id').id,
+            'batch_user_expression': 'user.partner_id.id'
+        })
+        challenge = self.env['gamification.challenge'].create({
+            'name': _('%s challenge certificate' % self.title),
+            'reward_id': self.certification_badge_id.id,
+            'state': 'inprogress',
+            'period': 'once',
+            'category': 'certification',
+            'reward_realtime': True,
+            'report_message_frequency': 'never',
+            'user_domain': [('karma', '>', 0)],
+            'visibility_mode': 'personal'
+        })
+        self.env['gamification.challenge.line'].create({
+            'definition_id': goal.id,
+            'challenge_id': challenge.id,
+            'target_goal': 1
+        })
+
+    def _handle_certification_badges(self, vals):
+        if vals.get('certification_give_badge'):
+            # If badge already set on records, reactivate the ones that are not active.
+            surveys_with_badge = self.filtered(lambda survey: survey.certification_badge_id
+                                                                 and not survey.certification_badge_id.active)
+            surveys_with_badge.mapped('certification_badge_id').write({'active': True})
+            # (re-)create challenge and goal
+            for survey in self:
+                survey._create_certification_badge_trigger()
+        else:
+            # if badge with owner : archive them, else delete everything (badge, challenge, goal)
+            badges = self.mapped('certification_badge_id')
+            challenges_to_delete = self.env['gamification.challenge'].search([('reward_id', 'in', badges.ids)])
+            goals_to_delete = challenges_to_delete.mapped('line_ids').mapped('definition_id')
+            badges.write({'active': False})
+            # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
+            challenges_to_delete.unlink()
+            goals_to_delete.unlink()
+
     # Actions
 
-    @api.multi
     def action_draft(self):
         self.write({'state': 'draft'})
 
-    @api.multi
     def action_open(self):
         self.write({'state': 'open'})
 
-    @api.multi
     def action_close(self):
         self.write({'state': 'closed'})
 
-    @api.multi
     def action_start_survey(self):
         """ Open the website page with the survey form """
         self.ensure_one()
@@ -462,7 +538,6 @@ class Survey(models.Model):
             'url': self.public_url + trail
         }
 
-    @api.multi
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
@@ -489,7 +564,6 @@ class Survey(models.Model):
             'context': local_context,
         }
 
-    @api.multi
     def action_print_survey(self):
         """ Open the website page with the survey printable view """
         self.ensure_one()
@@ -502,7 +576,6 @@ class Survey(models.Model):
             'url': '/survey/print/%s%s' % (self.access_token, trail)
         }
 
-    @api.multi
     def action_result_survey(self):
         """ Open the website page with the survey results view """
         self.ensure_one()
@@ -513,7 +586,6 @@ class Survey(models.Model):
             'url': '/survey/results/%s' % self.id
         }
 
-    @api.multi
     def action_test_survey(self):
         ''' Open the website page with the survey form into test mode'''
         self.ensure_one()
@@ -524,7 +596,6 @@ class Survey(models.Model):
             'url': '/survey/test/%s' % self.access_token,
         }
 
-    @api.multi
     def action_survey_user_input_completed(self):
         action_rec = self.env.ref('survey.action_survey_user_input_notest')
         action = action_rec.read()[0]
@@ -534,7 +605,6 @@ class Survey(models.Model):
         action['context'] = ctx
         return action
 
-    @api.multi
     def action_survey_user_input_certified(self):
         action_rec = self.env.ref('survey.action_survey_user_input_notest')
         action = action_rec.read()[0]
@@ -544,7 +614,6 @@ class Survey(models.Model):
         action['context'] = ctx
         return action
 
-    @api.multi
     def action_survey_user_input_invite(self):
         action_rec = self.env.ref('survey.action_survey_user_input_notest')
         action = action_rec.read()[0]
@@ -554,7 +623,6 @@ class Survey(models.Model):
         action['context'] = ctx
         return action
 
-    @api.multi
     def _has_attempts_left(self, partner, email, invite_token):
         self.ensure_one()
 
@@ -563,7 +631,6 @@ class Survey(models.Model):
 
         return True
 
-    @api.multi
     def _get_number_of_attempts_lefts(self, partner, email, invite_token):
         """ Returns the number of attempts left. """
         self.ensure_one()
@@ -584,7 +651,6 @@ class Survey(models.Model):
 
         return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
 
-    @api.multi
     def _prepare_answer_questions(self):
         """ Will generate the questions for a randomized survey.
         It uses the random_questions_count of every sections of the survey to

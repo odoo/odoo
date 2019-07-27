@@ -144,7 +144,6 @@ class ProductProduct(models.Model):
 
     image = fields.Binary("Image", compute='_compute_image', inverse='_set_image')
 
-    @api.multi
     @api.depends('image_raw_original')
     def _compute_images(self):
         for record in self:
@@ -158,13 +157,11 @@ class ProductProduct(models.Model):
             record.image_raw_small = image and images['image_small']
             record.can_image_raw_be_zoomed = image and tools.is_image_size_above(image)
 
-    @api.multi
     def _compute_image_original(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
             record.image_original = record.image_raw_original or record.product_tmpl_id.image_original
 
-    @api.multi
     def _set_image_original(self):
         for record in self:
             if (
@@ -185,43 +182,36 @@ class ProductProduct(models.Model):
             else:
                 record.image_raw_original = record.image_original
 
-    @api.multi
     def _compute_image_big(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
             record.image_big = record.image_raw_big or record.product_tmpl_id.image_big
 
-    @api.multi
     def _compute_image_large(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
             record.image_large = record.image_raw_large or record.product_tmpl_id.image_large
 
-    @api.multi
     def _compute_image_medium(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
             record.image_medium = record.image_raw_medium or record.product_tmpl_id.image_medium
 
-    @api.multi
     def _compute_image_small(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
             record.image_small = record.image_raw_small or record.product_tmpl_id.image_small
 
-    @api.multi
     def _compute_can_image_be_zoomed(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
             record.can_image_be_zoomed = record.can_image_raw_be_zoomed if record.image_raw_original else record.product_tmpl_id.can_image_be_zoomed
 
-    @api.multi
     @api.depends('image_big')
     def _compute_image(self):
         for record in self:
             record.image = record.image_big
 
-    @api.multi
     def _set_image(self):
         for record in self:
             record.image_original = record.image
@@ -382,7 +372,6 @@ class ProductProduct(models.Model):
         )
         return products
 
-    @api.multi
     def write(self, values):
         res = super(ProductProduct, self).write(values)
         if 'attribute_value_ids' in values:
@@ -396,7 +385,6 @@ class ProductProduct(models.Model):
             self.clear_caches()
         return res
 
-    @api.multi
     def unlink(self):
         unlink_products = self.env['product.product']
         unlink_templates = self.env['product.template']
@@ -422,7 +410,40 @@ class ProductProduct(models.Model):
         self.clear_caches()
         return res
 
-    @api.multi
+    def _unlink_or_archive(self, check_access=True):
+        """Unlink or archive products.
+        Try in batch as much as possible because it is much faster.
+        Use dichotomy when an exception occurs.
+        """
+
+        # Avoid access errors in case the products is shared amongst companies
+        # but the underlying objects are not. If unlink fails because of an
+        # AccessError (e.g. while recomputing fields), the 'write' call will
+        # fail as well for the same reason since the field has been set to
+        # recompute.
+        if check_access:
+            self.check_access_rights('unlink')
+            self.check_access_rule('unlink')
+            self.check_access_rights('write')
+            self.check_access_rule('write')
+            self = self.sudo()
+
+        try:
+            with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                self.unlink()
+        except Exception:
+            # We catch all kind of exceptions to be sure that the operation
+            # doesn't fail.
+            if len(self) > 1:
+                self[:len(self) // 2]._unlink_or_archive(check_access=False)
+                self[len(self) // 2:]._unlink_or_archive(check_access=False)
+            else:
+                if self.active:
+                    # Note: this can still fail if something is preventing
+                    # from archiving.
+                    # This is the case from existing stock reordering rules.
+                    self.write({'active': False})
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         # TDE FIXME: clean context / variant brol
@@ -443,7 +464,6 @@ class ProductProduct(models.Model):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.multi
     def name_get(self):
         # TDE: this could be cleaned a bit I think
 
@@ -578,7 +598,6 @@ class ProductProduct(models.Model):
             return _('Products: ') + self.env['product.category'].browse(self._context['categ_id']).name
         return res
 
-    @api.multi
     def open_product_template(self):
         """ Utility method used to add an "Open Template" button in product views """
         self.ensure_one()
@@ -591,7 +610,6 @@ class ProductProduct(models.Model):
     def _prepare_sellers(self, params):
         return self.seller_ids
 
-    @api.multi
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
@@ -618,12 +636,10 @@ class ProductProduct(models.Model):
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
+            if not res or res.name == seller.name:
+                res |= seller
+        return res.sorted('price')[:1]
 
-            res |= seller
-            break
-        return res
-
-    @api.multi
     def price_compute(self, price_type, uom=False, currency=False, company=False):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
@@ -704,7 +720,6 @@ class ProductProduct(models.Model):
                 return False
         return True
 
-    @api.multi
     def _is_variant_possible(self, parent_combination=None):
         """Return whether the variant is possible based on its own combination,
         and optionally a parent combination.
@@ -724,7 +739,6 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination)
 
-    @api.multi
     def toggle_active(self):
         """ Archiving related product.template if there is only one active product.product """
         with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.product_variant_ids) == 1)

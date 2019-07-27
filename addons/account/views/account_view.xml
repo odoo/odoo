@@ -180,10 +180,10 @@
             <field name="model">account.journal.group</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree editable="bottom">
                     <field name="sequence"  widget="handle"/>
                     <field name="name"/>
-                    <field name="account_journal_ids" widget="many2many_tags"/>
+                    <field name="account_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -211,17 +211,14 @@
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="type"/>
                                 <field name="journal_group_ids" widget="many2many_tags" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" options="{'no_create': True}"/>
                             </group>
@@ -378,12 +375,9 @@ action = model.setting_init_bank_account_action()
             <field name="arch" type="xml">
                 <form string="Tags">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="applicability"/>
                             <field name="tax_negate" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
@@ -394,6 +388,18 @@ action = model.setting_init_bank_account_action()
                 </form>
             </field>
         </record>
+
+        <record id="account_tag_view_tree" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">account.account.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tags">
+                    <field name="name"/>
+                    <field name="applicability"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="account_tag_action" model="ir.actions.act_window">
             <field name="name">Account Tags</field>
             <field name="res_model">account.account.tag</field>
@@ -411,29 +417,46 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.bank.statement.cashbox</field>
             <field name="arch" type="xml">
                 <form>
-                    <group>
-                        <field name="cashbox_lines_ids" nolabel="1">
+                    <sheet>
+                        <field name="start_bank_stmt_ids" invisible="1"/>
+                        <field name="end_bank_stmt_ids" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="cashbox_lines_ids" nolabel="1" context="{'default_currency_id': currency_id}">
                             <tree editable="bottom">
-                                <field name="coin_value"/>
+                                <field name="currency_id" invisible="1"/>
                                 <field name="number"/>
-                                <field name="subtotal" sum="Total"/>
+                                <field name="coin_value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </tree>
                         </field>
-                    </group>
-                    <footer>
-                        <button string="Confirm" name="validate" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    </footer>
+                        <div>
+                            <group>
+                                <group class="oe_subtotal_footer oe_right" cols="6">
+                                    <field name="currency_id" invisible="1" />
+                                    <div class="o_td_label"></div>
+                                    <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                            </group>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="action_view_account_bnk_stmt_cashbox" model="ir.actions.act_window">
-            <field name="name">Cash Control</field>
-            <field name="res_model">account.bank.statement.cashbox</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_bnk_stmt_cashbox"/>
-            <field name="target">new</field>
+        <record id="view_account_bnk_stmt_cashbox_footer" model="ir.ui.view">
+            <field name="name">account.bnk_stmt_cashbox.form</field>
+            <field name="model">account.bank.statement.cashbox</field>
+            <field name="priority">1000</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_account_bnk_stmt_cashbox"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="after">
+                    <footer>
+                        <button string="Confirm" class="btn-primary" special="save"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </xpath>
+            </field>
         </record>
 
         <record id="view_account_bnk_stmt_check" model="ir.ui.view">
@@ -537,18 +560,12 @@ action = model.setting_init_bank_account_action()
                             <label for="balance_start"/>
                             <div>
                                 <field class="oe_inline" name="balance_start"/>
-                                <button class="oe_inline oe_link oe_edit_only" name="%(action_view_account_bnk_stmt_cashbox)d"
-                                string="&#8594; Count" type="action"
-                                attrs="{'invisible':['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_start_id','!=',False)]}" context="{'balance':'start'}"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_start_id', '=', False)]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start', 'cashbox_id': cashbox_start_id}"/>
+                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
                             </div>
                             <label for="balance_end_real"/>
                             <div>
                                 <field class="oe_inline" name="balance_end_real"/>
-                                <button class="oe_inline oe_link oe_edit_only" name="%(action_view_account_bnk_stmt_cashbox)d"
-                                string="&#8594; Count" type="action"
-                                attrs="{'invisible':['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_end_id','!=',False)]}" context="{'balance':'close'}"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_end_id', '=', False)]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close', 'cashbox_id': cashbox_end_id}"/>
+                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
                             </div>
                         </group>
                     </group>
@@ -1064,15 +1081,11 @@ action = model.setting_init_bank_account_action()
             <field name="arch" type="xml">
                 <form string="Account Tax">
                     <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
                     <group>
                         <group>
                             <field name="name"/>
                             <field name="amount_type"/>
+                            <field name="active"/>
                         </group>
                         <group>
                             <field name="type_tax_use"/>
@@ -1261,14 +1274,10 @@ action = model.setting_init_bank_account_action()
             <field name="arch" type="xml">
                 <form string="Payment Terms">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="name"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
@@ -1440,56 +1449,58 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.tax.template</field>
             <field name="arch" type="xml">
                 <form string="Account Tax Template">
-                    <group>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                        <group>
-                            <field name="type_tax_use"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Definition">
+                    <sheet>
+                        <group name="main_group">
                             <group>
-                                <group>
-                                    <field name="amount_type" />
-                                    <label for="amount" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <div attrs="{'invisible':[('amount_type','=', 'group')]}">
-                                        <field name="amount" class="oe_inline" />
-                                        <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
-                                    </div>
-                                </group>
+                                <field name="name"/>
                             </group>
-                            <field name="children_tax_ids"
-                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
-                                domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
-                                <tree string="Children Taxes">
-                                    <field name="sequence" widget="handle" />
-                                    <field name="name"/>
-                                    <field name="amount_type" />
-                                    <field name="amount" />
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Advanced Options">
                             <group>
-                                <group>
-                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
-                                </group>
-                                <group>
-                                    <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
-                                    <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
-                                </group>
-                                <group>
-                                    <field name="active" groups="base.group_no_one"/>
-                                    <field name="tax_exigibility" widget="radio" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="cash_basis_base_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
-                                    <field name="cash_basis_transition_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
-                                </group>
+                                <field name="type_tax_use"/>
                             </group>
-                        </page>
-                    </notebook>
+                        </group>
+                        <notebook>
+                            <page name="definition" string="Definition">
+                                <group name="tax_definitions">
+                                    <group>
+                                        <field name="amount_type" />
+                                        <label for="amount" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                        <div attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                            <field name="amount" class="oe_inline" />
+                                            <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
+                                        </div>
+                                    </group>
+                                </group>
+                                <field name="children_tax_ids"
+                                    attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
+                                    domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
+                                    <tree string="Children Taxes">
+                                        <field name="sequence" widget="handle" />
+                                        <field name="name"/>
+                                        <field name="amount_type" />
+                                        <field name="amount" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="advanced_options" string="Advanced Options">
+                                <group name="advanced_definitions">
+                                    <group>
+                                        <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                        <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    </group>
+                                    <group name="price_definitions">
+                                        <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                        <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                    </group>
+                                    <group name="tax_configuration">
+                                        <field name="active" groups="base.group_no_one"/>
+                                        <field name="tax_exigibility" widget="radio" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                        <field name="cash_basis_base_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
+                                        <field name="cash_basis_transition_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>

@@ -178,11 +178,11 @@ var QWebView = AbstractView.extend({
     viewType: 'qweb',
     // groupable?
     enableTimeRangeMenu: true,
-    config: {
+    config: _.extend({}, AbstractView.prototype.config, {
         Model: Model,
         Renderer: Renderer,
         Controller: Controller,
-    },
+    }),
 
     /**
      * init method

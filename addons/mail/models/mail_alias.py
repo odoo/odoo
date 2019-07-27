@@ -73,7 +73,6 @@ class Alias(models.Model):
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')
     ]
 
-    @api.multi
     def _get_alias_domain(self):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
@@ -107,14 +106,12 @@ class Alias(models.Model):
             vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         """"give a unique alias name if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), alias_ids=self.ids)
         return super(Alias, self).write(vals)
 
-    @api.multi
     def name_get(self):
         """Return the mail alias display alias_name, including the implicit
            mail catchall domain if exists from config otherwise "New Alias".
@@ -154,7 +151,6 @@ class Alias(models.Model):
         name = re.sub(r'[^\w+.]+', '-', name)
         return self._find_unique(name, alias_ids=alias_ids)
 
-    @api.multi
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:
             return False
@@ -165,7 +161,6 @@ class Alias(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    @api.multi
     def open_parent_document(self):
         if not self.alias_parent_model_id or not self.alias_parent_thread_id:
             return False
@@ -212,7 +207,6 @@ class AliasMixin(models.AbstractModel):
         record.alias_id.sudo().write(record.get_alias_values())
         return record
 
-    @api.multi
     def unlink(self):
         """ Delete the given records, and cascade-delete their corresponding alias. """
         aliases = self.mapped('alias_id')

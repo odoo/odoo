@@ -290,6 +290,7 @@
             <field name="arch" type="xml">
                 <form string="Work Center">
                     <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(mrp_workcenter_productivity_report_oee)d" type="action" class="oe_stat_button" icon="fa-pie-chart">
                                 <div class="o_field_widget o_stat_info">
@@ -299,13 +300,13 @@
                             </button>
                             <button name="%(mrp_workcenter_productivity_report_blocked)d" type="action" class="oe_stat_button" icon="fa-bar-chart">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="blocked_time" widget="statinfo" nolabel="1"/> hour(s)</span>
+                                    <span class="o_stat_value"><field name="blocked_time" widget="statinfo" nolabel="1"/> hours</span>
                                     <span class="o_stat_text">Lost</span>
                                 </div>
                             </button>
                             <button name="%(action_mrp_workcenter_load_report_graph)d" type="action" class="oe_stat_button" icon="fa-bar-chart" context="{'search_default_workcenter_id': active_id}">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="workcenter_load" widget="statinfo" nolabel="1"/> minute(s)</span>
+                                    <span class="o_stat_value"><field name="workcenter_load" widget="statinfo" nolabel="1"/> minutes</span>
                                     <span class="o_stat_text">Work Center Load</span>
                                 </div>
                             </button>
@@ -315,13 +316,10 @@
                                     <span class="o_stat_text">Performance</span>
                                 </div>
                             </button>
-                            <button class="oe_stat_button" name="toggle_active" type="object" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="name" string="Work Center Name" required="True"/>
                                 <field
                                     name="alternative_workcenter_ids"
@@ -460,9 +458,9 @@
         <field name="name">mrp.workcenter.productivity.loss.tree</field>
         <field name="model">mrp.workcenter.productivity.loss</field>
         <field name="arch" type="xml">
-            <tree string="Workcenter Productivity Loss">
+            <tree string="Workcenter Productivity Loss" editable='bottom'>
                 <field name="sequence" widget="handle"/>
-                <field name="name" string="Blocking Reasons"/>
+                <field name="name"/>
                 <field name="loss_type" string="Category"/>
             </tree>
         </field>

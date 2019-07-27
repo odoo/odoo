@@ -41,12 +41,13 @@ class HrEmployeePrivate(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     # private partner
     address_home_id = fields.Many2one(
-        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.',
+        'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
         groups="hr.group_hr_user", tracking=True)
     is_address_home_a_company = fields.Boolean(
         'The employee adress has a company linked',
         compute='_compute_is_address_home_a_company',
     )
+    private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False, groups="hr.group_hr_user")
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
@@ -90,8 +91,7 @@ class HrEmployeePrivate(models.Model):
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
-    km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user", tracking=True)
-    google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user", tracking=True)
+    km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
@@ -128,13 +128,11 @@ class HrEmployeePrivate(models.Model):
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
 
-    @api.multi
     def name_get(self):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).name_get()
         return self.env['hr.employee.public'].browse(self.ids).name_get()
 
-    @api.multi
     def read(self, fields, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).read(fields, load=load)
@@ -142,6 +140,12 @@ class HrEmployeePrivate(models.Model):
         if private_fields:
             raise AccessError(_('The fields "%s" you try to read is not available on the public employee profile.') % (','.join(private_fields)))
         return self.env['hr.employee.public'].browse(self.ids).read(fields, load=load)
+
+    @api.model
+    def load_views(self, views, options=None):
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).load_views(views, options=options)
+        return self.env['hr.employee.public'].load_views(views, options=options)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -157,7 +161,6 @@ class HrEmployeePrivate(models.Model):
             return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
         return self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.multi
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         if access_uid:
@@ -170,7 +173,6 @@ class HrEmployeePrivate(models.Model):
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
 
-    @api.multi
     def get_formview_action(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
@@ -253,7 +255,6 @@ class HrEmployeePrivate(models.Model):
             ])._subscribe_users()
         return employee
 
-    @api.multi
     def write(self, vals):
         if 'address_home_id' in vals:
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
@@ -271,7 +272,6 @@ class HrEmployeePrivate(models.Model):
             ])._subscribe_users()
         return res
 
-    @api.multi
     def unlink(self):
         resources = self.mapped('resource_id')
         super(HrEmployeePrivate, self).unlink()
@@ -291,10 +291,10 @@ class HrEmployeePrivate(models.Model):
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {'active_id': self.id},
+                'views': [[False, 'form']]
             }
         return res
 
-    @api.multi
     def generate_random_barcode(self):
         for employee in self:
             employee.barcode = "".join(choice(digits) for i in range(8))
@@ -385,7 +385,12 @@ class HrEmployeePrivate(models.Model):
     def _message_log(self, **kwargs):
         return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *args, **kwargs):
         return super(HrEmployeePrivate, self._post_author()).message_post(*args, **kwargs)
+
+    def _sms_get_default_partners(self):
+        return self.mapped('user_partner_id')
+
+    def _sms_get_number_fields(self):
+        return ['mobile_phone']

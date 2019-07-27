@@ -18,9 +18,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.env['pos.open.statement'].create({}).open_statement()
 
     def test_order_refund(self):
+        self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
         # I create a new PoS order with 2 lines
         order = self.PosOrder.create({
             'company_id': self.company_id,
+            'session_id': current_session.id,
             'partner_id': self.partner1.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'lines': [(0, 0, {
@@ -84,6 +87,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I click on create a new session button
         self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR
         # and 3 units of PCSC349 at 300 EUR.
@@ -91,6 +95,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         untax2, atax2 = compute_tax(self.product4, 300, 3)
         self.pos_order_pos1 = self.PosOrder.create({
             'company_id': self.company_id,
+            'session_id': current_session.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'partner_id': self.partner1.id,
             'lines': [(0, 0, {
@@ -155,6 +160,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         untax2, atax2 = compute_tax(self.product4, 300, -3)
         self.pos_order_pos2 = self.PosOrder.create({
             'company_id': self.company_id,
+            'session_id': current_session.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'partner_id': self.partner1.id,
             'lines': [(0, 0, {
@@ -219,6 +225,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         untax2, atax2 = compute_tax(self.product4, 300, 3)
         self.pos_order_pos3 = self.PosOrder.create({
             'company_id': self.company_id,
+            'session_id': current_session.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'partner_id': self.partner1.id,
             'lines': [(0, 0, {
@@ -291,11 +298,15 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             untax = res['total_excluded']
             return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
+        self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
+
         untax1, atax1 = compute_tax(self.product3, 450*0.95, 2)
         untax2, atax2 = compute_tax(self.product4, 300*0.95, 3)
         # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
         self.pos_order_pos1 = self.PosOrder.create({
             'company_id': self.company_id,
+            'session_id': current_session.id,
             'partner_id': self.partner1.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'lines': [(0, 0, {
@@ -579,6 +590,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I click on create a new session button
         self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl)
         # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
@@ -587,6 +599,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         untax2, atax2 = compute_tax(self.product4, 300*0.95, 3)
         self.pos_order_pos0 = self.PosOrder.create({
             'company_id': self.company_id,
+            'session_id': current_session.id,
             'pricelist_id': self.partner1.property_product_pricelist.copy(default={'currency_id': self.env.ref('base.EUR').id}).id,
             'partner_id': self.partner1.id,
             'lines': [(0, 0, {
@@ -673,9 +686,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             self.assertAlmostEqual(a, b)
 
     def test_order_to_invoice_no_tax(self):
+
+        self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
+
         # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
         self.pos_order_pos1 = self.PosOrder.create({
             'company_id': self.company_id,
+            'session_id': current_session.id,
             'partner_id': self.partner1.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'lines': [(0, 0, {

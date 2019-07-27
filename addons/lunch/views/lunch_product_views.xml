@@ -14,6 +14,10 @@
                     <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
                     <filter name="group_by_category" string="Product Category" context="{'group_by': 'category_id'}"/>
                 </group>
+                <searchpanel>
+                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
+                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -41,13 +45,7 @@
             <form string="Products Form">
                 <field name="currency_id" invisible="1"/>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                     <div class="oe_title">
                         <label for="name" class="oe-edit-only"/>
@@ -57,6 +55,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name='category_id'/>
                             <field name='supplier_id'/>
                             <field name='price' widget="monetary"/>
@@ -118,10 +117,6 @@
                         </div>
                     </t>
                 </templates>
-                <searchpanel>
-                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
-                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
-                </searchpanel>
             </kanban>
         </field>
     </record>
@@ -131,7 +126,7 @@
         <field name="model">lunch.product</field>
         <field name="priority">5</field>
         <field name="arch" type="xml">
-            <kanban create="0" edit="0" class="o_kanban_mobile">
+            <kanban create="1" edit="0" class="o_kanban_mobile">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="category_id"/>
@@ -173,7 +168,7 @@
     <record id="lunch_product_action_statbutton" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">lunch.product</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_group_by_supplier': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -189,7 +184,7 @@
         <field name="model">lunch.product.category</field>
         <field name="arch" type="xml">
             <tree string="Products List">
-                <field name='name' string="Product Category: "/>
+                <field name='name' string="Product Category"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>

@@ -73,7 +73,6 @@ class account_journal(models.Model):
             return ['', _('Bank: Balance')]
 
     # Below method is used to get data of bank and cash statemens
-    @api.multi
     def get_line_graph_datas(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
 
@@ -133,7 +132,6 @@ class account_journal(models.Model):
 
         return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
 
-    @api.multi
     def get_bar_graph_datas(self):
         data = []
         today = fields.Datetime.now(self)
@@ -205,7 +203,6 @@ class account_journal(models.Model):
             AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
         ''', {'journal_id': self.id})
 
-    @api.multi
     def get_journal_dashboard_datas(self):
         currency = self.currency_id or self.company_id.currency_id
         number_to_reconcile = number_to_check = last_balance = account_sum = 0
@@ -368,7 +365,6 @@ class account_journal(models.Model):
             rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
-    @api.multi
     def action_create_new(self):
         ctx = self._context.copy()
         ctx['default_journal_id'] = self.id
@@ -388,7 +384,6 @@ class account_journal(models.Model):
             'context': ctx,
         }
 
-    @api.multi
     def create_cash_statement(self):
         ctx = self._context.copy()
         ctx.update({'journal_id': self.id, 'default_journal_id': self.id, 'default_journal_type': 'cash'})
@@ -400,7 +395,6 @@ class account_journal(models.Model):
             'context': ctx,
         }
 
-    @api.multi
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:
             # Open reconciliation view for bank statements belonging to this journal
@@ -423,7 +417,6 @@ class account_journal(models.Model):
                 'context': action_context,
             }
 
-    @api.multi
     def action_open_to_check(self):
         self.ensure_one()
         ids = self.to_check_ids().ids
@@ -443,7 +436,6 @@ class account_journal(models.Model):
         statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
         return statement_line_ids
 
-    @api.multi
     def open_action(self):
         """return action based on type for related journals"""
         action_name = self._context.get('action_name')
@@ -484,19 +476,15 @@ class account_journal(models.Model):
 
         return action
 
-    @api.multi
     def open_spend_money(self):
         return self.open_payments_action('outbound')
 
-    @api.multi
     def open_collect_money(self):
         return self.open_payments_action('inbound')
 
-    @api.multi
     def open_transfer_money(self):
         return self.open_payments_action('transfer')
 
-    @api.multi
     def open_payments_action(self, payment_type, mode='tree'):
         if payment_type == 'outbound':
             action_ref = 'account.action_account_payments_payable'
@@ -510,7 +498,6 @@ class account_journal(models.Model):
             action['views'] = [[False, 'form']]
         return action
 
-    @api.multi
     def open_action_with_context(self):
         action_name = self.env.context.get('action_name', False)
         if not action_name:
@@ -528,7 +515,6 @@ class account_journal(models.Model):
             action['name'] += ' for journal ' + self.name
         return action
 
-    @api.multi
     def create_bank_statement(self):
         """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
         action = self.env.ref('account.action_bank_statement_tree').read()[0]
@@ -538,17 +524,14 @@ class account_journal(models.Model):
         })
         return action
 
-    @api.multi
     def create_customer_payment(self):
         """return action to create a customer payment"""
         return self.open_payments_action('inbound', mode='form')
 
-    @api.multi
     def create_supplier_payment(self):
         """return action to create a supplier payment"""
         return self.open_payments_action('outbound', mode='form')
 
-    @api.multi
     def create_internal_transfer(self):
         """return action to create a internal transfer"""
         return self.open_payments_action('transfer', mode='form')

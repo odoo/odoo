@@ -20,7 +20,6 @@ class ResConfigSettings(models.TransientModel):
         )
         return res
 
-    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         self.env.ref('hr_expense.mail_alias_expense').write({'alias_name': self.expense_alias_prefix})

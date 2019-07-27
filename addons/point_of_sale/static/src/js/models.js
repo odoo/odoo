@@ -586,13 +586,17 @@ exports.PosModel = Backbone.Model.extend({
         return loaded;
     },
 
+    prepare_new_partners_domain: function(){
+        return [['customer','=',true], ['write_date','>', this.db.get_partner_write_date()]];
+    },
+
     // reload the list of partner, returns as a promise that resolves if there were
     // updated partners, and fails if not
     load_new_partners: function(){
         var self = this;
         return new Promise(function (resolve, reject) {
             var fields = _.find(self.models, function(model){ return model.label === 'load_partners'; }).fields;
-            var domain = [['customer','=',true],['write_date','>',self.db.get_partner_write_date()]];
+            var domain = self.prepare_new_partners_domain();
             rpc.query({
                 model: 'res.partner',
                 method: 'search_read',
@@ -1717,7 +1721,9 @@ exports.Orderline = Backbone.Model.extend({
 
             if (tax_mappings && tax_mappings.length) {
                 _.each(tax_mappings, function(tm) {
-                    taxes.push(self.pos.taxes_by_id[tm.tax_dest_id[0]]);
+                    if (tm.tax_dest_id) {
+                        taxes.push(self.pos.taxes_by_id[tm.tax_dest_id[0]]);
+                    }
                 });
             } else{
                 taxes.push(tax);
@@ -1738,8 +1744,11 @@ exports.Orderline = Backbone.Model.extend({
         else
             var price_include = !price_exclude;
         if (tax.amount_type === 'fixed') {
-            var sign_base_amount = base_amount >= 0 ? 1 : -1;
-            return (Math.abs(tax.amount) * sign_base_amount) * quantity;
+            var sign_base_amount = Math.sign(base_amount) || 1;
+            // Since base amount has been computed with quantity
+            // we take the abs of quantity
+            // Same logic as bb72dea98de4dae8f59e397f232a0636411d37ce
+            return tax.amount * sign_base_amount * Math.abs(quantity);
         }
         if (tax.amount_type === 'percent' && !price_include){
             return base_amount * tax.amount / 100;

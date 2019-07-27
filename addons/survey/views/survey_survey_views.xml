@@ -19,6 +19,7 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_survey_user_input_invite"
                             type="object"
@@ -40,9 +41,6 @@
                             icon="fa-pencil-square-o">
                             <field string="Answers" name="answer_done_count" widget="statinfo"/>
                         </button>
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
                     </div>
                     <div class="oe_title" style="width: 100%;">
                         <label for="title" class="oe_edit_only"/>
@@ -50,6 +48,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="category" invisible="1"/>
                         </group>
                     </group>
@@ -99,6 +98,18 @@
                                     <field name="passing_score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
                                     <field name="certificate" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
                                     <field name="certification_mail_template_id" attrs="{'invisible': [('certificate', '=', False)]}" />
+                                    <field name="certification_give_badge" attrs="{'invisible': ['|', ('certificate', '=', False), ('users_login_required', '=', False)]}" />
+                                    <field name="certification_badge_id" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)]}"
+                                           domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
+                                           context="{'default_name': title,
+                                                   'default_description': 'Congratulation, you succeeded this certification',
+                                                   'default_rule_auth': 'nobody',
+                                                   'default_level': None,
+                                                   'form_view_ref': 'survey.gamification_badge_form_view_simplified',
+                                                   'default_website_published': True}"/>
+                                    <field name="certification_badge_id_dummy" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '=', False)]}"
+                                           options="{'no_create': True}"
+                                           context="{'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
                                 </group>
                             </group>
                         </page>

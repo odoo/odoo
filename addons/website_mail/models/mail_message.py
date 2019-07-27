@@ -31,7 +31,6 @@ class MailMessage(models.Model):
         domain = super(MailMessage, self)._non_employee_message_domain()
         return expression.AND([domain, [('website_published', '=', True)]])
 
-    @api.multi
     def _compute_description(self):
         for message in self:
             if message.subject:
@@ -50,7 +49,6 @@ class MailMessage(models.Model):
         return super(MailMessage, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=count, access_rights_uid=access_rights_uid)
 
-    @api.multi
     def check_access_rule(self, operation):
         """ Add Access rules of mail.message for non-employee user:
             - read:
@@ -65,7 +63,6 @@ class MailMessage(models.Model):
                 )
         return super(MailMessage, self).check_access_rule(operation=operation)
 
-    @api.multi
     def _portal_message_format(self, fields_list):
         fields_list += ['website_published']
         return super(MailMessage, self)._portal_message_format(fields_list)

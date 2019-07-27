@@ -265,9 +265,15 @@ var ListController = BasicController.extend({
         if (ids.length === 0) {
             return Promise.resolve();
         }
-        return this.model
-            .toggleActive(ids, !archive, this.handle)
-            .then(this.update.bind(this, {}, {reload: false}));
+        if (archive) {
+            return this.model
+                .actionArchive(ids, this.handle)
+                .then(this.update.bind(this, {}, {reload: false}));
+        } else {
+            return this.model
+                .actionUnarchive(ids, this.handle)
+                .then(this.update.bind(this, {}, {reload: false}));
+        }
     },
     /**
      * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard

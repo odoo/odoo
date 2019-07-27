@@ -6,6 +6,17 @@
          template
     -->
     <rng:include href="common.rng"/>
+
+    <rng:define name="searchpanel">
+        <rng:element name="searchpanel">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="view_types"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field" />
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="search">
         <rng:element name="search">
             <rng:ref name="overload"/>
@@ -17,6 +28,7 @@
                     <rng:ref name="separator"/>
                     <rng:ref name="filter"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
+                    <rng:ref name="searchpanel"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>

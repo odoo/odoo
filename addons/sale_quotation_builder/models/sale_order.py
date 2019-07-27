@@ -47,7 +47,6 @@ class SaleOrderLine(models.Model):
         values = self._inject_quotation_description(values)
         return super(SaleOrderLine, self).create(values)
 
-    @api.multi
     def write(self, values):
         values = self._inject_quotation_description(values)
         return super(SaleOrderLine, self).write(values)
@@ -73,7 +72,6 @@ class SaleOrderOption(models.Model):
             self.website_description = product.quotation_description
         return ret
 
-    @api.multi
     def _get_values_to_add_to_order(self):
         values = super(SaleOrderOption, self)._get_values_to_add_to_order()
         values.update(website_description=self.website_description)

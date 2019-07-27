@@ -4,12 +4,10 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
 
 class TestChangeDepartment(TestHrHolidaysBase):
-        
     def test_employee_change_department_request_change_department(self):
         self.HolidaysEmployeeGroup = self.env['hr.leave'].with_user(self.user_employee_id)
 
@@ -68,4 +66,3 @@ class TestChangeDepartment(TestHrHolidaysBase):
         hol32_user_group.action_refuse()
         self.employee_emp.department_id = self.hr_dept # Change department
         self.assertEqual(hol32_employee_group.department_id, self.hr_dept, 'hr_holidays: refused futur leave request should change department if employee change department')
-

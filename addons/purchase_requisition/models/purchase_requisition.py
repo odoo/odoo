@@ -86,13 +86,11 @@ class PurchaseRequisition(models.Model):
             }
             return {'warning': warning}
 
-    @api.multi
     @api.depends('purchase_ids')
     def _compute_orders_number(self):
         for requisition in self:
             requisition.order_count = len(requisition.purchase_ids)
 
-    @api.multi
     def action_cancel(self):
         # try to set all associated quotations to cancel state
         for requisition in self:
@@ -103,7 +101,6 @@ class PurchaseRequisition(models.Model):
                 po.message_post(body=_('Cancelled by the agreement associated to this quotation.'))
         self.write({'state': 'cancel'})
 
-    @api.multi
     def action_in_progress(self):
         self.ensure_one()
         if not all(obj.line_ids for obj in self):
@@ -125,7 +122,6 @@ class PurchaseRequisition(models.Model):
             else:
                 self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
 
-    @api.multi
     def action_open(self):
         self.write({'state': 'open'})
 
@@ -134,7 +130,6 @@ class PurchaseRequisition(models.Model):
         self.name = 'New'
         self.write({'state': 'draft'})
 
-    @api.multi
     def action_done(self):
         """
         Generate all purchase order based on selected lines, should only be called on one agreement at a time
@@ -200,7 +195,6 @@ class PurchaseRequisitionLine(models.Model):
                 raise UserError(_('You cannot confirm the blanket order without price.'))
         return res
 
-    @api.multi
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
@@ -229,7 +223,6 @@ class PurchaseRequisitionLine(models.Model):
                 'purchase_requisition_line_id': self.id,
             })
 
-    @api.multi
     @api.depends('requisition_id.purchase_ids.state')
     def _compute_ordered_qty(self):
         for line in self:
@@ -250,7 +243,6 @@ class PurchaseRequisitionLine(models.Model):
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
-    @api.multi
     def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         self.ensure_one()
         requisition = self.requisition_id

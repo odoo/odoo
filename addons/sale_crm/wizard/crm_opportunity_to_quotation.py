@@ -30,7 +30,6 @@ class Opportunity2Quotation(models.TransientModel):
     ], 'Quotation Customer', required=True)
     lead_id = fields.Many2one('crm.lead', "Associated Lead", required=True)
 
-    @api.multi
     def action_apply(self):
         """ Convert lead to opportunity or merge lead and opportunity and open
             the freshly created opportunity view.

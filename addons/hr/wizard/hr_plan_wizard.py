@@ -19,7 +19,6 @@ class HrPlanWizard(models.TransientModel):
     plan_id = fields.Many2one('hr.plan', default=lambda self: self.env['hr.plan'].search([], limit=1))
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
 
-    @api.multi
     def action_launch(self):
         for activity_type in self.plan_id.plan_activity_type_ids:
             self.env['mail.activity'].create({

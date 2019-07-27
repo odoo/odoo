@@ -75,7 +75,7 @@
 
             <div line-ratio='0.6'>
                 <t t-foreach='receipt.orderlines' t-as='line'>
-                    <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
+                    <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Units" and line.quantity === 1' />
                     <t t-if='simple'>
                         <line>
                             <left><t t-esc='line.product_name' /></left>
@@ -92,7 +92,7 @@
                                 <value value-decimals='3' value-autoint='on'>
                                     <t t-esc='line.quantity' />
                                 </value>
-                                <t t-if='line.unit_name !== "Unit(s)"'>
+                                <t t-if='line.unit_name !== "Units"'>
                                     <t t-esc='line.unit_name' />
                                 </t>
                                 x
