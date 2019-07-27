@@ -1099,8 +1099,7 @@ def load_test_file_py(registry, test_file):
                     for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                         suite.addTest(t)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    stream = odoo.modules.module.TestStream()
-                    result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
+                    result = odoo.modules.module.OdooTestRunner().run(suite)
                     success = result.wasSuccessful()
                     if hasattr(registry._assertion_report,'report_result'):
                         registry._assertion_report.report_result(success)
@@ -1123,9 +1122,13 @@ def preload_registries(dbnames):
             # run test_file if provided
             if config['test_file']:
                 test_file = config['test_file']
-                _logger.info('loading test file %s', test_file)
-                with odoo.api.Environment.manage():
-                    if test_file.endswith('py'):
+                if not os.path.isfile(test_file):
+                    _logger.warning('test file %s cannot be found', test_file)
+                elif not test_file.endswith('py'):
+                    _logger.warning('test file %s is not a python file', test_file)
+                else:
+                    _logger.info('loading test file %s', test_file)
+                    with odoo.api.Environment.manage():
                         load_test_file_py(registry, test_file)
 
             # run post-install tests
@@ -1137,8 +1140,7 @@ def preload_registries(dbnames):
                 _logger.info("Starting post tests")
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
-                        result = run_unit_tests(module_name, registry.db_name,
-                                                position='post_install')
+                        result = run_unit_tests(module_name, position='post_install')
                         registry._assertion_report.record_result(result)
                 _logger.info("All post-tested in %.2fs, %s queries",
                              time.time() - t0, odoo.sql_db.sql_counter - t0_sql)

@@ -33,8 +33,8 @@
             <field name="standard_price">70.0</field>
             <field name="weight">1.0</field>
             <field name="tracking">lot</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
-            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="image" type="base64" file="stock/static/img/cable_management.png"/>
         </record>
 
@@ -60,7 +60,7 @@
 
         <record id="stock_inventory_line_icecream_lot0" model="stock.inventory.line">
             <field name="product_id" ref="stock.product_cable_management_box"/>
-            <field name="product_uom_id" ref="uom.product_uom_kgm"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock.stock_inventory_icecream"/>
             <field name="product_qty">50.0</field>
             <field name="location_id" ref="stock.stock_location_14"/>
@@ -69,7 +69,7 @@
 
         <record id="stock_inventory_line_icecream_lot1" model="stock.inventory.line">
             <field name="product_id" ref="stock.product_cable_management_box"/>
-            <field name="product_uom_id" ref="uom.product_uom_kgm"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock.stock_inventory_icecream"/>
             <field name="product_qty">40.0</field>
             <field name="location_id" ref="stock.stock_location_14"/>
@@ -247,7 +247,7 @@
             <field name="move_lines" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('stock.product_cable_management_box').name,
                 'product_id': ref('stock.product_cable_management_box'),
-                'product_uom': ref('uom.product_uom_kgm'),
+                'product_uom': ref('uom.product_uom_unit'),
                 'product_uom_qty': 50.0,
                 'picking_type_id': ref('stock.picking_type_in'),
                 'location_id': ref('stock.stock_location_suppliers'),

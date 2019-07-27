@@ -13,10 +13,9 @@ class MailThread(models.AbstractModel):
     _mail_post_token_field = 'access_token' # token field for external posts, to be overridden
 
     website_message_ids = fields.One2many('mail.message', 'res_id', string='Website Messages',
-        domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')], auto_join=True,
+        domain=lambda self: [('model', '=', self._name), '|', ('message_type', '=', 'comment'), ('message_type', '=', 'email')], auto_join=True,
         help="Website communication history")
 
-    @api.multi
     def _sign_token(self, pid):
         """Generate a secure hash for this record with the email of the recipient with whom the record have been shared.
 

@@ -13,7 +13,7 @@ class BaseUpdateTranslations(models.TransientModel):
 
     @api.model
     def _get_languages(self):
-        langs = self.env['res.lang'].search([('active', '=', True), ('translatable', '=', True)])
+        langs = self.env['res.lang'].search([('active', '=', True)])
         return [(lang.code, lang.name) for lang in langs]
 
 
@@ -26,7 +26,6 @@ class BaseUpdateTranslations(models.TransientModel):
             raise UserError(_('No language with code "%s" exists') % lang_code)
         return lang.name
 
-    @api.multi
     def act_update(self):
         this = self[0]
         lang_name = self._get_lang_name(this.lang)

@@ -16,7 +16,7 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee')
+    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True)
     department_id = fields.Many2one('hr.department', string="Department")
     job_id = fields.Many2one('hr.job', string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
@@ -137,7 +137,6 @@ class Contract(models.Model):
         for contract in self:
             contract.employee_id.sudo().write({'contract_id': contract.id})
 
-    @api.multi
     def write(self, vals):
         res = super(Contract, self).write(vals)
         if vals.get('state') == 'open':
@@ -163,7 +162,6 @@ class Contract(models.Model):
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id
         return contracts
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'open' and 'kanban_state' in init_values and self.kanban_state == 'blocked':

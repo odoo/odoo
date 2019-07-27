@@ -167,7 +167,6 @@ class Challenge(models.Model):
 
         return super(Challenge, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('user_domain'):
             users = self._get_challenger_users(ustr(vals.get('user_domain')))
@@ -299,12 +298,10 @@ class Challenge(models.Model):
 
         return True
 
-    @api.multi
     def action_start(self):
         """Start a challenge"""
         return self.write({'state': 'inprogress'})
 
-    @api.multi
     def action_check(self):
         """Check a challenge
 
@@ -317,7 +314,6 @@ class Challenge(models.Model):
 
         return self._update_all()
 
-    @api.multi
     def action_report_progress(self):
         """Manual report of a goal, does not influence automatic report frequency"""
         for challenge in self:
@@ -602,7 +598,6 @@ class Challenge(models.Model):
         return challenge.write({'last_report_date': fields.Date.today()})
 
     ##### Challenges #####
-    @api.multi
     def accept_challenge(self):
         user = self.env.user
         sudoed = self.sudo()
@@ -610,7 +605,6 @@ class Challenge(models.Model):
         sudoed.write({'invited_user_ids': [(3, user.id)], 'user_ids': [(4, user.id)]})
         return sudoed._generate_goals_from_challenge()
 
-    @api.multi
     def discard_challenge(self):
         """The user discard the suggested challenge"""
         user = self.env.user

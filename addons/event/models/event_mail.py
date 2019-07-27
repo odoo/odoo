@@ -29,11 +29,12 @@ class EventTypeMail(models.Model):
     event_type_id = fields.Many2one(
         'event.type', string='Event Type',
         ondelete='cascade', required=True)
+    notification_type = fields.Selection([('mail', 'Mail')], string='Send', default='mail', required=True)
     interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([
         ('now', 'Immediately'),
-        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
-        ('weeks', 'Week(s)'), ('months', 'Month(s)')],
+        ('hours', 'Hours'), ('days', 'Days'),
+        ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
         ('after_sub', 'After each registration'),
@@ -42,7 +43,7 @@ class EventTypeMail(models.Model):
         string='Trigger', default="before_event", required=True)
     template_id = fields.Many2one(
         'mail.template', string='Email Template',
-        domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
+        domain=[('model', '=', 'event.registration')], ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
 
 
@@ -56,11 +57,12 @@ class EventMailScheduler(models.Model):
 
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
+    notification_type = fields.Selection([('mail', 'Mail')], string='Send', default='mail', required=True)
     interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([
         ('now', 'Immediately'),
-        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
-        ('weeks', 'Week(s)'), ('months', 'Month(s)')],
+        ('hours', 'Hours'), ('days', 'Days'),
+        ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
         ('after_sub', 'After each registration'),
@@ -69,7 +71,7 @@ class EventMailScheduler(models.Model):
         string='Trigger ', default="before_event", required=True)
     template_id = fields.Many2one(
         'mail.template', string='Email Template',
-        domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
+        domain=[('model', '=', 'event.registration')], ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
     scheduled_date = fields.Datetime('Scheduled Sent Mail', compute='_compute_scheduled_date', store=True)
     mail_registration_ids = fields.One2many('event.mail.registration', 'scheduler_id')
@@ -113,7 +115,7 @@ class EventMailScheduler(models.Model):
                 mail.mail_registration_ids.filtered(lambda reg: reg.scheduled_date and reg.scheduled_date <= now).execute()
             else:
                 # Do not send emails if the mailing was scheduled before the event but the event is over
-                if not mail.mail_sent and (mail.interval_type != 'before_event' or mail.event_id.date_end > now):
+                if not mail.mail_sent and (mail.interval_type != 'before_event' or mail.event_id.date_end > now) and mail.notification_type == 'mail':
                     mail.event_id.mail_attendees(mail.template_id.id)
                     mail.write({'mail_sent': True})
         return True
@@ -180,7 +182,7 @@ class EventMailRegistration(models.Model):
 
     def execute(self):
         for mail in self:
-            if mail.registration_id.state in ['open', 'done'] and not mail.mail_sent:
+            if mail.registration_id.state in ['open', 'done'] and not mail.mail_sent and mail.scheduler_id.notification_type == 'mail':
                 mail.scheduler_id.template_id.send_mail(mail.registration_id.id)
                 mail.write({'mail_sent': True})
 

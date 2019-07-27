@@ -60,7 +60,6 @@ class Category(models.Model):
             # assign name of last category, and reassign display_name (to normalize it)
             cat.name = names[-1].strip()
 
-    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
             raise AccessError('Sorry')
@@ -189,7 +188,6 @@ class Message(models.Model):
     def _search_author_partner(self, operator, value):
         return [('author.partner_id', operator, value)]
 
-    @api.multi
     def write(self, vals):
         if 'priority' in vals:
             vals['priority'] = 5

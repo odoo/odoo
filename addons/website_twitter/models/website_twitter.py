@@ -45,7 +45,6 @@ class WebsiteTwitter(models.Model):
         _logger.debug("Refreshing tweets for website IDs: %r", website.ids)
         website.fetch_favorite_tweets()
 
-    @api.multi
     def fetch_favorite_tweets(self):
         WebsiteTweets = self.env['website.twitter.tweet']
         tweet_ids = []

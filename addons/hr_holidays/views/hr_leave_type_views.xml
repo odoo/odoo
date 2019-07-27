@@ -44,7 +44,6 @@
                             <field name="active" invisible="1"/>
                             <field name="code"/>
                             <field name="request_unit" widget="radio"/>
-                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
@@ -105,7 +104,6 @@
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
             <tree string="Time Off Type">
-                <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="code"/>
                 <field name="allocation_type"/>
@@ -123,19 +121,5 @@
         <field name="res_model">hr.leave.type</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
-
-    <menuitem
-        id="menu_hr_holidays_configuration"
-        name="Configuration"
-        parent="menu_hr_holidays_root"
-        sequence="100"/>
-
-    <menuitem
-        id="hr_holidays_status_menu_configuration"
-        action="open_view_holiday_status"
-        name="Time Off Types"
-        parent="menu_hr_holidays_configuration"
-        groups="hr_holidays.group_hr_holidays_user"
-        sequence="1"/>
 
 </odoo>

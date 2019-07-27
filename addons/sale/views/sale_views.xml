@@ -309,10 +309,12 @@
                                         TODO: at some point we want to fix this in the framework so that an invisible field is not required.
                                     -->
                                     <field name="sequence" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <group>
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                             <field name="product_updatable" invisible="1"/>
                                             <field name="product_id"
+                                                domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                                 attrs="{
                                                     'readonly': [('product_updatable', '=', False)],
@@ -399,6 +401,7 @@
                                     <field name="sequence" widget="handle" />
                                     <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                     <field name="display_type" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
 
                                     <field name="product_updatable" invisible="1"/>
                                     <field
@@ -407,6 +410,7 @@
                                             'readonly': [('product_updatable', '=', False)],
                                             'required': [('display_type', '=', False)],
                                         }"
+                                        options="{'no_open': True}"
                                         force_save="1"
                                         context="{
                                             'partner_id': parent.partner_id,
@@ -417,6 +421,7 @@
                                             'default_lst_price': price_unit,
                                             'default_description_sale': name
                                         }"
+                                        domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                         widget="product_configurator"
                                     />
                                     <field name="product_template_id"
@@ -436,6 +441,7 @@
                                           'default_lst_price': price_unit,
                                           'default_description_sale': name
                                       }"
+                                      domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                       widget="product_configurator"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
                                     <field

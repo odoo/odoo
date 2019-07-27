@@ -28,7 +28,7 @@
         </xpath>
 
         <xpath expr="//section[@id='signature']" position="after">
-            <t t-if="any([(not option.line_id) for option in sale_order.sale_order_option_ids])">
+            <t t-if="any([(not option.is_present) for option in sale_order.sale_order_option_ids])">
                 <section>
                     <h3>Options</h3>
                     <t t-set="display_discount" t-value="True in [option.discount > 0 for option in sale_order.sale_order_option_ids]"/>
@@ -44,7 +44,7 @@
                         </thead>
                         <tbody>
                             <tr t-foreach="sale_order.sale_order_option_ids" t-as="option">
-                                <t t-if="not option.line_id">
+                                <t t-if="not option.is_present">
                                     <td>
                                         <div t-field="option.name"/>
                                     </td>

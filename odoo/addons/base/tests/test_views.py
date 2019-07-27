@@ -7,10 +7,12 @@ from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 
-from odoo.osv.orm import modifiers_tests
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger
+from odoo.addons.base.models.ir_ui_view import (
+    transfer_field_to_modifiers, transfer_node_to_modifiers, simplify_modifiers,
+)
 
 
 class ViewXMLID(common.TransactionCase):
@@ -1104,8 +1106,36 @@ class TestViews(ViewCase):
             ))
 
     def test_modifiers(self):
-        # implemeted elsewhere...
-        modifiers_tests()
+        def _test_modifiers(what, expected):
+            modifiers = {}
+            if isinstance(what, str):
+                node = etree.fromstring(what)
+                transfer_node_to_modifiers(node, modifiers)
+                simplify_modifiers(modifiers)
+                assert modifiers == expected, "%s != %s" % (modifiers, expected)
+            elif isinstance(what, dict):
+                transfer_field_to_modifiers(what, modifiers)
+                simplify_modifiers(modifiers)
+                assert modifiers == expected, "%s != %s" % (modifiers, expected)
+        _test_modifiers('<field name="a"/>', {})
+        _test_modifiers('<field name="a" invisible="1"/>', {"invisible": True})
+        _test_modifiers('<field name="a" readonly="1"/>', {"readonly": True})
+        _test_modifiers('<field name="a" required="1"/>', {"required": True})
+        _test_modifiers('<field name="a" invisible="0"/>', {})
+        _test_modifiers('<field name="a" readonly="0"/>', {})
+        _test_modifiers('<field name="a" required="0"/>', {})
+        # TODO: Order is not guaranteed
+        _test_modifiers('<field name="a" invisible="1" required="1"/>',
+            {"invisible": True, "required": True})
+        _test_modifiers('<field name="a" invisible="1" required="0"/>', {"invisible": True})
+        _test_modifiers('<field name="a" invisible="0" required="1"/>', {"required": True})
+        _test_modifiers("""<field name="a" attrs="{'invisible': [['b', '=', 'c']]}"/>""",
+            {"invisible": [["b", "=", "c"]]})
+
+        # The dictionary is supposed to be the result of fields_get().
+        _test_modifiers({}, {})
+        _test_modifiers({"invisible": True}, {"invisible": True})
+        _test_modifiers({"invisible": False}, {})
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_invalid_field(self):

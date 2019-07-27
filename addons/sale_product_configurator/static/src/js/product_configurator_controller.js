@@ -116,7 +116,7 @@ var ProductConfiguratorFormController = FormController.extend({
         return this._rpc({
             route: '/sale_product_configurator/configure',
             params: {
-                product_id: productTemplateId,
+                product_template_id: productTemplateId,
                 pricelist_id: this.renderer.pricelistId,
                 add_qty: data.quantity,
                 product_template_attribute_value_ids: this._getAttributeValueIds(

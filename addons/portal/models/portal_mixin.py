@@ -21,7 +21,6 @@ class PortalMixin(models.AbstractModel):
         for mixin in self:
             mixin.access_warning = ''
 
-    @api.multi
     def _compute_access_url(self):
         for record in self:
             record.access_url = '#'
@@ -61,7 +60,6 @@ class PortalMixin(models.AbstractModel):
 
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
-    @api.multi
     def _notify_get_groups(self):
         access_token = self._portal_ensure_token()
         customer = self['partner_id']
@@ -85,7 +83,6 @@ class PortalMixin(models.AbstractModel):
             new_group = []
         return new_group + groups
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the online document for
         portal users or if force_website=True in the context. """
@@ -130,7 +127,6 @@ class PortalMixin(models.AbstractModel):
                              'active_model': self.env.context['active_model']}
         return action
 
-    @api.multi
     def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None):
         """
             Get a portal url for this model, including access_token.

@@ -20,7 +20,6 @@ class ResUsers(models.Model):
         ('login_key', 'unique (login, website_id)', 'You can not have two users with the same login!'),
     ]
 
-    @api.multi
     def _has_unsplash_key_rights(self):
         self.ensure_one()
         if self.has_group('website.group_website_designer'):

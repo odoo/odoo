@@ -98,6 +98,18 @@
                                     <field name="passing_score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
                                     <field name="certificate" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
                                     <field name="certification_mail_template_id" attrs="{'invisible': [('certificate', '=', False)]}" />
+                                    <field name="certification_give_badge" attrs="{'invisible': ['|', ('certificate', '=', False), ('users_login_required', '=', False)]}" />
+                                    <field name="certification_badge_id" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)]}"
+                                           domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
+                                           context="{'default_name': title,
+                                                   'default_description': 'Congratulation, you succeeded this certification',
+                                                   'default_rule_auth': 'nobody',
+                                                   'default_level': None,
+                                                   'form_view_ref': 'survey.gamification_badge_form_view_simplified',
+                                                   'default_website_published': True}"/>
+                                    <field name="certification_badge_id_dummy" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '=', False)]}"
+                                           options="{'no_create': True}"
+                                           context="{'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
                                 </group>
                             </group>
                         </page>

@@ -6,10 +6,10 @@ import datetime
 class TestAutoBlacklist(common.TransactionCase):
 
     def test_mail_bounced_auto_blacklist(self):
-        mass_mailing_contacts = self.env['mail.mass_mailing.contact']
-        mass_mailing = self.env['mail.mass_mailing']
+        mass_mailing_contacts = self.env['mailing.contact']
+        mass_mailing = self.env['mailing.mailing']
         mail_blacklist = self.env['mail.blacklist']
-        mail_statistics = self.env['mail.mail.statistics']
+        mail_statistics = self.env['mailing.trace']
         mail_thread = self.env['mail.thread']
 
         # create mailing contact record
@@ -17,34 +17,33 @@ class TestAutoBlacklist(common.TransactionCase):
 
         # create bounced history
         mail_statistics.create({
-            'model': 'mail.mass_mailing.contact',
+            'model': 'mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=2),
             'email': self.mailing_contact_1.email
         })
         self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
         mail_statistics.create({
-            'model': 'mail.mass_mailing.contact',
+            'model': 'mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=3),
             'email': self.mailing_contact_1.email
         })
         self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
         mail_statistics.create({
-            'model': 'mail.mass_mailing.contact',
+            'model': 'mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=4),
             'email': self.mailing_contact_1.email
         })
         self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
         mail_statistics.create({
-            'model': 'mail.mass_mailing.contact',
+            'model': 'mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=5),
             'email': self.mailing_contact_1.email
         })
         self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
-
 
         # create mass mailing record
         self.mass_mailing = mass_mailing.create({
@@ -54,7 +53,7 @@ class TestAutoBlacklist(common.TransactionCase):
                                 [self.mailing_contact_1.id])],
             'body_html': 'This is a bounced mail for auto blacklist demo'})
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
+        res_ids = self.mass_mailing._get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -71,7 +70,7 @@ class TestAutoBlacklist(common.TransactionCase):
         composer.send_mail()
 
         mail_statistics.create({
-            'model': 'mail.mass_mailing.contact',
+            'model': 'mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now(),
             'email': self.mailing_contact_1.email

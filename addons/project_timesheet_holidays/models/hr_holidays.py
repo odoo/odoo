@@ -88,7 +88,6 @@ class Holidays(models.Model):
 
         return super(Holidays, self)._validate_leave_request()
 
-    @api.multi
     def action_refuse(self):
         """ Remove the timesheets linked to the refused holidays """
         result = super(Holidays, self).action_refuse()

@@ -25,6 +25,7 @@ var DECORATIONS = [
 ];
 
 var FIELD_CLASSES = {
+    char: 'o_list_char',
     float: 'o_list_number',
     integer: 'o_list_number',
     monetary: 'o_list_number',
@@ -405,7 +406,8 @@ var ListRenderer = BasicRenderer.extend({
             isPassword: 'password' in node.attrs,
         });
         this._handleAttributes($td, node);
-        return $td.html(formattedValue).attr('title', formattedValue);
+        var title = field.type !== 'boolean' ? formattedValue : '';
+        return $td.html(formattedValue).attr('title', title);
     },
     /**
      * Renders the button element associated to the given node and record.
@@ -618,7 +620,7 @@ var ListRenderer = BasicRenderer.extend({
             var $pager = this._renderGroupPager(group);
             $lastCell.addClass('o_group_pager').append($pager);
         }
-        if (group.isOpen && this.groupbys[groupBy]) {
+        if (groupLevel === 0 && group.isOpen && this.groupbys[groupBy]) {
             var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
             if ($buttons.length) {
                 var $buttonSection = $('<div>', {
@@ -743,7 +745,7 @@ var ListRenderer = BasicRenderer.extend({
             $th.css({ textAlign: 'right' });
         }
 
-        if (config.isDebug()) {
+        if (config.isDebug() || node.attrs.help || field.help) {
             var fieldDescr = {
                 field: field,
                 name: name,

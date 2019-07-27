@@ -44,6 +44,9 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
 publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     selector: '.o_wprofile_editor_form',
     read_events: {
+        'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
+        'change .o_forum_file_upload': '_onFileUploadChange',
+        'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
         'click .o_wprofile_submit_btn': '_onSubmitClick',
     },
 
@@ -74,6 +77,43 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onEditProfilePicClick: function (ev) {
+        ev.preventDefault();
+        $(ev.currentTarget).closest('form').find('.o_forum_file_upload').trigger('click');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFileUploadChange: function (ev) {
+        if (!ev.currentTarget.files.length) {
+            return;
+        }
+        var $form = $(ev.currentTarget).closest('form');
+        var reader = new window.FileReader();
+        reader.readAsDataURL(ev.currentTarget.files[0]);
+        reader.onload = function (ev) {
+            $form.find('.o_forum_avatar_img').attr('src', ev.target.result);
+        };
+        $form.find('#forum_clear_image').remove();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfilePicClearClick: function (ev) {
+        var $form = $(ev.currentTarget).closest('form');
+        $form.find('.o_forum_avatar_img').attr('src', '/web/static/src/img/placeholder.png');
+        $form.append($('<input/>', {
+            name: 'clear_image',
+            id: 'forum_clear_image',
+            type: 'hidden',
+        }));
+    },
     /**
      * @private
      */

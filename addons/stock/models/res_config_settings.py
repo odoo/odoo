@@ -59,7 +59,6 @@ class ResConfigSettings(models.TransientModel):
         if self.group_stock_adv_location and not self.group_stock_multi_locations:
             self.group_stock_multi_locations = True
 
-    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
 

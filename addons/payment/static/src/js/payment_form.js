@@ -10,6 +10,7 @@ var _t = core._t;
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     selector: '.o_payment_form',
     events: {
+        'submit': 'async onSubmit',
         'click #o_payment_form_pay': 'async payEvent',
         'click #o_payment_form_add_pm': 'addPmEvent',
         'click button[name="delete_pm"]': 'deletePmEvent',
@@ -21,10 +22,12 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.options = _.extend(this.$el.data(), this.options);
-        this.updateNewPaymentDisplayStatus();
-        $('[data-toggle="tooltip"]').tooltip();
-        return this._super.apply(this, arguments);
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.options = _.extend(self.$el.data(), self.options);
+            self.updateNewPaymentDisplayStatus();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -147,7 +150,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         var form = this.el;
         var checked_radio = this.$('input[type="radio"]:checked');
         var self = this;
-        var button = ev.target;
+        if (ev.type === 'submit') {
+            var button = $(ev.target).find('*[type="submit"]')[0]
+        } else {
+            var button = ev.target;
+        }
 
         // first we check that the user has selected a payment method
         if (checked_radio.length === 1) {
@@ -322,7 +329,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         ev.preventDefault();
         var checked_radio = this.$('input[type="radio"]:checked');
         var self = this;
-        var button = ev.target;
+        if (ev.type === 'submit') {
+            var button = $(ev.target).find('*[type="submit"]')[0]
+        } else {
+            var button = ev.target;
+        }
 
         // we check if the user has selected a 'add a new payment' option
         if (checked_radio.length === 1 && this.isNewPaymentRadio(checked_radio[0])) {
@@ -424,6 +435,25 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 _t('Please select the option to add a new payment method.')
             );
         }
+    },
+    /**
+     * Called when submitting the form (e.g. through the Return key).
+     * We need to check whether we are paying or adding a new pm and dispatch
+     * to the correct method.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    onSubmit: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        var button = $(ev.target).find('*[type="submit"]')[0]
+        if (button.id === 'o_payment_form_pay') {
+            return this.payEvent(ev);
+        } else if (button.id === 'o_payment_form_add_pm') {
+            return this.addPmEvent(ev);
+        }
+        return;
     },
     /**
      * Called when clicking on a button to delete a payment method.

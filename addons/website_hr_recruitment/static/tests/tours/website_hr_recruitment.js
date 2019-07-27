@@ -19,10 +19,6 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         trigger: "input[name=partner_phone]",
         run: "text 118.218"
     }, {
-        content: "Complete Residence Country",
-        trigger: "input[name=residence_country]",
-        run: "text Belgium"
-    }, {
         content: "Complete Subject",
         trigger: "textarea[name=description]",
         run: "text ### HR RECRUITMENT TEST DATA ###"

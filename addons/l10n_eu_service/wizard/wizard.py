@@ -70,7 +70,6 @@ class l10n_eu_service(models.TransientModel):
         'res.country', 'l10n_eu_service_country_rel_todo', default=_default_todo_country_ids,
         string='EU Customers From', required=True)
 
-    @api.multi
     def generate_eu_service(self):
         tax_rate = self.env["l10n_eu_service.service_tax_rate"]
         account_tax = self.env['account.tax']

@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         self.ensure_one()
         lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id)
@@ -18,7 +17,6 @@ class SaleOrder(models.Model):
             domain.append(('event_ticket_id', '=', self.env.context.get("event_ticket_id")))
         return self.env['sale.order.line'].sudo().search(domain)
 
-    @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.env['sale.order'].sudo().browse(order_id)
         if self._context.get('pricelist') != order.pricelist_id.id:
@@ -49,7 +47,6 @@ class SaleOrder(models.Model):
 
         return values
 
-    @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         OrderLine = self.env['sale.order.line']
 
@@ -101,7 +98,6 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    @api.multi
     @api.depends('product_id.display_name', 'event_ticket_id.display_name')
     def _compute_name_short(self):
         """ If the sale order line concerns a ticket, we don't want the product name, but the ticket name instead.

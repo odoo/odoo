@@ -10,7 +10,6 @@ class ResPartner(models.Model):
 
     last_website_so_id = fields.Many2one('sale.order', compute='_compute_last_website_so_id', string='Last Online Sales Order')
 
-    @api.multi
     def _compute_last_website_so_id(self):
         SaleOrder = self.env['sale.order']
         for partner in self:

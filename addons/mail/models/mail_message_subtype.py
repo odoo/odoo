@@ -46,12 +46,10 @@ class MailMessageSubtype(models.Model):
         self.clear_caches()
         return super(MailMessageSubtype, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         self.clear_caches()
         return super(MailMessageSubtype, self).write(vals)
 
-    @api.multi
     def unlink(self):
         self.clear_caches()
         return super(MailMessageSubtype, self).unlink()

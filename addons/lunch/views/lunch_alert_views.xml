@@ -18,10 +18,11 @@
         <field name="model">lunch.alert</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="active" widget="boolean_toggle"/>
                 <field name="name"/>
+                <field name="mode"/>
                 <field name="message" invisible="1"/>
                 <field name="available_today"/>
+                <field name="active" widget="boolean_toggle"/>
             </tree>
         </field>
     </record>
@@ -40,6 +41,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="mode" widget="radio"/>
+                            <field name="recipients" attrs="{'invisible': [['mode', '!=', 'chat']]}" widget="radio"/>
                             <field name="location_ids" widget="many2many_tags"/>
                             <field name="until"/>
                             <field name="active"/>
@@ -52,6 +55,12 @@
                             <field name="recurrency_friday"/>
                             <field name="recurrency_saturday"/>
                             <field name="recurrency_sunday"/>
+                            <label for="notification_time" attrs="{'invisible': [['mode', '!=', 'chat']]}"/>
+                            <div class="o_row" attrs="{'invisible': [['mode', '!=', 'chat']]}">
+                                <field name="notification_time" attrs="{'required': [('mode', '=', 'chat')]}" widget="float_time"/>
+                                <field name="notification_moment"/>
+                            </div>
+                            <field name="tz" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="message"/>
@@ -67,7 +76,7 @@
         <field name="res_model">lunch.alert</field>
         <field name="search_view_id" ref="lunch_alert_view_search"/>
         <field name="view_mode">tree,form</field>
+        <field name="domain">['|', ('active', '=', True), ('active', '=', False)]</field>
         <field name="view_id" ref="lunch_alert_view_tree"/>
-        <field name="context">{'search_default_inactive': 1, 'search_default_active': 1}</field>
     </record>
 </odoo>

@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    @api.multi
     def write(self, vals):
         forbidden_fields = set([
             'amount_type', 'amount', 'type_tax_use', 'tax_group_id', 'price_include',

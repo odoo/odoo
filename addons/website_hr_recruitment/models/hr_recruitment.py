@@ -29,8 +29,6 @@ class Applicant(models.Model):
 
     _inherit = 'hr.applicant'
 
-    residence_country = fields.Char(string="Residence Country")
-
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:
             values.setdefault('name', '%s\'s Application' % values['partner_name'])
@@ -48,13 +46,11 @@ class Job(models.Model):
 
     website_description = fields.Html('Website description', translate=html_translate, sanitize_attributes=False, default=_get_default_website_description, prefetch=False)
 
-    @api.multi
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
         for job in self:
             job.website_url = "/jobs/detail/%s" % job.id
 
-    @api.multi
     def set_open(self):
         self.write({'website_published': False})
         return super(Job, self).set_open()

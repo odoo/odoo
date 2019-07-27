@@ -21,6 +21,7 @@ return mvc.Renderer.extend({
         this._super.apply(this, arguments);
         this.arch = params.arch;
         this.noContentHelp = params.noContentHelp;
+        this.withSearchPanel = params.withSearchPanel;
     },
     /**
      * The rendering is asynchronous. The start
@@ -30,6 +31,9 @@ return mvc.Renderer.extend({
      */
     start: function () {
         this.$el.addClass(this.arch.attrs.class);
+        if (this.withSearchPanel) {
+            this.$el.addClass('o_renderer_with_searchpanel');
+        }
         return Promise.all([this._render(), this._super()]);
     },
     /**

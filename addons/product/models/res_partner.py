@@ -14,7 +14,6 @@ class Partner(models.Model):
         inverse="_inverse_product_pricelist", company_dependent=False,
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
-    @api.multi
     @api.depends('country_id')
     def _compute_product_pricelist(self):
         company = self.env.context.get('force_company', False)
@@ -33,7 +32,7 @@ class Partner(models.Model):
             # update at each change country, and so erase old pricelist
             if partner.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
                 # keep the company of the current user before sudo
-                partner.env['ir.property'].with_context(force_company=self.env.company.id).sudo().set_multi(
+                self.env['ir.property'].with_context(force_company=self._context.get('force_company', self.env.company.id)).sudo().set_multi(
                     'property_product_pricelist',
                     partner._name,
                     {partner.id: partner.property_product_pricelist or default_for_country.id},

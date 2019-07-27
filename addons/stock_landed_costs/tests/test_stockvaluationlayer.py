@@ -95,3 +95,46 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
 
         self.assertEqual(out_svl.value, -250)
         self.assertEqual(in_svl.value, 225)
+
+
+@tagged('post_install', '-at_install')
+class TestStockValuationLCAVCO(TestStockValuationLC):
+    def setUp(self):
+        super(TestStockValuationLCAVCO, self).setUp()
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+    def test_normal_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        lc = self._make_lc(move1, 100)
+        move3 = self._make_out_move(self.product1, 1)
+
+        self.assertEqual(self.product1.value_svl, 380)
+
+    def test_negative_1(self):
+        self.product1.standard_price = 10
+        move1 = self._make_out_move(self.product1, 2, force_assign=True)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=15, create_picking=True)
+        lc = self._make_lc(move2, 100)
+
+        self.assertEqual(self.product1.value_svl, 200)
+        self.assertEqual(self.product1.quantity_svl, 8)
+
+    def test_alreadyout_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        move2 = self._make_out_move(self.product1, 10)
+        lc = self._make_lc(move1, 100)
+
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 2)
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+    def test_alreadyout_2(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move2 = self._make_out_move(self.product1, 1)
+        lc = self._make_lc(move1, 100)
+
+        self.assertEqual(self.product1.value_svl, 375)
+        self.assertEqual(self.product1.quantity_svl, 19)

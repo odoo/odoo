@@ -27,13 +27,11 @@ class IrDefault(models.Model):
         self.clear_caches()
         return super(IrDefault, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         if self:
             self.clear_caches()
         return super(IrDefault, self).write(vals)
 
-    @api.multi
     def unlink(self):
         if self:
             self.clear_caches()

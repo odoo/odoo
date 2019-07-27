@@ -41,7 +41,6 @@ class MailMessageSubtype(models.Model):
             result._update_department_subtype()
         return result
 
-    @api.multi
     def write(self, vals):
         result = super(MailMessageSubtype, self).write(vals)
         self.filtered(

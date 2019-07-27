@@ -72,8 +72,11 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='amount_authorized']" position="after">
-                    <group  attrs="{'invisible': [('type', '!=', 'bank')]}">
+                <xpath expr="//page[@name='point_of_sale']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//page[@name='point_of_sale']" position="inside">
+                    <group attrs="{'invisible': [('journal_user', '=', False)]}">
                         <field name="pos_mercury_config_id"/>
                     </group>
                 </xpath>

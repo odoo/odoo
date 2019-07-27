@@ -23,8 +23,9 @@
             <field name="name">res.partner.activation.tree</field>
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
-                <tree string="Activation">
-                    <field name="name" />
+                <tree string="Activation" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>

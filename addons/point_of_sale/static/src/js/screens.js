@@ -289,7 +289,6 @@ var ScaleScreenWidget = ScreenWidget.extend({
     show: function(){
         this._super();
         var self = this;
-        var queue = this.pos.proxy_queue;
 
         this.set_weight(0);
         this.renderElement();
@@ -314,7 +313,12 @@ var ScaleScreenWidget = ScreenWidget.extend({
             // add product *after* switching screen to scroll properly
             self.order_product();
         });
+        this._read_scale();
+    },
 
+    _read_scale: function() {
+        var self = this;
+        var queue = this.pos.proxy_queue;
         queue.schedule(function(){
             return self.pos.proxy.scale_read().then(function(weight){
                 self.set_weight(weight.weight);
@@ -1248,10 +1252,11 @@ var ClientListScreenWidget = ScreenWidget.extend({
         if( this.has_client_changed() ){
             var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
             if ( this.new_client ) {
+                var client_fiscal_position_id;
                 if (this.new_client.property_account_position_id ){
-                  var client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
-                  order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
+                    client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
                 }
+                order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
                 order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
             } else {
                 order.fiscal_position = default_fiscal_position_id;

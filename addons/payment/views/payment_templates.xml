@@ -29,7 +29,8 @@
                 t-att-data-access-token="access_token or ''"
                 t-att-data-partner-id="partner_id"
                 t-att-data-callback-method="callback_method or ''"
-                t-att-data-order-id="order_id or ''">
+                t-att-data-order-id="order_id or ''"
+                t-att-data-mode="mode">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" t-if="prepare_tx_url" name="prepare_tx_url" t-att-value="prepare_tx_url"/>
             <input type="hidden" t-if="order_id" name="order_id" t-att-value="order_id"/>
@@ -152,7 +153,7 @@
                 <t t-if="show_manage_btn">
                     <a class="btn btn-link mb8 mt8" href="/my/payment_method">Manage your payment methods</a>
                 </t>
-                <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
+                <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" type="submit" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
                     <i class="fa fa-plus-circle"/> Add new card
                 </button>
             </div>

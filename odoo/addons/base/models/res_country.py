@@ -83,13 +83,11 @@ class Country(models.Model):
                 vals['code'] = vals['code'].upper()
         return super(Country, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
         return super(Country, self).write(vals)
 
-    @api.multi
     def get_address_fields(self):
         self.ensure_one()
         return re.findall(r'\((.+?)\)', self.address_format)
@@ -135,7 +133,6 @@ class CountryState(models.Model):
         state_ids = first_state_ids + [state_id for state_id in self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid) if not state_id in first_state_ids]
         return self.browse(state_ids).name_get()
 
-    @api.multi
     def name_get(self):
         result = []
         for record in self:

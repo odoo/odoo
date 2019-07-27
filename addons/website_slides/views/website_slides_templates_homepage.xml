@@ -282,7 +282,7 @@
 </template>
 
 <template id='course_card' name="Course Card">
-    <div class="card w-100 o_wslides_course_card mb-4">
+    <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
         <t t-set="course_image" t-value="'/web/image/slide.channel/%s/image' % channel.id"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
             <div t-if="channel.image_large" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
@@ -292,6 +292,7 @@
         </a>
         <div class="card-body p-3">
             <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+            <span t-if="not channel.is_published" class="badge badge-danger p-1">Unpublished</span>
             <div class="card-text mt-1">
                 <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description"/>
                 <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
@@ -355,7 +356,7 @@
         <div class="row o_wslides_home_aside_title">
             <div class="col">
                 <a href="/profile/users" class="float-right">View all</a>
-                <h5 class="m-0">Leaderboard of the week</h5>
+                <h5 class="m-0">Leaderboard</h5>
                 <hr class="mt-2 pt-2"/>
             </div>
         </div>
@@ -396,14 +397,14 @@
             <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
             <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
-        <t t-if="user.rank_id">
-            <div t-if="user.next_rank_id" class="font-weight-bold text-muted mt-1">Next rank:</div>
-            <t t-call="website_profile.profile_next_rank_card">
-                <t t-set="bg_class">bg-200</t>
-                <t t-set="img_max_width">50%</t>
-            </t>
-            <div t-field="user.rank_id.description_motivational"/>
+        <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
+        <div t-if="next_rank_id" class="font-weight-bold text-muted mt-1">Next rank:</div>
+        <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
+            <t t-set="bg_class">bg-200</t>
+            <t t-set="img_max_width">50%</t>
         </t>
+        <div t-if="next_rank_id" t-field="next_rank_id.description_motivational"/>
+        <div t-else="">Congratulations, you have reached the last rank!</div>
     </div>
 </template>
 

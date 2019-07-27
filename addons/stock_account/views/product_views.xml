@@ -40,14 +40,40 @@
                         <field name="standard_price"
                             attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
                             widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
-                            class="float-left oe_inline"/>
-                        <div name="update_cost_price">
+                            class="oe_inline"/>
+                    </field>
+                    <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                        <span name="update_cost_price">
                             <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
                                 attrs="{'invisible':['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '>', 1)]}"
-                                class="oe_link pt-0 float-left oe_inline"/>
-                        </div>
+                                class="oe_link pt-0 oe_inline"/>
+                        </span>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_product_normal_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.normal.form.view.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="standard_price" position="replace">
+                        <field name="standard_price"
+                            attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
+                            widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
+                            class="oe_inline"/>
                     </field>
+                    <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                        <span name="update_cost_price">
+                            <button string="Update Cost" type="action"
+                                name="%(action_view_change_standard_price)d"
+                                attrs="{'invisible':['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '=', 1)]}"
+                                class="oe_link pt-0 oe_inline"/>
+                        </span>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -58,22 +84,21 @@
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="standard_price" position="after">
-                        <field name="valuation" invisible="1"/>
-                        <field name="cost_method" invisible="1"/>
-                    </field>
                     <field name="standard_price" position="replace">
-                        <label for="standard_price"/>
-                        <div name="standard_price_div" class="row ml-0">
-                            <field name="standard_price"
-                                attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
-                                widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}" class="float-left"/>
-                            <div name="update_cost_price">
-                                <button string="Update Cost" type="action"
+                        <field name="valuation" invisible="1" readonly="1"/>
+                        <field name="cost_method" invisible="1" readonly="1"/>
+                        <div class="o_td_label" name="update_cost_price">
+                            <label for="standard_price"/>
+                            <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
                                 attrs="{'invisible':[('cost_method', '=', 'fifo')]}"
-                                class="oe_link pt-0 float-left"/>
-                            </div>
+                                class="oe_link oe_inline"/>
+                        </div>
+                        <div class="o_row">
+                            <field name="standard_price"
+                                attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
+                                widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
+                                class="oe_inline"/>
                         </div>
                     </field>
                 </data>

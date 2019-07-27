@@ -189,8 +189,9 @@ class MetaCase(type):
         super(MetaCase, cls).__init__(name, bases, attrs)
         # assign default test tags
         if cls.__module__.startswith('odoo.addons.'):
-            module = cls.__module__.split('.')[2]
-            cls.test_tags = {'standard', 'at_install', module}
+            cls.test_tags = {'standard', 'at_install'}
+            cls.test_module = cls.__module__.split('.')[2]
+            cls.test_class = cls.__name__
 
 
 class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
@@ -244,7 +245,10 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     def _assertRaises(self, exception):
         """ Context manager that clears the environment upon failure. """
         with super(BaseCase, self).assertRaises(exception) as cm:
-            with self.env.clear_upon_failure():
+            if hasattr(self, 'env'):
+                with self.env.clear_upon_failure():
+                    yield cm
+            else:
                 yield cm
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
@@ -333,9 +337,23 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                     return False
             return True
 
+        def _repr_field_value(record, field_name):
+            record_value = record[field_name]
+            field_type = record._fields[field_name].type
+            if field_type == 'monetary':
+                currency_field_name = record._fields[field_name].currency_field
+                record_currency = record[currency_field_name]
+                return record_currency and record_currency.round(record_value) or record_value
+            elif field_type in ('one2many', 'many2many'):
+                return set(record_value.ids)
+            elif field_type == 'many2one':
+                return record_value.id
+            else:
+                return record_value
+
         def _format_message(records, expected_values):
             ''' Return a formatted representation of records/expected_values. '''
-            all_records_values = records.read(list(expected_values[0].keys()), load=False)
+            all_records_values = [{key: _repr_field_value(record, key) for key in expected_values[0]} for record in records]
             msg1 = '\n'.join(pprint.pformat(dic) for dic in all_records_values)
             msg2 = '\n'.join(pprint.pformat(dic) for dic in expected_values)
             return 'Current values:\n\n%s\n\nExpected values:\n\n%s' % (msg1, msg2)
@@ -441,11 +459,16 @@ class SavepointCase(SingleTransactionCase):
         super(SavepointCase, self).tearDown()
 
 
+class ChromeBrowserException(Exception):
+    pass
+
+
 class ChromeBrowser():
     """ Helper object to control a Chrome headless process. """
 
-    def __init__(self, logger, window_size):
+    def __init__(self, logger, window_size, test_class):
         self._logger = logger
+        self.test_class = test_class
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
@@ -455,7 +478,19 @@ class ChromeBrowser():
         self.request_id = 0
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
         self.chrome_process = None
+
+        otc = odoo.tools.config
+        self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
+        self.screencasts_dir = None
+        if otc['screencasts']:
+            if otc['screencasts'] in ('1', 'true', 't'):
+                self.screencasts_dir = os.path.join(otc['screenshots'], get_db_name(), 'screencasts')
+            else:
+                self.screencasts_dir =os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
+
         self.screencast_frames = []
+        os.makedirs(self.screenshots_dir, exist_ok=True)
+
         self.window_size = window_size
         self._chrome_start()
         self._find_websocket()
@@ -642,49 +677,60 @@ class ChromeBrowser():
                 self._logger.debug('chrome devtools protocol event: %s', res)
         self._logger.info('timeout exceeded while waiting for : %s', method)
 
-    def _get_shotname(self, prefix, ext):
-        """ return a unique filename for screenshot or screencast"""
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-        base_file = os.path.splitext(odoo.tools.config['logfile'])[0]
-        name = '%s_%s_%s.%s' % (base_file, prefix, timestamp, ext)
-        return name
-
-    def take_screenshot(self, prefix='failed'):
-        if not odoo.tools.config['logfile']:
-            self._logger.info('Screenshot disabled !')
-            return None
+    def take_screenshot(self, prefix='sc_', suffix=None):
+        if suffix is None:
+            suffix = '_%s' % self.test_class
         ss_id = self._websocket_send('Page.captureScreenshot')
         self._logger.info('Asked for screenshot (id: %s)', ss_id)
         res = self._websocket_wait_id(ss_id)
         base_png = res.get('result', {}).get('data')
         decoded = base64.decodebytes(bytes(base_png.encode('utf-8')))
-        outfile = self._get_shotname(prefix, 'png')
-        with open(outfile, 'wb') as f:
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+        fname = '%s%s%s.png' % (prefix, timestamp,suffix)
+        full_path = os.path.join(self.screenshots_dir, fname)
+        with open(full_path, 'wb') as f:
             f.write(decoded)
-        self._logger.info('Screenshot in: %s', outfile)
+        self._logger.log(25, 'Screenshot in: %s', full_path)
 
     def _save_screencast(self, prefix='failed'):
         # could be encododed with something like that
         #  ffmpeg -framerate 3 -i frame_%05d.png  output.mp4
-        if not odoo.tools.config['logfile']:
-            self._logger.info('Screencast disabled !')
+        if not self.screencast_frames:
+            self._logger.debug('No screencast frames to encode')
             return None
-        sdir = tempfile.mkdtemp(suffix='_chrome_odoo_screencast')
-        nb = 0
-        for frame in self.screencast_frames:
-            outfile = os.path.join(sdir, 'frame_%05d.png' % nb)
-            with open(outfile, 'wb') as f:
-                f.write(base64.decodebytes(bytes(frame.get('data').encode('utf-8'))))
-                nb += 1
-        framerate = int(nb / (self.screencast_frames[nb-1].get('metadata').get('timestamp') - self.screencast_frames[0].get('metadata').get('timestamp')))
-        outfile = self._get_shotname(prefix, 'mp4')
-        r = subprocess.run(['ffmpeg', '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % sdir, outfile])
-        shutil.rmtree(sdir)
-        if r.returncode == 0:
-            self._logger.info('Screencast in: %s', outfile)
+
+        for f in self.screencast_frames:
+            with open(f['file_path'], 'rb') as b64_file:
+                frame = base64.decodebytes(b64_file.read())
+            os.unlink(f['file_path'])
+            f['file_path'] = f['file_path'].replace('.b64', '.png')
+            with open(f['file_path'], 'wb') as png_file:
+                png_file.write(frame)
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+        fname = '%s_screencast_%s.mp4' % (prefix, timestamp)
+        outfile = os.path.join(self.screencasts_dir, fname)
+        
+        try:
+            ffmpeg_path = find_in_path('ffmpeg')
+        except IOError:
+            ffmpeg_path = None
+
+        if ffmpeg_path:
+            framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
+            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_dir, outfile])
+            self._logger.log(25, 'Screencast in: %s', outfile)
+        else:
+            outfile = outfile.strip('.mp4')
+            shutil.move(self.screencasts_frames_dir, outfile)
+            self._logger.log(25, 'Screencast frames in: %s', outfile)
 
     def start_screencast(self):
-        self._websocket_send('Page.startScreencast', {'params': {'everyNthFrame': 5, 'maxWidth': 683, 'maxHeight': 384}})
+        if self.screencasts_dir:
+            os.makedirs(self.screencasts_dir, exist_ok=True)
+            self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
+            os.makedirs(self.screencasts_frames_dir, exist_ok=True)
+        self._websocket_send('Page.startScreencast', params={'maxWidth': 1024, 'maxHeight': 576})
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
@@ -715,7 +761,7 @@ class ChromeBrowser():
             if tdiff >= 2 and not has_exceeded:
                 has_exceeded = True
 
-        self.take_screenshot(prefix='failed_ready')
+        self.take_screenshot(prefix='sc_failed_ready_')
         self._logger.info('Ready code last try result: %s', last_bad_res or res)
         return False
 
@@ -724,6 +770,7 @@ class ChromeBrowser():
         code_id = self._websocket_send('Runtime.evaluate', params={'expression': code})
         start_time = time.time()
         logged_error = False
+        nb_frame = 0
         while time.time() - start_time < timeout:
             try:
                 res = json.loads(self.ws.recv())
@@ -732,34 +779,41 @@ class ChromeBrowser():
             if res and res.get('id', -1) == code_id:
                 self._logger.info('Code start result: %s', res)
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
-                    self._logger.error("Running code returned an error")
-                    return False
+                    raise ChromeBrowserException("Running code returned an error: %s" % res)
             elif res and res.get('method') == 'Runtime.exceptionThrown':
                 exception_details = res.get('params', {}).get('exceptionDetails', {})
-                self._logger.error(exception_details)
                 self.take_screenshot()
                 self._save_screencast()
-                return False
-            elif res and res.get('method') in 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
+                raise ChromeBrowserException(exception_details)
+            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
                 logs = res.get('params', {}).get('args')
                 log_type = res.get('params', {}).get('type')
                 content = " ".join([str(log.get('value', '')) for log in logs])
                 if log_type == 'error':
-                    self._logger.error(content)
                     self.take_screenshot()
                     self._save_screencast()
-                    return False
+                    raise ChromeBrowserException(content)
                 else:
                     self._logger.info('console log: %s', content)
                     if 'test successful' in content:
                         return True
             elif res and res.get('method') == 'Page.screencastFrame':
-                self.screencast_frames.append(res.get('params'))
+                session_id = res.get('params').get('sessionId')
+                self._websocket_send('Page.screencastFrameAck', params={'sessionId': int(session_id)})
+                outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % nb_frame)
+                frame = res.get('params')
+                with open(outfile, 'w') as f:
+                    f.write(frame.get('data'))
+                    nb_frame += 1
+                    self.screencast_frames.append({
+                        'file_path': outfile,
+                        'timestamp': frame.get('metadata').get('timestamp')
+                    })
             elif res:
                 self._logger.debug('chrome devtools protocol event: %s', res)
-        self._logger.error('Script timeout exceeded : %s', (time.time() - start_time))
         self.take_screenshot()
-        return False
+        raise ChromeBrowserException('Script timeout exceeded : %s' % (time.time() - start_time))
+
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
@@ -773,6 +827,8 @@ class ChromeBrowser():
 
     def clear(self):
         self._websocket_send('Page.stopScreencast')
+        if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
+            shutil.rmtree(self.screencasts_frames_dir)
         self.screencast_frames = []
         self._websocket_send('Page.stopLoading')
         self._logger.info('Deleting cookies and clearing local storage')
@@ -798,13 +854,13 @@ class HttpCase(TransactionCase):
         self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
         self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
         cls = type(self)
-        self._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+        cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
-    def start_browser(cls, logger):
+    def start_browser(cls):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser(logger, cls.browser_size)
+            cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.__name__)
 
     @classmethod
     def tearDownClass(cls):
@@ -828,11 +884,11 @@ class HttpCase(TransactionCase):
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
 
-    def url_open(self, url, data=None, timeout=10, headers=None):
+    def url_open(self, url, data=None, files=None, timeout=10, headers=None):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
-        if data:
-            return self.opener.post(url, data=data, timeout=timeout, headers=headers)
+        if data or files:
+            return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers)
         return self.opener.get(url, timeout=timeout, headers=headers)
 
     def _wait_remaining_requests(self):
@@ -901,7 +957,8 @@ class HttpCase(TransactionCase):
         # increase timeout if coverage is running
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
             timeout = timeout * 1.5
-        self.start_browser(self._logger)
+
+        self.start_browser()
 
         try:
             self.authenticate(login, login)
@@ -911,8 +968,8 @@ class HttpCase(TransactionCase):
             url = "%s%s" % (base_url, url_path or '/')
             self._logger.info('Open "%s" in browser', url)
 
-            if odoo.tools.config['logfile']:
-                self._logger.info('Starting screen cast')
+            if self.browser.screencasts_dir:
+                self._logger.info('Starting screencast')
                 self.browser.start_screencast()
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
@@ -920,11 +977,19 @@ class HttpCase(TransactionCase):
             # code = ""
             ready = ready or "document.readyState === 'complete'"
             self.assertTrue(self.browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
-            if code:
-                message = 'The test code "%s" failed' % code
-            else:
-                message = "Some js test failed"
-            self.assertTrue(self.browser._wait_code_ok(code, timeout), message)
+
+            error = False
+            try:
+                self.browser._wait_code_ok(code, timeout)
+            except ChromeBrowserException as chrome_browser_exception:
+                error = chrome_browser_exception
+            if error:  # dont keep initial traceback, keep that outside of except
+                if code:
+                    message = 'The test code "%s" failed' % code
+                else:
+                    message = "Some js test failed"
+                self.fail('%s\n%s' % (message, error))
+
         finally:
             # clear browser to make it stop sending requests, in case we call
             # the method several times in a test method
@@ -1541,6 +1606,12 @@ class O2MForm(Form):
         else:
             self._values.update(proxy._records[index])
 
+    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+        if vals is None:
+            vals = {**self._values, '•parent•': self._proxy._parent._values}
+
+        return super()._get_modifier(field, modifier, default=default, modmap=modmap, vals=vals)
+
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()
         # computed o2m may not have a relation_field(?)
@@ -1810,7 +1881,7 @@ def _get_node(view, f, *arg):
 
 def tagged(*tags):
     """
-    A decorator to tag TestCase objects
+    A decorator to tag BaseCase objects
     Tags are stored in a set that can be accessed from a 'test_tags' attribute
     A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag
     By default, all Test classes from odoo.tests.common have a test_tags
@@ -1820,33 +1891,75 @@ def tagged(*tags):
     def tags_decorator(obj):
         include = {t for t in tags if not t.startswith('-')}
         exclude = {t[1:] for t in tags if t.startswith('-')}
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
+        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude # todo remove getattr in master since we want to limmit tagged to BaseCase and always have +standard tag
         return obj
     return tags_decorator
 
 
 class TagsSelector(object):
     """ Test selector based on tags. """
+    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:/(\w*))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
-        clean_tags = {t.strip() for t in spec.split(',') if t.strip() != ''}
-        self.exclude = {t[1:] for t in clean_tags if t.startswith('-')}
-        self.include = {t.replace('+', '') for t in clean_tags if not t.startswith('-')}
+        filter_specs = {t.strip() for t in spec.split(',') if t.strip()}
+        self.exclude = set()
+        self.include = set()
 
-    def check(self, arg):
+        for filter_spec in filter_specs:
+            match = self.filter_spec_re.match(filter_spec)
+            if not match:
+                _logger.error('Invalid tag %s', filter_spec)
+                continue
+
+            sign, tag, module, klass, method = match.groups()
+            is_include = sign != '-'
+
+            if not tag and is_include:
+                # including /module:class.method implicitly requires 'standard'
+                tag = 'standard'
+            elif not tag or tag == '*':
+                # '*' indicates all tests (instead of 'standard' tests only)
+                tag = None
+            test_filter = (tag, module, klass, method)
+
+            if is_include:
+                self.include.add(test_filter)
+            else:
+                self.exclude.add(test_filter)
+
+        if self.exclude and not self.include:
+            self.include.add(('standard', None, None, None))
+
+    def check(self, test):
         """ Return whether ``arg`` matches the specification: it must have at
-            least one tag in ``self.include`` and none in ``self.exclude``.
+            least one tag in ``self.include`` and none in ``self.exclude`` for each tag category.
         """
-        # handle the case where the Test does not inherit from TransactionCase
-        tags = getattr(arg, 'test_tags', set())
-        inter_no_test = self.exclude.intersection(tags)
-        if inter_no_test:
-            _logger.debug("Test '%s' not selected because it is tagged with : %s (exclusions: %s)", arg, inter_no_test, self.exclude)
+        if not hasattr(test, 'test_tags'): # handle the case where the Test does not inherit from BaseCase and has no test_tags
+            _logger.debug("Skipping test '%s' because no test_tag found.", test)
             return False
-        inter_to_test = self.include.intersection(tags)
-        if not inter_to_test:
-            _logger.debug("Test '%s' not selected because it was not tagged with %s", arg, self.include)
+
+        test_module = getattr(test, 'test_module', None)
+        test_class = getattr(test, 'test_class', None)
+        test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility, 
+        test_method = getattr(test, '_testMethodName', None)
+
+        def _is_matching(test_filter):
+            (tag, module, klass, method) = test_filter
+            if tag and tag not in test_tags:
+                return False
+            elif module and module != test_module:
+                return False
+            elif klass and klass != test_class:
+                return False
+            elif method and test_method and method != test_method:
+                return False
+            return True
+
+        if any(_is_matching(test_filter) for test_filter in self.exclude):
             return False
-        _logger.debug("Test '%s' selected: tagged with %s, exclusions: %s, inclusions: %s", arg, tags, self.exclude, self.include)
-        return True
+
+        if any(_is_matching(test_filter) for test_filter in self.include):
+            return True
+
+        return False

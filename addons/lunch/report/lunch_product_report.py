@@ -51,7 +51,6 @@ class LunchProductReport(models.Model):
 
         return expression.OR([[('supplier_id.available_location_ids', 'in', value)], [('supplier_id.available_location_ids', '=', False)]])
 
-    @api.multi
     def write(self, values):
         user_id = self.env.user.id
         if 'is_favorite' in values:

@@ -12,9 +12,9 @@ class LunchOrder(models.Model):
     _display_name = 'product_id'
 
     name = fields.Char(related='product_id.name', string="Product Name", readonly=True)  # to remove
-    topping_ids_1 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Toppings 1', domain=[('topping_category', '=', 1)])
-    topping_ids_2 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Toppings 2', domain=[('topping_category', '=', 2)])
-    topping_ids_3 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Toppings 3', domain=[('topping_category', '=', 3)])
+    topping_ids_1 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 1', domain=[('topping_category', '=', 1)])
+    topping_ids_2 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 2', domain=[('topping_category', '=', 2)])
+    topping_ids_3 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 3', domain=[('topping_category', '=', 3)])
     product_id = fields.Many2one('lunch.product', string="Product", required=True)
     category_id = fields.Many2one('lunch.product.category', string='Product Category',
                                   related='product_id.category_id', readonly=True, store=True)
@@ -39,7 +39,7 @@ class LunchOrder(models.Model):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     quantity = fields.Float('Quantity', required=True, default=1)
 
-    display_toppings = fields.Text('Toppings', compute='_compute_display_toppings', store=True)
+    display_toppings = fields.Text('Extras', compute='_compute_display_toppings', store=True)
 
     def init(self):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""

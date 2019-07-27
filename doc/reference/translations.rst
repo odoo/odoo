@@ -37,7 +37,7 @@ translation tool like POEdit_ or by simply copying the template to a new file
 called :file:`{language}.po`. Translation files should be put in
 :file:`{yourmodule}/i18n/`, next to :file:`{yourmodule}.pot`, and will be
 automatically loaded by Odoo when the corresponding language is installed (via
-:menuselection:`Settings --> Translations --> Load a Translation`)
+:menuselection:`Settings --> Translations --> Languages`)
 
 .. note:: translations for all loaded languages are also installed or updated
           when installing or updating a module

@@ -107,7 +107,6 @@ class AccountFiscalPosition(models.Model):
             vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
         return super(AccountFiscalPosition, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         zip_from = vals.get('zip_from')
         zip_to = vals.get('zip_to')
@@ -224,7 +223,6 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
-    @api.multi
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.company.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
@@ -247,7 +245,6 @@ class ResPartner(models.Model):
             elif type == 'payable':
                 partner.debit = -val
 
-    @api.multi
     def _asset_difference_search(self, account_type, operator, operand):
         if operator not in ('<', '=', '>', '>=', '<='):
             return []
@@ -262,9 +259,9 @@ class ResPartner(models.Model):
             LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
             RIGHT JOIN account_account acc ON aml.account_id = acc.id
             WHERE acc.internal_type = %s
-              AND NOT acc.deprecated
+              AND NOT acc.deprecated AND acc.company_id = %s
             GROUP BY partner.id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, sign, operand))
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.user.company_id.id, sign, operand))
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -278,11 +275,9 @@ class ResPartner(models.Model):
     def _debit_search(self, operator, operand):
         return self._asset_difference_search('payable', operator, operand)
 
-    @api.multi
     def _invoice_total(self):
         account_invoice_report = self.env['account.invoice.report']
         if not self.ids:
-            self.total_invoiced = 0.0
             return True
 
         user_currency_id = self.env.company.currency_id.id
@@ -318,13 +313,11 @@ class ResPartner(models.Model):
         for partner, child_ids in all_partners_and_children.items():
             partner.total_invoiced = sum(price['total'] for price in price_totals if price['partner_id'] in child_ids)
 
-    @api.multi
     def _compute_journal_item_count(self):
         AccountMoveLine = self.env['account.move.line']
         for partner in self:
             partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
 
-    @api.multi
     def _compute_contracts_count(self):
         AccountAnalyticAccount = self.env['account.analytic.account']
         for partner in self:
@@ -381,7 +374,6 @@ class ResPartner(models.Model):
                 """, (partner.id,))
             partner.has_unreconciled_entries = self.env.cr.rowcount == 1
 
-    @api.multi
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
         return self.sudo().with_context(company_id=self.env.company.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
@@ -439,7 +431,6 @@ class ResPartner(models.Model):
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
 
-    @api.multi
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
         mapped_data = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])
@@ -456,7 +447,6 @@ class ResPartner(models.Model):
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
 
-    @api.multi
     def action_view_partner_invoices(self):
         self.ensure_one()
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
@@ -477,6 +467,7 @@ class ResPartner(models.Model):
         return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
 
     def can_edit_vat(self):
+        ''' Can't edit `vat` if there is (non draft) issued invoices. '''
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat

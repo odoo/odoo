@@ -25,7 +25,6 @@ class BaseLanguageImport(models.TransientModel):
                                help="If you enable this option, existing translations (including custom ones) "
                                     "will be overwritten and replaced by those in this file")
 
-    @api.multi
     def import_lang(self):
         this = self[0]
         this = this.with_context(overwrite=this.overwrite)

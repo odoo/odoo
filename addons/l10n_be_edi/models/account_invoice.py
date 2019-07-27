@@ -25,7 +25,7 @@ class AccountMove(models.Model):
         return namespaces
 
     @api.model
-    def _detect_ubl_2_1(self, tree):
+    def _detect_ubl_2_1(self, tree, file_name):
         # Quick check the tree looks like an UBL 2.1 file.
         flag = tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice'
         error = None

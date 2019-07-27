@@ -45,7 +45,7 @@ class AccountMove(models.Model):
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
         new_lines = self.env['account.move.line']
-        for line in po_lines:
+        for line in po_lines.filtered(lambda l: not l.display_type):
             new_line = new_lines.new(line._prepare_account_move_line(self))
             new_line.account_id = new_line._get_computed_account()
             new_line._onchange_price_subtotal()
@@ -83,7 +83,6 @@ class AccountMove(models.Model):
             move.message_post(body=message)
         return moves
 
-    @api.multi
     def write(self, vals):
         # OVERRIDE
         old_purchases = [move.mapped('line_ids.purchase_line_id.order_id') for move in self]
@@ -106,7 +105,6 @@ class AccountMoveLine(models.Model):
 
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True)
 
-    @api.multi
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)

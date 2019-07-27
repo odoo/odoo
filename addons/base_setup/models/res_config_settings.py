@@ -44,21 +44,21 @@ class ResConfigSettings(models.TransientModel):
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
     external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
+    company_count = fields.Integer('Number of Companies', readonly=True, compute="_compute_company_count")
+    language_count = fields.Integer('Number of Languages', compute="_compute_language_count")
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
-        res.update(
-            company_share_partner=not self.env.ref('base.res_partner_rule').active,
-        )
+        res.update({
+            'company_share_partner': not self.env.ref('base.res_partner_rule').active,
+        })
         return res
 
-    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         self.env.ref('base.res_partner_rule').write({'active': not self.company_share_partner})
 
-    @api.multi
     def open_company(self):
         return {
             'type': 'ir.actions.act_window',
@@ -68,7 +68,6 @@ class ResConfigSettings(models.TransientModel):
             'res_id': self.env.company.id,
             'target': 'current',
         }
-    @api.multi
     def open_default_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
         action['res_id'] = self.env.ref('base.default_user').id
@@ -85,13 +84,11 @@ class ResConfigSettings(models.TransientModel):
             'res_id': template_id.id,
         }
 
-    @api.multi
     def edit_external_header(self):
         if not self.external_report_layout_id:
             return False
         return self._prepare_report_view_action(self.external_report_layout_id.key)
 
-    @api.multi
     def change_report_template(self):
         self.ensure_one()
         template = self.env.ref('base.view_company_document_template_form')
@@ -105,3 +102,19 @@ class ResConfigSettings(models.TransientModel):
             'view_id': template.id,
             'target': 'new',
         }
+
+    # NOTE: These fields depend on the context, if we want them to be computed
+    # we have to make them depend on a field. This is because we are on a TransientModel.
+    @api.depends('company_id')
+    def _compute_company_count(self):
+        company_count = self.env['res.company'].sudo().search_count([])
+        for record in self:
+            record.company_count = company_count
+
+    @api.depends('company_id')
+    def _compute_language_count(self):
+        language_count = self.env['res.lang'].search_count([
+            ('active', '=', True),
+        ])
+        for record in self:
+            record.language_count = language_count

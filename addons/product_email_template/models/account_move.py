@@ -17,7 +17,6 @@ class AccountMove(models.Model):
                     invoice.message_post_with_template(line.product_id.email_template_id.id, composition_mode='comment', custom_layout='mail.mail_notification_light')
         return True
 
-    @api.multi
     def post(self):
         # OVERRIDE
         res = super(AccountMove, self).post()

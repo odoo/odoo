@@ -10,7 +10,6 @@ class Website(models.Model):
 
     channel_id = fields.Many2one('im_livechat.channel', string='Website Live Chat Channel')
 
-    @api.multi
     def get_livechat_channel_info(self):
         """ Get the livechat info dict (button text, channel name, ...) for the livechat channel of
             the current website.

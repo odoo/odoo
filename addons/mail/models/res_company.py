@@ -10,7 +10,6 @@ class Company(models.Model):
 
     catchall = fields.Char(string="Catchall Email", compute="_compute_catchall")
 
-    @api.multi
     def _compute_catchall(self):
         ConfigParameter = self.env['ir.config_parameter'].sudo()
         alias = ConfigParameter.get_param('mail.catchall.alias')

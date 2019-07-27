@@ -162,7 +162,6 @@ class IrMailServer(models.Model):
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
 
-    @api.multi
     def test_smtp_connection(self):
         for server in self:
             smtp = False
@@ -279,6 +278,11 @@ class IrMailServer(models.Model):
             smtp_user = pycompat.to_text(ustr(smtp_user))
             smtp_password = pycompat.to_text(ustr(smtp_password))
             connection.login(smtp_user, smtp_password)
+
+        # Some methods of SMTP don't check whether EHLO/HELO was sent.
+        # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
+        connection.ehlo_or_helo_if_needed()
+
         return connection
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,

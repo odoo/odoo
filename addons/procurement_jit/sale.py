@@ -7,7 +7,6 @@ from odoo import api, models
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    @api.multi
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         res = super(SaleOrderLine, self)._action_launch_stock_rule(previous_product_uom_qty=previous_product_uom_qty)
         orders = list(set(x.order_id for x in self))

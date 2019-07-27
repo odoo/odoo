@@ -11,7 +11,6 @@ class WebsiteResPartner(models.Model):
     website_description = fields.Html('Website Partner Full Description', strip_style=True)
     website_short_description = fields.Text('Website Partner Short Description')
 
-    @api.multi
     def _compute_website_url(self):
         super(WebsiteResPartner, self)._compute_website_url()
         for partner in self:

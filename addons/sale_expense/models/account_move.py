@@ -7,7 +7,6 @@ from odoo import api, models
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    @api.multi
     def _sale_determine_order(self):
         """ For move lines created from expense, we override the normal behavior.
             Note: if no SO but an AA is given on the expense, we will determine anyway the SO from the AA, using the same

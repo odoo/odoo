@@ -20,7 +20,12 @@ _logger = logging.getLogger(__name__)
 class HolidaysType(models.Model):
     _name = "hr.leave.type"
     _description = "Time Off Type"
-    _order = "sequence, id"
+
+    @api.model
+    def _model_sorting_key(self, leave_type):
+        remaining = leave_type.virtual_remaining_leaves > 0
+        taken = leave_type.leaves_taken > 0
+        return leave_type.allocation_type == 'fixed' and remaining, leave_type.allocation_type == 'fixed_allocation' and remaining, taken
 
     name = fields.Char('Time Off Type', required=True, translate=True)
     code = fields.Char('Code')
@@ -63,9 +68,9 @@ class HolidaysType(models.Model):
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    responsible_id = fields.Many2one('res.users', 'Responsible', domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)],
-                                     help="This user will be responsible for approving this type of times off"
-                                     "This is only used when validation is 'hr' or 'both'",)
+    responsible_id = fields.Many2one('res.users', 'Responsible',
+        help="This user will be responsible for approving this type of times off"
+        "This is only used when validation is 'hr' or 'both'",)
     validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'Time Off Officer'),
@@ -92,7 +97,6 @@ class HolidaysType(models.Model):
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
 
-    @api.multi
     @api.constrains('validity_start', 'validity_stop')
     def _check_validity_dates(self):
         for leave_type in self:
@@ -100,7 +104,6 @@ class HolidaysType(models.Model):
                leave_type.validity_start > leave_type.validity_stop:
                 raise ValidationError(_("End of validity period should be greater than start of validity period"))
 
-    @api.multi
     @api.depends('validity_start', 'validity_stop')
     def _compute_valid(self):
         dt = self._context.get('default_date_from') or fields.Date.context_today(self)
@@ -151,7 +154,6 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave)]
 
-    @api.multi
     def get_days(self, employee_id):
         # need to use `dict` constructor to create a dict per id
         result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0, virtual_remaining_leaves=0)) for id in self.ids)
@@ -201,16 +203,14 @@ class HolidaysType(models.Model):
 
     @api.model
     def get_days_all_request(self):
-        employee_id = self._get_contextual_employee_id()
-
-        leaves_type = self.search([])
-        leaves = leaves_type.get_days(employee_id)
-        leave_id_name = dict(zip(leaves_type.ids, leaves_type.mapped('name')))
-        leave_id_allocation_type = dict(zip(leaves_type.ids, leaves_type.mapped('allocation_type')))
-        result = [(leave_id_name[leave_id], {key: round(value, 2) for (key, value) in leave.items()}, leave_id_allocation_type[leave_id]) for leave_id, leave in leaves.items() if leave['virtual_remaining_leaves'] or leave['max_leaves']]
-
-        sort_key = lambda l: (l[2] == 'fixed', l[2] == 'fixed_allocation', l[1]['virtual_remaining_leaves'])
-        return sorted(result, key=sort_key, reverse=True)
+        leave_types = sorted(self.search([]).filtered(lambda x: x.virtual_remaining_leaves or x.max_leaves), key=self._model_sorting_key, reverse=True)
+        return [(lt.name, {
+                    'remaining_leaves': lt.remaining_leaves,
+                    'virtual_remaining_leaves': lt.virtual_remaining_leaves,
+                    'max_leaves': lt.max_leaves,
+                    'leaves_taken': lt.leaves_taken,
+                }, lt.allocation_type)
+            for lt in leave_types]
 
     def _get_contextual_employee_id(self):
         if 'employee_id' in self._context:
@@ -221,7 +221,6 @@ class HolidaysType(models.Model):
             employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id), ('company_id', '=', self.env.company.id)], limit=1).id
         return employee_id
 
-    @api.multi
     def _compute_leaves(self):
         data_days = {}
         employee_id = self._get_contextual_employee_id()
@@ -236,7 +235,6 @@ class HolidaysType(models.Model):
             holiday_status.remaining_leaves = result.get('remaining_leaves', 0)
             holiday_status.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
 
-    @api.multi
     def _compute_group_days_allocation(self):
         domain = [
             ('holiday_status_id', 'in', self.ids),
@@ -257,7 +255,6 @@ class HolidaysType(models.Model):
         for allocation in self:
             allocation.group_days_allocation = grouped_dict.get(allocation.id, 0)
 
-    @api.multi
     def _compute_group_days_leave(self):
         grouped_res = self.env['hr.leave'].read_group(
             [('holiday_status_id', 'in', self.ids), ('holiday_type', '=', 'employee'), ('state', '=', 'validate'),
@@ -269,7 +266,6 @@ class HolidaysType(models.Model):
         for allocation in self:
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
-    @api.multi
     def name_get(self):
         if not self._context.get('employee_id'):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
@@ -305,11 +301,10 @@ class HolidaysType(models.Model):
         leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
         if not count and not order and employee_id:
             leaves = self.browse(leave_ids)
-            sort_key = lambda l: (l.allocation_type in ['fixed', 'fixed_allocation'], l.virtual_remaining_leaves)
-            return leaves.sorted(key=sort_key, reverse=True).ids
+
+            return leaves.sorted(key=self._model_sorting_key, reverse=True).ids
         return leave_ids
 
-    @api.multi
     def action_see_days_allocated(self):
         self.ensure_one()
         action = self.env.ref('hr_holidays.hr_leave_allocation_action_all').read()[0]
@@ -329,7 +324,6 @@ class HolidaysType(models.Model):
         }
         return action
 
-    @api.multi
     def action_see_group_leaves(self):
         self.ensure_one()
         action = self.env.ref('hr_holidays.hr_leave_action_all').read()[0]

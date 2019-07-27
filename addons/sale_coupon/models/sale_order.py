@@ -30,14 +30,12 @@ class SaleOrder(models.Model):
             lines = self.order_line.filtered(lambda l: l.product_id == self.code_promo_program_id.discount_line_product_id)
         return lines
 
-    @api.multi
     def recompute_coupon_lines(self):
         for order in self:
             order._remove_invalid_reward_lines()
             order._create_new_no_code_promo_reward_lines()
             order._update_existing_reward_lines()
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         order = super(SaleOrder, self).copy(default)
@@ -209,9 +207,9 @@ class SaleOrder(models.Model):
     def _get_reward_line_values(self, program):
         self.ensure_one()
         if program.reward_type == 'discount':
-            return self._get_reward_values_discount(program)
+            return self._get_reward_values_discount(program.with_context(lang=self.partner_id.lang))
         elif program.reward_type == 'product':
-            return [self._get_reward_values_product(program)]
+            return [self._get_reward_values_product(program.with_context(lang=self.partner_id.lang))]
 
     def _create_reward_line(self, program):
         self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
@@ -416,7 +414,6 @@ class SaleOrderLine(models.Model):
                 related_program_lines |= line.order_id.order_line.filtered(lambda l: l.product_id.id == related_program.discount_line_product_id.id) - line
         return super(SaleOrderLine, self | related_program_lines).unlink()
 
-    @api.multi
     def _compute_tax_id(self):
         reward_lines = self.filtered('is_reward_line')
         super(SaleOrderLine, self - reward_lines)._compute_tax_id()

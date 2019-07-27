@@ -101,10 +101,10 @@
             <field name="name">res.country.state.tree</field>
             <field name="model">res.country.state</field>
             <field name="arch" type="xml">
-                <tree string="State">
+                <tree string="State" editable="bottom">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="country_id"/>
+                    <field name="country_id" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>

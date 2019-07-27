@@ -18,7 +18,6 @@ class BaseModel(models.AbstractModel):
         templates = E.templates(activity_box)
         return E.activity(templates, string=self._description)
 
-    @api.multi
     def _notify_email_headers(self):
         """
             Generate the email headers based on record

@@ -79,7 +79,6 @@ class PurchaseOrder(models.Model):
             order_lines.append((0, 0, order_line_values))
         self.order_line = order_lines
 
-    @api.multi
     def button_confirm(self):
         res = super(PurchaseOrder, self).button_confirm()
         for po in self:
@@ -100,7 +99,6 @@ class PurchaseOrder(models.Model):
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
         return purchase
 
-    @api.multi
     def write(self, vals):
         result = super(PurchaseOrder, self).write(vals)
         if vals.get('requisition_id'):

@@ -97,7 +97,6 @@ class AccountFrFec(models.TransientModel):
             'siren': company.vat[4:13] if not is_dom_tom else '',
         }
 
-    @api.multi
     def generate_fec(self):
         self.ensure_one()
         # We choose to implement the flat file instead of the XML
@@ -307,7 +306,7 @@ class AccountFrFec(models.TransientModel):
             TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
             CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
                 WHEN aml.name SIMILAR TO '[\t|\s|\n]*' THEN '/'
-                ELSE replace(replace(replace(aml.name, '|', '/'), '\t', ''), '\n', '') END AS EcritureLib,
+                ELSE replace(replace(replace(replace(aml.name, '|', '/'), '\t', ''), '\n', ''), '\r', '') END AS EcritureLib,
             replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
             replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,

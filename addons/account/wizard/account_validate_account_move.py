@@ -6,7 +6,6 @@ class ValidateAccountMove(models.TransientModel):
     _name = "validate.account.move"
     _description = "Validate Account Move"
 
-    @api.multi
     def validate_move(self):
         context = dict(self._context or {})
         moves = self.env['account.move'].browse(context.get('active_ids'))

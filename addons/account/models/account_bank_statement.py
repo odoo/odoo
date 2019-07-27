@@ -20,13 +20,14 @@ class AccountCashboxLine(models.Model):
     @api.depends('coin_value', 'number')
     def _sub_total(self):
         """ Calculates Sub total"""
-        for line in self:
-            line.subtotal = line.coin_value * line.number
+        for cashbox_line in self:
+            cashbox_line.subtotal = cashbox_line.coin_value * cashbox_line.number
 
     coin_value = fields.Float(string='Coin/Bill Value', required=True, digits=0)
-    number = fields.Integer(string='Number of Coins/Bills', help='Opening Unit Numbers')
+    number = fields.Integer(string='#Coins/Bills', help='Opening Unit Numbers')
     subtotal = fields.Float(compute='_sub_total', string='Subtotal', digits=0, readonly=True)
     cashbox_id = fields.Many2one('account.bank.statement.cashbox', string="Cashbox")
+    currency_id = fields.Many2one('res.currency', related='cashbox_id.currency_id')
 
 
 class AccountBankStmtCashWizard(models.Model):
@@ -37,21 +38,59 @@ class AccountBankStmtCashWizard(models.Model):
     _description = 'Bank Statement Cashbox'
 
     cashbox_lines_ids = fields.One2many('account.cashbox.line', 'cashbox_id', string='Cashbox Lines')
+    start_bank_stmt_ids = fields.One2many('account.bank.statement', 'cashbox_start_id')
+    end_bank_stmt_ids = fields.One2many('account.bank.statement', 'cashbox_end_id')
+    total = fields.Float(compute='_compute_total')
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency')
 
-    @api.multi
-    def validate(self):
-        bnk_stmt_id = self.env.context.get('bank_statement_id', False) or self.env.context.get('active_id', False)
-        bnk_stmt = self.env['account.bank.statement'].browse(bnk_stmt_id)
-        total = 0.0
-        for lines in self.cashbox_lines_ids:
-            total += lines.subtotal
-        if self.env.context.get('balance', False) == 'start':
-            #starting balance
-            bnk_stmt.write({'balance_start': total, 'cashbox_start_id': self.id})
-        else:
-            #closing balance
-            bnk_stmt.write({'balance_end_real': total, 'cashbox_end_id': self.id})
-        return {'type': 'ir.actions.act_window_close'}
+    @api.depends('start_bank_stmt_ids', 'end_bank_stmt_ids')
+    def _compute_currency(self):
+        for cashbox in self:
+            if cashbox.end_bank_stmt_ids:
+                cashbox.currency_id = cashbox.end_bank_stmt_ids[0].currency_id
+            if cashbox.start_bank_stmt_ids:
+                cashbox.currency_id = cashbox.start_bank_stmt_ids[0].currency_id
+
+    @api.depends('cashbox_lines_ids', 'cashbox_lines_ids.coin_value', 'cashbox_lines_ids.number')
+    def _compute_total(self):
+        for cashbox in self:
+            cashbox.total = sum([line.subtotal for line in cashbox.cashbox_lines_ids])
+
+    @api.model
+    def default_get(self, fields):
+        vals = super(AccountBankStmtCashWizard, self).default_get(fields)
+        balance = self.env.context.get('balance')
+        statement_id = self.env.context.get('statement_id')
+        if 'start_bank_stmt_ids' in fields and not vals.get('start_bank_stmt_ids') and statement_id and balance == 'start':
+            vals['start_bank_stmt_ids'] = [(6, 0, [statement_id])]
+        if 'end_bank_stmt_ids' in fields and not vals.get('end_bank_stmt_ids') and statement_id and balance == 'close':
+            vals['end_bank_stmt_ids'] = [(6, 0, [statement_id])]
+
+        return vals
+
+    def name_get(self):
+        result = []
+        for cashbox in self:
+            result.append((cashbox.id, _("%s")%(cashbox.total)))
+        return result
+
+    @api.model_create_multi
+    def create(self, vals):
+        cashboxes = super(AccountBankStmtCashWizard, self).create(vals)
+        cashboxes._validate_cashbox()
+        return cashboxes
+
+    def write(self, vals):
+        res = super(AccountBankStmtCashWizard, self).write(vals)
+        self._validate_cashbox()
+        return res
+
+    def _validate_cashbox(self):
+        for cashbox in self:
+            if self.start_bank_stmt_ids:
+                self.start_bank_stmt_ids.write({'balance_start': self.total})
+            if self.end_bank_stmt_ids:
+                self.end_bank_stmt_ids.write({'balance_end_real': self.total})
 
 
 class AccountBankStmtCloseCheck(models.TransientModel):
@@ -61,7 +100,6 @@ class AccountBankStmtCloseCheck(models.TransientModel):
     _name = 'account.bank.statement.closebalance'
     _description = 'Bank Statement Closing Balance'
 
-    @api.multi
     def validate(self):
         bnk_stmt_id = self.env.context.get('active_id', False)
         if bnk_stmt_id:
@@ -78,7 +116,6 @@ class AccountBankStatement(models.Model):
             statement.balance_end = statement.balance_start + statement.total_entry_encoding
             statement.difference = statement.balance_end_real - statement.balance_end
 
-    @api.multi
     def _is_difference_zero(self):
         for bank_stmt in self:
             bank_stmt.is_difference_zero = float_is_zero(bank_stmt.difference, precision_digits=bank_stmt.currency_id.decimal_places)
@@ -112,14 +149,12 @@ class AccountBankStatement(models.Model):
                 return journals[0]
         return self.env['account.journal']
 
-    @api.multi
     def _get_opening_balance(self, journal_id):
         last_bnk_stmt = self.search([('journal_id', '=', journal_id)], limit=1)
         if last_bnk_stmt:
             return last_bnk_stmt.balance_end
         return 0
 
-    @api.multi
     def _set_opening_balance(self, journal_id):
         self.balance_start = self._get_opening_balance(journal_id)
 
@@ -169,7 +204,6 @@ class AccountBankStatement(models.Model):
     def onchange_journal_id(self):
         self._set_opening_balance(self.journal_id.id)
 
-    @api.multi
     def _balance_check(self):
         for stmt in self:
             if not stmt.currency_id.is_zero(stmt.difference):
@@ -182,7 +216,7 @@ class AccountBankStatement(models.Model):
                         account = stmt.journal_id.profit_account_id
                         name = _('Profit')
                     if not account:
-                        raise UserError(_('There is no account defined on the journal %s for %s involved in a cash difference.') % (stmt.journal_id.name, name))
+                        raise UserError(_('Please go on the %s journal and define a %s Account. This account will be used to record cash difference.') % (stmt.journal_id.name, name))
 
                     values = {
                         'statement_id': stmt.id,
@@ -198,7 +232,6 @@ class AccountBankStatement(models.Model):
                         % (balance_end_real, balance_end))
         return True
 
-    @api.multi
     def unlink(self):
         for statement in self:
             if statement.state != 'open':
@@ -207,23 +240,31 @@ class AccountBankStatement(models.Model):
             statement.line_ids.unlink()
         return super(AccountBankStatement, self).unlink()
 
-    @api.multi
     def open_cashbox_id(self):
+        self.ensure_one()
         context = dict(self.env.context or {})
-        if context.get('cashbox_id'):
-            context['active_id'] = self.id
-            return {
+        if context.get('balance'):
+            context['statement_id'] = self.id
+            if context['balance'] == 'start':
+                cashbox_id = self.cashbox_start_id.id
+            elif context['balance'] == 'close':
+                cashbox_id = self.cashbox_end_id.id
+            else:
+                cashbox_id = False
+
+            action = {
                 'name': _('Cash Control'),
                 'view_mode': 'form',
                 'res_model': 'account.bank.statement.cashbox',
-                'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
+                'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox_footer').id,
                 'type': 'ir.actions.act_window',
-                'res_id': self.env.context.get('cashbox_id'),
+                'res_id': cashbox_id,
                 'context': context,
                 'target': 'new'
             }
 
-    @api.multi
+            return action
+
     def check_confirm_bank(self):
         if self.journal_type == 'cash' and not self.currency_id.is_zero(self.difference):
             action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_view_account_bnk_stmt_check')
@@ -232,7 +273,6 @@ class AccountBankStatement(models.Model):
                 return action
         return self.button_confirm_bank()
 
-    @api.multi
     def button_confirm_bank(self):
         self._balance_check()
         statements = self.filtered(lambda r: r.state == 'open')
@@ -255,7 +295,6 @@ class AccountBankStatement(models.Model):
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
 
-    @api.multi
     def button_journal_entries(self):
         context = dict(self._context or {})
         context['journal_id'] = self.journal_id.id
@@ -269,7 +308,6 @@ class AccountBankStatement(models.Model):
             'context': context,
         }
 
-    @api.multi
     def button_open(self):
         """ Changes statement state to Running."""
         for statement in self:
@@ -282,8 +320,7 @@ class AccountBankStatement(models.Model):
                     st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
                 statement.name = st_number
             statement.state = 'open'
-            
-    @api.multi
+
     def action_bank_reconcile_bank_statements(self):
         self.ensure_one()
         bank_stmt_lines = self.mapped('line_ids')
@@ -365,14 +402,12 @@ class AccountBankStatementLine(models.Model):
         line.amount = line.amount
         return line
 
-    @api.multi
     def unlink(self):
         for line in self:
             if line.journal_entry_ids.ids:
                 raise UserError(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
         return super(AccountBankStatementLine, self).unlink()
 
-    @api.multi
     def button_cancel_reconciliation(self):
         aml_to_unbind = self.env['account.move.line']
         aml_to_cancel = self.env['account.move.line']
@@ -500,7 +535,6 @@ class AccountBankStatementLine(models.Model):
             aml_dict['move_id'] = move.id
         return aml_dict
 
-    @api.multi
     def fast_counterpart_creation(self):
         """This function is called when confirming a bank statement and will allow to automatically process lines without
         going in the bank reconciliation widget. By setting an account_id on bank statement lines, it will create a journal
@@ -766,7 +800,6 @@ class AccountBankStatementLine(models.Model):
         counterpart_moves._check_balanced()
         return counterpart_moves
 
-    @api.multi
     def _prepare_move_line_for_currency(self, aml_dict, date):
         self.ensure_one()
         company_currency = self.journal_id.company_id.currency_id

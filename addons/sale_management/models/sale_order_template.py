@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class SaleOrderTemplate(models.Model):
@@ -28,8 +28,23 @@ class SaleOrderTemplate(models.Model):
         domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
+    company_id = fields.Many2one('res.company', string='Company')
 
-    @api.multi
+    @api.constrains('company_id', 'sale_order_template_line_ids', 'sale_order_template_option_ids')
+    def _check_company_id(self):
+        for template in self:
+            companies = template.mapped('sale_order_template_line_ids.product_id.company_id') | template.mapped('sale_order_template_option_ids.product_id.company_id')
+            if len(companies) > 1:
+                raise ValidationError(_("Your template cannot contain products from multiple companies."))
+            elif companies and companies != template.company_id:
+                raise ValidationError((_("Your template contains products from company %s whereas your template belongs to company %s. \n Please change the company of your template or remove the products from other companies.") % (companies.mapped('display_name'), template.company_id.display_name)))
+
+    @api.onchange('sale_order_template_line_ids', 'sale_order_template_option_ids')
+    def _onchange_template_line_ids(self):
+        companies = self.mapped('sale_order_template_option_ids.product_id.company_id') | self.mapped('sale_order_template_line_ids.product_id.company_id')
+        if companies and self.company_id not in companies:
+            self.company_id = companies[0]
+
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):
             template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
@@ -53,7 +68,8 @@ class SaleOrderTemplateLine(models.Model):
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     discount = fields.Float('Discount (%)', digits='Discount', default=0.0)
     product_uom_qty = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
 
     display_type = fields.Selection([
         ('line_section', "Section"),
@@ -69,8 +85,6 @@ class SaleOrderTemplateLine(models.Model):
             self.name = name
             self.price_unit = self.product_id.lst_price
             self.product_uom_id = self.product_id.uom_id.id
-            domain = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-            return {'domain': domain}
 
     @api.onchange('product_uom_id')
     def _onchange_product_uom(self):
@@ -83,7 +97,6 @@ class SaleOrderTemplateLine(models.Model):
             values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False)
         return super(SaleOrderTemplateLine, self).create(values)
 
-    @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")
@@ -110,7 +123,8 @@ class SaleOrderTemplateOption(models.Model):
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     discount = fields.Float('Discount (%)', digits='Discount')
-    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
+    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     quantity = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
 
     @api.onchange('product_id')

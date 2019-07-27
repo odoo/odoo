@@ -271,6 +271,19 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('boolean field has no title', async function (assert) {
+        assert.expect(1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="bar"/></tree>',
+        });
+        assert.equal(list.$('tbody tr:first td:eq(1)').attr('title'), "");
+        list.destroy();
+    });
+
     QUnit.test('record-depending invisible lines are correctly aligned', async function (assert) {
         assert.expect(4);
 
@@ -2051,6 +2064,42 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_group_header button');
 
         await testUtils.dom.click(list.$('.o_group_header:eq(0) button'));
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with a button in inner groupbys', async function (assert) {
+        assert.expect(5);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="foo"/>' +
+                '<groupby name="currency_id">' +
+                    '<button string="Button 1" type="object" name="button_method"/>' +
+                '</groupby>' +
+            '</tree>',
+            groupBy: ['bar', 'currency_id'],
+        });
+
+        assert.containsN(list, '.o_group_header', 2,
+            "there should be 2 group headers");
+        assert.containsNone(list, '.o_group_header button',
+            "there should be no button in the header");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+
+        assert.containsN(list, 'tbody:eq(1) .o_group_header', 2,
+            "there should be 2 inner groups header");
+        assert.containsNone(list, 'tbody:eq(1) .o_group_header button',
+            "there should be no button in the header");
+
+        await testUtils.dom.click(list.$('tbody:eq(1) .o_group_header:eq(0)'));
+
+        assert.containsNone(list, '.o_group_header button',
+            "there should be no button in the header");
 
         list.destroy();
     });
@@ -6504,6 +6553,37 @@ QUnit.module('Views', {
 
         assert.ok(list.$('th:contains(Reference Field)').is(':visible'),
             "should have a visible reference field");
+
+        list.destroy();
+    });
+
+    QUnit.test('always display field help as toolip of header cells', async function (assert) {
+        assert.expect(6);
+
+        this.data.foo.fields.foo.help = "This is Foo field";
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree>
+                    <field name="foo"/>
+                    <field name="bar" help="This is Bar field"/>
+                </tree>`,
+        });
+
+        var $fooHeader = list.$('th[data-name=foo]');
+        $fooHeader.tooltip('show', true);
+        $fooHeader.trigger($.Event('mouseenter'));
+        assert.containsOnce(document.body, '.oe_tooltip_string');
+        assert.strictEqual($('.oe_tooltip_string').text().trim(), 'Foo');
+        assert.strictEqual($('.oe_tooltip_help').text().trim(), 'This is Foo field');
+
+        var $barHeader = list.$('th[data-name=bar]');
+        $barHeader.tooltip('show', true);
+        $barHeader.trigger($.Event('mouseenter'));
+        assert.containsOnce(document.body, '.oe_tooltip_string');
+        assert.strictEqual($('.oe_tooltip_string').text().trim(), 'Bar');
+        assert.strictEqual($('.oe_tooltip_help').text().trim(), 'This is Bar field');
 
         list.destroy();
     });

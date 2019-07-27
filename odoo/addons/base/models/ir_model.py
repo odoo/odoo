@@ -196,7 +196,6 @@ class IrModel(models.Model):
                 _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
-    @api.multi
     def unlink(self):
         # Prevent manual deletion of module tables
         if not self._context.get(MODULE_UNINSTALL_FLAG):
@@ -220,7 +219,6 @@ class IrModel(models.Model):
 
         return res
 
-    @api.multi
     def write(self, vals):
         if '__last_update' in self._context:
             self = self.with_context({k: v for k, v in self._context.items() if k != '__last_update'})
@@ -558,7 +556,6 @@ class IrModelFields(models.Model):
         result = self.env.cr.fetchone()
         return result and result[0]
 
-    @api.multi
     def _drop_column(self):
         tables_to_drop = set()
 
@@ -593,7 +590,6 @@ class IrModelFields(models.Model):
 
         return True
 
-    @api.multi
     def _prepare_update(self):
         """ Check whether the fields in ``self`` may be modified or removed.
             This method prevents the modification/deletion of many2one fields
@@ -650,7 +646,6 @@ class IrModelFields(models.Model):
             # the registry has been modified, restore it
             self.pool.setup_models(self._cr)
 
-    @api.multi
     def unlink(self):
         if not self:
             return True
@@ -709,7 +704,6 @@ class IrModelFields(models.Model):
 
         return res
 
-    @api.multi
     def write(self, vals):
         # if set, *one* column can be renamed here
         column_rename = None
@@ -782,7 +776,6 @@ class IrModelFields(models.Model):
 
         return res
 
-    @api.multi
     def name_get(self):
         res = []
         for field in self:
@@ -851,8 +844,13 @@ class IrModelFields(models.Model):
                 keys = [key for key in new_vals if old_vals[key] != new_vals[key]]
                 self.pool.post_init(record.modified, keys)
                 old_vals.update(new_vals)
-            if module and not field.manual and (module == model._original_module or module in field._modules):
-                to_xmlids.append(name)
+            if module and (module == model._original_module or module in field._modules):
+                # remove this and only keep the else clause if version >= saas-12.4
+                if field.manual:
+                    self.pool.loaded_xmlids.add(
+                        '%s.field_%s__%s' % (module, model._name.replace('.', '_'), name))
+                else:
+                    to_xmlids.append(name)
 
         if to_insert:
             # insert missing fields
@@ -976,15 +974,14 @@ class IrModelConstraint(models.Model):
     type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
                        help="Type of the constraint: `f` for a foreign key, "
                             "`u` for other constraints.")
-    date_update = fields.Datetime(string='Update Date')
-    date_init = fields.Datetime(string='Initialization Date')
+    write_date = fields.Datetime(oldname='date_update')
+    create_date = fields.Datetime(oldname='date_init')
 
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)',
          'Constraints with the same name are unique per module.'),
     ]
 
-    @api.multi
     def _module_data_uninstall(self):
         """
         Delete PostgreSQL foreign keys and constraints tracked by this model.
@@ -1028,7 +1025,6 @@ class IrModelConstraint(models.Model):
 
         self.unlink()
 
-    @api.multi
     def copy(self, default=None):
         default = dict(default or {})
         default['name'] = self.name + '_copy'
@@ -1053,20 +1049,26 @@ class IrModelConstraint(models.Model):
         cons = cr.dictfetchone()
         if not cons:
             query = """ INSERT INTO ir_model_constraint
-                            (name, date_init, date_update, module, model, type, definition, message)
-                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
-                            (SELECT id FROM ir_module_module WHERE name=%s),
-                            (SELECT id FROM ir_model WHERE model=%s), %s, %s, %s)
+                            (name, create_date, write_date, create_uid, write_uid, module, model, type, definition, message)
+                        VALUES (%s,
+                                now() AT TIME ZONE 'UTC',
+                                now() AT TIME ZONE 'UTC',
+                                %s, %s,
+                                (SELECT id FROM ir_module_module WHERE name=%s),
+                                (SELECT id FROM ir_model WHERE model=%s),
+                                %s, %s, %s)
                         RETURNING id"""
-            cr.execute(query, (conname, module, model._name, type, definition, message))
+            cr.execute(query,
+                (conname, self.env.uid, self.env.uid, module, model._name, type, definition, message))
             return self.browse(cr.fetchone()[0])
 
         cons_id = cons.pop('id')
         if cons != dict(type=type, definition=definition, message=message):
             query = """ UPDATE ir_model_constraint
-                        SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s, message=%s
+                        SET write_date=now() AT TIME ZONE 'UTC',
+                            write_uid=%s, type=%s, definition=%s, message=%s
                         WHERE id=%s"""
-            cr.execute(query, (type, definition, message, cons_id))
+            cr.execute(query, (self.env.uid, type, definition, message, cons_id))
         return self.browse(cons_id)
 
     def _reflect_model(self, model):
@@ -1106,10 +1108,9 @@ class IrModelRelation(models.Model):
                        help="PostgreSQL table name implementing a many2many relation.")
     model = fields.Many2one('ir.model', required=True, index=True)
     module = fields.Many2one('ir.module.module', required=True, index=True)
-    date_update = fields.Datetime(string='Update Date')
-    date_init = fields.Datetime(string='Initialization Date')
+    write_date = fields.Datetime(oldname='date_update')
+    create_date = fields.Datetime(oldname='date_init')
 
-    @api.multi
     def _module_data_uninstall(self):
         """
         Delete PostgreSQL many2many relations tracked by this model.
@@ -1148,11 +1149,15 @@ class IrModelRelation(models.Model):
                     WHERE r.module=m.id AND r.name=%s AND m.name=%s """
         cr.execute(query, (table, module))
         if not cr.rowcount:
-            query = """ INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
-                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+            query = """ INSERT INTO ir_model_relation
+                            (name, create_date, write_date, create_uid, write_uid, module, model)
+                        VALUES (%s,
+                                now() AT TIME ZONE 'UTC',
+                                now() AT TIME ZONE 'UTC',
+                                %s, %s,
                                 (SELECT id FROM ir_module_module WHERE name=%s),
                                 (SELECT id FROM ir_model WHERE model=%s)) """
-            cr.execute(query, (table, module, model._name))
+            cr.execute(query, (table, self.env.uid, self.env.uid, module, model._name))
             self.invalidate_cache()
 
 
@@ -1317,12 +1322,10 @@ class IrModelAccess(models.Model):
         self.call_cache_clearing_methods()
         return super(IrModelAccess, self).create(vals_list)
 
-    @api.multi
     def write(self, values):
         self.call_cache_clearing_methods()
         return super(IrModelAccess, self).write(values)
 
-    @api.multi
     def unlink(self):
         self.call_cache_clearing_methods()
         return super(IrModelAccess, self).unlink()
@@ -1373,7 +1376,6 @@ class IrModelData(models.Model):
                            self._table, ['model', 'res_id'])
         return res
 
-    @api.multi
     def name_get(self):
         model_id_name = defaultdict(dict)       # {res_model: {res_id: name}}
         for xid in self:
@@ -1469,7 +1471,6 @@ class IrModelData(models.Model):
         """
         return self.xmlid_to_object("%s.%s" % (module, xml_id), raise_if_not_found=True)
 
-    @api.multi
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
         self.clear_caches()
@@ -1733,7 +1734,6 @@ class WizardModelMenu(models.TransientModel):
     menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')
     name = fields.Char(string='Menu Name', required=True)
 
-    @api.multi
     def menu_create(self):
         for menu in self:
             model = self.env['ir.model'].browse(self._context.get('model_id'))

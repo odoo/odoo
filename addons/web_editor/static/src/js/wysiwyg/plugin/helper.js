@@ -1071,14 +1071,18 @@ var HelperPlugin = AbstractPlugin.extend({
             If this error appears, the carret is moved to the beginning
             of the focused node.*/
             console.error(e);
-            console.error('Informations for debugging', [
+            var log = [
                 ['textContent', textContent],
                 ['trimmed', trimmed],
                 ['cleanContents', cleanContents],
-                ['start', range.sc.outerHTML || range.sc.textContent, range.so],
-                ['end', range.ec.outerHTML || range.ec.textContent, range.eo],
-                ['parent', range.sc.parentNode && range.sc.parentNode.outerHTML],
-            ]);
+            ];
+            if (range) {
+                log.push(
+                    ['start', range.sc.outerHTML || range.sc.textContent, range.so],
+                    ['end', range.ec.outerHTML || range.ec.textContent, range.eo],
+                    ['parent', range.sc.parentNode && range.sc.parentNode.outerHTML]);
+            }
+            console.error('Informations for debugging', log);
         }
         this.context.invoke('editor.saveRange');
     },
@@ -1885,6 +1889,9 @@ var HelperPlugin = AbstractPlugin.extend({
         // Create empty text node to have a range into the node
         if (range.sc.tagName && !dom.isVoid(range.sc) && !range.sc.childNodes[range.so]) {
             $(range.sc).append(invisible);
+            if (invisible.previousSibling && invisible.previousSibling.tagName === "BR") {
+                invisible.previousSibling.remove();
+            }
             range = this.context.invoke('editor.setRange', invisible, 0);
         }
 

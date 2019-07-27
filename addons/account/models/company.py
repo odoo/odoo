@@ -43,6 +43,8 @@ class ResCompany(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
+    default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
+    default_cash_difference_expense_account_id = fields.Many2one('account.account', string="Cash Difference Expense Account")
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -145,7 +147,6 @@ Best Regards,'''))
             'account_setup_coa_state',
         ])
 
-    @api.multi
     def _check_lock_dates(self, vals):
         '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need
         to perform some comparison between new/old values. This method forces the lock dates to be irreversible.
@@ -199,7 +200,6 @@ Best Regards,'''))
             if period_lock_date < fiscalyear_lock_date:
                 raise ValidationError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users.'))
 
-    @api.multi
     def compute_fiscalyear_dates(self, current_date):
         '''Computes the start and end dates of the fiscal year where the given 'date' belongs to.
 
@@ -266,7 +266,6 @@ Best Regards,'''))
             if account.code.startswith(old_code):
                 account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
 
-    @api.multi
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
             nb_draft_entries = self.env['account.move'].search([
@@ -276,7 +275,6 @@ Best Regards,'''))
             if nb_draft_entries:
                 raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
 
-    @api.multi
     def write(self, values):
         #restrict the closing of FY if there are still unposted entries
         self._validate_fiscalyear_lock(values)
@@ -538,13 +536,11 @@ Best Regards,'''))
         }
         return action
 
-    @api.multi
     def action_save_onboarding_invoice_layout(self):
         """ Set the onboarding step as done """
         if bool(self.logo) and self.logo != self._get_logo():
             self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
 
-    @api.multi
     def action_save_onboarding_sale_tax(self):
         """ Set the onboarding step as done """
         self.set_onboarding_step_done('account_onboarding_sale_tax_state')

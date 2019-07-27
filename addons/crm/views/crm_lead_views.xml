@@ -31,8 +31,9 @@
             <field name="name">crm.lead.tag.tree</field>
             <field name="model">crm.lead.tag</field>
             <field name="arch" type="xml">
-                <tree string="Lead Tags">
+                <tree string="Lead Tags" editable="bottom">
                     <field name="name"/>
+                    <field name="color" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -127,8 +128,8 @@
                             </div>
                             <field name="email_cc" groups="base.group_no_one"/>
                             <field name="function"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile"/>
+                            <field name="phone" widget="phone" options="{'enable_sms': True}"/>
+                            <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                         </group>
                         <group>
                             <field name="user_id" domain="[('share', '=', False)]"
@@ -602,10 +603,12 @@
                                        attrs="{'invisible': [('partner_address_phone', '==', False)]}"
                                        readonly="1"
                                        widget="phone"
-                                       string="Phone"/>
+                                       string="Phone"
+                                       options="{'enable_sms': True}"/>
                                 <field name="phone"
                                        attrs="{'invisible': [('partner_address_phone', '!=', False)]}"
-                                       widget="phone"/>
+                                       widget="phone"
+                                       options="{'enable_sms': True}"/>
                             </group>
 
                             <group>
@@ -651,7 +654,7 @@
                                         <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                     </div>
                                     <field name="function"/>
-                                    <field name="mobile"/>
+                                    <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                                 </group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />
@@ -852,6 +855,16 @@
                         </div>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="crm_lost_reason_view_tree" model="ir.ui.view">
+            <field name="name">crm.lost.reason.tree</field>
+            <field name="model">crm.lost.reason</field>
+            <field name="arch" type="xml">
+                <tree string="Channel" editable="bottom">
+                    <field name="name"/>
+                </tree>
             </field>
         </record>
 

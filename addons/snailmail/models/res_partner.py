@@ -9,7 +9,6 @@ from odoo.addons.snailmail.country_utils import SNAILMAIL_COUNTRIES
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    @api.multi
     def write(self, vals):
         letter_address_vals = {}
         address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
@@ -23,7 +22,6 @@ class ResPartner(models.Model):
 
         return super(ResPartner, self).write(vals)
 
-    @api.multi
     def _get_country_name(self):
         # when sending a letter, thus rendering the report with the snailmail_layout,
         # we need to override the country name to its english version following the

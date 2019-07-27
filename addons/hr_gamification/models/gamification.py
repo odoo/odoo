@@ -31,7 +31,6 @@ class GamificationBadge(models.Model):
                 ('employee_id', '!=', False)
             ])
 
-    @api.multi
     def get_granted_employees(self):
         employee_ids = self.mapped('owner_ids.employee_id').ids
         return {

@@ -71,6 +71,18 @@ var LunchKanbanController = KanbanController.extend({
         });
     },
     /**
+     * Override to add the location domain (coming from the lunchKanbanWidget)
+     * to the searchDomain (coming from the controlPanel).
+     *
+     * @override
+     * @private
+     */
+    _getSearchDomain: function () {
+        var searchDomain = this._super.apply(this, arguments) || [];
+        var locationId = this.model.getCurrentLocationId();
+        return searchDomain.concat([['is_available_at', 'in', [locationId]]]);
+    },
+    /**
      * Renders and appends the lunch banner widget.
      *
      * @private
@@ -108,18 +120,6 @@ var LunchKanbanController = KanbanController.extend({
     _update: function () {
         var def = this._fetchWidgetData().then(this._renderLunchKanbanWidget.bind(this));
         return Promise.all([def, this._super.apply(this, arguments)]);
-    },
-    /**
-     * Override to add the location domain (coming from the lunchKanbanWidget)
-     * to the searchDomain (coming from the controlPanel).
-     *
-     * @override
-     * @private
-     */
-    _updateSearchPanel: function () {
-        var locationId = this.model.getCurrentLocationId();
-        var domain = this.controlPanelDomain.concat([['is_available_at', 'in', [locationId]]]);
-        return this._searchPanel.update({searchDomain: domain});
     },
 
     //--------------------------------------------------------------------------
@@ -169,6 +169,7 @@ var LunchKanbanController = KanbanController.extend({
 
         this.do_action({
             res_model: 'lunch.order.temp',
+            name: 'Configure Your Order',
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',

@@ -11,6 +11,7 @@ import logging
 import optparse
 import os
 import sys
+import tempfile
 import odoo
 from .. import release, conf, loglevels
 from . import appdirs
@@ -160,8 +161,22 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="Comma separated list of tags to filter which tests to execute. Enable unit tests if set.")
+                         help="""Comma separated list of spec to filter which tests to execute. Enable unit tests if set.
+                         A filter spec has the format: [-][tag][/module][:class][.method]
+                         The '-' specifies if we want to include or exclude tests matching this spec.
+                         The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
+                         given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
+                         The module, class, and method will respectively match the module name, test class name and test method name.
+                         examples: :TestClass.test_func,/test_module,external
+                         """)
 
+        group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
+                         metavar='DIR',
+                         help="Screencasts will go in DIR/{db_name}/screencasts. '1' can be used to force the same dir as for screenshots.")
+        temp_tests_dir = os.path.join(tempfile.gettempdir(), 'odoo_tests')
+        group.add_option("--screenshots", dest="screenshots", action="store", my_default=temp_tests_dir,
+                         metavar='DIR',
+                         help="Screenshots will go in DIR/{db_name}/screenshots. Defaults to %s." % temp_tests_dir)
         parser.add_option_group(group)
 
         # Logging Group
@@ -406,7 +421,7 @@ class configmanager(object):
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'db_maxconn', 'import_partial', 'addons_path',
-                'syslog', 'without_demo',
+                'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
         ]

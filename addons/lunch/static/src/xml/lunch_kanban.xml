@@ -4,10 +4,10 @@
         <div class="o_lunch_widget row py-3 py-md-0">
             <div class="o_lunch_widget_info col-12 col-md-4 card border-0">
                 <div class="card-body row no-gutters align-items-center">
-                    <div class="col-3 col-md-6 col-lg-4">
+                    <div class="col-3 col-md-6 col-lg-3">
                         <img class="rounded-circle" t-attf-src="{{ widget.userimage }}"/>
                     </div>
-                    <div class="col-9 col-md-6 col-lg-8">
+                    <div class="col-9 col-md-6 col-lg-9">
                         <div class="pl-3">
                             <div class="o_lunch_user_field py-1"/>
                             <div class="o_lunch_location_field py-1"/>
@@ -87,7 +87,7 @@
             </div>
         </div>
         <t t-foreach="widget.alerts" t-as="alert">
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-warning" role="alert">
                 <t t-raw="alert.message"/> <!-- alert.message is coming from a fields.Html so it should be safe -->
             </div>
         </t>

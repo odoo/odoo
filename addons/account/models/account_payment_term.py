@@ -31,7 +31,6 @@ class AccountPaymentTerm(models.Model):
             if len(lines) > 1:
                 raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
 
-    @api.multi
     def compute(self, value, date_ref=False, currency=None):
         self.ensure_one()
         date_ref = date_ref or fields.Date.today()
@@ -68,7 +67,6 @@ class AccountPaymentTerm(models.Model):
             result.append((last_date, dist))
         return result
 
-    @api.multi
     def unlink(self):
         for terms in self:
             if self.env['account.move'].search([('payment_term_id', 'in', terms.ids)]):
@@ -93,7 +91,7 @@ class AccountPaymentTermLine(models.Model):
     days = fields.Integer(string='Number of Days', required=True, default=0)
     day_of_the_month = fields.Integer(string='Day of the month', help="Day of the month on which the invoice must come to its term. If zero or negative, this value will be ignored, and no specific day will be set. If greater than the last day of a month, this number will instead select the last day of this month.")
     option = fields.Selection([
-            ('day_after_invoice_date', "day(s) after the invoice date"),
+            ('day_after_invoice_date', "days after the invoice date"),
             ('day_following_month', "of the following month"),
             ('day_current_month', "of the current month"),
         ],

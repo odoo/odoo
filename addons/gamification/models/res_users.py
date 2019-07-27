@@ -11,7 +11,6 @@ class Users(models.Model):
     _inherit = 'res.users'
 
     karma = fields.Integer('Karma', default=0)
-    karma_position = fields.Integer('Karma position', compute="_compute_karma_position", store=False)
     badge_ids = fields.One2many('gamification.badge.user', 'user_id', string='Badges', copy=False)
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
     silver_badge = fields.Integer('Silver badges count', compute="_get_user_badge_level")
@@ -19,13 +18,6 @@ class Users(models.Model):
     rank_id = fields.Many2one('gamification.karma.rank', 'Rank', index=False)
     next_rank_id = fields.Many2one('gamification.karma.rank', 'Next Rank', index=False)
 
-    @api.depends('karma')
-    def _compute_karma_position(self):
-        _logger.warning("The field karma_position from res.users is deprecated. Don't use it anymore.")
-        for user in self:
-            user.karma_position = 0
-
-    @api.multi
     @api.depends('badge_ids')
     def _get_user_badge_level(self):
         """ Return total badge per level of users
@@ -55,14 +47,12 @@ class Users(models.Model):
         res._recompute_rank()
         return res
 
-    @api.multi
     def write(self, vals):
         result = super(Users, self).write(vals)
         if 'karma' in vals:
             self._recompute_rank()
         return result
 
-    @api.multi
     def add_karma(self, karma):
         for user in self:
             user.karma += karma
@@ -95,6 +85,14 @@ class Users(models.Model):
                         break
             if old_rank != user.rank_id:
                 user._rank_changed()
+
+    def _get_next_rank(self):
+        """ For fresh users with 0 karma that don't have a rank_id and next_rank_id yet
+        this method returns the first karma rank (by karma ascending). This acts as a
+        default value in related views.
+
+        TDE FIXME in post-12.4: make next_rank_id a non-stored computed field correctly computed """
+        return self.next_rank_id or (not self.rank_id and self.env['gamification.karma.rank'].search([], order="karma_min ASC", limit=1))
 
     def get_gamification_redirection_data(self):
         """

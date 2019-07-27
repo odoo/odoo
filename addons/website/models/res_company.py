@@ -7,17 +7,14 @@ from odoo import api, models
 class Company(models.Model):
     _inherit = "res.company"
 
-    @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):
         partner = self.sudo().partner_id
         return partner and partner.google_map_img(zoom, width, height) or None
 
-    @api.multi
     def google_map_link(self, zoom=8):
         partner = self.sudo().partner_id
         return partner and partner.google_map_link(zoom) or None
 
-    @api.multi
     def _get_public_user(self):
         self.ensure_one()
         # We need sudo to be able to see public users from others companies too
