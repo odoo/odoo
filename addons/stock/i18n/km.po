@@ -955,7 +955,7 @@ msgstr "ក្រុមហ៊ុន"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__compute_at_date
 msgid "Compute"
-msgstr ""
+msgstr "គណនា"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1117,7 +1117,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_tree_view
 msgid "Create Date"
-msgstr ""
+msgstr "បង្កើតកាលបរិច្ឆេទ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
@@ -1533,7 +1533,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Deliveries"
-msgstr ""
+msgstr "ការដឹកជញ្ជូន"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:734
@@ -1546,7 +1546,7 @@ msgstr "បញ្ជាទំនិញដឹកជញ្ជូន"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "កញ្ជាប់ដឹកជញ្ជូន"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -2384,7 +2384,7 @@ msgstr ""
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr ""
+msgstr "សារខ្លីៗ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -2394,7 +2394,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
 msgid "Internal Type"
-msgstr ""
+msgstr "ប្រភេទខាងក្នុង"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__ref
@@ -3780,7 +3780,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Packages"
-msgstr ""
+msgstr "កញ្ជាប់"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -4125,7 +4125,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "ផលតិផលត្រូវបានផ្លាស់ប្តូរ"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
@@ -4742,7 +4742,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "ត្រលប់ទៅការទទួលយក"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -4956,6 +4956,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"ការជ្រើសរើសជម្រើស \"ព្រមាន\" នឹងជូនដំណឹងដល់អ្នកប្រើជាមួយសារដែលជ្រើសរើស "
+"\"ទប់ស្កាត់សារ\" នឹងបោះចោលការលើកលែងជាមួយសារនិងទប់ស្កាត់លំហូរ។ "
+"សារត្រូវតែសរសេរនៅក្នុងកន្លែងបន្ទាប់។"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5279,7 +5282,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:443
 #, python-format
 msgid "Stock"
-msgstr ""
+msgstr "ស្តុក"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast
@@ -5325,7 +5328,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__move_id
 msgid "Stock Move"
-msgstr ""
+msgstr "ឃ្លំាងត្រូវបានផ្លាស់ប្តូរ"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -6348,7 +6351,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_tree
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Warehouse"
-msgstr ""
+msgstr "ឃ្លាំង"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -6822,6 +6825,14 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:712
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:70
+#, python-format
+msgid ""
+"You should not remove the 'lots and serial numbers' option while the following products are still tracked by lot or serial number:\n"
+" %s"
 msgstr ""
 
 #. module: stock

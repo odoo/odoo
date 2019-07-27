@@ -14,7 +14,7 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
+# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Alberto Carollo <baba75@gmail.com>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
@@ -28,6 +28,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5880,6 +5881,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
+"Il valore \"Operazione manuale\" crea un movimento dopo l'attuale. Con "
+"\"Automatico senza successivo\" l'ubicazione è sostituita nel movimento "
+"originale."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:824
@@ -7312,6 +7316,14 @@ msgstr "Devi prima impostare la quantità che metterai nella confezione. "
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "Devi fornire un numero di lotto/di serie per il prodotto %s. "
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:70
+#, python-format
+msgid ""
+"You should not remove the 'lots and serial numbers' option while the following products are still tracked by lot or serial number:\n"
+" %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:394

@@ -31,8 +31,9 @@
 # Liping Wang <lynn.config@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # John An <johnxan@163.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# F4NNIU <sparkamax@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
+"Last-Translator: F4NNIU <sparkamax@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -212,6 +213,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                产品不能被预留。点击 “检查可用” 按钮来尝试预留产品。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -4687,7 +4690,7 @@ msgstr "每个公司的参考必须是唯一！"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__origin
 msgid "Reference of the document"
-msgstr "单据的参照"
+msgstr "文档的参照"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_receipt_picking_move
@@ -5311,7 +5314,7 @@ msgstr "来源"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__origin
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__origin
 msgid "Source Document"
-msgstr "源单据"
+msgstr "源文档"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:95
@@ -6979,6 +6982,16 @@ msgstr "你需要预先设置包装内容数量。"
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "你需要为产品%s提供批次 / 序列号。"
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:70
+#, python-format
+msgid ""
+"You should not remove the 'lots and serial numbers' option while the following products are still tracked by lot or serial number:\n"
+" %s"
+msgstr ""
+"您不应删除“批次和序列号”选项，以下产品含批次或序列号：\n"
+" %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:394
