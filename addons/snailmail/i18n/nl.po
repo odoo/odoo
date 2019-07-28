@@ -55,6 +55,9 @@ msgid ""
 "account.</p><div class= \"text-right\"><a class=\"btn btn-link buy_credits\""
 " href=%s><i class= \"fa fa-arrow-right\"/> Buy credits</a></div>"
 msgstr ""
+"<p>De brief kon niet verzonden worden vanwege te weinig credits op uw IAP "
+"account.</p><div class= \"text-right\"><a class=\"btn btn-link buy_credits\""
+" href=%s><i class= \"fa fa-arrow-right\"/>Koop credits</a></div>"
 
 #. module: snailmail
 #. openerp-web
@@ -65,6 +68,9 @@ msgid ""
 "\"text-right\"><a class=\"btn btn-link buy_credits\" href=%s><i class= \"fa "
 "fa-arrow-right\"/> Buy credits</a></div>"
 msgstr ""
+"<p>U heeft credits nodig op uw IAP account om een brief te versturen.</p> "
+"<div class= \"text-right\"><a class=\"btn btn-link buy_credits\" href=%s><i "
+"class= \"fa fa-arrow-right\"/>Koop credits</a></div>"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -126,7 +132,7 @@ msgstr "Bestandsnaam bijlage"
 #: code:addons/snailmail/static/src/xml/thread.xml:27
 #, python-format
 msgid "Awaiting Dispatch"
-msgstr ""
+msgstr "Wachten op verzending"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
@@ -347,6 +353,9 @@ msgid ""
 "notification and review them one by one by clicking on the red paper-plane "
 "next to each message."
 msgstr ""
+"Indien u ze opnieuw wilt verzenden klikt u nu op annuleren, vervolgens op de"
+" notificatie en controleert u ze één per één door te klikken op het rode "
+"vliegtuig naast elk bericht."
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
@@ -452,6 +461,9 @@ msgid ""
 "                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
+"Onze dienst kan uw brief niet lezen vanwege het formaat.<br/>\n"
+"Gelieve het formaat van het sjabloon te wijzigen of uw instellingen te updaten\n"
+"om automatisch een blanco voorblad toe te voegen aan alle brieven."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -674,6 +686,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Wanneer een brief wordt aangemaakt, is de status 'Concept'.\n"
+"Als de brief correct is verzonden, gaat de status in 'Verzonden',\n"
+"Als dat niet het geval is, krijgt het de status 'Fout' en wordt het foutbericht weergegeven in het veld 'Foutbericht'."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:265

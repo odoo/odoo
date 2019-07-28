@@ -538,7 +538,7 @@ msgstr "Actieve toewijzingen"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Active Time Off"
-msgstr ""
+msgstr "Actieve afwezigheid"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1191,7 +1191,7 @@ msgstr "Formulier inhoud ontbreekt, dit rapport kan niet afgedrukt worden."
 #. module: hr_holidays
 #: selection:hr.leave.type,allocation_type:0
 msgid "Free Allocation Request"
-msgstr ""
+msgstr "Gratis toewijzingsverzoek"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__date_from
@@ -1670,7 +1670,7 @@ msgstr "Aantal dagen"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leaves_count
 msgid "Number of Time Off"
-msgstr ""
+msgstr "Aantal verloven"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days_display
@@ -1678,6 +1678,8 @@ msgid ""
 "Number of days of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
+"Aantal dagen van de verlofaanvraag gebaseerd op uw werkschema. Gebruikt voor"
+" de interface."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
@@ -1685,6 +1687,8 @@ msgid ""
 "Number of days of the time off request. Used in the calculation. To manually"
 " correct the duration, use this field."
 msgstr ""
+"Aantal dagen van de verlofaanvraag. Gebruikt in de berekening. Om manueel "
+"deze duur aan te passen gebruikt u dit veld"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -1698,6 +1702,8 @@ msgid ""
 "Number of hours of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
+"Aantal uren van de verlofaanvraag volgens uw werkschema. Gebruikt voor "
+"interface."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -1738,6 +1744,8 @@ msgid ""
 "Once a time off is validated, Odoo will create a corresponding meeting of "
 "this type in the calendar."
 msgstr ""
+"Wanneer een verlof is goedgekeurd, zal Odoo een overeenkomende afspraak in "
+"de agenda zetten."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -1746,6 +1754,8 @@ msgstr ""
 msgid ""
 "Once a time off request is posted, your manager is notified for validation."
 msgstr ""
+"Eenmaal een verlofaanvraag geplaatst is zal uw manager een melding krijgen "
+"voor goedkeuring."
 
 #. module: hr_holidays
 #. openerp-web
@@ -1761,6 +1771,8 @@ msgid ""
 "Only a Team Leader, Time Off Officer or Manager can approve or refuse time "
 "off requests."
 msgstr ""
+"Alleen een teamleader, verlof manager of manager kan een verlofaanvraag "
+"goedkeuren of afwijzen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:773
@@ -1995,7 +2007,7 @@ msgstr "Terugzetten naar concept"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Resource afwezigheid detail"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -2376,7 +2388,7 @@ msgstr "Eerder opgenomen verlof"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Time off of Your Team Members"
-msgstr ""
+msgstr "Verloven voor uw teamleden"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2396,7 +2408,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:437
 #, python-format
 msgid "Time off request must be confirmed in order to approve it."
-msgstr ""
+msgstr "Verlofaanvraag moet bevestigd worden om ze goed te keuren."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:731
@@ -2404,6 +2416,7 @@ msgstr ""
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
+"Verlofaanvraag moet bevestigd of goedgekeurd worden om het te weigeren."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:667
@@ -2421,6 +2434,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
 msgstr ""
+"Verlofaanvraag fase moet \"Afgekeurd\" of \"Goed te keuren\" zijn om terug "
+"naar concept te zetten."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:397
@@ -2637,7 +2652,7 @@ msgstr "Lila"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid "Virtual Remaining Time Off"
-msgstr ""
+msgstr "Virtueel resterende verlof"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -2715,7 +2730,7 @@ msgstr "U kan %s alleen nemen tussen %s en %s"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:362
 #, python-format
 msgid "You cannot delete a time off which is in %s state."
-msgstr ""
+msgstr "U kan geen afwezigheid verwijderen die zich in de %s fase bevind."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
@@ -2729,6 +2744,8 @@ msgstr "U moet tenminste één afdeling selecteren."
 msgid ""
 "You must be either %s's manager or Time Off Manager to approve this time off"
 msgstr ""
+"U moet of %s zijn/haar manager zijn of verlof manager zijn om deze verlof "
+"goed te keuren"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:514
@@ -2736,6 +2753,8 @@ msgstr ""
 msgid ""
 "You must be either %s's manager or time off manager to approve this time off"
 msgstr ""
+"U moet of %s zijn/haar manager zijn of verlof manager om deze verlof goed te"
+" keuren"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban

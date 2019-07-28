@@ -105,6 +105,32 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"                    <table style=\"width:600px;margin:5px auto;\">\n"
+"                        <tbody>\n"
+"                            <tr><td>\n"
+"                                <!-- We gebruiken het logo van het bedrijf dat de enquete heeft aangemaakt (om meerdere bedrijven af te handelen) -->\n"
+"                                <a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                                    Certificering: ${object.survey_id.display_name}\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"                        <tbody>\n"
+"                            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                                <p>Beste <span>${object.partner_id.name or 'participant'}</span></p>\n"
+"                                <p>\n"
+"                                    Hier is, in bijlage, uw certificaat voor\n"
+"                                        <strong>${object.survey_id.display_name}</strong>\n"
+"                                </p>\n"
+"                                <p>Proficiat met het behalen van de certificering!</p>\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -139,6 +165,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        % if object.survey_id.certificate:\n"
+"            U bent uitgenodigd om deel te nemen aan een nieuwe certificering.\n"
+"        % else:\n"
+"            We doen een enquête en uw reactie zou gewaardeerd worden.\n"
+"        % endif\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${('%s?answer_token=%s' % (object.survey_id.public_url, object.token)) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                % if object.survey_id.certificate:\n"
+"                    Start certificering\n"
+"                % else:\n"
+"                    Start Survey\n"
+"                % endif\n"
+"            </a>\n"
+"        </div>\n"
+"        % if object.deadline:\n"
+"            Gelieve de enquête te beantwoorden voor ${format_date(object.deadline)}.<br/><br/>\n"
+"        % endif\n"
+"        Bedankt voor uw deelname.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -570,6 +620,8 @@ msgid ""
 "Automated email sent to the user when he succeeds the certification, "
 "containing his certification document."
 msgstr ""
+"Geautomatiseerde e-mails verzonden naar de gebruiker wanneer hij de "
+"certificering behaald, inclusief het certificaat."
 
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
@@ -604,6 +656,9 @@ msgid ""
 "may define their own categories when they use survey like jobs recruitment "
 "or employee appraisal surveys."
 msgstr ""
+"De categorie wordt gebruikt in welke context de enquête gebruikt wordt. "
+"Verschillende apps kunnen hun eigen categorieën definiëren wanneer ze "
+"enquêtes gebruiker zoals werving of evaluaties."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certificate
@@ -841,6 +896,8 @@ msgid ""
 "Customers will receive a new token and be able to completely retake the "
 "survey."
 msgstr ""
+"Klanten ontvangen een nieuw token en kunnen de enquête volledig opnieuw "
+"doen."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1143,7 +1200,7 @@ msgstr "Hoeveel versies van de hoekbureau hebben we?"
 #: model:survey.question,question:survey.vendor_certification_page_2_question_1
 #: model:survey.question,title:survey.vendor_certification_page_2_question_1
 msgid "How much do we sell our Cable Management Box?"
-msgstr ""
+msgstr "Voor hoeveel verkopen we onze kabelbeheer box?"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row5
@@ -1233,6 +1290,8 @@ msgid ""
 "If randomized is selected, add the number of random questions next to the "
 "section."
 msgstr ""
+"Indien willekeurig is aangevinkt voegt u het aantal willekeurige vragen toe "
+"aan de volgende sectie."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -2522,6 +2581,8 @@ msgid ""
 "These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for "
 "dropdown-based simple and multiple choice questions."
 msgstr ""
+"De opties verwijzen naar  col-xx-[12|6|4|3|2] classes in Bootstrap voor "
+"dropdown gebaseerde vragen en multiple choice vragen."
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:181
@@ -2625,6 +2686,9 @@ msgid ""
 "This survey does not allow external people to participate. You should create"
 " user accounts or update survey access mode accordingly."
 msgstr ""
+"Deze enquête staat geen externe mensen toe om deel te nemen. U moet een "
+"gebruikersaccount aanmaken of de toegangsmogelijkheden van de enquête "
+"veranderen."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void

@@ -33,9 +33,9 @@
 # Jan Meyer, 2019
 # Mathias Markl <mathias.markl@mukit.at>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
-# Leon Grill <leg@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -284,7 +284,7 @@ msgstr "<i class=\"fa fa-calendar\"/> Enddatum :"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -297,6 +297,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -309,6 +311,8 @@ msgid ""
 "<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
 "satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -325,6 +329,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Dokumente sind den Aufgaben Ihres Projekts beigefügt.</p><p>\n"
+"                        Senden Sie Nachrichten oder protokollieren Sie interne Notizen mit Anhängen,\n"
+"                        um Dokumente mit Ihrem Projekt zu verknüpfen.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:150
@@ -356,7 +365,7 @@ msgstr "<small class=\"text-right\">Status:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -770,6 +779,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Kommunizieren Sie mit Kunden zu den Aufgaben über das E-Mail-Gateway. Fügen "
+"Sie der Aufgabe Logodesigns hinzu, so dass der Informationsfluss von den "
+"Designern zu den Mitarbeitern, die das T-Shirt drucken, erfolgt. "
+"Organisieren Sie Prioritäten zwischen den Aufträgen %s über das Symbol."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -786,6 +799,9 @@ msgid ""
 "Computed using sum of hours planned of all subtasks created from main task. "
 "Usually these hours are less or equal to the Planned Hours (of main task)."
 msgstr ""
+"Berechnet aus der Summe der geplanten Stunden aller Teilaufgaben, die aus "
+"der Hauptaufgabe erstellt wurden. In der Regel sind diese Stunden kleiner "
+"oder gleich den geplanten Stunden (der Hauptaufgabe)."
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -969,6 +985,10 @@ msgid ""
 "feedback is accepted %s and which feedback is moved to the \"Refused\" "
 "column."
 msgstr ""
+"Kunden schlagen Rückmeldungen per E-Mail vor; Odoo erstellt Aufgaben "
+"automatisch, und Sie können direkt über die Aufgabe kommunizieren. Ihre "
+"Vorgesetzten entscheiden, welches Feedback akzeptiert wird %s und welches "
+"Feedback in die Spalte \"Abgelehnt\" verschoben wird."
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -1013,6 +1033,11 @@ msgid ""
 "- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Definiert die Sichtbarkeit der Aufgaben des Projekts:\n"
+"- Sichtbar für eingeladene Mitarbeiter: Die Mitarbeiter dürfen nur die folgenden Projekte und Aufgaben sehen.\n"
+"- Für die Mitarbeiter sichtbar: Die Mitarbeiter können alle Projekte und Aufgaben einsehen.\n"
+"- Sichtbar für Portalbenutzer und Mitarbeiter: Mitarbeiter können alles sehen. Portalbenutzer können Projekte und Aufgaben sehen,\n"
+"   die von ihnen oder von jemandem aus ihrem Unternehmen verfolgt werden."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1129,6 +1154,8 @@ msgid ""
 "Edit project's stages and set an email template on the stages on which you "
 "want to activate the rating."
 msgstr ""
+"Bearbeiten Sie die Projektphasen und legen Sie eine E-Mail-Vorlage für die "
+"Stufen fest, auf denen Sie die Bewertung aktivieren möchten."
 
 #. module: project
 #. openerp-web
@@ -1184,6 +1211,9 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized."
 msgstr ""
+"Jeder kann Ideen vorschlagen, und der Editor markiert die besten als %s. "
+"Fügen Sie alle Dokumente oder Links direkt an die Aufgabe an, um alle "
+"Informationen über eine Recherche zentralisiert zu haben."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1219,6 +1249,11 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"Füllen Sie Ihren Posteingang einfach mit dem E-Mail-Gateway. Überprüfen Sie "
+"regelmäßig Ihren Posteingang und planen Sie Aufgaben, indem Sie sie in "
+"andere Spalten verschieben. Jeden Tag überprüfen Sie die Spalte \"Diese "
+"Woche\", um wichtige Aufgaben \"Heute\" zu verschieben. Jeden Montag "
+"besuchen Sie die Spalte \"Dieser Monat\"."
 
 #. module: project
 #. openerp-web
@@ -1333,6 +1368,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea"
 msgstr ""
+"Behandeln Sie Ihre Ideensammlung innerhalb der Aufgaben Ihres neuen Projekts"
+" und diskutieren Sie sie im Gespräch mit den Aufgaben. Verwenden Sie das %s "
+"und %s, um zu signalisieren, was der aktuelle Status Ihrer Idee ist."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1364,6 +1402,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Wie erhalte ich Kundenfeedback?\n"
+"- Bewertung beim Stufenwechsel: Eine E-Mail wird gesendet, wenn eine Aufgabe in einer anderen Stufe gezogen wird.\n"
+"- Regelmäßige Bewertung: E-Mails werden regelmäßig versendet.\n"
+"\n"
+"Vergessen Sie nicht, die Mailvorlagen auf den Stufen einzurichten, für die Sie die Rückmeldungen des Kunden erhalten möchten."
 
 #. module: project
 #: code:addons/project/models/project.py:792
@@ -1541,6 +1584,9 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"Es ist die geplante Zeit, um die Aufgabe zu erfüllen. Wenn dieses Dokument "
+"Teilaufgaben hat, bedeutet dies die Zeit, die benötigt wird, um diese "
+"Aufgaben und ihre Unteraufgaben zu erfüllen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -1561,7 +1607,7 @@ msgstr "Kanban-Status"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Kanban Statuslabel"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
@@ -1571,12 +1617,12 @@ msgstr "Erläuterung zu gültigem Kanban "
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "Kpi Projektaufgabe Offener Wert"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "Bezeichnung, die für die Aufgaben des Projekts verwendet wird."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1653,7 +1699,7 @@ msgstr "Neueste Bewertung: Zufrieden"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Legend priority"
-msgstr ""
+msgstr "Legendenpriorität"
 
 #. module: project
 #. openerp-web
@@ -1667,7 +1713,7 @@ msgstr "Los geht's: erstellen Sie Ihr erstes Projekt."
 #: code:addons/project/static/src/js/tour.js:55
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Lassen Sie uns Ihre erste Aufgabe erstellen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1695,7 +1741,7 @@ msgstr "Protokollieren Sie die Zeit für Aufgaben"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:76
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "Logo-Design"
 
 #. module: project
 #. openerp-web
@@ -1729,6 +1775,10 @@ msgid ""
 "acquired project, assign them and use the %s and %s to define if the project"
 " is ready for the next step."
 msgstr ""
+"Verwalten Sie den Lebenszyklus Ihres Projekts mit Hilfe der Kanban-Ansicht. "
+"Fügen Sie neu erworbene Projekte hinzu, weisen Sie sie zu und verwenden Sie "
+"die %s und %s, um zu definieren, ob das Projekt für den nächsten Schritt "
+"bereit ist."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -1835,6 +1885,8 @@ msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
 msgstr ""
+"Aus eingehenden E-Mails können neue Aufgaben generiert werden. Sie müssen "
+"nur E-Mail-Aliase für Ihre Projekte festlegen. <br>"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:41
@@ -1964,6 +2016,8 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
 "                    You can track progress, discuss on tasks, attach documents, etc."
 msgstr ""
+"Das Projektmanagement von Odoo ermöglicht es Ihnen, die Pipeline Ihrer Aufgaben effizient zu verwalten.<br>\n"
+"                    Sie können den Fortschritt verfolgen, über Aufgaben diskutieren, Dokumente anhängen, etc."
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -2155,6 +2209,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task."
 msgstr ""
+"Priorisieren Sie Aufgaben, indem Sie das %s-Symbol verwenden. %s Verwenden "
+"Sie die %s-Taste, um Ihren Kollegen zu signalisieren, dass eine Aufgabe für "
+"die nächste Stufe bereit ist. %s Verwenden Sie die %s, um ein Problem oder "
+"einen Diskussionsbedarf für eine Aufgabe zu signalisieren."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2227,6 +2285,8 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"Projekt, in dem Teilaufgaben des aktuellen Projekts erstellt werden. Es kann"
+" das aktuelle Projekt selbst sein."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2335,7 +2395,7 @@ msgstr "Bewertung Anzahl"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "Bewertung öffentlich sichtbar"
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -2472,7 +2532,7 @@ msgstr "Recherchieren"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:62
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Ressourcenzuweisung"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
@@ -2490,6 +2550,8 @@ msgstr "trauriges Gesicht"
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
 msgstr ""
+"Planen Sie Ihre Teams projektübergreifend und schätzen Sie die Termine "
+"genauer ein."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:114
@@ -2554,7 +2616,7 @@ msgstr "Titelbild setzen"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "E-Mail-Aliase festlegen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2700,7 +2762,7 @@ msgstr "Unteraufgaben"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "Teilaufgaben"
 
 #. module: project
 #. openerp-web
@@ -2734,7 +2796,7 @@ msgstr "Aufgabe"
 #: code:addons/project/models/project.py:599
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr ""
+msgstr "Aufgabe %s kann nicht mehrere Teilaufgabenebenen haben."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2750,7 +2812,7 @@ msgstr "Aufgabe wurde blockiert"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "Anzahl der Aufgaben"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -2923,6 +2985,10 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Das Projekt kann nicht mit dem/den Empfänger(n) geteilt werden, da die "
+"Privatsphäre des Projekts zu stark eingeschränkt ist. Stellen Sie die "
+"Privatsphäre auf \"Sichtbar für folgende Kunden\", um sie für den/die "
+"Empfänger zugänglich zu machen."
 
 #. module: project
 #: code:addons/project/models/project.py:559
@@ -2932,6 +2998,10 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Die Aufgabe kann nicht mit dem/den Empfänger(n) geteilt werden, da die "
+"Privatsphäre des Projekts zu stark eingeschränkt ist. Stellen Sie die "
+"Privatsphäre des Projekts auf \"Sichtbar für folgende Kunden\", um es für "
+"den/die Empfänger zugänglich zu machen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -3007,6 +3077,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
+"Dieser Schritt ist abgeschlossen. Klicken Sie hier, um zu blockieren oder in"
+" Bearbeitung zu setzen."
 
 #. module: project
 #. openerp-web
@@ -3014,6 +3086,7 @@ msgstr ""
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
 msgstr ""
+"Dies wird ein neues Projekt erstellen und uns in dessen Phasen weiterleiten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3055,6 +3128,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"Um Dinge zu erledigen, verwenden Sie Aktivitäten und Status für Aufgaben.<br>\n"
+"                    Chatten Sie in Echtzeit oder per E-Mail, um effizient zusammenzuarbeiten."
 
 #. module: project
 #. openerp-web
@@ -3115,12 +3190,12 @@ msgstr "Hochladen und einstellen"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "Bewertung im Projekt verwenden"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr ""
+msgstr "Teilaufgaben verwenden"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -3159,24 +3234,24 @@ msgstr "Benutzer E-Mail"
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by employees"
-msgstr ""
+msgstr "Sichtbar für die Mitarbeiter"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by invited employees"
-msgstr ""
+msgstr "Sichtbar für eingeladene Mitarbeiter"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by portal users and employees"
-msgstr ""
+msgstr "Sichtbar für Portalbenutzer und Mitarbeiter"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:37
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr ""
+msgstr "Warten auf die nächste Stufe: nutze %s und %s. "
 
 #. module: project
 #. openerp-web
@@ -3205,7 +3280,7 @@ msgstr "Website-Nachrichten"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:71
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "Neugestaltung der Website"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
@@ -3221,7 +3296,7 @@ msgstr "Wöchentlich"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "Ob dieses Projekt auf Ihrem Dashboard angezeigt werden soll"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
