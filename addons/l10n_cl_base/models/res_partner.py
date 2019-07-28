@@ -96,7 +96,6 @@ class ResPartner(models.Model):
                 rec.l10n_cl_rut = '55555555-5'
             rec.l10n_cl_rut_dv = rec.l10n_cl_rut[-1:]
 
-    @api.multi
     def validate_rut(self):
         self.ensure_one()
         if not self.l10n_cl_rut:

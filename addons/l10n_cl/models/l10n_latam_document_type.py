@@ -35,7 +35,6 @@ class L10nLatamDocumentType(models.Model):
             ('receipt_invoice', 'Receipt Invoice')])
     # take a look if I put here a fiscal position (preferred fiscal position).
 
-    @api.multi
     def get_document_sequence_vals(self, journal):
         vals = super(L10nLatamDocumentType, self).get_document_sequence_vals(
             journal)

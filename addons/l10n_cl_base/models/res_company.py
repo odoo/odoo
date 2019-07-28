@@ -19,6 +19,5 @@ class ResCompany(models.Model):
         readonly=True
     )
 
-    @api.multi
     def validate_rut(self):
         return self.partner_id.validate_rut()
