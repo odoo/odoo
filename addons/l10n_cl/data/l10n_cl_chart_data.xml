@@ -23,24 +23,6 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
-
-    <!-- Account Templates -->
-<!--    <record id="113_001" model="account.account.template">
-        <field name="code">110111</field>
-        <field name="name">Caja</field>
-        <field ref="account.account.data_account_type_liquidity" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
-
-    <record id="110120" model="account.account.template">
-        <field name="code">110120</field>
-        <field name="name">Banco</field>
-        <field ref="account.account.data_account_type_liquidity" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>-->
-
     <record id="112" model="account.account.template">
         <field name="code">110210</field>
         <field name="name">Depósitos en Divisas</field>
@@ -1372,7 +1354,7 @@
 
     <record id="516" model="account.account.template">
         <field name="code">410210</field>
-        <field name="name">Impuesto 1ra Categoría</field>
+        <field name="name">Impuesto a la Renta 1ra Categoría</field>
         <field ref="account_account_type_NCLASIFICADO" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1532,6 +1514,14 @@
     <record id="723" model="account.account.template">
         <field name="code">420210</field>
         <field name="name">Acreedor por Documentos Descontados</field>
+        <field name="user_type_id" ref="account_account_type_NCLASIFICADO" />
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+    </record>
+
+    <record id="420220" model="account.account.template">
+        <field name="code">420220</field>
+        <field name="name">Gastos Otros Impuestos</field>
         <field name="user_type_id" ref="account_account_type_NCLASIFICADO" />
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
