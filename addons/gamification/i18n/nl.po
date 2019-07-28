@@ -8,8 +8,8 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Martin Trigaux, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:51+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -313,6 +313,41 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"                 <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"                    <tbody>\n"
+"                        <tr>\n"
+"                            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                                <p>\n"
+"                                    Proficiat\n"
+"                                    <span>${object.partner_id.name or ''}</span>!\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                    U heeft net een nieuwe rang behaald : <strong>${object.rank_id.name}</strong>\n"
+"                                </p>\n"
+"                                <p>Zet uw werk verder om een <strong>${object.next_rank_id.name} te worden</strong> !</p>\n"
+"                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                    % set gamification_redirection_data = object.get_gamification_redirection_data()\n"
+"                                    % for data in gamification_redirection_data\n"
+"                                        % set url = data['url']\n"
+"                                        % set label = data['label']\n"
+"                                        <a href=\"${url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">${label}</a>\n"
+"                                    % endfor\n"
+"                                </div>\n"
+"                            </td>\n"
+"                            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                                <p style=\"text-align: center;\">\n"
+"                                    <img src=\"/web/image/gamification.karma.rank/${object.rank_id.id}/image_medium\"/>\n"
+"                                </p>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                 </table>\n"
+"                </div>\n"
+"                <div>\n"
+"                    Bedankt,<br/>\n"
+"                </div>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -818,6 +853,8 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
+"Een rang komt overeen met een karma niveau. Hoe meer karma u heeft hoe hoger uw rang is.\n"
+"Dit wordt gebruikt om snel te zien welke gebruiker nieuw of oud is en actief of niet actief is."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -1806,6 +1843,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Middelgroot icoon van de rang.  Wordt automatisch aangepast naar een "
+"128x128px image, met behoud van de aspect-ratio. Gebruik dit veld in "
+"formulieren en sommige kanban views."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__image_medium
@@ -1814,6 +1854,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Middelgrote afbeelding van de badge. Het wordt automatisch aangepast naar "
+"128x128px, met behoud van de verhouding. Gebruik dit veld in formulier of "
+"kanban weergaven."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_medium
@@ -2399,6 +2442,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Kleine afbeelding van de rang. De afbeelding wordt automatisch verkleint "
+"naar 64x64px, met behoud van de verhoudingen. Gebruik dit veld, waar een "
+"kleine afbeelding benodigd is."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__image_small
@@ -2407,6 +2453,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Kleine afbeelding van de badge. De afbeelding wordt automatisch geschaald "
+"naar een 64x64 afbeelding met behoud van de verhoudingen. Gebruik dit veld "
+"overal waar een kleine afbeelding vereist is."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_small
@@ -2930,11 +2979,12 @@ msgid ""
 "e.g. A Master Chief knows quite everything on the forum! You cannot beat "
 "him!"
 msgstr ""
+"Bijvoorbeeld meester chef weet veel op het forum! U kan hem niet verslaan!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Master Chief"
-msgstr ""
+msgstr "Bijvoorbeeld meester chef"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view

@@ -134,6 +134,19 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        U bent uitgenodigd om deel te nemen aan een nieuwe opleiding: ${object.channel_id.name}.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Klik hier om de nieuwe opleiding te starten.\n"
+"            </a>\n"
+"        </div>\n"
+"        Geniet van deze exclusieve content !\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -323,6 +336,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                    The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"De module voor delen op sociale media wordt ontgrendeld van zodra een moderator toestaat om te publiceren."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -465,6 +480,19 @@ msgid ""
 "                            <span class=\"mr-5 ml-auto\">LinkedIn</span>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"font-weight-bold mb-3 mt-3\">Share teller\n"
+"                        <span class=\"d-flex pl-3\">\n"
+"                            <span class=\"badge badge-pill\" id=\"facebook-badge\">0</span>\n"
+"                            <span class=\"mr-5 ml-auto\">Facebook</span>\n"
+"                        </span>\n"
+"                        <span class=\"d-flex pl-3\">\n"
+"                            <span class=\"badge badge-pill\" id=\"twitter-badge\">0</span>\n"
+"                            <span class=\"mr-5 ml-auto\">Twitter</span>\n"
+"                        </span>\n"
+"                        <span class=\"d-flex pl-3\">\n"
+"                            <span class=\"badge badge-pill\" id=\"linkedin-badge\">0</span>\n"
+"                            <span class=\"mr-5 ml-auto\">LinkedIn</span>\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -507,7 +535,7 @@ msgstr "<span class=\"mr-5 ml-auto\">Likes</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span class=\"mr-5 ml-auto\">Members Views</span>"
-msgstr ""
+msgstr "<span class=\"mr-5 ml-auto\">Leden weergave</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -599,13 +627,14 @@ msgstr "Een vraag moet minimaal twee mogelijke antwoorden hebben"
 msgid ""
 "A slide is either filled with a document url or HTML content. Not both."
 msgstr ""
+"Een slide wordt ingevuld via een document URL of HTML inhoud. Niet beide."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_0
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_5
 #: model:slide.slide,description:website_slides.slide_slide_demo_2_0
 msgid "A summary of know-how: how and what."
-msgstr ""
+msgstr "Een samenvatting van kennis: hoe en wat."
 
 #. module: website_slides
 #: sql_constraint:slide.tag:0
@@ -747,6 +776,8 @@ msgid ""
 "Applied directly as ACLs. Allow to hide channels and their content for non "
 "members."
 msgstr ""
+"Direct toegepast als ACL's. Sta het verbergen van kanalen en hun inhoud toe "
+"voor niet leden."
 
 #. module: website_slides
 #. openerp-web
@@ -806,7 +837,7 @@ msgstr "Auteur"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_group_ids
 msgid "Auto Enroll Groups"
-msgstr ""
+msgstr "Automatisch groepen inschrijven"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_basic
@@ -816,7 +847,7 @@ msgstr "Basis"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_5_furn2
 msgid "Basics of Furniture Creation"
-msgstr ""
+msgstr "Basis van meubelmakerij"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
@@ -981,6 +1012,8 @@ msgstr "Kanaal labels"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__completed
 msgid "Channel validated, even if slides / lessons are added once done."
 msgstr ""
+"Kanaal gevalideerd, zelfs als slides / opleidingen worden toegevoegd nadat "
+"ze gedaan zijn."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag
@@ -1091,6 +1124,8 @@ msgstr "E-mail opstellen"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
 msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
 msgstr ""
+"Conditie om in te schrijven: iedereen, op uitnodiging, bij betaling (verkoop"
+" brug)."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
@@ -1447,12 +1482,12 @@ msgstr "Energie efficiëntie feiten"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
 msgid "Enroll Message"
-msgstr ""
+msgstr "Registratie bericht"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
 msgid "Enroll Policy"
-msgstr ""
+msgstr "Inschrijving policy"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_exercises
@@ -1548,7 +1583,7 @@ msgstr "Van"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_5_2
 msgid "From a piece of wood to a fully functional furniture, step by step."
-msgstr ""
+msgstr "Vanuit een stuk hout naar een functioneel meubel, stap per stap."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1563,7 +1598,7 @@ msgstr "Meubel ontwerper"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_4_furn1
 msgid "Furniture Technical Specifications"
-msgstr ""
+msgstr "Technische specificaties meubel"
 
 #. module: website_slides
 #. openerp-web
@@ -1662,7 +1697,7 @@ msgstr "Home"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_1
 msgid "Home Gardening"
-msgstr ""
+msgstr "Thuis tuinieren"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
@@ -1677,12 +1712,12 @@ msgstr "Hoe kwaliteitsvol hout te vinden"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_3
 msgid "How to plant a potted tree"
-msgstr ""
+msgstr "Hoe een gepotte boom te planten"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_2_2
 msgid "How to wall decorating by tree planting in hanging plastic bottles."
-msgstr ""
+msgstr "Hoe muren decoreren door bomen te platen in hangende plastic flessen."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_howto
@@ -1718,6 +1753,9 @@ msgid ""
 " * like content and post comments on documentation course;\n"
 " * post comment and review on training course;"
 msgstr ""
+"Indien aangevinkt staat het leden toe om:\n"
+"* content te liken en nieuwe reacties te plaatsen op uw documentatie;\n"
+"* reacties en reviews te plaatsen op trainingen;"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
@@ -1777,7 +1815,7 @@ msgstr "Interessante feiten over bomen"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_1
 msgid "Interesting informations about home gardening. Keep it close !"
-msgstr ""
+msgstr "Interessante informatie over thuis tuinieren. Hou het dichtbij!"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
@@ -1851,6 +1889,8 @@ msgid ""
 "Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and "
 "Landscaping. Narrated by Leif Knecht, owner."
 msgstr ""
+"Jim en Todd planten een gepotte boom voor een klant van Knecht's kwekerijen "
+"en landschapsarchitectuur. Verteld door Leif Knecht, eigenaar."
 
 #. module: website_slides
 #. openerp-web
@@ -1869,7 +1909,7 @@ msgstr "Word lid van opleiding"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:44
 #, python-format
 msgid "Join course to take quiz"
-msgstr ""
+msgstr "Wordt lid van de opleiding om de quiz te doen"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_2
@@ -1915,7 +1955,7 @@ msgstr "Karma benodigd om een beoordeling toe te voegen aan deze opleiding"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
 msgid "Karma needed to like/dislike a slide of this course."
-msgstr ""
+msgstr "Karma nodig om een slide in de opleiding te liken/te ontliken."
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_profile
@@ -1935,6 +1975,8 @@ msgid ""
 "Knowing which kind of wood to use depending on your application is important. In this course you\n"
 "will learn the basics of wood characteristics."
 msgstr ""
+"Weten welke soort hout u moet gebruiken afhankelijk van het doel is belangrijk. In deze opleiding leert u\n"
+"de basis over hout karakteristieken"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_large
@@ -2064,6 +2106,8 @@ msgid ""
 "Makes a menu entry in main navigation of Slides, allowing to filter on its "
 "tags directly from main navigation."
 msgstr ""
+"Maakt een menu aan in de hoofdnavigatie van slides zodat u direct kan "
+"filteren op de labels vanuit de hoofdnavigatie."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_medium
@@ -2093,6 +2137,8 @@ msgstr "Informatie leden"
 msgid ""
 "Members of those groups are automatically added as members of the channel."
 msgstr ""
+"Leden van deze groepen worden automatisch toegevoegd als leden van het "
+"kanaal."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_published
@@ -2127,6 +2173,8 @@ msgid ""
 "Mighty forest just don't appear in a few weeks. Learn how time made our "
 "forests mighty and mysterious."
 msgstr ""
+"Machtige bossen verdwijnen niet zomaar in weken. Leer hoe tijd onze bossen "
+"machtig en mysterieus maakten."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
@@ -2484,6 +2532,8 @@ msgid ""
 "Publishing is restricted to the responsible of training courses or members "
 "of the publisher group for documentation courses"
 msgstr ""
+"Publiceren is alleen mogelijk voor de verantwoordelijke van een opleiding of"
+" leden van de publiceer groep voor documentatie opleidingen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
@@ -2832,6 +2882,8 @@ msgid ""
 "Skill up and have an impact! Your business career starts here. Time to start"
 " a course."
 msgstr ""
+"Train uw skills om impact te hebben! Uw zakelijke carrière start hier. Tijd "
+"om een opleiding te starten."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__slide_id
@@ -2855,7 +2907,7 @@ msgstr "Presentatiekanaal"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_question
 msgid "Slide Quiz Question"
-msgstr ""
+msgstr "Slide quiz vraag"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -2887,6 +2939,8 @@ msgid ""
 "Slide with questions must be marked as done when submitting all good answers"
 " "
 msgstr ""
+"Slide met vragen moet gemarkeerd worden als gereed wanneer alle goede "
+"antwoorden ingediend worden"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
@@ -2964,7 +3018,7 @@ msgstr "Informatie abonnees"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information for the current logged in user"
-msgstr ""
+msgstr "Abonnee informatie voor de huidige ingelogde gebruiker"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__partner_ids
@@ -3053,6 +3107,9 @@ msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external sign up in configuration."
 msgstr ""
+"De volgende ontvangers hebben geen gebruikersaccount: %s. U kan beter "
+"gebruikers aanmaken voor deze personen of extern registreren toestaan in de "
+"configuratie."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -3168,7 +3225,7 @@ msgstr "Lijst infografiek"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
 msgid "Tree planting in hanging bottles on wall"
-msgstr ""
+msgstr "Bomen planten in hangende flessen aan een muur"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.slide_category_demo_2_0
@@ -3299,7 +3356,7 @@ msgstr "Gebruik sjabloon"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
-msgstr ""
+msgstr "Gebruikt om getoonde kanelen/opleidingen te categoriseren en filteren"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
@@ -3376,6 +3433,8 @@ msgid ""
 "We had a little chat with Harry Potted, sure he had interesting things to "
 "say !"
 msgstr ""
+"We hadden een korte babbel met Harry Potted, hij had heel wat interessante "
+"dingen te vertellen!"
 
 #. module: website_slides
 #. openerp-web
@@ -3457,6 +3516,8 @@ msgid ""
 "Who can publish: responsible, members of upload_group_ids if defined or "
 "website publisher group members."
 msgstr ""
+"Wie kan publiceren: verantwoordelijke, leden van de upload_group_ids indien "
+"ingevuld of website publiceerder groepsleden."
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.slide_category_demo_2_1
@@ -3477,6 +3538,8 @@ msgid ""
 "Write one or two paragraphs describing your product or services. <br>To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
+"Schrijf een of twee alinea's die uw product of diensten beschrijven. <br>Om "
+"succesvol te zijn, moet uw inhoud nuttig zijn voor uw lezers."
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -3486,6 +3549,9 @@ msgid ""
 "feature.<br> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
+"Schrijf één of twee paragrafen die uw product, dienst of een specifiek "
+"kenmerk omschrijven. <br> Om succesvol te zijn moet uw inhoud handig zijn "
+"voor uw gebruikers."
 
 #. module: website_slides
 #. openerp-web
@@ -3523,26 +3589,28 @@ msgstr "Bestanden beveiligd met een wachtwoord kunt u niet uploaden."
 #: code:addons/website_slides/models/slide_slide.py:456
 #, python-format
 msgid "You cannot mark a slide as completed if you are not among its members."
-msgstr ""
+msgstr "U kan een slide niet markeren als voltooid als u geen lid bent."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:429
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
-msgstr ""
+msgstr "U kan een slide niet als bekeken markeren als u geen lid bent."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:489
 #, python-format
 msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members."
-msgstr ""
+msgstr "U kan een slide quit niet als compleet markeren als u geen lid bent."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:369
 #, python-format
 msgid "You cannot send invitations for channels that are not set as 'invite'."
 msgstr ""
+"U kan geen uitnodigingen versturen voor kanelen die niet ingesteld zijn als "
+"'uitnodiging'."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:774
@@ -3588,7 +3656,7 @@ msgstr "U heeft al gestemd op deze les"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to join ${object.channel_id.name}"
-msgstr ""
+msgstr "U bent uitgenodigd om deel te nemen aan ${object.channel_id.name}"
 
 #. module: website_slides
 #. openerp-web
