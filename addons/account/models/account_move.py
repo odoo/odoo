@@ -76,7 +76,7 @@ class AccountMove(models.Model):
 
     # ==== Business fields ====
     name = fields.Char(string='Number', required=True, readonly=True, copy=False, default='/')
-    rate = fields.Float(digits=(12, 6), help='The between this currency and company currency')
+    rate = fields.Float(digits=(12, 6), help='The between this currency and company currency', readonly=True, states={'draft': [('readonly', False)]})
     has_foreign_currency = fields.Boolean(compute='_compute_has_foreign_currency')
     date = fields.Date(string='Date', required=True, index=True, readonly=True,
         states={'draft': [('readonly', False)]},

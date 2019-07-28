@@ -604,6 +604,7 @@
                                        groups="base.group_multi_currency"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                                 <field name="rate"
+                                       force_save="1"
                                        groups="base.group_multi_currency"
                                        attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('has_foreign_currency', '=', False)]}"/>
                             </group>
