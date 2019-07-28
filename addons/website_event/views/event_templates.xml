@@ -459,12 +459,12 @@
             </div>
         </form>
         <div t-if="not buy" class="alert alert-info" role="status">
-            <t t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
+            <span t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
                 Event registration not yet started.
-            </t>
-            <t t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
+            </span>
+            <span t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
                 Event registration is closed.
-            </t>
+            </span>
             <t t-if="request.env.user.has_group('event.group_event_manager')">
                 <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
                     <em><i class="fa fa-plus-circle" role="img" aria-label="Create" title="Create"></i>
