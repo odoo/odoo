@@ -246,10 +246,10 @@
                     <a t-attf-href="/forum/#{ slug(question.forum_id) }/question/#{ slug(question) }">
                         <span class="ml-4 mr-1 fa fa-star"></span><span t-field="question.favourite_count"/> <t t-if="question.views&lt;=1">Favorite</t><t t-else="">Favorites</t>
                     </a>
-                    <t t-if="question.state == 'flagged'" class="text-black">
+                    <span t-if="question.state == 'flagged'" class="text-black">
                         <i class="fa fa-flag ml-4 mr4"/>
                         Flagged
-                    </t>
+                    </span>
                 </small>
             </div>
         </div>
@@ -797,7 +797,7 @@
                                 <t t-set="icon" t-value="'fa-check'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
-                            <t t-if="question.active" href="#" t-call="website_forum.link_button">
+                            <t t-if="question.active" t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
                                 <t t-set="title">Flag</t>
                                 <t t-set="inDropdown" t-value="False"/>
@@ -1184,10 +1184,10 @@
                                  <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
                                 <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
                                 <i class="ml-4 mr4 fa fa-calendar"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
-                                <t t-if="question.state == 'flagged'" class="text-black">
+                                <span t-if="question.state == 'flagged'" class="text-black">
                                     <i class="fa fa-flag ml-4 mr4"/>
                                     Flagged
-                                </t>
+                                </span>
                             </small>
                         </div>
                     </t>
