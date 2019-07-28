@@ -17,7 +17,6 @@
 # Zamba Lee <zambalee@gmail.com>, 2018
 # 朱仁杰 <johnson19960308@gmail.com>, 2018
 # zpq001 <zpq001@live.com>, 2018
-# bf2549c5415a9287249cba2b8a5823c7, 2018
 # e2f <projects@e2f.com>, 2018
 # Wei "oldrev" Li <liwei@sandwych.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
@@ -50,18 +49,21 @@
 # lttlsnk <lttlsnk@gmail.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
-# F4NNIU <sparkamax@gmail.com>, 2018
+# F4NNIU <sparkamax+fanniu@gmail.com>, 2018
 # rejen he <251442037@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # 卫安琪 <weianqi1991@gmail.com>, 2018
 # jian liu <lj1989419@gmail.com>, 2018
 # Martin Trigaux, 2018
 # keecome <7017511@qq.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Maie <m@maie.name>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# 黎伟杰 <674416404@qq.com>, 2019
+# bf2549c5415a9287249cba2b8a5823c7, 2019
+# F4NNIU <sparkamax@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -69,7 +71,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
+"Last-Translator: F4NNIU <sparkamax@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +122,21 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"将结构化通信添加到客户发票。\n"
+"---------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"使用BBA结构化通信简化核销发票和付款之间的对账。        \n"
+"您可以在开票/会计设置中选择结构化通信作为支付通信。\n"
+"建议使用三种算法:\n"
+"    1) 随机 : +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** 随机数字, **DD =** 校验数字\n"
+"    2) 日期: +++DOY/YEAR/SSSDD+++\n"
+"        **DOY =** 年内天数, **SSS =** 序列号, **DD =** 校验数字\n"
+"    3) 客户参考 +++RRR/RRRR/SSSDDD+++\n"
+"        **R..R =** 无数字字母客户参考, **SSS =** 序列号, **DD =** 校验数字  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -673,6 +690,9 @@ msgid ""
 "        Bridge module between sale and intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"        销售和 intrastat 的桥模块。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -1731,7 +1751,7 @@ msgid ""
 msgstr ""
 "\n"
 "增加从文档模块建立产品功能。\n"
-"同时增加发送产品附件到单据程序的选项。\n"
+"同时增加发送产品附件到文档程序的选项。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_sign
@@ -1964,7 +1984,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"允许用户通过邮件方式发送文件\n"
+"允许用户通过邮件方式发送文档\n"
 "=====================================================\n"
 "        "
 
@@ -3092,7 +3112,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"通过邮寄方式，发送后续延期文件\n"
+"通过邮寄方式，发送后续延期文档\n"
 "    "
 
 #. module: base
@@ -4511,10 +4531,10 @@ msgid ""
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
 "\n"
-" 为 Odoo 导入的新可扩展文件\n"
+" 为 Odoo 导入的新可扩展文档\n"
 "======================================\n"
 "\n"
-" 重新引入 Odoo 的文件导入系统：\n"
+" 重新引入 Odoo 的文档导入系统：\n"
 "\n"
 "* 服务器端，之前的系统将大多数逻辑强加到\n"
 " 客户端，此操作加倍了工作量（客户端之间），使没有客户端（直接的 RPC或\n"
@@ -4522,8 +4542,8 @@ msgstr ""
 " 导入系统更难使用，并且更难以收集，因为需要在3种或更多的项目范围内导入导出\n"
 "\n"
 "* 因此，通过更多的可扩展方式，用户和合作伙伴可以创建其\n"
-" 自己的前端，以便从其他的文件格式中进行导入（例如，OpenDocument\n"
-" 文件），这使得其工作流程或\n"
+" 自己的前端，以便从其他的文档格式中进行导入（例如，OpenDocument\n"
+" 文档），这使得其工作流程或\n"
 " 其数据生产源中的处理变得更简单。\n"
 "\n"
 "* 因此，在模块中，不\n"
@@ -8282,7 +8302,7 @@ msgstr ""
 "`self`是一个表示表单视图内容的伪记录，就像@ api.onchange方法一样\n"
 "带有'O-CMD'或'O-BTN'前缀的条形码保留用于特殊功能，并且永远不会传递给on_barcode_scanned。\n"
 "可以扩展表单视图条形码处理程序以添加客户端处理。请参考（希望\n"
-"足够好）记录文件以获取更多信息\n"
+"足够好）记录文档以获取更多信息\n"
 "\n"
 "\n"
 "按钮条码处理程序\n"
@@ -8575,7 +8595,7 @@ msgstr "A 农业、林业和渔业"
 #: code:addons/models.py:2986
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
-msgstr "自你上次查看过以后该单据已被修改(%s:%d)"
+msgstr "自你上次查看过以后该文档已被修改(%s:%d)"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_groups
@@ -9401,7 +9421,7 @@ msgstr "全部搞定!"
 msgid ""
 "All the emails and documents sent to this contact will be translated in this"
 " language."
-msgstr "发送到该联系人的所有EMail和文件将以这种语言翻译。"
+msgstr "发送到该联系人的所有EMail和文档将以这种语言翻译。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -10603,7 +10623,7 @@ msgstr "无法聚合字段 %r."
 #: code:addons/base/models/ir_translation.py:256
 #, python-format
 msgid "Cannot be translated; record not accessible."
-msgstr ""
+msgstr "无法翻译，记录无法访问。"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -11006,7 +11026,7 @@ msgstr "哥伦比亚-会计和税预配置"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_co_edi
 msgid "Colombian Localization for EDI documents"
-msgstr "哥伦比亚的EDI文件本地化"
+msgstr "哥伦比亚的EDI文档本地化"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__color
@@ -12336,7 +12356,7 @@ msgstr "交货成本"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_hs_code
 msgid "Delivery HS Code"
-msgstr ""
+msgstr "交货HS编码"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -12364,8 +12384,8 @@ msgid ""
 "Demo data should only be used on test databases!\n"
 "                             Once they are loaded, they cannot be removed!"
 msgstr ""
-"Demo数据仅用于测试数据库\n"
-"                         一旦这些数据加载，就不能被移除！"
+"Odoo官方警告：Demo数据仅用于测试数据库\n"
+"                         一旦这些数据加载，就不能被移除！简体中文用户可用老邓的模块一键清除Demo演示数据。"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -12741,7 +12761,7 @@ msgstr "博士"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
-msgstr "单据"
+msgstr "文档"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_document_management
@@ -12751,7 +12771,7 @@ msgstr "文档管理"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sign
 msgid "Document Signatures"
-msgstr "文件签名"
+msgstr "文档签名"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__external_report_layout_id
@@ -12768,7 +12788,7 @@ msgstr "文档管理"
 #: code:addons/base/models/ir_model.py:1231
 #, python-format
 msgid "Document model"
-msgstr "单据模型"
+msgstr "文档模型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
@@ -14117,9 +14137,9 @@ msgid ""
 "\n"
 "(Document type: %s)"
 msgstr ""
-"对这种类型的单据，你只能访问你自己创建的记录。\n"
+"对这种类型的文档，你只能访问你自己创建的记录。\n"
 "\n"
-" (单据类型：%s)"
+" (文档类型：%s)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
@@ -16073,7 +16093,7 @@ msgstr "开票和付款"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
 msgid "Invoices from Documents"
-msgstr "来自文件的发票"
+msgstr "来自文档的发票"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -17171,7 +17191,7 @@ msgstr ""
 "<a href=\"https://www.odoo.com/page/recruitment\">开源招聘应用程序</a>。\n"
 "\n"
 "轻松组织职位公告板，推广招聘通知以及跟踪提交的申请。\n"
-"跟踪每位申请人，并建立包含索引文件的技能与个人资料数\n"
+"跟踪每位申请人，并建立包含索引文档的技能与个人资料数\n"
 "据库。\n"
 "\n"
 "在最佳职位公告板上发布您的职位\n"
@@ -17200,7 +17220,7 @@ msgstr ""
 "使用智能看板视图在招聘流程中跟踪申请人。\n"
 "借助EMail模板自动完成一部分通信任务来节省时间。\n"
 "\n"
-"通过自动索引简历、求职信等文件，\n"
+"通过自动索引简历、求职信等文档，\n"
 "您可以轻松查找特定技能并建立应聘者资料\n"
 "数据库。\n"
 
@@ -17617,7 +17637,7 @@ msgstr "缺少 SMTP 服务器"
 #: code:addons/models.py:3028
 #, python-format
 msgid "Missing document(s)"
-msgstr "缺失单据"
+msgstr "缺失文档"
 
 #. module: base
 #: code:addons/models.py:5505
@@ -17838,7 +17858,7 @@ msgstr "模块依赖"
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
-msgstr "模块互斥"
+msgstr "模块排除"
 
 #. module: base
 #: code:addons/convert.py:833
@@ -18855,7 +18875,7 @@ msgstr ""
 "----------------------\n"
 "\n"
 "通过兴趣小组共同合作，减少会议和EMail负担。\n"
-"创建一个群组，让人们共享文件，讨论想法，并投票\n"
+"创建一个群组，让人们共享文档，讨论想法，并投票\n"
 "推广最佳做法。\n"
 "\n"
 "改善信息和专业知识的可及性\n"
@@ -19487,7 +19507,7 @@ msgstr ""
 "\n"
 "### 实时共享和编辑记事本\n"
 "\n"
-"记事本上的实时协作书写使其成为在会议记录上协作的理想工具。与会者将能够对会议记录作出贡献，附上重要文件或讨论相关主题。\n"
+"记事本上的实时协作书写使其成为在会议记录上协作的理想工具。与会者将能够对会议记录作出贡献，附上重要文档或讨论相关主题。\n"
 "\n"
 
 #. module: base
@@ -20467,7 +20487,7 @@ msgstr "多对一（many2one）字段的 on delete 属性"
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
-msgstr "一个你试图访问的单据已经被删除，请刷新后重试。"
+msgstr "一个你试图访问的文档已经被删除，请刷新后重试。"
 
 #. module: base
 #: code:addons/models.py:3363
@@ -20475,7 +20495,7 @@ msgstr "一个你试图访问的单据已经被删除，请刷新后重试。"
 msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
-msgstr "你正尝试修改的记录已经被删除(单据类型：%s)."
+msgstr "你正尝试修改的记录已经被删除(文档类型：%s)."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:407
@@ -21281,7 +21301,7 @@ msgstr "业务伙伴称谓"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
 msgid "Partner is Active"
-msgstr ""
+msgstr "激活的合作伙伴"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
@@ -21491,7 +21511,8 @@ msgstr "请在当前用户上配置EMail，以模拟使用该发件服务器发�
 msgid ""
 "Please confirm that you want to <b>irreversibly</b> make this database a "
 "demo database."
-msgstr "你想让这个数据库成为demo数据库，该操作<b>不可逆</b>，请确认。"
+msgstr ""
+"Odoo官方敬告：你想让这个数据库成为demo数据库，该操作<b>不可逆</b>，请确认。简体中文用户须知：老邓的Odoo自定义模块可以清除demo数据，自行到odoo官方app下载即可。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1231
@@ -21849,7 +21870,7 @@ msgstr ""
 "共同合作\n"
 "-------------\n"
 "\n"
-"### 实时聊天、文件共享、EMail集成\n"
+"### 实时聊天、文档共享、EMail集成\n"
 "\n"
 "使用开放式的聊天工具与您的团队或客户进行沟通，并就任务和问题分享评论\n"
 "和文档。将讨论与EMail集成快速集成。\n"
@@ -22813,7 +22834,7 @@ msgstr "销售优惠券交付"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
 msgid "Sale Intrastat"
-msgstr ""
+msgstr "Intrastat 销售"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase
@@ -23093,7 +23114,7 @@ msgid ""
 "                                You can remove contacts from this list to avoid merging them."
 msgstr ""
 "选定的联系人将被合并在一起。\n"
-"所有的文件链接到其中的一个联系人\n"
+"所有的文档链接到其中的一个联系人\n"
 "将会被重定向到生成的目的地联系人。\n"
 "你可以从这个列表中移除联系人以避免合并它们。"
 
@@ -23156,7 +23177,7 @@ msgstr "在线销售你的产品"
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
-msgstr "发送文件到网上签名和处理填写的副本"
+msgstr "发送文档到网上签名和处理填写的副本"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar_sms
@@ -23345,7 +23366,7 @@ msgstr "基于安全考虑，不允许设置空密码！"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr "参数设置"
+msgstr "设置"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -24986,7 +25007,7 @@ msgstr "以下应用将卸载"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "The following documents will be permanently lost"
-msgstr "以下文件将永久丢失"
+msgstr "以下文档将永久丢失"
 
 #. module: base
 #: code:addons/base/wizard/base_module_upgrade.py:69
@@ -25060,7 +25081,7 @@ msgstr "语言名称必须唯一！"
 #. module: base
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique!"
-msgstr "模块名称必须唯一！"
+msgstr "模块的名称必须唯一！"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__number_increment
@@ -25170,7 +25191,7 @@ msgid ""
 msgstr ""
 "由于安全限制，请求法完成。请联系你的系统管理员。\n"
 "\n"
-"(单据类型: %s, 操作: %s)"
+"(文档类型: %s, 操作: %s)"
 
 #. module: base
 #: sql_constraint:res.currency:0
@@ -25936,7 +25957,7 @@ msgstr "乌克兰"
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
-msgstr "不能删除该单据，因为它被用作默认属性"
+msgstr "不能删除该文档，因为它被用作默认属性"
 
 #. module: base
 #: code:addons/base/models/ir_actions_report.py:663
@@ -27341,8 +27362,8 @@ msgstr "例如：zh_CN"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "例如：www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "例如：https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
