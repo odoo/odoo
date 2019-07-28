@@ -15,6 +15,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
         'l10n_latam_document',
         ],
     'data': [
+        'data/account_tax_report_data.xml',
         'data/l10n_cl_chart_data.xml',
         'data/account_tax_group_data.xml',
         'data/account_tax_tags_data.xml',

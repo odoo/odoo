@@ -1,146 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="tax_report_impuestos" model="account.tax.report.line">
-        <field name="name">Impuestos Directos a Pagar</field>
-        <field name="sequence" eval="1"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuestos_renta" model="account.tax.report.line">
-        <field name="name">Impuesto a la Renta Primera Categoría a Pagar</field>
-        <field name="tag_name">Impuesto a la Renta Primera Categoría a Pagar</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="tax_report_impuestos"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general" model="account.tax.report.line">
-        <field name="name">Impuesto General a las Ventas (IVA) Total a Pagar</field>
-        <field name="sequence" eval="2"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_pag" model="account.tax.report.line">
-        <field name="name">Impuesto Pagado</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="tax_report_impuesto_general"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_pag_iva" model="account.tax.report.line">
-        <field name="name">Impuesto Pagado IVA</field>
-        <field name="tag_name">Impuesto Pagado IVA</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="tax_report_impuesto_general_pag"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_pag_exon" model="account.tax.report.line">
-        <field name="name">Impuesto Pagado de Exonerados al IVA</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="tax_report_impuesto_general_pag"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_pag_fuera" model="account.tax.report.line">
-        <field name="name">Impuesto Pagado Fuera de Ámbito</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="tax_report_impuesto_general_pag"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_cobrado" model="account.tax.report.line">
-        <field name="name">Impuesto Cobrado</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="tax_report_impuesto_general"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_cobrado_iva" model="account.tax.report.line">
-        <field name="name">Impuesto Cobrado IVA</field>
-        <field name="tag_name">Impuesto Cobrado IVA</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="tax_report_impuesto_general_cobrado"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_cobrado_exon" model="account.tax.report.line">
-        <field name="name">Impuesto Cobrado de Exonerados al IVA</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="tax_report_impuesto_general_cobrado"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_impuesto_general_cobrado_fuera" model="account.tax.report.line">
-        <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="tax_report_impuesto_general_cobrado"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
-    <record id="tax_report_base_imponible" model="account.tax.report.line">
-        <field name="name">Base Imponible</field>
-        <field name="sequence" eval="3"/>
-        <field name="country_id" ref="base.cl"/>
-    </record>
-
     <record id="tax_report_base_imponible_ventas" model="account.tax.report.line">
-        <field name="name">Base Imponible - Ventas</field>
+        <field name="name">Ventas: Base Imponible</field>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="tax_report_base_imponible"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
-    <record id="tax_report_base_imponible_ventas_grav" model="account.tax.report.line">
-        <field name="name">Ventas Gravadas con IVA</field>
-        <field name="tag_name">Ventas Gravadas con IVA</field>
+    <record id="tax_report_ventas_netas_gravadas_c_iva" model="account.tax.report.line">
+        <field name="name">Ventas Netas Afectas A IVA</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_base_imponible_ventas"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
-    <record id="tax_report_base_imponible_ventas_no_grav" model="account.tax.report.line">
-        <field name="name">Ventas NO Gravadas (Exoneradas)</field>
-        <field name="sequence" eval="2"/>
+    <record id="tax_report_ventas_exentas" model="account.tax.report.line">
+        <field name="name">Ventas Netas Exentas de IVA</field>
+        <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_base_imponible_ventas"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
-    <record id="tax_report_base_imponible_ventas_fuera" model="account.tax.report.line">
-        <field name="name">Ventas Gravadas Fuera de Ámbito</field>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="tax_report_base_imponible_ventas"/>
+
+    <record id="tax_report_impuestos_originados_venta" model="account.tax.report.line">
+        <field name="name">Impuesto Originados por la Venta</field>
+        <field name="sequence" eval="1"/>
         <field name="country_id" ref="base.cl"/>
     </record>
+
+    <record id="tax_report_iva_debito_fiscal" model="account.tax.report.line">
+        <field name="name">IVA Débito Fiscal</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_originados_venta"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+
 
     <record id="tax_report_base_imponible_compras" model="account.tax.report.line">
-        <field name="name">Base Imponible - Compras</field>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="tax_report_base_imponible"/>
+        <field name="name">Base Imponible de Compras</field>
+        <field name="sequence" eval="1"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
-    <record id="tax_report_base_imponible_compras_grav" model="account.tax.report.line">
-        <field name="name">Compras Gravadas con IVA</field>
-        <field name="tag_name">Compras Gravadas con IVA</field>
+
+    <record id="tax_report_base_imponible_compras" model="account.tax.report.line">
+        <field name="name">Base Imponible de Compras</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_compras_netas_gr_iva_recup" model="account.tax.report.line">
+        <field name="name">Compras Netas Gravadas con IVA (Recuperable)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_base_imponible_compras"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
-    <record id="tax_report_base_imponible_compras_no_grav" model="account.tax.report.line">
-        <field name="name">Compras NO Gravadas (Exoneradas)</field>
-        <field name="sequence" eval="2"/>
+    <record id="tax_report_compras_netas_gr_iva_uso_comun" model="account.tax.report.line">
+        <field name="name">Compras Netas Gravadas con IVA (Uso Común)</field>
+        <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_base_imponible_compras"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
-    <record id="tax_report_base_imponible_compras_fuera" model="account.tax.report.line">
-        <field name="name">Compras Gravadas Fuera de Ámbito</field>
-        <field name="sequence" eval="3"/>
+    <record id="tax_report_compras_netas_gr_iva_no_recuperable" model="account.tax.report.line">
+        <field name="name">Compras Netas Gravadas con IVA (No Recuperable)</field>
+        <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_base_imponible_compras"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
+    <record id="tax_report_compras_supermercado" model="account.tax.report.line">
+        <field name="name">Compras Netas en Supermercado</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_base_imponible_compras"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_compras_activo_fijo" model="account.tax.report.line">
+        <field name="name">Compras Netas de Activos Fijos Gravadas con IVA (Recuperable)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_base_imponible_compras"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_compras_activo_fijo_uso_comun" model="account.tax.report.line">
+        <field name="name">Compras Netas de Activos Fijos Gravadas con IVA (Uso Común)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_base_imponible_compras"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_compras_activo_fijo_no_recup" model="account.tax.report.line">
+        <field name="name">Compras Netas de Activos Fijos Gravadas con IVA (No Recuperable)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_base_imponible_compras"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_compras_no_gravadas_iva" model="account.tax.report.line">
+        <field name="name">Compras Netas de Activos Fijos Gravadas con IVA (No Recuperable)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_base_imponible_compras"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_impuestos_pagados_compra" model="account.tax.report.line">
+        <field name="name">Impuestos Pagados en La Compra</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <record id="tax_report_compras_iva_recup" model="account.tax.report.line">
+        <field name="name">IVA por Facturas recibidas (Recuperable)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_pagados_compra"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <record id="tax_report_compras_iva_uso_comun" model="account.tax.report.line">
+        <field name="name">IVA por Facturas recibidas (Uso Común)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_pagados_compra"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <record id="tax_report_compras_iva_no_recup" model="account.tax.report.line">
+        <field name="name">IVA por Facturas recibidas (No Recuperable)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_pagados_compra"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <record id="tax_report_compras_iva_supermercado" model="account.tax.report.line">
+        <field name="name">IVA por Compras Supermercado</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_pagados_compra"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <record id="tax_report_compras_iva_activo_fijo" model="account.tax.report.line">
+        <field name="name">IVA por Compras de Activo Fijo (Recuperable)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_pagados_compra"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <record id="tax_report_compras_iva_activo_fijo_uso_comun" model="account.tax.report.line">
+        <field name="name">IVA por Compras de Activo Fijo (Uso Común)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_pagados_compra"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <record id="tax_report_compras_iva_activo_fijo_no_recup" model="account.tax.report.line">
+        <field name="name">IVA por Compras de Activo Fijo (No Recuperable</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuestos_pagados_compra"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+
+    <record id="tax_report_impuesto_renta" model="account.tax.report.line">
+        <field name="name">Impuesto a la Renta DL 824/74</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_base_retencion_segunda_categ" model="account.tax.report.line">
+        <field name="name">Base Reteción</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuesto_renta"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_retencion_segunda_categ" model="account.tax.report.line">
+        <field name="name">Retención de Impuesto con tasa del 10% Art. 42 Nº 2/según Art. 74 Nº 2 LIR</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuesto_renta"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_ppm" model="account.tax.report.line">
+        <field name="name">P.P.M. A Pagar</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_impuesto_renta"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+    <!-- remanentes -->
 </odoo>
