@@ -11,6 +11,7 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Manel Fernandez <manelfera@outlook.com>, 2019
 # M Palau <mpalau@tda.ad>, 2019
+# Arnau Ros, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: M Palau <mpalau@tda.ad>, 2019\n"
+"Last-Translator: Arnau Ros, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,7 +115,7 @@ msgstr "Neteja"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Prémer aquí per veure el document"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -169,7 +170,7 @@ msgstr "Creat el"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL del portal dels clients"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -183,7 +184,7 @@ msgstr "Mostrar Nom"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "Dibuixa la signatura"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -217,7 +218,7 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "Al portal"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:200
@@ -254,7 +255,7 @@ msgstr "Actualitzat per última vegada el dia"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:20
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "Deixar un comentari"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
@@ -287,6 +288,7 @@ msgstr "Següent"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Ups! Alguna cosa ha anat malament. Recarrega la pàgina i inicia sessió."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -312,7 +314,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL del portal d'accés"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -329,7 +331,7 @@ msgstr "Anterior"
 #: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Publicat a %s"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -338,6 +340,9 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Selecció dels contactes que han de pertànyer a la següent llista\n"
+"                        El correu electrònic de cada contacte seleccionat ha de ser vàlid i únic.\n"
+"                        Si és necessari, qualsevol adreça pot ser modificada directament en la llista"
 
 #. module: portal
 #. openerp-web
@@ -356,13 +361,15 @@ msgstr "Diversos contactes tenen el mateix correu electrònic:"
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Alguns contactes no tenen un correu electrònic vàlid"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Alguns contactes tenen el mateix correu electrònic que un usuari existent en"
+" el portal"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:219
@@ -385,7 +392,7 @@ msgstr "Carrer"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr ""
+msgstr "Gràcies!"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
@@ -403,11 +410,13 @@ msgstr "Actualment no hi ha comentaris."
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Aquest text s'inclou al correu electrònic enviat als nous usuaris del portal"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Aquest text s'inclou al correu electrònic enviat als nous usuaris del portal"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -417,6 +426,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"Per resoldre l'error, es pot: \n"
+"- Corregir els correus electrònics dels contactes\n"
+"- Donar accés només als contactes amb correus electrònics únics"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -567,7 +579,7 @@ msgstr "Escriure un comentari."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "Heu d'estar"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:182
@@ -617,7 +629,7 @@ msgstr "CP / Codi Postal"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. openerp-web
@@ -638,7 +650,7 @@ msgstr "comentaris"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "connectat"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -655,4 +667,4 @@ msgstr "seleccionar..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "per escriure un comentari."
