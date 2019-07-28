@@ -15,7 +15,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         if not self.country_id:
             return False, False
-        elif self.l10n_latam_identification_type_id.short_name in ['RUT', 'RUN']:
+        elif self.l10n_latam_identification_type_id.name in ['RUT', 'RUN']:
             country_origin = 'cl'
         elif self.country_id.code != 'CL':
             country_origin = self.country_id.code.lower()
