@@ -197,16 +197,20 @@ class Message(models.Model):
         # search, and one for each message in the result set is_read to True in the
         # current notifications from the relation.
         partner_id = self.env.user.partner_id.id
-        msg_domain = [('notified_partner_ids', 'in', partner_id)]
-        unread_messages = self.search(expression.AND([msg_domain, domain]))
-        ids = unread_messages.ids
-        notifications = self.env['mail.notification'].sudo().search([
-            ('mail_message_id', 'in', ids),
+        notif_domain = [
             ('res_partner_id', '=', partner_id),
-            ('is_read', '=', False)])
+            ('is_read', '=', False)]
+
+        if domain:
+            messages_ids = self.search(domain).ids  # need sudo?
+            notif_domain = expression.AND([notif_domain, [('mail_message_id', 'in', messages_ids)]])
+
+        notifications = self.env['mail.notification'].sudo().search(notif_domain)
         notifications.write({'is_read': True})
 
-        notification = {'type': 'mark_as_read', 'message_ids': ids}
+        ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
+
+        notification = {'type': 'mark_as_read', 'message_ids': notifications}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
 
         return ids
