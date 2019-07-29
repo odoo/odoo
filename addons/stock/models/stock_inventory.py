@@ -68,9 +68,10 @@ class Inventory(models.Model):
         help="Specify Products to focus your inventory on particular Products.")
     start_empty = fields.Boolean('Empty Inventory',
         help="Allows to start with an empty inventory.")
-    prefill_counted_quantity = fields.Boolean('Pre-fill counted quantity',
-        help='Pre-fill the counted quantity with on hand quantity for all the '
-        'products included in the inventory adjustment.', default=True)
+    prefill_counted_quantity = fields.Selection(string='Counted Quantities',
+        help="Allows to start with prefill counted quantity for each lines or "
+        "with all counted quantity set to zero.", default='counted',
+        selection=[('counted', 'Default to stock on hand'), ('zero', 'Default to zero')])
 
     def unlink(self):
         for inventory in self:
@@ -233,7 +234,7 @@ class Inventory(models.Model):
             for void_field in [item[0] for item in product_data.items() if item[1] is None]:
                 product_data[void_field] = False
             product_data['theoretical_qty'] = product_data['product_qty']
-            if not self.prefill_counted_quantity:
+            if self.prefill_counted_quantity == 'zero':
                 product_data['product_qty'] = 0
             if product_data['product_id']:
                 product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id

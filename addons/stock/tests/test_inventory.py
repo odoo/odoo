@@ -323,7 +323,7 @@ class TestInventory(SavepointCase):
             'reserved_quantity': 0,
         })
         inventory_form = Form(self.env['stock.inventory'].with_context(
-                default_prefill_counted_quantity=False,
+                default_prefill_counted_quantity='zero',
              ), view='stock.view_inventory_form')
         inventory = inventory_form.save()
         inventory.action_start()
@@ -332,6 +332,43 @@ class TestInventory(SavepointCase):
         for line in inventory.line_ids:
             self.assertEqual(line.product_qty, 0)
             self.assertNotEqual(line.theoretical_qty, 0)
+
+    def test_inventory_prefill_counted_quantity(self):
+        """ Checks that inventory lines have a `product_qty` set on zero or
+        equals to quantity on hand, depending of the `prefill_counted_quantity`.
+        """
+        # Set product quantity to 42.
+        vals = {
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'quantity': 42,
+        }
+        self.env['stock.quant'].create(vals)
+        # Generate new inventory, its line must have a theoretical
+        # quantity to 42 and a counted quantity to 42.
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Default Qty',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+            'prefill_counted_quantity': 'counted',
+        })
+        inventory.action_start()
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 42)
+        self.assertEqual(inventory.line_ids.product_qty, 42)
+
+        # Generate new inventory, its line must have a theoretical
+        # quantity to 42 and a counted quantity to 0.
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Default Qty',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+            'prefill_counted_quantity': 'zero',
+        })
+        inventory.action_start()
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 42)
+        self.assertEqual(inventory.line_ids.product_qty, 0)
 
     def test_inventory_outdate_1(self):
         """ Checks that inventory adjustment line is marked as outdated after
