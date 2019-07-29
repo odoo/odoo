@@ -531,7 +531,7 @@ class WebsiteSlides(WebsiteProfile):
 
         # Allows to have breadcrumb for the previously used filter
         values.update({
-            'search_category': slide.category_id.id if kwargs.get('search_category') else None,
+            'search_category': slide.category_id if kwargs.get('search_category') else None,
             'search_tag': request.env['slide.tag'].browse(int(kwargs.get('search_tag'))) if kwargs.get('search_tag') else None,
             'slide_types': dict(request.env['slide.slide']._fields['slide_type']._description_selection(request.env)) if kwargs.get('search_slide_type') else None,
             'search_slide_type': kwargs.get('search_slide_type'),
