@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="account_withh_tax_form_l10n_il" model="ir.ui.view">
+                <field name="name">account.withh.tax.form.l10n.il</field>
+                <field name="model">account.tax</field>
+                <field name="inherit_id" ref="account.view_tax_form"/>
+                <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page" position="inside">
+                        <group>
+                            <field name="l10n_il_valid_until_date"/>
+                            <field name="l10n_il_withh_tax_reason"/>
+                            <field name="l10n_il_ita_branch"/>
+                        </group>
+                    </xpath>
+                </data>
+                </field>
+        </record>
+    </data>
+</odoo>
