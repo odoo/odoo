@@ -903,6 +903,10 @@ class StockMove(SavepointCase):
         # This test will apply two putaway strategies by category. We check here
         # that the most specific putaway takes precedence.
 
+        child_category = self.env['product.category'].create({
+            'name': 'child_category',
+            'parent_id': self.ref('product.product_category_all'),
+        })
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
@@ -919,7 +923,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf1_location.id,
         })
         putaway_category_office_furn = self.env['stock.putaway.rule'].create({
-            'category_id': self.ref('product.product_category_all'),
+            'category_id': child_category.id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': shelf2_location.id,
         })
@@ -929,7 +933,7 @@ class StockMove(SavepointCase):
                 putaway_category_office_furn.id,
             ])],
         })
-        self.product.categ_id = self.ref('product.product_category_all')
+        self.product.categ_id = child_category
 
         # creation
         move1 = self.env['stock.move'].create({
