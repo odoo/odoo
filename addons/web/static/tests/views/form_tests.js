@@ -4844,6 +4844,65 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.module('focus and scroll test', async function () {
+        QUnit.test('no focus set on form when closing many2one modal if lastActivatedFieldIndex is not set', async function (assert) {
+            assert.expect(8);
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partners">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="bar"/>' +
+                        '<field name="p"/>' +
+                        '<field name="timmy"/>' +
+                        '<field name="product_ids"/>' +
+                        '<field name="trululu"/>' +
+                    '</form>',
+                res_id: 2,
+                archs: {
+                    'partner,false,list': '<tree><field name="display_name"/></tree>',
+                    'partner_type,false,list': '<tree><field name="name"/></tree>',
+                    'partner,false,form': '<form><field name="trululu"/></form>',
+                    'product,false,list': '<tree><field name="name"/></tree>',
+                },
+                mockRPC: function (route, args) {
+                    if (args.method === 'get_formview_id') {
+                        return Promise.resolve(false);
+                    }
+                    return this._super(route, args);
+                },
+            });
+
+            // set max-height to have scroll forcefully so that we can test scroll position after modal close
+            $('.o_content').css({'overflow': 'auto', 'max-height': '300px'});
+            // Open many2one modal, lastActivatedFieldIndex will not set as we directly click on external button
+            await testUtils.form.clickEdit(form);
+            assert.strictEqual($(".o_content").scrollTop(), 0, "scroll position should be 0");
+
+            form.$(".o_field_many2one[name='trululu'] .o_input").focus();
+            assert.notStrictEqual($(".o_content").scrollTop(), 0, "scroll position should not be 0");
+
+            await testUtils.dom.click(form.$('.o_external_button'));
+            // Close modal
+            await testUtils.dom.click($('.modal').last().find('button[class="close"]'));
+            assert.notStrictEqual($(".o_content").scrollTop(), 0,
+                "scroll position should not be 0 after closing modal");
+            assert.containsNone(document.body, '.modal', 'There should be no modal');
+            assert.doesNotHaveClass($('body'), 'modal-open', 'Modal is not said opened');
+            assert.strictEqual(form.renderer.lastActivatedFieldIndex, -1,
+                "lastActivatedFieldIndex is -1");
+            assert.equal(document.activeElement, $('body')[0],
+                'body is focused, should not set focus on form widget');
+            assert.notStrictEqual(document.activeElement, form.$('.o_field_many2one[name="trululu"] .o_input'),
+                'field widget should not be focused when lastActivatedFieldIndex is -1');
+
+            form.destroy();
+        });
+    });
+
     QUnit.test('in create mode, autofocus fields are focused', async function (assert) {
         assert.expect(1);
 

@@ -30,6 +30,7 @@ invoices from picking, the system is able to add and compute the shipping line.
         'views/res_config_settings_views.xml',
         'wizard/choose_delivery_package_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
+        'views/assets.xml',
     ],
     'demo': ['data/delivery_demo.xml'],
     'installable': True,

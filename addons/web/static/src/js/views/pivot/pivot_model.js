@@ -430,6 +430,7 @@ var PivotModel = AbstractModel.extend({
         }
         if ('domain' in params) {
             this.data.domain = params.domain;
+            this.initialDomain = params.domain;
         } else {
             this.data.domain = this.initialDomain;
         }

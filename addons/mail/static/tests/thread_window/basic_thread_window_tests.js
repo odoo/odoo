@@ -726,6 +726,119 @@ QUnit.test('no out-of-office status in thread window', async function (assert) {
     parent.destroy();
 });
 
+QUnit.test('auto-update out-of-office info on im_status change', async function (assert) {
+    assert.expect(5);
+
+    var imStatusDefs = [testUtils.makeTestPromise(), testUtils.makeTestPromise()];
+    var channelInfoDefs = [testUtils.makeTestPromise(), testUtils.makeTestPromise()];
+    var timeoutMock = mailTestUtils.patchMailTimeouts();
+    var step = 0;
+
+    this.data = {
+        'mail.message': {
+            fields: {},
+            records: [],
+        },
+        initMessaging: {
+            channel_slots: {
+                channel_channel: [{
+                    id: 1,
+                    name: "DM",
+                    channel_type: "chat",
+                    message_unread_counter: 0,
+                    direct_partner: [{
+                        id: 666,
+                        name: 'DemoUser1',
+                        im_status: 'online',
+                    }],
+                }],
+            },
+        },
+    };
+
+    var parent = this.createParent({
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (route === '/longpolling/im_status') {
+                step++;
+                if (step === 1) {
+                    imStatusDefs[0].resolve();
+                    return Promise.resolve([
+                        {
+                            id: 666,
+                            im_status: 'leave',
+                        },
+                    ]);
+                } else if (step === 2) {
+                    imStatusDefs[1].resolve();
+                    return Promise.resolve([
+                        {
+                            id: 666,
+                            im_status: 'online',
+                        },
+                    ]);
+                }
+            }
+            if (args.method === 'channel_info') {
+                if (step === 1) {
+                    channelInfoDefs[0].resolve();
+                    return Promise.resolve([{
+                        id: 1,
+                        direct_partner: [{
+                            out_of_office_message: "Leave me alone",
+                            out_of_office_date_end: false,
+                        }],
+                    }]);
+                }
+                else if (step === 2) {
+                    channelInfoDefs[1].resolve();
+                    return Promise.resolve([{
+                        id: 1,
+                        direct_partner: [{
+                            out_of_office_message: false,
+                            out_of_office_date_end: false,
+                        }],
+                    }]);
+                }
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    await testUtils.nextTick();
+
+    // detach channel 1, so that it opens corresponding thread window.
+    parent.call('mail_service', 'getChannel', 1).detach();
+    await testUtils.nextTick();
+
+    assert.containsNone($, '.o_out_of_office',
+        "should contain no out of office section on chat window initially");
+
+    timeoutMock.addTime(51*1000); // wait for next im status fetch
+
+    await Promise.all([imStatusDefs[0], channelInfoDefs[0]]);
+    await testUtils.nextTick();
+    assert.containsOnce($, '.o_out_of_office',
+        "should contain out of office section on chat window");
+    assert.containsOnce($, '.o_out_of_office > .o_out_of_office_text',
+        "should contain out of office text on chat window");
+    assert.ok(
+        $('.o_out_of_office > .o_out_of_office_text')
+            .text()
+            .replace(/\s/g, "")
+            .indexOf("Leavemealone") !== -1,
+        "should contain out of office text on chat window");
+    timeoutMock.addTime(51*1000); // wait for next im status fetch
+
+    await Promise.all([imStatusDefs[1], channelInfoDefs[1]]);
+    await testUtils.nextTick();
+    assert.containsNone($, '.o_out_of_office',
+        "should no longer contain out of office section on chat window");
+
+    timeoutMock.runPendingTimeouts();
+    parent.destroy();
+});
+
 });
 });
 });

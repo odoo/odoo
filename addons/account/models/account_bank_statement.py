@@ -296,8 +296,6 @@ class AccountBankStatement(models.Model):
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
 
     def button_journal_entries(self):
-        context = dict(self._context or {})
-        context['journal_id'] = self.journal_id.id
         return {
             'name': _('Journal Entries'),
             'view_mode': 'tree,form',
@@ -305,7 +303,9 @@ class AccountBankStatement(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('move_line_ids').mapped('move_id').ids)],
-            'context': context,
+            'context': {
+                'journal_id': self.journal_id.id,
+            }
         }
 
     def button_open(self):

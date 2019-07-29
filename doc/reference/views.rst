@@ -332,11 +332,20 @@ Possible children elements of the list view are:
     ``width_factor`` (for ``editable``)
         the column relative width (as the layout is fixed)
     ``width`` (for ``editable``)
-        the column width (as the layout is fixed)
+        the column width (as the layout is fixed). It is a string describing the
+        width css property, such as '100px'.
 
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
+
+    .. note:: When a list view is grouped, numeric fields are aggregated and
+              displayed for each group.  Also, if there are too many records in
+              a group, a pager will appear on the right of the group row. For
+              this reason, it is not a good practice to have a numeric field in
+              the last column, when the list view is in a situation where it can
+              be grouped (it is however fine for x2manys field in a form view:
+              they cannot be grouped).
 
 ``groupby``
   defines custom headers (with buttons) for the current view when grouping
@@ -346,7 +355,7 @@ Possible children elements of the list view are:
 
   ``name``
       the name of a many2one field (on the current model). Custom header will be
-      displayed when grouping the view on this field name (only for first level).
+      displayed when grouping the view on this field name.
 
   .. code-block:: xml
 

@@ -219,8 +219,8 @@ class View(models.Model):
         return most_specific_views
 
     @api.model
-    def _view_get_inherited_children(self, view, options):
-        extensions = super(View, self)._view_get_inherited_children(view, options)
+    def _view_get_inherited_children(self, view):
+        extensions = super(View, self)._view_get_inherited_children(view)
         return extensions.filter_duplicate()
 
     @api.model
