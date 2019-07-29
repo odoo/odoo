@@ -367,11 +367,11 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         var row_id = cell.data('row_id') | 0;
         var answer_id = cell.data('answer_id');
 
-        var params = this._getQueryStringParams();
-        var filters = params['filters'] ? params['filters'] + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id
-        params['filters'] = filters;
+        var params = new URLSearchParams(window.location.search)
+        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id
+        params.set('filters', filters);
 
-        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
+        window.location.href = window.location.pathname + '?' + params.toString();
     },
 
     /**
@@ -379,10 +379,10 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClearFilterClick: function (ev) {
-        var params = this._getQueryStringParams();
-        delete params['filters'];
-        delete params['finished'];
-        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
+        var params = new URLSearchParams(window.location.search)
+        params.delete('filters');
+        params.delete('finished');
+        window.location.href = window.location.pathname + '?' + params.toString();
     },
 
     /**
@@ -390,9 +390,9 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterAllClick: function (ev) {
-        var params = this._getQueryStringParams();
-        delete params['finished'];
-        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
+        var params = new URLSearchParams(window.location.search)
+        params.delete('finished');
+        window.location.href = window.location.pathname + '?' + params.toString();
     },
 
     /**
@@ -400,40 +400,9 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterFinishedClick: function (ev) {
-        var params = this._getQueryStringParams();
-        params['finished'] = true;
-        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
-    },
-
-    // TODO DBE : Remove the two next functions in v13 and use URLSearchParams instead (see task id : 1985506)
-    // as IE will not be supported anymore in v13.
-    _getQueryStringParams: function () {
-        var paramsDict = {};
-        var params = window.location.search.split('?');
-        if (params.length === 1) {
-            return paramsDict;
-        }
-        params = params[1].split('&');
-        params.forEach(function (param) {
-            var paramKeyValue = param.split('=');
-            paramsDict[paramKeyValue[0]] = paramKeyValue.length === 2 ? paramKeyValue[1] : null;
-        });
-        return paramsDict;
-    },
-
-    _toQueryString: function (paramsDict) {
-        var queryString = "";
-        _.each(paramsDict, function (value, key) {
-            if (value) {
-                queryString += key + '=' + value + '&';
-            } else {
-                queryString += key + '&';
-            }
-        });
-        if (queryString.length > 0) {
-            queryString = queryString.substring(0, queryString.length-1);
-        }
-        return queryString;
+        var params = new URLSearchParams(window.location.search)
+        params.set('finished', true);
+        window.location.href = window.location.pathname + '?' + params.toString();
     },
 });
 
