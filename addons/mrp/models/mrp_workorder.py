@@ -367,7 +367,7 @@ class MrpWorkorder(models.Model):
                              'location_dest_id': location_dest_id,
                     })
             else:
-                production_move.quantity_done += self.qty_producing
+                production_move._set_quantity_done(self.qty_producing)
 
         if not self.next_work_order_id:
             for by_product_move in self._get_byproduct_move_to_update():
