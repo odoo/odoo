@@ -110,7 +110,7 @@ class SaleCouponProgram(models.Model):
         res = super(SaleCouponProgram, self).write(vals)
         reward_fields = [
             'reward_type', 'reward_product_id', 'discount_type', 'discount_percentage',
-            'discount_apply_on', 'discount_specific_product_id', 'discount_fixed_amount'
+            'discount_apply_on', 'discount_specific_product_ids', 'discount_fixed_amount'
         ]
         if any(field in reward_fields for field in vals):
             self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
@@ -259,8 +259,8 @@ class SaleCouponProgram(models.Model):
             if program.reward_type == 'product' and \
                not order.order_line.filtered(lambda line: line.product_id == program.reward_product_id):
                 continue
-            elif program.reward_type == 'discount' and program.discount_apply_on == 'specific_product' and \
-               not order.order_line.filtered(lambda line: line.product_id == program.discount_specific_product_id):
+            elif program.reward_type == 'discount' and program.discount_apply_on == 'specific_products' and \
+               not order.order_line.filtered(lambda line: line.product_id in program.discount_specific_product_ids):
                 continue
             programs |= program
         return programs

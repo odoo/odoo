@@ -26,10 +26,18 @@
             <span style="font-size: 50px; color: #875A7B; font-weight: bold;">
                 ${object.program_id.discount_percentage} %
             </span>
-            % if object.program_id.discount_apply_on == 'specific_product':
-            <br /><strong style="font-size: 24px;">
-                ${'on %s' % object.program_id.discount_specific_product_id.name}
-            </strong>
+            % if object.program_id.discount_apply_on == 'specific_products'
+                <br />
+                % if len(object.program_id.discount_specific_product_ids) != 1
+                % set display_specific_products = True
+                <strong style="font-size: 24px;">
+                    on some products*
+                </strong>
+                % else
+                <strong style="font-size: 24px;">
+                    ${'on %s' % object.program_id.discount_specific_product_ids.name}
+                </strong>
+                % endif
             % elif object.program_id.discount_apply_on == 'cheapest_product':
             <br /><strong style="font-size: 24px;">
                 off on the cheapest product
@@ -71,6 +79,11 @@
         % if object.program_id.rule_minimum_amount != 0.00
         <span style="font-size: 14px;">
             Valid for purchase above ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}
+        </span><br />
+        % endif
+        % if display_specific_products
+        <span>
+            *Valid for following products: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}
         </span><br />
         % endif
         <br/>

@@ -155,11 +155,11 @@ class SaleOrder(models.Model):
                         'is_reward_line': True,
                         'tax_id': [(4, tax.id, False) for tax in taxes],
                     }
-        elif program.discount_apply_on in ['specific_product', 'on_order']:
-            if program.discount_apply_on == 'specific_product':
+        elif program.discount_apply_on in ['specific_products', 'on_order']:
+            if program.discount_apply_on == 'specific_products':
                 # We should not exclude reward line that offer this product since we need to offer only the discount on the real paid product (regular product - free product)
-                free_product_lines = self.env['sale.coupon.program'].search([('reward_type', '=', 'product'), ('reward_product_id', '=', program.discount_specific_product_id.id)]).mapped('discount_line_product_id')
-                lines = lines.filtered(lambda x: x.product_id == program.discount_specific_product_id or x.product_id in free_product_lines)
+                free_product_lines = self.env['sale.coupon.program'].search([('reward_type', '=', 'product'), ('reward_product_id', 'in', program.discount_specific_product_ids.ids)]).mapped('discount_line_product_id')
+                lines = lines.filtered(lambda x: x.product_id in (program.discount_specific_product_ids | free_product_lines))
 
             for line in lines:
                 discount_line_amount = self._get_reward_values_discount_percentage_per_line(program, line)

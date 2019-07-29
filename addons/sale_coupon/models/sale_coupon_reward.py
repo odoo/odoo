@@ -33,12 +33,12 @@ class SaleCouponReward(models.Model):
     discount_apply_on = fields.Selection([
         ('on_order', 'On Order'),
         ('cheapest_product', 'On Cheapest Product'),
-        ('specific_product', 'On Specific Product')], default="on_order",
+        ('specific_products', 'On Specific Products')], default="on_order",
         help="On Order - Discount on whole order\n" +
         "Cheapest product - Discount on cheapest product of the order\n" +
-        "Specific product - Discount on selected specific product")
-    discount_specific_product_id = fields.Many2one('product.product', string="Product",
-        help="Product that will be discounted if the discount is applied on a specific product")
+        "Specific products - Discount on selected specific products")
+    discount_specific_product_ids = fields.Many2many('product.product', string="Products",
+        help="Products that will be discounted if the discount is applied on specific products")
     discount_max_amount = fields.Float(default=0,
         help="Maximum amount of discount that can be provided")
     discount_fixed_amount = fields.Float(string="Fixed Amount", help='The discount in fixed amount')
@@ -65,8 +65,11 @@ class SaleCouponReward(models.Model):
                     reward_percentage = str(reward.discount_percentage)
                     if reward.discount_apply_on == 'on_order':
                         reward_string = _("%s%% discount on total amount" % (reward_percentage))
-                    elif reward.discount_apply_on == 'specific_product':
-                        reward_string = _("%s%% discount on %s" % (reward_percentage, reward.discount_specific_product_id.name))
+                    elif reward.discount_apply_on == 'specific_products':
+                        if len(reward.discount_specific_product_ids) > 1:
+                            reward_string = _("%s%% discount on products" % (reward_percentage))
+                        else:
+                            reward_string = _("%s%% discount on %s" % (reward_percentage, reward.discount_specific_product_ids.name))
                     elif reward.discount_apply_on == 'cheapest_product':
                         reward_string = _("%s%% discount on cheapest product" % (reward_percentage))
                 elif reward.discount_type == 'fixed_amount':
