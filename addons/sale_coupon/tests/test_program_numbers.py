@@ -142,8 +142,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_type': 'percentage',
             'discount_percentage': 20.0,
             'rule_minimum_amount': 320.00,
-            'discount_apply_on': 'specific_product',
-            'discount_specific_product_id': self.largeCabinet.id,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': [(6, 0, [self.largeCabinet.id])],
         })
         order = self.empty_order
         self.largeCabinet.taxes_id = percent_tax
@@ -377,8 +377,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'program_type': 'promotion_program',
             'discount_type': 'percentage',
             'discount_percentage': 20.0,
-            'discount_apply_on': 'specific_product',
-            'discount_specific_product_id': self.largeCabinet.id,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': [(6, 0, [self.largeCabinet.id])],
         })
         order.recompute_coupon_lines()
         # Note: we have 7 regular Large Cabinets and 3 free Large Cabinets. We should then discount only 4 really paid Large Cabinets
@@ -537,3 +537,83 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         generated_coupon = order.generated_coupon_ids
         self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
         self.assertEqual(generated_coupon.state, 'reserved', "The coupon should be set back to reserved as we had already an expired one, no need to create a new one")
+
+    def test_program_discount_on_multiple_specific_products(self):
+        """ Ensure a discount on multiple specific products is correctly computed.
+            - Simple: Discount must be applied on all the products set on the promotion
+            - Advanced: This discount must be split by different taxes
+        """
+        order = self.empty_order
+        p_specific_products = self.env['sale.coupon.program'].create({
+            'name': '20% reduction on Conference Chair and Drawer Black in cart',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'program_type': 'promotion_program',
+            'discount_type': 'percentage',
+            'discount_percentage': 25.0,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': [(6, 0, [self.conferenceChair.id, self.drawerBlack.id])],
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': self.conferenceChair.id,
+            'name': 'Conference Chair',
+            'product_uom_qty': 4.0,
+            'order_id': order.id,
+        })
+        sol2 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'name': 'Drawer Black',
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3, "Conference Chair + Drawer Black + 20% discount line")
+        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair     |  4  |     16.50  |       /  |   66.00 |   66.00 |   0.00
+        # Drawer Black         |  2  |     25.00  |       /  |   50.00 |   50.00 |   0.00
+        # 25% discount         |  1  |    -29.00  |       /  |  -29.00 |  -29.00 |   0.00
+        # --------------------------------------------------------------------------------
+        # TOTAL                                              |   87.00 |   87.00 |   0.00
+        self.assertEqual(order.amount_total, 87.00, "Total should be 87.00, see above comment")
+
+        # remove Drawer Black case from promotion
+        p_specific_products.discount_specific_product_ids = [(6, 0, [self.conferenceChair.id])]
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3, "Should still be Conference Chair + Drawer Black + 20% discount line")
+        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair     |  4  |     16.50  |       /  |   66.00 |   66.00 |   0.00
+        # Drawer Black         |  2  |     25.00  |       /  |   50.00 |   50.00 |   0.00
+        # 25% discount         |  1  |    -16.50  |       /  |  -16.50 |  -16.50 |   0.00
+        # --------------------------------------------------------------------------------
+        # TOTAL                                              |   99.50 |   99.50 |   0.00
+        self.assertEqual(order.amount_total, 99.50, "The 12.50 discount from the drawer black should be gone")
+
+        # =========================================================================
+        # PART 2: Same flow but with different taxes on products to ensure discount is split per VAT
+        # Add back Drawer Black in promotion
+        p_specific_products.discount_specific_product_ids = [(6, 0, [self.conferenceChair.id, self.drawerBlack.id])]
+
+        percent_tax = self.env['account.tax'].create({
+            'name': "30% Tax",
+            'amount_type': 'percent',
+            'amount': 30,
+            'price_include': True,
+        })
+        sol2.tax_id = percent_tax
+
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 4, "Conference Chair + Drawer Black + 20% on no TVA product (Conference Chair) + 20% on 15% tva product (Drawer Black)")
+        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair     |  4  |     16.50  |       /  |   66.00 |   66.00 |   0.00
+        # Drawer Black         |  2  |     25.00  | 30% incl |   38.46 |   50.00 |  11.54
+        # 25% discount         |  1  |    -16.50  |       /  |  -16.50 |  -16.50 |   0.00
+        # 25% discount         |  1  |    -12.50  | 30% incl |   -9.62 |  -12.50 |  -2.88
+        # --------------------------------------------------------------------------------
+        # TOTAL                                              |   78.34 |   87.00 |   8.66
+        self.assertEqual(order.amount_total, 87.00, "Total untaxed should be as per above comment")
+        self.assertEqual(order.amount_untaxed, 78.34, "Total with taxes should be as per above comment")
