@@ -511,6 +511,17 @@ class OdooTestResult(unittest.result.TestResult):
         super().addFailure(test, err)
         self.logError("FAIL", test, err)
 
+    def addSubTest(self, test, subtest, err):
+        # since addSubTest is not making a call to addFailure or addError we need to manage it too
+        # https://github.com/python/cpython/blob/3.7/Lib/unittest/result.py#L136
+        if err is not None:
+            if issubclass(err[0], test.failureException):
+                flavour = "FAIL"
+            else:
+                flavour = "ERROR"
+            self.logError(flavour, subtest, err)
+        super().addSubTest(test, subtest, err)
+
     def addSkip(self, test, reason):
         super().addSkip(test, reason)
         self.log(logging.INFO, 'skipped %s', self.getDescription(test), test=test)
