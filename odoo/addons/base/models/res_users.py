@@ -1144,14 +1144,12 @@ class GroupsView(models.Model):
 class ModuleCategory(models.Model):
     _inherit = "ir.module.category"
 
-    @api.multi
     def write(self, values):
         res = super().write(values)
         if "name" in values:
             self.env["res.groups"]._update_user_groups_view()
         return res
 
-    @api.multi
     def unlink(self):
         res = super().unlink()
         self.env["res.groups"]._update_user_groups_view()
