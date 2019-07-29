@@ -156,7 +156,7 @@
                                 <li t-if="sale_order.remaining_validity_days &gt; 0" class="list-group-item">
                                     <small><b class="text-muted">This offer expires in</b></small>
                                     <div class="day_counter">
-                                        <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
+                                        <i class="fa fa-clock-o" aria-label="Dates" title="Dates"></i>
                                         <t t-esc="sale_order.remaining_validity_days"/>
                                         <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
