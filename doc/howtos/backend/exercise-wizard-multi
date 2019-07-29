@@ -15,22 +15,21 @@ Index: addons/openacademy/wizard.py
 ===================================================================
 --- addons.orig/openacademy/wizard.py
 +++ addons/openacademy/wizard.py
-@@ -6,14 +6,15 @@ class Wizard(models.TransientModel):
+@@ -6,13 +6,14 @@ class Wizard(models.TransientModel):
      _name = 'openacademy.wizard'
      _description = "Wizard: Quick Registration of Attendees to Sessions"
- 
+
 -    def _default_session(self):
 -        return self.env['openacademy.session'].browse(self._context.get('active_id'))
 +    def _default_sessions(self):
 +        return self.env['openacademy.session'].browse(self._context.get('active_ids'))
- 
+
 -    session_id = fields.Many2one('openacademy.session',
 -        string="Session", required=True, default=_default_session)
 +    session_ids = fields.Many2many('openacademy.session',
 +        string="Sessions", required=True, default=_default_sessions)
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
- 
-     @api.multi
+
      def subscribe(self):
 -        self.session_id.attendee_ids |= self.attendee_ids
 +        for session in self.session_ids:
