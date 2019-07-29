@@ -461,7 +461,7 @@ class PosConfig(models.Model):
         """ open the pos interface """
         self.ensure_one()
         # check all constraints, raises if any is not met
-        self._validate_fields(self._fields)
+        self._validate_fields(set(self._fields) - {"cash_control"})
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',
