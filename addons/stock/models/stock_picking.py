@@ -245,8 +245,7 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company,
-        index=True, required=True,
+        related='picking_type_id.company_id',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     user_id = fields.Many2one(
         'res.users', 'Responsible', tracking=True,
@@ -293,7 +292,7 @@ class Picking(models.Model):
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
 
     _sql_constraints = [
-        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
+        ('name_uniq', 'unique(name, picking_type_id)', 'Reference must be unique per picking type!'),
     ]
 
     def _compute_has_tracking(self):
@@ -625,8 +624,8 @@ class Picking(models.Model):
         for picking in self:
             if picking.mapped('move_lines.company_id') != picking.company_id:
                 raise UserError(_('Some stock moves are recorded in another company than this transfer'))
-            if picking.location_dest_id.company_id not in [False, picking.company_id]\
-                    or picking.location_id.company_id not in [False, picking.company_id]:
+            if picking.location_dest_id.company_id and picking.location_dest_id.company_id != picking.company_id\
+                    or picking.location_id.company_id and picking.location_id.company_id != picking.company_id:
                 raise UserError(_('The locations are not recorded in the same company than this transfer'))
 
 
