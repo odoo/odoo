@@ -21,7 +21,7 @@ CREATE TABLE res_users (
     -- (when the destination rows exist)
     company_id integer, -- references res_company,
     partner_id integer, -- references res_partner,
-    create_date timestamp without time zone,
+    create_date timestamp(0) without time zone,
     primary key(id)
 );
 
@@ -34,8 +34,8 @@ CREATE TABLE res_groups (
 CREATE TABLE ir_module_category (
     id serial NOT NULL,
     create_uid integer, -- references res_users on delete set null,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
+    create_date timestamp(0) without time zone,
+    write_date timestamp(0) without time zone,
     write_uid integer, -- references res_users on delete set null,
     parent_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     name character varying(128) NOT NULL,
@@ -45,8 +45,8 @@ CREATE TABLE ir_module_category (
 CREATE TABLE ir_module_module (
     id serial NOT NULL,
     create_uid integer, -- references res_users on delete set null,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
+    create_date timestamp(0) without time zone,
+    write_date timestamp(0) without time zone,
     write_uid integer, -- references res_users on delete set null,
     website character varying(256),
     summary character varying(256),
@@ -72,8 +72,8 @@ ALTER TABLE ir_module_module add constraint name_uniq unique (name);
 CREATE TABLE ir_module_module_dependency (
     id serial NOT NULL,
     create_uid integer, -- references res_users on delete set null,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
+    create_date timestamp(0) without time zone,
+    write_date timestamp(0) without time zone,
     write_uid integer, -- references res_users on delete set null,
     name character varying(128),
     module_id integer REFERENCES ir_module_module ON DELETE cascade,
@@ -84,13 +84,13 @@ CREATE TABLE ir_module_module_dependency (
 CREATE TABLE ir_model_data (
     id serial NOT NULL,
     create_uid integer,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
+    create_date timestamp(0) without time zone,
+    write_date timestamp(0) without time zone,
     write_uid integer,
     noupdate boolean,
     name varchar NOT NULL,
-    date_init timestamp without time zone,
-    date_update timestamp without time zone,
+    date_init timestamp(0) without time zone,
+    date_update timestamp(0) without time zone,
     module varchar NOT NULL,
     model varchar NOT NULL,
     res_id integer,
@@ -110,7 +110,7 @@ CREATE TABLE res_company (
     partner_id integer,
     currency_id integer,
     sequence integer,
-    create_date timestamp without time zone,
+    create_date timestamp(0) without time zone,
     primary key(id)
 );
 
@@ -118,7 +118,7 @@ CREATE TABLE res_partner (
     id serial,
     name varchar,
     company_id integer,
-    create_date timestamp without time zone,
+    create_date timestamp(0) without time zone,
     primary key(id)
 );
 
