@@ -79,12 +79,13 @@ except ImportError:
 def phone_sanitize_numbers(numbers, country_code, country_phone_code, force_format='E164'):
     result = dict.fromkeys(numbers, False)
     for number in numbers:
+        stripped = number.strip()
         if not number:
             result[number] = {'sanitized': False, 'code': 'empty', 'msg': False}
             continue
         try:
             sanitized = phone_format(
-                number, country_code, country_phone_code,
+                stripped, country_code, country_phone_code,
                 force_format=force_format, raise_exception=True)
         except Exception as e:
             result[number] = {'sanitized': False, 'code': 'invalid', 'msg': e}
@@ -105,7 +106,7 @@ def phone_sanitize_numbers_w_record(numbers, record, country=False, record_count
 
 
 def phone_sanitize_numbers_string_w_record(numbers_str, record, country=False, record_country_fname='country_id', force_format='E164'):
-    found_numbers = [number.strip() for number in numbers_str.split(',')]
+    found_numbers = [number for number in numbers_str.split(',')]
     return phone_sanitize_numbers_w_record(found_numbers, record, country=country, record_country_fname=record_country_fname, force_format=force_format)
 
 
