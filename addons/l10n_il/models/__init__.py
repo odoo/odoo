@@ -5,3 +5,4 @@
 
 from . import res_partner
 from . import res_company
+from . import l10n_il_withh_tax_report_data
