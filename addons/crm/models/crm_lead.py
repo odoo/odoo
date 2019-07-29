@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from psycopg2 import sql, extras
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
@@ -1499,11 +1498,7 @@ class Lead(models.Model):
             leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
             lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
 
-            # Update in execute batch to avoid server roundtrips + page_size to 10000 to avoid memory errors
-            sql = "update crm_lead set automated_probability = %s where id = %s"
-            batch_params = [(lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
-            extras.execute_batch(self._cr, sql, batch_params, page_size=10000)
-            _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
+            self._update_lead_probability_batch(lead_probabilities, leads_to_update)
 
     # ----------------------------
     # Utility Tools for PLS
@@ -1568,7 +1563,6 @@ class Lead(models.Model):
         #   Prepare fields injection
         team_condition = 'and l.team_id = %s' if team_id else 'and l.team_id is null'
         str_fields = ", ".join(["{}"] * len(fields))
-        args = [sql.Identifier(field) for field in fields] * 2
 
         #   Build sql query in safe mode
         query = """select probability, active, %s, count(probability) as count
@@ -1577,7 +1571,7 @@ class Lead(models.Model):
                     and create_date > %%s
                     %s
                     group by probability, active, %s """
-        query = sql.SQL(query % (str_fields, team_condition, str_fields)).format(*args)
+        query = (query % (str_fields, team_condition, str_fields)).format(*fields * 2)
 
         query_params = [pls_start_date] + ([int(team_id)] if team_id else [])
         self._cr.execute(query, query_params)
@@ -1635,6 +1629,26 @@ class Lead(models.Model):
             frequencies[field][value]['lost'] += lost
         return frequencies
 
+    def _update_lead_probability_batch(self, lead_probabilities, leads_to_update):
+        query = "update crm_lead set automated_probability = %s where id = %s"
+        try:
+            from psycopg2 import extras
+            # Update in execute batch to avoid server roundtrips + page_size to 10000 to avoid memory errors
+            batch_params = [(lead_probabilities[lead.id], lead.id) for lead in leads_to_update if
+                            lead.id in lead_probabilities]
+            extras.execute_batch(self._cr, query, batch_params, page_size=10000)
+        # Fallback in case of psycopg2.7 (minimum) is not installed.
+        except ImportError:
+            update_counter = 0
+            for lead in leads_to_update:
+                if lead.id in lead_probabilities:
+                    self._cr.execute(query, (lead_probabilities[lead.id], lead.id))
+                    update_counter += 1
+                if update_counter % 10000 == 0:
+                    self._cr.commit()
+            self._cr.commit()
+        _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
+
     # Compute Automated Probability Tools
     # -----------------------------------
     def _pls_get_lead_pls_values(self, batch_mode=False):
@@ -1658,12 +1672,11 @@ class Lead(models.Model):
             # get all info on leads
             #   Prepare fields injection
             str_fields = ", ".join(["{}"] * len(fields))
-            args = [sql.Identifier(field) for field in fields]
             #   Build sql query in safe mode
             query = """SELECT id, %s
                         FROM crm_lead l
                         WHERE probability > 0 AND probability < 100 AND active = True AND id in %%s order by team_id asc"""
-            query = sql.SQL(query % str_fields).format(*args)
+            query = (query % str_fields).format(*fields)
 
             self._cr.execute(query, [tuple(self.ids)])
             lead_results = self._cr.dictfetchall()
