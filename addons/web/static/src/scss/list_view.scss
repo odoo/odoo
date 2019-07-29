@@ -25,7 +25,9 @@
             }
         }
         tbody > tr > td:not(.o_list_record_selector) {
-            @include o-text-overflow(table-cell);
+            &:not(.o_handle_cell) {
+                @include o-text-overflow(table-cell);
+            }
 
             &.o_list_number {
                 text-align: right;
