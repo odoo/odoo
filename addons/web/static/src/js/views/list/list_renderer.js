@@ -599,16 +599,22 @@ var ListRenderer = BasicRenderer.extend({
         var colspanBeforeAggregate;
         if (firstAggregateIndex !== -1) {
             // if there are aggregates, the first $th goes until the first
-            // aggregate then all cells between aggregates are rendered, then
-            // there is a last $th for the pager
+            // aggregate then all cells between aggregates are rendered
             colspanBeforeAggregate = firstAggregateIndex;
             var lastAggregateIndex = _.findLastIndex(this.columns, function (column) {
                 return column.tag === 'field' && _.contains(aggregateKeys, column.attrs.name);
             });
             cells = cells.concat(aggregateCells.slice(firstAggregateIndex, lastAggregateIndex + 1));
-            cells.push($('<th>').attr('colspan', this.columns.length - 1 - lastAggregateIndex));
+            var colSpan = this.columns.length - 1 - lastAggregateIndex;
+            if (colSpan > 0) {
+                cells.push($('<th>').attr('colspan', colSpan));
+            }
         } else {
-            colspanBeforeAggregate = this.columns.length;
+            var colN = this.columns.length;
+            colspanBeforeAggregate = colN > 1 ? colN - 1 : 1;
+            if (colN > 1) {
+                cells.push($('<th>'));
+            }
         }
         if (this.hasSelectors) {
             colspanBeforeAggregate += 1;
@@ -616,11 +622,11 @@ var ListRenderer = BasicRenderer.extend({
         $th.attr('colspan', colspanBeforeAggregate);
 
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
-            var $lastCell = cells[cells.length - 1];
             var $pager = this._renderGroupPager(group);
-            $lastCell.addClass('o_group_pager').append($pager);
+            var $lastCell = cells[cells.length - 1];
+            $lastCell.append($pager);
         }
-        if (groupLevel === 0 && group.isOpen && this.groupbys[groupBy]) {
+        if (group.isOpen && this.groupbys[groupBy]) {
             var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
             if ($buttons.length) {
                 var $buttonSection = $('<div>', {

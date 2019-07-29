@@ -39,8 +39,9 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         padding: 8px;
 
         @include media-breakpoint-down(sm) {
+            align-items: center;
             height: $o-mail-chat-header-height;
-            padding-top: 12px;
+            padding: 0;
             border-radius: 0px;
             .o_thread_window_title {
                 font-size: 16px;
@@ -48,7 +49,9 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             }
 
             .o_thread_window_close {
-                font-size: 17px;
+                $o-close-font-size: 17px;
+                padding: (($o-mail-chat-header-height - $o-close-font-size) / 2);
+                font-size: $o-close-font-size;
                 color: white;
             }
         }

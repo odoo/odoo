@@ -15,6 +15,7 @@ This is the latest basic South African localisation necessary to run Odoo in ZA:
     'website': 'https://www.paradigmdigital.co.za',
     'depends': ['account', 'base_vat'],
     'data': [
+        'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
         'data/account.tax.group.csv',
         'data/account_chart_template_data.xml',

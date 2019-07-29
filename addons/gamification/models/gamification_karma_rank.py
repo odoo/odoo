@@ -55,8 +55,19 @@ class KarmaRank(models.Model):
         return res
 
     def write(self, vals):
+        if 'karma_min' in vals:
+            previous_ranks = self.env['gamification.karma.rank'].search([], order="karma_min DESC").ids
+            low = min(vals['karma_min'], self.karma_min)
+            high = max(vals['karma_min'], self.karma_min)
+
         tools.image_resize_images(vals)
         res = super(KarmaRank, self).write(vals)
-        users = self.env['res.users'].sudo().search([('karma', '>', 0)])
-        users._recompute_rank()
+
+        if 'karma_min' in vals:
+            after_ranks = self.env['gamification.karma.rank'].search([], order="karma_min DESC").ids
+            if previous_ranks != after_ranks:
+                users = self.env['res.users'].sudo().search([('karma', '>', 0)])
+            else:
+                users = self.env['res.users'].sudo().search([('karma', '>=', low), ('karma', '<=', high)])
+            users._recompute_rank()
         return res
