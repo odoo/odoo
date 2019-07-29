@@ -290,17 +290,17 @@ class Message(models.Model):
         partners = self.env['res.partner'].sudo()
         attachments = self.env['ir.attachment']
         message_ids = list(message_tree.keys())
+        email_notification_tree = {}
         for message in message_tree.values():
             if message.author_id:
                 partners |= message.author_id
-            if message.subtype_id and message.partner_ids:  # take notified people of message with a subtype
-                partners |= message.partner_ids
-            elif not message.subtype_id and message.partner_ids:  # take specified people of message without a subtype (log)
-                partners |= message.partner_ids
-            if message.notified_partner_ids:  # notified
-                partners |= message.notified_partner_ids
+            # find all notified partners
+            email_notification_tree[message.id] = message.notification_ids.filtered(
+                lambda n: n.notification_type == 'email' and n.res_partner_id.active and
+                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share))
             if message.attachment_ids:
                 attachments |= message.attachment_ids
+        partners |= self.env['mail.notification'].concat(*email_notification_tree.values()).mapped('res_partner_id')
         # Read partners as SUPERUSER -> message being browsed as SUPERUSER it is already the case
         partners_names = partners.name_get()
         partner_tree = dict((partner[0], partner) for partner in partners_names)
@@ -339,14 +339,6 @@ class Message(models.Model):
                 author = partner_tree[message.author_id.id]
             else:
                 author = (0, message.email_from)
-            partner_ids = []
-            if message.subtype_id:
-                partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
-                               if partner.id in partner_tree]
-            else:
-                partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
-                               if partner.id in partner_tree]
-            # we read customer_email_status before filtering inactive user because we don't want to miss a red enveloppe
             customer_email_status = (
                 (all(n.notification_status == 'sent' for n in message.notification_ids if n.notification_type == 'email') and 'sent') or
                 (any(n.notification_status == 'exception' for n in message.notification_ids if n.notification_type == 'email') and 'exception') or
@@ -354,9 +346,7 @@ class Message(models.Model):
                 'ready'
             )
             customer_email_data = []
-            for notification in message.notification_ids.filtered(
-                    lambda n: n.notification_type == 'email' and n.res_partner_id.active and
-                    (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share)):
+            for notification in email_notification_tree[message.id]:
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.notification_status))
 
             has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
@@ -374,7 +364,6 @@ class Message(models.Model):
 
             message_dict.update({
                 'author_id': author,
-                'partner_ids': partner_ids,
                 'customer_email_status': customer_email_status,
                 'customer_email_data': customer_email_data,
                 'attachment_ids': attachment_ids,
