@@ -19,7 +19,8 @@
         <field name="model">stock.inventory.line</field>
         <field name="arch" type="xml">
             <tree editable="top" string="Inventory Details" js_class="inventory_validate_button"
-                  decoration-info="product_qty != theoretical_qty" decoration-danger="outdated"
+                  decoration-danger="product_qty != theoretical_qty"
+                  decoration-muted="product_qty == theoretical_qty"
                   decoration-bf="is_editable">
                 <field name="product_tracking" invisible="1"/>
                 <field name="is_editable" invisible="1"/>
@@ -31,33 +32,34 @@
                             ('state', '!=', 'confirm')]}"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"
                        options="{'no_create': True}"
+                       invisible="context.get('readonly_location_id', False)"
                        readonly="context.get('readonly_location_id', False)"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"/>
+                <field name="inventory_date" optional="hide"/>
                 <field name="prod_lot_id" groups="stock.group_production_lot"
                        attrs="{'readonly': ['|', '|',
                             ('product_tracking', '=', 'none'),
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"
-                       context="{'default_product_id': product_id}"
+                       context="{'default_product_id': product_id}" optional="show"
                        domain="[('product_id', '=', product_id)]"/>
                 <field name="package_id" groups="stock.group_tracking_lot"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"
-                       string="Package"
+                       string="Package" optional="show"
                        domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]"/>
                 <field name="partner_id" groups="stock.group_tracking_owner"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"/>
-                <field name="theoretical_qty" string="On Hand Quantity"
-                       force_save="1" readonly="1"/>
-                <field name="product_qty" attrs="{'readonly': [('state', '!=', 'confirm')]}"/>
-                <field name="difference_qty"/>
+                <field name="theoretical_qty" string="On Hand"
+                       force_save="1" readonly="1" optional="show"/>
+                <field name="product_qty" attrs="{'readonly': [('state', '!=', 'confirm')]}" string="Counted"/>
+                <field name="difference_qty" optional="show"/>
                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" force_save="1"/>
-                <field name="inventory_date"/>
                 <field name="inventory_id" invisible="1"/>
                 <field name="state" invisible="1"/>
             </tree>
@@ -189,15 +191,6 @@
                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                     </group>
                 </group>
-                <div attrs="{'invisible': [('state', '=', 'done')]}">
-                    <h3 class="oe_grey">Notes</h3>
-                    <span class="oe_grey">Inventory Adjustment Lines are displayed:</span>
-                    <ul class="oe_grey">
-                        <li>In black if there is no difference between the quantity on hand and the counted quantity.</li>
-                        <li>In <span class="text-info">blue</span> if there is a difference between the quantity on hand and the counted quantity.</li>
-                        <li>In <span class="text-danger">red</span> if the quantity on hand has changed, it can be recomputed via the action menu at the top.</li>
-                    </ul>
-                </div>
             </sheet>
             </form>
         </field>

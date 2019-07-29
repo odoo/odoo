@@ -56,13 +56,13 @@ class Inventory(models.Model):
         states={'draft': [('readonly', False)]},
         default=lambda self: self.env.company)
     location_ids = fields.Many2many(
-        'stock.location', string='Inventoried Location(s)',
+        'stock.location', string='Locations',
         readonly=True,
         states={'draft': [('readonly', False)]},
         default=lambda self: self._default_location_ids(),
         domain=lambda self: self._domain_location_ids())
     product_ids = fields.Many2many(
-        'product.product', string='Inventoried Product(s)',
+        'product.product', string='Products',
         domain=[('type', '=', 'product')], readonly=True,
         states={'draft': [('readonly', False)]},
         help="Specify Products to focus your inventory on particular Products.")
