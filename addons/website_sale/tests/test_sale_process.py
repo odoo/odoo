@@ -130,3 +130,19 @@ class TestWebsiteSaleCheckoutAddress(odoo.tests.TransactionCase):
             self.default_address_values['partner_id'] = new_partner.id
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertEqual(new_partner.company_id, self.website.company_id, "Public user edited billing (the partner itself) should not get its company modified.")
+
+    def test_04_apply_empty_pl(self):
+        ''' Ensure empty pl code reset the applied pl '''
+        so = self._create_so(self.env.user.partner_id.id)
+        eur_pl = self.env['product.pricelist'].create({
+            'name': 'EUR_test',
+            'website_id': self.website.id,
+            'code': 'EUR_test',
+        })
+
+        with MockRequest(self.env, website=self.website, sale_order_id=so.id):
+            self.WebsiteSaleController.pricelist('EUR_test')
+            self.assertEqual(so.pricelist_id, eur_pl, "Ensure EUR_test is applied")
+
+            self.WebsiteSaleController.pricelist('')
+            self.assertNotEqual(so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code")
