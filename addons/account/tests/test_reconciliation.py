@@ -23,7 +23,7 @@ class TestReconciliation(AccountingTestCase):
         self.res_currency_model = self.registry('res.currency')
         self.res_currency_rate_model = self.registry('res.currency.rate')
 
-        self.partner_agrolait = self.env.ref("base.res_partner_2")
+        self.partner_agrolait = self.env.ref("base.res_partner_1")
         self.partner_agrolait_id = self.partner_agrolait.id
         self.currency_swiss_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id

@@ -148,8 +148,9 @@
                             <field name="invoice_ids" invisible="1"/>
                             <group name="partner_group" invisible="context.get('active_model') == 'account.move'">
                                 <field name="payment_type" widget="radio"/>
-                                <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
-                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
+                                <field name="partner_type" invisible="1"/>
+                                <field name="partner_id" string="Customer" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': ['|', ('partner_type', '!=', 'customer'),('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
+                                <field name="partner_id" string="Vendor" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': ['|', ('partner_type', '!=', 'supplier'),('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
                             </group>
                             <group name="right_column">
                                 <field name="communication"/>
@@ -165,7 +166,8 @@
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
                                 <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
-                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('require_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
+                                <field name="partner_bank_account_id" string="Customer Account" attrs="{'invisible': ['|', ('partner_type', '!=', 'customer'), ('show_partner_bank_account', '!=', True)],'required': [('require_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
+                                <field name="partner_bank_account_id" string="Recipient Account" attrs="{'invisible': ['|', ('partner_type', '!=', 'supplier'), ('show_partner_bank_account', '!=', True)],'required': [('require_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
                                 <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="require_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
