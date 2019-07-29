@@ -105,7 +105,7 @@ QUnit.test('on_{attach/detach}_callback', function (assert) {
 
 QUnit.test('mobile discuss swipe [Mark as Read and Toggle Star]', async function (assert) {
     var done = assert.async();
-    assert.expect(7);
+    assert.expect(8);
 
     this.data['mail.message'].records = [{
         author_id: ["1", "John Doe 1"],
@@ -129,7 +129,6 @@ QUnit.test('mobile discuss swipe [Mark as Read and Toggle Star]', async function
         mockRPC: function (route, args) {
             if (args.method === 'set_message_done') {
                 assert.step('mark_as_read');
-                console.log("STEP mark_as_read DONE");
             }
             if (args.method === 'toggle_message_starred') {
                 assert.step('toggle_star_status');
@@ -216,8 +215,12 @@ QUnit.test('mobile discuss swipe [Mark as Read and Toggle Star]', async function
                 }]
             });
             testUtils.dom.triggerEvents($message, [touchEnd, 'click']);
-
-            concurrency.delay(750).then(function () {
+            // jQuery animation delay
+            concurrency.delay(650).then(function () {
+                assert.ok($('body > .o_mobile_undobar').length, 'showing undo option for marked as read');
+                // waiting for undo to go
+                return concurrency.delay(3000);
+            }).then(function () {
                 assert.verifySteps(['mark_as_read'], "thread should marked as read");
                 discuss.destroy();
                 done();

@@ -518,4 +518,30 @@
             }
         }
     }
+
+    .o_mobile_undobar {
+        position: fixed;
+        bottom: 20px;
+        left: 15px;
+        right: 15px;
+        height: 50px;
+        background: #414141;
+        z-index: 9999;
+        color: white;
+        border-radius: 2px;
+        display: inline-flex;
+
+        .undobar-message {
+            flex-grow: 1;
+            font-weight: bold;
+            padding: 16px;
+        }
+        .undobar-button {
+            font-weight: bold;
+            color: $o-brand-primary;
+            margin: 0px;
+            padding: 0px 16px;
+            height: 100%;
+        }
+    }
 }

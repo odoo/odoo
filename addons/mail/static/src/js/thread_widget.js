@@ -7,6 +7,7 @@ var mailUtils = require('mail.utils');
 var config = require('web.config');
 var core = require('web.core');
 var time = require('web.time');
+var MobileUndobar = require('mail.MobileUndobar');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -20,6 +21,7 @@ var ORDER = {
 
 var READ_MORE = _lt("read more");
 var READ_LESS = _lt("read less");
+var MARKED_AS_READ = _lt('Marked as read');
 
 /**
  * This is a generic widget to render a thread.
@@ -235,12 +237,24 @@ var ThreadWidget = Widget.extend({
                     $(ev.currentTarget).find(".swipe-action[data-key='star']").toggleClass("bg-warning", action == "left");
                 },
                 onRightSwipe: function (ev) {
-                    setTimeout(function() {
-                        $(ev.currentTarget).find(".swipe-action").removeClass("bg-success");
-                        $(ev.currentTarget).animate({ left: '0px' }, 200);
-                        var messageID = $(ev.currentTarget).find(".o_thread_message").data("message-id");
-                        self.trigger('mark_as_read', messageID);
-                    }, 500);
+                    var target = $(ev.currentTarget);
+                    target.find(".swipe-action").removeClass("bg-success");
+                    target.animate({ left: '0px' }, 200);
+                    console.log('slideup starting...');
+                    target.slideUp("fast", function () {
+                        console.log('slideup starting DONE');
+                        new MobileUndobar(self, {
+                            message: MARKED_AS_READ,
+                            delay: 3000,
+                            complete: function () {
+                                var messageID = target.find(".o_thread_message").data("message-id");
+                                self.trigger('mark_as_read', messageID);
+                            },
+                            cancel: function () {
+                                target.slideDown("fast");
+                            }
+                        }).show();
+                    });
                 },
                 onLeftSwipe: function (ev) {
                     setTimeout(function() {

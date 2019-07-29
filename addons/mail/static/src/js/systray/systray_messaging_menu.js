@@ -4,8 +4,13 @@ odoo.define('mail.systray.MessagingMenu', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var SystrayMenu = require('web.SystrayMenu');
+var MobileUndobar = require('mail.MobileUndobar');
 var Widget = require('web.Widget');
 var QWeb = core.qweb;
+
+var _lt = core._lt;
+
+var MARKED_AS_READ = _lt('Marked as read');
 
 /**
  * Menu item appended in the systray part of the navbar
@@ -194,11 +199,20 @@ var MessagingMenu = Widget.extend({
                 },
                 onRightSwipe: function (ev) {
                     var target = $(ev.currentTarget);
-                    setTimeout(function() {
-                        target.find(".swipe-action").removeClass("bg-success");
-                        target.animate({ left: '0px' }, 200);
-                        self._processPreviewMarkAsRead($(ev.currentTarget).find(".o_mail_preview"));
-                    }, 500);
+                    target.find(".swipe-action").removeClass("bg-success");
+                    target.animate({ left: '0px' }, 200);
+                    target.slideUp("fast", function () {
+                        new MobileUndobar(self, {
+                            message: MARKED_AS_READ,
+                            delay: 3000,
+                            complete: function () {
+                                self._processPreviewMarkAsRead(target.find(".o_mail_preview"));
+                            },
+                            cancel: function () {
+                                target.slideDown("fast");
+                            }
+                        }).show();
+                    });
                 }
             });
         }
