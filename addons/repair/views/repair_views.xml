@@ -8,12 +8,15 @@
         <field name="arch" type="xml">
             <tree string="Repairs order" decoration-muted="state in ('done','cancel')" decoration-info="state=='draft'">
                 <field name="name" />
-                <field name="product_id" />
-                <field name="partner_id"/>
-                <field name="address_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="guarantee_limit"/>
-                <field name="state"/>
+                <field name="product_id" optional="show"/>
+                <field name="product_qty" optional="hide" string="Quantity"/>
+                <field name="product_uom" optional="hide" string="Unit of Measure"/>
+                <field name="partner_id" optional="show"/>
+                <field name="address_id" optional="show"/>
+                <field name="guarantee_limit" optional="show"/>
+                <field name="location_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="state" optional="show"/>
             </tree>
         </field>
     </record>
