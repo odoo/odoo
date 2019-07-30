@@ -83,6 +83,8 @@
                 <field name="partner_id" groups="stock.group_tracking_owner"/>
                 <filter string="Outdated Theoretical Quantities"
                         name="outdated" domain="[('outdated', '=', True)]"/>
+                <filter string="Difference different than zero"
+                        name="difference" domain="[('difference_qty', '!=', '0')]"/>
                 <group  expand='0' string='Group by...'>
                    <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}"/>
                    <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'package_id'}"/>

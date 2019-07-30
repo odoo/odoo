@@ -306,7 +306,7 @@ class InventoryLine(models.Model):
         digits='Product Unit of Measure', readonly=True)
     difference_qty = fields.Float('Difference', compute='_compute_difference',
         help="Indicates the gap between the product's theoretical quantity and its newest quantity.",
-        readonly=True, digits='Product Unit of Measure')
+        readonly=True, digits='Product Unit of Measure', search="_search_difference_qty")
     inventory_date = fields.Datetime('Inventory Date', readonly=True,
         default=fields.Datetime.now,
         help="Last date at which the On Hand Quantity has been computed.")
@@ -503,6 +503,17 @@ class InventoryLine(models.Model):
                 continue
             impacted_lines |= line
         impacted_lines.write({'product_qty': 0})
+
+    def _search_difference_qty(self, operator, value):
+        if operator == '=':
+            result = True
+        elif operator == '!=':
+            result = False
+        else:
+            raise NotImplementedError()
+        lines = self.search([('inventory_id', '=', self.env.context.get('default_inventory_id'))])
+        line_ids = lines.filtered(lambda line: float_is_zero(line.difference_qty, line.product_id.uom_id.rounding) == result).ids
+        return [('id', 'in', line_ids)]
 
     def _search_outdated(self, operator, value):
         if operator != '=':
