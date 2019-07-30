@@ -17,35 +17,30 @@ class CrmTeam(models.Model):
     _name = "crm.team"
     _inherit = ['mail.thread']
     _description = "Sales Team"
-    _order = "name"
+    _order = "sequence"
 
     @api.model
     @api.returns('self', lambda value: value.id if value else False)
-    def _get_default_team_id(self, user_id=None):
+    def _get_default_team_id(self, user_id=None, domain=None):
         if not user_id:
             user_id = self.env.uid
-        team_id = self.env['crm.team'].sudo().search([
+        team_id = self.env['crm.team'].search([
             '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
             '|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)
         ], limit=1)
         if not team_id and 'default_team_id' in self.env.context:
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
         if not team_id:
-            default_team_id = self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
-            if default_team_id:
-                try:
-                    default_team_id.check_access_rule('read')
-                except AccessError:
-                    return self.env['crm.team']
-                if self.env.context.get('default_type') != 'lead' and default_team_id.active:
-                    team_id = default_team_id
+            team_domain = domain or []
+            default_team_id = self.env['crm.team'].search(team_domain, limit=1)
+            return default_team_id or self.env['crm.team']
         return team_id
-
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
     name = fields.Char('Sales Team', required=True, translate=True)
+    sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
@@ -65,7 +60,7 @@ class CrmTeam(models.Model):
     color = fields.Integer(string='Color Index', help="The color of the channel")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
-    
+
     def _compute_dashboard_graph(self):
         for team in self:
             team.dashboard_graph_data = json.dumps(team._get_graph())
@@ -85,7 +80,6 @@ class CrmTeam(models.Model):
         """ skeleton function defined here because it'll be called by crm and/or sale
         """
         raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
-        
 
     def _graph_get_dates(self, today):
         """ return a coherent start and end date for the dashboard graph covering a month period grouped by week.
@@ -129,7 +123,7 @@ class CrmTeam(models.Model):
                     GROUP BY x_value;"""
 
         # apply rules
-        dashboard_graph_model = self._graph_get_model()     
+        dashboard_graph_model = self._graph_get_model()
         GraphModel = self.env[dashboard_graph_model]
         graph_table = GraphModel._table
         extra_conditions = self._extra_sql_conditions()
@@ -149,7 +143,7 @@ class CrmTeam(models.Model):
             'end_date': "%s",
             'extra_conditions': extra_conditions
         }
-        
+
         self._cr.execute(query, [self.id, start_date, end_date] + where_clause_params)
         return self.env.cr.dictfetchall()
 
@@ -177,7 +171,7 @@ class CrmTeam(models.Model):
 
         # generate all required x_fields and update the y_values where we have data for them
         locale = self._context.get('lang') or 'en_US'
-        
+
         weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
         for week in range(0, (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1):
             short_name = get_week_name(start_date + relativedelta(days=7 * week), locale)

@@ -63,8 +63,12 @@ class Lead(models.Model):
                            self._table, ['create_date', 'team_id'])
         return res
 
+    def _default_team_id(self, user_id):
+        domain = [('use_leads', '=', True)] if self._context.get('default_type') == "lead" or self.type == 'lead' else [('use_opportunities', '=', True)]
+        return self.env['crm.team']._get_default_team_id(user_id=user_id, domain=domain)
+
     def _default_stage_id(self):
-        team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
+        team = self._default_team_id(user_id=self.env.uid)
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
     name = fields.Char('Opportunity', required=True, index=True)
@@ -74,7 +78,7 @@ class Lead(models.Model):
     date_action_last = fields.Datetime('Last Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", tracking=40, index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
-    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self._default_team_id(self.env.uid),
         index=True, tracking=True, help='When sending mails, the default email address is taken from the Sales Team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
@@ -280,7 +284,7 @@ class Lead(models.Model):
             team = self.env['crm.team'].browse(self._context['team_id'])
             if user_id in team.member_ids.ids or user_id == team.user_id.id:
                 return {}
-        team_id = self.env['crm.team']._get_default_team_id(user_id=user_id)
+        team_id = self._default_team_id(user_id)
         return {'team_id': team_id}
 
     @api.onchange('user_id')
