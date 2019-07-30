@@ -24,7 +24,7 @@ class Website(models.Model):
     def _get_crm_default_team_domain(self):
         if not self.env.user.has_group('crm.group_use_lead'):
             return [('use_opportunities', '=', True)]
-        return []
+        return [('use_leads', '=', True)]
 
     crm_default_team_id = fields.Many2one(
         'crm.team', string='Default Sales Teams',
