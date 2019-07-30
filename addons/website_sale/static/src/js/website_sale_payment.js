@@ -24,18 +24,22 @@ $(document).ready(function () {
             $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).attr('data-token', token);
             $("div.js_payment a.list-group-item").removeClass("list-group-item-info");
             $('span.js_radio').switchClass(ico_on, ico_off, 0);
+            $("div.oe_sale_acquirer_button[data-id]", $payment).addClass("hidden");
+            $("div.oe_sale_token_button", $payment).addClass("hidden");
             if (token) {
               $("div.oe_sale_acquirer_button div.token_hide").hide();
               $(ev.currentTarget).find('span.js_radio').switchClass(ico_off, ico_on, 0);
               $(ev.currentTarget).parents('li').find('input').prop("checked", true);
               $(ev.currentTarget).addClass("list-group-item-info");
+              var token_button = $("div.oe_sale_token_button", $payment);
+              token_button.attr('data-token', token);
+              token_button.attr('data-id', payment_id);
+              token_button.removeClass("hidden");
             }
             else{
               $("div.oe_sale_acquirer_button div.token_hide").show();
+              $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
             }
-            $("div.oe_sale_acquirer_button[data-id]", $payment).addClass("hidden");
-            $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
-
     })
     .find("input[name='acquirer']:checked").click();
 
@@ -45,6 +49,9 @@ $(document).ready(function () {
       ev.stopPropagation();
       var $form = $(ev.currentTarget).parents('form');
       var acquirer = $(ev.currentTarget).parents('div.oe_sale_acquirer_button').first();
+      if (!acquirer.length) {
+        acquirer = $(ev.currentTarget).parents('div.oe_sale_token_button').first();
+      }
       var acquirer_id = acquirer.data('id');
       var acquirer_token = acquirer.attr('data-token'); // !=data
       var params = {'tx_type': acquirer.find('input[name="odoo_save_token"]').is(':checked')?'form_save':'form'};

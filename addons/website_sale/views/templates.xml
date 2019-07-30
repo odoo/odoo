@@ -1384,6 +1384,11 @@
                                             </div>
                                         </div>
                                     </t>
+                                    <div class="oe_sale_token_button hidden pull-right" t-if="tokens">
+                                        <button type="submit" width="100px" class="btn btn-primary token_button">
+                                            <span>Pay Now <span class="fa fa-long-arrow-right"/></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
