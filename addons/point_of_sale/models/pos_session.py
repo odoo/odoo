@@ -77,9 +77,12 @@ class PosSession(models.Model):
         readonly=True)
     cash_register_difference = fields.Monetary(
         compute='_compute_cash_balance',
-        string='Difference',
+        string='Before Closing Difference',
         help="Difference between the theoretical closing balance and the real closing balance.",
         readonly=True)
+    cash_real_difference = fields.Monetary(string='Difference', readonly=True)
+    cash_real_transaction = fields.Monetary(string='Transaction', readonly=True)
+    cash_real_expected = fields.Monetary(string="Expected", readonly=True)
 
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
     order_count = fields.Integer(compute='_compute_order_count')
@@ -289,6 +292,9 @@ class PosSession(models.Model):
 
     def _validate_session(self):
         self.ensure_one()
+        self.cash_real_transaction = self.cash_register_total_entry_encoding
+        self.cash_real_expected = self.cash_register_balance_end
+        self.cash_real_difference = self.cash_register_difference
         self._check_if_no_draft_orders()
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
