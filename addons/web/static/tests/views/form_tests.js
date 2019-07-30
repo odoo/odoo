@@ -4627,6 +4627,83 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('oe_read_only className is handled in list views', async function (assert) {
+        assert.expect(5);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="foo"/>' +
+                                '<field name="display_name" class="oe_read_only"/>' +
+                                '<field name="bar"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_readonly',
+            'form should be in readonly mode');
+        assert.isVisible(form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            'display_name cell should be visible in readonly mode');
+
+        await testUtils.form.clickEdit(form);
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable',
+            'form should be in edit mode');
+        assert.isNotVisible(form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            'display_name cell should not be visible in edit mode');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.hasClass(form.$('.o_form_view .o_list_view tbody tr:first input[name="display_name"]'),
+            'oe_read_only', 'display_name input should have oe_read_only class');
+
+        form.destroy();
+    });
+
+    QUnit.test('oe_edit_only className is handled in list views', async function (assert) {
+        assert.expect(5);
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="foo"/>' +
+                                '<field name="display_name" class="oe_edit_only"/>' +
+                                '<field name="bar"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_readonly',
+            'form should be in readonly mode');
+        assert.isNotVisible(form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            'display_name cell should not be visible in readonly mode');
+
+        await testUtils.form.clickEdit(form);
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable',
+            'form should be in edit mode');
+        assert.isVisible(form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            'display_name cell should be visible in edit mode');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.hasClass(form.$('.o_form_view .o_list_view tbody tr:first input[name="display_name"]'),
+            'oe_edit_only', 'display_name input should have oe_edit_only class');
+
+        form.destroy();
+    });
+
     QUnit.test('*_view_ref in context are passed correctly', async function (assert) {
         var done = assert.async();
         assert.expect(3);
