@@ -50,4 +50,16 @@ $o-website-values-palette-number: length($o-website-values-palettes);
     @return map-get($o-website-values, $key);
 }
 
+@if o-website-value('google-fonts') {
+    $o-theme-font-names: join($o-theme-font-names, o-website-value('google-fonts'));
+    @each $font in o-website-value('google-fonts') {
+        $o-theme-fonts: append($o-theme-fonts, (quote($font), sans-serif));
+        $o-theme-font-urls: append($o-theme-font-urls, quote($font) + ':400,400i,700,700i');
+    }
+}
+
 $o-theme-navbar-logo-height: o-website-value('logo-height') !default;
+$o-theme-font: nth($o-theme-fonts, o-website-value('font-number')) !default;
+$o-theme-headings-font: nth($o-theme-fonts, o-website-value('headings-font-number')) !default;
+$o-theme-navbar-font: nth($o-theme-fonts, o-website-value('navbar-font-number')) !default;
+$o-theme-buttons-font: nth($o-theme-fonts, o-website-value('buttons-font-number')) !default;
