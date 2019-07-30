@@ -2,6 +2,7 @@
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.test_mail.tests import common as test_mail_common
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 
 
 class BaseFunctionalTest(test_mail_common.BaseFunctionalTest):
@@ -62,3 +63,14 @@ class TestRecipients(test_mail_common.TestRecipients):
             phone_validation.phone_format(partner.mobile, partner.country_id.code, partner.country_id.phone_code, force_format='E164')
             for partner in (cls.partner_1 | cls.partner_2)
         ]
+
+
+class MassSMSBaseFunctionalTest(BaseFunctionalTest):
+
+    @classmethod
+    def setUpClass(cls):
+        super(MassSMSBaseFunctionalTest, cls).setUpClass()
+        cls.user_marketing = mail_new_test_user(
+            cls.env, login='marketing',
+            groups='base.group_user,mass_mailing.group_mass_mailing_user',
+            name='Martial Marketing', signature='--\nMartial')
