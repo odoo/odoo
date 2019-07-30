@@ -879,7 +879,7 @@ class AccountMove(models.Model):
                     JOIN account_payment payment ON payment.id = rec_line.payment_id
                     JOIN account_journal journal ON journal.id = rec_line.journal_id
                     WHERE payment.state IN ('posted', 'sent')
-                    AND journal.post_at_bank_rec = 'bank reconciliation'
+                    AND journal.post_at_bank_rec IS TRUE
                     AND move.id IN %s
                 ''', [tuple(invoice_ids)]
             )
@@ -1880,7 +1880,7 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        if self.mapped('line_ids.payment_id') and any(post_at_bank_rec == 'bank reconciliation' for post_at_bank_rec in self.mapped('journal_id.post_at_bank_rec')):
+        if self.mapped('line_ids.payment_id') and any(self.mapped('journal_id.post_at_bank_rec')):
             raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
         return self.post()
 

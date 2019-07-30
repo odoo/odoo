@@ -26,12 +26,12 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.assertEqual(prop[0]['id'], rcv_mv_line.id)
 
     def test_full_reconcile(self):
-        self._reconcile_invoice_with_statement('payment validation')
+        self._reconcile_invoice_with_statement(False)
 
     def test_post_at_bank_rec_full_reconcile(self):
         """ Test the full reconciliation of a bank statement directly with an invoice.
         """
-        self._reconcile_invoice_with_statement('bank reconciliation')
+        self._reconcile_invoice_with_statement(True)
 
     def _reconcile_invoice_with_statement(self, post_at_bank_rec):
         """ Tests the reconciliation of an invoice with a bank statement, using

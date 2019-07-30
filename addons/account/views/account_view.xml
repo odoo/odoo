@@ -287,7 +287,7 @@
                                     <group string="Posting" groups="account.group_account_user,account.group_account_manager" attrs="{'invisible': [('type', 'not in', ['bank', 'cash', 'sale', 'purchase'])]}">
                                         <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="post_at_bank_rec" widget="radio" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                                        <field name="post_at" widget="radio" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                     </group>
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>

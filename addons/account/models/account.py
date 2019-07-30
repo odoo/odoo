@@ -594,7 +594,8 @@ class AccountJournal(models.Model):
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
-    post_at_bank_rec = fields.Selection([('payment validation', 'Payment Validation'), ('bank reconciliation', 'Bank Reconciliation')], string="Post At", default='bank reconciliation')
+    post_at = fields.Selection([('pay_val', 'Payment Validation'), ('bank_rec', 'Bank Reconciliation')], string="Post At")
+    post_at_bank_rec = fields.Boolean(compute='_compute_post_at_bank_rec', inverse='_inverse_post_at_bank_rec', store=True)
 
     # alias configuration for journals
     alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
@@ -611,6 +612,15 @@ class AccountJournal(models.Model):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
+
+    @api.depends('post_at')
+    def _compute_post_at_bank_rec(self):
+        for journal in self:
+            journal.post_at_bank_rec = (journal.post_at == 'bank_rec')
+
+    def _inverse_post_at_bank_rec(self):
+        for journal in self:
+            journal.post_at = journal.post_at_bank_rec and 'bank_rec' or 'pay_val'
 
     # do not depend on 'sequence_id.date_range_ids', because
     # sequence_id._get_current_sequence() may invalidate it!
@@ -786,7 +796,7 @@ class AccountJournal(models.Model):
                 }
                 journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
         # Changing the 'post_at_bank_rec' option will post the draft payment moves and change the related invoices' state.
-        if 'post_at_bank_rec' in vals and vals['post_at_bank_rec'] != 'bank reconciliation':
+        if 'post_at_bank_rec' in vals and not vals['post_at_bank_rec']:
             draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
             pending_payments = draft_moves.mapped('line_ids.payment_id')
             pending_payments.mapped('move_line_ids.move_id').post()
