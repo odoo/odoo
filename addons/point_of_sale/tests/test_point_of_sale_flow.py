@@ -744,3 +744,112 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         for iline in invoice.invoice_line_ids:
             self.assertFalse(iline.tax_ids)
+
+    def test_invoiced_order_with_fiscal_position(self):
+        """ Check if the invoiced created respects the fiscal position
+        """
+        # fiscal position requires few rituals in order to work
+        # create here the records needed for the testing
+        company = self.env['res.company'].browse(self.company_id)
+        tax_received_account = company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id')
+        sale_account = self.env.ref('product.product_category_all').property_account_income_categ_id
+        other_sale_account = self.env['account.account'].search([
+            ('company_id', '=', company.id),
+            ('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id),
+            ('id', '!=', sale_account.id)
+        ], limit=1)
+        tax5 = self.env['account.tax'].create({
+            'name': 'VAT 5 perc test',
+            'amount_type': 'percent',
+            'amount': 5.0,
+            'price_include': 0
+        })
+        tax17 = self.env['account.tax'].create({'name': 'New Tax 17%', 'amount': 17})
+        (tax5 | tax17).invoice_repartition_line_ids.write({'account_id': tax_received_account.id})
+
+        # This fiscal position maps
+        #   `tax5` -> `tax17`
+        #   `sale_account` -> `other_sale_account`
+        fpos = self.env['account.fiscal.position'].create({'name': 'Test Fiscal Position'})
+        account_fpos = self.env['account.fiscal.position.account'].create({
+            'position_id': fpos.id,
+            'account_src_id': sale_account.id,
+            'account_dest_id': other_sale_account.id,
+        })
+        tax_fpos = self.env['account.fiscal.position.tax'].create({
+            'position_id': fpos.id,
+            'tax_src_id': tax5.id,
+            'tax_dest_id': tax17.id,
+        })
+        fpos.write({
+            'account_ids': [(6, 0, account_fpos.ids)],
+            'tax_ids': [(6, 0, tax_fpos.ids)],
+        })
+
+        # this customer has `fpos` as fiscal position
+        self.partner1.write({'property_account_position_id': fpos.id})
+        # this product has `tax5` so it should map to `tax17`
+        self.product3.write({'taxes_id': [(6, 0, tax5.ids)]})
+
+        self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
+
+        # the pos client returns order line with products original taxes_id
+        # but the computed amounts are based on the mapped taxes
+        self.pos_order_pos1 = self.PosOrder.create({
+            'company_id': company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'fiscal_position_id': fpos.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': 2.0,
+                'price_subtotal': 900,
+                'price_subtotal_incl': 1053,
+                'tax_ids': [(6, 0, tax5.ids)]
+            })],
+            'amount_tax': 153,
+            'amount_total': 1053,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+
+        # I click on the "Make Payment" wizard to pay the PoS order
+        context_make_payment = {"active_ids": [self.pos_order_pos1.id], "active_id": self.pos_order_pos1.id}
+        self.pos_make_payment = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 1053,
+        })
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos1.id}
+        self.pos_make_payment.with_context(context_payment).check()
+
+        # I check that the order is marked as paid and there is no invoice
+        # attached to it
+        self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
+        self.assertFalse(self.pos_order_pos1.account_move, 'Invoice should not be attached to order.')
+
+        # I generate an invoice from the order
+        res = self.pos_order_pos1.action_pos_order_invoice()
+        self.assertIn('res_id', res, "No invoice created")
+
+        # I test that the total of the attached invoice is correct
+        invoice = self.env['account.move'].browse(res['res_id'])
+        self.assertAlmostEqual(
+            invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
+
+        # Check the accounting lines
+        sale_lines = invoice.line_ids.filtered(lambda line: line.account_id == sale_account)
+        self.assertEqual(len(sale_lines), 0, msg='There should be no line for the `sale_account` '
+                                                 'since it should be mapped to `other_sale_account`.')
+
+        other_sale_lines = invoice.line_ids.filtered(lambda line: line.account_id == other_sale_account)
+        self.assertEqual(len(other_sale_lines), 1)
+        self.assertAlmostEqual(other_sale_lines.balance, -900.0)
+
+        tax_lines = invoice.line_ids.filtered(lambda line: line.account_id == tax_received_account)
+        self.assertEqual(len(tax_lines), 1)
+        self.assertAlmostEqual(tax_lines.balance, -153.0)
