@@ -52,7 +52,7 @@ var AbstractView = Factory.extend({
     // determines if a control panel should be instantiated
     withControlPanel: true,
     // determines if a search panel could be instantiated
-    withSearchPanel: true,
+    withSearchPanel: false,
     // determines the MVC components to use
     config: _.extend({}, Factory.prototype.config, {
         Model: AbstractModel,
