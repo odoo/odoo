@@ -13,11 +13,19 @@ var InventoryReportListController = ListController.extend({
     // Public
     // -------------------------------------------------------------------------
 
+    init: function (parent, model, renderer, params) {
+        this.context = renderer.state.getContext();
+        return this._super.apply(this, arguments);
+    },
+
     /**
      * @override
      */
     renderButtons: function ($node) {
         this._super.apply(this, arguments);
+        if (this.context.no_at_date) {
+            return;
+        }
         var $buttonToDate = $(qweb.render('InventoryReport.Buttons'));
         $buttonToDate.on('click', this._onOpenWizard.bind(this));
 
