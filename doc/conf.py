@@ -25,7 +25,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.linkcode',
-    'autojsdoc.ext',
+    # 'autojsdoc.ext',
     'github_link',
     'odoo_ext',
     'html_domain',
