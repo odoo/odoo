@@ -93,7 +93,7 @@
                         </group><group>
                             <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
                             <field name="date"/>
-                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>

@@ -461,7 +461,7 @@
             <field name="model">stock.move</field>
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves">
+                <tree decoration-muted="state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves" create="0">
                     <field name="date_expected" widget='date'/>
                     <field name="date" string="Creation date" widget="date" optional="hide"/>
                     <field name="picking_id" string="Reference" invisible="1"/>

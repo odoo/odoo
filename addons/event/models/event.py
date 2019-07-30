@@ -108,7 +108,8 @@ class EventEvent(models.Model):
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer',
         tracking=True,
-        default=lambda self: self.env.company.partner_id)
+        default=lambda self: self.env.company.partner_id,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     event_type_id = fields.Many2one(
         'event.type', string='Category',
         readonly=False, states={'done': [('readonly', True)]})
@@ -168,6 +169,7 @@ class EventEvent(models.Model):
         'res.partner', string='Location',
         default=lambda self: self.env.company.partner_id,
         readonly=False, states={'done': [('readonly', True)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         tracking=True)
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
     twitter_hashtag = fields.Char('Twitter Hashtag')

@@ -171,6 +171,9 @@
                                 <field name="require_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
                             </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" required="1"/>
+                            </group>
                             <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
                                 <label for="payment_difference"/>
                                 <div>

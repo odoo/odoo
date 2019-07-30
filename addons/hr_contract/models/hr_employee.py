@@ -12,7 +12,7 @@ class Employee(models.Model):
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
     contract_id = fields.Many2one('hr.contract', string='Current Contract',
-        groups="hr.group_hr_user", help='Current contract of the employee')
+        groups="hr.group_hr_user",domain="[('company_id', '=', company_id)]", help='Current contract of the employee')
     calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch')
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")

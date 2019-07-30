@@ -143,13 +143,13 @@ class SaleOrder(models.Model):
     remaining_validity_days = fields.Integer(compute='_compute_remaining_validity_days', string="Remaining Days Before Expiration")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user)
-    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, tracking=1, help="You can find a customer from their name, email, tax ID or reference.")
-    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Invoice address for current sales order.")
-    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Delivery address for current sales order.")
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, tracking=1, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a customer from their name, email, tax ID or reference.")
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Delivery address for current sales order.")
 
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current order. If you change the pricelist, only new lines will consider this pricelist.")
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Pricelist for current order. If you change the pricelist, only new lines will consider this pricelist.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False)
+    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="The analytic account related to a sales order.", copy=False)
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
@@ -170,10 +170,10 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', tracking=4)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', help="Payment terms applies to all invoices issued from this order.")
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', help=" Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. The default value comes from the customer.")
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Payment terms applies to all invoices issued from this order.")
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="[('company_id', '=', company_id)]", help=" Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. The default value comes from the customer.")
     company_id = fields.Many2one('res.company', 'Company', required=True, default=lambda self: self.env.company)
-    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team)
+    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)

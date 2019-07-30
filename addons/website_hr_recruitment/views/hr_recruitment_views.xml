@@ -28,7 +28,7 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>

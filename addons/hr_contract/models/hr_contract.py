@@ -16,9 +16,9 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True)
-    department_id = fields.Many2one('hr.department', string="Department")
-    job_id = fields.Many2one('hr.job', string='Job Position')
+    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    department_id = fields.Many2one('hr.department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
+    job_id = fields.Many2one('hr.job', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
         help="Start date of the contract.")
     date_end = fields.Date('End Date',
@@ -27,7 +27,8 @@ class Contract(models.Model):
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
-        default=lambda self: self.env.company.resource_calendar_id.id)
+        default=lambda self: self.env.company.resource_calendar_id.id,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
@@ -38,7 +39,7 @@ class Contract(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', group_expand='_expand_states',
        tracking=True, help='Status of the contract', default='draft')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     """
         kanban_state:
             * draft + green = "Incoming" state (will be set as Open once the contract has started)

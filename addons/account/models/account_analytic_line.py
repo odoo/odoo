@@ -9,7 +9,7 @@ class AccountAnalyticLine(models.Model):
     _description = 'Analytic Line'
     _order = 'date desc'
 
-    product_id = fields.Many2one('product.product', string='Product')
+    product_id = fields.Many2one('product.product', string='Product', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True,
                                          related='move_id.account_id', store=True, domain=[('deprecated', '=', False)],
                                          compute_sudo=True)

@@ -14,7 +14,7 @@ class HrWorkEntry(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', required=True)
+    employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(string='To')
     duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")

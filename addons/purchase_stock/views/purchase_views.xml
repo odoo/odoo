@@ -34,7 +34,7 @@
                 <attribute name="attrs">{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('product_type', 'in', ('consu', 'product'))]}</attribute>
             </xpath>
             <xpath expr="//page[@name='purchase_delivery_invoice']/group/group" position="inside">
-                <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="dest_address_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
                 <field name="default_location_dest_id_usage" invisible="1"/>
                 <field name="incoterm_id"/>

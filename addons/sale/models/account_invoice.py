@@ -12,12 +12,13 @@ class AccountMove(models.Model):
     def _get_invoice_default_sale_team(self):
         return self.env['crm.team']._get_default_team_id()
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_invoice_default_sale_team)
+    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_invoice_default_sale_team, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_shipping_id = fields.Many2one(
         'res.partner',
         string='Delivery Address',
         readonly=True,
         states={'draft': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Delivery address for current invoice.")
 
     @api.onchange('partner_shipping_id')
