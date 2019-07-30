@@ -515,7 +515,7 @@ class AccountJournalGroup(models.Model):
 
     name = fields.Char("Group Name", required=True, translate=True)
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
-    account_journal_ids = fields.Many2many('account.journal', string="Journals")
+    account_journal_ids = fields.Many2many('account.journal', string="Journals", domain="[('company_id', '=', company_id)]")
     sequence = fields.Integer(default=10)
 
 
@@ -553,11 +553,11 @@ class AccountJournal(models.Model):
         "Select 'General' for miscellaneous operations journals.")
     type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Account Types Allowed')
     account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Accounts Allowed',
-        domain=[('deprecated', '=', False)])
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
     default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
         domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount")
     default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
-        domain=[('deprecated', '=', False)], help="It acts as a default account for debit amount")
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount")
     update_posted = fields.Boolean(string='Allow Cancelling Entries',
         help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
@@ -596,14 +596,14 @@ class AccountJournal(models.Model):
              "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings.")
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
     at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
-    profit_account_id = fields.Many2one('account.account', string='Profit Account', help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
-    loss_account_id = fields.Many2one('account.account', string='Loss Account', help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
+    profit_account_id = fields.Many2one('account.account', domain="[('company_id', '=', company_id)]", string='Profit Account', help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
+    loss_account_id = fields.Many2one('account.account', domain="[('company_id', '=', company_id)]", string='Loss Account', help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
     belongs_to_company = fields.Boolean('Belong to the user\'s current company', compute="_belong_to_company", search="_search_company_journals",)
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
-    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id)]")
+    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
@@ -614,7 +614,7 @@ class AccountJournal(models.Model):
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_name = fields.Char('Alias Name', related='alias_id.alias_name', help="It creates draft invoices and bills by sending an email.", readonly=False)
 
-    journal_group_ids = fields.Many2many('account.journal.group', string="Journal Groups")
+    journal_group_ids = fields.Many2many('account.journal.group', domain="[('company_id', '=', company_id)]", string="Journal Groups")
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),

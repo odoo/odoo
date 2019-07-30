@@ -48,7 +48,7 @@ class PurchaseRequisition(models.Model):
     name = fields.Char(string='Agreement Reference', required=True, copy=False, default='New', readonly=True)
     origin = fields.Char(string='Source Document')
     order_count = fields.Integer(compute='_compute_orders_number', string='Number of Orders')
-    vendor_id = fields.Many2one('res.partner', string="Vendor")
+    vendor_id = fields.Many2one('res.partner', string="Vendor", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     type_id = fields.Many2one('purchase.requisition.type', string="Agreement Type", required=True, default=_get_type_id)
     ordering_date = fields.Date(string="Ordering Date", tracking=True)
     date_end = fields.Datetime(string='Agreement Deadline', tracking=True)

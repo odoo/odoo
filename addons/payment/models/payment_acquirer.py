@@ -104,7 +104,7 @@ class PaymentAcquirer(models.Model):
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
     journal_id = fields.Many2one(
-        'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
+        'account.journal', 'Payment Journal', domain="[('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]",
         help="""Journal where the successful transactions will be posted""")
     check_validity = fields.Boolean(string="Verify Card Validity",
         help="""Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.

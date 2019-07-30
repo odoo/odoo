@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class Expense(models.Model):
     _inherit = "hr.expense"
 
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)]}, domain=[('state', '=', 'sale')])
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)]}, domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]")
 
     @api.onchange('sale_order_id')
     def _onchange_sale_order(self):

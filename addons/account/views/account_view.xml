@@ -199,6 +199,7 @@
                             <field name="name"/>
                             <field name="account_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="sequence"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </sheet>
                 </form>

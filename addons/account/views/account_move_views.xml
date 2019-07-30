@@ -622,15 +622,17 @@
 
                                         <!-- Displayed fields -->
                                         <field name="sequence" widget="handle"/>
-                                        <field name="product_id"/>
+                                        <field name="product_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                         <field name="name" widget="section_and_note_text" required="1"/>
                                         <field name="account_id"
                                                groups="account.group_account_user"
-                                               domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable'))]"
+                                               domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('company_id', '=', parent.company_id)]"
                                                attrs="{'required': [('display_type', '=', False)]}"/>
                                         <field name="analytic_account_id"
+                                               domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                                groups="analytic.group_analytic_accounting"/>
                                         <field name="analytic_tag_ids"
+                                               domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                                groups="analytic.group_analytic_tags"
                                                widget="many2many_tags"/>
                                         <field name="quantity"/>
@@ -638,7 +640,7 @@
                                         <field name="price_unit" string="Price"/>
                                         <field name="discount" string="Disc.%" groups="base.group_no_one"/>
                                         <field name="tax_ids" widget="many2many_tags"
-                                               domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain)]"
+                                               domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
                                                options="{'no_create': True}"/>
                                         <field name="price_subtotal"
@@ -821,6 +823,9 @@
                                                attrs="{'invisible': [('type', '!=', 'entry')], 'readonly': [('reversed_entry_id', '!=', False)]}"/>
                                         <field name="reversed_entry_id"
                                                attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" required="1"/>
                                     </group>
                                 </group>
                             </page>

@@ -76,7 +76,7 @@
                     <group col="2">
                         <group string="Driver">
                             <field name="active" invisible="1"/>
-                            <field name="driver_id"/>
+                            <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
                             <label for="future_driver_id"/>
                             <div class="o_row">
                                 <field name="future_driver_id"/>

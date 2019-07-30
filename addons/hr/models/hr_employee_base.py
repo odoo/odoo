@@ -12,18 +12,18 @@ class HrEmployeeBase(models.AbstractModel):
     name = fields.Char()
     active = fields.Boolean("Active")
     color = fields.Integer('Color Index', default=0)
-    department_id = fields.Many2one('hr.department', 'Department')
-    job_id = fields.Many2one('hr.job', 'Job Position')
+    department_id = fields.Many2one('hr.department', 'Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    job_id = fields.Many2one('hr.job', 'Job Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     job_title = fields.Char("Job Title")
     company_id = fields.Many2one('res.company', 'Company')
-    address_id = fields.Many2one('res.partner', 'Work Address')
+    address_id = fields.Many2one('res.partner', 'Work Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     work_phone = fields.Char('Work Phone')
     mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
-    resource_calendar_id = fields.Many2one('resource.calendar')
+    resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
