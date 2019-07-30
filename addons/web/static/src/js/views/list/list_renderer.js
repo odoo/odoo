@@ -745,6 +745,14 @@ var ListRenderer = BasicRenderer.extend({
         var isNodeSorted = order[0] && order[0].name === name;
         var field = this.state.fields[name];
         var $th = $('<th>');
+        if (node.attrs.class) {
+            if (node.attrs.class.indexOf('oe_edit_only') !== -1) {
+                $th.addClass('oe_edit_only');
+            }
+            if (node.attrs.class.indexOf('oe_read_only') !== -1) {
+                $th.addClass('oe_read_only');
+            }
+        }
         if (!field) {
             return $th;
         }
