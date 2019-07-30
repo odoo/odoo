@@ -28,7 +28,7 @@ _ref_vat = {
     'at': 'ATU12345675',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'ch': 'CHE-123.456.788 TVA or CH TVA 123456',  # Swiss by Yannick Vaucher @ Camptocamp
+    'ch': 'CHE-123.456.788 TVA',  # Swiss by Yannick Vaucher @ Camptocamp
     'cy': 'CY12345678F',
     'cz': 'CZ12345679',
     'de': 'DE123456788',
@@ -154,7 +154,7 @@ class ResPartner(models.Model):
         return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
-    __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
+    __check_vat_ch_re2 = re.compile(r'CHE([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
     def check_vat_ch(self, vat):
         '''
@@ -162,13 +162,11 @@ class ResPartner(models.Model):
         '''
         # VAT number in Switzerland will change between 2011 and 2013
         # http://www.estv.admin.ch/mwst/themen/00154/00589/01107/index.html?lang=fr
-        # Old format is "TVA 123456" we will admit the user has to enter ch before the number
+        # Old format is "TVA 123456" number is deprecated and should not be entered
+        # by users anymore.
         # Format will becomes such as "CHE-999.999.99C TVA"
         # Both old and new format will be accepted till end of 2013
         # Accepted format are: (spaces are ignored)
-        #     CH TVA ######
-        #     CH IVA ######
-        #     CH MWST #######
         #
         #     CHE#########MWST
         #     CHE#########TVA
@@ -178,7 +176,8 @@ class ResPartner(models.Model):
         #     CHE-###.###.### IVA
         #
         if self.__check_vat_ch_re1.match(vat):
-            return True
+            # Old format. Unsuppported since 2014
+            return False
         match = self.__check_vat_ch_re2.match(vat)
         if match:
             # For new TVA numbers, do a mod11 check
