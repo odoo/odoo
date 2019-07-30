@@ -40,13 +40,12 @@ class MassMailing(models.Model):
         return action
 
     def action_redirect_to_invoiced(self):
-        action = self.env.ref('account.view_move_form').read()[0]
+        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
         invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
         action['domain'] = [
             ('id', 'in', invoices.ids),
             ('type', 'in', ('out_invoice', 'out_refund')),
-            ('type', '=', 'posted'),
-            ('partner_id', 'child_of', self.id),
+            ('state', '=', 'posted'),
         ]
         return action
 
