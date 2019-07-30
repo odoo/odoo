@@ -21,6 +21,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     delivery_price = fields.Float()
     display_price = fields.Float(string='Cost')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+    company_id = fields.Many2one('res.company', related='order_id.company_id')
     available_carrier_ids = fields.Many2many("delivery.carrier", compute='_compute_available_carrier', string="Available Carriers")
     invoicing_message = fields.Text(compute='_compute_invoicing_message')
     delivery_message = fields.Text(readonly=True)

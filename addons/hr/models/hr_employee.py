@@ -42,7 +42,8 @@ class HrEmployeePrivate(models.Model):
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
-        groups="hr.group_hr_user", tracking=True)
+        groups="hr.group_hr_user", tracking=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     is_address_home_a_company = fields.Boolean(
         'The employee address has a company linked',
         compute='_compute_is_address_home_a_company',
@@ -74,7 +75,7 @@ class HrEmployeePrivate(models.Model):
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account Number',
-        domain="[('partner_id', '=', address_home_id)]",
+        domain="[('partner_id', '=', address_home_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         tracking=True,
         help='Employee bank salary account')
@@ -96,9 +97,9 @@ class HrEmployeePrivate(models.Model):
     image_1920 = fields.Image(default=_default_image)
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
-    parent_id = fields.Many2one('hr.employee', 'Manager')
+    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
-    coach_id = fields.Many2one('hr.employee', 'Coach')
+    coach_id = fields.Many2one('hr.employee', 'Coach', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
         'emp_id', 'category_id', groups="hr.group_hr_manager",

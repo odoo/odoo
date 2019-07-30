@@ -31,7 +31,7 @@ class SaleOrder(models.Model):
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse',
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        default=_default_warehouse_id)
+        default=_default_warehouse_id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)

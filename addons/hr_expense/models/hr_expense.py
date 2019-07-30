@@ -30,37 +30,38 @@ class HrExpense(models.Model):
     @api.model
     def _get_employee_id_domain(self):
 
-        res= [('id', '=', 0)] # Nothing accepted by domain, by default
+        res = "[('id', '=', 0), '|', ('company_id', '=', False), ('company_id', '=', company_id)]" # Nothing accepted by domain, by default
         if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
-            res = [] # Then, domain accepts everything
+            res = "['|', ('company_id', '=', False), ('company_id', '=', company_id)]"  # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = ['|', '|', '|', ('department_id.manager_id.id', '=', employee.id),
-                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.user_id.id), ('id', '=', employee.id)]
+                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.user_id.id), ('id', '=', employee.id),
+                   '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
         elif self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
-            res = [('id', '=', employee.id)]
+            res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
         return res
 
     name = fields.Char('Description', readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain())
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
-    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)])
+    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Price')
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Unit of Measure', default=1)
-    tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes')
+    tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', domain="[('company_id', '=', company_id)]", string='Taxes')
     untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account')
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
-    account_id = fields.Many2one('account.account', string='Account', default=_default_account_id, help="An expense account is expected")
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    account_id = fields.Many2one('account.account', domain="[('company_id', '=', company_id)]", string='Account', default=_default_account_id, help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
@@ -614,16 +615,16 @@ class HrExpenseSheet(models.Model):
         ('done', 'Paid'),
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True, help='Expense Report State')
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1))
-    address_id = fields.Many2one('res.partner', string="Employee Home Address")
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", limit=1))
+    address_id = fields.Many2one('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Employee Home Address")
     payment_mode = fields.Selection(related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Paid By")
     user_id = fields.Many2one('res.users', 'Manager', readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True)
     total_amount = fields.Monetary('Total Amount', currency_field='currency_id', compute='_compute_amount', store=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
-    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=_default_journal_id, help="The journal used when the expense is done.")
-    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=_default_bank_journal_id, help="The payment method used when the expense is paid by the company.")
+    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=_default_journal_id, domain="[('company_id', '=', company_id)]", help="The journal used when the expense is done.")
+    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=_default_bank_journal_id, domain="[('company_id', '=', company_id)]", help="The payment method used when the expense is paid by the company.")
     accounting_date = fields.Date("Date")
     account_move_id = fields.Many2one('account.move', string='Journal Entry', ondelete='restrict', copy=False)
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})

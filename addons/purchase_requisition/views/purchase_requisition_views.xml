@@ -163,14 +163,14 @@
                     <page string="Products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"/>
+                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                 <field name="schedule_date" groups="base.group_no_one"/>
-                                <field name="account_analytic_id" optional="hide" groups="analytic.group_analytic_accounting"/>
-                                <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                <field name="account_analytic_id" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_tag_ids" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="price_unit"/>
                             </tree>
                             <form string="Products">
@@ -181,7 +181,7 @@
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_uom_id" />
                                     <field name="schedule_date"/>
-                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="account_analytic_id"  domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                             </form>

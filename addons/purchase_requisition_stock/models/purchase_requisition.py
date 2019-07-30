@@ -17,8 +17,8 @@ class PurchaseRequisition(models.Model):
             )
         return pick_in
 
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
-    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', domain="[('company_id', '=', company_id)]")
+    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in, domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
 
     def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         res = super(PurchaseRequisition, self)._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)

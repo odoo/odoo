@@ -164,10 +164,11 @@ class Project(models.Model):
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Analytic account to which this project is linked for financial management. "
              "Use an analytic account to record cost and revenue on your project.")
 
@@ -182,6 +183,7 @@ class Project(models.Model):
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id.id,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
@@ -209,6 +211,7 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
+        domain="[('company_id', '=', company_id)]",
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
 
     # rating fields
@@ -502,7 +505,8 @@ class Task(models.Model):
         index=True, tracking=True)
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        default=lambda self: self._get_default_partner())
+        default=lambda self: self._get_default_partner(),
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     color = fields.Integer(string='Color Index')
