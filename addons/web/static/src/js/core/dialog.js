@@ -53,8 +53,8 @@ var Dialog = Widget.extend({
      * @param {jQueryElement} [options.$parentNode]
      *        Element in which dialog will be appended, by default it will be
      *        in the body
-     * @param {boolean} [options.backdrop=true]
-     *        Whether modal rendered with backdrop or not
+     * @param {boolean|string} [options.backdrop='static']
+     *        The kind of modal backdrop to use (see BS documentation)
      * @param {boolean} [options.renderHeader=true]
      *        Whether or not the dialog should be rendered with header
      * @param {boolean} [options.renderFooter=true]
@@ -75,7 +75,7 @@ var Dialog = Widget.extend({
             buttons: [{text: _t("Ok"), close: true}],
             technical: true,
             $parentNode: false,
-            backdrop: true,
+            backdrop: 'static',
             renderHeader: true,
             renderFooter: true,
         });
