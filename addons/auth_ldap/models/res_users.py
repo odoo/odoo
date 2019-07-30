@@ -38,3 +38,12 @@ class Users(models.Model):
                     if Ldap._authenticate(conf, self.env.user.login, password):
                         return
             raise
+
+    @api.model
+    def change_password(self, old_passwd, new_passwd):
+        if self.env.user.active:
+            Ldap = self.env['res.company.ldap']
+            for conf in Ldap._get_ldap_dicts():
+                if Ldap._authenticate(conf, self.env.user.login, password):
+                    raise UserError(_("Changing password is not supported for LDAP users!"))
+        super(Users, self).change_password(old_password, new_password)
