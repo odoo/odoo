@@ -6670,37 +6670,6 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('always display field help as toolip of header cells', async function (assert) {
-        assert.expect(6);
-
-        this.data.foo.fields.foo.help = "This is Foo field";
-        var list = await createView({
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: `<tree>
-                    <field name="foo"/>
-                    <field name="bar" help="This is Bar field"/>
-                </tree>`,
-        });
-
-        var $fooHeader = list.$('th[data-name=foo]');
-        $fooHeader.tooltip('show', true);
-        $fooHeader.trigger($.Event('mouseenter'));
-        assert.containsOnce(document.body, '.oe_tooltip_string');
-        assert.strictEqual($('.oe_tooltip_string').text().trim(), 'Foo');
-        assert.strictEqual($('.oe_tooltip_help').text().trim(), 'This is Foo field');
-
-        var $barHeader = list.$('th[data-name=bar]');
-        $barHeader.tooltip('show', true);
-        $barHeader.trigger($.Event('mouseenter'));
-        assert.containsOnce(document.body, '.oe_tooltip_string');
-        assert.strictEqual($('.oe_tooltip_string').text().trim(), 'Bar');
-        assert.strictEqual($('.oe_tooltip_help').text().trim(), 'This is Bar field');
-
-        list.destroy();
-    });
-
     // TODO: write test on:
     // - default_get with a field not in view
 });
