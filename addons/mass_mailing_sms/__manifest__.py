@@ -27,6 +27,9 @@
         'wizard/mailing_sms_test_views.xml',
     ],
     'demo': [
+        'data/utm_demo.xml',
+        'data/mailing_list_demo.xml',
+        'data/mailing_demo.xml',
     ],
     'application': True,
 }
