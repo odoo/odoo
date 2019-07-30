@@ -67,6 +67,20 @@ class SaleOrder(models.Model):
         for line in template.sale_order_template_line_ids:
             data = self._compute_line_data_for_template_change(line)
             if line.product_id:
+                # if the translation is not defined (untranslated_name == translated_name)
+                # and the template description matches the one on the product (untranslated_name == untranslated_product_name)
+                # then we fallback on the product's translation
+                line_wo_lang = line.with_context(lang=None)
+                untranslated_name = line_wo_lang.name
+                translated_name = line.name
+                untranslated_product_name = line_wo_lang.product_id.display_name
+                translated_product_name = line.product_id.display_name
+                if line.product_id.description_sale:  # from _onchange_product_id
+                    untranslated_product_name += '\n' + line_wo_lang.product_id.description_sale
+                    translated_product_name += '\n' + line.product_id.description_sale
+                if untranslated_name == translated_name and untranslated_name == untranslated_product_name:
+                    data['name'] = translated_product_name
+
                 discount = 0
                 if self.pricelist_id:
                     price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
