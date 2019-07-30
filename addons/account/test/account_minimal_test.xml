@@ -8,6 +8,10 @@
             <field name="bank_account_code_prefix">X1100</field>
         </record>
 
+        <!-- Demo Account Tag -->
+        <record id="demo_stock_account_test" model="account.account.tag">
+            <field name="name">Demo Stock Account</field>
+        </record>
         <!--
         Chart of Accounts
         -->
@@ -29,7 +33,7 @@
             <field name="code">X1011</field>
             <field name="name">Purchased Stocks - (test)</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="tag_ids" eval="[(6,0,[ref('account.demo_stock_account')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('demo_stock_account_test')])]"/>
         </record>
         <record id="a_recv" model="account.account">
             <field name="code">X1012</field>

@@ -31,8 +31,16 @@ class TestProductMargin(common.TransactionCase):
 
         supplier = self.env['res.partner'].create({'name': 'Supplier'})
         customer = self.env['res.partner'].create({'name': 'Customer'})
-        ipad = self.env.ref("product.product_product_4")
-
+        uom_unit_id = self.ref('uom.product_uom_unit')
+        category_5_id = self.env['product.category'].create({'name': 'Physical'}).id
+        ipad = self.env['product.product'].create({
+            'name': 'abc',
+            'type': 'consu',
+            'list_price': 750.0,
+            'standard_price': 500.0,
+            'uom_id': uom_unit_id,
+            'categ_id': category_5_id,
+        })
         # Create supplier invoice and customer invoice to test product margin.
         # Define supplier invoices
         self.create_account_invoice('in_invoice', supplier, ipad, 10.0, 300.00)
