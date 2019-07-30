@@ -1318,6 +1318,7 @@ take the following attributes:
     ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
 
   * Scale ``year`` always snap to full day.
+
   Example of precision attribute: ``{"day": "hour:quarter", "week": "day:half", "month": "day"}``
 ``total_row``
   boolean to control whether the row containing the total count of records should
