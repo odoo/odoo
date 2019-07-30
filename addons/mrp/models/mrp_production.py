@@ -397,6 +397,7 @@ class MrpProduction(models.Model):
     def _onchange_bom_id(self):
         self.product_qty = self.bom_id.product_qty
         self.product_uom_id = self.bom_id.product_uom_id.id
+        self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):
@@ -409,11 +410,21 @@ class MrpProduction(models.Model):
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
-        self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
         if self.bom_id and self.product_qty > 0:
+            # keep manual entries
+            list_move_raw = [(4, move.id) for move in self.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             moves_raw_values = self._get_moves_raw_values()
+            move_raw_dict = {move.bom_line_id.id: move for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)}
             for move_raw_values in moves_raw_values:
-                self.move_raw_ids += self.env['stock.move'].new(move_raw_values)
+                if move_raw_values['bom_line_id'] in move_raw_dict:
+                    # update existing entries
+                    list_move_raw += [(1, move_raw_dict[move_raw_values['bom_line_id']].id, move_raw_values)]
+                else:
+                    # add new entries
+                    list_move_raw += [(0, 0, move_raw_values)]
+            self.move_raw_ids = list_move_raw
+        else:
+            self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
     @api.onchange('location_src_id', 'move_raw_ids', 'routing_id')
     def _onchange_location(self):
