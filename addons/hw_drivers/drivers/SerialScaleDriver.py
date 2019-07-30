@@ -221,7 +221,7 @@ class Toledo8217Driver(ScaleDriver):
         protocol = cls._protocol
 
         try:
-            with serial_connection(device.device, protocol, is_probing=True) as connection:
+            with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
                 connection.write(b'Ehello' + protocol.commandTerminator)
                 time.sleep(protocol.commandDelay)
                 answer = connection.read(8)
@@ -297,7 +297,7 @@ class AdamEquipmentDriver(ScaleDriver):
         protocol = cls._protocol
 
         try:
-            with serial_connection(device.device, protocol, is_probing=True) as connection:
+            with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
                 connection.write(protocol.measureCommand + protocol.commandTerminator)
                 # Checking whether writing to the serial port using the Adam protocol raises a timeout exception is about the only thing we can do.
                 return True
