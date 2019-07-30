@@ -115,6 +115,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Sales Team">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="user_id"/>
