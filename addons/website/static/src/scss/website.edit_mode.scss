@@ -51,7 +51,7 @@
     .dropdown-menu {
         position: static !important;
         transform: none !important;
-        width: 100%;
+        min-width: 100%;
     }
 
     .o_theme_customize_option {
@@ -194,6 +194,11 @@
             }
         }
         $i: $i + 1;
+    }
+
+    .o_theme_customize_delete_google_font {
+        @include o-position-absolute(1px, 1px, 1px, auto);
+        padding: 0 8px !important;
     }
 }
 
