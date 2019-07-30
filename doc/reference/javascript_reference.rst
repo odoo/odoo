@@ -1664,7 +1664,7 @@ order.
 Relational fields
 -----------------
 
-.. autoclass:: web.relational_fields.FieldSelection
+.. class:: web.relational_fields.FieldSelection
 
     Supported field types: *selection*
 
