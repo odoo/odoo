@@ -130,27 +130,6 @@
                             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding" style="border-style:solid none none none;padding:20px 0 20px 0;border-top-color:rgb(245, 245, 245);border-top-width:2px;width:100%;border-collapse:separate;">
                                 <tbody>
                                     <tr>
-                                        <td class="o_mail_footer_social" style="text-align:center;vertical-align:middle;">
-                                            <a title="Facebook" href="https://www.facebook.com/Odoo" style="text-decoration:none;font-weight:bold;background-color:transparent;color:rgb(100, 89, 116);">
-                                                <img src="/web_editor/font_to_img/61594/rgb(100,89,116)/16" data-class="fa fa-facebook" style="border-style:none;max-width:100%;width:100%;vertical-align:middle;height: auto; width: auto;"/> ​
-                                            
-                                            </a>
-                                            <a style="text-decoration:none;font-weight:bold;background-color:transparent;color:rgb(100, 89, 116);margin-left:10px" title="Google Plus" href="https://plus.google.com/+Odooapps">
-                                                <img src="/web_editor/font_to_img/61653/rgb(100,89,116)/16" data-class="fa fa-google-plus" style="border-style:none;max-width:100%;width:100%;vertical-align:middle;height: auto; width: auto;"/>
-                                            </a>
-                                            <a style="text-decoration:none;font-weight:bold;background-color:transparent;color:rgb(100, 89, 116);margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                                                <img src="/web_editor/font_to_img/61665/rgb(100,89,116)/16" data-class="fa fa-linkedin" style="border-style:none;max-width:100%;width:100%;vertical-align:middle;height: auto; width: auto;"/>
-                                            </a>
-                                            <a style="text-decoration:none;font-weight:bold;background-color:transparent;color:rgb(100, 89, 116);margin-left:10px" title="Twitter" href="https://twitter.com/Odoo">
-                                                <img src="/web_editor/font_to_img/61593/rgb(100,89,116)/16" data-class="fa fa-twitter" style="border-style:none;max-width:100%;width:100%;vertical-align:middle;height: auto; width: auto;"/>
-                                            </a>
-                                            <a style="text-decoration:none;font-weight:bold;background-color:transparent;color:rgb(100, 89, 116);margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                                                <img src="/web_editor/font_to_img/61805/rgb(100,89,116)/16" data-class="fa fa-instagram" style="border-style:none;max-width:100%;width:100%;vertical-align:middle;height: auto; width: auto;"/> ​
-                                            
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td class="o_mail_footer_links o_default_snippet_text" style="padding:10px 0 10px 0;text-align:center;vertical-align:middle;">
                                             <a href="/unsubscribe_from_list" class="btn btn-link o_default_snippet_text" style="text-decoration:none;border-radius:0.25rem;border-style:solid;padding:0px;cursor:pointer;line-height:1.5;font-size:12px;border-left-color:transparent;border-bottom-color:transparent;border-right-color:transparent;border-top-color:transparent;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-width:1px;user-select:none;vertical-align:middle;white-space:nowrap;text-align:center;font-weight:bold;display:inline-block;background-color:transparent;color:rgb(100, 89, 116);">Unsubscribe</a> | 
                                             
@@ -176,9 +155,7 @@
         <tbody>
             <tr>
                 <td align="center" style="padding:16px 0 16px 0;" class="pt16 pb16">
-                  Powered by 
-                    
-                    <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="text-decoration:none;background-color:transparent;color:#875A7B;">Odoo</a>
+                  Powered by <a target="_blank" href="https://www.odoo.com" style="text-decoration:none;background-color:transparent;color:#875A7B;">Odoo</a>
                 </td>
             </tr>
         </tbody>
@@ -195,6 +172,7 @@
             <field name="message_id">1111000@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_7"/>
+            <field name="email">billy.fox45@example.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="replied" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -204,6 +182,7 @@
             <field name="message_id">1111001@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_13"/>
+            <field name="email">kim.snyder96@example.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -213,6 +192,7 @@
             <field name="message_id">1111002@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_14"/>
+            <field name="email">edith.sanchez68@example.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
@@ -221,6 +201,7 @@
             <field name="message_id">1111003@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_24"/>
+            <field name="email">theodore.gardner36@example.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
@@ -229,14 +210,15 @@
             <field name="message_id">1111004@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_32"/>
+            <field name="email">sandra.neal80@example.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_5" model="mailing.trace">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111004@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_33"/>
+            <field name="email">julie.richards84@example.com</field>
             <field name="sent" eval="False"/>
             <field name="exception" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
@@ -245,6 +227,7 @@
             <field name="message_id">1111004@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_34"/>
+            <field name="email">travis.mendoza24@example.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
