@@ -179,17 +179,19 @@
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations"/>
-                    <field name="partner_id"/>
+                    <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
+                    <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="user_id" optional="hide"/>
                     <field name="date" invisible="1"/>
-                    <field name="scheduled_date"/>
-                    <field name="origin"/>
+                    <field name="scheduled_date" optional="show"/>
+                    <field name="origin" optional="show"/>
                     <field name="group_id" invisible="1"/>
-                    <field name="backorder_id"/>
-                    <field name="state"/>
-                    <field name="priority" invisible="1"/>
-                    <field name="picking_type_id" invisible="1"/>
+                    <field name="backorder_id" optional="hide"/>
+                    <field name="state" optional="show"/>
+                    <field name="priority" optional="hide"/>
+                    <field name="picking_type_id" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 </tree>
             </field>
         </record>

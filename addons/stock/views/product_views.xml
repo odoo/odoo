@@ -41,8 +41,8 @@
                     <attribute name="decoration-info">type != 'product' or virtual_available&gt;=0</attribute>
                 </tree>
                 <field name="price" position="after">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}"/>
+                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
+                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted Quantity" optional="show"/>
                 </field>
             </field>
         </record>
@@ -57,8 +57,8 @@
                     <attribute name="decoration-info">type != 'product' or virtual_available&gt;=0</attribute>
                 </tree>
                 <field name="uom_id" position="before">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}"/>
+                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
+                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
                 </field>
             </field>
         </record>

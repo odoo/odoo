@@ -206,12 +206,13 @@
             <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Purchase Agreements">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
-                <field name="user_id"/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                <field name="ordering_date"/>
-                <field name="date_end"/>
-                <field name="origin"/>
-                <field name="state"/>
+                <field name="user_id" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                <field name="ordering_date" optional="show"/>
+                <field name="schedule_date" optional="hide"/>
+                <field name="date_end" optional="show"/>
+                <field name="origin" optional="show"/>
+                <field name="state" optional="show"/>
             </tree>
       </field>
     </record>

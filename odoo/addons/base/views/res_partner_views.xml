@@ -46,12 +46,14 @@
                 <tree string="Contacts">
                     <field name="display_name" string="Name"/>
                     <field name="function" invisible="1"/>
-                    <field name="phone"/>
-                    <field name="email"/>
+                    <field name="phone" optional="show"/>
+                    <field name="email" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="city" optional="hide"/>
+                    <field name="state_id" optional="hide"/>
+                    <field name="country_id" optional="hide"/>
                     <field name="user_id" invisible="1"/>
                     <field name="is_company" invisible="1"/>
-                    <field name="country_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="active" invisible="1"/>
                 </tree>
