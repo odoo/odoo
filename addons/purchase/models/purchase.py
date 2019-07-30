@@ -213,7 +213,7 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
-        if not self.partner_id:
+        if not self.partner_id or not self.env.user.has_group('purchase.group_warning_purchase'):
             return
         warning = {}
         title = False
@@ -626,7 +626,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id_warning(self):
-        if not self.product_id:
+        if not self.product_id or not self.env.user.has_group('purchase.group_warning_purchase'):
             return
         warning = {}
         title = False

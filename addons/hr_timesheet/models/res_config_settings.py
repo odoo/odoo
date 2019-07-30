@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     module_project_timesheet_synchro = fields.Boolean("Awesome Timesheet")
-    module_project_timesheet_holidays = fields.Boolean("Time Off")
+    module_project_timesheet_holidays = fields.Boolean("Record Time Off")
     project_time_mode_id = fields.Many2one(
         'uom.uom', related='company_id.project_time_mode_id', string='Project Time Unit', readonly=False,
         help="This will set the unit of measure used in projects and tasks.\n"

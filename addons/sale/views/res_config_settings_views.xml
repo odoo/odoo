@@ -21,7 +21,7 @@
                                     Sell variants of a product using attributes (size, color, etc.)
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_product_variant','=',False)]}">
-                                    <div class="mt16">
+                                    <div class="mt8">
                                         <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                                     Sell and purchase products in different units of measure
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_uom','=',False)]}">
-                                    <div class="mt16">
+                                    <div class="mt8">
                                         <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
                                     </div>
                                 </div>
@@ -126,7 +126,9 @@
                                         <field name="group_sale_pricelist" invisible="1"/>
                                         <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
                                     </div>
-                                    <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                    <div class="mt8">
+                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -179,12 +181,12 @@
                                 <div class="text-muted">
                                     Request an online payment to confirm orders
                                 </div>
-                                <div attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
+                                <div class="mt8" attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
                                     <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="confirmation_email_setting" attrs="{'invisible': [('portal_confirmation_pay', '=', False) , ('portal_confirmation_sign', '=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box" id="confirmation_email_setting" attrs="{'invisible': [('portal_confirmation_pay', '=', False) , ('portal_confirmation_sign', '=', False)]}" groups="base.group_no_one">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Confirmation Email</span>
                                 <div class="text-muted">
@@ -394,7 +396,7 @@
                                 <div class="text-muted">
                                     Generate the invoice automatically when the online payment is confirmed
                                 </div>
-                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}">
+                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}" groups="base.group_no_one">
                                     <label for="template_id" class="o_light_label"/>
                                     <field name="template_id" class="oe_inline" options="{'no_create': True}"/>
                                 </div>

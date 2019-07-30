@@ -9,7 +9,7 @@
             <div id="msg_module_google_drive" position="replace">
                 <div class="content-group"
                      attrs="{'invisible': [('module_google_drive','=',False)]}">
-                    <div class="mt-2 row">
+                    <div class="mt8 row">
                         <div class="col-sm">
                             <field name="is_google_drive_token_generated" invisible="1"/>
                             <div role="alert"
@@ -23,23 +23,23 @@
                         </div>
                         <div class="col-sm text-center"
                              attrs="{'invisible': [('is_google_drive_token_generated', '=', True)]}">
-                            <button class="btn btn-link pt-0"
+                            <button class="btn btn-link"
                                     name="action_setup_token"
                                     type="object"><i class="fa fa-arrow-right"></i> Set up token</button>
                         </div>
                         <div class="col-sm text-center"
                              attrs="{'invisible': [('is_google_drive_token_generated', '=', False)]}">
-                            <button class="btn btn-link pt-0"
+                            <button class="btn btn-link"
                                     name="action_setup_token"
                                     type="object"><i class="fa fa-arrow-right"></i> Reset token</button>
                         </div>
                     </div>
-                    <div>
+                    <div class="mt8">
                         <button type="action"
                                 name="%(action_google_drive_users_config)d"
                                 string="Google Drive Templates"
                                 icon="fa-arrow-right"
-                                class="btn-link"/>
+                                class="btn-link pl-0"/>
                     </div>
                 </div>
             </div>

@@ -21,7 +21,7 @@
                                         <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                     </div>
                                 </div>
-                                <div>
+                                <div class="mt8">
                                     <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
                                 </div>
                             </div>
@@ -43,7 +43,9 @@
                                         <field name="group_sale_pricelist" invisible="1"/>
                                         <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
                                     </div>
-                                    <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_sale_pricelist" class="btn-link"/>
+                                    <div class="mt8">
+                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_sale_pricelist" class="btn-link"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +59,7 @@
                                     Record transactions in foreign currencies
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                    <div class="mt16">
+                                    <div class="mt8">
                                         <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                 </div>

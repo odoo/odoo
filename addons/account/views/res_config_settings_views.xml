@@ -34,7 +34,7 @@
                                             <label for="chart_template_id" string="Package" class="col-lg-3 o_light_label"/>
                                             <field name="chart_template_id" widget="selection"/>
                                         </div>
-                                        <div>
+                                        <div class="mt8">
                                             <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
                                         </div>
                                     </div>
@@ -145,7 +145,7 @@
                                         Record transactions in foreign currencies
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                        <div class="mt16">
+                                        <div class="mt8">
                                             <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
                                         </div>
                                         <div class="row mt16">
@@ -256,7 +256,7 @@
                                     <div class="text-muted">
                                         Define the smallest coinage of the currency used to pay by cash.
                                     </div>
-                                    <div class="mt16">
+                                    <div class="mt8">
                                         <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
                                                 type="action" string="Cash Roundings" class="btn-link"
                                                 attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
@@ -504,10 +504,10 @@
                                         Track costs &amp; revenues by project, department, etc.
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_analytic_accounting', '=', False)]}">
-                                        <div class="mt16" id="analytic_account_link">
+                                        <div class="mt8" id="analytic_account_link">
                                             <button name="%(analytic.action_analytic_account_form)d" icon="fa-arrow-right" type="action" string="Analytic Accounts" class="btn-link"/>
                                         </div>
-                                        <div id="analytic_account_groups_link">
+                                        <div class="mt8" id="analytic_account_groups_link">
                                             <button name="%(analytic.account_analytic_group_action)d" icon="fa-arrow-right" type="action" string="Analytic Account Groups" class="btn-link"/>
                                         </div>
                                     </div>
@@ -523,7 +523,7 @@
                                         Allows to tag analytic entries and to manage analytic distributions
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_analytic_tags', '=', False)]}">
-                                        <div class="mt16">
+                                        <div class="mt8">
                                             <button name="%(analytic.account_analytic_tag_action)d" icon="fa-arrow-right" type="action" string="Analytic Tags" class="btn-link"/>
                                         </div>
                                     </div>

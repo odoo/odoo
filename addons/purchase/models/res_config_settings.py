@@ -21,8 +21,6 @@ class ResConfigSettings(models.TransientModel):
         help="This default value is applied to any new product created. "
         "This can be changed in the product detail form.", default="receive")
     group_warning_purchase = fields.Boolean("Purchase Warnings", implied_group='purchase.group_warning_purchase')
-    group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
-        implied_group="purchase.group_manage_vendor_price")
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
     module_purchase_product_matrix = fields.Boolean("Variants Grid Entry")

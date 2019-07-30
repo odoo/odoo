@@ -55,7 +55,9 @@
                                             Companies
                                         </span>
                                         <br/>
-                                        <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
+                                        <div class="mt8">
+                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +75,9 @@
                                                 Languages
                                             </span>
                                         </div>
-                                        <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
+                                        <div class="mt8">
+                                            <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +113,7 @@
                                                 <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
                                                 <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                             </div>
-                                            <div class="mt16">
+                                            <div class="mt8">
                                                 <button name="%(base.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
                                                 <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
                                                 <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
@@ -166,7 +170,7 @@
                                     Set custom access rights for new users
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('user_default_rights','=',False)]}">
-                                    <div class="mt16">
+                                    <div class="mt8">
                                         <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
                                     </div>
                                 </div>
