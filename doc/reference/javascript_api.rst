@@ -8,5 +8,4 @@
 Javascript API
 ==============
 
-.. automodule:: *
-    :members:
+..     :members:
