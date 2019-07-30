@@ -834,8 +834,7 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: multi, model, depends, constrains, onchange, returns,
-              one, v7, v8
+    :members: model, depends, constrains, onchange, returns,
 
 .. _reference/orm/fields:
 
