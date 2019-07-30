@@ -19,21 +19,15 @@ class PhoneValidationMixin(models.AbstractModel):
             return self.country_id
         return self.env.company.country_id
 
-    def _phone_get_always_international(self):
-        if 'company_id' in self and self.company_id:
-            return self.company_id.phone_international_format == 'prefix'
-        return self.env.company.phone_international_format == 'prefix'
-
     def phone_format(self, number, country=None, company=None):
         country = country or self._phone_get_country()
         if not country:
             return number
-        always_international = company.phone_international_format == 'prefix' if company else self._phone_get_always_international()
         return phone_validation.phone_format(
             number,
             country.code if country else None,
             country.phone_code if country else None,
-            force_format='INTERNATIONAL' if always_international else 'NATIONAL',
+            force_format='INTERNATIONAL',
             raise_exception=False
         )
 

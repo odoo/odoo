@@ -115,7 +115,7 @@ class Lead(models.Model):
     email_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect'),
-        ('empty', 'Empty')], string='Email quality', default="empty", compute="_compute_email_state", store=True)
+        ('empty', 'Empty')], string='Email Quality', default="empty", compute="_compute_email_state", store=True)
 
     # Only used for type opportunity
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)

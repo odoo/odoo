@@ -14,7 +14,6 @@ class ResConfigSettings(models.TransientModel):
     module_crm_iap_lead = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
     module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     lead_mining_in_pipeline = fields.Boolean("Create a lead mining request directly from the opportunity pipeline.", config_parameter='crm.lead_mining_in_pipeline')
-    crm_phone_valid_method = fields.Selection(related="company_id.phone_international_format", required=True, readonly=False)
     predictive_lead_scoring_start_date = fields.Date(string='Lead Scoring Starting Date', compute="_compute_pls_start_date", inverse="_inverse_pls_start_date_str")
     predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', default=date.today().strftime('%Y-%m-%d'), config_parameter='crm.pls_start_date')
     predictive_lead_scoring_fields = fields.Many2many('crm.lead.scoring.frequency.field', string='Lead Scoring Frequency Fields', compute="_compute_pls_fields", inverse="_inverse_pls_fields_str")
