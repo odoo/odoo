@@ -399,6 +399,27 @@
     </div>
 </t>
 
+<div t-name="GraphView.CustomTooltip" class="o_graph_custom_tooltip">
+    <table>
+        <thead>
+            <tr>
+                <th class="o_measure"><t t-esc="measure"/></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="tooltipItems" t-as="tooltipItem">
+                <td>
+                    <span class="o_square" t-att-style="'background-color: ' + tooltipItem.boxColor"/>
+                    <span class="o_label" t-att-style="'max-width: ' + maxWidth"> <t t-esc="tooltipItem.label" /> </span>
+                </td>
+                <td class="o_value">
+                    <t t-esc="tooltipItem.value"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <div t-name="PivotView" t-attf-class="o_pivot #{widget.enableLinking ? 'o_enable_linking' : ''}">
     <div class="o_field_selection"/>
 </div>
