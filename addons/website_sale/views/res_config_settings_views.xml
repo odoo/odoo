@@ -19,7 +19,7 @@
                                 Sell variants of a product using attributes (size, color, etc.)
                             </div>
                             <div class="content-group" attrs="{'invisible': [('group_product_variant', '=', False)]}">
-                                <div class="mt16">
+                                <div class="mt8">
                                     <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                                 <field name="group_product_pricelist" invisible="1"/>
                                 <field name="product_pricelist_setting" class="o_light_label" widget="radio"/>
                             </div>
-                            <div attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
+                            <div class="mt8" attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
                                 <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="fa-arrow-right"/>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                                 Sell in several currencies
                             </div>
                             <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                <div class="mt16">
+                                <div class="mt8">
                                     <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
                             </div>
