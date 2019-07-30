@@ -216,7 +216,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             res_model: 'account.bank.statement',
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
-            context: {search_default_journal_id: journalId},
+            context: {search_default_journal_id: journalId, 'journal_type':'bank'},
             view_mode: 'form',
         });
     },
