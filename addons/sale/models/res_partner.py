@@ -40,3 +40,11 @@ class ResPartner(models.Model):
             ('state', 'in', ['sent', 'sale', 'done'])
         ], limit=1)
         return can_edit_vat and not bool(has_so)
+
+    def _get_name_search_join_clause(self):
+        res = super()._get_name_search_join_clause()
+        partner_search_mode = self.env.context.get('res_partner_search_mode')
+        if partner_search_mode == 'customer':
+            join_clause = "LEFT JOIN {table} ON res_partner.id = {table}.partner_id".format(table=self.env['sale.order']._table)
+            return '%s %s' % (res, join_clause) if res else join_clause
+        return res
