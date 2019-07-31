@@ -50,6 +50,12 @@ var GreetingMessage = AbstractAction.extend({
         this.format_time = 'HH:mm:ss';
         this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
         this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
+
+        if (action.hours_today) {
+            var duration = moment.duration(action.hours_today, "hours");
+            this.hours_today = duration.hours() + ' hours, ' + duration.minutes() + ' minutes';
+        }
+
         this.employee_name = action.employee_name;
         this.attendanceBarcode = action.barcode;
     },

@@ -10,19 +10,19 @@
             <span class="o_hr_attendance_kiosk_backdrop"/>
             <div class="o_hr_attendance_clock text-center"/>
             <div class="o_hr_attendance_kiosk_mode">
-                <h1><small>Welcome to</small> <t t-esc="widget.company_name"/></h1>
+                <h1><small>Welcome to</small><br/> <t t-esc="widget.company_name"/></h1>
                 <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo" class="o_hr_attendance_kiosk_company_image"/>
                 <div class="row o_hr_attendance_kiosk_welcome_row">
                     <div class="col-sm-5">
                         <img class="img img-fluid d-block mx-auto" src="/hr_attendance/static/src/img/barcode.png"/>
-                        <h5 class="mt8 mb0 text-muted">Scan your badge</h5>
+                        <h5 class="mt8 mb0">Scan your badge</h5>
                     </div>
                     <div class="col-sm-2">
-                        <h3 class="mt0 mb8"><i>or</i></h3>
+                        <h3 class="mt0 mb8 text-muted"><i>or</i></h3>
                     </div>
                     <div class="col-sm-5">
                         <button class="o_hr_attendance_button_employees btn btn-primary mb16">
-                            <div class="mb16 mt16">Select Employee</div>
+                            <div class="mb16 mt16">Identify<br/>Manually</div>
                         </button>
                     </div>
                 </div>
@@ -116,6 +116,7 @@
                         <h2 class="o_hr_attendance_message_message mt4 mb24"/>
                         <div class="alert alert-info h2 mt0" role="status">
                             Checked out at <b><t t-esc="widget.attendance.check_out_time"/></b>
+                            <br/><b><t t-esc="widget.hours_today"/></b>
                         </div>
                         <h3 class="o_hr_attendance_random_message mb24"/>
                         <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
