@@ -9,8 +9,9 @@ class SupplierInfo(models.Model):
 
     is_subcontractor = fields.Boolean('Subcontracted', compute='_compute_is_subcontractor', help="Choose a vendor of type subcontractor if you want to subcontract the product")
 
-    @api.depends('name')
+    @api.depends('name', 'product_id', 'product_tmpl_id')
     def _compute_is_subcontractor(self):
-        for supplierinfo in self:
-            supplierinfo.is_subcontractor = True if supplierinfo.name.type == 'subcontractor' else False
-
+        for supplier in self:
+            boms = supplier.product_id.variant_bom_ids
+            boms |= supplier.product_tmpl_id.bom_ids.filtered(lambda b: not b.product_id)
+            supplier.is_subcontractor = supplier.name in boms.subcontractor_ids
