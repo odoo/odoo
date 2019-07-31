@@ -5552,7 +5552,7 @@ Fields:
 
         # prefetch x2many lines without data (for the initial snapshot)
         for name, subnames in nametree.items():
-            if subnames and values.get(name):
+            if subnames and values.get(name) and not isinstance(values.get(name), int):
                 # retrieve all ids in commands
                 line_ids = set()
                 for cmd in values[name]:
