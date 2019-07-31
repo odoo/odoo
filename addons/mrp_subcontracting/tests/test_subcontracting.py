@@ -232,9 +232,13 @@ class TestSubcontractingFlows(SavepointCase):
 
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
-        self.assertEqual(len(mo.picking_ids), 1)
         self.assertEquals(mo.state, 'to_close')
-        self.assertEqual(len(mo.picking_ids.move_lines), 2)
+
+        picking_delivery = mo.picking_ids
+        self.assertEqual(len(picking_delivery), 1)
+        self.assertEqual(len(picking_delivery.move_lines), 2)
+        self.assertEquals(picking_delivery.origin, picking_receipt.name)
+        self.assertEquals(picking_delivery.partner_id, picking_receipt.partner_id)
 
         # The picking should be a delivery order
         wh = picking_receipt.picking_type_id.warehouse_id
