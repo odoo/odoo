@@ -8,11 +8,18 @@ var NotificationService = require('web.NotificationService');
 var testUtils = require('web.test_utils');
 var createView = testUtils.createView;
 
+var waitCloseNotification = function () {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, 1);
+    });
+}
 
 QUnit.module('Services', {
     beforeEach: function () {
+        // We need to use a delay above 0 ms because otherwise the notification will close right after it opens
+        // before we can perform any test.
         testUtils.mock.patch(Notification, {
-            _autoCloseDelay: 0,
+            _autoCloseDelay: 1,
             _animation: false,
         });
         this.viewParams = {
@@ -55,7 +62,7 @@ QUnit.module('Services', {
             "<div class=\"toast-header\"> <span class=\"fa fa-2x mr-3 fa-lightbulb-o o_notification_icon\" role=\"img\" aria-label=\"Notification undefined\" title=\"Notification undefined\"></span> <div class=\"d-flex align-items-center mr-auto font-weight-bold o_notification_title\">a</div> </div> <div class=\"toast-body\"> <div class=\"o_notification_content\">b</div> </div>",
             "should display notification");
         assert.containsNone($notification, '.o_notification_close', "should not display the close button in ");
-        await testUtils.nextTick();
+        await waitCloseNotification();
         assert.strictEqual($notification.is(':hidden'), true, "should hide the notification");
         assert.strictEqual($('body .o_notification_manager .o_notification').length, 0, "should destroy the notification");
         view.destroy();
