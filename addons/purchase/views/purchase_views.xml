@@ -166,7 +166,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" widget="res_partner_many2one" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0, 'show_vat': True}" domain="[('supplier','=',True)]"
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
                                 placeholder="Name, TIN, Email, or Reference"
                             />
                             <field name="partner_ref"/>

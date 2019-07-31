@@ -14,7 +14,6 @@ class TestCommonTimesheet(TransactionCase):
         self.partner = self.env['res.partner'].create({
             'name': 'Customer Task',
             'email': 'customer@task.com',
-            'customer': True,
         })
 
         self.analytic_account = self.env['account.analytic.account'].create({

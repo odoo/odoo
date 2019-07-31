@@ -767,7 +767,7 @@ class SupplierInfo(models.Model):
 
     name = fields.Many2one(
         'res.partner', 'Vendor',
-        domain=[('supplier', '=', True)], ondelete='cascade', required=True,
+        ondelete='cascade', required=True,
         help="Vendor of this product")
     product_name = fields.Char(
         'Vendor Product Name',

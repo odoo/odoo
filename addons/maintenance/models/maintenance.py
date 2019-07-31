@@ -124,7 +124,7 @@ class MaintenanceEquipment(models.Model):
     owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True)
     category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
                                   tracking=True, group_expand='_read_group_category_ids')
-    partner_id = fields.Many2one('res.partner', string='Vendor', domain="[('supplier', '=', 1)]")
+    partner_id = fields.Many2one('res.partner', string='Vendor')
     partner_ref = fields.Char('Vendor Reference')
     location = fields.Char('Location')
     model = fields.Char('Model')

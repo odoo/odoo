@@ -6,7 +6,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 class TestReplenishWizard(TestStockCommon):
     def setUp(self):
         super(TestReplenishWizard, self).setUp()
-        self.vendor = self.env['res.partner'].create(dict(name='The Replenisher', supplier=True))
+        self.vendor = self.env['res.partner'].create(dict(name='The Replenisher'))
         self.product1_price = 500
 
         # Create a supplier info witch the previous vendor

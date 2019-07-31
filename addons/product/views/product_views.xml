@@ -630,7 +630,7 @@
                     <group>
                         <group name="vendor" string="Vendor">
                             <field name="product_variant_count" invisible="1"/>
-                            <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
+                            <field name="name" context="{'res_partner_search_mode': 'supplier'}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
                             <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}"/>
