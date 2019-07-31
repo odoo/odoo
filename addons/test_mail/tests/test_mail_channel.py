@@ -161,6 +161,7 @@ class TestChannelFeatures(TestMailCommon):
         """ Posting a message on a mailing list should send one email to all recipients """
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'schlouby.fr')
         self.test_channel.write({'email_send': True})
+        self.user_employee.write({'notification_type': 'email'})
 
         # Subscribe an user without email. We shouldn't try to send email to them.
         nomail = self.env['res.users'].create({

@@ -2178,7 +2178,17 @@ class MailThread(models.AbstractModel):
                 for partner_id in inbox_pids:
                     bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
             if channel_ids:
-                bus_notifications += self.env['mail.channel'].sudo().browse(channel_ids)._channel_message_notifications(message, message_format_values)
+                channels = self.env['mail.channel'].sudo().browse(channel_ids)
+                bus_notifications += channels._channel_message_notifications(message, message_format_values)
+                # Message from mailing channel should not make a notification in Odoo for users
+                # with notification "Handled by Email", but web client should receive the message.
+                # To do so, message is still sent from longpolling, but channel is marked as read
+                # in order to remove notification.
+                for channel in channels.filtered(lambda c: c.email_send):
+                    users = channel.channel_partner_ids.mapped('user_ids')
+                    for user in users.filtered(lambda u: u.notification_type == 'email'):
+                        channel.with_user(user).channel_seen()
+
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
 
@@ -2433,18 +2443,23 @@ class MailThread(models.AbstractModel):
             # here      : (searching all partners linked to channels with notif email if email is not the author one)
             # TDE FIXME: use email_sanitized
             email_from = msg_vals.get('email_from') or message.email_from
+            email_from = self.env['res.partner']._parse_partner_name(email_from)[1]
             exept_partner = [r['id'] for r in recipient_data['partners']]
             if author_id:
                 exept_partner.append(author_id)
-            new_pids = self.env['res.partner'].sudo().search([
-                ('id', 'not in', exept_partner),
-                ('channel_ids', 'in', email_cids),
-                ('email', 'not in', [email_from]),
-            ])
-            for partner in new_pids:
-                # caution: side effect, if user has notif type inbox, will receive en email anyway?
+            sql_query = """ select distinct on (p.id) p.id from res_partner p
+                            left join mail_channel_partner mcp on p.id = mcp.partner_id
+                            left join mail_channel c on c.id = mcp.channel_id
+                            left join res_users u on p.id = u.partner_id
+                                where (u.notification_type != 'inbox' or u.id is null)
+                                and (p.email != ANY(%s) or p.email is null)
+                                and c.id = ANY(%s)
+                                and p.id != ANY(%s)"""
+
+            self.env.cr.execute(sql_query, (([email_from], ), (email_cids, ), (exept_partner, )))
+            for partner_id in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
-                recipient_data['partners'].append({'id': partner.id, 'share': True, 'active': True, 'notif': 'email', 'type': 'channel_email', 'groups': []})
+                recipient_data['partners'].append({'id': partner_id[0], 'share': True, 'active': True, 'notif': 'email', 'type': 'channel_email', 'groups': []})
 
         return recipient_data
 
