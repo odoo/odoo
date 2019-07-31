@@ -12,6 +12,7 @@
     'data': [
         'data/mrp_subcontracting_data.xml',
         'views/stock_warehouse_views.xml',
+        'views/stock_move_views.xml',
         'views/stock_picking_views.xml',
         'views/mrp_bom_views.xml',
         'views/res_partner_views.xml',

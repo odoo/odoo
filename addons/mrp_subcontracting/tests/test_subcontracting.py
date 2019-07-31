@@ -188,7 +188,6 @@ class TestSubcontractingFlows(SavepointCase):
 
         # Nothing should be tracked
         self.assertFalse(picking_receipt.display_action_record_components)
-        self.assertFalse(picking_receipt.display_view_subcontracted_move_lines)
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -217,9 +216,6 @@ class TestSubcontractingFlows(SavepointCase):
         picking_receipt.move_lines.quantity_done = 1
         picking_receipt.button_validate()
         self.assertEquals(mo.state, 'done')
-
-        # Now that the picking is done, the details stat button should be visible
-        self.assertTrue(picking_receipt.display_view_subcontracted_move_lines)
 
         # Available quantities should be negative at the subcontracting location for each components
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
@@ -250,7 +246,6 @@ class TestSubcontractingFlows(SavepointCase):
 
         # Nothing should be tracked
         self.assertFalse(picking_receipt.display_action_record_components)
-        self.assertFalse(picking_receipt.display_view_subcontracted_move_lines)
 
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -274,9 +269,6 @@ class TestSubcontractingFlows(SavepointCase):
         picking_receipt.move_lines.quantity_done = 1
         picking_receipt.button_validate()
         self.assertEquals(mo.state, 'done')
-
-        # Now that the picking is done, the details stat button should be visible
-        self.assertTrue(picking_receipt.display_view_subcontracted_move_lines)
 
         # Available quantities should be negative at the subcontracting location for each components
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
@@ -314,7 +306,6 @@ class TestSubcontractingFlows(SavepointCase):
 
         # Nothing should be tracked
         self.assertFalse(picking_receipt.display_action_record_components)
-        self.assertFalse(picking_receipt.display_view_subcontracted_move_lines)
 
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -335,9 +326,6 @@ class TestSubcontractingFlows(SavepointCase):
         picking_receipt.move_lines.quantity_done = 1
         picking_receipt.button_validate()
         self.assertEquals(mo.state, 'done')
-
-        # Now that the picking is done, the details stat button should be visible
-        self.assertTrue(picking_receipt.display_view_subcontracted_move_lines)
 
         # Available quantities should be negative at the subcontracting location for each components
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
@@ -524,7 +512,6 @@ class TestSubcontractingTracking(TransactionCase):
 
         # We should be able to call the 'record_components' button
         self.assertTrue(picking_receipt.display_action_record_components)
-        self.assertFalse(picking_receipt.display_view_subcontracted_move_lines)
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
@@ -571,8 +558,6 @@ class TestSubcontractingTracking(TransactionCase):
 
         # We should not be able to call the 'record_components' button
         self.assertFalse(picking_receipt.display_action_record_components)
-        # We should see the move lines stat button
-        self.assertTrue(picking_receipt.display_view_subcontracted_move_lines)
 
         picking_receipt.move_lines.quantity_done = 1
         picking_receipt.move_lines.move_line_ids.lot_name = 'lot00001test'

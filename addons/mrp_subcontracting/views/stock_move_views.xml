@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_move_operations_inherit_mrp_subcontracting" model="ir.ui.view">
+        <field name="name">stock.move.operations.form.inherit.mrp.subcontracting</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_line_ids']" position="after">
+                <field name="is_subcontract" invisible="1"/>
+                <h2 attrs="{'invisible': [('is_subcontract', '!=', True)]}">Components</h2>
+                <field name="subcontract_components_ids" attrs="{'invisible': [('is_subcontract', '!=', True)], 'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
+                    <tree editable="bottom">
+                        <field name="tracking" invisible="1"/>
+                        <field name="product_id" readonly="1"/>
+                        <field name="lot_produced_ids" widget="many2many_tags" context="{'default_product_id': parent.product_id}"/>
+                        <field name="qty_done"/>
+                        <field name="lot_id"/>
+                    </tree>
+                </field>
+            </xpath>
+            <xpath expr="//field[@name='move_line_ids']" position="before">
+                <h2 attrs="{'invisible': [('is_subcontract', '!=', True)]}">Subcontracted Product</h2>
+            </xpath>
+        </field>
+    </record>
+</odoo>
