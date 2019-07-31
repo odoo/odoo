@@ -898,7 +898,7 @@ var StatementModel = BasicModel.extend({
                                 'link': prop.id,
                                 'tax_id': [tax.id, null],
                                 'amount': tax.amount,
-                                'label': tax.name,
+                                'label': prop.label ? prop.label + " " + tax.name : tax.name,
                                 'date': prop.date,
                                 'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
                                 'analytic': tax.analytic,
