@@ -872,8 +872,8 @@ class StockMove(models.Model):
         """ return create values for new picking that will be linked with group
         of moves in self.
         """
-        origins = self.filtered(lambda m: m.origin).mapped('origin')
-        origin = len(origins) == 1 and origins[0] or False
+        origins = set(self.filtered(lambda m: m.origin).mapped('origin'))
+        origin = len(origins) == 1 and origins.pop() or False
         partners = self.mapped('partner_id')
         partner = len(partners) == 1 and partners.id or False
         return {
