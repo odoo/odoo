@@ -380,7 +380,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
                 subtype='mail.mt_comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Test Post Performances</p>')
-        self.assertEqual(record.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(record.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -394,7 +394,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
-        self.assertEqual(record.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id | self.customer)
+        self.assertEqual(record.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id | self.customer)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -464,10 +464,10 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
         self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.env['res.partner'])
         # creation message
         self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.partners)
+        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.partners)
         self.assertEqual(len(rec.message_ids), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -490,7 +490,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # creation message
         self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
         self.assertEqual(len(rec.message_ids), 1)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -515,10 +515,10 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
         self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
         # creation message
         self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.env['res.partner'])
         self.assertEqual(len(rec.message_ids), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -552,10 +552,10 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
         self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
         # creation message
         self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.user_portal.partner_id)
+        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.user_portal.partner_id)
         self.assertEqual(len(rec.message_ids), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -586,10 +586,10 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         self.assertEqual(rec.message_ids[0].subject, 'Test Template')
         # write tracking message
         self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.env['res.partner'])
         # creation message
         self.assertEqual(rec.message_ids[2].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[2].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(rec.message_ids[2].notified_partner_ids, self.partners | self.user_portal.partner_id)
         self.assertEqual(len(rec.message_ids), 3)
 
 
@@ -731,4 +731,4 @@ class TestMailPerformancePost(BaseMailPerformance):
         self.assertTrue(record.message_ids[0].body.startswith('<p>Test body <img src="/web/image/'))
         self.assertEqual(self.attachements.mapped('res_model'), [record._name for i in range(3)])
         self.assertEqual(self.attachements.mapped('res_id'), [record.id for i in range(3)])
-        # self.assertEqual(record.message_ids[0].needaction_partner_ids, [])
+        # self.assertEqual(record.message_ids[0].notified_partner_ids, [])

@@ -53,7 +53,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
 
         # no specific recipients except those following notes, no email
         self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
-        self.assertEqual(self.record.message_ids.needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(self.record.message_ids.notified_partner_ids, self.env['res.partner'])
         self.assertEqual(self._mails, [])
 
         # verify tracked value
@@ -81,7 +81,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
 
         # no specific recipients except those following umbrella
         self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
-        self.assertEqual(self.record.message_ids.needaction_partner_ids, self.user_admin.partner_id)
+        self.assertEqual(self.record.message_ids.notified_partner_ids, self.user_admin.partner_id)
 
         # verify tracked value
         self.assertTracking(
