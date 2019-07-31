@@ -53,7 +53,7 @@
                                 </td>
                                 <t t-foreach="data['quantities']" t-as="quantity">
                                     <td><strong t-esc="categ_data['prices'][product.id][quantity]"
-                                                t-esc-options="{
+                                                t-options="{
                                                     'widget': 'monetary',
                                                     'display_currency': data['pricelist'].currency_id}"/>
                                     </td>
