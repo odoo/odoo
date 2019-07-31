@@ -10,7 +10,6 @@ odoo.define('web.basic_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var config = require('web.config');
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
 var dom = require('web.dom');
 var Domain = require('web.Domain');
@@ -1928,11 +1927,10 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
             ev.stopPropagation();
         } else if (this.res_id) {
             framework.blockUI();
-            var c = crash_manager;
             var filename_fieldname = this.attrs.filename;
             this.getSession().get_file({
-                'url': '/web/content',
-                'data': {
+                complete: framework.unblockUI,
+                data: {
                     'model': this.model,
                     'id': this.res_id,
                     'field': this.name,
@@ -1941,8 +1939,8 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
-                'complete': framework.unblockUI,
-                'error': c.rpc_error.bind(c),
+                error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+                url: '/web/content',
             });
             ev.stopPropagation();
         }

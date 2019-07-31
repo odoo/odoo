@@ -2,9 +2,9 @@ odoo.define('web.framework', function (require) {
 "use strict";
 
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
+var disableCrashManager = require('web.CrashManager').disable;
 
 var _t = core._t;
 
@@ -101,7 +101,7 @@ function unblockUI() {
  */
 function redirect (url, wait) {
     // Dont display a dialog if some xmlhttprequest are in progress
-    crash_manager.disable();
+    disableCrashManager();
 
     var load = function() {
         var old = "" + window.location;
