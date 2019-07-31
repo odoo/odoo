@@ -8,7 +8,6 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     display_action_record_components = fields.Boolean(compute='_compute_display_action_record_components')
-    display_view_subcontracted_move_lines = fields.Boolean(compute='_compute_display_view_subcontracted_move_lines')
 
     @api.depends('state')
     def _compute_display_action_record_components(self):
@@ -29,26 +28,6 @@ class StockPicking(models.Model):
                 continue
             picking.display_action_record_components = True
 
-    @api.depends('state')
-    def _compute_display_view_subcontracted_move_lines(self):
-        for picking in self:
-            # Hide if not encoding state
-            if picking.state in ('draft', 'cancel'):
-                continue
-            if not picking._is_subcontract():
-                continue
-            # Hide until state done if no move is tracked, if tracked until something was produced
-            subcontracted_productions = picking._get_subcontracted_productions()
-            subcontracted_moves = subcontracted_productions.mapped('move_raw_ids')
-            subcontracted_moves |= subcontracted_productions.mapped('move_finished_ids')
-            if all(subcontracted_move.has_tracking == 'none' for subcontracted_move in subcontracted_moves):
-                if picking.state != 'done':
-                    continue
-            # Hide if nothing was produced
-            if all(subcontracted_move.quantity_done == 0 for subcontracted_move in subcontracted_moves):
-                continue
-            picking.display_view_subcontracted_move_lines = True
-
     # -------------------------------------------------------------------------
     # Action methods
     # -------------------------------------------------------------------------
@@ -60,29 +39,18 @@ class StockPicking(models.Model):
                 subcontracted_production.button_mark_done()
         return res
 
-    def action_view_subcontracted_move_lines(self):
-        """ Returns a list view with the move lines of the subcontracted products. To find them, we
-        look on the origin moves of the move lines of the picking if there is a manufacturing order.
-        """
-        self.ensure_one()
-        subcontracted_productions = self._get_subcontracted_productions()
-        subcontracted_move_lines = self.env['stock.move.line']
-        for subcontracted_production in subcontracted_productions:
-            subcontracted_move_lines |= subcontracted_production.move_raw_ids.mapped('move_line_ids')
-            subcontracted_move_lines |= subcontracted_production.move_finished_ids.mapped('move_line_ids')
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
-        action['context'] = {}
-        action['domain'] = [('id', 'in', subcontracted_move_lines.ids)]
-        return action
-
     def action_record_components(self):
         self.ensure_one()
-        subcontracted_productions = self._get_subcontracted_productions()
-        to_register = subcontracted_productions.filtered(lambda mo: mo.state not in ('to_close', 'done'))
-        if to_register:
-            mo = to_register[0]
+        for move in self.move_lines:
+            production = move.move_orig_ids.production_id
+            if not production or production.state in ('done', 'to_close'):
+                continue
             action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
-            action['context'] = dict(self.env.context, active_id=mo.id)
+            action['context'] = dict(
+                self.env.context,
+                active_id=production.id,
+                default_subcontract_move_id=move.id
+            )
             return action
 
     # -------------------------------------------------------------------------
