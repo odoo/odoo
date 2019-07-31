@@ -298,6 +298,7 @@ class MaintenanceRequest(models.Model):
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
     duration = fields.Float(help="Duration in hours.")
+    done = fields.Boolean(related='stage_id.done')
 
     def archive_equipment_request(self):
         self.write({'archive': True})

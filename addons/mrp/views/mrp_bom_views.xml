@@ -16,7 +16,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(action_report_mrp_bom)d" type="action"
-                                class="oe_stat_button" icon="fa-bars" string="Structure &amp; Cost" attrs="{'invisible': [('bom_line_ids', '=', [])]}"/>
+                                class="oe_stat_button" icon="fa-bars" string="Structure &amp; Cost"/>
                         </div>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
@@ -110,16 +110,16 @@
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <tree string="Bill of Materials" default_order="product_tmpl_id">
+                <tree string="Bill of Materials">
                     <field name="active" invisible="1"/>
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="product_tmpl_id"/>
                     <field name="code" optional="show"/>
                     <field name="product_id" groups="product.group_product_variant" optional="show"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="product_qty" optional="show"/>
                     <field name="product_uom_id" groups="uom.group_uom" optional="show" string="Unit of Measure"/>
-                    <field name="type" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings" optional="show"/>
                 </tree>
             </field>
@@ -164,7 +164,7 @@
                     <filter string="Normal" name="normal" domain="[('type', '=', 'normal')]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
-                        <filter string='Default Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string='BoM Type' name="group_by_type" domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string="Routings" name="routings" domain="[]" context="{'group_by':'routing_id'}"/>
                    </group>
                 </search>
@@ -177,6 +177,7 @@
             <field name="domain">[]</field> <!-- force empty -->
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
+            <field name="context">{'search_default_group_by_type': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a bill of materials

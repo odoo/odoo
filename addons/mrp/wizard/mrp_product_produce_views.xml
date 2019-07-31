@@ -33,7 +33,7 @@
                                 <field name="product_tracking" invisible="1"/>
                                 <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id, 'active_mo_id': parent.production_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
                                 <field name="qty_to_consume" readonly="1" force_save="1"/>
-                                <field name="qty_reserved" readonly="1" force_save="1"/>
+                                <field name="qty_reserved" readonly="1" force_save="1" optional="show"/>
                                 <field name="qty_done"/>
                                 <field name="product_uom_id" readonly="1" force_save="1" groups="uom.group_uom"/>
                                 <field name="move_id" invisible="1"/>
