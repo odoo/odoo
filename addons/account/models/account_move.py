@@ -104,7 +104,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         domain=lambda self: [('company_id', '=', self.env.company.id)],
         default=_get_default_journal)
-    user_id = fields.Many2one(related='invoice_user_id')
+    user_id = fields.Many2one(related='invoice_user_id', string='User')
     company_id = fields.Many2one(string='Company', store=True, readonly=True,
         related='journal_id.company_id')
     company_currency_id = fields.Many2one(string='Company Currency', readonly=True,
