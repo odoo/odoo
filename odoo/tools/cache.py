@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# decorator makes wrappers that have the same API as their wrapped function;
-# this is important for the odoo.api.guess() that relies on signatures
+# decorator makes wrappers that have the same API as their wrapped function
 from collections import defaultdict
 from decorator import decorator
 from inspect import formatargspec, getargspec
