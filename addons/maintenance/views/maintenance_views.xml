@@ -65,19 +65,19 @@
                         <field name="kanban_state" class="oe_inline" widget="state_selection"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <label for="name" class="oe_edit_only" string="Title"/>
                         <h1>
                             <field name="name" placeholder="Maintenance Request"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="owner_user_id" string="Requested By"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="owner_user_id" string="Requested By" invisible="1"/>
                             <field name="equipment_id"  context="{'default_category_id':category_id}"/>
                             <field name="category_id" groups="maintenance.group_equipment_manager" attrs="{'invisible': [('equipment_id', '=', False)]}"/>
                             <field name="request_date" readonly="True"/>
-                            <field name="close_date" groups="base.group_no_one" readonly="True"/>
+                            <field name="done" invisible="1"/>
+                            <field name="close_date" attrs="{'invisible': [('done', '!=', True)]}" readonly="True"/>
                             <field name="archive" invisible="1"/>
                             <field name="maintenance_type" widget="radio"/>
                         </group>

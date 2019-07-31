@@ -69,8 +69,7 @@ class MrpRoutingWorkcenter(models.Model):
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     batch = fields.Selection([
         ('no',  'Once all products are processed'),
-        ('yes', 'Once a minimum number of products is processed')], string='Next Operation',
-        help="Set 'no' to schedule the next work order after the previous one. Set 'yes' to produce after the quantity set in 'Quantity To Process' has been produced.",
+        ('yes', 'Once some products are processed')], string='Start Next Operation',
         default='no', required=True)
     batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
