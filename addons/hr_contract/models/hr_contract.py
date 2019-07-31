@@ -28,7 +28,7 @@ class Contract(models.Model):
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
         default=lambda self: self.env.company.resource_calendar_id.id)
-    wage = fields.Monetary('Wage', digits=(16, 2), required=True, tracking=True, help="Employee's monthly gross wage.")
+    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
     state = fields.Selection([

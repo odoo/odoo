@@ -89,7 +89,6 @@ class PosSession(models.Model):
         help="Total of all paid sales orders")
     cash_register_balance_end = fields.Monetary(
         related='cash_register_id.balance_end',
-        digits=0,
         string="Theoretical Closing Balance",
         help="Sum of opening balance and transactions.",
         readonly=True)
