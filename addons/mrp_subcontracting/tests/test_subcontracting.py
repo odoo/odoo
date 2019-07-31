@@ -330,6 +330,7 @@ class TestSubcontractingFlows(SavepointCase):
         subcontractor_partner2 = self.env['res.partner'].create({
             'name': 'subcontractor_partner',
             'parent_id': main_partner_2.id,
+            'company_id': self.env.ref('base.main_company').id,
         })
         self.env.cache.invalidate()
 
@@ -378,6 +379,97 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEqual(sum(move_finished.mapped('product_uom_qty')), 3.0)
         self.assertEqual(sum(move_finished.mapped('quantity_done')), 3.0)
 
+    def test_flow_6(self):
+        """ Process a subcontracting receipt with tracked component and
+        finished product. Simulate the regiter components button.
+        Once the components are registered, try to do a correction on exisiting
+        move lines and check that the subcontracting document is updated.
+        """
+        # Create a receipt picking from the subcontractor
+        (self.comp1 | self.comp2 | self.finished).write({'tracking': 'lot'})
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 5
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        mo = picking_receipt.move_lines.move_orig_ids.production_id
+        move_comp1 = mo.move_raw_ids.filtered(lambda m: m.product_id == self.comp1)
+        move_comp2 = mo.move_raw_ids.filtered(lambda m: m.product_id == self.comp2)
+        # move_finished is linked to receipt and not MO finished move.
+        move_finished = picking_receipt.move_lines
+
+        self.assertEqual(move_comp1.quantity_done, 0)
+        self.assertEqual(move_comp2.quantity_done, 0)
+
+        lot_c1 = self.env['stock.production.lot'].create({
+            'name': 'LOT C1',
+            'product_id': self.comp1.id
+        })
+        lot_c2 = self.env['stock.production.lot'].create({
+            'name': 'LOT C2',
+            'product_id': self.comp2.id
+        })
+        lot_f1 = self.env['stock.production.lot'].create({
+            'name': 'LOT F1',
+            'product_id': self.finished.id
+        })
+
+        register_form = Form(self.env['mrp.product.produce'].with_context(
+            active_id=picking_receipt._get_subcontracted_productions().id,
+            default_subcontract_move_id=picking_receipt.move_lines.id
+        ))
+        register_form.qty_producing = 3.0
+        self.assertEqual(len(register_form._values['raw_workorder_line_ids']), 2,
+            'Register Components Form should contains one line per component.')
+        self.assertTrue(all(p[2]['product_id'] in (self.comp1 | self.comp2).ids for p in register_form._values['raw_workorder_line_ids']),
+            'Register Components Form should contains component.')
+        with register_form.raw_workorder_line_ids.edit(0) as pl:
+            pl.lot_id = lot_c1
+        with register_form.raw_workorder_line_ids.edit(1) as pl:
+            pl.lot_id = lot_c2
+        register_form.finished_lot_id = lot_f1
+        register_wizard = register_form.save()
+        action = register_wizard.continue_production()
+        register_form = Form(self.env['mrp.product.produce'].with_context(
+            **action['context']
+        ))
+        with register_form.raw_workorder_line_ids.edit(0) as pl:
+            pl.lot_id = lot_c1
+        with register_form.raw_workorder_line_ids.edit(1) as pl:
+            pl.lot_id = lot_c2
+        register_form.finished_lot_id = lot_f1
+        register_wizard = register_form.save()
+        register_wizard.do_produce()
+
+        self.assertEqual(move_comp1.quantity_done, 5.0)
+        self.assertEqual(move_comp1.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_id.name, 'LOT C1')
+        self.assertEqual(move_comp2.quantity_done, 5.0)
+        self.assertEqual(move_comp2.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_id.name, 'LOT C2')
+        self.assertEqual(move_finished.quantity_done, 5.0)
+        self.assertEqual(move_finished.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_id.name, 'LOT F1')
+
+        corrected_final_lot = self.env['stock.production.lot'].create({
+            'name': 'LOT F2',
+            'product_id': self.finished.id
+        })
+
+        details_operation_form = Form(picking_receipt.move_lines, view=self.env.ref('mrp_subcontracting.view_stock_move_operations_inherit_mrp_subcontracting'))
+        for i in range(len(details_operation_form._values['move_line_ids'])):
+            with details_operation_form.move_line_ids.edit(i) as ml:
+                if ml._values['qty_done']:
+                    ml.lot_id = corrected_final_lot
+        for i in range(len(details_operation_form._values['subcontract_components_ids'])):
+            with details_operation_form.subcontract_components_ids.edit(i) as sc:
+                if sc._values['qty_done']:
+                    sc.lot_produced_ids.remove(index=0)
+                    sc.lot_produced_ids.add(corrected_final_lot)
+        details_operation_form.save()
+
+        self.assertEqual(move_comp1.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_produced_ids.name, 'LOT F2')
+        self.assertEqual(move_comp2.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_produced_ids.name, 'LOT F2')
 
 class TestSubcontractingTracking(TransactionCase):
     def setUp(self):
