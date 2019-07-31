@@ -549,10 +549,7 @@
                                 </div>
                                 <field name="partner_id" widget="res_partner_many2one" nolabel="1"
                                        context="{
-                                            'search_default_customer': context.get('type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt'),
-                                            'search_default_supplier': context.get('type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt'),
-                                            'default_customer': context.get('type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt'),
-                                            'default_supplier': context.get('type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt'),
+                                            'res_partner_search_mode': (context.get('type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                        options='{"always_reload": True, "no_quick_create": True}'
                                        attrs="{

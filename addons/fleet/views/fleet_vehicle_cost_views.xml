@@ -187,7 +187,7 @@
                             <field name="active" invisible="1"/>
                             <field name="ins_ref"/>
                             <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                            <field name="insurer_id" context="{'default_supplier': True}"/>
+                            <field name="insurer_id"/>
                             <field name="user_id"/>
                         </group>
                         <group string="Vehicle Informations">
@@ -425,7 +425,7 @@
                             <field name="date" />
                             <field name="purchaser_id" />
                             <field name="inv_ref" />
-                            <field name="vendor_id" context="{'default_supplier': True}"/>
+                            <field name="vendor_id"/>
                         </group>
                     </group>
                     <field name="notes" placeholder="Write here any other information"/>
@@ -549,7 +549,7 @@
                         <group string="Additional Details">
                             <field name="date" />
                             <field name="purchaser_id" />
-                            <field name="vendor_id" context="{'default_supplier': True}"/>
+                            <field name="vendor_id"/>
                             <field name="inv_ref" />
                         </group>
                     </group>

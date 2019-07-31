@@ -149,7 +149,7 @@
                             <field name="parent_id"
                                 widget="res_partner_many2one"
                                 placeholder="Company"
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer, 'show_vat': True}"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
                                 <button name="create_company" type="object" class="oe_edit_only btn-link"
@@ -186,8 +186,6 @@
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}"/>
-                            <field name="customer" invisible="1"/>
-                            <field name="supplier" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -222,7 +220,7 @@
                             <field name="parent_id"
                                 widget="res_partner_many2one"
                                 placeholder="Company"
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer, 'show_vat': True}"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
                                 <button name="create_company" type="object" class="oe_edit_only btn-link"
@@ -283,7 +281,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang, 'default_user_id': user_id}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}">
                                 <kanban>
                                     <field name="id"/>
                                     <field name="color"/>
@@ -306,9 +304,7 @@
                                     <field name="lang"/>
                                     <!-- fields in form x2many view to diminish requests -->
                                     <field name="comment"/>
-                                    <field name="customer"/>
                                     <field name="display_name"/>
-                                    <field name="supplier"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
@@ -380,8 +376,6 @@
                                                 <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
                                             </group>
                                         </group>
-                                        <field name="supplier" invisible="True"/>
-                                        <field name="customer" invisible="True"/>
                                         <field name="lang" invisible="True"/>
                                         <field name="image" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
@@ -395,11 +389,9 @@
                         <page name='sales_purchases' string="Sales &amp; Purchase">
                             <group name="container_row_2">
                                 <group string="Sales" name="sale" priority="1">
-                                    <field name="customer"/>
-                                    <field name="user_id" attrs="{'invisible': [('customer','=', False)]}"/>
+                                    <field name="user_id"/>
                                 </group>
                                 <group string="Purchase" name="purchase" priority="2">
-                                    <field name="supplier"/>
                                 </group>
                                 <group name="misc" string="Misc">
                                     <field name="ref" string="Reference"/>
@@ -474,8 +466,6 @@
                    <filter string="Individuals" name="type_person" domain="[('is_company','=',False)]"/>
                    <filter string="Companies" name="type_company" domain="[('is_company','=',True)]"/>
                    <separator/>
-                   <filter string="Customers" name="customer" domain="[('customer','=',True), ('parent_id', '=', False)]"/>
-                   <filter string="Vendors" name="supplier" domain="[('supplier','=',True), ('parent_id', '=', False)]"/>
                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','child_of', self)]"/>
@@ -559,7 +549,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{"search_default_customer":1}</field>
+            <field name="context">{'res_partner_search_mode': 'customer'}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -594,7 +584,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[]</field>
-            <field name="context">{'default_customer':1, 'search_default_customer':1, 'default_is_company': True}</field>
+            <field name="context">{'res_partner_search_mode': 'customer', 'default_is_company': True}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -629,7 +619,7 @@
             <field name="res_model">res.partner</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1, 'default_is_company': True}</field>
+            <field name="context">{'res_partner_search_mode': 'supplier', 'default_is_company': True}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -664,7 +654,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('employee','=',1)]</field>
-            <field name="context">{'default_customer':0, 'default_supplier':0 , 'default_employee':1}</field>
+            <field name="context">{'default_employee':1}</field>
             <field name="filter" eval="True"/>
         </record>
 

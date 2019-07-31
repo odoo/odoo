@@ -862,17 +862,11 @@ var StatementModel = BasicModel.extend({
         return this._rpc({
                 model: 'res.partner',
                 method: 'read',
-                args: [partner_id, ["property_account_receivable_id", "property_account_payable_id", "customer", "supplier"]],
+                args: [partner_id, ["property_account_receivable_id", "property_account_payable_id"]],
             }).then(function (result) {
                 if (result.length > 0) {
                     var line = self.getLine(handle);
-                    if (result[0]['supplier'] && !result[0]['customer']) {
-                        self.lines[handle].st_line.open_balance_account_id = result[0]['property_account_payable_id'][0];
-                    } else if (!result[0]['supplier'] && result[0]['customer']) {
-                        self.lines[handle].st_line.open_balance_account_id = result[0]['property_account_receivable_id'][0];
-                    } else {
-                        self.lines[handle].st_line.open_balance_account_id = line.balance.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
-                    }
+                    self.lines[handle].st_line.open_balance_account_id = line.balance.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
                 }
             });
     },

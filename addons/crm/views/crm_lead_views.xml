@@ -279,7 +279,7 @@
                         <group>
                             <group>
                                 <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
-                                <field name="partner_id" widget="res_partner_many2one" domain="[('customer', '=', True)]" context="{'search_default_customer': 1, 'show_vat': True}"/>
+                                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
                                 <field name="partner_name" invisible="1"/>
                                 <field name="street" invisible="1"/>
                                 <field name="street2" invisible="1"/>
@@ -336,7 +336,7 @@
                 <form>
                     <group>
                         <field name="name"/>
-                        <field name="partner_id" widget="res_partner_many2one" domain="[('customer', '=', True)]" context="{'search_default_customer': 1, 'show_vat': True}"/>
+                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
                         <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
@@ -565,8 +565,8 @@
                             <group>
                                 <field name="partner_id"
                                     widget="res_partner_many2one"
-                                    string="Customer" domain="[('customer', '=', True)]"
-                                    context="{'search_default_customer': 1,
+                                    string="Customer"
+                                    context="{'res_partner_search_mode': 'customer',
                                         'default_name': contact_name or partner_name,
                                         'default_street': street,
                                         'default_is_company': contact_name == False,

@@ -125,8 +125,6 @@ class ValuationReconciliationTestCase(AccountingTestCase):
 
         self.test_partner = self.env['res.partner'].create({
             'name': 'Ruben Rybnik',
-            'supplier': True,
-            'customer': True,
         })
 
         self.product_price_unit = 66.0
