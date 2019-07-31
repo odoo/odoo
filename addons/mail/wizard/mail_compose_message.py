@@ -310,7 +310,6 @@ class MailComposer(models.TransientModel):
                 'attachment_ids': [attach.id for attach in self.attachment_ids],
                 'author_id': self.author_id.id,
                 'email_from': self.email_from,
-                'reply_to': self.reply_to,
                 'record_name': self.record_name,
                 'no_auto_thread': self.no_auto_thread,
                 'mail_server_id': self.mail_server_id.id,
