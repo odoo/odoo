@@ -178,6 +178,11 @@ var LivechatButton = Widget.extend({
                     this._livechat.unregisterTyping({ partnerID: partnerID });
                 }
             } else { // normal message
+                // If message from notif is already in chatter messages, stop handling
+                if (this._messages.some(message => message.getID() === notification[1].id)) {
+                    this._livechat.unregisterTyping({ partnerID: notification[1].author_id[0] });
+                    return;
+                }
                 this._addMessage(notification[1]);
                 this._renderMessages();
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
