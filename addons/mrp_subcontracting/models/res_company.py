@@ -30,18 +30,3 @@ class ResCompany(models.Model):
             [('subcontracting_location_id', '=', False)])
         for company in company_without_subcontracting_loc:
             company._create_subcontracting_location()
-
-    def _create_resupply_subcontractor_rules(self):
-        self.ensure_one()
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.id), ('active', '=', True)], limit=1)
-        subcontracting_location = self.subcontracting_location_id
-        production_location = wh._get_production_location()
-        resupply_route = wh._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto', _('Resupply Subcontractor on Order'))
-        resupply_route.rule_ids = [(0, 0, {
-            'name': '%s → %s' % (subcontracting_location.name, production_location.name),
-            'action': 'pull',
-            'picking_type_id': wh.subcontracting_type_id,
-            'location_src_id': subcontracting_location,
-            'location_id': production_location,
-        })],
-
