@@ -1242,10 +1242,3 @@ automatically fill matched parameters from the current
 :attr:`~odoo.api.Environment.user` and
 :attr:`~odoo.api.Environment.context`) or the current recordset (for ``id``
 and ``ids``).
-
-In the rare cases where it is necessary, the bridging can be customized by
-decorating the old-style method:
-
-* disabling it entirely, by decorating a method with
-  :func:`~odoo.api.noguess` there will be no bridging and methods will be
-  called the exact same way from the new and old API styles
