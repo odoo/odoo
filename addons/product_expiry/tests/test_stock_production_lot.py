@@ -28,7 +28,6 @@ class TestStockProductionLot(TestStockCommon):
         })
 
         picking_in = self.PickingObj.create({
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location
@@ -125,7 +124,6 @@ class TestStockProductionLot(TestStockCommon):
         })
 
         picking_in = self.PickingObj.create({
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
@@ -174,7 +172,6 @@ class TestStockProductionLot(TestStockCommon):
         self.lot1_productCCC = self.LotObj.create({'name': 'Lot 1 ProductCCC', 'product_id': self.productCCC.id})
 
         picking_in = self.PickingObj.create({
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
