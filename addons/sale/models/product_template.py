@@ -109,8 +109,7 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()
         if self.env.context.get('sale_multi_pricelist_product_template'):
-            sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
-            if sale_pricelist_setting == 'percentage':
+            if self.user_has_groups('product.group_sale_pricelist'):
                 return [{
                     'label': _('Import Template for Products'),
                     'template': '/product/static/xls/product_template.xls'

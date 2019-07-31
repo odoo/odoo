@@ -102,20 +102,19 @@
                     </div>
                     <div class="col-12 col-lg-6 o_setting_box" id="pricelists_setting"  title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists.">
                         <div class="o_setting_left_pane">
-                            <field name="multi_sales_price"/>
+                            <field name="group_product_pricelist"/>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="multi_sales_price"/>
+                            <label for="group_product_pricelist"/>
                             <div class="text-muted">
                                 Apply specific prices per country, discounts, etc.
                             </div>
-                            <div class="content-group mt16" attrs="{'invisible': [('multi_sales_price', '=', False)]}">
+                            <div class="content-group mt16" attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
                                 <field name="group_sale_pricelist" invisible="1"/>
-                                <field name="group_pricelist_item" invisible="1"/>
                                 <field name="group_product_pricelist" invisible="1"/>
-                                <field name="multi_sales_price_method" class="o_light_label" widget="radio"/>
+                                <field name="product_pricelist_setting" class="o_light_label" widget="radio"/>
                             </div>
-                            <div attrs="{'invisible': [('multi_sales_price', '=', False)]}">
+                            <div attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
                                 <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="fa-arrow-right"/>
                             </div>
                         </div>

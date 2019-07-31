@@ -12,17 +12,6 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_pricelist_view">
-        <field name="name">product.pricelist.website.form</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.product_pricelist_view"/>
-        <field name="arch" type="xml">
-            <field name="currency_id" position="before">
-                <field name="code"/>
-            </field>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="product_product_website_tree_view">
         <field name="name">product.product.website.tree</field>
         <field name="model">product.product</field>
@@ -188,11 +177,14 @@
         <field name="inherit_id" ref="product.product_pricelist_view" />
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <field name='currency_id' position='after'>
-                <field name="selectable"/>
-                <field name="website_id" options="{'no_create': True}" />
-            </field>
-        </field>
+            <xpath expr="//group[@name='pricelist_availability']" position="after">
+                <group name="pricelist_website" string="Website">
+                    <field name="website_id" options="{'no_create': True}"/>
+                    <field name="selectable"/>
+                    <field name="code"/>
+                </group>
+            </xpath>
+          </field>
     </record>
 
     <record id="website_sale_pricelist_tree_view" model="ir.ui.view">
