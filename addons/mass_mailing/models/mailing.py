@@ -268,7 +268,7 @@ class MassMailing(models.Model):
     received_ratio = fields.Integer(compute="_compute_statistics", string='Received Ratio')
     opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
-    bounced_ratio = fields.Integer(compute="_compute_statistics", String='Bounced Ratio')
+    bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
 
     def _compute_total(self):
