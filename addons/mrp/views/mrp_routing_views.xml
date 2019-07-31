@@ -10,8 +10,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="workcenter_id"/>
-                    <field name="time_cycle" widget="float_time"/>
-                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="time_cycle" widget="float_time" string="Duration (minutes)" sum="Total Duration"/>
                 </tree>
             </field>
         </record>
@@ -25,7 +24,6 @@
                             <group name="description">
                                 <field name="name"/>
                                 <field name="workcenter_id"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group><group name="workorder">
                                 <field name="workorder_count" invisible="1"/>
@@ -43,7 +41,7 @@
                                 <field name="time_cycle" invisible="1"/>
                             </group>
                             <group>
-                                <field name="batch"/>
+                                <field name="batch" widget="radio"/>
                                 <field name="batch_size" attrs="{'invisible': [('batch', '=', 'no')]}"/>
                             </group>
                         </group>

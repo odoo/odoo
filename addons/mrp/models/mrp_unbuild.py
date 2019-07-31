@@ -80,6 +80,8 @@ class MrpUnbuild(models.Model):
         if self.product_id:
             self.bom_id = self.env['mrp.bom']._bom_find(product=self.product_id)
             self.product_uom_id = self.product_id.uom_id.id
+            return {'domain': {'mo_id': [('state', '=', 'done'), ('product_id', '=', self.product_id.id)]}}
+        return {'domain': {'mo_id': [('state', '=', 'done')]}}
 
     @api.constrains('product_qty')
     def _check_qty(self):

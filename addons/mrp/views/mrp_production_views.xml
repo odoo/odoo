@@ -11,14 +11,14 @@
                     <field name="name"/>
                     <field name="date_planned_start" optional="show"/>
                     <field name="product_id" optional="show"/>
-                    <field name="product_qty" sum="Total Qty" string="Quantity" optional="show"/>
                     <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
                     <field name="bom_id" optional="hide"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings" optional="show"/>
-                    <field name="state" optional="show"/>
                     <field name="reservation_state" optional="show"/>
+                    <field name="product_qty" sum="Total Qty" string="Quantity" optional="show"/>
+                    <field name="state" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -309,7 +309,7 @@
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <graph string="Manufacturing Orders">
+                <graph string="Manufacturing Orders" type="line">
                     <field name="date_deadline"/>
                 </graph>
             </field>
@@ -373,7 +373,9 @@
             <field name="domain">[('picking_type_id.active', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new manufacturing order
+                Create a new manufacturing order <br/>
+              </p><p>
+                Produce finished products and consume components based on bill of materials.
               </p>
             </field>
         </record>

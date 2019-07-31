@@ -125,7 +125,7 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="mo_id" domain="[('state','=','done')]"/>
+                                <field name="mo_id"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="has_tracking" invisible="1"/>
@@ -150,6 +150,7 @@
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="bom_id"/>
+                    <field name="mo_id"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="product_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>

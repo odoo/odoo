@@ -25,7 +25,7 @@ class MrpWorkcenter(models.Model):
         help="Description of the Work Center.")
     capacity = fields.Float(
         'Capacity', default=1.0,
-        help="Number of pieces that can be produced in parallel.")
+        help="Number of pieces that can be produced in parallel. In case the work center has a capacity of 5 and you have to produce 10 units on your work order, the usual operation time will be multiplied by 2.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
@@ -53,7 +53,7 @@ class MrpWorkcenter(models.Model):
         'Productive Time', compute='_compute_productive_time',
         help='Productive hours over the last month', digits=(16, 2))
     oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
-    oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
+    oee_target = fields.Float(string='OEE Target', help="Overall Effective Efficiency Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
     workcenter_load = fields.Float('Work Center Load', compute='_compute_workorder_count')
     alternative_workcenter_ids = fields.Many2many(

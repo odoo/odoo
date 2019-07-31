@@ -36,7 +36,7 @@ var SetBulletStatus = AbstractField.extend({
         this._super.apply(this, arguments);
         var bullet_class = this.classes[this.value] || 'default';
         if (this.value) {
-            var title = this.value === 'waiting' ? _t('Waiting Materials') : _t('Ready to produce');
+            var title = this.value === 'waiting' ? _t('Waiting Materials') : '';
             this.$el.attr({'title': title, 'style': 'display:inline'});
             this.$el.removeClass('text-success text-danger text-default');
             this.$el.html($('<span>' + title + '</span>').addClass('badge badge-' + bullet_class));
