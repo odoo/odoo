@@ -76,5 +76,5 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_discount_per_so_line(self):
         if self.group_discount_per_so_line:
             self.update({
-                'multi_sales_price': True,
+                'group_product_pricelist': True,
             })

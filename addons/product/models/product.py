@@ -113,8 +113,7 @@ class ProductProduct(models.Model):
     volume = fields.Float('Volume')
     weight = fields.Float('Weight', digits='Stock Weight')
 
-    pricelist_item_ids = fields.Many2many(
-        'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
+    pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
 
     packaging_ids = fields.One2many(
         'product.packaging', 'product_id', 'Product Packages',
@@ -317,12 +316,12 @@ class ProductProduct(models.Model):
                 else:
                     product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
 
-    def _get_pricelist_items(self):
+    def _compute_variant_item_count(self):
         for product in self:
-            product.pricelist_item_ids = self.env['product.pricelist.item'].search([
-                '|',
-                ('product_id', '=', product.id),
-                ('product_tmpl_id', '=', product.product_tmpl_id.id)]).ids
+            domain = ['|',
+                '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
+                '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
+            product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
     @api.constrains('attribute_value_ids')
     def _check_attribute_value_ids(self):
@@ -580,6 +579,25 @@ class ProductProduct(models.Model):
         if self._context.get('categ_id'):
             return _('Products: ') + self.env['product.category'].browse(self._context['categ_id']).name
         return res
+
+    def open_pricelist_rules(self):
+        self.ensure_one()
+        domain = ['|',
+            '&', ('product_tmpl_id', '=', self.product_tmpl_id.id), ('applied_on', '=', '1_product'),
+            '&', ('product_id', '=', self.id), ('applied_on', '=', '0_product_variant')]
+        return {
+            'name': _('Price Rules'),
+            'view_mode': 'tree,form',
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'res_model': 'product.pricelist.item',
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'domain': domain,
+            'context': {
+                'default_product_id': self.id,
+                'default_applied_on': '0_product_variant',
+            }
+        }
 
     def open_product_template(self):
         """ Utility method used to add an "Open Template" button in product views """
