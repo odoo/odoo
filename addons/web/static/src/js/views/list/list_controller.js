@@ -50,6 +50,7 @@ var ListController = BasicController.extend({
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
         this.selectedRecords = params.selectedRecords || [];
+        this.isSaved = false;
     },
 
     //--------------------------------------------------------------------------
@@ -121,10 +122,12 @@ var ListController = BasicController.extend({
      * @override
      * @param {jQuery} $node
      */
-    renderButtons: function ($node) {
+    renderButtons: function ($node, dialog) {
         if (!this.noLeaf && this.hasButtons) {
+            this.dialog = dialog;
             this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+            this.$buttons.on('click', '.o_list_button_save', this._onSave.bind(this));
 
             this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
             this.$buttons.find('.o_list_button_add').tooltip({
@@ -312,9 +315,15 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _confirmSave: function (id) {
+        var self = this;
         var state = this.model.get(this.handle);
         return this.renderer.updateState(state, {noRender: true})
-            .then(this._setMode.bind(this, 'readonly', id));
+            .then(this._setMode.bind(this, 'readonly', id))
+            .then(function () {
+                if (self.isSaved && self.dialog) {
+                    self.dialog.close();
+                }
+            });
     },
     /**
      * To improve performance, list view must not be rerendered if it is asked
@@ -567,6 +576,15 @@ var ListController = BasicController.extend({
     _onDiscard: function (ev) {
         ev.stopPropagation(); // So that it is not considered as a row leaving
         this._discardChanges();
+    },
+    /**
+     * Handler called when the user clicked on the 'Save' button.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSave: function (ev) {
+        this.isSaved = true;
     },
     /**
      * Called when the user asks to edit a row -> Updates the controller buttons

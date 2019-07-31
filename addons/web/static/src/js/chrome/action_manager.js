@@ -395,7 +395,7 @@ var ActionManager = Widget.extend({
                     in_DOM: true,
                     callbacks: [{widget: dialog}, {widget: controller.widget}],
                 });
-                widget.renderButtons(dialog.$footer);
+                widget.renderButtons(dialog.$footer, dialog);
                 dialog.rebindButtonBehavior();
 
                 return action;
