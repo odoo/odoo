@@ -111,6 +111,7 @@ class HrEmployeeBase(models.AbstractModel):
         action_message['employee_name'] = employee.name
         action_message['barcode'] = employee.barcode
         action_message['next_action'] = next_action
+        action_message['hours_today'] = employee.hours_today
 
         if employee.user_id:
             modified_attendance = employee.with_user(employee.user_id)._attendance_action_change()
