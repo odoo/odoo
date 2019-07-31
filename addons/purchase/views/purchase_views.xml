@@ -38,17 +38,6 @@
               action="uom.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
-
-    <!-- Purchase Control Menu -->
-    <menuitem id="menu_purchase_control" name="Control" parent="purchase.menu_purchase_root" sequence="4"/>
-
-    <!--Invoice control-->
-    <menuitem
-         id="menu_procurement_management_pending_invoice"
-         action="account.action_move_in_invoice_type"
-         parent="menu_purchase_control"
-         sequence="13"/>
-
     <!-- Products Control Menu -->
     <menuitem id="menu_purchase_products" name="Products" parent="purchase.menu_purchase_root" sequence="5"/>
 
@@ -348,9 +337,8 @@
                                 <group name="other_info">
                                     <field name="user_id"/>
                                     <field name="invoice_status"/>
-                                    <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
+                                    <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
-                                    <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
                         </page>
