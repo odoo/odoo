@@ -416,7 +416,7 @@ class PricelistItem(models.Model):
              'Cost Price : The base price will be the cost price.\n'
              'Other Pricelist : Computation of the base price based on another Pricelist.')
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
-    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade')
+    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade', required=True)
     price_surcharge = fields.Float(
         'Price Surcharge', digits='Product Price',
         help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')

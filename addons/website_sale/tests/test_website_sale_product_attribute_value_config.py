@@ -15,9 +15,10 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueSe
         self.computer = self.computer.with_context(website_id=current_website.id)
 
         # make sure the pricelist has a 10% discount
-        pricelist.item_ids = self.env['product.pricelist.item'].create({
+        self.env['product.pricelist.item'].create({
             'price_discount': 10,
             'compute_price': 'formula',
+            'pricelist_id': pricelist.id,
         })
 
         discount_rate = 0.9
