@@ -107,8 +107,7 @@ class StockWarehouse(models.Model):
             'subcontracting_type_id': {
                 'name': _('Subcontracting'),
                 'code': 'mrp_operation',
-                'use_create_lots': True,
-                'use_existing_lots': True,
+                'use_create_components_lots': True,
                 'sequence': next_sequence + 2,
                 'sequence_code': 'SBC',
             },
