@@ -13,4 +13,5 @@ class IrHttp(models.AbstractModel):
         result = super(IrHttp, self).session_info()
         if self.env.user.has_group('base.group_user'):
             result['out_of_office_message'] = user.out_of_office_message
+            result['notification_type'] = user.notification_type
         return result
