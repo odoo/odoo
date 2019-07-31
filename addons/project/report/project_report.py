@@ -29,7 +29,7 @@ class ReportProjectTaskUser(models.Model):
         ('0', 'Low'),
         ('1', 'Normal'),
         ('2', 'High')
-        ], size=1, readonly=True, string="Priority")
+        ], readonly=True, string="Priority")
     state = fields.Selection([
             ('normal', 'In Progress'),
             ('blocked', 'Blocked'),

@@ -39,7 +39,7 @@ class Alias(models.Model):
                                       # hack to only allow selecting mail_thread models (we might
                                       # (have a few false positives, though)
                                       domain="[('field_id.name', '=', 'message_ids')]")
-    alias_user_id = fields.Many2one('res.users', 'Owner', defaults=lambda self: self.env.user,
+    alias_user_id = fields.Many2one('res.users', 'Owner', default=lambda self: self.env.user,
                                     help="The owner of records created upon receiving emails on this alias. "
                                          "If this field is not set the system will attempt to find the right owner "
                                          "based on the sender (From) address, or will use the Administrator account "

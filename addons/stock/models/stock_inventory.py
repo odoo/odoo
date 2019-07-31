@@ -309,7 +309,7 @@ class InventoryLine(models.Model):
     inventory_date = fields.Datetime('Inventory Date', readonly=True,
         default=fields.Datetime.now,
         help="Last date at which the On Hand Quantity has been computed.")
-    outdated = fields.Boolean(String='Quantity oudated',
+    outdated = fields.Boolean(string='Quantity outdated',
         compute='_compute_outdated', search='_search_outdated')
     product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
 
