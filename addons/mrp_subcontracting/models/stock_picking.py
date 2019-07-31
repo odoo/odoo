@@ -58,10 +58,7 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     def _is_subcontract(self):
         self.ensure_one()
-        if self.partner_id.type == 'subcontractor' and \
-                self.picking_type_id.code == 'incoming':
-            return True
-        return False
+        return self.picking_type_id.code == 'incoming' and any(m.is_subcontract for m in self.move_lines)
 
     def _get_subcontracted_productions(self):
         self.ensure_one()
@@ -75,8 +72,8 @@ class StockPicking(models.Model):
             'product_id': product.id,
             'product_uom_id': subcontract_move.product_uom.id,
             'bom_id': bom.id,
-            'location_src_id': subcontract_move.picking_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': subcontract_move.location_id.id,
+            'location_src_id': subcontract_move.picking_id.partner_id.property_stock_subcontractor.id,
+            'location_dest_id': subcontract_move.picking_id.partner_id.property_stock_subcontractor.id,
             'product_qty': subcontract_move.product_uom_qty,
             'picking_type_id': warehouse.subcontracting_type_id.id
         }

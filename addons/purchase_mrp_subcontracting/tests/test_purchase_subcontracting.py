@@ -43,7 +43,6 @@ class TestPurchaseSubcontractingFlows(TransactionCase):
         company_partner = self.env['res.partner'].create({'name': 'main_partner', 'is_company': True})
         self.subcontractor_partner1 = self.env['res.partner'].create({
             'name': 'subcontractor_partner',
-            'type': 'subcontractor',
             'parent_id': company_partner.id,
             'company_id': self.env.ref('base.main_company').id
         })
