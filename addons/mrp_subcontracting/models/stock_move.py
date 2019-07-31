@@ -47,19 +47,17 @@ class StockMove(models.Model):
     def _action_confirm(self, merge=True, merge_into=False):
         subcontract_details_per_picking = defaultdict(list)
         for move in self:
-            if not move.picking_id:
+            if move.location_id.usage != 'supplier' or move.location_dest_id.usage == 'supplier':
                 continue
-            if not move.picking_id._is_subcontract():
+            if not move.picking_id:
                 continue
             bom = move._get_subcontract_bom()
             if not bom:
-                error_message = _('Please define a BoM of type subcontracting for the product "%s". If you don\'t want to subcontract the product "%s", do not select a partner of type subcontractor.')
-                error_message += '\n\n'
-                error_message += _('If there is well a BoM of type subcontracting defined, check if you have set the correct subcontractors on it.')
-                raise UserError(error_message % (move.product_id.name, move.product_id.name))
+                continue
             subcontract_details_per_picking[move.picking_id].append((move, bom))
             move.write({
                 'is_subcontract': True,
+                'location_id': self.picking_id.partner_id.property_stock_subcontractor.id
             })
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)

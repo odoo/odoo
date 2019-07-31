@@ -8,114 +8,13 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingBasic(TransactionCase):
-    def test_partner_1(self):
-        """ Checks the `display_name` of subcontracted partners. """
-        main_partner = self.env['res.partner'].create({'name': 'main_partner'})
-
-        # When a name is set to the subcontracted partner.
-        subcontractor_partner1 = self.env['res.partner'].create({
-            'name': 'subcontractor_partner',
-            'type': 'subcontractor',
-            'parent_id': main_partner.id,
-        })
-        self.assertEqual(subcontractor_partner1.display_name, "main_partner, subcontractor_partner, Subcontractor")
-
-        # When a name is not set to the subcontracted partner.
-        subcontractor_partner1 = self.env['res.partner'].create({
-            'name': '',
-            'type': 'subcontractor',
-            'parent_id': main_partner.id,
-        })
-        self.assertEqual(subcontractor_partner1.display_name, "main_partner, Subcontractor")
-
-    def test_partner_2(self):
-        """ Open an existing partner and add a contact of type subcontractor (simple form view).
-        Checks the customer and supplier locations are set to the subcontracting one onces saved.
-        """
-        that_company = self.env['res.partner'].create({
-            'is_company': True,
-            'name': "That Company",
-            'company_id': self.env.ref('base.main_company').id
-        })
-        partner_form = Form(that_company)
-        with partner_form.child_ids.new() as partner:
-            partner.name = 'That Guy'
-            partner.type = 'subcontractor'
-        partner_form.save()
-        subcontractor = that_company.child_ids
-        self.assertEquals(subcontractor.property_stock_supplier, self.env.user.company_id.subcontracting_location_id)
-        self.assertEquals(subcontractor.property_stock_customer, self.env.user.company_id.subcontracting_location_id)
-
-    def test_partner_3(self):
-        """ Create a new partner, select a parent company, and choose type subcontractor (debug
-        active). Checks the onchange correctly set the customer and supplier locations to the
-        subcontracting ones. Change them to another one, save, checks they are rightly applied.
-        """
-        # FIXME sle: this field should not be writeable without the debug mode but it is. ask xmo
-        group_no_one = self.env.ref('base.group_no_one')
-        self.env.user.write({'groups_id': [(3, group_no_one.id)]})
-        partner_form = Form(self.env['res.partner'])
-        partner_form.name = 'subcontractor partner'
-        partner_form.company_id = self.env.ref('base.main_company')
-        self.assertNotEqual(partner_form.property_stock_supplier, self.env.user.company_id.subcontracting_location_id)
-        self.assertNotEqual(partner_form.property_stock_customer, self.env.user.company_id.subcontracting_location_id)
-        partner_form.type = 'subcontractor'
-        self.assertEqual(partner_form.property_stock_supplier, self.env.user.company_id.subcontracting_location_id)
-        self.assertEqual(partner_form.property_stock_customer, self.env.user.company_id.subcontracting_location_id)
-        subcontracting_location2 = self.env.user.company_id.subcontracting_location_id.copy()
-        partner_form.property_stock_supplier = subcontracting_location2
-        partner_form.property_stock_customer = subcontracting_location2
-        partner = partner_form.save()
-        self.assertEqual(partner.property_stock_supplier, subcontracting_location2)
-        self.assertEqual(partner.property_stock_customer, subcontracting_location2)
-
-    def test_partner_4(self):
-        """ Create a new partner, select a parent company, and choose type subcontractor (debug
-        not active). Checks the customer and supplier locations are set to the subcontracting one
-        onces saved.
-        """
-        that_company = self.env['res.partner'].create({
-            'is_company': True,
-            'name': "That Company",
-            'company_id': self.env.ref('base.main_company').id
-        })
-        partner_form = Form(self.env['res.partner'])
-        partner_form.name = 'That Guy'
-        partner_form.parent_id = that_company
-        partner_form.type = 'subcontractor'
-        subcontractor = partner_form.save()
-        self.assertEquals(subcontractor.property_stock_supplier, self.env.user.company_id.subcontracting_location_id)
-        self.assertEquals(subcontractor.property_stock_customer, self.env.user.company_id.subcontracting_location_id)
-
-    def test_partner_5(self):
-        """ Create a new partner with a child partner of type contact,
-        then write the type 'subcontractor' on it
-        """
-        that_company = self.env['res.partner'].create({
-            'is_company': True,
-            'name': "That Company",
-        })
-        partner_form = Form(that_company)
-        with partner_form.child_ids.new() as partner:
-            partner.name = 'That Guy'
-            partner.type = 'contact'
-        partner_form.save()
-
-        # We write a new type on the created child partner
-        subcontractor = that_company.child_ids
-        self.assertEquals(len(that_company.child_ids), 1)
-        subcontractor.type = 'subcontractor'
-
-        self.assertEquals(subcontractor.property_stock_supplier, self.env.user.company_id.subcontracting_location_id)
-        self.assertEquals(subcontractor.property_stock_customer, self.env.user.company_id.subcontracting_location_id)
-
     def test_subcontracting_location_1(self):
         """ Checks the creation and presence of the subcontracting location. """
-        self.assertTrue(self.env.user.company_id.subcontracting_location_id)
-        self.assertTrue(self.env.user.company_id.subcontracting_location_id.active)
+        self.assertTrue(self.env.company.subcontracting_location_id)
+        self.assertTrue(self.env.company.subcontracting_location_id.active)
         company2 = self.env['res.company'].create({'name': 'Test Company'})
         self.assertTrue(company2.subcontracting_location_id)
-
+        self.assertTrue(self.env.company.subcontracting_location_id != company2.subcontracting_location_id)
 
 class TestSubcontractingFlows(SavepointCase):
     @classmethod
@@ -125,7 +24,6 @@ class TestSubcontractingFlows(SavepointCase):
         main_partner = cls.env['res.partner'].create({'name': 'main_partner'})
         cls.subcontractor_partner1 = cls.env['res.partner'].create({
             'name': 'subcontractor_partner',
-            'type': 'subcontractor',
             'parent_id': main_partner.id,
             'company_id': cls.env.ref('base.main_company').id
         })
@@ -218,8 +116,8 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEquals(mo.state, 'done')
 
         # Available quantities should be negative at the subcontracting location for each components
-        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
-        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
+        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         avail_qty_finished = self.env['stock.quant']._get_available_quantity(self.finished, wh.lot_stock_id)
         self.assertEquals(avail_qty_comp1, -1)
         self.assertEquals(avail_qty_comp2, -1)
@@ -228,11 +126,27 @@ class TestSubcontractingFlows(SavepointCase):
     def test_flow_2(self):
         """ Tick "Resupply Subcontractor on Order" on the components and trigger the creation of
         the subcontracting manufacturing order through a receipt picking. Checks if the resupplying
-        actually works.
+        actually works. Also set a different subcontracting location on the partner.
         """
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
+        # Create a different subcontract location
+        partner_subcontract_location = self.env['stock.location'].create({
+            'name': 'Specific partner location',
+            'location_id': self.env.ref('stock.stock_location_locations_partner').id,
+            'usage': 'internal',
+            'company_id': self.env.company.id,
+        })
+        self.subcontractor_partner1.property_stock_subcontractor = partner_subcontract_location.id
+        resupply_rule = resupply_sub_on_order_route.rule_ids.filtered(lambda l:
+            l.location_id == self.comp1.property_stock_production and
+            l.location_src_id == self.env.company.subcontracting_location_id)
+        resupply_rule.copy({'location_src_id': partner_subcontract_location.id})
+        resupply_warehouse_rule = self.warehouse.route_ids.rule_ids.filtered(lambda l:
+            l.location_id == self.env.company.subcontracting_location_id and
+            l.location_src_id == self.warehouse.lot_stock_id)
+        resupply_warehouse_rule.copy({'location_id': partner_subcontract_location.id})
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -271,12 +185,17 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEquals(mo.state, 'done')
 
         # Available quantities should be negative at the subcontracting location for each components
-        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
-        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
+        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         avail_qty_finished = self.env['stock.quant']._get_available_quantity(self.finished, wh.lot_stock_id)
         self.assertEquals(avail_qty_comp1, -1)
         self.assertEquals(avail_qty_comp2, -1)
         self.assertEquals(avail_qty_finished, 1)
+
+        avail_qty_comp1_in_global_location = self.env['stock.quant']._get_available_quantity(self.comp1, self.env.company.subcontracting_location_id, allow_negative=True)
+        avail_qty_comp2_in_global_location = self.env['stock.quant']._get_available_quantity(self.comp2, self.env.company.subcontracting_location_id, allow_negative=True)
+        self.assertEqual(avail_qty_comp1_in_global_location, 0.0)
+        self.assertEqual(avail_qty_comp2_in_global_location, 0.0)
 
     def test_flow_3(self):
         """ Tick "Resupply Subcontractor on Order" and "MTO" on the components and trigger the
@@ -328,8 +247,8 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEquals(mo.state, 'done')
 
         # Available quantities should be negative at the subcontracting location for each components
-        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
-        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
+        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         avail_qty_finished = self.env['stock.quant']._get_available_quantity(self.finished, wh.lot_stock_id)
         self.assertEquals(avail_qty_comp1, -1)
         self.assertEquals(avail_qty_comp2, -1)
@@ -342,7 +261,6 @@ class TestSubcontractingFlows(SavepointCase):
         main_partner_2 = self.env['res.partner'].create({'name': 'main_partner'})
         subcontractor_partner2 = self.env['res.partner'].create({
             'name': 'subcontractor_partner',
-            'type': 'subcontractor',
             'parent_id': main_partner_2.id,
             'company_id': self.env.ref('base.main_company').id
         })
@@ -403,9 +321,9 @@ class TestSubcontractingFlows(SavepointCase):
         main_partner_2 = self.env['res.partner'].create({'name': 'main_partner'})
         subcontractor_partner2 = self.env['res.partner'].create({
             'name': 'subcontractor_partner',
-            'type': 'subcontractor',
             'parent_id': main_partner_2.id,
         })
+        self.env.cache.invalidate()
 
         # We create a different BoM for the same product
         comp3 = self.env['product.product'].create({
@@ -460,7 +378,6 @@ class TestSubcontractingTracking(TransactionCase):
         main_company_1 = self.env['res.partner'].create({'name': 'main_partner'})
         self.subcontractor_partner1 = self.env['res.partner'].create({
             'name': 'Subcontractor 1',
-            'type': 'subcontractor',
             'parent_id': main_company_1.id,
             'company_id': self.env.ref('base.main_company').id
         })
@@ -565,8 +482,8 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEquals(mo.state, 'done')
 
         # Available quantities should be negative at the subcontracting location for each components
-        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
-        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_supplier, allow_negative=True)
+        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         avail_qty_finished = self.env['stock.quant']._get_available_quantity(self.finished_lot, wh.lot_stock_id)
         self.assertEquals(avail_qty_comp1, -1)
         self.assertEquals(avail_qty_comp2, -1)
