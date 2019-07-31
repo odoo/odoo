@@ -68,12 +68,16 @@ class TestSubcontractingFlows(SavepointCase):
             bom_line.product_qty = 1
         cls.comp2_bom = bom_form.save()
 
+        cls.warehouse = cls.env['stock.warehouse'].search([], limit=1)
+
     def test_flow_1(self):
         """ Don't tick any route on the components and trigger the creation of the subcontracting
         manufacturing order through a receipt picking. Create a reordering rule in the
         subcontracting locations for a component and run the scheduler to resupply. Checks if the
         resupplying actually works
         """
+        # Check subcontracting picking Type
+        self.assertTrue(all(self.env['stock.warehouse'].search([]).with_context(active_test=False).mapped('subcontracting_type_id.use_create_components_lots')))
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
