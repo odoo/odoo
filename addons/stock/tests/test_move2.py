@@ -13,7 +13,6 @@ class TestPickShip(TestStockCommon):
         picking_client = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
 
@@ -32,7 +31,6 @@ class TestPickShip(TestStockCommon):
         picking_pick = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
 
@@ -53,7 +51,6 @@ class TestPickShip(TestStockCommon):
         picking_ship = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
 
@@ -70,7 +67,6 @@ class TestPickShip(TestStockCommon):
         picking_pack = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
 
@@ -88,7 +84,6 @@ class TestPickShip(TestStockCommon):
         picking_pick = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
 
@@ -383,7 +378,6 @@ class TestPickShip(TestStockCommon):
         picking_client = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         dest = self.MoveObj.create({
@@ -400,7 +394,6 @@ class TestPickShip(TestStockCommon):
         picking_pick = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
 
@@ -747,7 +740,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -785,7 +777,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -824,7 +815,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -869,7 +859,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -919,7 +908,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         move1 = self.MoveObj.create({
@@ -965,7 +953,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         move1 = self.MoveObj.create({
@@ -1010,7 +997,6 @@ class TestSinglePicking(TestStockCommon):
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
         })
         move1 = self.MoveObj.create({
@@ -1049,7 +1035,6 @@ class TestSinglePicking(TestStockCommon):
         delivery = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -1094,7 +1079,6 @@ class TestSinglePicking(TestStockCommon):
         delivery = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         product = self.kgB
@@ -1128,7 +1112,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         move1 = self.MoveObj.create({
@@ -1184,7 +1167,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         move1 = self.MoveObj.create({
@@ -1243,7 +1225,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         move1 = self.MoveObj.create({
@@ -1308,7 +1289,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         move1 = self.MoveObj.create({
@@ -1362,7 +1342,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -1415,7 +1394,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -1449,7 +1427,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -1490,7 +1467,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -1531,7 +1507,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -1574,7 +1549,6 @@ class TestSinglePicking(TestStockCommon):
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
         })
         self.MoveObj.create({
@@ -1622,7 +1596,6 @@ class TestSinglePicking(TestStockCommon):
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
         })
         self.MoveObj.create({
@@ -1668,7 +1641,6 @@ class TestSinglePicking(TestStockCommon):
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
         })
         move_1 = self.MoveObj.create({
@@ -1711,7 +1683,6 @@ class TestSinglePicking(TestStockCommon):
         receipt1 = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': warehouse.in_type_id.id,
         })
         move_receipt_1 = self.MoveObj.create({
@@ -1726,7 +1697,6 @@ class TestSinglePicking(TestStockCommon):
         receipt2 = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': warehouse.in_type_id.id,
         })
         move_receipt_2 = self.MoveObj.create({
@@ -1767,7 +1737,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         self.MoveObj.create({
@@ -1802,7 +1771,6 @@ class TestSinglePicking(TestStockCommon):
         delivery_order = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
         move_a = self.MoveObj.create({
@@ -1867,7 +1835,6 @@ class TestStockUOM(TestStockCommon):
         })
 
         picking_in = self.env['stock.picking'].create({
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location
@@ -2347,7 +2314,6 @@ class TestRoutes(TestStockCommon):
         picking_ship = self.env['stock.picking'].create({
             'location_id': ship_location.id,
             'location_dest_id': self.customer_location,
-            'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
 
