@@ -557,9 +557,9 @@ class WebsiteSlides(WebsiteProfile):
         return response
 
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
-    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False):
+    def slide_get_image(self, slide_id, field='image_128', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
-        if field not in ('image_small', 'image_medium', 'image_large'):
+        if field not in ('image_64', 'image_128', 'image_256', 'image_512', 'image_1024', 'image_1920'):
             return werkzeug.exceptions.Forbidden()
 
         slide = request.env['slide.slide'].sudo().browse(slide_id).exists()
@@ -846,7 +846,7 @@ class WebsiteSlides(WebsiteProfile):
 
     def _get_valid_slide_post_values(self):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-            'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published']
+            'mime_type', 'datas', 'description', 'image_1920', 'index_content', 'website_published']
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):

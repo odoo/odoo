@@ -287,8 +287,8 @@ class Slide(models.Model):
 
         if not values.get('index_content'):
             values['index_content'] = values.get('description')
-        if values.get('slide_type') == 'infographic' and not values.get('image'):
-            values['image'] = values['datas']
+        if values.get('slide_type') == 'infographic' and not values.get('image_1920'):
+            values['image_1920'] = values['datas']
         if values.get('website_published') and not values.get('date_published'):
             values['date_published'] = datetime.datetime.now()
         if values.get('url') and not values.get('document_id'):
@@ -604,7 +604,7 @@ class Slide(models.Model):
                 return values
             values.update({
                 'name': snippet['title'],
-                'image': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
+                'image_1920': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
                 'description': snippet['description'],
                 'mime_type': False,
             })
@@ -615,8 +615,8 @@ class Slide(models.Model):
         def get_slide_type(vals):
             # TDE FIXME: WTF ??
             slide_type = 'presentation'
-            if vals.get('image'):
-                image = Image.open(io.BytesIO(base64.b64decode(vals['image'])))
+            if vals.get('image_1920'):
+                image = Image.open(io.BytesIO(base64.b64decode(vals['image_1920'])))
                 width, height = image.size
                 if height > width:
                     return 'document'
@@ -648,14 +648,14 @@ class Slide(models.Model):
 
         values = {
             'name': google_values['title'],
-            'image': self._fetch_data(google_values['thumbnailLink'].replace('=s220', ''), {}, 'image')['values'],
+            'image_1920': self._fetch_data(google_values['thumbnailLink'].replace('=s220', ''), {}, 'image')['values'],
             'mime_type': google_values['mimeType'],
             'document_id': document_id,
         }
         if google_values['mimeType'].startswith('video/'):
             values['slide_type'] = 'video'
         elif google_values['mimeType'].startswith('image/'):
-            values['datas'] = values['image']
+            values['datas'] = values['image_1920']
             values['slide_type'] = 'infographic'
         elif google_values['mimeType'].startswith('application/vnd.google-apps'):
             values['slide_type'] = get_slide_type(values)
@@ -677,6 +677,6 @@ class Slide(models.Model):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_1024" % (self.id)
         res['default_meta_description'] = self.description
         return res

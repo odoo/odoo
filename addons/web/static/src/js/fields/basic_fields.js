@@ -1833,7 +1833,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     this.$el.addClass(this.attrs.class);
                 }
 
-                var urlThumb = this._getImageUrl(this.model, this.res_id, 'image_medium', unique);
+                var urlThumb = this._getImageUrl(this.model, this.res_id, 'image_128', unique);
 
                 this.$el.empty();
                 $img = this.$el;

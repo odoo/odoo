@@ -31,7 +31,7 @@ class HrEmployeePrivate(models.Model):
     @api.model
     def _default_image(self):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
+        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=(1024, 1024))
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
@@ -96,9 +96,9 @@ class HrEmployeePrivate(models.Model):
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
         "Photo", default=_default_image)
-    image_medium = fields.Binary(
+    image_128 = fields.Binary(
         "Medium-sized photo")
-    image_small = fields.Binary(
+    image_64 = fields.Binary(
         "Small-sized photo")
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company

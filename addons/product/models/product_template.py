@@ -371,6 +371,16 @@ class ProductTemplate(models.Model):
             self.create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
+        if 'image_1920' in vals:
+            self.env['product.product'].invalidate_cache(fnames=[
+                'image_1920',
+                'image_1024',
+                'image_512',
+                'image_256',
+                'image_128',
+                'image_64',
+                'can_image_be_zoomed',
+            ])
         return res
 
     @api.returns('self', lambda value: value.id)

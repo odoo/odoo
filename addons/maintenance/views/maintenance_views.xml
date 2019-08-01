@@ -166,7 +166,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -466,7 +466,7 @@
                                         <div class="o_kanban_inline_block">
                                             <field name="activity_ids" widget="kanban_activity" />
                                         </div>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" t-att-alt="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" t-att-alt="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
@@ -660,7 +660,7 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="mb4">
                                 <strong><field name="name"/></strong>
-                                <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                <img t-att-src="kanban_image('res.users', 'image_64', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">

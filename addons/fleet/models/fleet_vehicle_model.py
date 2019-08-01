@@ -15,8 +15,8 @@ class FleetVehicleModel(models.Model):
     manager_id = fields.Many2one('res.users', 'Fleet Manager', default=lambda self: self.env.uid,
                                  domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)])
     image = fields.Binary(related='brand_id.image', string="Logo", readonly=False)
-    image_medium = fields.Binary(related='brand_id.image_medium', string="Logo (medium)", readonly=False)
-    image_small = fields.Binary(related='brand_id.image_small', string="Logo (small)", readonly=False)
+    image_128 = fields.Binary(related='brand_id.image_128', string="Logo (medium)", readonly=False)
+    image_64 = fields.Binary(related='brand_id.image_64', string="Logo (small)", readonly=False)
 
     @api.depends('name', 'brand_id')
     def name_get(self):
@@ -31,9 +31,9 @@ class FleetVehicleModel(models.Model):
     @api.onchange('brand_id')
     def _onchange_brand(self):
         if self.brand_id:
-            self.image_medium = self.brand_id.image
+            self.image_128 = self.brand_id.image
         else:
-            self.image_medium = False
+            self.image_128 = False
 
 
 class FleetVehicleModelBrand(models.Model):
@@ -44,11 +44,11 @@ class FleetVehicleModelBrand(models.Model):
     name = fields.Char('Make', required=True)
     image = fields.Binary("Logo",
         help="This field holds the image used as logo for the brand, limited to 1024x1024px.")
-    image_medium = fields.Binary("Medium-sized image",
+    image_128 = fields.Binary("Medium-sized image",
         help="Medium-sized logo of the brand. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary("Small-sized image",
+    image_64 = fields.Binary("Small-sized image",
         help="Small-sized logo of the brand. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")

@@ -1763,7 +1763,7 @@ order.
 
     .. code-block:: xml
 
-        <field name="image" widget='image' options='{"preview_image":"image_medium"}'/>
+        <field name="image" widget='image' options='{"preview_image":"image_128"}'/>
 
 - binary (FieldBinaryFile)
     Generic widget to allow saving/downloading a binary file.
