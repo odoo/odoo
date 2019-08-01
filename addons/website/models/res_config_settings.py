@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
     website_logo = fields.Binary(related='website_id.logo', readonly=False)
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang',
         readonly=False)
-    language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
+    website_language_count = fields.Integer(string='Number of languages', compute='_compute_website_language_count', readonly=True)
     website_default_lang_id = fields.Many2one(
         string='Default language', related='website_id.default_lang_id', readonly=False,
         relation='res.lang')
@@ -114,9 +114,9 @@ class ResConfigSettings(models.TransientModel):
             self.website_default_lang_id = language_ids[0]
 
     @api.depends('language_ids')
-    def _compute_language_count(self):
+    def _compute_website_language_count(self):
         for config in self:
-            config.language_count = len(self.language_ids)
+            config.website_language_count = len(self.language_ids)
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
