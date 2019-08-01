@@ -179,7 +179,7 @@ class MrpProduction(models.Model):
     def _compute_picking_ids(self):
         for order in self:
             order.picking_ids = self.env['stock.picking'].search([
-                ('group_id', '=', order.procurement_group_id.id),
+                ('group_id', '=', order.procurement_group_id.id), ('group_id', '!=', False),
             ])
             order.delivery_count = len(order.picking_ids)
 
