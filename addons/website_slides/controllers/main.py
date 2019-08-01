@@ -324,7 +324,7 @@ class WebsiteSlides(WebsiteProfile):
         return request.env['res.users'].sudo().search_read([
             ('karma', '>', 0),
             ('website_published', '=', True),
-            ('image', '!=', False)], ['id'], limit=3, order='karma desc')
+            ('image_1920', '!=', False)], ['id'], limit=3, order='karma desc')
 
     @http.route([
         '/slides/<model("slide.channel"):channel>',
