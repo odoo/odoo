@@ -1186,7 +1186,7 @@ class Binary(http.Controller):
         '/web/partner_image/<int:rec_id>',
         '/web/partner_image/<int:rec_id>/<string:field>',
         '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
-    def content_image_partner(self, rec_id, field='image_small', model='res.partner', **kwargs):
+    def content_image_partner(self, rec_id, field='image_64', model='res.partner', **kwargs):
         # other kwargs are ignored on purpose
         return self._content_image(id=rec_id, model='res.partner', field=field,
             placeholder='user_placeholder.jpg')

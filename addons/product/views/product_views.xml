@@ -21,7 +21,7 @@
                     <field name='is_product_variant' invisible='1'/>
                     <field name='attribute_line_ids' invisible='1'/>
                     <field name="id" invisible="True"/>
-                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label class="oe_edit_only" for="name" string="Product Name"/>
                         <h1><field name="name" placeholder="Product Name"/></h1>
@@ -268,7 +268,7 @@
                         <div class="oe_button_box" name="button_box"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
-                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
@@ -418,7 +418,7 @@
             <field name="arch" type="xml">
                 <kanban>
                     <field name="id"/>
-                    <field name="image_small"/>
+                    <field name="image_64"/>
                     <field name="lst_price"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -426,7 +426,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('product.product', 'image_small', record.id.raw_value)" alt="Product"/>
+                                    <img t-att-src="kanban_image('product.product', 'image_64', record.id.raw_value)" alt="Product"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong class="o_kanban_record_title">
@@ -457,7 +457,7 @@
                     <field name="default_code"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('product.product', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <img t-att-src="activity_image('product.product', 'image_64', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <div t-if="record.default_code.value" class="text-muted">

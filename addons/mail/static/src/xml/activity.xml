@@ -17,7 +17,7 @@
                 <div class="o_thread_message" style="margin-bottom: 10px">
                     <div class="o_thread_message_sidebar">
                         <div class="o_avatar_stack">
-                            <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" class="o_thread_message_avatar rounded-circle mb8" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
+                            <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_64') : ''}" class="o_thread_message_avatar rounded-circle mb8" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
                             <i t-att-class="'o_avatar_icon fa ' + activity.icon + ' bg-' + (activity.state == 'planned'? 'success' : (activity.state == 'today'? 'warning' : 'danger')) + '-full'"
                                t-att-title="activity.activity_type_id[1]"/>
                         </div>
@@ -42,7 +42,7 @@
                                     <dd class="mb8">
                                         <t t-esc="activity.create_date.format(datetimeFormat)"/>
                                         by
-                                        <img t-attf-src="/web/image#{activity.create_uid[0] >= 0 ? ('/res.users/' + activity.create_uid[0] + '/image_small') : ''}"
+                                        <img t-attf-src="/web/image#{activity.create_uid[0] >= 0 ? ('/res.users/' + activity.create_uid[0] + '/image_64') : ''}"
                                             height="18" width="18"
                                             class="rounded-circle mr4"
                                             t-att-title="activity.create_uid[1]"
@@ -51,7 +51,7 @@
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">
-                                        <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="rounded-circle mr4" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
+                                        <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_64') : ''}" height="18" width="18" class="rounded-circle mr4" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
                                         <b><t t-esc="activity.user_id[1]"/></b>
                                         <em>, due on </em><span t-attf-class="o_activity_color_#{activity.state}"><t t-esc="activity.date_deadline.format(dateFormat)"/></span>
                                     </dd>

@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                             <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.quizz_passed">
-                                <img t-att-src="'/web/image/gamification.badge/%s/image_medium' % survey.certification_badge_id.id"/>
+                                <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
                                 <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
                             </div>
                         </div>

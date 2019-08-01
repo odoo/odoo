@@ -21,7 +21,7 @@ class ImLivechatChannel(models.Model):
 
     def _default_image(self):
         image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
+        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=(1024, 1024))
 
     def _default_user_ids(self):
         return [(6, 0, [self._uid])]
@@ -45,11 +45,11 @@ class ImLivechatChannel(models.Model):
     # images fields
     image = fields.Binary('Image', default=_default_image,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium',
+    image_128 = fields.Binary('Medium',
         help="Medium-sized photo of the group. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Thumbnail',
+    image_64 = fields.Binary('Thumbnail',
         help="Small-sized photo of the group. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")

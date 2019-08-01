@@ -34,12 +34,12 @@ class KarmaRank(models.Model):
     karma_min = fields.Integer(string='Required Karma', help='Minimum karma needed to reach this rank')
     user_ids = fields.One2many('res.users', 'rank_id', string='Users', help="Users having this rank")
     image = fields.Binary('Rank Icon')
-    image_medium = fields.Binary(
+    image_128 = fields.Binary(
         "Medium-sized rank icon",
         help="Medium-sized icon of the rank. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
+    image_64 = fields.Binary(
         "Small-sized rank icon",
         help="Small-sized icon of the rank. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "

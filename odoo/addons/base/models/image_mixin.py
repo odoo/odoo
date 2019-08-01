@@ -10,33 +10,19 @@ class ImageMixin(models.AbstractModel):
 
     # all image fields are base64 encoded and PIL-supported
 
-    image_original = fields.Image("Original Image", help="Image in its original size, as it was uploaded.")
+    image_1920 = fields.Image("Image", max_width=1920, max_height=1920)
 
     # resized fields stored (as attachment) for performance
-    image_big = fields.Image("Big-sized Image", related="image_original", max_width=1024, max_height=1024, store=True, help="1024px * 1024px")
-    image_large = fields.Image("Large-sized Image", related="image_original", max_width=256, max_height=256, store=True, help="256px * 256px")
-    image_medium = fields.Image("Medium-sized Image", related="image_original", max_width=128, max_height=128, store=True, help="128px * 128px")
-    image_small = fields.Image("Small-sized Image", related="image_original", max_width=64, max_height=64, store=True, help="64px * 64px")
+    image_1024 = fields.Image("Image 1024", related="image_1920", max_width=1024, max_height=1024, store=True)
+    image_512 = fields.Image("Image 512", related="image_1920", max_width=512, max_height=512, store=True)
+    image_256 = fields.Image("Image 256", related="image_1920", max_width=256, max_height=256, store=True)
+    image_128 = fields.Image("Image 128", related="image_1920", max_width=128, max_height=128, store=True)
+    image_64 = fields.Image("Image 64", related="image_1920", max_width=64, max_height=64, store=True)
 
     can_image_be_zoomed = fields.Boolean("Can image raw be zoomed", compute='_compute_images', store=True)
 
-    image = fields.Image("Image", compute='_compute_image', inverse='_set_image')
-
-    @api.depends('image_original')
+    @api.depends('image_1920')
     def _compute_images(self):
         for record in self:
-            image = record.image_original
+            image = record.image_1920
             record.can_image_be_zoomed = image and tools.is_image_size_above(image)
-
-    @api.depends('image_big')
-    def _compute_image(self):
-        for record in self:
-            record.image = record.image_big
-
-    def _set_image(self):
-        for record in self:
-            record.image_original = record.image
-        # We want the image field to be recomputed to have a correct size.
-        # Without this `invalidate_cache`, the image field will keep holding the
-        # image_original instead of the big-sized image.
-        self.invalidate_cache()

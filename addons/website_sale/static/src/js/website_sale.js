@@ -440,7 +440,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         else { // compatibility 12.0
             var model = productId ? 'product.product' : 'product.template';
             var modelId = productId || productTemplateId;
-            var imageSrc = '/web/image/{0}/{1}/image'
+            var imageSrc = '/web/image/{0}/{1}/image_1024'
                 .replace("{0}", model)
                 .replace("{1}", modelId);
 
@@ -451,7 +451,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
             var $thumbnail = $productContainer.find('img.js_variant_img_small');
             if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                $thumbnail.attr("src", "/web/image/{0}/{1}/image/90x90"
+                $thumbnail.attr("src", "/web/image/{0}/{1}/image_128/90x90"
                     .replace('{0}', model)
                     .replace('{1}', modelId));
                 $('.carousel').carousel(0);

@@ -73,8 +73,8 @@ class FleetVehicle(models.Model):
     power = fields.Integer('Power', help='Power in kW of the vehicle')
     co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle')
     image = fields.Binary(related='model_id.image', string="Logo", readonly=False)
-    image_medium = fields.Binary(related='model_id.image_medium', string="Logo (medium)", readonly=False)
-    image_small = fields.Binary(related='model_id.image_small', string="Logo (small)", readonly=False)
+    image_128 = fields.Binary(related='model_id.image_128', string="Logo (medium)", readonly=False)
+    image_64 = fields.Binary(related='model_id.image_64', string="Logo (small)", readonly=False)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew', multi='contract_info')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
@@ -206,9 +206,9 @@ class FleetVehicle(models.Model):
     @api.onchange('model_id')
     def _onchange_model(self):
         if self.model_id:
-            self.image_medium = self.model_id.image
+            self.image_128 = self.model_id.image
         else:
-            self.image_medium = False
+            self.image_128 = False
 
     @api.model
     def create(self, vals):

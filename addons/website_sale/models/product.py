@@ -155,11 +155,11 @@ class ProductPublicCategory(models.Model):
     # In this case, the default image is set by the js code.
     image = fields.Binary(help="This field holds the image used as image for the category, limited to 1024x1024px.")
     website_description = fields.Html('Category Description', sanitize_attributes=False, translate=html_translate)
-    image_medium = fields.Binary(string='Medium-sized image',
+    image_128 = fields.Binary(string='Medium-sized image',
                                  help="Medium-sized image of the category. It is automatically "
                                  "resized as a 128x128px image, with aspect ratio preserved. "
                                  "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(string='Small-sized image',
+    image_64 = fields.Binary(string='Small-sized image',
                                 help="Small-sized image of the category. It is automatically "
                                 "resized as a 64x64px image, with aspect ratio preserved. "
                                 "Use this field anywhere a small image is required.")
@@ -383,7 +383,7 @@ class ProductTemplate(models.Model):
         res = super(ProductTemplate, self)._default_website_meta()
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image_1024" % (self.id)
         res['default_meta_description'] = self.description_sale
         return res
 
@@ -457,7 +457,7 @@ class Product(models.Model):
         """
         self.ensure_one()
         variant_images = list(self.product_variant_image_ids)
-        if self.image_raw_original:
+        if self.image_variant_max:
             # if the main variant image is set, display it first
             variant_images = [self] + variant_images
         else:

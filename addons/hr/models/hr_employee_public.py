@@ -33,8 +33,8 @@ class HrEmployeePublic(models.Model):
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)
     image = fields.Binary("Photo", compute='_compute_image', readonly=True, compute_sudo=True)
-    image_medium = fields.Binary("Medium-sized photo", compute='_compute_image', readonly=True, compute_sudo=True)
-    image_small = fields.Binary("Small-sized photo", compute='_compute_image', readonly=True, compute_sudo=True)
+    image_128 = fields.Binary("Medium-sized photo", compute='_compute_image', readonly=True, compute_sudo=True)
+    image_64 = fields.Binary("Small-sized photo", compute='_compute_image', readonly=True, compute_sudo=True)
     parent_id = fields.Many2one('hr.employee.public', 'Manager', readonly=True)
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
 
@@ -43,8 +43,8 @@ class HrEmployeePublic(models.Model):
             # We have to be in sudo to have access to the images
             employee_id = self.sudo().env['hr.employee'].browse(employee.id)
             employee.image = employee_id.image
-            employee.image_medium = employee_id.image_medium
-            employee.image_small = employee_id.image_small
+            employee.image_128 = employee_id.image_128
+            employee.image_64 = employee_id.image_64
 
     @api.model
     def _get_fields(self):

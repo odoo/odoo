@@ -135,7 +135,7 @@
                                     <em><field name="description"/></em>
                                     <div>
                                         <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                            <img width="24" height="24" class="oe_kanban_avatar" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner" alt="Owner"/>
+                                            <img width="24" height="24" class="oe_kanban_avatar" t-att-src="kanban_image('res.users', 'image_64', owner)" t-att-data-member_id="owner" alt="Owner"/>
                                         </t>
                                     </div>
                                 </div>

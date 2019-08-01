@@ -82,7 +82,7 @@
                         </t>
                         <div class="media mt-3">
                             <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
-                               t-field="partner.image_medium"
+                               t-field="partner.image_128"
                                t-options='{"widget": "image", "class": "mr-3"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
@@ -164,7 +164,7 @@
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
-            <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
+            <span t-field="reference.image_128" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
             <div class="media-body" style="min-height: 64px;">
                 <span t-field="reference.self"/>
                 <div t-field='reference.website_short_description'/>
