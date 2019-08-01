@@ -210,7 +210,6 @@ exports.PosModel = Backbone.Model.extend({
         fields: ['name','street','city','state_id','country_id','vat',
                  'phone','zip','mobile','email','barcode','write_date',
                  'property_account_position_id','property_product_pricelist'],
-        domain: [['customer','=',true]],
         loaded: function(self,partners){
             self.partners = partners;
             self.db.add_partners(partners);
@@ -587,7 +586,7 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     prepare_new_partners_domain: function(){
-        return [['customer','=',true], ['write_date','>', this.db.get_partner_write_date()]];
+        return [['write_date','>', this.db.get_partner_write_date()]];
     },
 
     // reload the list of partner, returns as a promise that resolves if there were

@@ -60,7 +60,6 @@ class SurveyCase(common.SavepointCase):
         self.customer = self.env['res.partner'].create({
             'name': 'Caroline Customer',
             'email': 'customer@example.com',
-            'customer': True,
         })
 
         self.survey = self.env['survey.survey'].with_user(self.survey_manager).create({

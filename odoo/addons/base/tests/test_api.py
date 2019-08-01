@@ -465,16 +465,16 @@ class TestAPI(common.TransactionCase):
     def test_80_filter(self):
         """ Check filter on recordsets. """
         ps = self.env['res.partner'].search([])
-        customers = ps.browse([p.id for p in ps if p.customer])
+        customers = ps.browse([p.id for p in ps if p.employee])
 
         # filter on a single field
-        self.assertEqual(ps.filtered(lambda p: p.customer), customers)
-        self.assertEqual(ps.filtered('customer'), customers)
+        self.assertEqual(ps.filtered(lambda p: p.employee), customers)
+        self.assertEqual(ps.filtered('employee'), customers)
 
         # filter on a sequence of fields
         self.assertEqual(
-            ps.filtered(lambda p: p.parent_id.customer),
-            ps.filtered('parent_id.customer')
+            ps.filtered(lambda p: p.parent_id.employee),
+            ps.filtered('parent_id.employee')
         )
 
     @mute_logger('odoo.models')

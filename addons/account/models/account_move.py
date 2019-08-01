@@ -355,9 +355,6 @@ class AccountMove(models.Model):
         if self.is_sale_document(include_receipts=True):
             if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
                 self.narration = self.company_id.invoice_terms or self.env.company.invoice_terms
-            return {'domain': {'partner_id': [('customer', '=', True)]}}
-        elif self.is_purchase_document(include_receipts=True):
-            return {'domain': {'partner_id': [('supplier', '=', True)]}}
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):

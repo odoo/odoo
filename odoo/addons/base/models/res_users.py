@@ -437,7 +437,7 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        users = super(Users, self.with_context(default_customer=False)).create(vals_list)
+        users = super(Users, self).create(vals_list)
         for user in users:
             user.partner_id.active = user.active
             if user.partner_id.company_id:

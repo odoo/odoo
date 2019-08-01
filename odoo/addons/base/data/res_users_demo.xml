@@ -5,7 +5,6 @@
         <record id="partner_demo" model="res.partner">
             <field name="name">Marc Demo</field>
             <field name="company_id" ref="main_company"/>
-            <field name="customer" eval="False"/>
             <field name="company_name">YourCompany</field>
             <field name="street">3575  Buena Vista Avenue</field>
             <field name="city">Eugene</field>
@@ -64,8 +63,6 @@
         <record id="partner_demo_portal" model="res.partner">
             <field name="name">Joel Willis</field>
             <field name="email">joel.willis63@example.com</field>
-            <field name="supplier" eval="False"/>
-            <field name="customer" eval="True"/>
             <field name="street">858 Lynn Street</field>
             <field name="city">Bayonne</field>
             <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
