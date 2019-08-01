@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, tools
+from odoo import models, fields
 
 
 class ImageMixin(models.AbstractModel):
@@ -18,11 +18,3 @@ class ImageMixin(models.AbstractModel):
     image_256 = fields.Image("Image 256", related="image_1920", max_width=256, max_height=256, store=True)
     image_128 = fields.Image("Image 128", related="image_1920", max_width=128, max_height=128, store=True)
     image_64 = fields.Image("Image 64", related="image_1920", max_width=64, max_height=64, store=True)
-
-    can_image_be_zoomed = fields.Boolean("Can image raw be zoomed", compute='_compute_images', store=True)
-
-    @api.depends('image_1920')
-    def _compute_images(self):
-        for record in self:
-            image = record.image_1920
-            record.can_image_be_zoomed = image and tools.is_image_size_above(image)

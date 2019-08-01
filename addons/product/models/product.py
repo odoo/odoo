@@ -131,7 +131,7 @@ class ProductProduct(models.Model):
     image_variant_256 = fields.Image("Variant Image 256", related="image_variant_max", max_width=256, max_height=256, store=True)
     image_variant_128 = fields.Image("Variant Image 128", related="image_variant_max", max_width=128, max_height=128, store=True)
     image_variant_64 = fields.Image("Variant Image 64", related="image_variant_max", max_width=64, max_height=64, store=True)
-    can_image_variant_be_zoomed = fields.Boolean("Can image variant be zoomed", compute='_compute_images', store=True)
+    can_image_variant_1024_be_zoomed = fields.Boolean("Can Variant Image 1024 be zoomed", compute='_compute_can_image_variant_1024_be_zoomed', store=True)
 
     # Computed fields that are used to create a fallback to the template if
     # necessary, it's recommended to display those fields to the user.
@@ -141,13 +141,12 @@ class ProductProduct(models.Model):
     image_256 = fields.Image("Image 256", compute='_compute_image_256')
     image_128 = fields.Image("Image 128", compute='_compute_image_128')
     image_64 = fields.Image("Image 64", compute='_compute_image_64')
-    can_image_1024_be_zoomed = fields.Boolean("Can image be zoomed", compute='_compute_can_image_1024_be_zoomed')
+    can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
 
-    @api.depends('image_variant_max')
-    def _compute_images(self):
+    @api.depends('image_variant_max', 'image_variant_1024')
+    def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:
-            image = record.image_variant_max
-            record.can_image_variant_be_zoomed = image and tools.is_image_size_above(image)
+            record.can_image_variant_1024_be_zoomed = record.image_variant_max and tools.is_image_size_above(record.image_variant_max, record.image_variant_1024)
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""

@@ -149,6 +149,13 @@ class ProductTemplate(models.Model):
 
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items')
 
+    can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
+
+    @api.depends('image_1920', 'image_1024')
+    def _compute_can_image_1024_be_zoomed(self):
+        for template in self:
+            template.can_image_1024_be_zoomed = template.image_1920 and tools.is_image_size_above(template.image_1920, template.image_1024)
+
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
         for p in self:
@@ -379,7 +386,7 @@ class ProductTemplate(models.Model):
                 'image_256',
                 'image_128',
                 'image_64',
-                'can_image_be_zoomed',
+                'can_image_1024_be_zoomed',
             ])
         return res
 
