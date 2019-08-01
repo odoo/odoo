@@ -154,6 +154,19 @@ class Website(models.Model):
             self.env['ir.qweb'].clear_caches()
         return result
 
+    @api.multi
+    def unlink(self):
+        # Do not delete invoices, delete what's strictly necessary
+        attachments_to_unlink = self.env['ir.attachment'].search([
+            ('website_id', 'in', self.ids),
+            '|', '|',
+            ('key', '!=', False),  # theme attachment
+            ('url', 'ilike', '.custom.'),  # customized theme attachment
+            ('url', 'ilike', '.assets\\_'),
+        ])
+        attachments_to_unlink.unlink()
+        return super(Website, self).unlink()
+
     # ----------------------------------------------------------
     # Page Management
     # ----------------------------------------------------------
@@ -896,7 +909,7 @@ class WebsiteMultiMixin(models.AbstractModel):
     _name = 'website.multi.mixin'
     _description = 'Multi Website Mixin'
 
-    website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
+    website_id = fields.Many2one('website', string='Website', ondelete='restrict', help='Restrict publishing to this website.')
 
     @api.multi
     def can_access_from_current_website(self, website_id=False):
@@ -1183,7 +1196,7 @@ class Menu(models.Model):
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
