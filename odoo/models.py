@@ -3397,6 +3397,12 @@ Fields:
         other_fields = []               # list of non-column fields
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
         has_translation = self.env.lang and self.env.lang != 'en_US'
+        # when there is only one language, update existing translations but
+        # do not create new ones
+        if single_lang:
+            process_translations = self.env['ir.translation']._update_translations
+        else:
+            process_translations = self.env['ir.translation']._upsert_translations
 
         for name, val in vals.items():
             field = self._fields[name]
@@ -3410,6 +3416,9 @@ Fields:
                     # val is not a translation: update the table
                     val = field.convert_to_column(val, self, vals)
                     columns.append((name, field.column_format, val))
+                    tname = "%s,%s" % (self._name, name)
+                    if field.translate is True and self.env.lang:
+                        self.env['ir.translation']._set_source(tname, self.ids, val)
                 updated.append(name)
             else:
                 other_fields.append(field)
@@ -3440,6 +3449,7 @@ Fields:
                         + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
                     )
 
+            translation_values = []
             for name in updated:
                 field = self._fields[name]
                 if callable(field.translate):
@@ -3447,17 +3457,26 @@ Fields:
                     # synchronize translated terms when possible.
                     self.env['ir.translation']._sync_terms_translations(field, self)
 
-                elif has_translation and field.translate:
+                elif self.env.lang and field.translate:
                     # The translated value of a field has been modified.
-                    src_trans = self.read([name])[0][name]
+                    src_trans = self.with_context(lang=None).read([name])[0][name]
                     if not src_trans:
                         # Insert value to DB
                         src_trans = vals[name]
                         self.with_context(lang=None).write({name: src_trans})
                     tname = "%s,%s" % (self._name, name)
                     val = field.convert_to_column(vals[name], self, vals)
-                    self.env['ir.translation']._set_ids(
-                        tname, 'model', self.env.lang, self.ids, val, src_trans)
+                    translation_values += [dict(
+                        src=src_trans,
+                        value=val,
+                        name=tname,
+                        lang=self.env.lang,
+                        type='model',
+                        state='translated',
+                        res_id=res_id) for res_id in self.ids]
+
+            if translation_values:
+                process_translations(translation_values)
 
         # mark fields to recompute; do this before setting other fields, because
         # the latter can require the value of computed fields, e.g., a one2many
@@ -4283,11 +4302,12 @@ Fields:
                 vals_list = []
                 for vals in Translation.search_read(domain):
                     del vals['id']
-                    del vals['source']      # remove source to avoid triggering _set_src
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
+                    if not callable(field.translate):
+                        vals['src'] = new_wo_lang[name]
                     if vals['lang'] == old.env.lang and field.translate is True:
-                        # force a source if the new_val was not changed by copy override
+                        # update master record if the new_val was not changed by copy override
                         if new_val == old[name]:
                             new_wo_lang[name] = old_wo_lang[name]
                             vals['src'] = old_wo_lang[name]
