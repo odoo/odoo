@@ -123,38 +123,31 @@ class ProductProduct(models.Model):
     # all image fields are base64 encoded and PIL-supported
 
     # all image_raw fields are technical and should not be displayed to the user
-    image_raw_original = fields.Binary("Raw Original Image")
+    image_raw_original = fields.Image("Raw Original Image")
 
     # resized fields stored (as attachment) for performance
-    image_raw_big = fields.Binary("Raw Big-sized Image", compute='_compute_images', store=True)
-    image_raw_large = fields.Binary("Raw Large-sized Image", compute='_compute_images', store=True)
-    image_raw_medium = fields.Binary("Raw Medium-sized Image", compute='_compute_images', store=True)
-    image_raw_small = fields.Binary("Raw Small-sized Image", compute='_compute_images', store=True)
+    image_raw_big = fields.Image("Raw Big-sized Image", related="image_raw_original", max_width=1024, max_height=1024, store=True)
+    image_raw_large = fields.Image("Raw Large-sized Image", related="image_raw_original", max_width=256, max_height=256, store=True)
+    image_raw_medium = fields.Image("Raw Medium-sized Image", related="image_raw_original", max_width=128, max_height=128, store=True)
+    image_raw_small = fields.Image("Raw Small-sized Image", related="image_raw_original", max_width=64, max_height=64, store=True)
 
     can_image_raw_be_zoomed = fields.Boolean("Can image raw be zoomed", compute='_compute_images', store=True)
 
     # Computed fields that are used to create a fallback to the template if
     # necessary, it's recommended to display those fields to the user.
-    image_original = fields.Binary("Original Image", compute='_compute_image_original', inverse='_set_image_original', help="Image in its original size, as it was uploaded.")
-    image_big = fields.Binary("Big-sized Image", compute='_compute_image_big', help="1024px * 1024px")
-    image_large = fields.Binary("Large-sized Image", compute='_compute_image_large', help="256px * 256px")
-    image_medium = fields.Binary("Medium-sized Image", compute='_compute_image_medium', help="128px * 128px")
-    image_small = fields.Binary("Small-sized Image", compute='_compute_image_small', help="64px * 64px")
+    image_original = fields.Image("Original Image", compute='_compute_image_original', inverse='_set_image_original', help="Image in its original size, as it was uploaded.")
+    image_big = fields.Image("Big-sized Image", compute='_compute_image_big', help="1024px * 1024px")
+    image_large = fields.Image("Large-sized Image", compute='_compute_image_large', help="256px * 256px")
+    image_medium = fields.Image("Medium-sized Image", compute='_compute_image_medium', help="128px * 128px")
+    image_small = fields.Image("Small-sized Image", compute='_compute_image_small', help="64px * 64px")
     can_image_be_zoomed = fields.Boolean("Can image be zoomed", compute='_compute_can_image_be_zoomed')
 
-    image = fields.Binary("Image", compute='_compute_image', inverse='_set_image')
+    image = fields.Image("Image", compute='_compute_image', inverse='_set_image')
 
     @api.depends('image_raw_original')
     def _compute_images(self):
         for record in self:
             image = record.image_raw_original
-            # for performance: avoid calling unnecessary methods when falsy
-            images = image and tools.image_get_resized_images(image, big_name=False)
-            record.image_raw_big = image and tools.image_get_resized_images(image,
-                large_name=False, medium_name=False, small_name=False)['image']
-            record.image_raw_large = image and images['image_large']
-            record.image_raw_medium = image and images['image_medium']
-            record.image_raw_small = image and images['image_small']
             record.can_image_raw_be_zoomed = image and tools.is_image_size_above(image)
 
     def _compute_image_original(self):
