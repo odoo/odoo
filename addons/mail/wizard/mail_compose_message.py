@@ -8,6 +8,7 @@ import re
 
 from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 
 # main mako-like expression pattern
@@ -283,7 +284,9 @@ class MailComposer(models.TransientModel):
                             if wizard.model:
                                 post_params['model'] = wizard.model
                                 post_params['res_id'] = res_id
-                            ActiveModel.message_notify(**post_params)
+                            if not ActiveModel.message_notify(**post_params):
+                                # if message_notify returns an empty record set, no recipients where found.
+                                raise UserError(_("No recipient found."))
                         else:
                             ActiveModel.browse(res_id).message_post(**post_params)
 

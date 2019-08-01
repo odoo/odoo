@@ -1893,7 +1893,7 @@ class MailThread(models.AbstractModel):
 
         if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
-            return self.env['mail_message']
+            return self.env['mail.message']
 
         if not (model and res_id):  # both value should be set or none should be set (record)
             model = False
