@@ -210,7 +210,7 @@ class IrAttachment(models.Model):
     theme_template_id = fields.Many2one('theme.ir.attachment')
 
 
-class WebiteMenu(models.Model):
+class WebsiteMenu(models.Model):
     _inherit = 'website.menu'
 
     theme_template_id = fields.Many2one('theme.website.menu')
