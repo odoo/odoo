@@ -12,7 +12,6 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import ormcache
-from odoo.tools.safe_eval import safe_eval
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
 _logger = logging.getLogger(__name__)
@@ -64,7 +63,7 @@ class Channel(models.Model):
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=(1024, 1024))
+        return base64.b64encode(open(image_path, 'rb').read())
 
     @api.model
     def default_get(self, fields):
@@ -101,17 +100,7 @@ class Channel(models.Model):
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Photo", default=_get_default_image,
-        help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_128 = fields.Binary('Medium-sized photo',
-        help="Medium-sized photo of the group. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_64 = fields.Binary('Small-sized photo',
-        help="Small-sized photo of the group. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+    image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
     is_subscribed = fields.Boolean(
         'Is Subscribed', compute='_compute_is_subscribed')
     # moderation
@@ -209,11 +198,10 @@ class Channel(models.Model):
     @api.model
     def create(self, vals):
         # ensure image at quick create
-        if not vals.get('image'):
-            defaults = self.default_get(['image'])
-            vals['image'] = defaults['image']
+        if not vals.get('image_128'):
+            defaults = self.default_get(['image_128'])
+            vals['image_128'] = defaults['image_128']
 
-        tools.image_resize_images(vals)
         # Create channel and alias
         channel = super(Channel, self.with_context(
             alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
@@ -250,7 +238,6 @@ class Channel(models.Model):
             if not self.env.user.has_group('base.group_system'):
                 raise UserError("You do not possess the rights to modify fields related to moderation on one of the channels you are modifying.")
 
-        tools.image_resize_images(vals)
         result = super(Channel, self).write(vals)
 
         if vals.get('group_ids'):
