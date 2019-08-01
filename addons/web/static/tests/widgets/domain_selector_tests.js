@@ -213,6 +213,62 @@ QUnit.module('DomainSelector', {
 
         domainSelector.destroy();
     });
+
+    QUnit.test("Handle TRUE_LEAF and FALSE_LEAF", function (assert) {
+        assert.expect(6);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the domain selector and its mock environment
+        var domain = "['|', [0, '=', 0], ['foo','ilike', 'hutanay']]";
+        var domainSelector = new DomainSelector(null, "partner", domain, {
+            debugMode: true,
+            readonly: false,
+        });
+
+        testUtils.addMockEnvironment(domainSelector, {data: this.data, readonly: false});
+        domainSelector.appendTo($target);
+
+        var $inputContainer = domainSelector.$('.o_domain_debug_input');
+
+        var $domainLeafValues = domainSelector.$('.o_ds_value_cell input');
+        assert.strictEqual($domainLeafValues.length, 2,
+            'Two leaves lead to two rendered values');
+
+        assert.strictEqual($domainLeafValues.eq(0).val().trim(), '0',
+            'FALSE_LEAF value is correct');
+
+        assert.strictEqual(
+            $inputContainer.val(),
+            "[\"|\",[0,\"=\",0],[\"foo\",\"ilike\",\"hutanay\"]]",
+            'FALSE_LEAF is handled and rendered');
+
+        var redrawnDef = $.Deferred();
+        testUtils.patch(DomainSelector, {
+            _redraw: function () {
+                return this._super.apply(this, arguments).then(redrawnDef.resolve.bind(redrawnDef));
+            }
+        });
+
+        redrawnDef.then(function () {
+            $domainLeafValues = domainSelector.$('.o_ds_value_cell input, .o_ds_value_cell select');
+            assert.strictEqual($domainLeafValues.length, 2,
+                'Two leaves lead to two rendered values');
+
+            assert.strictEqual($domainLeafValues.eq(0).val().trim(), '1',
+                'TRUE_LEAF value is correct');
+
+            assert.strictEqual(
+                $inputContainer.val(),
+                '[\"&\",[1,\"=\",1],[\"bar\",\"=\", True]]',
+                'TRUE_LEAF is handled and rendered');
+
+            domainSelector.destroy();
+            testUtils.unpatch(DomainSelector);
+        });
+
+        $inputContainer.val('[\"&\",[1,\"=\",1],[\"bar\",\"=\", True]]').trigger('change');
+    });
 });
 });
 });

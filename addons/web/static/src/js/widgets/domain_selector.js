@@ -647,7 +647,7 @@ var DomainLeaf = DomainNode.extend({
         this.fieldSelector = new ModelFieldSelector(
             this,
             this.model,
-            this.chain ? this.chain.split(".") : [],
+            this.chain && !(typeof this.chain === 'number') ? this.chain.split(".") : [],
             this.options
         );
         defs.push(this.fieldSelector.appendTo($("<div/>")).then((function () {
