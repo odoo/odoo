@@ -41,7 +41,6 @@ class TestAccountNoChartCommon(SavepointCase):
         cls.partner_customer_usd = Partner.create({
             'name': 'Customer from the North',
             'email': 'customer.usd@north.com',
-            'customer': True,
             'property_account_payable_id': cls.account_payable.id,
             'property_account_receivable_id': cls.account_receivable.id,
         })

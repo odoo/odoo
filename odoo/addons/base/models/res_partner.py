@@ -172,10 +172,6 @@ class Partner(models.Model):
                                     column2='category_id', string='Tags', default=_default_category)
     credit_limit = fields.Float(string='Credit Limit')
     active = fields.Boolean(default=True)
-    customer = fields.Boolean(string='Is a Customer', default=True,
-                               help="Check this box if this contact is a customer. It can be selected in sales orders.")
-    supplier = fields.Boolean(string='Is a Vendor',
-                               help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
     employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
     type = fields.Selection(
@@ -760,6 +756,9 @@ class Partner(models.Model):
         return super(Partner, self)._search(args, offset=offset, limit=limit, order=order,
                                             count=count, access_rights_uid=access_rights_uid)
 
+    def _get_name_search_join_clause(self):
+        return ''
+
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         self = self.with_user(name_get_uid or self.env.uid)
@@ -782,16 +781,21 @@ class Partner(models.Model):
 
             unaccent = get_unaccent_wrapper(self.env.cr)
 
+            join_clause = self._get_name_search_join_clause()
+
             query = """SELECT res_partner.id
                          FROM {from_str}
+                         {join}
                       {where} ({email} {operator} {percent}
                            OR {display_name} {operator} {percent}
                            OR {reference} {operator} {percent}
                            OR {vat} {operator} {percent})
                            -- don't panic, trust postgres bitmap
-                     ORDER BY {display_name} {operator} {percent} desc,
+                     GROUP BY res_partner.id
+                     ORDER BY COUNT(*) DESC, {display_name} {operator} {percent} desc,
                               {display_name}
                     """.format(from_str=from_str,
+                               join=join_clause,
                                where=where_str,
                                operator=operator,
                                email=unaccent('res_partner.email'),

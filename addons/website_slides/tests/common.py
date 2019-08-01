@@ -37,7 +37,6 @@ class SlidesCase(common.SavepointCase):
         self.customer = self.env['res.partner'].create({
             'name': 'Caroline Customer',
             'email': 'customer@example.com',
-            'customer': True,
         })
 
         self.channel = self.env['slide.channel'].with_user(self.user_publisher).create({
