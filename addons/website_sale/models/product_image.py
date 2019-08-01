@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.website.tools import get_video_embed_code
@@ -23,6 +23,13 @@ class ProductImage(models.Model):
     video_url = fields.Char('Video URL',
                             help='URL of a video for showcasing your product.')
     embed_code = fields.Char(compute="_compute_embed_code")
+
+    can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
+
+    @api.depends('image_1920', 'image_1024')
+    def _compute_can_image_1024_be_zoomed(self):
+        for image in self:
+            image.can_image_1024_be_zoomed = image.image_1920 and tools.is_image_size_above(image.image_1920, image.image_1024)
 
     @api.depends('video_url')
     def _compute_embed_code(self):

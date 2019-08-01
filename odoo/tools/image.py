@@ -362,18 +362,18 @@ def image_to_base64(image, format, **params):
     return base64.b64encode(stream.getvalue())
 
 
-def is_image_size_above(base64_source, size=(1024, 1024)):
-    """Return whether or not the size of the given image `base64_source` is
-    above the provided `size` (tuple: width, height).
+def is_image_size_above(base64_source_1, base64_source_2):
+    """Return whether or not the size of the given image `base64_source_1` is
+    above the size of the given image `base64_source_2`.
     """
-    if not base64_source:
+    if not base64_source_1 or not base64_source_2:
         return False
-    if base64_source[:1] in (b'P', 'P'):
+    if base64_source_1[:1] in (b'P', 'P') or base64_source_2[:1] in (b'P', 'P'):
         # False for SVG
         return False
-    image = base64_to_image(base64_source)
-    width, height = image.size
-    return width > size[0] or height > size[1]
+    image_source = base64_to_image(base64_source_1)
+    image_target = base64_to_image(base64_source_2)
+    return image_source.width > image_target.width or image_source.height > image_target.height
 
 
 def image_guess_size_from_field_name(field_name):
