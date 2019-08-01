@@ -7,7 +7,7 @@ from datetime import date, timedelta
 
 import odoo.tests
 
-
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):
         env = self.env(user=self.env.ref('base.user_admin'))

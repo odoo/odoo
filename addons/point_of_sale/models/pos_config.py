@@ -76,13 +76,14 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
-        journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
-        if journal and journal.sudo().company_id == self.env.company:
-            return journal
-        return self._default_invoice_journal()
+        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id), ('code', '=', 'POSS')], limit=1)
 
     def _default_invoice_journal(self):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+
+    def _get_default_journal_ids(self):
+        journals = self.env['account.journal'].search([('journal_user', '=', True), ('type', 'in', ['cash','bank']), ('company_id', '=', self.env.company.id)])
+        return journals or False
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('currency_id', '=', self.env.company.currency_id.id)], limit=1)
@@ -102,7 +103,8 @@ class PosConfig(models.Model):
     journal_ids = fields.Many2many(
         'account.journal', 'pos_config_journal_rel',
         'pos_config_id', 'journal_id', string='Available Payment Methods',
-        domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
+        domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]",
+        default=lambda self: self._get_default_journal_ids())
     picking_type_id = fields.Many2one(
         'stock.picking.type',
         string='Operation Type',
@@ -307,8 +309,8 @@ class PosConfig(models.Model):
 
     @api.onchange('module_account')
     def _onchange_module_account(self):
-        if self.module_account:
-            self.invoice_journal_id = self.env.ref('point_of_sale.pos_sale_journal')
+        if self.module_account and not self.invoice_journal_id:
+            self.invoice_journal_id = self._default_invoice_journal()
 
     @api.onchange('use_pricelist')
     def _onchange_use_pricelist(self):

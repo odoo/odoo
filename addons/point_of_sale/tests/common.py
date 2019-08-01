@@ -11,12 +11,35 @@ class TestPointOfSaleCommon(common.TransactionCase):
         self.PosMakePayment = self.env['pos.make.payment']
         self.PosOrder = self.env['pos.order']
         self.PosSession = self.env['pos.session']
-        self.company_id = self.ref('base.main_company')
+        company = self.env.ref('base.main_company')
+        self.company_id = company.id
+        coa = self.env['account.chart.template'].search([
+            ('currency_id', '=', company.currency_id.id),
+            ], limit=1)
+        test_sale_journal = self.env['account.journal'].create({'name': 'Sales Journal - Test',
+                                                'code': 'TSJ',
+                                                'type': 'sale',
+                                                'company_id': self.company_id})
+        company.write({'anglo_saxon_accounting': coa.use_anglo_saxon,
+            'bank_account_code_prefix': coa.bank_account_code_prefix,
+            'cash_account_code_prefix': coa.cash_account_code_prefix,
+            'transfer_account_code_prefix': coa.transfer_account_code_prefix,
+            'chart_template_id': coa.id,
+        })
         self.product3 = self.env.ref('product.product_product_3')
         self.product4 = self.env.ref('product.product_product_4')
         self.partner1 = self.env.ref('base.res_partner_1')
         self.partner4 = self.env.ref('base.res_partner_4')
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
+        self.pos_config.write({
+            'journal_id': test_sale_journal.id,
+            'invoice_journal_id': test_sale_journal.id,
+            'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
+                                                       'code': 'TSC',
+                                                       'type': 'cash',
+                                                       'company_id': self.company_id,
+                                                       'journal_user': True})],
+            })
         self.led_lamp = self.env.ref('point_of_sale.led_lamp')
         self.whiteboard_pen = self.env.ref('point_of_sale.whiteboard_pen')
         self.newspaper_rack = self.env.ref('point_of_sale.newspaper_rack')
