@@ -67,7 +67,7 @@
                 <form string="Contact">
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"  groups="base.group_no_one"/>
                         <h1>
@@ -97,7 +97,7 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Partner">
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}' readonly="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}' readonly="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
@@ -135,7 +135,7 @@
             <field name="arch" type="xml">
                 <form string="Partners">
                 <sheet>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
@@ -205,7 +205,7 @@
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box"/>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
@@ -373,11 +373,11 @@
                                                 <field name="mobile" widget="phone"/>
                                             </group>
                                             <group colspan="1">
-                                                <field name="image_128" widget="image" class="oe_avatar" nolabel="1"/>
+                                                <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'image_preview': 'image_128'}"/>
                                             </group>
                                         </group>
                                         <field name="lang" invisible="True"/>
-                                        <field name="image" invisible="True"/>
+                                        <field name="image_1920" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
                                     </sheet>
                                 </form>

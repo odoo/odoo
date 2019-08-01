@@ -310,7 +310,7 @@
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name='product_variant_count' invisible='1'/>
                         <field name="id" invisible="True"/>
-                        <field name="image_128" widget="image" class="oe_avatar"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'image_preview': 'image_128'}"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
                             <h1><field name="name" placeholder="e.g. Lunch"/></h1>

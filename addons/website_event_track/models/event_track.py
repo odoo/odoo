@@ -88,7 +88,7 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='partner_id.image_128', store=True, readonly=False)
+    image = fields.Image("Image", related='partner_id.image_128', store=True, readonly=False)
 
     @api.depends('name')
     def _compute_website_url(self):
@@ -202,4 +202,4 @@ class Sponsor(models.Model):
     partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
     url = fields.Char('Sponsor Website')
     sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
-    image_128 = fields.Binary(string='Logo', related='partner_id.image_128', store=True, readonly=False)
+    image_128 = fields.Image(string="Logo", related='partner_id.image_128', store=True, readonly=False)

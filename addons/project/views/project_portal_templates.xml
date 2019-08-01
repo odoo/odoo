@@ -91,7 +91,7 @@
                             <h6>Customer</h6>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="project.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.partner_id.image)" alt="Contact"/>
+                                    <img t-if="project.partner_id.image_1024" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.partner_id.image_1024)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-sm-0">
@@ -103,7 +103,7 @@
                             <h6>Project Manager</h6>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="project.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.user_id.image)" alt="Contact"/>
+                                    <img t-if="project.user_id.image_1024" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.user_id.image_1024)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-sm-0">
@@ -205,7 +205,7 @@
                             <strong>Assigned to</strong>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="task.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.user_id.image)" alt="Contact"/>
+                                    <img t-if="task.user_id.image_1024" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.user_id.image_1024)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-md-0">
@@ -217,7 +217,7 @@
                             <strong>Reported by</strong>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="task.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.image)" alt="Contact"/>
+                                    <img t-if="task.partner_id.image_1024" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.image_1024)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-md-0">

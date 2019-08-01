@@ -979,7 +979,7 @@ class test_o2m_multiple(ImporterCase):
 class test_realworld(common.TransactionCase):
     def test_bigfile(self):
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json').decode('utf-8'))
-        result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image'], data)
+        result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image_1920'], data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
 

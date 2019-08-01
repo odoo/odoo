@@ -206,7 +206,7 @@
                     <!-- ==== Header Left ==== -->
                     <div class="col-12 col-md-4 col-lg-3">
                         <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
-                            <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image:url(/web/image/res.users/#{user.id}/image)"/>
+                            <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image:url(/web/image/res.users/#{user.id}/image_1024)"/>
                             <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and user.karma != 0" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-1"/>EDIT
                             </a>
@@ -406,7 +406,7 @@
                                 <t t-foreach="ranks" t-as="rank">
                                     <li t-attf-class="list-group-item">
                                         <div class="media align-items-center">
-                                            <img width="40" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image" class="mr-2" alt="Rank badge"/>
+                                            <img width="40" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image_64" class="mr-2" alt="Rank badge"/>
                                             <div class="media-body">
                                                 <h5 class="mt-0 mb-0" t-field="rank.name"/>
                                                 <span class="badge badge-success"><span t-field="rank.karma_min"/></span> point<span t-if="rank.karma_min">s</span>
@@ -437,9 +437,9 @@
         <table class="table table-sm mb64">
             <tr t-foreach="badges" t-as="badge">
                 <td class="align-middle">
-                    <img t-if="not badge.image and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg"
+                    <img t-if="not badge.image_1920 and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg"
                          class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
-                    <img t-else="" t-attf-src="/web/image/gamification.badge/#{badge.id}/image" class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
+                    <img t-else="" t-attf-src="/web/image/gamification.badge/#{badge.id}/image_1024" class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
                     <h6 t-field="badge.name" class="d-inline my-0"/>
                 </td>
                 <td class="align-middle d-none d-md-table-cell">

@@ -47,9 +47,8 @@ class LunchOrderWizard(models.TransientModel):
     available_toppings_2 = fields.Boolean(help='Are extras available for this product', compute='_compute_available_toppings')
     available_toppings_3 = fields.Boolean(help='Are extras available for this product', compute='_compute_available_toppings')
 
-    image = fields.Binary(related='product_id.image')
-    image_128 = fields.Binary(related='product_id.image_128')
-    image_64 = fields.Binary(related='product_id.image_64')
+    image_1920 = fields.Image(related='product_id.image_1920')
+    image_128 = fields.Image(related='product_id.image_128')
 
     quantity = fields.Float('Quantity', default=1)
     price_total = fields.Float('Total Price', compute='_compute_price_total')

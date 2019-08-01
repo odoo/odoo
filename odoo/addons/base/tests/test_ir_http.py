@@ -40,14 +40,14 @@ class test_ir_http_mimetype(common.TransactionCase):
     def test_ir_http_mimetype_basic_field(self):
         """ Test mimetype for classic field """
         partner = self.env['res.partner'].create({
-            'image': GIF,
+            'image_1920': GIF,
             'name': 'Test mimetype basic field',
         })
 
         status, headers, content = self.env['ir.http'].binary_content(
             model='res.partner',
             id=partner.id,
-            field='image',
+            field='image_1920',
             default_mimetype='application/octet-stream',
         )
         mimetype = dict(headers).get('Content-Type')

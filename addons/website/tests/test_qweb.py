@@ -57,7 +57,7 @@ class TestQweb(TransactionCase):
         <div widget="html"><span class="toto">
                 span<span class="fa"></span><img src="http://test.cdn/web/image/1">
             </span></div>
-        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/image/%(filename)s" class="img img-fluid" alt="%(alt)s"/></div>
+        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/image_1920/%(filename)s" class="img img-fluid" alt="%(alt)s"/></div>
     </body>
 </html>""" % {
             "js": attachments[0].url,

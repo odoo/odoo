@@ -1304,11 +1304,11 @@ class TestFields(common.TransactionCase):
         from odoo.addons.base.tests.test_mimetypes import SVG
         demo_user = self.env.ref('base.user_demo')
         # User demo changes his own avatar
-        demo_user.with_user(demo_user).image = SVG
+        demo_user.with_user(demo_user).image_1920 = SVG
         # The SVG file should have been neutered
         attachment = self.env['ir.attachment'].search([
             ('res_model', '=', demo_user.partner_id._name),
-            ('res_field', '=', 'image'),
+            ('res_field', '=', 'image_1920'),
             ('res_id', '=', demo_user.partner_id.id),
         ])
         self.assertEqual(attachment.mimetype, 'text/plain')
