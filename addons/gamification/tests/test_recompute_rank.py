@@ -18,6 +18,7 @@ class TestComputeRankCommon(common.TransactionCase):
 
         patch_email = patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail)
         patch_email.start()
+
         for k in range(-5, 1030, 30):
             self.users += self.User.create({
                 'name': str(k),
@@ -50,7 +51,7 @@ class TestComputeRankCommon(common.TransactionCase):
 
 
 class test_recompute(TestComputeRankCommon):
-
+    
     def test_00_initial_compute(self):
 
         self.assertEqual(len(self.users), 35)

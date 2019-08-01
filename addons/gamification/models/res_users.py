@@ -91,6 +91,10 @@ class Users(models.Model):
             old_rank = user.rank_id
             if user.karma == 0 and ranks:
                 user.write({'next_rank_id': ranks[-1]['rank'].id})
+                template = self.env.ref('gamification.mail_template_data_new_user', raise_if_not_found=False)
+                if template:
+                    template.send_mail(user.id, force_send=len(self) == 1, notif_layout='mail.mail_notification_light')
+
             else:
                 for i in range(0, len(ranks)):
                     if user.karma >= ranks[i]['karma_min']:
@@ -178,3 +182,9 @@ class Users(models.Model):
         """
         self.ensure_one()
         return []
+
+    def get_highest_rank(self):
+        "return the highest rank a user can obtain"
+        ranks = [{'rank': rank, 'karma_min': rank.karma_min} for rank in
+                 self.env['gamification.karma.rank'].search([], order="karma_min DESC")]
+        return ranks[0]['rank']
