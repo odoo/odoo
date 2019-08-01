@@ -120,6 +120,7 @@ class Channel(models.Model):
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
+    rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1))
     # configuration
     allow_comment = fields.Boolean(
         "Allow rating on Course", default=False,
@@ -230,6 +231,11 @@ class Channel(models.Model):
                 result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
                 result[cid]['total_slides'] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
         return result
+
+    def _compute_rating_stats(self):
+        super(Channel, self)._compute_rating_stats()
+        for record in self:
+            record.rating_avg_stars = record.rating_avg / 2
 
     @api.depends('slide_partner_ids', 'total_slides')
     def _compute_user_statistics(self):
