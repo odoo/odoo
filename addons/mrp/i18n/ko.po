@@ -3,12 +3,13 @@
 # * mrp
 # 
 # Translators:
+# JH CHOI <hwangtog@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-06 07:28+0000\n"
-"PO-Revision-Date: 2019-05-17 04:22+0000\n"
+"PO-Revision-Date: 2019-07-12 07:43+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -87,7 +88,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Printing date:</strong><br/>"
-msgstr ""
+msgstr "<strong>날짜 인쇄 :</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -122,7 +123,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Scheduled Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>계획 날짜 :</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -132,7 +133,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Source Document:</strong><br/>"
-msgstr ""
+msgstr "<strong>원본 문서 :</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -355,7 +356,7 @@ msgstr "고유 시리얼 번호 별"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
 msgid "By-Products"
-msgstr ""
+msgstr "부산물"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:227
@@ -391,7 +392,7 @@ msgstr "0 또는 음수 수량 이동은 소모되지 않습니다."
 #: code:addons/mrp/mrp.py:639
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr "'%s' 상태의 제조 주문을 삭제할 수 없습니다."
+msgstr "'%s' 상태의 제조 지시를 삭제할 수 없습니다."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:709
@@ -414,7 +415,7 @@ msgstr "생산용량 정보"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity_per_cycle
 msgid "Capacity per Cycle"
-msgstr "사이클당 생산용량"
+msgstr "사이클당 생산 능력"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
@@ -565,7 +566,7 @@ msgstr "소모"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "비용 구조"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -1033,7 +1034,7 @@ msgstr "작업 단위"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "작업 지시 운영 관리"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
@@ -1080,7 +1081,7 @@ msgstr "이 창고에서 제조"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Manufacture this product"
-msgstr ""
+msgstr "이 제품 제조하기"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1147,7 +1148,7 @@ msgstr "원자재 대기중인 제조 주문"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Manufacturing Reference"
-msgstr ""
+msgstr "제조 참조"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:774
@@ -1348,7 +1349,7 @@ msgstr "상위 재료명세서"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "상위 경로"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1624,7 +1625,7 @@ msgstr "수량(기본 측정 단위)"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "원자재"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1723,7 +1724,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "경로"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1977,7 +1978,7 @@ msgstr "한 주기를 수행하는 시간"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
 msgid "Time in hours for the cleaning."
-msgstr "청소 시간"
+msgstr "시간으로 표시한 청소 시간"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
@@ -2244,7 +2245,7 @@ msgid ""
 "                units. They consist of workers and/or machines, which are\n"
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
-msgstr ""
+msgstr "작업장은 제조 작업 단위를 관리하거나 만들 수 있습니다.\n                    그들은 노동자와 기계로 구성되어 있고,\n                    이는 업무 할당 단위이기도 하며 \n                    용량 및 계획 예측을 위한 단위로 간주됩니다."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -2259,7 +2260,7 @@ msgid ""
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
-msgstr ""
+msgstr "작업 지시서 운영을 사용하면 제품을 생산하기 위해 작업장에서 준수해야 하는 생산 작업을 생성하고 관리할 수 있습니다. 이들은 필요한 원자재를 정의하는 BOM에 첨부됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
