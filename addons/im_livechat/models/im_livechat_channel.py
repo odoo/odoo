@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules, tools
+from odoo import api, fields, models, modules
 
 
 class ImLivechatChannel(models.Model):
@@ -21,7 +21,7 @@ class ImLivechatChannel(models.Model):
 
     def _default_image(self):
         image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=(1024, 1024))
+        return base64.b64encode(open(image_path, 'rb').read())
 
     def _default_user_ids(self):
         return [(6, 0, [self._uid])]
@@ -42,17 +42,7 @@ class ImLivechatChannel(models.Model):
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
 
-    # images fields
-    image = fields.Binary('Image', default=_default_image,
-        help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_128 = fields.Binary('Medium',
-        help="Medium-sized photo of the group. It is automatically "\
-             "resized as a 128x128px image, with aspect ratio preserved. "\
-             "Use this field in form views or some kanban views.")
-    image_64 = fields.Binary('Thumbnail',
-        help="Small-sized photo of the group. It is automatically "\
-             "resized as a 64x64px image, with aspect ratio preserved. "\
-             "Use this field anywhere a small image is required.")
+    image_128 = fields.Image("Image", max_width=128, max_height=128, default=_default_image)
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
@@ -82,15 +72,6 @@ class ImLivechatChannel(models.Model):
     def _compute_nbr_channel(self):
         for record in self:
             record.nbr_channel = len(record.channel_ids)
-
-    @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(ImLivechatChannel, self).create(vals)
-
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(ImLivechatChannel, self).write(vals)
 
     # --------------------------
     # Action Methods

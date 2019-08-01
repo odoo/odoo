@@ -8,7 +8,7 @@ from dateutil import relativedelta
 import pprint
 
 from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
-from odoo.tools import consteq, float_round, image_resize_images, image_process, ustr
+from odoo.tools import consteq, float_round, image_process, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
@@ -152,18 +152,7 @@ class PaymentAcquirer(models.Model):
     module_id = fields.Many2one('ir.module.module', string='Corresponding Module')
     module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', readonly=False)
 
-    image = fields.Binary(
-        "Image", help="This field holds the image used for this provider, limited to 1024x1024px")
-    image_128 = fields.Binary(
-        "Medium-sized image",
-        help="Medium-sized image of this provider. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_64 = fields.Binary(
-        "Small-sized image",
-        help="Small-sized image of this provider. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+    image_128 = fields.Image("Image", max_width=128, max_height=128)
 
     payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
     payment_flow = fields.Selection(selection=[('form', 'Redirection to the acquirer website'),
@@ -275,13 +264,11 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def create(self, vals):
-        image_resize_images(vals)
         record = super(PaymentAcquirer, self).create(vals)
         record._check_required_if_provider()
         return record
 
     def write(self, vals):
-        image_resize_images(vals)
         result = super(PaymentAcquirer, self).write(vals)
         self._check_required_if_provider()
         return result
