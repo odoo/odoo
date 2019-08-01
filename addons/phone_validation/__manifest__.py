@@ -25,7 +25,6 @@ It adds two mixins :
 """,
     'data': [
         'security/ir.model.access.csv',
-        'views/res_company_view.xml',
         'views/phone_blacklist_views.xml',
     ],
     'depends': [
