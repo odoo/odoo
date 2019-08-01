@@ -508,3 +508,41 @@ class PosConfig(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
+
+    # All following methods are made to create data needed in POS, when a localisation
+    # is installed, or if POS is installed on database having companies that already have
+    # a localisation installed
+    @api.model
+    def post_install_pos_localisation(self):
+        self.assign_payment_journals()
+        self.generate_pos_journal()
+
+    @api.model
+    def assign_payment_journals(self, companies=False):
+        self = self.sudo()
+        if not companies:
+            companies = self.env['res.company'].search([])
+        for company in companies:
+            if company.chart_template_id:
+                cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
+                cash_journal.write({'journal_user':True})
+                existing_pos_config = self.env['pos.config'].search([('company_id', '=', company.id), ('journal_ids', '=', False)])
+                existing_pos_config.write({'journal_ids': [(6, 0, cash_journal.ids)]})
+
+    @api.model
+    def generate_pos_journal(self, companies=False):
+        self = self.sudo()
+        if not companies:
+            companies = self.env['res.company'].search([])
+        for company in companies:
+            pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
+            if company.chart_template_id and not pos_journal:
+                pos_journal = self.env['account.journal'].create({
+                    'type': 'sale',
+                    'name': 'Point of Sale',
+                    'code': 'POSS',
+                    'company_id': company.id,
+                    'sequence': 20
+                })
+                existing_pos_config = self.env['pos.config'].search([('company_id', '=', company.id), ('journal_id', '=', False)])
+                existing_pos_config.write({'journal_id': pos_journal.id})
