@@ -247,7 +247,10 @@ class PrinterDriver(Driver):
         hosting_ap = os.system('pgrep hostapd') == 0
         ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).decode('utf-8').rstrip()
         if hosting_ap:
-            wlan = 'Wireless network:\nIoTBox\n\n'
+            with open('/root_bypass_ramdisks/etc/hostapd/hostapd.conf') as config_file:
+                lines = config_file.readlines()
+            ssid = lines[1].split("=")[1].replace("\n", "")
+            wlan = 'Wireless network:\n%s\n\n' % ssid
         elif ssid:
             wlan = 'Wireless network:\n%s\n\n' % ssid
 
