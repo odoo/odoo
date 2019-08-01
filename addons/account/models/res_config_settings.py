@@ -51,7 +51,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_budget = fields.Boolean(string='Budget Management')
     module_account_payment = fields.Boolean(string='Invoice Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
-    module_account_reports_followup = fields.Boolean("Follow-up Levels")
+    module_account_reports_followup = fields.Boolean("Payment follow-up")
     module_account_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_payment = fields.Boolean(string='Use batch payments',
         help='This allows you grouping payments into a single batch and eases the reconciliation process.\n'
