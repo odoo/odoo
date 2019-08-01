@@ -71,12 +71,12 @@ class GamificationBadge(models.Model):
     active = fields.Boolean('Active', default=True)
     description = fields.Text('Description', translate=True)
     image = fields.Binary("Image", help="This field holds the image used for the badge.")
-    image_medium = fields.Binary(
+    image_128 = fields.Binary(
         "Medium-sized badge image",
         help="Medium-sized image of the badge. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
+    image_64 = fields.Binary(
         "Small-sized badge image",
         help="Small-sized image of the badge. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "

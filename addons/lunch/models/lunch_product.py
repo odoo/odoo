@@ -101,12 +101,12 @@ class LunchProduct(models.Model):
     image = fields.Binary(
         "Image",
         help="This field holds the image used as image for the product, limited to 1024x1024px.")
-    image_medium = fields.Binary(
+    image_128 = fields.Binary(
         "Medium-sized image",
         help="Medium-sized image of the product. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved, "
              "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
+    image_64 = fields.Binary(
         "Small-sized image",
         help="Small-sized image of the product. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "

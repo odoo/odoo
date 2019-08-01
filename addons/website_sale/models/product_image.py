@@ -16,7 +16,7 @@ class ProductImage(models.Model):
     name = fields.Char("Name", required=True)
     sequence = fields.Integer(default=10, index=True)
 
-    image_original = fields.Binary(required=True)
+    image_1920 = fields.Image(required=True)
 
     product_tmpl_id = fields.Many2one('product.template', "Product Template", index=True, ondelete='cascade')
     product_variant_id = fields.Many2one('product.product', "Product Variant", index=True, ondelete='cascade')

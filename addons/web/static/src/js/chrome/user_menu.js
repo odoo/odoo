@@ -46,7 +46,7 @@ var UserMenu = Widget.extend({
             self.$('.oe_topbar_name').text(topbar_name);
             var avatar_src = session.url('/web/image', {
                 model:'res.users',
-                field: 'image_small',
+                field: 'image_64',
                 id: session.uid,
             });
             $avatar.attr('src', avatar_src);

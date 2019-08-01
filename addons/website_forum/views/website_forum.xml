@@ -73,7 +73,7 @@
                     <div class="card bg-secondary" t-if="question">
                         <h6 class="card-header"><b>Writer</b></h6>
                         <div class="card-body o_card_people">
-                            <img class="o_wforum_people_photo_container d-block mx-auto mb-3" t-attf-src="/web/image/res.users/#{question.create_uid.id}/image_medium"/>
+                            <img class="o_wforum_people_photo_container d-block mx-auto mb-3" t-attf-src="/web/image/res.users/#{question.create_uid.id}/image_128"/>
                             <h6 class="text-center">
                                 <b><i class="fa fa-diamond text-secondary"/> <t t-esc="question.create_uid.sudo().karma"/></b>
                                 <b><a t-attf-href="/forum/#{slug(forum)}/user/#{question.create_uid.sudo().id}" t-field="question.create_uid" t-options='{"widget": "contact", "fields": ["name", "country_id"]}'/></b>
@@ -397,9 +397,9 @@
                                 <h1 class="card-header h6 font-weight-bold bg-white"
                                     t-field="forum.name"/>
                                 <div class="card-img-bottom embed-responsive embed-responsive-16by9 o_wforum_forum_card_bg">
-                                    <div t-if="forum.image"
+                                    <div t-if="forum.image_256"
                                          class="oe_img_bg embed-responsive-item"
-                                         t-attf-style="background-image: url(/web/image/forum.forum/#{forum.id}/image_large); background-position: center;"/>
+                                         t-attf-style="background-image: url(/web/image/forum.forum/#{forum.id}/image_256); background-position: center;"/>
                                 </div>
                             </div>
                         </a>
@@ -913,7 +913,7 @@
                             <t t-call="website_forum.forum_user_tooltip"/>
                         </div>
                         <a t-att-href="user_profile_url" class="o_forum_user_info">
-                            <img class="float-left o_forum_avatar" t-attf-src="/web/image/res.users/#{answer.create_uid.id}/image_medium" alt="Avatar"/>
+                            <img class="float-left o_forum_avatar" t-attf-src="/web/image/res.users/#{answer.create_uid.id}/image_128" alt="Avatar"/>
                         </a>
                         <a t-att-href="user_profile_url"
                             t-field="answer.create_uid"
@@ -969,7 +969,7 @@
     <div class="o_forum_user_bio text-left card">
         <div class="card-body">
             <a t-att-href="user_profile_url">
-                <img class="float-left img rounded o_forum_avatar_big" t-attf-src="/web/image/res.users/#{answer.create_uid.id}/image_medium" alt="Avatar"/>
+                <img class="float-left img rounded o_forum_avatar_big" t-attf-src="/web/image/res.users/#{answer.create_uid.id}/image_128" alt="Avatar"/>
             </a>
             <div class="o_forum_tooltip_header">
                 <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
@@ -1126,7 +1126,7 @@
                                                     <input type="checkbox" t-att-value="user.id" class="custom-control-input" t-attf-id="user_#{user.id}"/>
                                                     <label class="custom-control-label" t-attf-for="user_#{user.id}">
                                                         <div class="col-11 d-inline-flex">
-                                                            <img class="d-inline img o_forum_avatar" t-attf-src="/web/image/res.users/#{user.id}/image_medium" alt="Avatar"/>
+                                                            <img class="d-inline img o_forum_avatar" t-attf-src="/web/image/res.users/#{user.id}/image_128" alt="Avatar"/>
                                                             <b t-esc="user.name" class="d-inline"></b>
                                                         </div>
                                                     </label>

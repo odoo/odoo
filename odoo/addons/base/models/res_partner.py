@@ -222,11 +222,11 @@ class Partner(models.Model):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Image")
-    image_medium = fields.Binary("Medium-sized image",
+    image_128 = fields.Binary("Medium-sized image",
         help="Medium-sized image of this contact. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary("Small-sized image",
+    image_64 = fields.Binary("Small-sized image",
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
@@ -348,7 +348,7 @@ class Partner(models.Model):
         if image_base64 and colorize:
             image_base64 = tools.image_process(image_base64, colorize=True)
 
-        return tools.image_process(image_base64, size=tools.IMAGE_BIG_SIZE)
+        return tools.image_process(image_base64, size=(1024, 1024))
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

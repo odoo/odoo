@@ -86,7 +86,7 @@ class LunchController(http.Controller):
 
         res.update({
             'username': user.sudo().name,
-            'userimage': '/web/image?model=res.users&id=%s&field=image_small' % user.id,
+            'userimage': '/web/image?model=res.users&id=%s&field=image_64' % user.id,
             'wallet': request.env['lunch.cashmove'].get_wallet_balance(user, False),
             'is_manager': is_manager,
             'locations': request.env['lunch.location'].search_read([], ['name']),
