@@ -57,7 +57,7 @@ class AccountTaxReportLine(models.Model):
     _order = 'sequence'
     _parent_store = True
 
-    name = fields.Char(string="Name", required=True, help="Complete name for this report line, to be used in report.")
+    name = fields.Char(string="Name", required=True, translate=True, help="Complete name for this report line, to be used in report.")
     tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', relation='account_tax_report_line_tags_rel', help="Tax tags populating this line")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', required=True, default=lambda x: x.env.user.company_id.country_id.id, help="Country for which this line is available.")
     report_action_id = fields.Many2one(string="Report Action", comodel_name='ir.actions.act_window', help="The optional action to call when clicking on this line in accounting reports.")
