@@ -3,25 +3,26 @@
 # * project_issue
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# hoxhe Aits <hoxhe0@gmail.com>, 2016
-# amrnegm <amrnegm.01@gmail.com>, 2016
 # aymen rahmani <aymen.isims@gmail.com>, 2016
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
+# Martin Trigaux, 2016
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
+# amrnegm <amrnegm.01@gmail.com>, 2016
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:27+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,7 +151,7 @@ msgstr "محجوب"
 #: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "تنبيه أو تعين كمهمة منتهية"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -462,12 +463,12 @@ msgstr "تحليل البلاغات"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "تفسير حالة متوقف في واجهة كانبان"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "تفسير حالة قيد التقدم في واجهة كانبان"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
@@ -477,7 +478,7 @@ msgstr "حالة كانبان"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "تفسير حالة صالح في واجهة كانبان"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -573,7 +574,7 @@ msgstr "طبيعي"
 #: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
 msgid "Not validated"
-msgstr ""
+msgstr "غير معتمدة"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -591,6 +592,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"تجاوز القيمة الافتراضية المعروضة لحالة \"محظورة\" باختيارات كانبان، عندما "
+"تكون المهمة أو المشكلة في تلك المرحلة."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
@@ -598,6 +601,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"تجاوز القيمة الافتراضية المعروضة لحالة \"منتهية\" باختيارات كانبان، عندما "
+"تكون المهمة أو المشكلة في تلك المرحلة."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
@@ -605,6 +610,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"تجاوز القيمة الافتراضية المعروضة لحالة \"عادية\" باختيارات كانبان، عندما "
+"تكون المهمة أو المشكلة في تلك المرحلة."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -676,7 +683,7 @@ msgstr "جاهز للمرحلة المقبلة"
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
 msgid "Ready to reopen"
-msgstr ""
+msgstr "جاهز لإعادة الفتح"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -734,6 +741,8 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"سيتم إضافة عناوين البريد الإلكتروني هذه إلى حقل النسخة الكربونية CC لكافة المراسلات\n"
+"        الصادرة والواردة. افصل بين عناوين البريد بفاصلة"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from

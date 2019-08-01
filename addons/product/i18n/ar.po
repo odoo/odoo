@@ -12,7 +12,6 @@
 # aymen rahmani <aymen.isims@gmail.com>, 2016
 # Sadig Adam <sadig41@gmail.com>, 2016
 # hoxhe Aits <hoxhe0@gmail.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
 # Martin Trigaux, 2016
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2016
@@ -21,6 +20,7 @@
 # zahi chemaly <zahi@sercotex.net>, 2017
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:26+0000\n"
-"Last-Translator: Osoul <baruni@osoul.ly>, 2018\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "متغيرات المنتج"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "عدد المنتجات"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
@@ -62,7 +62,7 @@ msgstr "%s %% الخصم"
 #: code:addons/product/models/product_pricelist.py:440
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% خصم و %s رسوم إضافية"
 
 #. module: product
 #: code:addons/product/models/product_template.py:302
@@ -145,11 +145,14 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">السعر العام  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">التكلفة  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">قائمة الأسعار الأخرى  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> المنتجات</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -183,12 +186,15 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>تحذير</strong>: إضافة أو حذف خصائص\n"
+"                        سيؤدي لحذف الموديلات الموجودة وإعادة إنشائها مما سيؤدي\n"
+"                        لخسارة أي تعديلات تم القيام بها عليهم."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "لا يمكن تعيين نفس الباركود لأكثر من منتج واحد!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -286,7 +292,7 @@ msgstr "جميع المنتجات"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "تتم إدارة كافة إعدادات هذا المنتج على"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -341,7 +347,7 @@ msgstr "مؤرشف"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "تُعين أولوية قائمة موردي المنتج."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -408,6 +414,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"السعر الأساسي للحساب.\n"
+"السعر العام: السعر الأساسي سيكون سعر البيع/السعر العام.\n"
+"سعر التكلفة: السعر الأساسي سيكون سعر التكلفة.\n"
+"قائمة أسعار أخرى: حساب السعر الأساسي حسب قائمة أسعار أخرى."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -511,7 +521,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
+msgstr "حساب سعر وحدة المنتج حسب إصدار قائمة الأسعار."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
@@ -552,13 +562,13 @@ msgstr "نوع التصنيف"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "اسم الفئة"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:427
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "الفئة: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -584,6 +594,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"قم بتحديد هذا الخيار إذا كنت ترغب في إنشاء عدة قيم مختلفة لهذه الخاصية."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -662,7 +673,7 @@ msgstr "المؤسسة"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "حساب السعر"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
@@ -694,6 +705,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"لا يمكن التحويل بين وحدات القياس إلا إذا كانت تنتمي لنفس الفئة. سيتم إجراء "
+"التحويل بناءً على النسب."
 
 #. module: product
 #: code:addons/product/models/product_uom.py:89
@@ -823,7 +836,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "رقم إشارة العميل"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -943,12 +956,12 @@ msgstr "تاريخ الإنتهاء"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "تاريخ انتهاء سعر هذا المورد"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
+msgstr "تاريخ انتهاء التحقق من صحة عنصر قائمة الأسعار"
 
 #. module: product
 #: code:addons/product/models/product.py:43
@@ -968,7 +981,7 @@ msgstr ""
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
-msgstr ""
+msgstr "خطأ! لا يمكنك اختيار أكثر من قيمة واحدة لخاصية معينة."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -1074,7 +1087,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "سعر ثابت"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -1087,6 +1100,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"ليتم تطبيق القاعدة، يجب أن تكون الكمية المشتراة/المباعة أكبر من أو مساوية للحد الأدنى المحدد في هذا الحقل.\n"
+"معبر عنه بوحدة القياس الافتراضية للمنتج."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1155,7 +1170,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_sequence
 #: model:ir.model.fields,help:product.field_product_template_sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "يعرض أمر التسلسل عند عرض قائمة المنتجات"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -1284,14 +1299,14 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
+msgstr "عند إلغاء اختياره، يمكنك إخفاء قائمة الأسعار دون حذفها."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_active
 #: model:ir.model.fields,help:product.field_product_template_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "عند إلغاء اختياره، يمكنك إخفاء المنتج دون حذفه."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_image
@@ -1314,6 +1329,7 @@ msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
 msgstr ""
+"صورة موديل المنتج (صورة متوسطة الحجم لقالب المنتج إذا كانت هذه القيمة خطأ)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
@@ -1321,6 +1337,7 @@ msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
 msgstr ""
+"صورة موديل المنتج (صورة صغيرة الحجم لقالب المنتج إذا كانت هذه القيمة خطأ)."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1456,6 +1473,8 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"المهلة الزمنية بالأيام بين تأكيد أمر الشراء واستلام المنتجات في مخزنك. "
+"يستخدمها المجدول لحساب خطة أمر الشراء تلقائيًا."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1497,7 +1516,7 @@ msgstr "إدارة وحدات متعددة للقياس"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "إدارة عناصر قائمة الأسعار"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1507,7 +1526,7 @@ msgstr "إدارة تعبئة المنتجات"
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "إدارة موديلات المنتج"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1537,6 +1556,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
 msgstr ""
+"صورة متوسطة الحجم للمنتج. يتم تغيير حجمها تلقائيًا كصورة 128*128 بيكسل، مع "
+"الحفاظ على تناسب الأبعاد، فقط في حال تجاوزت الصورة إحدى هذه الأحجام. استخدم "
+"هذا الحقل في واجهات النموذج أو بعض واجهات كانبان."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1678,12 +1700,12 @@ msgstr "شريك"
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "النسبة المئوية (خصم)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "نسبة السعر"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
@@ -1796,7 +1818,7 @@ msgstr "قائمه الاسعار"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "عنصر قائمة الأسعار الممكن تطبيقه على الخيار المحدد"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
@@ -1808,7 +1830,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "عناصر قائمة الأسعار"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -1834,12 +1856,12 @@ msgstr "قوائم الاسعار"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "قوائم الأسعار على المنتج"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "تتم إدارة قوائم الأسعار على"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1943,7 +1965,7 @@ msgstr "وحدة قياس المنتج"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "فئات وحدات قياس المنتج"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2225,11 +2247,14 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
+"تحديد قيمة السعر لتكون من مضاعفات هذه القيمة.\n"
+"يتم التقريب بعد تطبيق الخصم وقبل حساب الرسوم الإضافية \n"
+"ليتم تقريب الأسعار التي تنتهي بـ9.99 إلى 10، وتكون الرسوم الإضافية -0.01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "مشاركة المنتج مع كافة المؤسسات"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2238,6 +2263,9 @@ msgid ""
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
 msgstr ""
+"مشاركة منتجك مع كافة المؤسسات المُعرفة في نسختك.\n"
+"* محدد: سيظهر المنتج لكل المؤسسات، حتى المؤسسات المُعرفة للشريك.\n"
+"* غير محدد: سيظهر لكل مؤسسة منتجاتها فقط (المنتج المُعرفة فيه المؤسسة). المنتجات غير المرتبطة بمؤسسة معينة ستظهر لكافة المؤسسات."
 
 #. module: product
 #: model:product.product,name:product.membership_1
@@ -2264,6 +2292,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"صورة صغيرة الحجم للمنتج. يتم تعديل حجمها تلقائيًا لتصبح بحجم 64*64 بيكسل، مع"
+" الحفاظ على تناسب الأبعاد. استخدم هذا الحقل لأي غرض يحتاج صورة صغيرة."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2289,6 +2319,8 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
+"حدد فئة منتج إن كانت هذه القاعدة تُطبق فقط على المنتجات التابعة لهذه الفئة "
+"أو الفئات التابعة لها. وإلا، اترك هذه الخانة فارغة."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
@@ -2296,6 +2328,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"حدد منتجًا إن كانت هذه القاعدة تُطبق على منتج واحد فقط. وإلا، اترك هذه "
+"الخانة فارغة."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
@@ -2303,6 +2337,8 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
+"حدد قالبًا إن كانت هذه القاعدة تُطبق على قالب واحد فقط. وإلا، اترك هذه "
+"الخانة فارغة."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
@@ -2316,16 +2352,18 @@ msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"حدد المبلغ الثابت الذي تريد إضافته أو طرحه (إذا كان سالبًا) إلى المبلغ "
+"المحسوب بالخصم."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "تحديد الحد الأقصى المسموح به لهامش الزيادة عن السعر الأساسي."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "تحديد الحد الأدنى المسموح به لهامش الزيادة عن السعر الأساسي."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
@@ -2336,12 +2374,12 @@ msgstr "تاريخ البدء"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "تاريخ بداية سعر هذا المورد"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
 msgid "Starting date for the pricelist item validation"
-msgstr ""
+msgstr "تاريخ بدء التحقق من صحة عنصر قائمة الأسعار"
 
 #. module: product
 #: selection:product.template,type:0
@@ -2385,7 +2423,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
-msgstr ""
+msgstr "حقل تقني. يُستخدم للبحث في قوائم الأسعار، لا يُخزن في قاعدة البيانات."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2425,7 +2463,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "يتم التعبير عن السعر المحسوب بوحدة القياس الافتراضية للمنتج."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
@@ -2449,7 +2487,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "أول قيمة في التسلسل هي القيمة الافتراضية."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2481,13 +2519,15 @@ msgid ""
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
+"أقل كمية يمكن شراؤها من هذا المورد، معبرًا عنها بوحدة قياس منتجات المورد إن "
+"وجدت، وإلا، بوحدة القياس الافتراضية للمنتج."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_product_count
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "عدد المنتجات التابعة لهذه الفئة (بغض النظر عن الفئات التابعة)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -2496,11 +2536,13 @@ msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
 msgstr ""
+"تعذّر تنفيذ هذه العملية:\n"
+"أنت تحاول حذف قيمة خاصية مُشار إليها في موديل منتج."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "سعر شراء منتج"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2563,7 +2605,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "إجمالي عدد المنتجات المسموح به في منصة النقل أو الصندوق الواحد."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2575,7 +2617,7 @@ msgstr "الحجم بالـ م3"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "وزن المحتوى بالكيلوجرامات، بدون إضافة أي وزن تعبئة."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2623,13 +2665,14 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr ""
+"يحتوي هذا الحقل على صورة موديل المنتج، الحد الأقصى لها هو 1024*1024 بيكسل."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "يحتوي هذا الحقل على صورة المنتج، الحد الأقصى لها هو 1024*1024 بيكسل."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
@@ -2655,6 +2698,8 @@ msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"سوف يتم استخدام كود منتج هذا المورد عند طباعة طلب عرض سعر. اترك هذا الحقل "
+"فارغًا لاستخدام الكود الداخلي."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
@@ -2662,6 +2707,8 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"سوف يتم استخدام اسم منتج هذا المورد عند طباعة طلب عرض سعر. اترك هذا الحقل "
+"فارغًا لاستخدام الاسم الداخلي."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2828,7 +2875,7 @@ msgstr "المورّد"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "بيانات المورد"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
@@ -2838,12 +2885,12 @@ msgstr "قوائم أسعار الموردين"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "كود منتج المورد"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "اسم منتج المورد"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
@@ -2853,7 +2900,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "مورد هذا المنتج"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
@@ -2973,6 +3020,8 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"لا يمكنك تعريف دقة عشرية للـ'حساب' أكبر من عامل التقريب العملة الرئيسية "
+"للمؤسسة"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3040,7 +3089,7 @@ msgstr "decimal.precision"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "مثلًا: مصابيح"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3050,7 +3099,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "مثلًا: بائعي التجزئة"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
@@ -3204,7 +3253,7 @@ msgstr "الشركة الأم"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "قالب منتج"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
