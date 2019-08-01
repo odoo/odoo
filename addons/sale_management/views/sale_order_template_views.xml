@@ -56,8 +56,8 @@
                                             <field name="product_uom_qty" class="oe_inline"/>
                                         </div>
                                         <field name="price_unit"/>
-                                        <label for="discount" groups="sale.group_discount_per_so_line"/>
-                                        <div groups="sale.group_discount_per_so_line">
+                                        <label for="discount" groups="product.group_discount_per_so_line"/>
+                                        <div groups="product.group_discount_per_so_line">
                                             <field name="discount" class="oe_inline"/> %%
                                         </div>
                                     </group>
@@ -92,7 +92,7 @@
                                     groups="uom.group_uom"
                                     attrs="{'required': [('display_type', '=', False)]}"
                                 />
-                                <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                <field name="discount" groups="product.group_discount_per_so_line"/>
                                 <field name="price_unit"/>
                             </tree>
                         </field>
@@ -106,7 +106,7 @@
                             <field name="product_uom_category_id" invisible="1"/>
                             <field name="uom_id" groups="uom.group_uom"/>
                             <field name="price_unit"/>
-                            <field name="discount" groups="sale.group_discount_per_so_line"/>
+                            <field name="discount" groups="product.group_discount_per_so_line"/>
                           </tree>
                         </field>
                     </page>
