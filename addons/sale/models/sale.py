@@ -527,7 +527,7 @@ class SaleOrder(models.Model):
                     continue
                 if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
                     if pending_section:
-                        invoice_vals.append((0, 0, pending_section._prepare_invoice_line()))
+                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
                         pending_section = None
                 invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
 
