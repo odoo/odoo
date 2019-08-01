@@ -2,7 +2,10 @@
 <templates id="template" xml:space="preserve">
 
 <div t-name="CrashManager.warning" class="o_dialog_warning" role="alert">
-    <pre t-esc="widget.message"/>
+    <t t-js="d">
+        d.error = d.widget.message.replace(/\n/g, '<br/>');
+    </t>
+    <t t-raw="error"/>
 </div>
 
 <div t-name="CrashManager.error" class="o_dialog_error">
