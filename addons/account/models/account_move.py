@@ -2132,7 +2132,7 @@ class AccountMove(models.Model):
             move.write(to_write)
 
             # Compute 'ref' for 'out_invoice'.
-            if move.type == 'out_invoice' and not move.invoice_payment_ref:
+            if move._auto_compute_invoice_reference():
                 to_write = {
                     'invoice_payment_ref': move._get_invoice_computed_reference(),
                     'line_ids': []
@@ -2156,6 +2156,14 @@ class AccountMove(models.Model):
                 move.partner_id._increase_rank('supplier_rank')
             else:
                 continue
+
+    def _auto_compute_invoice_reference(self):
+        ''' Hook to be overridden to set custom conditions for auto-computed invoice references.
+            :return True if the move should get a auto-computed reference else False
+            :rtype bool
+        '''
+        self.ensure_one()
+        return self.type == 'out_invoice' and not self.invoice_payment_ref
 
     def action_reverse(self):
         action = self.env.ref('account.action_view_account_move_reversal').read()[0]
