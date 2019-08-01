@@ -4739,6 +4739,11 @@ Fields:
         """ Return the list of actual record ids corresponding to ``self``. """
         return list(origin_ids(self._ids))
 
+    @property
+    def _model(self):
+        """ Return the corresponding ir.model record. """
+        return self.env['ir.model']._get(self._name)
+
     # backward-compatibility with former browse records
     _cr = property(lambda self: self.env.cr)
     _uid = property(lambda self: self.env.uid)
