@@ -32,9 +32,12 @@ class HrEmployeePublic(models.Model):
 
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)
-    image = fields.Binary("Photo", compute='_compute_image', readonly=True, compute_sudo=True)
-    image_128 = fields.Binary("Medium-sized photo", compute='_compute_image', readonly=True, compute_sudo=True)
-    image_64 = fields.Binary("Small-sized photo", compute='_compute_image', readonly=True, compute_sudo=True)
+    image_1920 = fields.Image("Original Image", compute='_compute_image', compute_sudo=True)
+    image_1024 = fields.Image("Image 1024", compute='_compute_image', compute_sudo=True)
+    image_512 = fields.Image("Image 512", compute='_compute_image', compute_sudo=True)
+    image_256 = fields.Image("Image 256", compute='_compute_image', compute_sudo=True)
+    image_128 = fields.Image("Image 128", compute='_compute_image', compute_sudo=True)
+    image_64 = fields.Image("Image 64", compute='_compute_image', compute_sudo=True)
     parent_id = fields.Many2one('hr.employee.public', 'Manager', readonly=True)
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
 
@@ -42,7 +45,10 @@ class HrEmployeePublic(models.Model):
         for employee in self:
             # We have to be in sudo to have access to the images
             employee_id = self.sudo().env['hr.employee'].browse(employee.id)
-            employee.image = employee_id.image
+            employee.image_1920 = employee_id.image_1920
+            employee.image_1024 = employee_id.image_1024
+            employee.image_512 = employee_id.image_512
+            employee.image_256 = employee_id.image_256
             employee.image_128 = employee_id.image_128
             employee.image_64 = employee_id.image_64
 

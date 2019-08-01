@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
@@ -137,7 +137,7 @@ class ProductPricelist(models.Model):
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
-    _inherit = ["website.seo.metadata", "website.multi.mixin"]
+    _inherit = ["website.seo.metadata", "website.multi.mixin", 'image.mixin']
     _description = "Website Product Category"
     _parent_store = True
     _order = "sequence, name"
@@ -148,31 +148,8 @@ class ProductPublicCategory(models.Model):
     child_id = fields.One2many('product.public.category', 'parent_id', string='Children Categories')
     parents_and_self = fields.Many2many('product.public.category', compute='_compute_parents_and_self')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", index=True)
-    # NOTE: there is no 'default image', because by default we don't show
-    # thumbnails for categories. However if we have a thumbnail for at least one
-    # category, then we display a default image on the other, so that the
-    # buttons have consistent styling.
-    # In this case, the default image is set by the js code.
-    image = fields.Binary(help="This field holds the image used as image for the category, limited to 1024x1024px.")
     website_description = fields.Html('Category Description', sanitize_attributes=False, translate=html_translate)
-    image_128 = fields.Binary(string='Medium-sized image',
-                                 help="Medium-sized image of the category. It is automatically "
-                                 "resized as a 128x128px image, with aspect ratio preserved. "
-                                 "Use this field in form views or some kanban views.")
-    image_64 = fields.Binary(string='Small-sized image',
-                                help="Small-sized image of the category. It is automatically "
-                                "resized as a 64x64px image, with aspect ratio preserved. "
-                                "Use this field anywhere a small image is required.")
     product_tmpl_ids = fields.Many2many('product.template', relation='product_public_category_product_template_rel')
-
-    @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(ProductPublicCategory, self).create(vals)
-
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(ProductPublicCategory, self).write(vals)
 
     @api.constrains('parent_id')
     def check_parent_id(self):

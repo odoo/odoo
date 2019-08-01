@@ -532,7 +532,7 @@ class Lead(models.Model):
                     'effect': {
                         'fadeout': 'slow',
                         'message': message,
-                        'img_url': '/web/image/%s/%s/image' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image else '/web/static/src/img/smile.svg',
+                        'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
                         'type': 'rainbow_man',
                     }
                 }
