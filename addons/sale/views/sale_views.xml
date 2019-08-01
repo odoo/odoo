@@ -370,8 +370,8 @@
                                             <field name="price_unit"/>
                                             <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
                                                 attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
-                                            <label for="discount" groups="sale.group_discount_per_so_line"/>
-                                            <div name="discount" groups="sale.group_discount_per_so_line">
+                                            <label for="discount" groups="product.group_discount_per_so_line"/>
+                                            <div name="discount" groups="product.group_discount_per_so_line">
                                                 <field name="discount" class="oe_inline"/> %%
                                             </div>
                                             <!--
@@ -518,7 +518,7 @@
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
-                                    <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
+                                    <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
                                     <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
@@ -974,7 +974,7 @@
                             </group>
                             <group>
                                 <field name="price_unit" readonly="1"/>
-                                <field name="discount" groups="sale.group_discount_per_so_line" readonly="1"/>
+                                <field name="discount" groups="product.group_discount_per_so_line" readonly="1"/>
                                 <field name="price_subtotal" widget="monetary"/>
                                 <field name="tax_id" widget="many2many_tags" readonly="1"/>
                                 <field name="price_tax" widget="monetary"/>
@@ -1119,7 +1119,7 @@
                               attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                    </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
-                        <attribute name="groups">sale.group_discount_per_so_line</attribute>
+                        <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
                     <xpath expr="//group[@name='sale_info_group']" position="inside">
                         <field name="team_id"/>
@@ -1133,41 +1133,6 @@
                             <field name="medium_id"/>
                             <field name="source_id"/>
                         </group>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-        <record id="product_pricelist_view_tree" model="ir.ui.view">
-            <field name="name">product.pricelist.tree.inherit.product</field>
-            <field name="model">product.pricelist</field>
-            <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
-            <field name="arch" type="xml">
-                <field name="currency_id" position="before">
-                    <field name="discount_policy" groups="sale.group_discount_per_so_line"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="product_pricelist_view_form" model="ir.ui.view">
-            <field name="name">product.pricelist.form.inherit.product</field>
-            <field name="model">product.pricelist</field>
-            <field name="inherit_id" ref="product.product_pricelist_view"/>
-            <field name="arch" type="xml">
-                <field name="currency_id" position="before">
-                    <field name="discount_policy" groups="sale.group_discount_per_so_line" widget="radio"/>
-                </field>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_pricelist_view_kanban">
-            <field name="name">product.pricelist.kanban.inherit.product</field>
-            <field name="model">product.pricelist</field>
-            <field name="inherit_id" ref="product.product_pricelist_view_kanban"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr='//div[contains(@id, "product_pricelist")]' position="after">
-                        <field name="discount_policy"/>
                     </xpath>
                 </data>
             </field>
