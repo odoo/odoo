@@ -10,14 +10,7 @@ from odoo.tests.common import TransactionCase
 
 
 class TestImage(TransactionCase):
-    """Tests for the different image tools helpers.
-
-    The following helpers are not tested here because they are wrappers for the
-    other methods or they are tested elsewhere (eg. on TestWebsiteSaleImage):
-    - image_get_resized_images
-    - image_resize_images
-    - is_image_size_above
-    """
+    """Tests for the different image tools helpers."""
     def setUp(self):
         super(TestImage, self).setUp()
         self.bg_color = (135, 90, 123)
