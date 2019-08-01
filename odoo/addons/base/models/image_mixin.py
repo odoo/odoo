@@ -10,29 +10,22 @@ class ImageMixin(models.AbstractModel):
 
     # all image fields are base64 encoded and PIL-supported
 
-    image_original = fields.Binary("Original Image", help="Image in its original size, as it was uploaded.")
+    image_original = fields.Image("Original Image", help="Image in its original size, as it was uploaded.")
 
     # resized fields stored (as attachment) for performance
-    image_big = fields.Binary("Big-sized Image", compute='_compute_images', store=True, help="1024px * 1024px")
-    image_large = fields.Binary("Large-sized Image", compute='_compute_images', store=True, help="256px * 256px")
-    image_medium = fields.Binary("Medium-sized Image", compute='_compute_images', store=True, help="128px * 128px")
-    image_small = fields.Binary("Small-sized Image", compute='_compute_images', store=True, help="64px * 64px")
+    image_big = fields.Image("Big-sized Image", related="image_original", max_width=1024, max_height=1024, store=True, help="1024px * 1024px")
+    image_large = fields.Image("Large-sized Image", related="image_original", max_width=256, max_height=256, store=True, help="256px * 256px")
+    image_medium = fields.Image("Medium-sized Image", related="image_original", max_width=128, max_height=128, store=True, help="128px * 128px")
+    image_small = fields.Image("Small-sized Image", related="image_original", max_width=64, max_height=64, store=True, help="64px * 64px")
 
     can_image_be_zoomed = fields.Boolean("Can image raw be zoomed", compute='_compute_images', store=True)
 
-    image = fields.Binary("Image", compute='_compute_image', inverse='_set_image')
+    image = fields.Image("Image", compute='_compute_image', inverse='_set_image')
 
     @api.depends('image_original')
     def _compute_images(self):
         for record in self:
             image = record.image_original
-            # for performance: avoid calling unnecessary methods when falsy
-            images = image and tools.image_get_resized_images(image, big_name=False)
-            record.image_big = image and tools.image_get_resized_images(image,
-                large_name=False, medium_name=False, small_name=False)['image']
-            record.image_large = image and images['image_large']
-            record.image_medium = image and images['image_medium']
-            record.image_small = image and images['image_small']
             record.can_image_be_zoomed = image and tools.is_image_size_above(image)
 
     @api.depends('image_big')
