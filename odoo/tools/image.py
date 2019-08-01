@@ -214,7 +214,7 @@ class ImageProcess():
             if new_h > h:
                 new_w, new_h = (new_w * h) // new_h, h
 
-            # Corretly place the center of the crop.
+            # Correctly place the center of the crop.
             x_offset = (w - new_w) * center_x
             h_offset = (h - new_h) * center_y
 
@@ -226,7 +226,7 @@ class ImageProcess():
         return self.resize(max_width, max_height)
 
     def colorize(self):
-        """Replace the trasparent background by a random color.
+        """Replace the transparent background by a random color.
 
         :return: self to allow chaining
         :rtype: ImageProcess
@@ -394,57 +394,6 @@ def image_guess_size_from_field_name(field_name):
         return (int(suffix), int(suffix))
     except ValueError:
         return (0, 0)
-
-
-def image_get_resized_images(base64_source,
-        big_name='image', large_name='image_256', medium_name='image_128', small_name='image_64'):
-    """ Standard tool function that returns a dictionary containing the
-        big, medium, large and small versions of the source image.
-
-        :param {..}_name: key of the resized image in the return dictionary;
-            'image', 'image_256', 'image_128' and 'image_64' by default.
-            Set a key to False to not include it.
-
-        Refer to image_resize_image for the other parameters.
-
-        :return return_dict: dictionary with resized images, depending on
-            previous parameters.
-    """
-    return_dict = dict()
-    if big_name:
-        return_dict[big_name] = image_process(base64_source, size=(1024, 1024))
-    if large_name:
-        return_dict[large_name] = image_process(base64_source, size=(256, 256))
-    if medium_name:
-        return_dict[medium_name] = image_process(base64_source, size=(128, 128))
-    if small_name:
-        return_dict[small_name] = image_process(base64_source, size=(64, 64))
-    return return_dict
-
-
-def image_resize_images(vals,
-        return_big=True, return_large=False, return_medium=True, return_small=True,
-        big_name='image', large_name='image_256', medium_name='image_128', small_name='image_64'):
-    """ Update ``vals`` with image fields resized as expected. """
-    big_image = vals.get(big_name)
-    large_image = vals.get(large_name)
-    medium_image = vals.get(medium_name)
-    small_image = vals.get(small_name)
-
-    biggest_image = big_image or large_image or medium_image or small_image
-
-    if biggest_image:
-        vals.update(image_get_resized_images(biggest_image,
-            big_name=return_big and big_name, large_name=return_large and large_name, medium_name=return_medium and medium_name, small_name=return_small and small_name))
-    elif any(f in vals for f in [big_name, large_name, medium_name, small_name]):
-        if return_big:
-            vals[big_name] = False
-        if return_large:
-            vals[large_name] = False
-        if return_medium:
-            vals[medium_name] = False
-        if return_small:
-            vals[small_name] = False
 
 
 def image_data_uri(base64_source):
