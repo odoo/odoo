@@ -361,11 +361,11 @@
                     <field name="invoice_vendor_display_name" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
                     <field name="invoice_date" optional="show" invisible="context.get('default_type') not in ('in_invoice', 'in_refund','in_receipt')" string="Bill Date"/>
                     <field name="invoice_date" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
-                    <field name="invoice_payment_ref" optional="hide"/>
+                    <field name="invoice_origin" optional="show" string="Source Document"/>
+                    <field name="invoice_payment_ref" optional="hide" invisible="context.get('default_type') in ('out_invoice', 'out_refund','out_receipt')"/>
                     <field name="invoice_user_id" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="invoice_date_due" optional="show"/>
-                    <field name="invoice_origin" optional="show" string="Source Document"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
                     <field name="amount_total_signed" string="Total" sum="Total" optional="show"/>
@@ -518,7 +518,7 @@
                             <!-- Invoice draft header -->
                             <span class="o_form_label"><field name="type" attrs="{'invisible': ['|', ('type', '=', 'entry'), ('state', '=', 'draft')]}" readonly="1" nolabel="1"/></span>
                             <h1>
-                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">New Invoice</span>
+                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Invoice</span>
                                 <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Credit Note</span>
                                 <span attrs="{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Bill</span>
                                 <span attrs="{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Refund</span>
@@ -705,7 +705,7 @@
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="analytic_account_id"
-                                               optional="show"
+                                               optional="hide"
                                                groups="analytic.group_analytic_accounting"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="analytic_tag_ids"
@@ -718,7 +718,8 @@
                                                invisible="context.get('view_no_maturity')"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="amount_currency"
-                                               groups="base.group_multi_currency"/>
+                                               groups="base.group_multi_currency"
+                                               optional="hide"/>
                                         <field name="currency_id" options="{'no_create': True}"
                                                groups="base.group_multi_currency"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
@@ -742,7 +743,7 @@
                                         <field name="credit"
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
-                                        <field name="tag_ids" widget="many2many_tags" string="Tax Grids"/>
+                                        <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show"/>
 
                                         <!-- Others fields -->
                                         <field name="payment_id" invisible="1"/>
