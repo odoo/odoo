@@ -3,24 +3,25 @@
 # * pos_mercury
 # 
 # Translators:
-# abdullah alsabi <alsabi.abdullah@gmail.com>, 2016
 # Fahad Alqahtani <fahad@cloudland.sa>, 2016
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
 # hoxhe Aits <hoxhe0@gmail.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # amrnegm <amrnegm.01@gmail.com>, 2016
-# Yihya Hugirat <hugirat@gmail.com>, 2017
+# abdullah alsabi <alsabi.abdullah@gmail.com>, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Yihya Hugirat <hugirat@gmail.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
-"PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:26+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +52,11 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"تحدد <i>إعدادات Mercury</i> حساب Mercury المستخدم عند\n"
+"                                معالجة معاملات البطاقة الائتمانية في نقطة البيع.\n"
+"                                بضبط إعدادات Mercury ستتمكن من السماح بالسداد بعدة بطاقات ائتمانية\n"
+"                                (مثلًا: فيزا، ماستر كارد، ديسكفوري، أمريكان إكسبريس، ...). بعد ضبط هذه\n"
+"                                الإعدادات، ينبغي أن تربطها بطريقة السداد المستخدمة في نقطة البيع."
 
 #. module: pos_mercury
 #. openerp-web
@@ -240,6 +246,9 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
+"للتعامل مع الطلبات بسرعة: بمجرد إمرار بطاقة ائتمانية على شاشة السداد\n"
+"                                (بدون الضغط على أي شيء) سيتم خصم إجمالي قيمة الطلب\n"
+"                                من البطاقة."
 
 #. module: pos_mercury
 #. openerp-web
@@ -300,6 +309,8 @@ msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"إذا لم تكن تملك بالفعل حساب Mercury، اتصل بـMercury على +1 (800) 846-4472\n"
+"                                لإنشاء حساب."
 
 #. module: pos_mercury
 #. openerp-web
@@ -536,7 +547,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr ""
+msgstr "رقم الفاتورة من Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
@@ -569,7 +580,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "معرف التاجر"
 
 #. module: pos_mercury
 #. openerp-web
@@ -581,13 +592,13 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid "Merchant Password"
-msgstr ""
+msgstr "كلمة مرور التاجر"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
-msgstr ""
+msgstr "إعدادات Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal_pos_mercury_config_id
@@ -597,17 +608,17 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Mercury invoice number"
-msgstr ""
+msgstr "رقم فاتورة Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Mercury record number"
-msgstr ""
+msgstr "رقم سجل Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "رقم إشارة Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_name
@@ -617,13 +628,13 @@ msgstr "الاسم"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
-msgstr ""
+msgstr "اسم إعدادات Mercury"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
 #, python-format
 msgid "No Mercury configuration associated with the journal."
-msgstr ""
+msgstr "لا توجد إعدادات لـMercury مرتبطة بدفتر اليومية."
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
@@ -636,14 +647,14 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr ""
+msgstr "لا يصلنا رد من Mercury (ربما يكون مفصولًا؟)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:336
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr ""
+msgstr "لا يصلنا رد من السيرفر (هل أنت متصل بالشبكة؟)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -651,14 +662,14 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:562
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr ""
+msgstr "حدث خطأ بأودو أثناء معالجة المعاملة."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:639
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr ""
+msgstr "لا تزال إحدى عمليات سحب البطاقة الائتمانية معلقة."
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_common
@@ -670,7 +681,7 @@ msgstr "مره واحده"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:460
 #, python-format
 msgid "Partially approved"
-msgstr ""
+msgstr "معتمد جزئيًا"
 
 #. module: pos_mercury
 #. openerp-web
@@ -704,24 +715,24 @@ msgstr ""
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "كلمة مرور التاجر المطلوبة لمصادقة اتصاله بسيرفر مزود السداد"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Payment record number from Mercury Pay"
-msgstr ""
+msgstr "رقم سجل عملية السداد من Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr ""
+msgstr "رقم إشارة عملية السداد من Mercury Pay"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:407
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr ""
+msgstr "برجاء إعداد حساب التاجر الخاص بك على Mercury."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -752,7 +763,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:540
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr ""
+msgstr "فشلت الحركة العكسية، جاري إرسال VoidSale..."
 
 #. module: pos_mercury
 #. openerp-web
@@ -839,7 +850,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "العلامة التجارية للبطاقة المستخدمة للسداد (مثلًا: Visa, AMEX, ...)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
@@ -849,12 +860,12 @@ msgstr "رقم البطاقة المستخدمة في الدفع."
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "إعدادات Mercury المستخدمة لدفتر اليومية هذا"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr ""
+msgstr "آخر 4 أرقام من البطاقة المستخدمة للسداد"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
@@ -869,6 +880,8 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
+"يمكن أن يرجع هذا لتمرير بطاقة بشكل خاطئ أو بسبب اختيار نظام QWERTY الأمريكي "
+"كمخطط لوحة مفاتيحك (لا النظام الأمريكي الدولي)."
 
 #. module: pos_mercury
 #. openerp-web
@@ -934,13 +947,17 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"من السهل استخدام ربط Mercury في نقطة البيع: فقط اضغط على\n"
+"                                طريقة السداد المرتبطة. بعد ذلك يمكن تعديل المبلغ (لاسترداد النقود مثلًا)\n"
+"                                مثل أي بند سداد آخر. عند إعداد بند السداد، يمكن\n"
+"                                تمرير البطاقة عبر جهاز قارئ البطاقة."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:584
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "نجحت VoidSale"
 
 #. module: pos_mercury
 #. openerp-web
@@ -975,7 +992,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:50
 #, python-format
 msgid "X______________________________"
-msgstr ""
+msgstr "X______________________________"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule

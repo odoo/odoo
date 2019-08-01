@@ -307,7 +307,7 @@ msgstr "سعر بيع واحد لكل منتج"
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "يمكن تعيين تحذير على منتج أو عميل معين (المبيعات)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -368,6 +368,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"السماح بالتعامل بأسعار مختلفة حسب قواعد كل فئة عملاء.\n"
+"                مثلًا: 10% لبائعي التجزئة، أو عرض على هذا المنتج، إالخ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -531,7 +533,7 @@ msgstr "الشركة"
 #: code:addons/sale/static/src/js/tour.js:79
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "خيارات الضبط متاحة في تطبيق الإعدادات."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -721,7 +723,7 @@ msgstr "الوصف"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Digital Products"
-msgstr ""
+msgstr "المنتجات الرقمية"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -863,6 +865,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"من خلال هذا التقرير, يمكنك تكوين فكرة عامة عن المبالغ المفوترة من عملاءك. "
+"كما يمكنك استخدام أداة البحث لإضافة الطابع الشخصي على تقارير فواتيرك وبهذا "
+"تشكل هذا التحليل حسب احتياجاتك."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -902,6 +907,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"إذا تم إقفال أمر البيع، لن تستطيع تعديله. لكن سيكون بإمكانك فوترته أو "
+"تسليمه."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1045,6 +1052,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"سيتم إنشاء الفواتير في حالة المسودة لتتمكن من مراجعتهم\n"
+"                        قبل اعتمادهم."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1091,6 +1100,8 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"غير مسموح بتعديل قيمة الحقول التالية في أمر مُقفل:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1157,7 +1168,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "تحديد الكميات في الطلب يدويًا"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_track_service
@@ -1312,6 +1323,8 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"بمجرد أن يصبح عرض السعر جاهزًا، يمكنك حفظه، وطباعته، أو إرساله بالبريد "
+"الإلكتروني."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1486,12 +1499,12 @@ msgstr "تخفيض السعر"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "الخصم بدون إضافة الضريبة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "الخصم بإضافة الضريبة"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -2011,7 +2024,7 @@ msgstr "أظهر قائمة الأسعار للعملاء"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "إظهار السعر العام والخصم للعميل"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
@@ -2071,7 +2084,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "عرض الضريبة"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
@@ -2095,7 +2108,7 @@ msgstr "الضرائب"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "الضرائب المُطبقة على الدفعات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -2109,6 +2122,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"أمر البيع %s المرتبط بالحساب التحليلي %s ملغي. لا يمكنك تسجيل مصروفات على "
+"أمر بيع ملغي."
 
 #. module: sale
 #: code:addons/sale/models/sale_analytic.py:112
@@ -2117,6 +2132,7 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"يجب اعتماد أمر البيع %s المرتبط بالحساب التحليلي %s قبل تسجيل المصروفات."
 
 #. module: sale
 #: code:addons/sale/models/sale_analytic.py:115
@@ -2126,11 +2142,13 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"أمر البيع %s المرتبط بالحساب التحليلي %s مقفل حاليًا. لا يمكنك تسجيل مصروفات"
+" على أمر بيع مقفل. برجاء إنشاء أمر بيع جديد مرتبط بهذا الحساب التحليلي."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "الكمية المطلوب فوترتها مقدمًا، غير شاملة الضرائب."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -2160,6 +2178,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
+"يجب أن يكون نوع المنتج المستخدم لفوترة الدفعة المقدّمة هي 'الكميات "
+"المطلوبة'. برجاء استخدام منتج آخر أو تحديث هذا المنتج."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:146
@@ -2169,12 +2189,14 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"يجب أن تكون سياسة فاتورة المنتج المستخدم لفوترة الدفعة المقدّمة هي \"الكميات"
+" المطلوبة\". برجاء تحديث منتج الإيداع لتتمكن من إنشاء فاتورة إيداع."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "يجب أن تكون قيمة مبلغ الدفعة المقدّمة قيمة موجبة."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74
@@ -2183,6 +2205,8 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
+"لا يوجد حساب دخل مُعرف لهذا المنتج: \"%s\". قد تكون بحاجة لتثبيت دليل محاسبي"
+" من تطبيق المحاسبة، قائمة الإعدادات."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:366 code:addons/sale/models/sale.py:370
@@ -2348,14 +2372,14 @@ msgstr "استخدم قوائم الأسعار لتغير السعر على حس
 #: code:addons/sale/static/src/js/tour.js:69
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
-msgstr ""
+msgstr "استخدم فتات الخبز <b>للعودة للنوافذ السابقة</b>."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:73
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
-msgstr ""
+msgstr "استخدم هذه القائمة للوصول لعروض الأسعار، وأوامر البيع، والعملاء."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2409,7 +2433,7 @@ msgstr ""
 msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
-msgstr ""
+msgstr "اكتب اسم عميلك لإنشاء واحد على الطاير، أو اختر عميل موجود."
 
 #. module: sale
 #. openerp-web

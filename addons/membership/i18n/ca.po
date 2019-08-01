@@ -3,19 +3,21 @@
 # * membership
 # 
 # Translators:
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
 # Josep Sànchez <papapep@gmx.com>, 2016
 # Eric Antones <eantones@users.noreply.github.com>, 2016
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2016
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
+# Martin Trigaux, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# M Palau <mpalau@tda.ad>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Gemma Bochaca <gemma.bochaca@gmail.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:23+0000\n"
+"Last-Translator: M Palau <mpalau@tda.ad>, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +89,7 @@ msgstr "Empresa associada"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
-msgstr ""
+msgstr "Comprar una subscripció"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
@@ -314,7 +316,7 @@ msgstr "Soci facturat"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "Facturat/Pagat/Gratuit"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_state
@@ -346,6 +348,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Indica l'estat de l'afiliació.\n"
+"- No membre: empresa que no ha sol·licitat cap afiliació.\n"
+"- Membre cancel·lat: membre que ha cancel·lat la seva afiliació.\n"
+"- Antic membre: membre amb l'afiliació expirada.\n"
+"- Membre en espera: membre que ha sol·licitat l'afiliació i està a l'espera de la creació de la factura corresponent.\n"
+"- Membre facturat: membre amb factura creada.\n"
+"- Membre pagat: membre que ha pagat la quota d'afiliació."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -419,7 +428,7 @@ msgstr "Anàlisi dels socis"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr ""
+msgstr "Duració de l'afiliació"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_to
@@ -443,7 +452,7 @@ msgstr "Factura soci"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
-msgstr ""
+msgstr "Socis membres"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_membership_id
@@ -472,7 +481,7 @@ msgstr "Estat soci"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_state
 msgid "Membership Status"
-msgstr ""
+msgstr "Estat de l'afiliació"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -500,7 +509,7 @@ msgstr "No soci"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "None/Canceled/Old/Waiting"
-msgstr ""
+msgstr "No/Cancel·lat/Antic/En espera"
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -606,17 +615,17 @@ msgstr "El preu negociat per l'empresa"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Aquesta nota apareixerà en els pressupostos..."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr ""
+msgstr "Es mostraran les columnes de pagat, antic i totals"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
+msgstr "Es mostraran les columnes de pendents, facturades i totals"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to

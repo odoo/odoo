@@ -31,6 +31,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s--> ផលិតផល UoM គឺ%s (%s) - ផ្លាស់ទីUoM គឺ%s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:231
@@ -40,6 +43,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"ការបិទ៖%s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -53,13 +59,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:217
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr "(%sបម្រុងទុក)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:220
 #, python-format
 msgid " (reserved)"
-msgstr ""
+msgstr "(បម្រុងទុក)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_state
@@ -77,19 +83,21 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "#Products"
-msgstr ""
+msgstr "#ផលិតផល"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:449
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s:ផ្តត់ផ្គងផលិតផលមកពី%s"
 
 #. module: stock
 #: code:addons/stock/models/res_company.py:24
 #, python-format
 msgid "%s: Transit Location"
 msgstr ""
+" \n"
+"%s: ទីតាំងឆ្លងកាត់"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
@@ -100,6 +108,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* ថ្មី៖​នៅពេលការផ្លាស់ប្តូរភាគហ៊ុនត្រូវបានបង្កើតឡើងហើយមិនទាន់មានការបញ្ជាក់។\n"
+"*រង់ចាំការផ្លាស់ប្តូរមួយផ្សេងទៀត៖រដ្ឋនេះអាចត្រូវបានគេមើលឃើញនៅពេលដែលចលនាមួយកំពុងរង់ចាំសកម្មភាពផ្សេងទៀតឧទាហរណ៍ក្នុងខ្សែច្រវ៉ាក់។\n"
+"*ការរង់ចាំភាពអាចរកបាន៖ស្ថានភាពនេះត្រូវបានឈានដល់នៅពេលដែលដំណោះស្រាយលទ្ធកម្មមិនមានដំណើរការទៅមុខ។ វាអាចត្រូវការឧបករណ៍កំណត់ពេលវេលាដើម្បីដំណើរការសមាសធាតុដែលត្រូវផលិត ...\n"
+"* អាចប្រើបាន៖ នៅពេលដែលផលិតផលត្រូវបានបម្រុងទុកវាត្រូវបានកំណត់ទៅជា“ អាចប្រព្រឹត្តទៅបាន” ។\n"
+"* រួចរាល់៖នៅពេលការដឹកជញ្ជូនត្រូវបានដំណើរការរដ្ឋគឺ 'រួចរាល់' ។"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -191,7 +204,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Forecasted</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ការព្យាករណ៍</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -199,6 +212,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min :</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">នាទី៖</span>\n"
+"<span class=\"o_stat_text\">អតិបរមា៖</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -206,6 +221,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min:</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">នាទី៖</span>\n"
+"<span class=\"o_stat_text\">អតិបរមា៖</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -280,22 +297,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>អាសយដ្ឋានរបស់អតិថិជន៖</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>អាស័យ​ដ្ឋាន​សំរាប់​ការ​ដឹកជញ្ជូន៖</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>អាសយដ្ឋានរបស់អ្នកលក់៖</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr ""
+msgstr "អាសយដ្ឋានឃ្លាំង៖"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -380,7 +397,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Date</strong>"
-msgstr ""
+msgstr "<strong>កាលបរិច្ឆេទ</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -405,17 +422,17 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Inventory</strong>"
-msgstr ""
+msgstr "<strong>បញ្ជីរសារពើភ័ណ្ឌ</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr ""
+msgstr "<strong>ទីតាំង</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr ""
+msgstr "<strong>លេខ / លេខស៊េរី</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -492,7 +509,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
-msgstr ""
+msgstr "<strong>កញ្ចប់</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -504,18 +521,18 @@ msgstr "<strong>ផលិតផល</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Production Lot</strong>"
-msgstr ""
+msgstr "<strong>ផលិតកម្មឡូតិ៍</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>បរិមាណ</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date</strong>"
-msgstr ""
+msgstr "<strong>កាលបរិច្ឆេទកំណត់ពេលវេលា</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -532,7 +549,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>State</strong>"
-msgstr ""
+msgstr "<strong>រដ្ឋ</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -544,7 +561,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Total Quantity</strong>"
-msgstr ""
+msgstr "<strong>បរិមាណ​សរុប</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -563,7 +580,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:102
 #, python-format
 msgid "A Pack"
-msgstr ""
+msgstr "កញ្ចប់មួយ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -586,7 +603,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr ""
+msgstr "ការព្រមានអាចត្រូវបានកំណត់លើដៃគូ (ភាគហ៊ុន)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -620,11 +637,12 @@ msgstr ""
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
 msgstr ""
+"បន្ថែមកំណត់ចំណាំផ្ទៃក្នុងដែលនឹងត្រូវបោះពុម្ពលើសន្លឹកប្រតិបត្តិការដែលបានរើសយក"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Additional Info"
-msgstr ""
+msgstr "ព័ត៌មាន​បន្ថែម"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_comment
@@ -640,7 +658,7 @@ msgstr "អាសយដ្ឋាន"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Advanced"
-msgstr ""
+msgstr "កម្រិតខ្ពស់"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
@@ -650,7 +668,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr ""
+msgstr "កម្រិតខ្ពស់: អនុវត្តវិធានលទ្ធកម្ម។"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -671,12 +689,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 #: model:ir.ui.menu,name:stock.all_picking
 msgid "All Transfers"
-msgstr ""
+msgstr "រាល់ការផ្ទេរប្រាក់"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "ទាំង​អស់​ក្នុង​ពេល​តែ​មួយ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -689,7 +707,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:90
 #, python-format
 msgid "All products"
-msgstr ""
+msgstr "ផលិតផលទាំងអស់"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_tracking_owner:0
@@ -699,7 +717,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_returned_move_ids
 msgid "All returned moves"
-msgstr ""
+msgstr "រាល់ការផ្លាស់ប្តូរត្រឡប់មកវិញ"
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:221
@@ -767,22 +785,22 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Applicable On"
-msgstr ""
+msgstr "អាចប្រើបាននៅលើ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_product_selectable
 msgid "Applicable on Product"
-msgstr ""
+msgstr "អាចប្រើបានលើផលិតផល"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr ""
+msgstr "អាចប្រើបានលើប្រភេទផលិតផល"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_warehouse_selectable
 msgid "Applicable on Warehouse"
-msgstr ""
+msgstr "អាចប្រើបាននៅលើឃ្លាំង"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form_stock_inherit
@@ -820,32 +838,32 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Assign Owner"
-msgstr ""
+msgstr "ចាត់តាំងម្ចាស់"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr ""
+msgstr "ផ្លាស់ទីដែលបានចាត់តាំង"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
 msgid "Attribute Values"
-msgstr ""
+msgstr "កំណត់គុណតម្លៃ"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
 msgid "Attributes"
-msgstr ""
+msgstr "កំណត់"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_auto
 msgid "Automatic Move"
-msgstr ""
+msgstr "ផ្លាស់ទីដោយស្វ័យប្រវត្តិ"
 
 #. module: stock
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr ""
+msgstr "គ្មានជំហានបន្ថែមដោយស្វ័យប្រវត្តិទេ"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
@@ -855,17 +873,17 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_string_availability_info
 msgid "Availability"
-msgstr ""
+msgstr "កាលបរិច្ឆេទ"
 
 #. module: stock
 #: selection:stock.move,state:0 selection:stock.picking,state:0
 msgid "Available"
-msgstr ""
+msgstr "ដែលទំនេរ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Available Products"
-msgstr ""
+msgstr "ផលិតផលដែលមាន"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
@@ -973,7 +991,7 @@ msgstr ""
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr ""
+msgstr "ដោយច្រើន"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -1015,27 +1033,27 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_incoterms_active
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
+msgstr "ដោយដោះធីកវាលសកម្មអ្នកអាចលាក់ INCOTERM អ្នកនឹងមិនប្រើទេ។"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr ""
+msgstr "ការដឹកជញ្ជូននិងការធានាត្រូវបង់"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr ""
+msgstr "ការដឹកជញ្ជូនត្រូវបង់"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr ""
+msgstr "តម្លៃនិងទំនិញ"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr ""
+msgstr "ចំណាយ, ធានារ៉ាប់រងនិងទំនិញ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1068,7 +1086,7 @@ msgstr "លុបចោល"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Cancel Inventory"
-msgstr ""
+msgstr "លុបចោលសារពើភ័ណ្ឌ"
 
 #. module: stock
 #: selection:stock.inventory,state:0 selection:stock.move,state:0
@@ -1101,7 +1119,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
-msgstr ""
+msgstr "ផ្លាស់ប្តូរបរិមាណផលិតផល"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_quant_reserved_exist
@@ -1111,7 +1129,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_pack_operation_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "ពិនិត្យមើលអត្ថិភាពនៃប្រតិបត្តិការវេចខ្ចប់នៅពេលជ្រើសរើស"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
@@ -1231,7 +1249,7 @@ msgstr "កូដ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_color
 msgid "Color"
-msgstr ""
+msgstr "ព័ណ៍"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_company
@@ -1316,7 +1334,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_child_ids
 msgid "Contains"
-msgstr ""
+msgstr "មាន"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -1380,7 +1398,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_tree_view
 msgid "Create Date"
-msgstr ""
+msgstr "បង្កើតកាលបរិច្ឆេទ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
@@ -1428,7 +1446,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_move_ids
 msgid "Created Moves"
-msgstr ""
+msgstr "បានបង្កើតការផ្លាស់ប្តូរ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_procurement_ids
@@ -1506,7 +1524,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Creation"
-msgstr ""
+msgstr "ការបង្កើត"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_create_date
@@ -1519,7 +1537,7 @@ msgstr "ថ្ងៃបង្កើត"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date
 msgid "Creation Date, usually the time of the order"
-msgstr ""
+msgstr "កាលបរិច្ឆេទបង្កើត ជាធម្មតាពេលវេលានៃការបញ្ជាទិញ"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:401
@@ -1541,7 +1559,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.location_open_quants
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Current Stock"
-msgstr ""
+msgstr "ស្តុកបច្ចុប្បន្ន"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_qty_available
@@ -1576,53 +1594,53 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_users_property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr ""
+msgstr "ទីតាំងអតិថិជន"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr ""
+msgstr "ទីតាំងអតិថិជន"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
 #: selection:stock.picking.type,code:0
 msgid "Customers"
-msgstr ""
+msgstr "អតិថិជន"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAF
 msgid "DELIVERED AT FRONTIER"
-msgstr ""
+msgstr "បានបញ្ជូននៅខាងកើត"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr ""
+msgstr "លាលែងនៅទីកន្លែង"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAT
 msgid "DELIVERED AT TERMINAL"
-msgstr ""
+msgstr "រំដោះនៅចុងបញ្ចប់"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr ""
+msgstr "ផ្តល់ជូនការទូទាត់សង"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDU
 msgid "DELIVERED DUTY UNPAID"
-msgstr ""
+msgstr "រំលោះភារកិច្ច"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr ""
+msgstr "រំលោះ EX QUAY"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DES
 msgid "DELIVERED EX SHIP"
-msgstr ""
+msgstr "ចែកចាយ EX SHIFER"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
@@ -1651,7 +1669,7 @@ msgstr "កាលបរិច្ឆេត"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_move_tree
 msgid "Date Expected"
-msgstr ""
+msgstr "កាលបរិច្ឆេទដែលរំពឹងទុក"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_date_done
@@ -1706,6 +1724,14 @@ msgid ""
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
 msgstr ""
+"សូមគោរពលោក / លោកស្រី,\n"
+"\n"
+"កំណត់ត្រារបស់យើងបង្ហាញថាការបង់ប្រាក់មួយចំនួននៅលើគណនីរបស់អ្នកនៅតែមានកំណត់។ សូមស្វែងរកព័ត៌មានលម្អិតខាងក្រោម។\n"
+"ប្រសិនបើចំនួនទឹកប្រាក់ត្រូវបានបង់រួចហើយសូមបដិសេធការជូនដំណឹងនេះ។ បើមិនដូច្នោះទេសូមបញ្ជូនមកយើងនូវចំនួនសរុបដែលបានបញ្ជាក់ខាងក្រោម។\n"
+"ប្រសិនបើអ្នកមានសំណួរទាក់ទងនឹងគណនីរបស់អ្នកសូមទាក់ទងមកយើងខ្ញុំ។\n"
+"\n"
+"សូមអរគុណជាមុនសម្រាប់កិច្ចសហប្រតិបត្តិការរបស់អ្នក។\n"
+"គួរឱ្យអស់សំណើចណាស់,"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_decimal_precision
@@ -1815,13 +1841,13 @@ msgstr ""
 #: code:addons/stock/models/product.py:348
 #, python-format
 msgid "Delivered Qty"
-msgstr ""
+msgstr "ផ្តល់ជូនគុណភាព"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_deliver_move
 #: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
 msgid "Deliveries"
-msgstr ""
+msgstr "ការដឹកជញ្ជូន"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_delivery_count
@@ -1840,7 +1866,7 @@ msgstr "បញ្ជាទំនិញដឹកជញ្ជូន"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
 msgid "Delivery Route"
-msgstr ""
+msgstr "ផ្លូវដឹកជញ្ជូន"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_delivery
@@ -1850,7 +1876,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
 msgid "Delivery Type"
-msgstr ""
+msgstr "ប្រភេទដឹកជញ្ជូន"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2067,7 +2093,7 @@ msgstr ""
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "ការងារចាស់"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2147,16 +2173,19 @@ msgstr ""
 #: model:stock.incoterms,name:stock.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
 msgstr ""
+"ការដឹកជញ្ជួនដោយឥតគិតថ្លៃ\n"
+" \n"
+" "
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr ""
+msgstr "អ្នកទទួលខុសត្រូវដោយឥតគិតថ្លៃ"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr ""
+msgstr "ឥតគិតថ្លៃនៅលើក្រុមប្រឹក្សាភិបាល"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -2215,47 +2244,47 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "បរិមាណព្យាករណ៍"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_from_loc
 msgid "From"
-msgstr ""
+msgstr "មកពី"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_complete_name
 msgid "Full Location Name"
-msgstr ""
+msgstr " ឈ្មោះទីតាំងពេញ"
 
 #. module: stock
 #: code:addons/stock/models/product.py:346
 #, python-format
 msgid "Future Deliveries"
-msgstr ""
+msgstr "ការផ្តល់ជូននាពេលអនាគត"
 
 #. module: stock
 #: code:addons/stock/models/product.py:351
 #, python-format
 msgid "Future P&L"
-msgstr ""
+msgstr "P&L នាពេលអនាគត"
 
 #. module: stock
 #: code:addons/stock/models/product.py:361
 #, python-format
 msgid "Future Productions"
-msgstr ""
+msgstr "ផលិតកម្មនាពេលអនាគត"
 
 #. module: stock
 #: code:addons/stock/models/product.py:356
 #, python-format
 msgid "Future Qty"
-msgstr ""
+msgstr "គុណភាពនាពេលអនាគត"
 
 #. module: stock
 #: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future Receipts"
-msgstr ""
+msgstr "បង្កាន់ដៃនាពេលអនាគត"
 
 #. module: stock
 #: model:stock.location,name:stock.location_gate_a
@@ -2302,7 +2331,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 msgid "Graph"
-msgstr ""
+msgstr "ក្រាហ្វ"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_1
@@ -2324,7 +2353,7 @@ msgstr "Group By"
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Group by..."
-msgstr ""
+msgstr "ដាក់ជាក្រុមដោយ ..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_form_stock_inherit
@@ -2398,7 +2427,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "History"
-msgstr ""
+msgstr "ប្រវត្តិ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2444,13 +2473,13 @@ msgstr "ID"
 #: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid "INV:"
-msgstr ""
+msgstr "វិក័យប័ត្រៈ"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:96
 #, python-format
 msgid "INV: %s"
-msgstr ""
+msgstr "វិក័យប័ត្រៈ%s"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
@@ -2487,6 +2516,8 @@ msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
 msgstr ""
+"ប្រសិនបើផលិតផលមិននៅកន្លែងត្រឹមត្រូវកំណត់បរិមាណដែលបានត្រួតពិនិត្យទៅ 0 "
+"ហើយបង្កើតបន្ទាត់ថ្មីដែលមានទីតាំងត្រឹមត្រូវ។"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_picking_type_entire_packs
@@ -2515,6 +2546,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_propagate
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"ប្រសិនបើត្រួតពិនិត្យ នៅពេលដែលការផ្លាស់ប្តូរនេះត្រូវបានលុបចោល "
+"លុបការផ្លាស់ប្តូរតំណភ្ជាប់ផងដែរ។"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_route_id
@@ -2524,7 +2557,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_result_package_id
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "ប្រសិនបើបានកំណត់ ប្រតិបត្តិការត្រូវបានដាក់ក្នុងកញ្ចប់នេះ។"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_active
@@ -2532,6 +2565,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"ប្រសិនបើផ្នែកសកម្មភាពត្រូវបានកំណត់ទៅខុស "
+"វានឹងអនុញ្ញាតឱ្យអ្នកលាក់កន្លែងបញ្ជាទិញដោយមិនចាំបាច់ដកវាចេញ។"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_active
@@ -2539,6 +2574,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
 msgstr ""
+"ប្រសិនបើផ្នែកសកម្មភាព "
+"ត្រូវបានកំណត់ទៅមិនពិតវានឹងអនុញ្ញាតឱ្យអ្នកលាក់ផ្លូវដោយមិនយកវាចេញ។"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2704,7 +2741,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_code
 msgid "Incoterm Standard Code"
-msgstr ""
+msgstr "កូដស្តង់ដា Incoterm"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -2714,7 +2751,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_incoterms_view_search
 #: model:ir.ui.view,arch_db:stock.view_incoterms_tree
 msgid "Incoterms"
-msgstr ""
+msgstr "Incoterms"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_name
@@ -2723,6 +2760,8 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Incoterms គឺជាស៊េរីនៃលក្ខខណ្ឌនៃការលក់។ "
+"ពួកវាត្រូវបានប្រើដើម្បីបែងចែកថ្លៃចំណាយនិងការទទួលខុសត្រូវរវាងអ្នកទិញនិងអ្នកលក់ហើយឆ្លុះបញ្ចាំងពីការអនុវត្តការដឹកជញ្ជូនដ៏ទំនើប។"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -2762,7 +2801,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_location_search
 #: selection:stock.picking.type,code:0
 msgid "Internal"
-msgstr ""
+msgstr "ផ្ទៃក្នុង"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2783,14 +2822,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_ref
 msgid "Internal Reference"
-msgstr ""
+msgstr "ផ្នែកខាងក្នុង"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:228
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr ""
+msgstr "សារខ្លីៗ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
@@ -2800,7 +2839,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
 msgid "Internal Type"
-msgstr ""
+msgstr "ប្រភេទខាងក្នុង"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_ref
@@ -3228,7 +3267,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Localization"
-msgstr ""
+msgstr "មូលដ្ឋានីយកម្ម"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -3253,7 +3292,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 #, python-format
 msgid "Location"
-msgstr ""
+msgstr "តំបន់"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -3314,7 +3353,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_lot_id
 #, python-format
 msgid "Lot"
-msgstr ""
+msgstr "ច្រើន"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_lot_barcode
@@ -3600,7 +3639,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Misc"
-msgstr ""
+msgstr "ហិរញ្ញវត្ថុ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3639,7 +3678,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_move_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_move_id
 msgid "Move"
-msgstr ""
+msgstr "ផ្លាស់ទី "
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:50
@@ -3782,7 +3821,7 @@ msgstr ""
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "មិនមានសារទេ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -3865,7 +3904,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_delay
 msgid "Number of Days"
-msgstr ""
+msgstr "ចំនួនថ្ងៃ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_lead_days
@@ -4007,7 +4046,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Operations"
-msgstr ""
+msgstr "ប្រតិបត្តិការ"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
@@ -4192,7 +4231,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
 #, python-format
 msgid "Package"
-msgstr ""
+msgstr "កញ្ជប់"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode_small
@@ -4242,7 +4281,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_packages_config
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form
 msgid "Packages"
-msgstr ""
+msgstr "កញ្ជាប់"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_package_view
@@ -4748,7 +4787,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 #, python-format
 msgid "Products"
-msgstr ""
+msgstr "ផលិតផល"
 
 #. module: stock
 #: selection:stock.config.settings,group_product_variant:0
@@ -5179,7 +5218,7 @@ msgstr "របាយការណ៍"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_res_model
 msgid "Res Model"
-msgstr ""
+msgstr "Res ម៉ូដែល"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5245,7 +5284,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
-msgstr ""
+msgstr "ត្រឡប់"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_location_id
@@ -5255,7 +5294,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "ត្រលប់ទៅការទទួលយក"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:161
@@ -5324,7 +5363,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Rules"
-msgstr ""
+msgstr "ច្បាប់"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
@@ -5457,6 +5496,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"ការជ្រើសរើសជម្រើស \"ព្រមាន\" នឹងជូនដំណឹងដល់អ្នកប្រើជាមួយសារដែលជ្រើសរើស "
+"\"ទប់ស្កាត់សារ\" នឹងបោះចោលការលើកលែងជាមួយសារនិងទប់ស្កាត់លំហូរ។ "
+"សារត្រូវតែសរសេរនៅក្នុងកន្លែងបន្ទាប់។"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_sequence
@@ -5619,7 +5661,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Source"
-msgstr ""
+msgstr "ធនធាន"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_origin
@@ -5710,7 +5752,7 @@ msgstr "ស្ថានភាព"
 #: model:stock.location,name:stock.stock_location_stock
 #, python-format
 msgid "Stock"
-msgstr ""
+msgstr "ស្តុក"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -5749,7 +5791,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "ឃ្លំាងត្រូវបានផ្លាស់ប្តូរ"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -5936,7 +5978,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_tmpl_id
 msgid "Template"
-msgstr ""
+msgstr "គំរូ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_auto
@@ -6353,7 +6395,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_to_loc
 msgid "To"
-msgstr ""
+msgstr "ទៅ"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -6362,7 +6404,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "To Do"
-msgstr ""
+msgstr "ដើម្បីធ្វើ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6454,7 +6496,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_template_tracking
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_tracking
 msgid "Tracking"
-msgstr ""
+msgstr "ការ​តាមដាន"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:958
@@ -6463,7 +6505,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Transfer"
-msgstr ""
+msgstr "ផ្ទេរ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
@@ -6479,7 +6521,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
-msgstr ""
+msgstr "ផ្ទេរ"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -6719,7 +6761,7 @@ msgstr ""
 #: model:stock.location,name:stock.stock_location_suppliers
 #: selection:stock.picking.type,code:0
 msgid "Vendors"
-msgstr ""
+msgstr "អ្នកលក់"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -6729,7 +6771,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr ""
+msgstr "មើល"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -6749,7 +6791,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Volume"
-msgstr ""
+msgstr "តំឡើង"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6798,7 +6840,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_warehouse_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Warehouse"
-msgstr ""
+msgstr "ឃ្លាំង"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse
@@ -6859,7 +6901,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:319
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "ការព្រមាន!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6888,7 +6930,7 @@ msgstr ""
 #: code:addons/stock/models/barcode.py:11
 #, python-format
 msgid "Weighted Product"
-msgstr ""
+msgstr "ផលិតផលទម្ងន់"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
