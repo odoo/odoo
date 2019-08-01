@@ -1266,14 +1266,14 @@ QUnit.module('account', {
         widget.$('.create .quick_add button:contains(ATOS)').trigger('click');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_label, .accounting_view tbody .cell_right').text().replace(/[\n\r\s$,]+/g, ' '),
-            " ATOS Banque 1145.62 Tax 20.00% 229.12 ATOS Frais 26.71 Tax 10.00% include 2.67 ", "should display 4 lines");
+            " ATOS Banque 1145.62 ATOS Banque Tax 20.00% 229.12 ATOS Frais 26.71 ATOS Frais Tax 10.00% include 2.67 ", "should display 4 lines");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Open balance229.12", "should display the 'Open balance' line with value in left column");
 
         widget.$('.create .create_amount input').val('100').trigger('input');
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '),
-            " 101120 New ATOS Banque 1075.00 101120 New Tax 20.00% 215.00 101130 New ATOS Frais 90.91 101300 New Tax 10.00% include 9.09 ",
+            " 101120 New ATOS Banque 1075.00 101120 New ATOS Banque Tax 20.00% 215.00 101130 New ATOS Frais 90.91 101300 New ATOS Frais Tax 10.00% include 9.09 ",
             "should update the value of the 4 lines (because the line must have 100% of the value)");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Open balance215.00", "should change the 'Open balance' line because the 20.00% tax is not an include tax");
