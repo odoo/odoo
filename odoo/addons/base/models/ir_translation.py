@@ -171,8 +171,6 @@ class IrTranslation(models.Model):
     lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
     type = fields.Selection(TRANSLATION_TYPE, string='Type', index=True)
     src = fields.Text(string='Internal Source')  # stored in database, kept for backward compatibility
-    source = fields.Text(string='Source term', compute='_compute_source',
-                         inverse='_inverse_source', search='_search_source')
     value = fields.Text(string='Translation Value')
     module = fields.Char(index=True, help="Module this term belongs to")
 
@@ -195,55 +193,6 @@ class IrTranslation(models.Model):
     def _get_languages(self):
         langs = self.env['res.lang'].search([])
         return [(lang.code, lang.name) for lang in langs]
-
-    @api.depends('type', 'name', 'res_id')
-    def _compute_source(self):
-        ''' Get source name for the translation. If object type is model, return
-        the value stored in db. Otherwise, return value store in src field.
-        '''
-        for record in self:
-            record.source = record.src
-            if record.type != 'model':
-                continue
-            model_name, field_name = record.name.split(',')
-            if model_name not in self.env:
-                continue
-            model = self.env[model_name]
-            field = model._fields.get(field_name)
-            if field is None:
-                continue
-            if not callable(field.translate):
-                # Pass context without lang, need to read real stored field, not translation
-                try:
-                    result = model.browse(record.res_id).with_context(lang=None).read([field_name])
-                except AccessError:
-                    # because we can read self but not the record,
-                    # that means we would get an access error when accessing the translations
-                    # so instead we defer the access right to the "check" method
-                    result = [{field_name: _("Cannot be translated; record not accessible.")}]
-                record.source = result[0][field_name] if result else False
-
-    def _inverse_source(self):
-        ''' When changing source term of a translation, change its value in db
-        for the associated object, and the src field.
-        '''
-        self.ensure_one()
-        if self.type == 'model':
-            model_name, field_name = self.name.split(',')
-            model = self.env[model_name]
-            field = model._fields[field_name]
-            if not callable(field.translate):
-                # Make a context without language information, because we want
-                # to write on the value stored in db and not on the one
-                # associated with the current language. Also not removing lang
-                # from context trigger an error when lang is different.
-                model.browse(self.res_id).with_context(lang=None).write({field_name: self.source})
-        if self.src != self.source:
-            self.write({'src': self.source})
-
-    def _search_source(self, operator, value):
-        ''' the source term is stored on 'src' field '''
-        return [('src', operator, value)]
 
     def _auto_init(self):
         res = super(IrTranslation, self)._auto_init()
@@ -328,6 +277,22 @@ class IrTranslation(models.Model):
             for res_id in set(ids) - set(existing_ids)
         ])
         return len(ids)
+
+    def _set_source(self, name, ids, src):
+        """ Update the translation source of records.
+
+        :param name: a string defined as "<model_name>,<field_name>"
+        :param ids: the ids of the given records
+        :param src: the source of the translation
+        """
+        self._cr.execute("""UPDATE ir_translation
+                            SET src=%s
+                            WHERE type=%s AND name=%s AND res_id IN %s
+                            RETURNING id""",
+                         (src, 'model', name, tuple(ids)))
+        existing_ids = [row[0] for row in self._cr.fetchall()]
+        # invalidate src for updated translations
+        self.invalidate_cache(fnames=['src'], ids=existing_ids)
 
     @api.model
     def _get_source_query(self, name, types, lang, source, res_id):
@@ -645,6 +610,8 @@ class IrTranslation(models.Model):
             This method is used for creations of translations where the given
             ``vals_list`` is trusted to be the right values and potential
             conflicts should be updated to the new given value.
+            Mandatory values: name, lang, res_id, src, type
+            The other keys are ignored during update if not present
         """
         rows_by_type = defaultdict(list)
         for vals in vals_list:
@@ -661,7 +628,10 @@ class IrTranslation(models.Model):
                 ON CONFLICT (type, lang, name, res_id) WHERE type='model'
                 DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) =
                     (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type,
-                     EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                     EXCLUDED.value,
+                     COALESCE(EXCLUDED.module, ir_translation.module),
+                     COALESCE(EXCLUDED.state, ir_translation.state),
+                     COALESCE(EXCLUDED.comments, ir_translation.comments))
                 WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
             """.format(", ".join(["%s"] * len(rows_by_type['model'])))
             self.env.cr.execute(query, rows_by_type['model'])
@@ -678,6 +648,30 @@ class IrTranslation(models.Model):
                 WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
             """.format(", ".join(["%s"] * len(rows_by_type['model_terms'])))
             self.env.cr.execute(query, rows_by_type['model_terms'])
+
+    def _update_translations(self, vals_list):
+        """ Update translations of type 'model' or 'model_terms'.
+
+            This method is used for update of translations where the given
+            ``vals_list`` is trusted to be the right values
+            No new translation will be created
+        """
+        grouped_rows = {}
+        for vals in vals_list:
+            key = (vals['lang'], vals['type'], vals['name'])
+            grouped_rows.setdefault(key, [vals['value'], vals['src'], vals['state'], []])
+            grouped_rows[key][3].append(vals['res_id'])
+
+        for where, values in grouped_rows.items():
+            self._cr.execute(
+                """ UPDATE ir_translation
+                    SET value=%s,
+                        src=%s,
+                        state=%s
+                    WHERE lang=%s AND type=%s AND name=%s AND res_id in %s
+                """,
+                (values[0], values[1], values[2], where[0], where[1], where[2], tuple(values[3]))
+            )
 
     @api.model
     def translate_fields(self, model, id, field=None):

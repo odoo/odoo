@@ -63,7 +63,7 @@ class IrTranslation(models.Model):
                         project_modules[module] = tx_project
 
             for translation in self:
-                if not translation.module or not translation.source or translation.lang == 'en_US':
+                if not translation.module or not translation.src or translation.lang == 'en_US':
                     # custom or source term
                     translation.transifex_url = False
                     continue
@@ -85,6 +85,6 @@ class IrTranslation(models.Model):
                     'lang': lang_code,
                     'module': translation.module,
                     'src': "text:'" + werkzeug.url_quote_plus(
-                               translation.source[:50].replace("\n", "").replace("'", "")
+                               translation.src[:50].replace("\n", "").replace("'", "")
                            ) + "'",
                 }
