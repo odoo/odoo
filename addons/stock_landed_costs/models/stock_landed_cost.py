@@ -118,6 +118,7 @@ class LandedCost(models.Model):
                 'date': cost.date,
                 'ref': cost.name,
                 'line_ids': [],
+                'type': 'entry',
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
@@ -155,6 +156,13 @@ class LandedCost(models.Model):
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
+
+            if cost.vendor_bill_id and cost.vendor_bill_id.state == 'posted' and cost.company_id.anglo_saxon_accounting:
+                all_amls = cost.vendor_bill_id.line_ids | cost.account_move_id.line_ids
+                for product in cost.cost_lines.product_id:
+                    accounts = product.product_tmpl_id.get_product_accounts()
+                    input_account = accounts['stock_input']
+                    all_amls.filtered(lambda aml: aml.account_id == input_account).reconcile()
         return True
 
     def _check_sum(self):
@@ -285,7 +293,8 @@ class LandedCostLine(models.Model):
         self.name = self.product_id.name or ''
         self.split_method = 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
-        self.account_id = self.product_id.property_account_expense_id.id or self.product_id.categ_id.property_account_expense_categ_id.id
+        accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
+        self.account_id = accounts_data['stock_input']
 
 
 class AdjustmentLines(models.Model):
@@ -341,7 +350,7 @@ class AdjustmentLines(models.Model):
         if self.move_id._is_dropshipped():
             debit_account_id = accounts.get('expense') and accounts['expense'].id or False
         already_out_account_id = accounts['stock_output'].id
-        credit_account_id = self.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
+        credit_account_id = self.cost_line_id.account_id.id or cost_product.categ_id.property_stock_account_input_categ_id.id
 
         if not credit_account_id:
             raise UserError(_('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
@@ -394,12 +403,12 @@ class AdjustmentLines(models.Model):
             AccountMoveLine.append([0, 0, debit_line])
             AccountMoveLine.append([0, 0, credit_line])
 
-            # TDE FIXME: oh dear
             if self.env.company.anglo_saxon_accounting:
+                expense_account_id = self.product_id.product_tmpl_id.get_product_accounts()['expense'].id
                 debit_line = dict(base_line,
                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
                                   quantity=0,
-                                  account_id=credit_account_id)
+                                  account_id=expense_account_id)
                 credit_line = dict(base_line,
                                    name=(self.name + ": " + str(qty_out) + _(' already out')),
                                    quantity=0,
