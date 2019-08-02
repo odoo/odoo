@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='title']" position="after">
                 <field name="mass_mailing_id"/>
-                <field name="mass_mailing_campaign_id"/>
+                <field name="campaign_id"/>
             </xpath>
             <xpath expr="//group" position="inside">
                 <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
-                <filter string="Mailing Campaign" name="groupby_mass_mailing_campaign_id" domain="[]" context="{'group_by': 'mass_mailing_campaign_id'}"/>
+                <filter string="Mailing Campaign" name="groupby_mass_mailing_campaign_id" domain="[]" context="{'group_by': 'campaign_id'}"/>
             </xpath>
         </field>
     </record>
@@ -24,7 +24,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='campaign_id']" position="before">
                 <field name="mass_mailing_id"/>
-                <field name="mass_mailing_campaign_id"/>
             </xpath>
         </field>
     </record>
@@ -62,12 +61,12 @@
         <field name="inherit_id" ref="link_tracker.link_tracker_click_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='country_id']" position="after">
-                <field name="mass_mailing_campaign_id"/>
+                <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
             </xpath>
             <xpath expr="//filter[@name='groupby_country_id']" position="after">
                 <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
-                <filter string="Mailing Campaign" name="groupby_mass_mailing_campaign_id" domain="[]" context="{'group_by': 'mass_mailing_campaign_id'}"/>
+                <filter string="Mailing Campaign" name="groupby_mass_mailing_campaign_id" domain="[]" context="{'group_by': 'campaign_id'}"/>
             </xpath>
         </field>
     </record>
@@ -78,7 +77,7 @@
         <field name="inherit_id" ref="link_tracker.link_tracker_click_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='country_id']" position="after">
-                <field name="mass_mailing_campaign_id"/>
+                <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
                 <field name="mailing_trace_id"/>
             </xpath>
@@ -91,7 +90,7 @@
         <field name="inherit_id" ref="link_tracker.link_tracker_click_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='link_id']" position="after">
-                <field name="mass_mailing_campaign_id"/>
+                <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
             </xpath>
         </field>
@@ -103,7 +102,7 @@
         <field name="inherit_id" ref="link_tracker.link_tracker_click_view_graph"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='country_id']" position="after">
-                <field name="mass_mailing_campaign_id"/>
+                <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
             </xpath>
         </field>
