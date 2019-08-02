@@ -14,7 +14,6 @@ class TestStockValuationLC(TestStockValuationCommon):
         cls.productlc1 = cls.env['product.product'].create({
             'name': 'product1',
             'type': 'service',
-            'landed_cost_ok': True,
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
