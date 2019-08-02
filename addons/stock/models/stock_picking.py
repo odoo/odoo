@@ -622,7 +622,7 @@ class Picking(models.Model):
         """ Sanity check on multicompany. This method ensure the picking's company
         is the same than all the sub objects ones"""
         for picking in self:
-            if picking.mapped('move_lines.company_id') != picking.company_id:
+            if picking.move_lines and picking.mapped('move_lines.company_id') != picking.company_id:
                 raise UserError(_('Some stock moves are recorded in another company than this transfer'))
             if picking.location_dest_id.company_id and picking.location_dest_id.company_id != picking.company_id\
                     or picking.location_id.company_id and picking.location_id.company_id != picking.company_id:

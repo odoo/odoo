@@ -5,10 +5,10 @@ from odoo.tests.common import SavepointCase
 from odoo.exceptions import AccessError
 
 
-class StockMove(SavepointCase):
+class MulticompanyTests(SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(StockMove, cls).setUpClass()
+        super(MulticompanyTests, cls).setUpClass()
         cls.comp1 = cls.env['res.company'].create({
             'name': 'main_company',
         })
@@ -19,15 +19,31 @@ class StockMove(SavepointCase):
         cls.new_user = cls.env['res.users'].create({
             'name': 'stock user!',
             'login': 'stockuser',
-            'groups_id': [(6, 0, cls.env.ref('stock.group_stock_user').ids)],
+            'groups_id': [(6, 0, cls.env.ref('stock.group_stock_manager').ids)],
             'company_id': cls.comp1.id,
             'company_ids': [(6, 0, cls.comp1.ids)],
         })
         cls.new_user.partner_id.email = 'xxx@odoo.com'
 
         cls.picking_type_internal = cls.env.ref('stock.picking_type_internal')
-        cls.picking_type_in = cls.env.ref('stock.picking_type_in')
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.picking_type_internal.company_id = cls.comp2
+        cls.warehouse = cls.env['stock.warehouse'].create({
+            'name': 'New Warehouse',
+            'code': 'NW',
+            'company_id': cls.comp2.id,
+        })
+        cls.stock_location = cls.warehouse.lot_stock_id
+        sequence = cls.env['ir.sequence'].create({
+            'name': cls.warehouse.name + 'Sequence in',
+            'prefix': cls.warehouse.code + '/IN/', 'padding': 5,
+            'company_id': cls.comp2.id,
+        })
+        cls.picking_type_in = cls.env['stock.picking.type'].create({
+            'warehouse_id': cls.warehouse.id,
+            'code': 'incoming',
+            'name': 'Incoming company 2',
+            'sequence_id': sequence.id,
+        })
         cls.vendor_location = cls.env.ref('stock.stock_location_suppliers')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
@@ -43,7 +59,6 @@ class StockMove(SavepointCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.picking_type_internal.id,
-            'company_id': self.comp2.id,
         })
         move1 = self.env['stock.move'].create({
             'picking_id': internal_picking.id,
@@ -58,10 +73,10 @@ class StockMove(SavepointCase):
 
         # Can't access move1 as not in allowed companies
         with self.assertRaises(AccessError):
-            move1.sudo(self.new_user).name
+            move1.with_user(self.new_user).name
 
         self.new_user.company_ids = [(4, self.comp2.id)]
-        move1.sudo(self.new_user).name
+        move1.with_user(self.new_user).name
 
         internal_picking.action_confirm()
         move1.quantity_done = 10
@@ -87,7 +102,7 @@ class StockMove(SavepointCase):
         self.assertEquals(line1.company_id, self.comp2, 'The line was created in the wrong company')
 
         self.new_user.company_ids = [(4, self.comp2.id)]
-        inventory.action_validate()
+        inventory.with_user(self.new_user).action_validate()
         self.assertEquals(inventory.move_ids.company_id, self.comp2, 'The moves was created in the wrong company')
 
     def test_multicompany_3(self):
@@ -120,19 +135,20 @@ class StockMove(SavepointCase):
 
     def test_multicompany_4(self):
         """ Check that each business document takes the user company."""
-        self.new_user.company_ids = [(4, self.ref('base.main_company'))]
-        picking = self.env['stock.picking'].sudo(self.new_user).create({
+        self.new_user.company_ids = [(4, self.comp2.id)]
+        self.new_user.company_id = self.comp2.id
+        picking = self.env['stock.picking'].with_user(self.new_user).create({
             'location_id': self.vendor_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.picking_type_in.id,
         })
         self.assertEqual(picking.company_id, self.new_user.company_id, 'Picking created in the wrong company')
-        lot = self.env['stock.production.lot'].sudo(self.new_user).create({
+        lot = self.env['stock.production.lot'].with_user(self.new_user).create({
             'product_id': self.product.id,
             'name': '000001',
         })
         self.assertEqual(lot.company_id, self.new_user.company_id, 'Lot created in the wrong company')
-        inventory = self.env['stock.inventory'].sudo(self.new_user).create({
+        inventory = self.env['stock.inventory'].with_user(self.new_user).create({
             'name': 'remove product1',
             'location_ids': [(4, self.stock_location.id)],
             'product_ids': [(4, self.product.id)],
