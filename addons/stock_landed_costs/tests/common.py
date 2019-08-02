@@ -71,5 +71,4 @@ class TestStockLandedCostsCommon(AccountingTestCase):
     def _create_services(self, name):
         return self.Product.create({
             'name': name,
-            'landed_cost_ok': True,
             'type': 'service'})

@@ -4,9 +4,17 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
-from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_is_zero
+
+
+SPLIT_METHOD = [
+    ('equal', 'Equal'),
+    ('by_quantity', 'By Quantity'),
+    ('by_current_cost_price', 'By Current Cost'),
+    ('by_weight', 'By Weight'),
+    ('by_volume', 'By Volume'),
+]
 
 
 class LandedCost(models.Model):
@@ -267,7 +275,7 @@ class LandedCostLine(models.Model):
         required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
     price_unit = fields.Float('Cost', digits='Product Price', required=True)
-    split_method = fields.Selection(product.SPLIT_METHOD, string='Split Method', required=True)
+    split_method = fields.Selection(SPLIT_METHOD, string='Split Method', required=True)
     account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
 
     @api.onchange('product_id')
@@ -275,7 +283,7 @@ class LandedCostLine(models.Model):
         if not self.product_id:
             self.quantity = 0.0
         self.name = self.product_id.name or ''
-        self.split_method = self.product_id.split_method or 'equal'
+        self.split_method = 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
         self.account_id = self.product_id.property_account_expense_id.id or self.product_id.categ_id.property_account_expense_categ_id.id
 
