@@ -161,20 +161,3 @@ class TestProductPricelist(TransactionCase):
         partner = self.res_partner_4.with_context(context)
         msg = "Wrong cost price: LCD Monitor if more than 3 Unit.should be 785 instead of %s" % ipad_mini._select_seller(partner_id=partner, quantity=3.0).price
         self.assertEqual(float_compare(ipad_mini._select_seller(partner_id=partner, quantity=3.0).price, 785, precision_digits=2), 0, msg)
-
-        # I print the sale prices report.
-        ctx = {'active_model': 'product.product', 'date': '2011-12-30', 'active_ids': [self.computer_SC234.id, self.ipad_retina_display.id, self.custom_computer_kit.id, self.ipad_mini.id]}
-        data_dict = {
-            'qty1': 1,
-            'qty2': 5,
-            'qty3': 10,
-            'qty4': 15,
-            'qty5': 30,
-            'price_list': self.customer_pricelist.id,
-        }
-
-        with self.assertRaises(UserError):
-            test_reports.try_report_action(self.cr, self.uid, 'action_product_price_list', wiz_data=data_dict, context=ctx, our_module='product')
-
-        self.env.company.external_report_layout_id = self.env.ref('web.external_layout_standard').id
-        test_reports.try_report_action(self.cr, self.uid, 'action_product_price_list', wiz_data=data_dict, context=ctx, our_module='product')
