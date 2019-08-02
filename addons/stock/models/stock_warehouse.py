@@ -28,7 +28,7 @@ class Warehouse(models.Model):
         'res.company', 'Company', default=lambda self: self.env.company,
         index=True, readonly=True, required=True,
         help='The company is automatically set from your user preferences.')
-    partner_id = fields.Many2one('res.partner', 'Address')
+    partner_id = fields.Many2one('res.partner', 'Address', default=lambda self: self.env.company.partner_id)
     view_location_id = fields.Many2one('stock.location', 'View Location', domain=[('usage', '=', 'view')], required=True)
     lot_stock_id = fields.Many2one('stock.location', 'Location Stock', domain=[('usage', '=', 'internal')], required=True)
     code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
