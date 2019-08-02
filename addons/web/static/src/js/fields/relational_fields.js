@@ -471,9 +471,9 @@ var FieldMany2One = AbstractField.extend({
 
         // this is a stupid hack necessary to support the always_reload flag.
         // the field value has been reread by the basic model.  We use it to
-        // display the full address of a patner, separated by \n.  This is
+        // display the full address of a partner, separated by \n.  This is
         // really a bad way to do it.  Now, we need to remove the extra lines
-        // and hope for the best that noone tries to uses this mechanism to do
+        // and hope for the best that no one tries to uses this mechanism to do
         // something else.
         if (this.nodeOptions.always_reload) {
             value = this._getDisplayName(value);

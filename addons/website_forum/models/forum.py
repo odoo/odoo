@@ -173,7 +173,7 @@ class Forum(models.Model):
         user = self.env.user
         for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
-                # check that not arleady created meanwhile or maybe excluded by the limit on the search
+                # check that not already created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
                 if tag_ids:
                     existing_keep.append(int(tag_ids[0]))

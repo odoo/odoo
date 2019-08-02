@@ -2981,7 +2981,7 @@ class AccountMoveLine(models.Model):
         else:
             amls = self.browse(list(amls))
 
-        # If we have multiple currency, we can only base ourselve on debit-credit to see if it is fully reconciled
+        # If we have multiple currency, we can only base ourselves on debit-credit to see if it is fully reconciled
         currency = set([a.currency_id for a in amls if a.currency_id.id != False])
         multiple_currency = False
         if len(currency) != 1:
@@ -3014,7 +3014,7 @@ class AccountMoveLine(models.Model):
                 to_balance[aml.currency_id][1] += aml.amount_residual != 0 and aml.amount_residual or aml.amount_residual_currency
 
         # Check if reconciliation is total
-        # To check if reconciliation is total we have 3 differents use case:
+        # To check if reconciliation is total we have 3 different use case:
         # 1) There are multiple currency different than company currency, in that case we check using debit-credit
         # 2) We only have one currency which is different than company currency, in that case we check using amount_currency
         # 3) We have only one currency and some entries that don't have a secundary currency, in that case we check debit-credit
@@ -3198,7 +3198,7 @@ class AccountMoveLine(models.Model):
         """ Create a writeoff move per journal for the account.move.lines in self. If debit/credit is not specified in vals,
             the writeoff amount will be computed as the sum of amount_residual of the given recordset.
             :param writeoff_vals: list of dicts containing values suitable for account_move_line.create(). The data in vals will
-                be processed to create bot writeoff acount.move.line and their enclosing account.move.
+                be processed to create bot writeoff account.move.line and their enclosing account.move.
         """
         def compute_writeoff_counterpart_vals(values):
             line_values = values.copy()

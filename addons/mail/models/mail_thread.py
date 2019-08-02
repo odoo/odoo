@@ -2749,7 +2749,7 @@ class MailThread(models.AbstractModel):
         company issues when clicking on a link sent by email, this
         could be called to try setting the most suited company on
         the allowed_company_ids in the context. This method can be 
-        overriden, for example on the hr.leave model, where the
+        overridden, for example on the hr.leave model, where the
         most suited company is the company of the leave type, as
         specified by the ir.rule.
         """

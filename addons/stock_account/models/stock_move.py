@@ -361,7 +361,7 @@ class StockMove(models.Model):
         return res
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
-        # This method returns a dictonary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
+        # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
         debit_line_vals = {
             'name': self.name,
