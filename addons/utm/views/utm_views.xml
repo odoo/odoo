@@ -11,34 +11,10 @@
         sequence="99"
         groups="base.group_no_one"/>
 
-	<!-- utm.campaign -->
-	<record id="utm_campaign_view_tree" model="ir.ui.view">
-        <field name="name">utm.campaign.view.tree</field>
-        <field name="model">utm.campaign</field>
-        <field name="arch" type="xml">
-            <tree string="Campaign" editable="bottom">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-    <record id="utm_campaign_view_form" model="ir.ui.view">
-        <field name="name">utm.campaign.view.form</field>
-        <field name="model">utm.campaign</field>
-        <field name="arch" type="xml">
-            <form string="Campaign">
-            <sheet>
-                <group>
-                    <field name="name"/>
-                </group>
-            </sheet>
-            </form>
-        </field>
-    </record>
-
     <record id="utm_campaign_action" model="ir.actions.act_window">
         <field name="name">Campaigns</field>
         <field name="res_model">utm.campaign</field>
-        <field name="view_id" ref="utm_campaign_view_tree"/>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Define a new UTM campaign

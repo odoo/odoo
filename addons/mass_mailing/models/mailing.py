@@ -32,155 +32,6 @@ MASS_MAILING_BUSINESS_MODELS = [
 # Used to find inline images
 image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
-
-class MailingTag(models.Model):
-    """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
-    _name = 'mailing.tag'
-    _description = 'Mass Mailing Tag'
-    _order = 'name'
-
-    name = fields.Char(required=True, translate=True)
-    color = fields.Integer(string='Color Index')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
-
-
-class MailingStage(models.Model):
-
-    """Stage for mass mailing campaigns. """
-    _name = 'mailing.stage'
-    _description = 'Mass Mailing Campaign Stage'
-    _order = 'sequence'
-
-    name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer()
-
-
-class MassMailingCampaign(models.Model):
-    """Model of mass mailing campaigns. """
-    _name = "mail.mass_mailing.campaign"
-    _description = 'Mass Mailing Campaign'
-    _rec_name = "campaign_id"
-    _inherits = {'utm.campaign': 'campaign_id'}
-
-    stage_id = fields.Many2one('mailing.stage', string='Stage', ondelete='restrict', required=True, 
-        default=lambda self: self.env['mailing.stage'].search([], limit=1),
-        group_expand='_group_expand_stage_ids')
-    user_id = fields.Many2one(
-        'res.users', string='Responsible',
-        required=True, default=lambda self: self.env.uid)
-    campaign_id = fields.Many2one('utm.campaign', 'campaign_id',
-        required=True, ondelete='cascade',  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
-    source_id = fields.Many2one('utm.source', string='Source',
-            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter', False))
-    medium_id = fields.Many2one('utm.medium', string='Medium',
-            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email', False))
-    tag_ids = fields.Many2many(
-        'mailing.tag', 'mail_mass_mailing_tag_rel',
-        'tag_id', 'campaign_id', string='Tags')
-    mass_mailing_ids = fields.One2many(
-        'mailing.mailing', 'mass_mailing_campaign_id',
-        string='Mass Mailings')
-    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
-        help='If checked, recipients will be mailed only once for the whole campaign. '
-             'This lets you send different mailings to randomly selected recipients and test '
-             'the effectiveness of the mailings, without causing duplicate messages.')
-    color = fields.Integer(string='Color Index')
-    clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of clicks")
-    # trace statistics fields
-    total = fields.Integer(compute="_compute_statistics")
-    scheduled = fields.Integer(compute="_compute_statistics")
-    failed = fields.Integer(compute="_compute_statistics")
-    ignored = fields.Integer(compute="_compute_statistics")
-    sent = fields.Integer(compute="_compute_statistics", string="Sent Emails")
-    delivered = fields.Integer(compute="_compute_statistics")
-    opened = fields.Integer(compute="_compute_statistics")
-    replied = fields.Integer(compute="_compute_statistics")
-    bounced = fields.Integer(compute="_compute_statistics")
-    received_ratio = fields.Integer(compute="_compute_statistics", string='Received Ratio')
-    opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
-    replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
-    bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
-    total_mailings = fields.Integer(compute="_compute_total_mailings", string='Mailings')
-
-    def _compute_clicks_ratio(self):
-        self.env.cr.execute("""
-            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_campaign_id AS id
-            FROM mailing_trace AS stats
-            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
-            WHERE stats.mass_mailing_campaign_id IN %s
-            GROUP BY stats.mass_mailing_campaign_id
-        """, (tuple(self.ids), ))
-
-        campaign_data = self.env.cr.dictfetchall()
-        mapped_data = dict([(c['id'], 100 * c['nb_clicks'] / c['nb_mails']) for c in campaign_data])
-        for campaign in self:
-            campaign.clicks_ratio = mapped_data.get(campaign.id, 0)
-
-    def _compute_statistics(self):
-        """ Compute statistics of the mass mailing campaign """
-        self.env.cr.execute("""
-            SELECT
-                c.id as campaign_id,
-                COUNT(s.id) AS total,
-                COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is null THEN 1 ELSE null END) AS scheduled,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
-                COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
-                COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
-                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
-                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
-            FROM
-                mailing_trace s
-            RIGHT JOIN
-                mail_mass_mailing_campaign c
-                ON (c.id = s.mass_mailing_campaign_id)
-            WHERE
-                c.id IN %s
-            GROUP BY
-                c.id
-        """, (tuple(self.ids), ))
-
-        for row in self.env.cr.dictfetchall():
-            total = (row['total'] - row['ignored']) or 1
-            row['delivered'] = row['sent'] - row['bounced']
-            row['received_ratio'] = 100.0 * row['delivered'] / total
-            row['opened_ratio'] = 100.0 * row['opened'] / total
-            row['replied_ratio'] = 100.0 * row['replied'] / total
-            row['bounced_ratio'] = 100.0 * row['bounced'] / total
-            self.browse(row.pop('campaign_id')).update(row)
-
-    def _compute_total_mailings(self):
-        campaign_data = self.env['mailing.mailing'].read_group(
-            [('mass_mailing_campaign_id', 'in', self.ids)],
-            ['mass_mailing_campaign_id'], ['mass_mailing_campaign_id'])
-        mapped_data = dict([(c['mass_mailing_campaign_id'][0], c['mass_mailing_campaign_id_count']) for c in campaign_data])
-        for campaign in self:
-            campaign.total_mailings = mapped_data.get(campaign.id, 0)
-
-    def _get_recipients(self, model=None):
-        """Return the recipients of a mailing campaign. This is based on the statistics
-        build for each mailing. """
-        res = dict.fromkeys(self.ids, {})
-        for campaign in self:
-            domain = [('mass_mailing_campaign_id', '=', campaign.id)]
-            if model:
-                domain += [('model', '=', model)]
-            res[campaign.id] = set(self.env['mailing.trace'].search(domain).mapped('res_id'))
-        return res
-
-    @api.model
-    def _group_expand_stage_ids(self, stages, domain, order):
-        """ Read group customization in order to display all the stages in the
-            kanban view, even if they are empty
-        """
-        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
-        return stages.browse(stage_ids)
-
-
 class MassMailing(models.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
     A mass mailing is an occurence of sending emails. """
@@ -223,9 +74,7 @@ class MassMailing(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
-    mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
-    campaign_id = fields.Many2one('utm.campaign', string='Campaign',
-                                  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
+    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign')
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one('utm.medium', string='Medium', help="Delivery method: Email")
@@ -252,6 +101,10 @@ class MassMailing(models.Model):
         string='Mailing Lists')
     contact_ab_pc = fields.Integer(string='A/B Testing percentage',
         help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
+    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
+        help='If checked, recipients will be mailed only once for the whole campaign. '
+             'This lets you send different mailings to randomly selected recipients and test '
+             'the effectiveness of the mailings, without causing duplicate messages.')
     # statistics data
     mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
@@ -339,11 +192,6 @@ class MassMailing(models.Model):
                 mass_mailing.next_departure = max(schedule_date, cron_time)
             else:
                 mass_mailing.next_departure = cron_time
-
-    @api.onchange('mass_mailing_campaign_id')
-    def _onchange_mass_mailing_campaign_id(self):
-        if self.mass_mailing_campaign_id:
-            self.campaign_id = self.mass_mailing_campaign_id.campaign_id.id
 
     @api.onchange('mailing_model_id', 'contact_list_ids')
     def _onchange_model_and_list(self):
@@ -531,14 +379,15 @@ class MassMailing(models.Model):
         return opt_out
 
     def _get_convert_links(self):
-        vals = {
-            'mass_mailing_id': self.id,
-            'source_id': self.source_id.id,
-            'medium_id': self.medium_id.id,
-        }
-        if self.mass_mailing_campaign_id:
-            vals['mass_mailing_campaign_id'] = self.mass_mailing_campaign_id.id
-            vals['campaign_id'] = self.mass_mailing_campaign_id.campaign_id.id
+        self.ensure_one()
+        vals = {'mass_mailing_id': self.id}
+
+        if self.campaign_id:
+            vals['campaign_id'] = self.campaign_id.id
+        if self.source_id:
+            vals['source_id'] = self.source_id.id
+        if self.medium_id:
+            vals['medium_id'] = self.medium_id.id
         return vals
 
     def _get_seen_list(self):
@@ -576,9 +425,9 @@ class MassMailing(models.Model):
         else:
             raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
 
-        if self.mass_mailing_campaign_id.unique_ab_testing:
+        if self.unique_ab_testing:
             query +="""
-               AND s.mass_mailing_campaign_id = %%(mailing_campaign_id)s;
+               AND s.campaign_id = %%(mailing_campaign_id)s;
             """
         else:
             query +="""
@@ -586,7 +435,7 @@ class MassMailing(models.Model):
                AND s.model = %%(target_model)s;
             """
         query = query % {'target': target._table, 'mail_field': mail_field}
-        params = {'mailing_id': self.id, 'mailing_campaign_id': self.mass_mailing_campaign_id.id, 'target_model': self.mailing_model_real}
+        params = {'mailing_id': self.id, 'mailing_campaign_id': self.campaign_id.id, 'target_model': self.mailing_model_real}
         self._cr.execute(query, params)
         seen_list = set(m[0] for m in self._cr.fetchall())
         _logger.info(
@@ -613,8 +462,8 @@ class MassMailing(models.Model):
         if self.contact_ab_pc < 100:
             contact_nbr = self.env[self.mailing_model_real].search_count(domain)
             topick = int(contact_nbr / 100.0 * self.contact_ab_pc)
-            if self.mass_mailing_campaign_id and self.mass_mailing_campaign_id.unique_ab_testing:
-                already_mailed = self.mass_mailing_campaign_id._get_recipients()[self.mass_mailing_campaign_id.id]
+            if self.campaign_id and self.unique_ab_testing:
+                already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:
                 already_mailed = set([])
             remaining = set(res_ids).difference(already_mailed)
@@ -671,19 +520,16 @@ class MassMailing(models.Model):
     def convert_links(self):
         res = {}
         for mass_mailing in self:
-            utm_mixin = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
             html = mass_mailing.body_html if mass_mailing.body_html else ''
 
             vals = {'mass_mailing_id': mass_mailing.id}
 
-            if mass_mailing.mass_mailing_campaign_id:
-                vals['mass_mailing_campaign_id'] = mass_mailing.mass_mailing_campaign_id.id
-            if utm_mixin.campaign_id:
-                vals['campaign_id'] = utm_mixin.campaign_id.id
-            if utm_mixin.source_id:
-                vals['source_id'] = utm_mixin.source_id.id
-            if utm_mixin.medium_id:
-                vals['medium_id'] = utm_mixin.medium_id.id
+            if mass_mailing.campaign_id:
+                vals['campaign_id'] = mass_mailing.campaign_id.id
+            if mass_mailing.source_id:
+                vals['source_id'] = mass_mailing.source_id.id
+            if mass_mailing.medium_id:
+                vals['medium_id'] = mass_mailing.medium_id.id
 
             res[mass_mailing.id] = self.env['link.tracker'].convert_links(html, vals, blacklist=['/unsubscribe_from_list'])
 
