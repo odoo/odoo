@@ -1426,12 +1426,12 @@ class AccountTax(models.Model):
                 subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
 
             # Compute the tax lines
-            tax_repartition_lines = is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids
+            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
             repartition_lines_to_treat = len(tax_repartition_lines)
             total_amount = 0
-            for repartition_line in tax_repartition_lines.filtered(lambda x: x.repartition_type == 'tax'):
+            for repartition_line in tax_repartition_lines:
                 # In case some rounding error occurs, we compensate for it on the last line
-                line_amount = round(sign * tax_amount * repartition_line.factor if repartition_lines_to_treat != 1 else tax_amount - total_amount, prec)
+                line_amount = round(sign * tax_amount * repartition_line.factor if repartition_lines_to_treat != 1 else sign * (tax_amount - total_amount), prec)
 
                 taxes_vals.append({
                     'id': tax.id,
