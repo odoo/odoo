@@ -33,7 +33,7 @@
             </div>
             <div class="row mt8" t-foreach="groups" t-as="group">
                 <div class="col-lg-3">
-                    <img t-att-src="website.image_url(group, 'image_small')" class="float-left" alt="Group"/>
+                    <img t-att-src="website.image_url(group, 'image_64')" class="float-left" alt="Group"/>
                     <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong><br />
                     <t t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
                         <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>

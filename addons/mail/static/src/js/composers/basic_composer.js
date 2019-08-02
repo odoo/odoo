@@ -100,7 +100,7 @@ var BasicComposer = Widget.extend({
 
         this.avatarURL = session.uid > 0 ? session.url('/web/image', {
             model: 'res.users',
-            field: 'image_small',
+            field: 'image_64',
             id: session.uid,
         }) : '/web/static/src/img/user_menu_avatar.png';
     },

@@ -115,7 +115,7 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
         var self = this;
         this._getCreateData(company).then(function (data) {
             if (data.logo) {
-                var logoField = self.model === 'res.partner' ? 'image' : 'logo';
+                var logoField = self.model === 'res.partner' ? 'image_1920' : 'logo';
                 data.company[logoField] = data.logo;
             }
 

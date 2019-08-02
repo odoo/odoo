@@ -61,7 +61,7 @@
                                 </div>
                             </button>
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <field name="image_128" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Name"/></h1>
                         </div>
@@ -157,7 +157,7 @@
                             <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
                             <div t-attf-class="oe_kanban_global_click #{installed and record.website_published.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
                                 <div class="o_kanban_image">
-                                    <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.id.raw_value)" alt="Acquirer"/>
+                                    <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_128', record.id.raw_value)" alt="Acquirer"/>
                                 </div>
                                 <div class="o_payment_acquirer_desc">
                                     <h3 class="mt4"><t t-esc="record.name.value"/></h3>

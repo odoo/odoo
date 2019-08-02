@@ -149,6 +149,13 @@ class ProductTemplate(models.Model):
 
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items')
 
+    can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
+
+    @api.depends('image_1920', 'image_1024')
+    def _compute_can_image_1024_be_zoomed(self):
+        for template in self:
+            template.can_image_1024_be_zoomed = template.image_1920 and tools.is_image_size_above(template.image_1920, template.image_1024)
+
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
         for p in self:
@@ -371,6 +378,16 @@ class ProductTemplate(models.Model):
             self.create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
+        if 'image_1920' in vals:
+            self.env['product.product'].invalidate_cache(fnames=[
+                'image_1920',
+                'image_1024',
+                'image_512',
+                'image_256',
+                'image_128',
+                'image_64',
+                'can_image_1024_be_zoomed',
+            ])
         return res
 
     @api.returns('self', lambda value: value.id)

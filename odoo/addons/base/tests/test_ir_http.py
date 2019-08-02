@@ -40,14 +40,14 @@ class test_ir_http_mimetype(common.TransactionCase):
     def test_ir_http_mimetype_basic_field(self):
         """ Test mimetype for classic field """
         partner = self.env['res.partner'].create({
-            'image': GIF,
+            'image_1920': GIF,
             'name': 'Test mimetype basic field',
         })
 
         status, headers, content = self.env['ir.http'].binary_content(
             model='res.partner',
             id=partner.id,
-            field='image',
+            field='image_1920',
             default_mimetype='application/octet-stream',
         )
         mimetype = dict(headers).get('Content-Type')
@@ -62,7 +62,7 @@ class test_ir_http_mimetype(common.TransactionCase):
             'type': 'binary',
         })
 
-        resized = odoo.tools.image_process(prop.value_binary, size=odoo.tools.IMAGE_SMALL_SIZE)
+        resized = odoo.tools.image_process(prop.value_binary, size=(64, 64))
         # Simul computed field which resize and that is not attachement=True (E.G. on product)
         prop.write({'value_binary': resized})
         status, headers, content = self.env['ir.http'].binary_content(

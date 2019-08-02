@@ -70,7 +70,7 @@ class Company(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo", readonly=False)
+    logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
@@ -154,10 +154,10 @@ class Company(models.Model):
         for company in self:
             company.partner_id.country_id = company.country_id
 
-    @api.depends('partner_id', 'partner_id.image')
+    @api.depends('partner_id.image_1920')
     def _compute_logo_web(self):
         for company in self:
-            company.logo_web = tools.image_process(company.partner_id.image, size=(180, 0))
+            company.logo_web = tools.image_process(company.partner_id.image_1920, size=(180, 0))
 
     @api.onchange('state_id')
     def _onchange_state(self):
@@ -218,7 +218,7 @@ class Company(models.Model):
         partner = self.env['res.partner'].create({
             'name': vals['name'],
             'is_company': True,
-            'image': vals.get('logo'),
+            'image_1920': vals.get('logo'),
             'email': vals.get('email'),
             'phone': vals.get('phone'),
             'website': vals.get('website'),

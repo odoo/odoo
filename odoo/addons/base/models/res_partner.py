@@ -15,7 +15,7 @@ import requests
 from lxml import etree
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -130,7 +130,7 @@ class PartnerTitle(models.Model):
 
 class Partner(models.Model):
     _description = 'Contact'
-    _inherit = ['format.address.mixin']
+    _inherit = ['format.address.mixin', 'image.mixin']
     _name = "res.partner"
     _order = "display_name"
 
@@ -220,16 +220,6 @@ class Partner(models.Model):
                                           store=True)
     company_name = fields.Char('Company Name')
 
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Image")
-    image_medium = fields.Binary("Medium-sized image",
-        help="Medium-sized image of this contact. It is automatically "\
-             "resized as a 128x128px image, with aspect ratio preserved. "\
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary("Small-sized image",
-        help="Small-sized image of this contact. It is automatically "\
-             "resized as a 64x64px image, with aspect ratio preserved. "\
-             "Use this field anywhere a small image is required.")
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
 
@@ -329,7 +319,7 @@ class Partner(models.Model):
         colorize, img_path, image_base64 = False, False, False
 
         if partner_type in ['other'] and parent_id:
-            parent_image = self.browse(parent_id).image
+            parent_image = self.browse(parent_id).image_1920
             image_base64 = parent_image or None
 
         if not image_base64 and partner_type == 'invoice':
@@ -348,7 +338,7 @@ class Partner(models.Model):
         if image_base64 and colorize:
             image_base64 = tools.image_process(image_base64, colorize=True)
 
-        return tools.image_process(image_base64, size=tools.IMAGE_BIG_SIZE)
+        return image_base64
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -408,8 +398,8 @@ class Partner(models.Model):
 
     @api.onchange('email')
     def onchange_email(self):
-        if not self.image and self._context.get('gravatar_image') and self.email:
-            self.image = self._get_gravatar_image(self.email)
+        if not self.image_1920 and self._context.get('gravatar_image') and self.email:
+            self.image_1920 = self._get_gravatar_image(self.email)
 
     @api.onchange('parent_id', 'company_id')
     def _onchange_company_id(self):
@@ -568,10 +558,6 @@ class Partner(models.Model):
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
-        # no padding on the big image, because it's used as website logo
-        tools.image_resize_images(vals, return_big=False)
-        tools.image_resize_images(vals, return_medium=False, return_small=False)
-
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.su:
@@ -595,11 +581,8 @@ class Partner(models.Model):
                 vals['company_name'] = False
             # compute default image in create, because computing gravatar in the onchange
             # cannot be easily performed if default images are in the way
-            if not vals.get('image'):
-                vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-            # no padding on the big image, because it's used as website logo
-            tools.image_resize_images(vals, return_big=False)
-            tools.image_resize_images(vals, return_medium=False, return_small=False)
+            if not vals.get('image_1920'):
+                vals['image_1920'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
         partners = super(Partner, self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):

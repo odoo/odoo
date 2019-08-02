@@ -67,7 +67,7 @@
                 <form string="Contact">
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"  groups="base.group_no_one"/>
                         <h1>
@@ -97,7 +97,7 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Partner">
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}' readonly="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}' readonly="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
@@ -135,7 +135,7 @@
             <field name="arch" type="xml">
                 <form string="Partners">
                 <sheet>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
@@ -205,7 +205,7 @@
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box"/>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
@@ -300,7 +300,7 @@
                                     <field name="country_id"/>
                                     <field name="mobile"/>
                                     <field name="state_id"/>
-                                    <field name="image_small"/>
+                                    <field name="image_64"/>
                                     <field name="lang"/>
                                     <!-- fields in form x2many view to diminish requests -->
                                     <field name="comment"/>
@@ -310,8 +310,8 @@
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <div class="o_kanban_image">
-                                                    <img alt="" t-if="record.image_small.raw_value" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
-                                                    <t t-if="!record.image_small.raw_value">
+                                                    <img alt="" t-if="record.image_64.raw_value" t-att-src="kanban_image('res.partner', 'image_64', record.id.raw_value)"/>
+                                                    <t t-if="!record.image_64.raw_value">
                                                         <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
                                                         <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
                                                         <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
@@ -373,11 +373,11 @@
                                                 <field name="mobile" widget="phone"/>
                                             </group>
                                             <group colspan="1">
-                                                <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
+                                                <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'image_preview': 'image_128'}"/>
                                             </group>
                                         </group>
                                         <field name="lang" invisible="True"/>
-                                        <field name="image" invisible="True"/>
+                                        <field name="image_1920" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
                                     </sheet>
                                 </form>
@@ -503,7 +503,7 @@
                     <field name="mobile"/>
                     <field name="state_id"/>
                     <field name="category_id"/>
-                    <field name="image_medium"/>
+                    <field name="image_128"/>
                     <field name="type"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -512,16 +512,16 @@
                                     <t t-if="record.type.raw_value === 'delivery'" t-set="placeholder" t-value="'/base/static/img/truck.png'"/>
                                     <t t-elif="record.type.raw_value === 'invoice'" t-set="placeholder" t-value="'/base/static/img/money.png'"/>
                                     <t t-else="" t-set="placeholder" t-value="'/base/static/img/avatar_grey.png'"/>
-                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_medium', record.id.raw_value,  placeholder)}')">
-                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_small', record.parent_id.raw_value)"/>
+                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_128', record.id.raw_value,  placeholder)}')">
+                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_64', record.parent_id.raw_value)"/>
                                     </div>
-                                    <div class="o_kanban_image rounded-circle d-md-none" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_medium', record.id.raw_value,  placeholder)}')">
-                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_small', record.parent_id.raw_value)"/>
+                                    <div class="o_kanban_image rounded-circle d-md-none" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_128', record.id.raw_value,  placeholder)}')">
+                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_64', record.parent_id.raw_value)"/>
                                     </div>
                                 </t>
                                 <t t-else="">
                                     <t t-set="placeholder" t-value="'/base/static/img/company_image.png'"/>
-                                    <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'image_medium', record.id.raw_value, placeholder)})" role="img"/>
+                                    <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'image_128', record.id.raw_value, placeholder)})" role="img"/>
                                 </t>
                                 <div class="oe_kanban_details">
                                     <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>

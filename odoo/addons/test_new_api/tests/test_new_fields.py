@@ -1,7 +1,10 @@
 #
 # test cases for new-style fields
 #
+import base64
 from datetime import date, datetime, time
+import io
+from PIL import Image
 
 from odoo import fields
 from odoo.exceptions import AccessError, UserError
@@ -1301,11 +1304,11 @@ class TestFields(common.TransactionCase):
         from odoo.addons.base.tests.test_mimetypes import SVG
         demo_user = self.env.ref('base.user_demo')
         # User demo changes his own avatar
-        demo_user.with_user(demo_user).image = SVG
+        demo_user.with_user(demo_user).image_1920 = SVG
         # The SVG file should have been neutered
         attachment = self.env['ir.attachment'].search([
             ('res_model', '=', demo_user.partner_id._name),
-            ('res_field', '=', 'image'),
+            ('res_field', '=', 'image_1920'),
             ('res_id', '=', demo_user.partner_id.id),
         ])
         self.assertEqual(attachment.mimetype, 'text/plain')
@@ -1329,6 +1332,110 @@ class TestFields(common.TransactionCase):
         field = self.env['test_new_api.monetary_inherits']._fields['amount']
         self.assertEqual(field.related, ('monetary_id', 'amount'))
         self.assertEqual(field.currency_field, 'base_currency_id')
+
+    def test_94_image(self):
+        f = io.BytesIO()
+        Image.new('RGB', (4000, 2000), '#4169E1').save(f, 'PNG')
+        f.seek(0)
+        image_w = base64.b64encode(f.read())
+
+        f = io.BytesIO()
+        Image.new('RGB', (2000, 4000), '#4169E1').save(f, 'PNG')
+        f.seek(0)
+        image_h = base64.b64encode(f.read())
+
+        record = self.env['test_new_api.model_image'].create({
+            'name': 'image',
+            'image': image_w,
+            'image_128': image_w,
+        })
+
+        # test create (no resize)
+        self.assertEqual(record.image, image_w)
+        # test create (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_128))).size, (128, 64))
+        # test create related store (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
+        # test create related no store (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+
+        record.write({
+            'image': image_h,
+            'image_128': image_h,
+        })
+
+        # test write (no resize)
+        self.assertEqual(record.image, image_h)
+        # test write (resize, height limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_128))).size, (64, 128))
+        # test write related store (resize, height limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
+        # test write related no store (resize, height limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
+
+        record = self.env['test_new_api.model_image'].create({
+            'name': 'image',
+            'image': image_h,
+            'image_128': image_h,
+        })
+
+        # test create (no resize)
+        self.assertEqual(record.image, image_h)
+        # test create (resize, height limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_128))).size, (64, 128))
+        # test create related store (resize, height limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
+        # test create related no store (resize, height limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
+
+        record.write({
+            'image': image_w,
+            'image_128': image_w,
+        })
+
+        # test write (no resize)
+        self.assertEqual(record.image, image_w)
+        # test write (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_128))).size, (128, 64))
+        # test write related store (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
+        # test write related store (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+
+        # test create inverse store
+        record = self.env['test_new_api.model_image'].create({
+            'name': 'image',
+            'image_512': image_w,
+        })
+        record.invalidate_cache(fnames=['image_512'], ids=record.ids)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+        # test write inverse store
+        record.write({
+            'image_512': image_h,
+        })
+        record.invalidate_cache(fnames=['image_512'], ids=record.ids)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
+
+        # test create inverse no store
+        record = self.env['test_new_api.model_image'].create({
+            'name': 'image',
+            'image_256': image_w,
+        })
+        record.invalidate_cache(fnames=['image_256'], ids=record.ids)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+        # test write inverse no store
+        record.write({
+            'image_256': image_h,
+        })
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
 
 
 class TestX2many(common.TransactionCase):

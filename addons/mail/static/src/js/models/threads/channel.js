@@ -220,7 +220,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     getPreview: function () {
         var result = this._super.apply(this, arguments);
         if (!this.isTwoUserThread()) {
-            result.imageSRC = '/web/image/mail.channel/' + this.getID() + '/image_small';
+            result.imageSRC = '/web/image/mail.channel/' + this.getID() + '/image_128';
         }
         var lastMessage = this.getLastMessage();
         return _.extend(result, {

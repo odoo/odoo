@@ -157,7 +157,7 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image', 'tz'] if f in vals]:
+        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
             employee_values[fname] = vals[fname]
         if employee_values:
             if 'email' in employee_values:

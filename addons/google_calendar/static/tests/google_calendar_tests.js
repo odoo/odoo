@@ -39,7 +39,7 @@ QUnit.module('Google Calendar', {
                     id: {string: "ID", type: "integer"},
                     display_name: {string: "Displayed name", type: "char"},
                     partner_id: {string: "partner", type: "many2one", relation: 'partner'},
-                    image: {string: "image", type: "integer"},
+                    image_1920: {string: "image", type: "integer"},
                 },
                 records: [
                     {id: 4, display_name: "user 4", partner_id: 4},
@@ -49,10 +49,10 @@ QUnit.module('Google Calendar', {
                 fields: {
                     id: {string: "ID", type: "integer"},
                     display_name: {string: "Displayed name", type: "char"},
-                    image: {string: "image", type: "integer"},
+                    image_1920: {string: "image", type: "integer"},
                 },
                 records: [
-                    {id: 4, display_name: "partner 4", image: 'DDD'}
+                    {id: 4, display_name: "partner 4", image_1920: 'DDD'}
                 ]
             },
             filter_partner: {

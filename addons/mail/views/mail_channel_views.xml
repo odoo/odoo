@@ -61,7 +61,7 @@
                         </t>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click">
-                                <img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
+                                <img t-att-src="kanban_image('mail.channel', 'image_128', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
                                 <div class="oe_module_desc">
                                     <h4 class="o_kanban_record_title">#<field name="name"/></h4>
                                     <p class="oe_module_name">
@@ -94,7 +94,7 @@
                             </button>
                         </div>
                         <div class="oe_button_box" name="button_box"/>
-                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
+                        <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name"/>

@@ -54,8 +54,8 @@
                     </div>
                     <div class="col-lg-1 d-inline-block"></div>
                     <div class="col-lg-5 d-inline-block align-top text-left">
-                        <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image' % product_variant.id" class="d-block product_detail_img" alt="Product Image"/>
-                        <img t-else="" t-att-src="'/web/image/product.template/%s/image' % product.id" class="d-block product_detail_img" alt="Product Image"/>
+                        <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_1024' % product_variant.id" class="d-block product_detail_img" alt="Product Image"/>
+                        <img t-else="" t-att-src="'/web/image/product.template/%s/image_1024' % product.id" class="d-block product_detail_img" alt="Product Image"/>
                     </div>
                 </t>
                 <t t-else="">
@@ -87,8 +87,8 @@
                 <input type="hidden" class="product_template_id" t-att-value="product.product_tmpl_id.id"/>
                 <input type="hidden" class="product_id" t-att-value="product_variant.id"/>
                 <td class='td-img'>
-                    <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_medium' % product_variant.id" alt="Product Image"/>
-                    <img t-else="" t-att-src="'/web/image/product.template/%s/image_medium' % product.id" alt="Product Image"/>
+                    <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_128' % product_variant.id" alt="Product Image"/>
+                    <img t-else="" t-att-src="'/web/image/product.template/%s/image_128' % product.id" alt="Product Image"/>
                 </td>
                 <td class='td-product_name'>
                     <strong t-esc="combination_info['display_name']"/>
@@ -165,8 +165,8 @@
                     <td class="td-img">
                         <input type="hidden" class="product_template_id" t-att-value="product.id"/>
                         <input type="hidden" class="product_id" t-attf-name="optional-product-#{product.id}" t-att-value="product_variant.id"/>
-                        <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_medium' % product_variant.id"  class="variant_image" alt="Product Image"/>
-                        <img t-else="" t-att-src="'/web/image/product.template/%s/image_medium' % product.id"  class="variant_image" alt="Product Image"/>
+                        <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_128' % product_variant.id"  class="variant_image" alt="Product Image"/>
+                        <img t-else="" t-att-src="'/web/image/product.template/%s/image_128' % product.id"  class="variant_image" alt="Product Image"/>
                     </td>
                     <td class='td-product_name' colspan="2">
                         <div class="float-left">
