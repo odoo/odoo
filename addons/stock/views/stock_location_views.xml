@@ -36,18 +36,12 @@
                     <h2><field name="location_id" options="{'no_create': True}"/></h2>
 
                     <group>
-                        <group string="Additional Information">
+                        <group string="Additional Information" name="additional_info">
                             <field name="active" invisible="1"/>
                             <field name="usage"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                             <field name="return_location"/>
-                        </group>
-                        <group string="Localization" name="localization">
-                            <field name="posx"/>
-                            <field name="posy"/>
-                            <field name="posz"/>
-                            <field name="barcode"/>
                         </group>
                         <group string="Logistics" groups="stock.group_adv_location">
                             <field name="removal_strategy_id" options="{'no_create': True}"/>
