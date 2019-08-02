@@ -35,12 +35,15 @@ Print product labels with barcode.
         'views/product_views.xml',
         'views/product_template_views.xml',
         'views/product_pricelist_views.xml',
+        'views/product_templates.xml',
         'views/res_partner_views.xml',
         'report/product_reports.xml',
         'report/product_product_templates.xml',
         'report/product_template_templates.xml',
         'report/product_packaging.xml',
+        'report/product_pricelist_report_templates.xml'
     ],
+    'qweb': ['static/src/xml/pricelist_report.xml'],
     'demo': [
         'data/product_demo.xml',
     ],
