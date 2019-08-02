@@ -2219,9 +2219,9 @@
         </record>
         <record id="account_common_526" model="account.account.template">
             <field name="code">526</field>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="name">Dividendo activo a pagar</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="account_chart_template_common"/>
             <field name="group_id" ref="l10n_es.account_group_526" />
         </record>
