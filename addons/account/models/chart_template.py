@@ -116,6 +116,7 @@ class AccountChartTemplate(models.Model):
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
+    default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
     property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account')
     property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account')
@@ -249,6 +250,12 @@ class AccountChartTemplate(models.Model):
             'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
             'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
         })
+
+        # Set default PoS receivable account in company
+        if acc_template_ref.get(self.default_pos_receivable_account_id.id):
+            company.write({
+                'account_default_pos_receivable_account_id': acc_template_ref[self.default_pos_receivable_account_id.id]
+            })
 
         # Set the transfer account on the company
         company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[0]
