@@ -102,6 +102,14 @@
       <field name="chart_template_id" ref="pt_chart_template"/>
     </record>
 
+    <record id="chart_2117" model="account.account.template">
+      <field name="code">2117</field>
+      <field name="name">Clientes gerais (PoS)</field>
+      <field name="reconcile" eval="True"/>
+      <field name="user_type_id" ref="account.data_account_type_receivable" />
+      <field name="chart_template_id" ref="pt_chart_template"/>
+    </record>
+
     <record id="chart_2121" model="account.account.template">
       <field name="code">2121</field>
       <field name="name">Clientes gerais</field>

@@ -307,6 +307,14 @@
             <field name="reconcile" eval="True" />
         </record>
 
+        <record model="account.account.template" id="account_account_737">
+            <field name="name">Trade Receivable Account (PoS)</field>
+            <field name="code">100030</field>
+            <field name="user_type_id" ref="account.data_account_type_receivable" />
+            <field name="chart_template_id" ref="sg_chart_template"/>
+            <field name="reconcile" eval="True" />
+        </record>
+
         <record model="account.account.template" id="account_account_738">
             <field name="name">Purchase Tax Account 7% TX-N33</field>
             <field name="code">101260</field>
@@ -1162,5 +1170,6 @@
         <field name="property_account_income_categ_id" ref="account_account_803" />
         <field name="income_currency_exchange_account_id" ref="account_account_853"/>
         <field name="expense_currency_exchange_account_id" ref="account_account_853"/>
+        <field name="default_pos_receivable_account_id" ref="account_account_737" />
     </record>
 </odoo>
