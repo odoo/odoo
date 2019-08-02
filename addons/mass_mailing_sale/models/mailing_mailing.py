@@ -36,17 +36,21 @@ class MassMailing(models.Model):
     def action_redirect_to_quotations(self):
         action = self.env.ref('sale.action_quotations_with_onboarding').read()[0]
         action['domain'] = self._get_sale_utm_domain()
-        action['context'] = {'default_type': 'lead', 'create': False}
+        action['context'] = {'create': False}
         return action
 
     def action_redirect_to_invoiced(self):
-        action = self.env.ref('account.view_move_form').read()[0]
+        action = self.env.ref('account.action_move_journal_line').read()[0]
         invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
+        action['context'] = {
+            'create': False,
+            'edit': False,
+            'view_no_maturity': True
+        }
         action['domain'] = [
             ('id', 'in', invoices.ids),
-            ('type', 'in', ('out_invoice', 'out_refund')),
-            ('type', '=', 'posted'),
-            ('partner_id', 'child_of', self.id),
+            ('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+            ('state', 'not in', ['draft', 'cancel'])
         ]
         action['context'] = {'create': False}
         return action
