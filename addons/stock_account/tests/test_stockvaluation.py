@@ -8,6 +8,44 @@ from odoo.fields import Datetime
 from odoo.tests.common import Form, SavepointCase
 
 
+def _create_accounting_data(env):
+    """Create the accounts and journals used in stock valuation.
+
+    :param env: environment used to create the records
+    :return: an input account, an output account, a valuation account, an expense account, a stock journal
+    """
+    stock_input_account = env['account.account'].create({
+        'name': 'Stock Input',
+        'code': 'StockIn',
+        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'reconcile': True,
+    })
+    stock_output_account = env['account.account'].create({
+        'name': 'Stock Output',
+        'code': 'StockOut',
+        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'reconcile': True,
+    })
+    stock_valuation_account = env['account.account'].create({
+        'name': 'Stock Valuation',
+        'code': 'Stock Valuation',
+        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'reconcile': True,
+    })
+    expense_account = env['account.account'].create({
+        'name': 'Expense Account',
+        'code': 'Expense Account',
+        'user_type_id': env.ref('account.data_account_type_expenses').id,
+        'reconcile': True,
+    })
+    stock_journal = env['account.journal'].create({
+        'name': 'Stock Journal',
+        'code': 'STJTEST',
+        'type': 'general',
+    })
+    return stock_input_account, stock_output_account, stock_valuation_account, expense_account, stock_journal
+
+
 class TestStockValuation(SavepointCase):
     @classmethod
     def setUpClass(cls):
@@ -37,34 +75,9 @@ class TestStockValuation(SavepointCase):
             'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
         })
 
+        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
         cls.product1.categ_id.property_valuation = 'real_time'
         cls.product2.categ_id.property_valuation = 'real_time'
-        Account = cls.env['account.account']
-        cls.stock_input_account = Account.create({
-            'name': 'Stock Input',
-            'code': 'StockIn',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-        })
-        cls.stock_output_account = Account.create({
-            'name': 'Stock Output',
-            'code': 'StockOut',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-        })
-        cls.stock_valuation_account = Account.create({
-            'name': 'Stock Valuation',
-            'code': 'Stock Valuation',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-        })
-        cls.expense_account = Account.create({
-            'name': 'Expense Account',
-            'code': 'Expense Account',
-            'user_type_id': cls.env.ref('account.data_account_type_expenses').id,
-        })
-        cls.stock_journal = cls.env['account.journal'].create({
-            'name': 'Stock Journal',
-            'code': 'STJTEST',
-            'type': 'general',
-        })
         cls.product1.write({
             'property_account_expense_id': cls.expense_account.id,
         })

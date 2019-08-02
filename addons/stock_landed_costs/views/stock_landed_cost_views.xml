@@ -34,6 +34,7 @@
                                 <label for="account_journal_id" string="Journal"/>
                                 <field name="account_journal_id" nolabel="1"/>
                                 <field name="account_move_id" attrs="{'invisible': [('account_move_id', '=', False)]}"/>
+                                <field name="vendor_bill_id"/>
                             </group>
                         </group>
                         <notebook>
@@ -113,6 +114,22 @@
                 <tree string="Landed Costs">
                     <field name="name"/>
                     <field name="date"/>
+                    <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='view_stock_landed_cost_tree2' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.tree</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <tree string="Landed Costs">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="amount_total" widget="monetary"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
