@@ -91,6 +91,14 @@ class StockMoveLine(models.Model):
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
         if self.product_id:
+            if self.user_has_groups('stock.group_stock_multi_locations') and not self.id:
+                # When create a new moveline, see if a matching putaway exists.
+                putaway = self.env['stock.putaway.rule'].search([
+                    ('product_id', '=', self.product_id.id),
+                    ('location_in_id', '=', self.location_dest_id.id)
+                ], limit=1)
+                if putaway.exists():
+                    self.location_dest_id = putaway.location_out_id
             if self.picking_id:
                 self.description_picking = self.product_id._get_description(self.picking_id.picking_type_id)
             self.lots_visible = self.product_id.tracking != 'none'
