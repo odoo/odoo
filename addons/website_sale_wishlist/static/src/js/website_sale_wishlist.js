@@ -69,7 +69,7 @@ var ProductWishlist = Widget.extend({
                 $('input.js_product_change:checked').first().trigger('change');
             }
             else {
-                $('input.js_variant_change').trigger('change');
+                $('input.js_variant_change:checked').first().trigger('change');
             }
         });
 

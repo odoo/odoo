@@ -170,10 +170,13 @@ var WebsiteRoot = BodyManager.extend({
      * @private
      * @param {jQuery} [$stopTarget]
      *        only stop the animations linked to the given element(s)
+     *        its descendants
      */
     _stopAnimations: function ($stopTarget) {
         var removedAnimations = _.map(this.animations, function (animation) {
-            if (!$stopTarget || $stopTarget.filter(animation.el).length) {
+            if (!$stopTarget
+             || $stopTarget.filter(animation.el).length
+             || $stopTarget.find(animation.el).length) {
                 animation.destroy();
                 return animation;
             }
