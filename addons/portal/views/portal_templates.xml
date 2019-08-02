@@ -292,7 +292,7 @@
                                 <input type="text" name="city" class="form-control" t-att-value="city or partner.city" />
                             </div>
                             <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="zipcode">Zip / Postal Code</label>
+                                <label class="control-label label-optional" for="zipcode">Zip / Postal Code</label>
                                 <input type="text" name="zipcode" class="form-control" t-att-value="zipcode or partner.zip" />
                             </div>
                             <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
