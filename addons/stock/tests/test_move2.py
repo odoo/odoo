@@ -1835,6 +1835,50 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(stock_quant.owner_id, owner1)
         self.assertEqual(stock_quant.quantity, 1)
 
+    def test_putaway_for_picking_sml(self):
+        """ Checks picking's move lines will take in account the putaway rules
+        to define the `location_dest_id`.
+        """
+        partner = self.env['res.partner'].create({'name': 'Partner'})
+        supplier_location = self.env['stock.location'].browse(self.supplier_location)
+        stock_location = self.env['stock.location'].create({
+            'name': 'test-stock',
+            'usage': 'internal',
+        })
+        shelf_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        })
+
+        # We need to activate multi-locations to use putaway rules.
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        putaway_product = self.env['stock.putaway.rule'].create({
+            'product_id': self.productA.id,
+            'location_in_id': stock_location.id,
+            'location_out_id': shelf_location.id,
+        })
+        # Changes config of receipt type to allow to edit move lines directly.
+        picking_type = self.env['stock.picking.type'].browse(self.picking_type_in)
+        picking_type.show_operations = True
+
+        receipt_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        receipt_form.partner_id = partner
+        receipt_form.picking_type_id = picking_type
+        receipt_form.location_id = supplier_location
+        receipt_form.location_dest_id = stock_location
+        receipt = receipt_form.save()
+        with receipt_form.move_line_nosuggest_ids.new() as move_line:
+            move_line.product_id = self.productA
+
+        receipt = receipt_form.save()
+        # Checks receipt has still its destination location and checks its move
+        # line took the one from the putaway rule.
+        self.assertEqual(receipt.location_dest_id.id, stock_location.id)
+        self.assertEqual(receipt.move_line_ids.location_dest_id.id, shelf_location.id)
 
 class TestStockUOM(TestStockCommon):
     def setUp(self):
