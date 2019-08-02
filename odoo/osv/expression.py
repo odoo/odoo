@@ -134,8 +134,8 @@ AND_OPERATOR = '&'
 DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 
 # List of available term operators. It is also possible to use the '<>'
-# operator, which is strictly the same as '!='; the later should be prefered
-# for consistency. This list doesn't contain '<>' as it is simpified to '!='
+# operator, which is strictly the same as '!='; the later should be preferred
+# for consistency. This list doesn't contain '<>' as it is simplified to '!='
 # by the normalize_operator() function (so later part of the code deals with
 # only one representation).
 # Internals (i.e. not available to the user) 'inselect' and 'not inselect'

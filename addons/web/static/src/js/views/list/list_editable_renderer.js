@@ -1083,7 +1083,7 @@ ListRenderer.include({
         this._selectCell(rowIndex, fieldIndex, {event: event});
     },
     /**
-     * We need to manually unselect row, because noone else would do it
+     * We need to manually unselect row, because no one else would do it
      */
     _onEmptyRowClick: function () {
         this.unselectRow();

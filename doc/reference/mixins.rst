@@ -996,13 +996,13 @@ The behaviour of the mixin adapts to your model:
 * The ``rating.rating`` record will be linked to the ``partner_id`` field of your
   model (if the field is present).
   
-  - this behaviour can be overriden with the function ``rating_get_partner_id()``
+  - this behaviour can be overridden with the function ``rating_get_partner_id()``
     if you use another field than ``partner_id``
       
 * The ``rating.rating`` record will be linked to the partner of the ``user_id``
   field of your model (if the field is present) (i.e. the partner who is rated)
   
-  - this behaviour can be overriden with the function ``rating_get_rated_partner_id()``
+  - this behaviour can be overridden with the function ``rating_get_rated_partner_id()``
     if you use another field than ``user_id`` (note that the function must return a
     ``res.partner``, for ``user_id`` the system automatically fetches the partner
     of the user)

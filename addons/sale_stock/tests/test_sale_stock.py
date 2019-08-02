@@ -234,7 +234,7 @@ class TestSaleStock(TestSale):
 
     def test_04_create_picking_update_saleorderline(self):
         """
-        Test that updating multiple sale order lines after a succesful delivery creates a single picking containing
+        Test that updating multiple sale order lines after a successful delivery creates a single picking containing
         the new move lines.
         """
         # sell two products

@@ -277,7 +277,7 @@ Odoo supports custom tags acting as syntactic sugar:
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use it if the record notation can't do what you want
 
-The 4 first tags are prefered over the *record* notation.
+The 4 first tags are preferred over the *record* notation.
 
 
 XML IDs and naming

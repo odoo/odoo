@@ -326,7 +326,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('many2ones in form views with show_adress', async function (assert) {
+        QUnit.test('many2ones in form views with show_address', async function (assert) {
             assert.expect(4);
             var form = await createView({
                 View: FormView,

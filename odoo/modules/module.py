@@ -272,7 +272,7 @@ def module_manifest(path):
 
 def get_module_root(path):
     """
-    Get closest module's root begining from path
+    Get closest module's root beginning from path
 
         # Given:
         # /foo/bar/module_dir/static/src/...

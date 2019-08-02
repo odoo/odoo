@@ -193,7 +193,7 @@ QUnit.module('pad widget', {
             "should have no confirmation modal opened");
         await testUtils.nextTick();
         assert.strictEqual(defState, 'resolved',
-            "can be discarded was succesfully resolved");
+            "can be discarded was successfully resolved");
         form.destroy();
         delete FieldPad.prototype.isPadConfigured;
     });
@@ -234,7 +234,7 @@ QUnit.module('pad widget', {
             "should have no confirmation modal opened");
         await testUtils.nextTick();
         assert.strictEqual(defState, 'resolved',
-            "can be discarded was succesfully resolved");
+            "can be discarded was successfully resolved");
         form.destroy();
         delete FieldPad.prototype.isPadConfigured;
     });

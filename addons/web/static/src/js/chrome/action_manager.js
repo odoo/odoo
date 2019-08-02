@@ -451,7 +451,7 @@ var ActionManager = Widget.extend({
         var prom = this._executeAction(action, options);
         prom.then(function () {
             // AAB: this should be done automatically in AbstractAction, so that
-            // it can be overriden by actions that have specific stuff to push
+            // it can be overridden by actions that have specific stuff to push
             // (e.g. Discuss, Views)
             self._pushState(controllerID, {});
         });
@@ -644,7 +644,7 @@ var ActionManager = Widget.extend({
     },
     /**
      * Dispatches the given action to the corresponding handler to execute it,
-     * according to its type. This function can be overriden to extend the
+     * according to its type. This function can be overridden to extend the
      * range of supported action types.
      *
      * @private

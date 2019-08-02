@@ -1783,7 +1783,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         :param list data: the data containing groups
         :param list groupby: name of the first group by
-        :param aggregated_fields list: list of aggregated fields in the query
+        :param list aggregated_fields: list of aggregated fields in the query
         :param relativedelta interval: interval between to temporal groups
                 expressed as a relativedelta month by default
         :rtype: list
@@ -2638,7 +2638,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         Return the definition of each field.
 
-        The returned value is a dictionary (indiced by field name) of
+        The returned value is a dictionary (indexed by field name) of
         dictionaries. The _inherits'd fields are included. The string, help,
         and selection (if present) attributes are translated.
 

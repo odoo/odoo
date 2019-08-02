@@ -387,7 +387,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_cost'], precision_rounding=rounding), "The expense cost of the project from SO2 should be 0.0")
 
-        # global project should have an expense, but not reinvoicable
+        # global project should have an expense, but not reinvoiceable
         project_global_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', self.project_global.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_global_timesheet_cost = timesheet7.amount + timesheet8.amount
         project_global_timesheet_unit = timesheet7.unit_amount + timesheet8.unit_amount

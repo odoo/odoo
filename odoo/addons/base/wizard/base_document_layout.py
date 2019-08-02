@@ -190,5 +190,5 @@ class BaseDocumentLayout(models.TransientModel):
         return self.env.ref(action_ref).read()[0]
 
     def document_layout_save(self):
-        # meant to be overriden
+        # meant to be overridden
         pass

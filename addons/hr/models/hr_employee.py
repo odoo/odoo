@@ -44,7 +44,7 @@ class HrEmployeePrivate(models.Model):
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
         groups="hr.group_hr_user", tracking=True)
     is_address_home_a_company = fields.Boolean(
-        'The employee adress has a company linked',
+        'The employee address has a company linked',
         compute='_compute_is_address_home_a_company',
     )
     private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False, groups="hr.group_hr_user")
@@ -293,7 +293,7 @@ class HrEmployeePrivate(models.Model):
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
-        """Checks that choosen address (res.partner) is not linked to a company.
+        """Checks that chosen address (res.partner) is not linked to a company.
         """
         for employee in self:
             try:

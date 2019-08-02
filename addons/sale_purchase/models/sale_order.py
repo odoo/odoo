@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
 
     def _activity_cancel_on_purchase(self):
         """ If some SO are cancelled, we need to put an activity on their generated purchase. If sale lines of
-            differents sale orders impact different purchase, we only want one activity to be attached.
+            different sale orders impact different purchase, we only want one activity to be attached.
         """
         purchase_to_notify_map = {}  # map PO -> recordset of SOL as {purchase.order: set(sale.orde.liner)}
 

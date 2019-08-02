@@ -161,7 +161,7 @@ function addMockEnvironment(widget, params) {
     var initialSession, initialConfig, initialParameters, initialDebounce, initialThrottle;
     initialSession = _.extend({}, session);
     session.getTZOffset = function () {
-        return 0; // by default, but may be overriden in specific tests
+        return 0; // by default, but may be overridden in specific tests
     };
     if ('session' in params) {
         _.extend(session, params.session);

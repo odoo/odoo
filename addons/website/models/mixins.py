@@ -70,7 +70,7 @@ class SeoMetadata(models.AbstractModel):
     def get_website_meta(self):
         """ This method will return final meta information. It will replace
             default values with user's custom value (if user modified it from
-            the seo popup of fronted)
+            the seo popup of frontend)
 
             This method is not meant for overridden. To customize meta values
             override `_default_website_meta` method instead of this method. This

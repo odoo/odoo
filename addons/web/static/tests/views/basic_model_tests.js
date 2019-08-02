@@ -1490,11 +1490,11 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(
                 recordPartner.getContext({ fieldName: "product_id" }),
                 { hello2: "world", test2: "gnap" },
-                "field context should have been overriden by xml attribute");
+                "field context should have been overridden by xml attribute");
             assert.deepEqual(
                 recordPartner.getDomain({ fieldName: "product_id" }),
                 [["hello2", "like", "world"], ["test2", "like", "gnap"]],
-                "field domain should have been overriden by xml attribute");
+                "field domain should have been overridden by xml attribute");
             model.destroy();
         });
 

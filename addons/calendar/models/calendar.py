@@ -551,7 +551,7 @@ class Meeting(models.Model):
 
     @api.model
     def default_get(self, fields):
-        # super default_model='crm.lead' for easier use in adddons
+        # super default_model='crm.lead' for easier use in addons
         if self.env.context.get('default_res_model') and not self.env.context.get('default_res_model_id'):
             self = self.with_context(
                 default_res_model_id=self.env['ir.model'].sudo().search([

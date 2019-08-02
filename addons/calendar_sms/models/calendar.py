@@ -12,7 +12,7 @@ class CalendarEvent(models.Model):
     _inherit = 'calendar.event'
 
     def _sms_get_default_partners(self):
-        """ Method overriden from mail.thread (defined in the sms module).
+        """ Method overridden from mail.thread (defined in the sms module).
             SMS text messages will be sent to attendees that haven't declined the event(s).
         """
         return self.mapped('attendee_ids').filtered(lambda att: att.state != 'declined').mapped('partner_id')
@@ -39,7 +39,7 @@ class AlarmManager(models.AbstractModel):
 
     @api.model
     def get_next_mail(self):
-        """ Cron method, overriden here to send SMS reminders as well
+        """ Cron method, overridden here to send SMS reminders as well
         """
         result = super(AlarmManager, self).get_next_mail()
         now = fields.Datetime.to_string(fields.Datetime.now())

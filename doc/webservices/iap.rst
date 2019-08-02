@@ -353,7 +353,7 @@ The :class:`~odoo.addons.iap.models.iap.charge` helper will:
    if the account does not have enough credits it will raise the relevant
    error
 2. execute the body of the ``with`` statement
-3. if the body of the ``with`` executes succesfully, update the price 
+3. if the body of the ``with`` executes successfully, update the price
    of the transaction if needed
 4. capture (confirm) the transaction
 5. otherwise, if an error is raised from the body of the ``with``, cancel the

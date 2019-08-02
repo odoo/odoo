@@ -396,7 +396,7 @@ class configmanager(object):
 
             die(os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath),
                 "Found '.odoorc' and '.openerp_serverrc' in your path. Please keep only one of "\
-                "them, preferrably '.odoorc'.")
+                "them, preferably '.odoorc'.")
 
             if not os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath):
                 rcfilepath = old_rcfilepath

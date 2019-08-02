@@ -175,7 +175,7 @@ var AbstractField = Widget.extend({
         // to send it to the server. These functions are chosen according to
         // the 'widget' attrs if is is given, and if it is a valid key, with a
         // fallback on the field type, ensuring that the value is formatted and
-        // displayed according to the choosen widget, if any.
+        // displayed according to the chosen widget, if any.
         this.formatType = this.attrs.widget in field_utils.format ?
                             this.attrs.widget :
                             this.field.type;

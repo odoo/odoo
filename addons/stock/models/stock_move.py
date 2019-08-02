@@ -459,7 +459,7 @@ class StockMove(models.Model):
     def _delay_alert_get_documents(self):
         """Returns a list of recordset of the documents linked to the stock.move in `self` in order
         to post the delay alert next activity. These documents are deduplicated. This method is meant
-        to be overriden by other modules, each of them adding an element by type of recordset on
+        to be overridden by other modules, each of them adding an element by type of recordset on
         this list.
 
         :return: a list of recordset of the documents linked to `self`

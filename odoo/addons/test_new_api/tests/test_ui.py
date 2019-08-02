@@ -28,7 +28,7 @@ class TestUiTranslation(odoo.tests.HttpCase):
         self.assertEqual(message, "La couleur doit être une valeur positive !")
 
         # TODO: make the test work with French translations. As the transaction
-        # is rollbacked at insert and a new cusor is opened, can not test that
+        # is rollbacked at insert and a new cursor is opened, can not test that
         # the message is translated (_load_module_terms is also) rollbacked.
         # Test individually the external id and loading of translation.
         self.start_tour("/web#action=test_new_api.action_categories",

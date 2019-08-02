@@ -1197,7 +1197,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         """ This method compute the delivered quantity of the SO lines: it covers the case provide by sale module, aka
             expense/vendor bills (sum of unit_amount of AAL), and manual case.
-            This method should be overriden to provide other way to automatically compute delivered qty. Overrides should
+            This method should be overridden to provide other way to automatically compute delivered qty. Overrides should
             take their concerned so lines, compute and set the `qty_delivered` field, and call super with the remaining
             records.
         """
@@ -1222,7 +1222,7 @@ class SaleOrderLine(models.Model):
         if not self:
             return result
 
-        # group anaytic lines by product uom and so line
+        # group analytic lines by product uom and so line
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
         data = self.env['account.analytic.line'].read_group(
             domain,

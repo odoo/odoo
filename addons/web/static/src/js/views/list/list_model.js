@@ -20,7 +20,7 @@ odoo.define('web.ListModel', function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * Overriden to add `groupData` when performing get on list datapoints.
+         * overridden to add `groupData` when performing get on list datapoints.
          *
          * @override
          * @see _readGroupExtraFields

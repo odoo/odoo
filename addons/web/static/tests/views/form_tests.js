@@ -4550,7 +4550,7 @@ QUnit.module('Views', {
     QUnit.test('readonly fields with modifiers may be saved', async function (assert) {
         // the readonly property on the field description only applies on view,
         // this is not a DB constraint. It should be seen as a default value,
-        // that may be overriden in views, for example with modifiers. So
+        // that may be overridden in views, for example with modifiers. So
         // basically, a field defined as readonly may be edited.
         assert.expect(3);
 

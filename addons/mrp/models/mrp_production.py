@@ -704,7 +704,7 @@ class MrpProduction(models.Model):
                     duration = best_workcenter.time_start + cycle_number * workorder.operation_id.time_cycle * 100.0 / best_workcenter.time_efficiency
                     start_date = best_workcenter.resource_calendar_id.plan_hours(duration / 60.0, best_start_date, compute_leaves=True, resource=best_workcenter.resource_id, domain=[('time_type', 'in', ['leave', 'other'])])
 
-            # Create leave on choosen workcenter calendar
+            # Create leave on chosen workcenter calendar
             leave = self.env['resource.calendar.leaves'].create({
                 'name': self.name + ' - ' + workorder.name,
                 'calendar_id': best_workcenter.resource_calendar_id.id,

@@ -353,7 +353,7 @@ var BasicRenderer = AbstractRenderer.extend({
         return _.findWhere(this.allModifiersData, {node: node});
     },
     /**
-     * This function is meant to be overriden in renderers. It takes a dataPoint
+     * This function is meant to be overridden in renderers. It takes a dataPoint
      * id (for a dataPoint of type record), and should return the corresponding
      * dataPoint.
      *
