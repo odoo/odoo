@@ -9,7 +9,13 @@
                 <search string="Links">
                     <field name="url" string="Title and URL" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
                     <field name="title"/>
+                    <field name="campaign_id"/>
+                    <field name="medium_id"/>
+                    <field name="source_id"/>
                     <group expand="0" string="Group By">
+                        <filter string="Campaign" name="groupby_campaign_id" context="{'group_by': 'campaign_id'}"/>
+                        <filter string="Medium" name="groupby_medium_id" context="{'group_by': 'medium_id'}"/>
+                        <filter string="Source" name="groupby_source_id" context="{'group_by': 'source_id'}"/>
                     </group>
                 </search>
             </field>
@@ -145,6 +151,19 @@
             <field name="view_mode">graph,tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_groupby_country_id': 1}</field>
+        </record>
+
+        <record id="link_tracker_action_campaign" model="ir.actions.act_window">
+            <field name="name">Statistics of Clicks</field>
+            <field name="res_model">link.tracker</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="link_tracker.link_tracker_view_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new link tracker
+                </p>
+            </field>
+            <field name="context">{'search_default_campaign_id': active_id}</field>
         </record>
 
         <!-- MENUS -->
