@@ -16,7 +16,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         super(TestHrHolidaysAccessRightsCommon, self).setUp()
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
             'allocation_type': 'no',
             'validity_start': False,
         })
@@ -35,28 +35,28 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
 
         self.lt_no_validation = self.env['hr.leave.type'].create({
             'name': 'Validation = no_validation',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
             'allocation_type': 'no',
             'validity_start': False,
         })
 
         self.lt_validation_hr = self.env['hr.leave.type'].create({
             'name': 'Validation = HR',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
             'allocation_type': 'no',
             'validity_start': False,
         })
 
         self.lt_validation_manager = self.env['hr.leave.type'].create({
             'name': 'Validation = manager',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
             'allocation_type': 'no',
             'validity_start': False,
         })
 
         self.lt_validation_both = self.env['hr.leave.type'].create({
             'name': 'Validation = both',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
             'allocation_type': 'no',
             'validity_start': False,
         })
@@ -670,7 +670,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_manager_to_validate_by_user(self):
         """ A simple user can validate in manager mode if he is leave_manager_id """
-        self.leave_type.write({'validation_type': 'manager'})
+        self.leave_type.write({'leave_validation_type': 'manager'})
         values = {
             'name': 'Hol HrUser',
             'employee_id': self.employee_hruser_id,
@@ -688,7 +688,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_manager_to_validate_by_holiday_user(self):
         """ A holiday user can validate in manager mode """
-        self.leave_type.write({'validation_type': 'manager'})
+        self.leave_type.write({'leave_validation_type': 'manager'})
         values = {
             'name': 'Hol HrUser',
             'employee_id': self.employee_emp_id,
@@ -704,7 +704,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_double_validate(self):
-        self.leave_type.write({'validation_type': 'both'})
+        self.leave_type.write({'leave_validation_type': 'both'})
         values = {
             'name': 'double HrManager',
             'employee_id': self.employee_hrmanager_id,
@@ -728,7 +728,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_double_validate_holiday_manager(self):
-        self.leave_type.write({'validation_type': 'both'})
+        self.leave_type.write({'leave_validation_type': 'both'})
         values = {
             'name': 'double HrManager',
             'employee_id': self.employee_emp_id,
@@ -780,7 +780,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited - Company New',
             'company_id': self.new_company.id,
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
             'allocation_type': 'no',
         })
         self.rd_dept.manager_id = False
