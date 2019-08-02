@@ -30,13 +30,13 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         self.holidays_status_hr = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
             'validity_start': False,
         })
         self.holidays_status_manager = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
             'allocation_type': 'no',
-            'validation_type': 'manager',
+            'leave_validation_type': 'manager',
             'validity_start': False,
         })
 
@@ -87,7 +87,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         holiday_status_paid_time_off = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'allocation_type': 'fixed',
-            'validation_type': 'both',
+            'leave_validation_type': 'both',
             'validity_start': time.strftime('%Y-%m-01'),
             'responsible_id': self.env.ref('base.user_admin').id,
         })
@@ -129,7 +129,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         self.holidays_status_limited = HolidayStatusManagerGroup.create({
             'name': 'Limited',
             'allocation_type': 'fixed',
-            'validation_type': 'both',
+            'allocation_validation_type': 'both',
+            'leave_validation_type': 'both',
             'validity_start': False,
         })
         HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
@@ -243,7 +244,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         holiday_status_paid_time_off = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'allocation_type': 'fixed',
-            'validation_type': 'both',
+            'leave_validation_type': 'both',
             'validity_start': time.strftime('%Y-%m-01'),
             'responsible_id': self.env.ref('base.user_admin').id,
         })
