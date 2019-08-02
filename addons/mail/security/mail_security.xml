@@ -56,5 +56,12 @@
             <field name="model_id" ref="model_mail_moderation"/>
             <field name="domain_force">[('channel_id.moderator_ids', 'in', user.id)]</field>
         </record>
+
+        <record id="mail_template_multi_company" model="ir.rule">
+            <field name="name">mail.template: Multi Company</field>
+            <field name="model_id" ref="model_mail_template"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
     </data>
 </odoo>
