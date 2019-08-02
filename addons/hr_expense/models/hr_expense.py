@@ -157,6 +157,46 @@ class HrExpense(models.Model):
         if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
             raise UserError(_('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.'))
 
+    def create_expense_from_attachments(self, attachment_ids=None):
+        ''' Create the expenses from files.
+         :return: An action redirecting to hr.expense tree/form view.
+        '''
+        if attachment_ids is None:
+            attachment_ids = []
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if not attachments:
+            raise UserError(_("No attachment was provided"))
+        expenses = self.env['hr.expense']
+
+        if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
+            raise UserError(_("Invalid attachments!"))
+
+        for attachment in attachments:
+            expense = self.env['hr.expense'].create({
+                'name': attachment.name.split('.')[0],
+                'unit_amount': 0,
+            })
+            attachment.write({'res_id': expense.id})
+            expense.message_post(body=_('Uploaded Attachment'), attachment_ids=[attachment.id])
+            expenses += expense
+
+        if len(expenses) == 1:
+            return {
+                'name': _('Generated Expense'),
+                'view_mode': 'form',
+                'res_model': 'hr.expense',
+                'type': 'ir.actions.act_window',
+                'views': [[False, 'form']],
+                'res_id': expenses[0].id,
+            }
+        return {
+            'name': _('Generated Expenses'),
+            'domain': [('id', 'in', expenses.ids)],
+            'res_model': 'hr.expense',
+            'type': 'ir.actions.act_window',
+            'views': [[False, "tree"], [False, "form"]],
+        }
+
     # ----------------------------------------
     # ORM Overrides
     # ----------------------------------------
@@ -209,6 +249,8 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report."))
+        if any(not expense.product_id for expense in self):
+            raise UserError(_("You can not create report without product."))
 
         todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
         return {
