@@ -21,7 +21,7 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Mailings" attrs="{}">
                     <group groups="base.group_no_one">
-                        <field name="mass_mailing_ids" readonly="1" nolabel="1">
+                        <field name="mailing_ids" readonly="1" nolabel="1">
                             <tree>
                                 <field name="name"/>
                                 <field name="sent_date"/>
@@ -83,12 +83,12 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="mass_mailing_ids"/>
+                <field name="mailing_ids"/>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_record_headings')]">
                 <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
                     class="oe_mailings o_kanban_record_subtitle d-inline-block">
-                    <t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings
+                    <t t-raw="record.mailing_ids.raw_value.length"/> Mailings
                 </a>
             </xpath>
         </field>

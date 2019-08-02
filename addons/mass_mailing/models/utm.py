@@ -6,10 +6,10 @@ from odoo import api, fields, models
 class UtmCampaign(models.Model):
     _inherit = 'utm.campaign'
 
-    mass_mailing_ids = fields.One2many(
+    mailing_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
         string='Mass Mailings')
-    mass_mailing_clicks_ratio = fields.Integer(default=0, compute="_compute_mass_mailing_clicks_ratio", string="Number of clicks")
+    mailing_clicks_ratio = fields.Integer(default=0, compute="_compute_mailing_clicks_ratio", string="Number of clicks")
     mailing_items = fields.Integer(compute="_compute_mailing_items", string='Mailings')
     mailing_clicked = fields.Integer(compute="_compute_mailing_items", string='Mailings Clicked')
     # stat fields
@@ -51,9 +51,9 @@ class UtmCampaign(models.Model):
             campaign.mailing_clicked = campaign_items_values.get('clicked_total', 0)
 
     @api.depends('mailing_items', 'mailing_clicked')
-    def _compute_mass_mailing_clicks_ratio(self):
+    def _compute_mailing_clicks_ratio(self):
         for campaign in self:
-            campaign.mass_mailing_clicks_ratio = campaign.mailing_clicked / campaign.mailing_items * 100 if campaign.mailing_items > 0 else 0
+            campaign.mailing_clicks_ratio = campaign.mailing_clicked / campaign.mailing_items * 100 if campaign.mailing_items > 0 else 0
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing campaign """
