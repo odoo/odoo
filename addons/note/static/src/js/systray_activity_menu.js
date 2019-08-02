@@ -96,6 +96,7 @@ ActivityMenu.include({
         }
         this.noteDateTimeWidget.appendTo(this.$('.o_note_datetime')).then(function() {
             self.noteDateTimeWidget.$input.attr('placeholder', _t("Today"));
+            self.noteDateTimeWidget.setValue(false);
             self.$('.o_note_show, .o_note').toggleClass('d-none');
             self.$('.o_note_input').val('').focus();
         });
