@@ -27,7 +27,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree">
+                <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree" js_class="hr_expense_tree" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
                     <field name="currency_id" invisible="True"/>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date"/>
@@ -70,7 +70,7 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="e.g. Lunch with Customer"/>
                         </h1>
@@ -90,6 +90,7 @@
                                 <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </group><group>
                             <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
                             <field name="date"/>
@@ -101,13 +102,11 @@
                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group><group>
-                            <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             <label for="payment_mode"/>
                             <div>
                                 <field name="payment_mode" widget="radio"/>
                             </div>
                         </group>
-
                     </group>
                     <div>
                         <field name="description" class="oe_inline" placeholder="Notes..."/>
@@ -373,7 +372,7 @@
             <field name="domain">[('can_be_expensed', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new expense category
+                Create a new expense product
               </p>
             </field>
         </record>
@@ -828,7 +827,7 @@
         </record>
 
         <record id="hr_expense_submit_action_server" model="ir.actions.server">
-            <field name="name">Submit Report</field>
+            <field name="name">Create Report</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_expense"/>
             <field name="binding_model_id" ref="model_hr_expense"/>
