@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-
-        <!-- Default stages of mass mailing campaigns -->
-        <record id="campaign_stage_1" model="mailing.stage">
-            <field name="name">Schedule</field>
-            <field name="sequence">10</field>
-        </record>
-        <record id="campaign_stage_2" model="mailing.stage">
-            <field name="name">Design</field>
-            <field name="sequence">20</field>
-        </record>
-        <record id="campaign_stage_3" model="mailing.stage">
-            <field name="name">Sent</field>
-            <field name="sequence">30</field>
-        </record>
-
         <!-- Cron that process the mass mailing queue -->
         <record id="ir_cron_mass_mailing_queue" model="ir.cron">
             <field name="name">Mass Mailing: Process queue</field>

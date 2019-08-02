@@ -231,6 +231,7 @@ class LinkTrackerClick(models.Model):
     _rec_name = "link_id"
     _description = "Link Tracker Click"
 
+    campaign_id = fields.Many2one(string='UTM Campaign', comodel_name="utm.campaign", related="link_id.campaign_id", store=True)
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country', 'Country')
