@@ -570,6 +570,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
 
         candidates = stock_moves\
+            .sudo()\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
