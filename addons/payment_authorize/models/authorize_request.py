@@ -211,7 +211,7 @@ class AuthorizeAPI():
         etree.SubElement(customer, "email").text = partner.email or ''
         response = self._authorize_request(root)
         res = dict()
-        if not response.find('customerProfileId'):
+        if response.find('customerProfileId') is None:  # Warning: do not use bool(etree) as the semantics is very misleading
             _logger.warning(
                 'Unable to create customer payment profile, data missing from transaction. Transaction_id: %s - Partner_id: %s'
                 % (transaction_id, partner)
