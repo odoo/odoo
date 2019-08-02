@@ -371,7 +371,10 @@
                                 <div class="media-body text-nowrap">
                                     <h6 class="my-0" t-field="badge.badge_id.name"/>
                                     <!-- Date the badge was granted : please check "badge.create_date" is correct -->
-                                    <p class="my-1 small text-muted" t-field="badge.create_date" t-options='{"format": "d MMM Y"}' />
+                                    <p class="my-1 small text-muted" >
+                                        Unlocked
+                                        <span t-field="badge.create_date" t-options='{"format": "d MMM Y"}' />
+                                    </p>
                                 </div>
                             </div>
                         </div>
