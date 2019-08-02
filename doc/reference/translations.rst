@@ -88,6 +88,10 @@ In JavaScript, the wrapping function is generally :js:func:`odoo.web._t`:
     variables. For situations where strings are formatted, this means the
     format string must be marked, not the formatted string
 
+The lazy version of `_` and `_t` is :func:`odoo._lt` in python and
+:js:func:`odoo.web._lt` in javascript. The translation lookup is executed only
+at rendering and can be used to declare translatable properties in class methods
+of global variables.
 
 Variables
 ^^^^^^^^^
@@ -144,8 +148,8 @@ Read vs Run Time
 
     ERROR_MESSAGE = {
       # bad, evaluated at server launch with no user language
-      access_error: _('Access Error'),
-      missing_error: _('Missing Record'),
+      'access_error': _('Access Error'),
+      'missing_error': _('Missing Record'),
     }
 
     class Record(models.Model):
@@ -163,10 +167,25 @@ Read vs Run Time
         missing_error: _t('Missing Record'),
     };
 
-**Do** evaluate dynamically the translatable content::
+
+**Do** use lazy translation lookup method::
+
+    ERROR_MESSAGE = {
+      'access_error': _lt('Access Error'),
+      'missing_error': _lt('Missing Record'),
+    }
+
+    class Record(models.Model):
+
+      def _raise_error(self, code):
+        # translation lookup executed at error rendering
+        raise UserError(ERROR_MESSAGE[code])
+
+
+or **do** evaluate dynamically the translatable content::
 
     # good, evaluated at run time
-    def _get_error_message():
+    def _get_error_message(self):
       return {
         access_error: _('Access Error'),
         missing_error: _('Missing Record'),
