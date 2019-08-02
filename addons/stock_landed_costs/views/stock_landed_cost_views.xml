@@ -35,69 +35,70 @@
                                 <field name="account_move_id"/>
                             </group>
                         </group>
-
-                        <separator string="Cost Lines"/>
                         <p class="oe_grey">
                             Landed cost are computed based on the purchase unit of measure.
                         </p>
-                        <field name="cost_lines">
-                            <form string="Cost Lines">
-                                <group>
-                                    <group>
+                        <notebook>
+                            <page string="Cost Lines">
+                                <field name="cost_lines">
+                                    <form string="Cost Lines">
+                                        <group>
+                                            <group>
+                                                <field name="product_id"
+                                                    domain="[('landed_cost_ok', '=', True)]"
+                                                    context="{'default_landed_cost_ok': True, 'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
+                                                <field name="price_unit"/>
+                                            </group>
+                                            <group>
+                                                <field name="split_method"/>
+                                                <field name="account_id" options="{'no_create': True}"/>
+                                            </group>
+                                        </group>
+                                        <label for="name"/>
+                                        <field name="name"/>
+                                    </form>
+                                    <tree string="Cost Lines" editable="bottom">
                                         <field name="product_id"
                                             domain="[('landed_cost_ok', '=', True)]"
-                                            context="{'default_landed_cost_ok': True, 'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
-                                        <field name="price_unit"/>
-                                    </group>
-                                    <group>
-                                        <field name="split_method"/>
+                                            context="{'default_landed_cost_ok': True, 'default_type': 'service',  'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
+                                        <field name="name"/>
                                         <field name="account_id" options="{'no_create': True}"/>
-                                    </group>
+                                        <field name="split_method"/>
+                                        <field name="price_unit"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_total" widget="monetary"/>
+                                    <button colspan="2" name="compute_landed_cost" string="Compute" type="object" class="oe_right btn-secondary" states='draft'/>
                                 </group>
-                                <label for="name"/>
-                                <field name="name"/>
-                            </form>
-                            <tree string="Cost Lines" editable="bottom">
-                                <field name="product_id"
-                                    domain="[('landed_cost_ok', '=', True)]"
-                                    context="{'default_landed_cost_ok': True, 'default_type': 'service',  'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
-                                <field name="name"/>
-                                <field name="account_id" options="{'no_create': True}"/>
-                                <field name="split_method"/>
-                                <field name="price_unit"/>
-                            </tree>
-                        </field>
-                        <group class="oe_subtotal_footer oe_right">
-                            <field name="amount_total" widget="monetary"/>
-                            <button colspan="2" name="compute_landed_cost" string="Compute" type="object" class="oe_right btn-secondary" states='draft'/>
-                        </group>
-
-                        <div class="oe_clear"/>
-                        <separator string="Valuation Adjustments"/>
-                        <field name="valuation_adjustment_lines">
-                            <form string="Valuation Adjustments">
-                                <group>
-                                    <group>
-                                        <field name="product_id"/>
-                                        <field name="quantity"/>
-                                    </group>
-                                    <group>
-                                        <field name="former_cost"/>
+                            </page>
+                            <page string="Valuation Adjustments">
+                                <field name="valuation_adjustment_lines">
+                                    <form string="Valuation Adjustments">
+                                        <group>
+                                            <group>
+                                                <field name="product_id"/>
+                                                <field name="quantity"/>
+                                            </group>
+                                            <group>
+                                                <field name="former_cost"/>
+                                                <field name="additional_landed_cost"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                    <tree string="Valuation Adjustments" editable="bottom" create="0">
+                                        <field name="cost_line_id" readonly="1"/>
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="weight" readonly="1"/>
+                                        <field name="volume" readonly="1"/>
+                                        <field name="quantity" readonly="1"/>
+                                        <field name="former_cost_per_unit" readonly="1" widget="monetary"/>
+                                        <field name="former_cost" readonly="1"/>
                                         <field name="additional_landed_cost"/>
-                                    </group>
-                                </group>
-                            </form>
-                            <tree string="Valuation Adjustments" editable="bottom" create="0">
-                                <field name="cost_line_id" readonly="1"/>
-                                <field name="product_id" readonly="1"/>
-                                <field name="weight" readonly="1"/>
-                                <field name="volume" readonly="1"/>
-                                <field name="quantity" readonly="1"/>
-                                <field name="former_cost_per_unit" readonly="1" widget="monetary"/>
-                                <field name="former_cost" readonly="1"/>
-                                <field name="additional_landed_cost"/>
-                            </tree>
-                        </field>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
