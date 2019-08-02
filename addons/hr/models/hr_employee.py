@@ -8,7 +8,7 @@ import itertools
 from werkzeug import url_encode
 import pytz
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 from odoo.addons.resource.models.resource_mixin import timezone_datetime
@@ -25,13 +25,13 @@ class HrEmployeePrivate(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin']
+    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'image.mixin']
     _mail_post_access = 'read'
 
     @api.model
     def _default_image(self):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
+        return base64.b64encode(open(image_path, 'rb').read())
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
@@ -93,13 +93,7 @@ class HrEmployeePrivate(models.Model):
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
 
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary(
-        "Photo", default=_default_image)
-    image_medium = fields.Binary(
-        "Medium-sized photo")
-    image_small = fields.Binary(
-        "Small-sized photo")
+    image_1920 = fields.Image(default=_default_image)
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     parent_id = fields.Many2one('hr.employee', 'Manager')
@@ -232,7 +226,7 @@ class HrEmployeePrivate(models.Model):
 
     def _sync_user(self, user):
         vals = dict(
-            image=user.image,
+            image_1920=user.image_1920,
             work_email=user.email,
         )
         if user.tz:
@@ -245,7 +239,6 @@ class HrEmployeePrivate(models.Model):
             user = self.env['res.users'].browse(vals['user_id'])
             vals.update(self._sync_user(user))
             vals['name'] = vals.get('name', user.name)
-        tools.image_resize_images(vals)
         employee = super(HrEmployeePrivate, self).create(vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
         employee._message_log(body=_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
@@ -262,7 +255,6 @@ class HrEmployeePrivate(models.Model):
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         if vals.get('user_id'):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
-        tools.image_resize_images(vals)
         res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id

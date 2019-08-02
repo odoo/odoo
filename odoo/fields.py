@@ -23,7 +23,7 @@ except ImportError:
 import psycopg2
 
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
-    ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator
+    ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
@@ -1904,6 +1904,33 @@ class Binary(Field):
                     ])
             else:
                 atts.unlink()
+
+
+class Image(Binary):
+    _slots = {
+        'max_width': 0,
+        'max_height': 0,
+    }
+
+    def create(self, record_values):
+        new_record_values = []
+        for record, value in record_values:
+            new_record_values.append((record, self._image_process(value)))
+        super(Image, self).create(new_record_values)
+
+    def write(self, records, value):
+        value = self._image_process(value)
+        super(Image, self).write(records, value)
+
+    def _image_process(self, value):
+        if value and (self.max_width or self.max_height):
+            value = image_process(value, size=(self.max_width, self.max_height))
+        return value
+
+    def _compute_related(self, records):
+        super(Image, self)._compute_related(records)
+        for record in records:
+            record[self.name] = self._image_process(record[self.name])
 
 
 class Selection(Field):

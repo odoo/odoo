@@ -60,7 +60,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         this.pricelistId = params.pricelistId;
         this.previousModalHeight = params.previousModalHeight;
         this.dialogClass = 'oe_optional_products_modal';
-        this._productImageField = 'image_medium';
+        this._productImageField = 'image_128';
         // reset any previously populated properties maps
         optionalProductsMap = {};
 
@@ -209,7 +209,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         var productId = this.rootProduct.product_id;
         $modalContent
             .find('img:first')
-            .attr("src", "/web/image/product.product/" + productId + "/image_medium");
+            .attr("src", "/web/image/product.product/" + productId + "/image_128");
 
         if (this.rootProduct &&
                 (this.rootProduct.product_custom_attribute_values ||

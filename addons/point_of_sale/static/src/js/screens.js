@@ -732,7 +732,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
     },
 
     get_image_url: function(category){
-        return window.location.origin + '/web/image?model=pos.category&field=image_medium&id='+category.id;
+        return window.location.origin + '/web/image?model=pos.category&field=image_128&id='+category.id;
     },
 
     render_category: function( category, with_image ){
@@ -899,7 +899,7 @@ var ProductListWidget = PosBaseWidget.extend({
         this.renderElement();
     },
     get_product_image_url: function(product){
-        return window.location.origin + '/web/image?model=product.product&field=image_medium&id='+product.id;
+        return window.location.origin + '/web/image?model=product.product&field=image_128&id='+product.id;
     },
     replace: function($target){
         this.renderElement();
@@ -1308,7 +1308,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         }
     },
     partner_icon_url: function(id){
-        return '/web/image?model=res.partner&id='+id+'&field=image_small';
+        return '/web/image?model=res.partner&id='+id+'&field=image_64';
     },
 
     // ui handle for the 'edit selected customer' action
