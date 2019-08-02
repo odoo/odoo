@@ -38,7 +38,7 @@ class Inventory(models.Model):
              "If the inventory adjustment is validated, date at which the inventory adjustment has been validated.")
     line_ids = fields.One2many(
         'stock.inventory.line', 'inventory_id', string='Inventories',
-        copy=True, readonly=False,
+        copy=False, readonly=False,
         states={'done': [('readonly', True)]})
     move_ids = fields.One2many(
         'stock.move', 'inventory_id', string='Created Moves',
@@ -72,6 +72,11 @@ class Inventory(models.Model):
         help="Allows to start with prefill counted quantity for each lines or "
         "with all counted quantity set to zero.", default='counted',
         selection=[('counted', 'Default to stock on hand'), ('zero', 'Default to zero')])
+
+    def copy_data(self, default=None):
+        name = _("%s (copy)") % (self.name)
+        default = dict(default or {}, name=name)
+        return super(Inventory, self).copy_data(default)
 
     def unlink(self):
         for inventory in self:
