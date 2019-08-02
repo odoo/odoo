@@ -86,7 +86,7 @@ var SectionListRenderer = ListRenderer.extend({
     },
     // Handlers
     /**
-     * Overriden to allow different behaviours depending on
+     * Overridden to allow different behaviours depending on
      * the row the user clicked on.
      * If the row is a section: edit inline
      * else use a normal modal
@@ -106,7 +106,7 @@ var SectionListRenderer = ListRenderer.extend({
         this._super.apply(this, arguments);
     },
     /**
-     * Overriden to allow different behaviours depending on
+     * Overridden to allow different behaviours depending on
      * the cell the user clicked on.
      * If the cell is part of a section: edit inline
      * else use a normal edit modal
@@ -146,7 +146,7 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
         this.rendered = false;
     },
     /**
-     * Overriden to use our custom renderer
+     * Overridden to use our custom renderer
      * @private
      * @override
      */
@@ -157,7 +157,7 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
         return this._super.apply(this, arguments);
     },
     /**
-     * Overriden to allow different behaviours depending on
+     * Overridden to allow different behaviours depending on
      * the object we want to add. Adding a section would be done inline
      * while adding a question would render a modal.
      * @private

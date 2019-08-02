@@ -755,7 +755,7 @@ var StatementModel = BasicModel.extend({
             var props = _.filter(line.reconciliation_proposition, function (prop) {return !prop.invalid;});
             var computeLinePromise;
             if (props.length === 0) {
-                // Usability: if user has not choosen any lines and click validate, it has the same behavior
+                // Usability: if user has not chosen any lines and click validate, it has the same behavior
                 // as creating a write-off of the same amount.
                 props.push(self._formatQuickCreate(line, {
                     account_id: [line.st_line.open_balance_account_id, self.accounts[line.st_line.open_balance_account_id]],

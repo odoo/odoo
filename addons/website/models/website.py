@@ -252,7 +252,7 @@ class Website(models.Model):
         if ispage:
             page = self.env['website.page'].create({
                 'url': page_url,
-                'website_id': website.id,  # remove it if only one webiste or not?
+                'website_id': website.id,  # remove it if only one website or not?
                 'view_id': view.id,
             })
             result['view_id'] = view.id

@@ -236,7 +236,7 @@ var KanbanModel = BasicModel.extend({
 
         // Manually updates groups data. Note: this is done before the actual
         // save as it might need to perform a read group in some cases so those
-        // updated data might be overriden again.
+        // updated data might be overridden again.
         var record = self.localData[recordID];
         var resID = record.res_id;
         // Remove record from its current group

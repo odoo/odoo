@@ -462,7 +462,7 @@ class PaymentAcquirer(models.Model):
         if not self.s2s_validate(data):
             return False
         if hasattr(self, cust_method_name):
-            # As this method may be called in JSON and overriden in various addons
+            # As this method may be called in JSON and overridden in various addons
             # let us raise interesting errors before having stranges crashes
             if not data.get('partner_id'):
                 raise ValueError(_('Missing partner reference when trying to create a new payment token'))

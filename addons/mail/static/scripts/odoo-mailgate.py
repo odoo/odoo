@@ -13,7 +13,7 @@
 #
 # *: |/home/odoo/src/odoo-mail.py
 #
-# Note python2 was choosen on purpose for backward compatibility with old mail
+# Note python2 was chosen on purpose for backward compatibility with old mail
 # servers.
 #
 import optparse

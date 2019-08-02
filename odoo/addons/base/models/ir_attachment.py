@@ -322,7 +322,7 @@ class IrAttachment(models.Model):
     @api.model
     def check(self, mode, values=None):
         """Restricts the access to an ir.attachment, according to referred model
-        In the 'document' module, it is overriden to relax this hard rule, since
+        In the 'document' module, it is overridden to relax this hard rule, since
         more complex ones apply there.
         """
         if self.env.is_superuser():
