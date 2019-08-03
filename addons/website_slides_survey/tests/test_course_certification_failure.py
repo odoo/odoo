@@ -45,7 +45,7 @@ class TestCourseCertificationFailureFlow(SurveyCase):
             'channel_type': 'training',
             'enroll': 'public',
             'visibility': 'public',
-            'website_published': True,
+            'is_published': True,
         })
 
         # Step 2: link the certification to a slide of type 'certification'
@@ -54,7 +54,7 @@ class TestCourseCertificationFailureFlow(SurveyCase):
             'channel_id': self.channel.id,
             'slide_type': 'certification',
             'survey_id': certification.id,
-            'website_published': True,
+            'is_published': True,
         })
         # Step 3: add public user as member of the channel
         self.channel._action_add_members(self.user_public.partner_id)

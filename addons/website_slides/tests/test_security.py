@@ -66,7 +66,7 @@ class TestAccess(common.SlidesCase):
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_publish(self):
         """ Unpublished channels and their content are visible only to website people """
-        self.channel.write({'website_published': False, 'enroll': 'public'})
+        self.channel.write({'is_published': False, 'enroll': 'public'})
 
         # channel available only to website
         self.channel.with_user(self.user_publisher).read(['name'])
@@ -97,10 +97,10 @@ class TestAccess(common.SlidesCase):
             self.slide.with_user(self.user_emp).read(['name'])
 
         # publish channel but content unpublished (even if can be previewed) still unavailable
-        self.channel.write({'website_published': True})
+        self.channel.write({'is_published': True})
         self.slide.write({
             'is_preview': True,
-            'website_published': False,
+            'is_published': False,
         })
 
         self.slide.with_user(self.user_publisher).read(['name'])
@@ -134,7 +134,7 @@ class TestAccessFeatures(common.SlidesCase):
             channel = self.env['slide.channel'].create({
                 'name': 'Test',
                 'enroll': 'invite',
-                'website_published': True,
+                'is_published': True,
                 'enroll_group_ids': [(4, self.ref('base.group_user'))]
             })
 

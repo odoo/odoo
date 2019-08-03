@@ -11,7 +11,7 @@ class TestUi(odoo.tests.HttpCase):
         # create a template
         product_template = self.env['product.template'].create({
             'name': 'Test Product',
-            'website_published': True,
+            'is_published': True,
             'list_price': 750,
         })
 
@@ -147,7 +147,7 @@ class TestUi(odoo.tests.HttpCase):
         # create the template
         product_template = self.env['product.template'].create({
             'name': 'Test Product 2',
-            'website_published': True,
+            'is_published': True,
         })
 
         # set attribute and attribute values on the template

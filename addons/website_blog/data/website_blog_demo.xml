@@ -15,7 +15,7 @@
             <field name="subtitle">Ideas behind the Odoo communication tools.</field>
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="website_meta_keywords">Odoo, email</field>
             <field name="website_meta_description">Ideas behind the Odoo communication tools.</field>
@@ -130,7 +130,7 @@
             <field name="name">Integrating your CMS and E-Commerce</field>
             <field name="subtitle">Building your company's website and selling your products online easy.</field>
             <field name="blog_id" ref="blog_blog_1"/>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
             <field name="cover_properties">{"background-image": "url(/web/image/website_blog.blog_post_cover_02)", "resize_class": "cover container-fluid cover_full", "background-color": "oe_black", "opacity": "0.0"}</field>

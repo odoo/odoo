@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='consumable']" position="after">
                 <separator/>
-                <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
+                <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
             </xpath>
         </field>
     </record>
