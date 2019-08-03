@@ -1805,7 +1805,9 @@ Possible children elements of the search view are:
         the name of a field of type ``date`` or ``datetime``.
         Using this attribute has the effect to create
         a set of filters available in a submenu
-        of the filters menu.
+        of the filters menu. The filters proposed are time dependent
+        but not dynamic in the sense that their domains are evaluated
+        at the time of the control panel instantiation.
 
         Example:
 
@@ -1814,28 +1816,24 @@ Possible children elements of the search view are:
           <filter name="filter_create_date" date="create_date" string="Creation Date"/>
 
         The example above allows to easily search for records with creation date field
-        values in one of the periods below.
+        values in one of the periods below (if the current month is August 2019).
 
         .. code-block:: text
 
           Create Date >
-            Today
-            This Week
-            This Month
-            This Quarter
-            This Year
+            August
+            July
+            June
+            Q4
+            Q3
+            Q2
+            Q1
           --------------
-            Yesterday
-            Last Week
-            Last Month
-            Last Quarter
-            Last Year
-          --------------
-            Last 7 Days
-            Last 30 Days
-            Last 365 Days
+            2019
+            2018
+            2017
 
-        Note that the generated domains are dynamic and can be saved as such (via the favorites menu).
+        Muti selection of options is allowed.
 
     ``default_period`` (optional)
         only makes sense for a filter with non empty ``date`` attribute.
@@ -1844,9 +1842,9 @@ Possible children elements of the search view are:
         'this_month' is used by default.
 
         To choose among the following options:
-        today, this_week, this_month, this_quarter, this_year,
-        yesterday, last_week, last_month,
-        last_quarter, last_year, last_7_days, last_30_days, last_365_days
+        today, this_week, this_month, last_month, antepenultimate_month,
+        fourth_quarter, third_quarter, second_quarter, first_quarter,
+        this_year, last_year, antepenultimate_year.
 
         Example:
 
@@ -1860,7 +1858,7 @@ Possible children elements of the search view are:
 
         The key ``group_by`` can be used to define a groupby available in the
         'Group By' menu.
-        The 'group_by' value can be a valid field name or a list of field names.
+        The 'group_by' value can be a valid field name.
 
         .. code-block:: xml
 
