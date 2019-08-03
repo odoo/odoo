@@ -407,7 +407,17 @@ var ControlPanelModel = mvc.Model.extend({
             // we need to deactivate all groups when activating a favorite
             if (filter.type === 'favorite') {
                 this.query.forEach(function (groupId) {
-                    self.groups[groupId].activeFilterIds = [];
+                    var group = self.groups[groupId];
+                    group.activeFilterIds.forEach(function (id) {
+                        var filter = self.filters[id];
+                        if (filter.autoCompleteValues) {
+                            filter.autoCompleteValues = [];
+                        }
+                        if (filter.currentOptionId) {
+                            filter.currentOptionId = false;
+                        }   
+                    })
+                    group.activeFilterIds = [];
                 });
                 this.query = [];
             }
