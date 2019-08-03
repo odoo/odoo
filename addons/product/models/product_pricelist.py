@@ -16,17 +16,11 @@ class Pricelist(models.Model):
     def _get_default_currency_id(self):
         return self.env.company.currency_id.id
 
-    def _get_default_item_ids(self):
-        ProductPricelistItem = self.env['product.pricelist.item']
-        vals = ProductPricelistItem.default_get(list(ProductPricelistItem._fields))
-        vals.update(compute_price='formula')
-        return [[0, False, vals]]
-
     name = fields.Char('Pricelist Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
     item_ids = fields.One2many(
         'product.pricelist.item', 'pricelist_id', 'Pricelist Items',
-        copy=True, default=_get_default_item_ids)
+        copy=True)
     currency_id = fields.Many2one('res.currency', 'Currency', default=_get_default_currency_id, required=True)
     company_id = fields.Many2one('res.company', 'Company')
 
@@ -257,6 +251,10 @@ class Pricelist(models.Model):
                     cur = product.cost_currency_id
                 else:
                     cur = product.currency_id
+                price = cur._convert(price, self.currency_id, self.env.company, date, round=False)
+
+            if not suitable_rule:
+                cur = product.currency_id
                 price = cur._convert(price, self.currency_id, self.env.company, date, round=False)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
