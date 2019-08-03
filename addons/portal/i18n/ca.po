@@ -10,8 +10,8 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Quim - eccit <quim@eccit.com>, 2018
 # Manel Fernandez <manelfera@outlook.com>, 2019
-# M Palau <mpalau@tda.ad>, 2019
 # Arnau Ros, 2019
+# M Palau <mpalau@tda.ad>, 2019
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Arnau Ros, 2019\n"
+"Last-Translator: M Palau <mpalau@tda.ad>, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -197,14 +197,14 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Estimat/da ${object.user_id.name or ''},<br/> <br/>\n"
-"                        Se t'ha donat accés al portar de ${object.user_id.company_id.name}.<br/>\n"
+"                        Se t'ha donat accés al portal de ${object.user_id.company_id.name}.<br/>\n"
 "                        Les teves dades d'accés són les següents:\n"
 "                        <ul>\n"
 "                            <li>Usuari: ${object.user_id.login or ''}</li>\n"
 "                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "                            <li>Base de dades: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "                        </ul>\n"
-"                        Pots configurar o canviar la contrasenya a l'enllaç següent:\n"
+"                        Pots configurar o canviar la contrasenya mitjançant l'enllaç següent:\n"
 "                        <ul>\n"
 "                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "                        </ul>\n"
@@ -245,7 +245,7 @@ msgstr ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Amb tecnologia <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -310,8 +310,8 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Canviar el NIF/CIF no està permès un cop les factures han estat assignades "
-"al compte. Si us plau, contacti directament amb nosaltres per fer-ho."
+"Canviar el NIF/CIF no està permès un cop s'han assignat les factures al "
+"compte. Si us plau, contacti directament amb nosaltres per fer-ho."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -561,7 +561,8 @@ msgstr "Logo Odoo"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
-"Ups! Alguna cosa ha anat malament. Recarrega la pàgina i inicia sessió."
+"Ups! Alguna cosa ha anat malament. Torneu a carregar la pàgina i inicieu "
+"sessió."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

@@ -230,6 +230,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
 "                    My Cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart\"/>\n"
+"                    Můj Košík"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:58
@@ -240,6 +242,9 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"Zde najdete všechny opuštěné košíky, tj. košíky vytvořené návštěvníky vašeho webu před více než hodinou, které dosud nebyly potvrzeny.</p>\n"
+"<p>Zákazníkům byste měli poslat e-mail, abyste je povzbudili!</p>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -247,6 +252,8 @@ msgid ""
 "<small class=\"text-muted float-right\">Source: https://termsfeed.com/blog"
 "/sample-terms-and-conditions-template</small>"
 msgstr ""
+"<small class=\"text-muted float-right\">Zdroj: https://termsfeed.com/blog"
+"/sample-terms-and-conditions-template</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -254,6 +261,8 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span class=\"\">K pokladně</span>\n"
+"                                        <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -261,6 +270,8 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span class=\"\">K pokladně</span>\n"
+"                                        <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -292,6 +303,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left\"/>\n"
 "                                    Continue<span class=\"d-none d-md-inline\"> Shopping</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                    Pokračovat<span class=\"d-none d-md-inline\"> v nákupu</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -356,7 +369,7 @@ msgstr "<span>Objednávka</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
-msgstr ""
+msgstr "<span>K pokladně</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -366,7 +379,7 @@ msgstr "<span>Třídit podle</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "<span>Your payment has been authorized.</span>"
-msgstr ""
+msgstr "<span>Vaše platba byla autorizována.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -391,6 +404,9 @@ msgid ""
 "This should the country in which your company is headquartered or the "
 "country from which you operate your web site and mobile app."
 msgstr ""
+"<b>Platný zákon</b> bude informovat uživatele, které zákony země upravují "
+"dohodu. To by měla být země, ve které má vaše společnost sídlo, nebo země, "
+"ze které provozujete svůj web a mobilní aplikaci."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -400,6 +416,11 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
+"<b>Doložka o činnostech</b>, které mohou uživatelé udělat, může informovat "
+"uživatele, že souhlasí s používáním vaší služby a souhlasí také s tím, že "
+"nebudou dělat určité věci. Může to být součástí velmi dlouhého a důkladného "
+"seznamu ve vašich smluvních podmínkách, který zahrnuje co nejvíce "
+"negativních použití."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -410,6 +431,11 @@ msgid ""
 " agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
 " of these third parties."
 msgstr ""
+"Klauzule <b>Odkazy na jiné webové stránky</b> informuje uživatele, že nejste"
+" zodpovědní za žádné webové stránky třetích stran, na které odkazujete. "
+"Tento druh doložky bude obecně informovat uživatele, že jsou zodpovědní za "
+"čtení a souhlas (nebo nesouhlas) s podmínkami nebo zásadami ochrany osobních"
+" údajů těchto třetích stran."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -419,11 +445,15 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
+"<b>Ustanovení o ukončení služby</b> bude informovat, že účty uživatelů na "
+"vašem webu a mobilní aplikaci nebo přístup uživatelů k vašemu webu a mobilu "
+"(pokud uživatelé nemohou mít u vás účet) mohou být ukončeny v případě "
+"zneužití nebo na základě vlastního uvážení."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "A document to provide"
-msgstr ""
+msgstr "Dokument k poskytnutí"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -476,6 +506,10 @@ msgid ""
 "find them in *Website > Orders > Abandoned Carts*. From there you can send "
 "recovery emails to visitors who entered their contact details."
 msgstr ""
+"Opuštěné košíky jsou všechny košíky, které návštěvníci webových stránek "
+"nepotvrdili. Najdete je na *Web> Objednávky> Opuštěné košíky*. Odtud můžete "
+"odesílat e-maily pro obnovení návštěvníkům, kteří zadali své kontaktní "
+"údaje."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
@@ -484,12 +518,14 @@ msgid ""
 "Accessories show up when the customerreviews the cart before payment (cross-"
 "sell strategy)."
 msgstr ""
+"Příslušenství se objeví, když zákazník před nákupem zkontroluje košík "
+"(strategie křížového prodeje)."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
 msgid "Accessory Products"
-msgstr ""
+msgstr "Doplňkové produkty"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -557,6 +593,8 @@ msgid ""
 "An error occured while processing your payment. Please try again or contact "
 "your administrator."
 msgstr ""
+"Při zpracování platby došlo k chybě. Zkuste to prosím znovu nebo kontaktujte"
+" svého správce."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -609,7 +647,7 @@ msgstr "Název banky"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr ""
+msgstr "Buďte si vědomi co děláte!"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -728,6 +766,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "            touchscreen interface."
 msgstr ""
+"Kategorie se používají k procházení vašich produktů prostřednictvím rozhraní"
+" dotykové obrazovky."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_chairs
@@ -759,6 +799,7 @@ msgstr "Město"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
+"První produkt vytvoříte kliknutím na <i>'Nový'</i> v pravém horním rohu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -770,7 +811,7 @@ msgstr "Kliknout zde"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:28
 #, python-format
 msgid "Click on <em>Continue</em> to create the product."
-msgstr ""
+msgstr "Kliknutím na <em>Pokračovat</em> vytvořte produkt."
 
 #. module: website_sale
 #. openerp-web
@@ -872,7 +913,7 @@ msgstr "Kontakt"
 #: code:addons/website_sale/static/src/js/website_sale_options.js:87
 #, python-format
 msgid "Continue Shopping"
-msgstr ""
+msgstr "Pokračovat v nákupu"
 
 #. module: website_sale
 #. openerp-web
@@ -965,6 +1006,8 @@ msgid ""
 "Delivery methods are only used internally: the customer doesn't pay for "
 "shipping costs"
 msgstr ""
+"Způsoby doručení se používají pouze interně: zákazník neplatí náklady na "
+"dopravu"
 
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
@@ -972,6 +1015,7 @@ msgid ""
 "Delivery methods are selectable on the website: the customer pays for "
 "shipping costs"
 msgstr ""
+"Způsoby dodání jsou na webu volitelné: zákazník zaplatí náklady na dopravu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
@@ -988,7 +1032,7 @@ msgstr "Stoly"
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr ""
+msgstr "Určete pořadí zobrazení v e-shopu."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
