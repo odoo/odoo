@@ -30,14 +30,12 @@
                                 <field name="generate_lead_from_alias"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="generate_lead_from_alias" string="Manual Assignation of Incoming Emails"/>
+                                <label for="generate_lead_from_alias" string="Email Alias"/>
                                 <div class="text-muted">
-                                    Generate leads from incoming emails and assign them
-                                    to a Sales Team manually
+                                    Incoming emails create leads
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('generate_lead_from_alias','=',False)]}">
                                     <div class="mt16">
-                                        <label for="crm_alias_prefix" string="Alias" class="o_light_label"/>
                                         <field name="crm_alias_prefix" class="oe_inline"
                                             attrs="{'required': [('generate_lead_from_alias', '=', True)]}"/>
                                         <label for="alias_domain" string="@"/>

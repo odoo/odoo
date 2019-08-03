@@ -93,9 +93,9 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
-                <field name="date_review_next"/>
-                <field name="grade_id"/>
-                <field name="activation"/>
+                <field name="date_review_next" optional="hide"/>
+                <field name="grade_id" optional="hide"/>
+                <field name="activation" optional="hide"/>
             </field>
         </field>
     </record>
@@ -137,7 +137,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='sale']" position="inside">
-                    <field name="assigned_partner_id" groups="base.group_no_one" attrs="{'invisible': [('customer','=', False)]}"/>
+                    <field name="assigned_partner_id" groups="base.group_no_one"/>
                 </xpath>
             </data>
         </field>

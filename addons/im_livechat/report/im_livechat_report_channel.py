@@ -25,7 +25,7 @@ class ImLivechatReportChannel(models.Model):
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)")
     nbr_speaker = fields.Integer('# of speakers', readonly=True, group_operator="avg", help="Number of different speakers")
     nbr_message = fields.Integer('Average message', readonly=True, group_operator="avg", help="Number of message in the conversation")
-    is_without_answer = fields.Integer('Session(s) without answer', reandonly=True, group_operator="sum",
+    is_without_answer = fields.Integer('Session(s) without answer', readonly=True, group_operator="sum",
                                        help="""A session is without answer if the operator did not answer. 
                                        If the visitor is also the operator, the session will always be answered.""")
     days_of_activity = fields.Integer('Days of activity', group_operator="max", readonly=True, help="Number of days since the first session of the operator")

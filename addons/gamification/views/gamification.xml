@@ -4,4 +4,10 @@
             <link rel="stylesheet" type="text/scss" href="/gamification/static/src/scss/gamification.scss"/>
         </xpath>
     </template>
+
+    <template id="assets_common" inherit_id="web.assets_common">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/gamification/static/src/js/crash_manager.js"/>
+        </xpath>
+    </template>
 </odoo>

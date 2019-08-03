@@ -89,20 +89,6 @@ class ResConfigSettings(models.TransientModel):
             return False
         return self._prepare_report_view_action(self.external_report_layout_id.key)
 
-    def change_report_template(self):
-        self.ensure_one()
-        template = self.env.ref('base.view_company_document_template_form')
-        return {
-            'name': _('Choose Your Document Layout'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_id': self.env.company.id,
-            'res_model': 'res.company',
-            'views': [(template.id, 'form')],
-            'view_id': template.id,
-            'target': 'new',
-        }
-
     # NOTE: These fields depend on the context, if we want them to be computed
     # we have to make them depend on a field. This is because we are on a TransientModel.
     @api.depends('company_id')

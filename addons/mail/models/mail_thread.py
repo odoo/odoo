@@ -2017,8 +2017,8 @@ class MailThread(models.AbstractModel):
             message_format_values = False
             if inbox_pids:
                 message_format_values = message.message_format()[0]
-                for partner in self.env['res.partner'].browse(inbox_pids):
-                    bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner), dict(message_format_values)])
+                for partner_id in inbox_pids:
+                    bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
             if channel_ids:
                 bus_notifications += self.env['mail.channel'].sudo().browse(channel_ids)._channel_message_notifications(message, message_format_values)
         if bus_notifications:
@@ -2324,7 +2324,7 @@ class MailThread(models.AbstractModel):
             params['token'] = token
 
         link = '%s?%s' % (base_link, url_encode(params))
-        if self and hasattr(self, 'get_base_url'):
+        if self:
             link = self[0].get_base_url() + link
 
         return link

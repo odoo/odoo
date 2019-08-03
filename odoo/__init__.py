@@ -100,7 +100,7 @@ from . import tools
 from . import models
 from . import fields
 from . import api
-from odoo.tools.translate import _
+from odoo.tools.translate import _, _lt
 
 #----------------------------------------------------------
 # Other imports, which may require stuff from above

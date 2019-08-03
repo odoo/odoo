@@ -5,16 +5,9 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <button name="%(event.act_event_registration_from_event)d" position="after">
-                <button class="oe_stat_button" type="object"
-                        name="action_mass_mailing_attendees"
-                        icon="fa-envelope-o"
-                        attrs="{'invisible': [('seats_expected', '=', 0)]}">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Mail Attendees</span>
-                    </div>
-                </button>
-            </button>
+            <xpath expr="//button[@name='button_cancel']" position="after">
+                <button name="action_mass_mailing_attendees" string="Mail Attendees" type="object" attrs="{'invisible': [('seats_expected', '=', 0)]}"/>
+            </xpath>
         </field>
     </record>
 </odoo>

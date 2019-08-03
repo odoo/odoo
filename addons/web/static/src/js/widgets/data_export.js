@@ -3,7 +3,6 @@ odoo.define('web.DataExport', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var Dialog = require('web.Dialog');
 var data = require('web.data');
 var framework = require('web.framework');
@@ -168,7 +167,7 @@ var DataExport = Dialog.extend({
                 })
             },
             complete: framework.unblockUI,
-            error: crash_manager.rpc_error.bind(crash_manager),
+            error: () => this.call('crash_manager', 'rpc_error', ...arguments),
         });
     },
     /**

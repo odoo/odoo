@@ -5,11 +5,10 @@
 diff --git a/openacademy/models.py b/openacademy/models.py
 --- a/openacademy/models.py
 +++ b/openacademy/models.py
-@@ -14,6 +14,20 @@ class Course(models.Model):
+@@ -14,6 +14,19 @@ class Course(models.Model):
      session_ids = fields.One2many(
          'openacademy.session', 'course_id', string="Sessions")
- 
-+    @api.multi
+
 +    def copy(self, default=None):
 +        default = dict(default or {})
 +

@@ -264,7 +264,7 @@ class Project(models.Model):
             defaults = self._map_tasks_default_valeus(task)
             if task.parent_id:
                 # set the parent to the duplicated task
-                defaults['parent_id'] = old_to_new_tasks[task.parent_id.id]
+                defaults['parent_id'] = old_to_new_tasks.get(task.parent_id.id, False)
             new_task = task.copy(defaults)
             old_to_new_tasks[task.id] = new_task.id
             tasks += new_task
@@ -530,7 +530,7 @@ class Task(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Circular references are not permitted between tasks and sub-tasks'))
+            raise ValidationError(_('You cannot create recursive tasks.'))
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -910,7 +910,8 @@ class Task(models.Model):
             'view_mode': 'form',
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'context': dict(self._context, create=False)
         }
 
     def action_subtask(self):

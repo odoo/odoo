@@ -14,7 +14,6 @@ odoo.define('web.PivotController', function (require) {
 
 var AbstractController = require('web.AbstractController');
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var framework = require('web.framework');
 var session = require('web.session');
 
@@ -126,7 +125,7 @@ var PivotController = AbstractController.extend({
     _downloadTable: function () {
         var table = this.model.exportData();
         if(table.measure_row.length + 1 > 256) {
-            crash_manager.show_message(_t("For Excel compatibility, data cannot be exported if there are more than 256 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
+            this.call('crash_manager', 'show_message', _t("For Excel compatibility, data cannot be exported if there are more than 256 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
             framework.unblockUI();
             return;
         }
@@ -136,7 +135,7 @@ var PivotController = AbstractController.extend({
             url: '/web/pivot/export_xls',
             data: {data: JSON.stringify(table)},
             complete: framework.unblockUI,
-            error: crash_manager.rpc_error.bind(crash_manager)
+            error: () => this.call('crash_manager', 'rpc_error', ...arguments),
         });
     },
     /**

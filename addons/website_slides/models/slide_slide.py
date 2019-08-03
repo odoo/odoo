@@ -152,10 +152,20 @@ class Slide(models.Model):
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+    # comments
+    comments_count = fields.Integer('Number of comments', compute="_compute_comments_count")
+    # channel
+    channel_type = fields.Selection(related="channel_id.channel_type", string="Channel type")
+    channel_allow_comment = fields.Boolean(related="channel_id.allow_comment", string="Allows comment")
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
+
+    @api.depends('website_message_ids.res_id', 'website_message_ids.model', 'website_message_ids.message_type')
+    def _compute_comments_count(self):
+        for slide in self:
+            slide.comments_count = len(slide.website_message_ids)
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):
@@ -277,9 +287,9 @@ class Slide(models.Model):
 
         if not values.get('index_content'):
             values['index_content'] = values.get('description')
-        if values.get('slide_type') == 'infographic' and not values.get('image'):
-            values['image'] = values['datas']
-        if values.get('website_published') and not values.get('date_published'):
+        if values.get('slide_type') == 'infographic' and not values.get('image_1920'):
+            values['image_1920'] = values['datas']
+        if values.get('is_published') and not values.get('date_published'):
             values['date_published'] = datetime.datetime.now()
         if values.get('url') and not values.get('document_id'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
@@ -288,7 +298,7 @@ class Slide(models.Model):
 
         slide = super(Slide, self).create(values)
 
-        if slide.website_published:
+        if slide.is_published:
             slide._post_publication()
         return slide
 
@@ -299,7 +309,7 @@ class Slide(models.Model):
                 values.setdefault(key, value)
 
         res = super(Slide, self).write(values)
-        if values.get('website_published'):
+        if values.get('is_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
         return res
@@ -594,7 +604,7 @@ class Slide(models.Model):
                 return values
             values.update({
                 'name': snippet['title'],
-                'image': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
+                'image_1920': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
                 'description': snippet['description'],
                 'mime_type': False,
             })
@@ -605,8 +615,8 @@ class Slide(models.Model):
         def get_slide_type(vals):
             # TDE FIXME: WTF ??
             slide_type = 'presentation'
-            if vals.get('image'):
-                image = Image.open(io.BytesIO(base64.b64decode(vals['image'])))
+            if vals.get('image_1920'):
+                image = Image.open(io.BytesIO(base64.b64decode(vals['image_1920'])))
                 width, height = image.size
                 if height > width:
                     return 'document'
@@ -638,14 +648,14 @@ class Slide(models.Model):
 
         values = {
             'name': google_values['title'],
-            'image': self._fetch_data(google_values['thumbnailLink'].replace('=s220', ''), {}, 'image')['values'],
+            'image_1920': self._fetch_data(google_values['thumbnailLink'].replace('=s220', ''), {}, 'image')['values'],
             'mime_type': google_values['mimeType'],
             'document_id': document_id,
         }
         if google_values['mimeType'].startswith('video/'):
             values['slide_type'] = 'video'
         elif google_values['mimeType'].startswith('image/'):
-            values['datas'] = values['image']
+            values['datas'] = values['image_1920']
             values['slide_type'] = 'infographic'
         elif google_values['mimeType'].startswith('application/vnd.google-apps'):
             values['slide_type'] = get_slide_type(values)
@@ -667,6 +677,6 @@ class Slide(models.Model):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_1024" % (self.id)
         res['default_meta_description'] = self.description
         return res

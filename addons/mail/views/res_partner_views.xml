@@ -16,16 +16,6 @@
                         <field name="email" widget="email"/>
                     </div>
                 </xpath>
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button"  icon="fa-envelope" groups="base.group_no_one" attrs="{'invisible':[('message_bounce', '=', 0)]}">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_value">
-                                <field name="message_bounce" widget="statinfo" nolabel="1"/>
-                            </span>
-                            <span class="o_stat_text">Bounce(s)</span>
-                        </div>
-                    </button>
-                </div>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -67,7 +57,7 @@
                     <field name="id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('res.partner', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <img t-att-src="activity_image('res.partner', 'image_64', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="parent_id" muted="1" display="full"/>

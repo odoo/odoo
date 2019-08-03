@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import SavepointCase, HttpCase, tagged
 
 
 class TestAccountNoChartCommon(SavepointCase):
@@ -41,7 +41,6 @@ class TestAccountNoChartCommon(SavepointCase):
         cls.partner_customer_usd = Partner.create({
             'name': 'Customer from the North',
             'email': 'customer.usd@north.com',
-            'customer': True,
             'property_account_payable_id': cls.account_payable.id,
             'property_account_receivable_id': cls.account_receivable.id,
         })

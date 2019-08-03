@@ -7,7 +7,7 @@ import pytz
 
 from odoo import models, api, fields
 from odoo.fields import Datetime
-from odoo.tools.translate import _
+from odoo.tools.translate import _, _lt
 from odoo.exceptions import UserError
 
 
@@ -53,7 +53,7 @@ class pos_session(models.Model):
 
 ORDER_FIELDS = ['date_order', 'user_id', 'lines', 'statement_ids', 'pricelist_id', 'partner_id', 'session_id', 'pos_reference', 'sale_journal', 'fiscal_position_id']
 LINE_FIELDS = ['notice', 'product_id', 'qty', 'price_unit', 'discount', 'tax_ids', 'tax_ids_after_fiscal_position']
-ERR_MSG = _('According to the French law, you cannot modify a %s. Forbidden fields: %s.')
+ERR_MSG = _lt('According to the French law, you cannot modify a %s. Forbidden fields: %s.')
 
 
 class pos_order(models.Model):

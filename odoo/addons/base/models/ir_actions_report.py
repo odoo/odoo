@@ -490,23 +490,24 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).search(conditions, limit=1)
 
     @api.model
-    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0):
+    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=1):
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
         try:
-            width, height, humanreadable = int(width), int(height), bool(int(humanreadable))
+            width, height, humanreadable, quiet = int(width), int(height), bool(int(humanreadable)), bool(int(quiet))
             barcode = createBarcodeDrawing(
                 barcode_type, value=value, format='png', width=width, height=height,
-                humanReadable=humanreadable
+                humanReadable=humanreadable, quiet=quiet
             )
             return barcode.asString('png')
         except (ValueError, AttributeError):
             if barcode_type == 'Code128':
                 raise ValueError("Cannot convert into barcode.")
             else:
-                return self.barcode('Code128', value, width=width, height=height, humanreadable=humanreadable)
+                return self.barcode('Code128', value, width=width, height=height,
+                    humanreadable=humanreadable, quiet=quiet)
 
     def render_template(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
@@ -791,18 +792,7 @@ class IrActionsReport(models.Model):
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and ((not self.env.company.external_report_layout_id) or (not discard_logo_check and not self.env.company.logo)) and config:
-            template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
-            return {
-                'name': _('Choose Your Document Layout'),
-                'type': 'ir.actions.act_window',
-                'context': {'default_report_name': self.report_name, 'discard_logo_check': True},
-                'view_mode': 'form',
-                'res_id': self.env.company.id,
-                'res_model': 'res.company',
-                'views': [(template.id, 'form')],
-                'view_id': template.id,
-                'target': 'new',
-            }
+            return self.env.ref('base.action_base_document_layout_configurator').read()[0]
 
         context = self.env.context
         if docids:

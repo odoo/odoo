@@ -324,7 +324,7 @@ class WebsiteSlides(WebsiteProfile):
         return request.env['res.users'].sudo().search_read([
             ('karma', '>', 0),
             ('website_published', '=', True),
-            ('image', '!=', False)], ['id'], limit=3, order='karma desc')
+            ('image_1920', '!=', False)], ['id'], limit=3, order='karma desc')
 
     @http.route([
         '/slides/<model("slide.channel"):channel>',
@@ -557,9 +557,9 @@ class WebsiteSlides(WebsiteProfile):
         return response
 
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
-    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False):
+    def slide_get_image(self, slide_id, field='image_128', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
-        if field not in ('image_small', 'image_medium', 'image_large'):
+        if field not in ('image_64', 'image_128', 'image_256', 'image_512', 'image_1024', 'image_1920'):
             return werkzeug.exceptions.Forbidden()
 
         slide = request.env['slide.slide'].sudo().browse(slide_id).exists()
@@ -820,7 +820,7 @@ class WebsiteSlides(WebsiteProfile):
 
         try:
             values['user_id'] = request.env.uid
-            values['website_published'] = values.get('website_published', False) and can_publish
+            values['is_published'] = values.get('is_published', False) and can_publish
             slide = request.env['slide.slide'].sudo().create(values)
         except (UserError, AccessError) as e:
             _logger.error(e)
@@ -836,17 +836,17 @@ class WebsiteSlides(WebsiteProfile):
             redirect_url += "?enable_editor=1"
         if slide.slide_type == "quiz":
             action_id = request.env.ref('website_slides.action_slides_slides').id
-            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' %(slide.id,action_id)
+            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' % (slide.id, action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,
             'slide_id': slide.id,
             'category_id': slide.category_id
-            }
+        }
 
     def _get_valid_slide_post_values(self):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-            'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published']
+                'mime_type', 'datas', 'description', 'image_1920', 'index_content', 'is_published']
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):

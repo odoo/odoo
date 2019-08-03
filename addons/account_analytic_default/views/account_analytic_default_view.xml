@@ -59,7 +59,7 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div>
                                     <strong><span><field name="analytic_id"/></span></strong>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                 </div>
                                 <div t-if="record.date_start.value"><i class="fa fa-calendar"></i> From <field name="date_start"/> <t t-if="record.date_stop.value">to <field name="date_stop"/></t></div>
                                 <div t-if="record.product_id.value"><strong>Product</strong> <field name="product_id"/> </div>

@@ -214,7 +214,10 @@ class SaleOrder(models.Model):
             if not order.company_id:
                 order.currency_rate = order.currency_id.with_context(date=order.date_order).rate or 1.0
                 continue
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            elif order.company_id.currency_id and order.currency_id:  # the following crashes if any one is undefined
+                order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            else:
+                order.currency_rate = 1.0
 
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
@@ -491,6 +494,14 @@ class SaleOrder(models.Model):
             action['res_id'] = invoices.id
         else:
             action = {'type': 'ir.actions.act_window_close'}
+        action['context'] = {
+            'default_type': 'out_invoice',
+            'default_partner_id': self.partner_id.id,
+            'default_partner_shipping_id': self.partner_shipping_id.id,
+            'default_invoice_payment_term_id': self.payment_term_id.id,
+            'default_invoice_origin': self.name,
+            'default_user_id': self.user_id.id,
+        }
         return action
 
     def _create_invoices(self, grouped=False, final=False):
@@ -1506,7 +1517,7 @@ class SaleOrderLine(models.Model):
         if not (self.product_id and self.product_uom and
                 self.order_id.partner_id and self.order_id.pricelist_id and
                 self.order_id.pricelist_id.discount_policy == 'without_discount' and
-                self.env.user.has_group('sale.group_discount_per_so_line')):
+                self.env.user.has_group('product.group_discount_per_so_line')):
             return
 
         self.discount = 0.0

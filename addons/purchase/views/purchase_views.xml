@@ -166,11 +166,11 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" widget="res_partner_many2one" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0, 'show_vat': True}" domain="[('supplier','=',True)]"
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
                                 placeholder="Name, TIN, Email, or Reference"
                             />
                             <field name="partner_ref"/>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','=','purchase')]}"/>
@@ -206,7 +206,7 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
-                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}"/>
+                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)], 'readonly': [('parent.date_planned', '!=', False)]}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="account_analytic_id" optional="hide" context="{'default_partner_id':parent.partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -342,11 +342,6 @@
                                     <label for="date_planned"/>
                                     <div>
                                         <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
-                                        <button name="action_set_date_planned" type="object"
-                                            states="draft,sent"
-                                            string="Set date to all order lines"
-                                            help="This changes the scheduled date of all order lines to the given date"
-                                            class="fa fa-calendar o_icon_button oe_edit_only"/>
                                     </div>
                                 </group>
                                 <group>
@@ -375,6 +370,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="name" string="Reference"/>
+                    <field name="partner_ref" optional="hide"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
@@ -454,19 +450,20 @@
             <field name="arch" type="xml">
                 <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order">
                     <field name="message_unread" invisible="1"/>
+                    <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference"/>
-                    <field name="date_order" invisible="not context.get('quotation_only', False)"/>
-                    <field name="date_approve" invisible="context.get('quotation_only', False)"/>
+                    <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
+                    <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    <field name="date_planned" invisible="context.get('quotation_only', False)"/>
-                    <field name="user_id"/>
-                    <field name="origin"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
-                    <field name="amount_total" sum="Total amount" widget="monetary"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                    <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="origin" optional="show"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="state"/>
-                    <field name="invoice_status" invisible="1"/>
+                    <field name="state" optional="show"/>
+                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                 </tree>
             </field>
         </record>

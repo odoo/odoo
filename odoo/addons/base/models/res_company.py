@@ -70,7 +70,7 @@ class Company(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo", readonly=False)
+    logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
@@ -94,8 +94,9 @@ class Company(models.Model):
     base_onboarding_company_state = fields.Selection([
         ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
     favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
-
-
+    font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
+    primary_color = fields.Char()
+    secondary_color = fields.Char()
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
@@ -153,10 +154,10 @@ class Company(models.Model):
         for company in self:
             company.partner_id.country_id = company.country_id
 
-    @api.depends('partner_id', 'partner_id.image')
+    @api.depends('partner_id.image_1920')
     def _compute_logo_web(self):
         for company in self:
-            company.logo_web = tools.image_process(company.partner_id.image, size=(180, 0))
+            company.logo_web = tools.image_process(company.partner_id.image_1920, size=(180, 0))
 
     @api.onchange('state_id')
     def _onchange_state(self):
@@ -217,8 +218,7 @@ class Company(models.Model):
         partner = self.env['res.partner'].create({
             'name': vals['name'],
             'is_company': True,
-            'image': vals.get('logo'),
-            'customer': False,
+            'image_1920': vals.get('logo'),
             'email': vals.get('email'),
             'phone': vals.get('phone'),
             'website': vals.get('website'),
@@ -309,3 +309,24 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    def update_scss(self):
+        """ update the company scss stylesheet """
+        scss_properties = []
+        if self.primary_color:
+            scss_properties.append('$o-company-primary-color:%s;' % self.primary_color)
+        if self.secondary_color:
+            scss_properties.append('$o-company-secondary-color:%s;' % self.secondary_color)
+        if self.font:
+            scss_properties.append('$o-company-font:%s;' % self.font)
+        scss_string = '\n'.join(scss_properties)
+
+        if not len(scss_string):
+            scss_string = ""
+
+        scss_data = base64.b64encode((scss_string).encode('utf-8'))
+
+        attachment = self.env['ir.attachment'].search([('name', '=', 'res.company.scss')])
+        attachment.write({'datas': scss_data})
+
+        return ''

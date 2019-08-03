@@ -50,6 +50,8 @@ class MrpProductProduce(models.TransientModel):
         'raw_product_produce_id', string='Components')
     finished_workorder_line_ids = fields.One2many('mrp.product.produce.line',
         'finished_product_produce_id', string='By-products')
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order',
+        required=True, ondelete='cascade')
 
     @api.depends('qty_producing')
     def _compute_pending_production(self):

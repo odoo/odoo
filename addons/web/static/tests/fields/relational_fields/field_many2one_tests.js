@@ -338,7 +338,7 @@ QUnit.module('fields', {}, function () {
                     '<field ' +
                     'name="trululu" ' +
                     'string="custom label" ' +
-                    'context="{\'search_default_customer\':1, \'show_address\': 1}" ' +
+                    'context="{\'show_address\': 1}" ' +
                     'options="{\'always_reload\': True}"' +
                     '/>' +
                     '</group>' +

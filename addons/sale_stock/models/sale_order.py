@@ -134,6 +134,8 @@ class SaleOrder(models.Model):
         elif pickings:
             action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
             action['res_id'] = pickings.id
+        picking_id = pickings.filtered(lambda l: l.picking_type_id.code == 'outgoing')[0]
+        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_id=picking_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
         return action
 
     def action_cancel(self):
@@ -210,12 +212,15 @@ class SaleOrderLine(models.Model):
         for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
             if line.qty_delivered_method == 'stock_move':
                 qty = 0.0
-                for move in line.move_ids.filtered(lambda r: r.state == 'done' and not r.scrapped and line.product_id == r.product_id):
-                    if move.location_dest_id.usage == "customer":
-                        if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                            qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-                    elif move.location_dest_id.usage != "customer" and move.to_refund:
-                        qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves()
+                for move in outgoing_moves:
+                    if move.state != 'done':
+                        continue
+                    qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                for move in incoming_moves:
+                    if move.state != 'done':
+                        continue
+                    qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line.qty_delivered = qty
 
     @api.model_create_multi
@@ -355,12 +360,25 @@ class SaleOrderLine(models.Model):
     def _get_qty_procurement(self, previous_product_uom_qty=False):
         self.ensure_one()
         qty = 0.0
-        for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
-            if move.picking_code == 'outgoing':
-                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-            elif move.picking_code == 'incoming':
-                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
+        for move in outgoing_moves:
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        for move in incoming_moves:
+            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         return qty
+
+    def _get_outgoing_incoming_moves(self):
+        outgoing_moves = self.env['stock.move']
+        incoming_moves = self.env['stock.move']
+
+        for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
+            if move.location_dest_id.usage == "customer":
+                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
+                    outgoing_moves |= move
+            elif move.location_dest_id.usage != "customer" and move.to_refund:
+                incoming_moves |= move
+
+        return outgoing_moves, incoming_moves
 
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id
