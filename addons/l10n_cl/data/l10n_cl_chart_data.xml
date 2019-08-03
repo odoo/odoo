@@ -269,6 +269,7 @@
         <field ref="account.data_account_type_current_assets" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="116" model="account.account.template">
@@ -397,6 +398,8 @@
         <field ref="account.data_account_type_fixed_assets" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="121120" model="account.account.template">
@@ -405,6 +408,8 @@
         <field ref="account.data_account_type_fixed_assets" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="164" model="account.account.template">
@@ -413,6 +418,8 @@
         <field ref="account.data_account_type_fixed_assets" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="162" model="account.account.template">
@@ -421,6 +428,8 @@
         <field ref="account.data_account_type_fixed_assets" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="161" model="account.account.template">
@@ -429,6 +438,8 @@
         <field ref="account.data_account_type_fixed_assets" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="165" model="account.account.template">
@@ -453,6 +464,8 @@
         <field ref="account.data_account_type_fixed_assets" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="171" model="account.account.template">
@@ -798,6 +811,7 @@
         <field ref="account.data_account_type_current_liabilities" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_cl_impuesto_unico_trabajadores')])]"/>
     </record>
 
     <record id="244" model="account.account.template">
@@ -1046,6 +1060,11 @@
         <field ref="account.data_account_type_revenue" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[
+                         ref('tag_cl_sale_mnt_neto'),
+                         ref('tag_cl_sale_valor_neto_comis')
+               ])]"/>
     </record>
 
     <record id="310120" model="account.account.template">
@@ -1054,6 +1073,13 @@
         <field ref="account.data_account_type_revenue" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[
+                         ref('tag_cl_sale_mnt_exe'),
+                         ref('tag_cl_sale_valor_comisiones_no_afecto'),
+                         ref('tag_cl_sale_exento_vta_pasajes_nacional'),
+                         ref('tag_cl_sale_exento_vta_pasajes_internacional')
+               ])]"/>
     </record>
 
     <record id="310125" model="account.account.template">
@@ -1390,6 +1416,39 @@
         <field ref="account.data_account_type_expenses" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[
+                   (6,0,[ref('tag_cl_purchase_mnt_neto'),
+                         ref('tag_cl_purchase_tab_puros'),
+                         ref('tag_cl_purchase_tab_cigar)])]"/>s
+    </record>
+    <record id="61_02" model="account.account.template">
+        <field name="code">410231</field>
+        <field name="name">Compras Netas (IVA Uso Común)</field>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[
+                    (6,0,[ref('tag_cl_purchase_mnt_neto_uso_comun')])]"/>
+    </record>
+    <record id="61_03" model="account.account.template">
+        <field name="code">410232</field>
+        <field name="name">Compras Netas (IVA No Recuperable)</field>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_no_recup')])]"/>
+    </record>
+    <record id="61_04" model="account.account.template">
+        <field name="code">410232</field>
+        <field name="name">Compras de Supermercado</field>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_supermercado')])]f"/>
     </record>
 
     <record id="511_01" model="account.account.template">
