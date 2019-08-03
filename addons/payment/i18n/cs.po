@@ -150,7 +150,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Credit card(s)</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kreditní karta(y)</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -267,7 +267,7 @@ msgstr "Platební transakce již existuje."
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "K vytvoření nové platební transakce je vyžadován token."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
@@ -285,7 +285,7 @@ msgstr "Transakce %s s %s zahájena."
 #: code:addons/payment/models/account_invoice.py:36
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
-msgstr ""
+msgstr "Transakci nelze propojit s fakturami s různými měnami."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:41
@@ -402,7 +402,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr ""
+msgstr "Podporován mechanismus autorizace"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -499,7 +499,7 @@ msgstr "Platbu nelze nastavit"
 #: code:addons/payment/controllers/portal.py:225
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "Nelze nastavit platbu."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
@@ -515,7 +515,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr ""
+msgstr "Zachytit částku z Odoo, když je doručení dokončeno."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -526,7 +526,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Zvolte způsob platby"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -707,7 +707,7 @@ msgstr "Hotovo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Zpráva o dokončení"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -837,6 +837,8 @@ msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
 msgstr ""
+"Pokud ji necháte prázdnou, bude příjemce platby k dispozici pro všechny "
+"země."
 
 #. module: payment
 #. openerp-web
@@ -958,12 +960,12 @@ msgstr "Nechte zákazníka rozhodnout"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "Seznam příjemců podporujících tuto ikonu platby."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Zpřístupnit tohoto příjemce platby (faktury zákazníka atd.)"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
@@ -992,6 +994,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Ruční: Zaplaťte v hotovosti, šekem nebo jinou metodou mimo Odoo.\n"
+"Elektronické: Platba automaticky probíhá prostřednictvím příjemce plateb žádostí o transakci na kartě uloženou zákazníkem při nákupu nebo objednání online (platební token).\n"
+"Dávkový vklad: Zapíše několik zákaznických šeků najednou vygenerováním dávkového vkladu, který odešle do banky. Při kódování výpisu z banky v Odoo vám doporučujeme transakci spárovat s vkladem dávky. Aktivujte tuto možnost z nastavení."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
@@ -1023,12 +1028,12 @@ msgstr "Zpráva zobrazená po provedení platebního procesu."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Zobrazí se zpráva, která vysvětluje a pomáhá platebnímu procesu."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "Zobrazí se zpráva, pokud během procesu platby dojde k chybě."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
@@ -1042,6 +1047,8 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
+"Zobrazí se zpráva, pokud je po úspěšném provedení platby úspěšně provedena "
+"objednávka."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
@@ -1081,7 +1088,7 @@ msgstr "Název"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "Název tokenu platby"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -1679,7 +1686,7 @@ msgstr "Test"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__post_msg
 msgid "Thanks Message"
-msgstr ""
+msgstr "Zpráva poděkování"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:871

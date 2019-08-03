@@ -1015,7 +1015,7 @@ class StockMove(models.Model):
         self.mapped('picking_id')._check_entire_pack()
 
     def _action_cancel(self):
-        if any(move.state == 'done' for move in self):
+        if any(move.state == 'done' and not move.scrapped for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
         moves_to_cancel = self.filtered(lambda m: m.state != 'cancel')
         # self cannot contain moves that are either cancelled or done, therefore we can safely
@@ -1037,6 +1037,7 @@ class StockMove(models.Model):
 
     def _prepare_extra_move_vals(self, qty):
         vals = {
+            'procure_method': 'make_to_stock',
             'origin_returned_move_id': self.origin_returned_move_id.id,
             'product_uom_qty': qty,
             'picking_id': self.picking_id.id,
@@ -1063,13 +1064,17 @@ class StockMove(models.Model):
                 rounding_method='HALF-UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals)
-            if extra_move.picking_id:
+
+            merge_into_self = all(self[field] == extra_move[field] for field in self._prepare_merge_moves_distinct_fields())
+
+            if merge_into_self and extra_move.picking_id:
                 extra_move = extra_move._action_confirm(merge_into=self)
+                return extra_move
             else:
                 extra_move = extra_move._action_confirm()
 
             # link it to some move lines. We don't need to do it for move since they should be merged.
-            if self.exists() and not self.picking_id:
+            if not merge_into_self:
                 for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
                     if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
                         # move this move line to our extra move
@@ -1086,7 +1091,7 @@ class StockMove(models.Model):
                         extra_move_quantity -= extra_move_quantity
                     if extra_move_quantity == 0.0:
                         break
-        return extra_move
+        return extra_move | self
 
     def _unreserve_initial_demand(self, new_move):
         pass
@@ -1107,9 +1112,7 @@ class StockMove(models.Model):
         for move in moves:
             if move.state == 'cancel' or move.quantity_done <= 0:
                 continue
-            # extra move will not be merged in mrp
-            if not move.picking_id:
-                moves_todo |= move
+
             moves_todo |= move._create_extra_move()
 
         # Split moves where necessary and move quants

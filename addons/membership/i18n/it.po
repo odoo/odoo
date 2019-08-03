@@ -5,10 +5,8 @@
 # Translators:
 # Martin Trigaux, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Paolo Valier, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
-# mymage <stefano.consolaro@mymage.it>, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
@@ -28,17 +26,17 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
 msgid "# Invoiced"
-msgstr "Totali con fattura"
+msgstr "N. con fattura"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
 msgid "# Paid"
-msgstr "Totali con pagamento"
+msgstr "N. con pagamento"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
 msgid "# Waiting"
-msgstr "Totali in attesa"
+msgstr "N. in attesa"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -66,8 +64,8 @@ msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Un socio a cui si vuole collegare la propria iscrizione. Verrà preso in "
-"considerazione lo stato dell'iscrizione del socio collegato."
+"Socio al quale collegare la propria iscrizione. Verrà preso in "
+"considerazione lo stato di iscrizione del socio collegato."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
@@ -77,7 +75,7 @@ msgstr "Riga contabile fattura"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Add a description..."
-msgstr "Aggiungere una descrizione..."
+msgstr "Aggiungi una descrizione..."
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
@@ -87,7 +85,7 @@ msgstr "Aggiungi un nuovo socio"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "All Members"
-msgstr "Tutti i soci"
+msgstr "Tutti gli iscritti"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -115,7 +113,7 @@ msgstr "Partner collegato"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
-msgstr "Acquisisci iscrizione"
+msgstr "Aggiungi iscrizione"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
@@ -138,7 +136,7 @@ msgstr "Data di annullamento"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
-msgstr "Socio cancellato"
+msgstr "Iscritto cancellato"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -189,13 +187,13 @@ msgstr "Creato il"
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Current Membership State"
-msgstr "Stato corrente di iscrizione"
+msgstr "Stato iscrizione corrente"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_state
 msgid "Current Membership Status"
-msgstr "Stato corrente di iscrizione"
+msgstr "Stato iscrizione corrente"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -239,7 +237,7 @@ msgstr "Nome visualizzato"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
 msgid "Earned Amount"
-msgstr "Importo ottenuto"
+msgstr "Importo ricavato"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
@@ -260,7 +258,7 @@ msgstr "Data fine iscrizione"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Ending Date Of Membership"
-msgstr ""
+msgstr "Data di fine iscrizione"
 
 #. module: membership
 #: sql_constraint:product.template:0
@@ -271,7 +269,7 @@ msgstr ""
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Forecast"
-msgstr "Previsione"
+msgstr "Stima"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__free_member
@@ -280,7 +278,7 @@ msgstr "Previsione"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr "Socio gratuito"
+msgstr "Iscritto non pagante"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
@@ -325,7 +323,7 @@ msgstr "Riga fattura"
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr "Crea fattura di iscrizione"
+msgstr "Fattura l'iscrizione"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -337,7 +335,7 @@ msgstr "Iscritto con fattura"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr "Fatturati/Pagati/Gratuiti"
+msgstr "Con fattura/Con pagamento/Non pagante"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_state
@@ -352,10 +350,10 @@ msgid ""
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
 "Indica lo stato dell'iscrizione.\n"
-"- Non iscritto: utente che non ha richiesto alcuna iscrizione.\n"
-"- Socio cancellato: socio che ha annullato la sua iscrizione.\n"
+"- Non iscritto: partner che non ha richiesto alcuna iscrizione.\n"
+"- Iscritto cancellato: socio che ha annullato la sua iscrizione.\n"
 "- Vecchio iscritto: socio la cui iscrizione è scaduta.\n"
-"- Socio in attesa: socio che ha richiesto l'iscrizione ed è in attesa che venga creata la relativa fattura.\n"
+"- Iscritto in attesa: socio che ha richiesto l'iscrizione ed è in attesa che venga creata la relativa fattura.\n"
 "- Iscritto con fattura: socio la cui fattura è stata creata.\n"
 "- Iscritto con pagamento: socio che ha pagato la quota di iscrizione."
 
@@ -371,10 +369,10 @@ msgid ""
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
 "Indica lo stato dell'iscrizione.\n"
-"- Non iscritto: utente che non ha richiesto alcuna iscrizione.\n"
-"- Socio cancellato: socio che ha annullato la sua iscrizione.\n"
+"- Non iscritto: partner che non ha richiesto alcuna iscrizione.\n"
+"- Iscritto cancellato: socio che ha annullato la sua iscrizione.\n"
 "- Vecchio iscritto: socio la cui iscrizione è scaduta.\n"
-"- Socio in attesa: socio che ha richiesto l'iscrizione ed è in attesa che venga creata la relativa fattura.\n"
+"- Iscritto in attesa: socio che ha richiesto l'iscrizione ed è in attesa che venga creata la relativa fattura.\n"
 "- Iscritto con fattura: socio la cui fattura è stata creata.\n"
 "- Iscritto con pagamento: socio che ha pagato la quota di iscrizione."
 
@@ -590,7 +588,7 @@ msgstr "Il partner non ha un indirizzo per la fatturazione."
 #: code:addons/membership/models/partner.py:184
 #, python-format
 msgid "Partner is a free Member."
-msgstr "Il partner è un socio gratuito."
+msgstr "Il partner è un iscritto non pagante."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
@@ -615,7 +613,7 @@ msgstr "Rendicontazione"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr "Entrata registrata"
+msgstr "Ricavi realizzati"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__user_id
@@ -628,7 +626,7 @@ msgstr "Addetto vendite"
 #: model:ir.model.fields,help:membership.field_res_partner__free_member
 #: model:ir.model.fields,help:membership.field_res_users__free_member
 msgid "Select if you want to give free membership."
-msgstr "Selezionare se si desidera un'iscrizione gratuita"
+msgstr "Selezionare se si desidera fornire un'iscrizione gratuita"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
@@ -661,12 +659,12 @@ msgstr "Questa nota verrà visualizzata nei preventivi..."
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr "Visualizza le colonne pagato, anno precedente e totale incassato"
+msgstr "Visualizza le colonne pagato, precedente e totale ricavato"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr "Visualizza le colonne «in attesa», «fatturate» e «totale in sospeso»"
+msgstr "Visualizza le colonne in attesa, fatturato e totale in sospeso"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
@@ -683,7 +681,7 @@ msgstr "Fornitori"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr "Socio in attesa"
+msgstr "Iscritto in attesa"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:162

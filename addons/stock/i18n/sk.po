@@ -2460,7 +2460,7 @@ msgstr "Spracováva sa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
-msgstr "V Type"
+msgstr "Typ vstupu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__exhausted
@@ -4054,7 +4054,7 @@ msgstr "Vybrať"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
 msgid "Pick Type"
-msgstr "Vybrať typ"
+msgstr "Typ výberu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__picking_id
@@ -7224,6 +7224,14 @@ msgstr "Najprv treba zadať baliace množstvo. "
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "Musíte dodať Šaržu/Sériové číslo pre produkt %s"
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:70
+#, python-format
+msgid ""
+"You should not remove the 'lots and serial numbers' option while the following products are still tracked by lot or serial number:\n"
+" %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:394

@@ -1311,7 +1311,7 @@ class Menu(models.Model):
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
-                page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
+                page = self.env['website.page'].search(self.env["website"].website_domain(website_id) + ['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url
@@ -1331,6 +1331,6 @@ class WebsiteRedirect(models.Model):
     type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True, default='301')
     url_from = fields.Char('Redirect From', required=True)
     url_to = fields.Char('Redirect To', required=True)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     active = fields.Boolean(default=True)
     sequence = fields.Integer()

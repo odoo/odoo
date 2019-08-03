@@ -349,9 +349,11 @@ class WebsiteSale(ProductConfiguratorController):
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
     def pricelist(self, promo, **post):
         redirect = post.get('r', '/shop/cart')
-        pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
-        if not pricelist or (pricelist and not request.website.is_pricelist_available(pricelist.id)):
-            return request.redirect("%s?code_not_available=1" % redirect)
+        # empty promo code is used to reset/remove pricelist (see `sale_get_order()`)
+        if promo:
+            pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
+            if (not pricelist or (pricelist and not request.website.is_pricelist_available(pricelist.id))):
+                return request.redirect("%s?code_not_available=1" % redirect)
 
         request.website.sale_get_order(code=promo)
         return request.redirect(redirect)
@@ -681,6 +683,8 @@ class WebsiteSale(ProductConfiguratorController):
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
                     order.onchange_partner_id()
+                    # This is the *only* thing that the front end user will see/edit anyway when choosing billing address
+                    order.partner_invoice_id = partner_id
                     if not kw.get('use_same'):
                         kw['callback'] = kw.get('callback') or \
                             (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))

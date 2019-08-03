@@ -17,6 +17,7 @@ class TimesheetAttendance(models.Model):
 
     @api.model_cr
     def init(self):
+        self._cr.execute("DROP VIEW IF EXISTS hr_timesheet_attendance_report")
         self._cr.execute("""CREATE OR REPLACE VIEW %s AS (
             SELECT
                 max(id) AS id,

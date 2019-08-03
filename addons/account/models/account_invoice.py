@@ -1504,8 +1504,10 @@ class AccountInvoice(models.Model):
 
         values['type'] = TYPE2REFUND[invoice['type']]
         values['date_invoice'] = date_invoice or fields.Date.context_today(invoice)
-        if values.get('date_due', False) and values['date_invoice'] > values['date_due']:
-            values['date_due'] = values['date_invoice']
+        if values.get('date_due', False) and values['date_invoice']:
+            # To ensure that the date_invoice is a date object
+            if self._fields['date_invoice'].to_date(values['date_invoice']) > values['date_due']:
+                values['date_due'] = values['date_invoice']
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
@@ -1847,7 +1849,10 @@ class AccountInvoiceLine(models.Model):
             return
         if not self.product_id:
             fpos = self.invoice_id.fiscal_position_id
-            default_tax = self.invoice_id.type in ('out_invoice', 'out_refund') and self.invoice_id.company_id.account_sale_tax_id or self.invoice_id.company_id.account_purchase_tax_id
+            if self.invoice_id.type in ('out_invoice', 'out_refund'):
+                default_tax = self.invoice_id.company_id.account_sale_tax_id
+            else:
+                default_tax = self.invoice_id.company_id.account_purchase_tax_id
             self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids or default_tax, partner=self.partner_id).ids
         elif not self.price_unit:
             self._set_taxes()

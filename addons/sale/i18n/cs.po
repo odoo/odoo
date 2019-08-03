@@ -267,11 +267,13 @@ msgstr "<span>Přijato jménem:</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Zaplacením této nabídky souhlasím s následujícími podmínkami:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Podpisem tohoto návrhu souhlasím s následujícími podmínkami:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -432,7 +434,7 @@ msgstr "Jediná prodejní cena pro každý produkt"
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
-msgstr ""
+msgstr "Transakce nemůže být spojena s prodejními zakázkami s různými měnami."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:780
@@ -440,6 +442,8 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
+"Transakce nemůže být spojena s prodejními zakázkami, které mají různé "
+"partnery."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -448,11 +452,14 @@ msgid ""
 "                where you want to sell extra hours to the customer\n"
 "                because the initial hours have already been used."
 msgstr ""
+"Typickým příkladem jsou předplacené hodiny služby,\n"
+"kde chcete prodat další hodiny zákazníkovi\n"
+"protože počáteční hodiny již byly vyčerpány."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "Upozornění na produkt nebo zákazníka (Prodej)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -460,6 +467,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Schopnost vybrat typ balíku v zakázkách odběratele a vynutit množství, které"
+" je násobkem počtu jednotek na balení."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -485,6 +494,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Podle konfigurace produktu může být dodané množství automaticky vypočítáno pomocí mechanismu:\n"
+"- Ruční: množství je nastaveno ručně na lince\n"
+"- Analytické z nákladů: množství je množství z účtovaných nákladů\n"
+"- Časový rozvrh: množství je součtem hodin zaznamenaných na úkolech spojených s touto prodejní linkou\n"
+"- Skladové pohyby: množství pochází z potvrzených vychystávání\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -584,7 +598,7 @@ msgstr "Částka"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Částka před slevou"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -643,7 +657,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Za cenu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
@@ -697,14 +711,14 @@ msgstr "Název banky"
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Na základě ID zákazníka"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:13
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Na základě odkazu na dokument"
 
 #. module: sale
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_5
@@ -1201,7 +1215,7 @@ msgstr ""
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "Vklad"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
@@ -1243,12 +1257,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist__discount_policy
 msgid "Discount Policy"
-msgstr ""
+msgstr "slevová politika"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Discount included in the price"
-msgstr ""
+msgstr "Sleva v ceně"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -1276,7 +1290,7 @@ msgstr "Zobrazovaný název"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Typ zobrazení"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1425,12 +1439,12 @@ msgstr "Budoucí činnosti"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
+msgstr "Fakturu vygenerujte automaticky při potvrzení platby online"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "Získejte varování v objednávkách produktů nebo zákazníků"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1454,7 +1468,7 @@ msgstr "Seskupit podle"
 #: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr ""
+msgstr "HTML Color Index"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute_value__html_color
@@ -1464,6 +1478,9 @@ msgid ""
 "        specific HTML color index (e.g. #ff0000) to display the color if the\n"
 "        attribute type is 'Color'."
 msgstr ""
+"Zde můžete nastavit a\n"
+"specifický HTML barevný index (např. #ff0000) pro zobrazení barvy, pokud\n"
+"typ atributu je  'Color'."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__hide_expense_policy
@@ -1474,7 +1491,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
 msgid "How your customers can confirm an order"
-msgstr ""
+msgstr "Jak mohou vaši zákazníci potvrdit objednávku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__id
@@ -1510,6 +1527,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Pokud je prodej uzamčen, již jej nemůžete měnit. Stále však budete moci "
+"fakturovat nebo dodat."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:280
@@ -1542,7 +1561,7 @@ msgstr "Importovat šablonu pro produkty"
 #: code:addons/sale/models/product_template.py:92
 #, python-format
 msgid "Import Template for Products (with several prices)"
-msgstr ""
+msgstr "Šablona importu pro produkty (s několika cenami)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1557,7 +1576,7 @@ msgstr "Účet příjmů"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
-msgstr ""
+msgstr "Sem vložte své smluvní podmínky ..."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:198
@@ -1646,11 +1665,14 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Výnosy z faktur za aktuální měsíc. Toto je částka, kterou tento měsíc "
+"fakturoval prodejní kanál. Používá se pro výpočet poměru progresu aktuálního"
+" a cílového příjmu na kanbanovém pohledu."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr ""
+msgstr "Faktura, co je dodáno"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1678,7 +1700,7 @@ msgstr "Fakturováno"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "Fakturované množství"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -1710,12 +1732,14 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Faktury budou vytvořeny v návrhu, abyste je mohli zkontrolovat\n"
+"před validací."
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr ""
+msgstr "Faktury: celkem bez daně"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -1740,7 +1764,7 @@ msgstr "Fakturační zvyklosti"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "Cíl fakturace"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1750,12 +1774,12 @@ msgstr "Fakturační adresa:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "Fakturační a dodací adresa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr ""
+msgstr "Invoicing and Shipping Address:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2385,7 +2409,7 @@ msgstr "Zaplať teď"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Pay online"
-msgstr ""
+msgstr "Zaplatit online"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2630,7 +2654,7 @@ msgstr "Kategorie výrobku"
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Product Image"
-msgstr ""
+msgstr "Obrázek produktu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_qty
@@ -3224,7 +3248,7 @@ msgstr "Odeslat e-mailem"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send sample"
-msgstr ""
+msgstr "Odeslat vzor"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3330,7 +3354,7 @@ msgstr "Zobrazit standardní podmínky  pro objednávky"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign and pay online"
-msgstr ""
+msgstr "Podepsat a zaplatit online"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -3780,6 +3804,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Chcete-li posílat pozvánky v režimu B2B, otevřete kontakt nebo vyberte "
+"několik v zobrazení seznamu a klikněte na možnost Správa portálového "
+"přístupu v rozevírací nabídce *Akce*."
 
 #. module: sale
 #: selection:sale.order,activity_state:0

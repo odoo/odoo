@@ -140,7 +140,7 @@ class SaleOrderLine(models.Model):
     def _compute_product_qty(self):
         for line in self:
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
-                return 0.0
+                continue
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
     def _is_delivery(self):

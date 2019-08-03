@@ -246,7 +246,7 @@ class PosConfig(models.Model):
                                     " the Accounting application."))
         if self.invoice_journal_id.currency_id and self.invoice_journal_id.currency_id != self.currency_id:
             raise ValidationError(_("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
-        if any(self.journal_ids.mapped(lambda journal: journal.currency_id and journal.currency_id != self.currency_id)):
+        if any(self.journal_ids.mapped(lambda journal: self.currency_id not in (journal.company_id.currency_id, journal.currency_id))):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
     @api.constrains('company_id', 'available_pricelist_ids')
@@ -423,6 +423,8 @@ class PosConfig(models.Model):
     def open_ui(self):
         """ open the pos interface """
         self.ensure_one()
+        # check all constraints, raises if any is not met
+        self._validate_fields(self._fields)
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',
