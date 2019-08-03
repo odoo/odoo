@@ -21,14 +21,14 @@ class TestStatistics(common.SlidesCase):
             'name': 'How To Cook For Humans',
             'channel_id': self.channel.id,
             'slide_type': 'presentation',
-            'website_published': True,
+            'is_published': True,
             'completion_time': 3.0,
         })
         self.slide_3 = self.env['slide.slide'].with_user(self.user_publisher).create({
             'name': 'How To Cook Humans For Humans',
             'channel_id': self.channel.id,
             'slide_type': 'document',
-            'website_published': True,
+            'is_published': True,
             'completion_time': 1.5,
         })
 

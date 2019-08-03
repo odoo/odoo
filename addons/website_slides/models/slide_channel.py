@@ -200,7 +200,7 @@ class Channel(models.Model):
     def _compute_slides_statistics(self):
         result = dict((cid, dict(total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
-            [('is_published', '=', True),('channel_id', 'in', self.ids)],
+            [('website_published', '=', True), ('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_type'],
             lazy=False)
@@ -534,7 +534,7 @@ class Category(models.Model):
     def _count_presentations(self):
         result = dict.fromkeys(self.ids, dict())
         res = self.env['slide.slide'].read_group(
-            [('is_published', '=', True), ('category_id', 'in', self.ids)],
+            [('website_published', '=', True), ('category_id', 'in', self.ids)],
             ['category_id', 'slide_type'], ['category_id', 'slide_type'],
             lazy=False)
 
