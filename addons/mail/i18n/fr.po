@@ -16,8 +16,9 @@
 # Julien Martin <204336@supinfo.com>, 2018
 # nle_odoo, 2018
 # Olivier ANDRE <frsw194@gmail.com>, 2019
-# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Martin Trigaux, 2019
+# Alex Tuyls <alt@odoo.com>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -292,6 +293,12 @@ msgid ""
 "                            </span>\n"
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"<strong>Email de masse</strong> pour\n"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">le fichier sélectionné</span>\n"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">le filtre de recherche actuellement utilisé</span>.\n"
+"</span>\n"
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Abonnés aux documents et</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -5674,6 +5681,13 @@ msgstr "Enlever tous les messages des favoris"
 #, python-format
 msgid "Unsubscribe"
 msgstr "Se désabonner"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/services/mail_notification_manager.js:454
+#, python-format
+msgid "Unsubscribed"
+msgstr "Désabonné"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:473
