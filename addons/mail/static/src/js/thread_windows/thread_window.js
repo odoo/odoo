@@ -6,6 +6,7 @@ var BasicComposer = require('mail.composer.Basic');
 
 var core = require('web.core');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 /**
@@ -152,6 +153,23 @@ var ThreadWindow = AbstractThreadWindow.extend({
      */
     removePassive: function () {
         this._passive = false;
+    },
+    renderOutOfOffice: function () {
+        var $outOfOffice = this.$('.o_out_of_office');
+        if (!this.getOutOfOfficeInfo() && !this.getOutOfOfficeMessage()) {
+            if ($outOfOffice.length) {
+                $outOfOffice.remove();
+            }
+            return;
+        }
+        var $newOutOfOffice = $(QWeb.render('mail.thread_window.OutOfOffice', {
+            widget: this,
+        }));
+        if ($outOfOffice.length) {
+            $outOfOffice.replaceWith($newOutOfOffice);
+        } else {
+            $newOutOfOffice.insertAfter(this.$('.o_thread_window_header'));
+        }
     },
     /**
      * Update this thread window

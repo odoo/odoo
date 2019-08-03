@@ -298,7 +298,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 },
                 on_success: resolve,
                 on_fail: function () {
-                    self.update({}, {reload: false}).then(reject).guardedCatch(reject);
+                    self.update({}, { reload: false }).then(reject).guardedCatch(reject);
                 },
                 on_closed: reload,
             });

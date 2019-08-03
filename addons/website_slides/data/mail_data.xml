@@ -12,7 +12,7 @@
                         A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_datetime(object.write_date, tz=user.tz)}
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}">
-                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; margin: 16px;"/>
+                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
@@ -39,7 +39,7 @@
                         ${ctx['user'].name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}">
-                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; margin: 16px;"/>
+                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">

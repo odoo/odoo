@@ -135,8 +135,6 @@
         <!--        Child Company 1-->
         <record id="res_partner_company_1" model="res.partner">
             <field name="name">My Company, Chicago</field>
-            <field eval="1" name="customer"/>
-            <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
             <field eval="1" name="active"/>
             <field name="street">90 Streets Avenue</field>
@@ -154,7 +152,7 @@
             <field name="parent_id" ref="res_partner_company_1"/>
             <field name="email">jeff.lawson52@example.com</field>
             <field name="phone">(461)-417-6587</field>
-            <field name="image" type="base64" file="stock/static/img/res_partner_address_41.jpg"/>
+            <field name="image_1920" type="base64" file="stock/static/img/res_partner_address_41.jpg"/>
         </record>
 
         <record id="res_company_1" model="res.company">

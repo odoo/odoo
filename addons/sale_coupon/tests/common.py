@@ -20,7 +20,6 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
         # create partner for sale order.
         self.steve = self.env['res.partner'].create({
             'name': 'Steve Bucknor',
-            'customer': True,
             'email': 'steve.bucknor@example.com',
         })
 

@@ -3,6 +3,7 @@ odoo.define('web.widget_tests', function (require) {
 
 var AjaxService = require('web.AjaxService');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var QWeb = require('web.QWeb');
 var Widget = require('web.Widget');
 var testUtils = require('web.test_utils');
@@ -482,6 +483,24 @@ QUnit.module('core', {}, function () {
         assert.verifySteps(['destroy'], "child should have been detroyed only once");
     });
 
+
+    QUnit.module('Widgets, Dialog');
+
+    QUnit.test("don't close dialog on backdrop click", async function (assert) {
+        assert.expect(3);
+
+        var dialog = new Dialog(null);
+        dialog.open();
+        await dialog.opened();
+
+        assert.strictEqual($('.modal.show').length, 1, "a dialog should have opened");
+        var $backdrop = $('.modal-backdrop');
+        assert.strictEqual($backdrop.length, 1, "the dialog should have a modal backdrop");
+        testUtils.dom.click('.modal.show'); // Click on backdrop is in fact a direct click on the .modal element
+        assert.strictEqual($('.modal.show').length, 1, "the dialog should still be opened");
+
+        dialog.close();
+    });
 });
 
 });

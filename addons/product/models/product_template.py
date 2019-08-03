@@ -149,6 +149,13 @@ class ProductTemplate(models.Model):
 
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items')
 
+    can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
+
+    @api.depends('image_1920', 'image_1024')
+    def _compute_can_image_1024_be_zoomed(self):
+        for template in self:
+            template.can_image_1024_be_zoomed = template.image_1920 and tools.is_image_size_above(template.image_1920, template.image_1024)
+
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
         for p in self:
@@ -371,6 +378,16 @@ class ProductTemplate(models.Model):
             self.create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
+        if 'image_1920' in vals:
+            self.env['product.product'].invalidate_cache(fnames=[
+                'image_1920',
+                'image_1024',
+                'image_512',
+                'image_256',
+                'image_128',
+                'image_64',
+                'can_image_1024_be_zoomed',
+            ])
         return res
 
     @api.returns('self', lambda value: value.id)
@@ -521,10 +538,12 @@ class ProductTemplate(models.Model):
             #   deleted
             valid_value_ids = tmpl_id.valid_product_attribute_value_wnva_ids
             valid_attribute_ids = tmpl_id.valid_product_attribute_wnva_ids
+            seen_attributes = set(p.attribute_value_ids for p in tmpl_id.product_variant_ids if p.active)
             for product_id in tmpl_id.product_variant_ids:
                 if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
-                    if not product_id.active:
+                    if not product_id.active and product_id.attribute_value_ids not in seen_attributes:
                         variants_to_activate += product_id
+                        seen_attributes.add(product_id.attribute_value_ids)
                 else:
                     variants_to_unlink += product_id
 

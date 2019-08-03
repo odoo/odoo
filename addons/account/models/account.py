@@ -556,7 +556,7 @@ class AccountJournal(models.Model):
         help='The next sequence number will be used for the next invoice.',
         compute='_compute_seq_number_next',
         inverse='_inverse_seq_number_next')
-    refund_sequence_number_next = fields.Integer(string='Credit Notes: Next Number',
+    refund_sequence_number_next = fields.Integer(string='Credit Notes Next Number',
         help='The next sequence number will be used for the next credit note.',
         compute='_compute_refund_seq_number_next',
         inverse='_inverse_refund_seq_number_next')
@@ -685,6 +685,10 @@ class AccountJournal(models.Model):
     def onchange_credit_account_id(self):
         if not self.default_debit_account_id:
             self.default_debit_account_id = self.default_credit_account_id
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        self.refund_sequence = self.type in ('sale', 'purchase')
 
     def _get_alias_values(self, type, alias_name=None):
         if not alias_name:
@@ -872,6 +876,7 @@ class AccountJournal(models.Model):
                 if not vals['code']:
                     raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
 
+
             # Create a default debit/credit account if not given
             default_account = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
             company = self.env['res.company'].browse(company_id)
@@ -886,6 +891,8 @@ class AccountJournal(models.Model):
                 if not vals.get('loss_account_id'):
                     vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
+        if 'refund_sequence' not in vals:
+            vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):

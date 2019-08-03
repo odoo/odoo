@@ -15,6 +15,7 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.PosOrder = self.env['pos.order']
         self.Statement = self.env['account.bank.statement']
         self.company = self.env.ref('base.main_company')
+        self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         self.product = self.env.ref('product.product_product_3')
         self.partner = self.env.ref('base.res_partner_1')
         self.category = self.env.ref('product.product_category_1')
@@ -114,3 +115,59 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         aml_expense = aml.filtered(lambda l: l.account_id.id == expense_account.id)
         self.assertEqual(aml_output.credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense.debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
+
+    def test_2041208(self):
+        # check fifo Costing Method of product.category
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.standard_price = 5.0
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 5.0,
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+        self.product.standard_price = 1.0
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 10.0,
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+        self.assertEqual(self.product.value_svl, 30, "Value should be (5*5 + 5*1) = 30")
+        self.assertEqual(self.product.quantity_svl, 10)
+
+        self.pos_config.open_session_cb()
+        self.pos_config.module_account = True
+
+        self.pos_order_pos0 = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'pricelist_id': self.company.partner_id.property_product_pricelist.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': 7.0,
+                'price_subtotal': 7 * 450,
+                'price_subtotal_incl': 7 * 450,
+            })],
+            'amount_total': 7 * 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 7 * 450.0,
+            'journal_id': self.cash_journal.id,
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+        current_session_id = self.pos_config.current_session_id
+        current_session_id.action_pos_session_validate()
+
+        line = self.pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
+        self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')

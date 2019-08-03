@@ -7,14 +7,15 @@ from odoo import fields, models
 class SlideChannelTagGroup(models.Model):
     _name = 'slide.channel.tag.group'
     _description = 'Channel/Course tags'
+    _inherit = 'website.published.mixin'
     _order = 'sequence asc'
 
     name = fields.Char('Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10, index=True, required=True)
     tag_ids = fields.One2many('slide.channel.tag', 'group_id', string='Tags')
-    website_published = fields.Boolean(
-        'Menu entry', default=True,
-        help='Makes a menu entry in main navigation of Slides, allowing to filter on its tags directly from main navigation.')
+
+    def _default_is_published(self):
+        return True
 
 
 class SlideChannelTag(models.Model):

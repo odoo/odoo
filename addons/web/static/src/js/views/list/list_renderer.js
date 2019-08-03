@@ -36,6 +36,7 @@ var FIELD_CLASSES = {
 var ListRenderer = BasicRenderer.extend({
     className: 'o_list_view',
     events: {
+        "mousedown": "_onMouseDown",
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
         "click .o_optional_columns_dropdown_toggle": "_onToggleOptionalColumnDropdown",
         'click tbody tr': '_onRowClicked',
@@ -599,16 +600,22 @@ var ListRenderer = BasicRenderer.extend({
         var colspanBeforeAggregate;
         if (firstAggregateIndex !== -1) {
             // if there are aggregates, the first $th goes until the first
-            // aggregate then all cells between aggregates are rendered, then
-            // there is a last $th for the pager
+            // aggregate then all cells between aggregates are rendered
             colspanBeforeAggregate = firstAggregateIndex;
             var lastAggregateIndex = _.findLastIndex(this.columns, function (column) {
                 return column.tag === 'field' && _.contains(aggregateKeys, column.attrs.name);
             });
             cells = cells.concat(aggregateCells.slice(firstAggregateIndex, lastAggregateIndex + 1));
-            cells.push($('<th>').attr('colspan', this.columns.length - 1 - lastAggregateIndex));
+            var colSpan = this.columns.length - 1 - lastAggregateIndex;
+            if (colSpan > 0) {
+                cells.push($('<th>').attr('colspan', colSpan));
+            }
         } else {
-            colspanBeforeAggregate = this.columns.length;
+            var colN = this.columns.length;
+            colspanBeforeAggregate = colN > 1 ? colN - 1 : 1;
+            if (colN > 1) {
+                cells.push($('<th>'));
+            }
         }
         if (this.hasSelectors) {
             colspanBeforeAggregate += 1;
@@ -616,11 +623,11 @@ var ListRenderer = BasicRenderer.extend({
         $th.attr('colspan', colspanBeforeAggregate);
 
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
-            var $lastCell = cells[cells.length - 1];
             var $pager = this._renderGroupPager(group);
-            $lastCell.addClass('o_group_pager').append($pager);
+            var $lastCell = cells[cells.length - 1];
+            $lastCell.append($pager);
         }
-        if (groupLevel === 0 && group.isOpen && this.groupbys[groupBy]) {
+        if (group.isOpen && this.groupbys[groupBy]) {
             var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
             if ($buttons.length) {
                 var $buttonSection = $('<div>', {
@@ -745,7 +752,7 @@ var ListRenderer = BasicRenderer.extend({
             $th.css({ textAlign: 'right' });
         }
 
-        if (config.isDebug() || node.attrs.help || field.help) {
+        if (config.isDebug()) {
             var fieldDescr = {
                 field: field,
                 name: name,
@@ -1062,6 +1069,7 @@ var ListRenderer = BasicRenderer.extend({
             case $.ui.keyCode.LEFT:
                 ev.preventDefault();
                 $tr = $cell.closest('tr');
+                $tr.closest('tbody').addClass('o_keyboard_navigation');
                 if ($tr.hasClass('o_group_header') && $tr.hasClass('o_group_open')) {
                     this._onToggleGroup(ev);
                 } else {
@@ -1071,6 +1079,7 @@ var ListRenderer = BasicRenderer.extend({
             case $.ui.keyCode.RIGHT:
                 ev.preventDefault();
                 $tr = $cell.closest('tr');
+                $tr.closest('tbody').addClass('o_keyboard_navigation');
                 if ($tr.hasClass('o_group_header') && !$tr.hasClass('o_group_open')) {
                     this._onToggleGroup(ev);
                 } else {
@@ -1079,11 +1088,13 @@ var ListRenderer = BasicRenderer.extend({
                 break;
             case $.ui.keyCode.UP:
                 ev.preventDefault();
+                $cell.closest('tbody').addClass('o_keyboard_navigation');
                 colIndex = this.currentColIndex || $cell.index();
                 $futureCell = this._findConnectedCell($cell, 'prev', colIndex);
                 break;
             case $.ui.keyCode.DOWN:
                 ev.preventDefault();
+                $cell.closest('tbody').addClass('o_keyboard_navigation');
                 colIndex = this.currentColIndex || $cell.index();
                 $futureCell = this._findConnectedCell($cell, 'next', colIndex);
                 break;
@@ -1112,6 +1123,13 @@ var ListRenderer = BasicRenderer.extend({
                 $futureCell.focus();
             }
         }
+    },
+    /**
+     *
+     * @param {MouseEvent} ev
+     */
+    _onMouseDown: function(ev) {
+        $('.o_keyboard_navigation').removeClass('o_keyboard_navigation');
     },
     /**
      * @private

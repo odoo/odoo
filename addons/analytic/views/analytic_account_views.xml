@@ -97,13 +97,16 @@
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
                 <tree string="Analytic Entries">
-                    <field name="date"/>
+                    <field name="date" optional="show"/>
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="unit_amount" sum="Quantity"/>
-                    <field name="amount" sum="Total"/>
+                    <field name="unit_amount" sum="Quantity" optional="hide"/>
+                    <field name="product_uom_id" optional="hide"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount" sum="Total" optional="show"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>

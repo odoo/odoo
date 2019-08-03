@@ -27,7 +27,6 @@
             <script type="text/javascript" src="/account/static/src/js/bank_statement.js"></script>
             <script type="text/javascript" src="/account/static/src/js/section_and_note_fields_backend.js"></script>
             <script type="text/javascript" src="/account/static/src/js/tours/account.js"></script>
-
             <script type="text/javascript" src="/account/static/src/js/bills_tree_upload.js"/>
         </xpath>
     </template>
@@ -41,6 +40,7 @@
     <template id="assets_tests" name="Account Assets Tests" inherit_id="web.assets_tests">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/account/static/tests/tours/reconciliation.js"></script>
+            <script type="text/javascript" src="/account/static/tests/tours/account_dashboard_setup_bar_tests.js"></script>
         </xpath>
     </template>
 

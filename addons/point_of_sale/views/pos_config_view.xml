@@ -243,6 +243,34 @@
                     </div>
                     <h2>Pricing</h2>
                     <div class="row mt16 o_settings_container" id="pricing">
+                        <div class="col-12 col-lg-6 o_setting_box" id="default_pricelist_setting" groups="base.group_multi_currency,product.group_sale_pricelist">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Default Pricelist</span>
+                                <div class="content-group mt16">
+                                    <field name="pricelist_id" domain="[('id', 'in', available_pricelist_ids)]" options="{'no_create': True}"/>
+                                </div>
+                                <div>
+                                    <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="pricelist_setting" groups="product.group_sale_pricelist">
+                            <div class="o_setting_left_pane">
+                                <field name="use_pricelist"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="use_pricelist" string="Advanced Pricelists"/>
+                                <div class="text-muted">
+                                    Set shop-specific prices, seasonal discounts, etc.
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('use_pricelist','=',False)], 'required' : [('use_pricelist', '=', True)]}">
+                                    <div class="row mt16">
+                                        <label string="Available Pricelists" for="available_pricelist_ids" class="col-lg-3 o_light_label"/>
+                                        <field name="available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-xs-12 col-lg-6 o_setting_box" id="product_prices">
                             <div class="o_setting_right_pane">
                                 <label for="iface_tax_included" string="Product Prices"/>
@@ -273,30 +301,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="pricelist_setting" title="Choose a pricelist for the Point Of Sale" groups="product.group_sale_pricelist">
-                            <div class="o_setting_left_pane">
-                                <field name="use_pricelist"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="use_pricelist" string="Pricelist"/>
-                                <div class="text-muted">
-                                    Set shop-specific prices, seasonal discounts, etc.
-                                </div>
-                                <div class="content-group mt16" attrs="{'invisible': [('use_pricelist','=',False)], 'required' : [('use_pricelist', '=', True)]}">
-                                    <div class="row mt16">
-                                        <label string="Available Pricelists" for="available_pricelist_ids" class="col-lg-3 o_light_label"/>
-                                        <field name="available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
-                                    </div>
-                                    <div class="row">
-                                        <label string="Default Pricelist" for="pricelist_id" class="col-lg-3 o_light_label"/>
-                                        <field name="pricelist_id" domain="[('id', 'in', available_pricelist_ids)]" options="{'no_create': True}"/>
-                                    </div>
-                                    <div>
-                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" class="btn-link"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_pos_loyalty" widget="upgrade_boolean" nolabel="1"/>
@@ -323,7 +327,7 @@
                                     Payment methods available
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="journal_ids" colspan="4" nolabel="1" context="{'default_journal_user': 1, 'default_type': 'cash'}" widget="many2many_tags"/>
+                                    <field name="journal_ids" required="1" colspan="4" nolabel="1" context="{'default_journal_user': 1, 'default_type': 'cash'}" widget="many2many_tags"/>
                                 </div>
                                 <div>
                                     <button name="%(account_journal_action_point_of_sale)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
@@ -442,9 +446,9 @@
                                     <div class="row mt16">
                                         <label string="Invoice Journal" for="invoice_journal_id" class="col-lg-3 o_light_label"/>
                                         <field name="invoice_journal_id"
-                                                domain="[('company_id', '=', company_id)]"
+                                                domain="[('company_id', '=', company_id), ('type', '=', 'sale')]"
                                                attrs="{'required': [('module_account', '=', True)]}"
-                                               context="{'default_company_id': company_id}"/>
+                                               context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
                                     </div>
                                 </div>
                             </div>
@@ -476,7 +480,7 @@
                                 <div class="content-group">
                                     <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
                                         <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" widget="selection"/>
-                                        <field name="journal_id" domain="[('company_id', '=', company_id)]" context="{'default_company_id': company_id}"/>
+                                        <field name="journal_id" required="1" domain="[('company_id', '=', company_id), ('type', '=', 'sale')]" context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
                                     </div>
                                     <div class="row" groups="account.group_account_user" title="Get one journal item per product rather than one journal item per receipt line. This works for any anonymous order. If the customer is set on the order, one journal item is created for each receipt line. This option is recommended for an easy review of your journal entries when managing lots of orders.">
                                         <label string="Group Journal Items" for="group_by" class="col-lg-3 o_light_label"/>

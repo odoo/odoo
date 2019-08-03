@@ -187,14 +187,16 @@
                 <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
-                    <field name="confirmation_date" string="Confirmation Date"/>
+                    <field name="confirmation_date" string="Confirmation Date" optional="show"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
-                    <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="team_id" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="invoice_status" invisible="1"/>
+                    <field name="invoice_status" optional="show"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
@@ -208,14 +210,17 @@
                 <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
-                    <field name="date_order" string="Quotation Date"/>
+                    <field name="date_order" string="Quotation Date" optional="show"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
-                    <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="team_id" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="state"/>
+                    <field name="state" optional="show"/>
+                    <field name="invoice_status" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -254,7 +259,6 @@
                     <button name="action_confirm"
                         string="Confirm" type="object"
                         attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                    <button name="preview_sale_order" type="object" string="Preview"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="sent,sale" class="o_sale_print"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
@@ -267,6 +271,15 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="preview_sale_order"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-globe icon">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Customer</span>
+                                <span class="o_stat_text">Preview</span>
+                            </div>
+                        </button>
                         <button name="action_view_invoice"
                             type="object"
                             class="oe_stat_button"
@@ -282,7 +295,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" widget="res_partner_many2one" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
                         </group>
@@ -357,8 +370,8 @@
                                             <field name="price_unit"/>
                                             <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
                                                 attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
-                                            <label for="discount" groups="sale.group_discount_per_so_line"/>
-                                            <div name="discount" groups="sale.group_discount_per_so_line">
+                                            <label for="discount" groups="product.group_discount_per_so_line"/>
+                                            <div name="discount" groups="product.group_discount_per_so_line">
                                                 <field name="discount" class="oe_inline"/> %%
                                             </div>
                                             <!--
@@ -505,7 +518,7 @@
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
-                                    <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
+                                    <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
                                     <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
@@ -688,6 +701,7 @@
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
+                    <field name="campaign_id"/>
                     <separator/>
                     <filter string="My Quotations" name="my_quotation" domain="[('user_id', '=', uid)]"/>
                     <separator/>
@@ -961,7 +975,7 @@
                             </group>
                             <group>
                                 <field name="price_unit" readonly="1"/>
-                                <field name="discount" groups="sale.group_discount_per_so_line" readonly="1"/>
+                                <field name="discount" groups="product.group_discount_per_so_line" readonly="1"/>
                                 <field name="price_subtotal" widget="monetary"/>
                                 <field name="tax_id" widget="many2many_tags" readonly="1"/>
                                 <field name="price_tax" widget="monetary"/>
@@ -1082,6 +1096,17 @@
             </field>
         </record>
 
+        <record id="account_invoice_view_tree" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit.sale</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="invoice_user_id" position="after">
+                    <field name="team_id" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
         <!-- Update account invoice !-->
         <record model="ir.ui.view" id="account_invoice_form">
             <field name="name">Account Invoice</field>
@@ -1095,7 +1120,7 @@
                               attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                    </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
-                        <attribute name="groups">sale.group_discount_per_so_line</attribute>
+                        <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
                     <xpath expr="//group[@name='sale_info_group']" position="inside">
                         <field name="team_id"/>
@@ -1109,41 +1134,6 @@
                             <field name="medium_id"/>
                             <field name="source_id"/>
                         </group>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-        <record id="product_pricelist_view_tree" model="ir.ui.view">
-            <field name="name">product.pricelist.tree.inherit.product</field>
-            <field name="model">product.pricelist</field>
-            <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
-            <field name="arch" type="xml">
-                <field name="currency_id" position="before">
-                    <field name="discount_policy" groups="sale.group_discount_per_so_line"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="product_pricelist_view_form" model="ir.ui.view">
-            <field name="name">product.pricelist.form.inherit.product</field>
-            <field name="model">product.pricelist</field>
-            <field name="inherit_id" ref="product.product_pricelist_view"/>
-            <field name="arch" type="xml">
-                <field name="currency_id" position="before">
-                    <field name="discount_policy" groups="sale.group_discount_per_so_line" widget="radio"/>
-                </field>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_pricelist_view_kanban">
-            <field name="name">product.pricelist.kanban.inherit.product</field>
-            <field name="model">product.pricelist</field>
-            <field name="inherit_id" ref="product.product_pricelist_view_kanban"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr='//div[contains(@id, "product_pricelist")]' position="after">
-                        <field name="discount_policy"/>
                     </xpath>
                 </data>
             </field>

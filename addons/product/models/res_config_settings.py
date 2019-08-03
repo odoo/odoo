@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
+    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='product.group_discount_per_so_line')
     group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
     module_sale_product_configurator = fields.Boolean("Product Configurator")
@@ -42,3 +43,9 @@ class ResConfigSettings(models.TransientModel):
         If the user enables the product configurator -> enable the product variants as well"""
         if self.module_sale_product_configurator and not self.group_product_variant:
             self.group_product_variant = True
+
+    def set_values(self):
+        super(ResConfigSettings, self).set_values()
+        if not self.group_discount_per_so_line:
+            pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
+            pl.write({'discount_policy': 'with_discount'})

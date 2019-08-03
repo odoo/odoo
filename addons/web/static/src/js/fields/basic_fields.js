@@ -10,7 +10,6 @@ odoo.define('web.basic_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var config = require('web.config');
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
 var dom = require('web.dom');
 var Domain = require('web.Domain');
@@ -23,6 +22,7 @@ var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
+var ColorpickerDialog = require('web.ColorpickerDialog');
 
 require("web.zoomodoo");
 
@@ -373,11 +373,11 @@ var NumericField = InputField.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /** 
+    /**
      * Evaluate a string representing a simple formula,
      * a formula is composed of numbers and arithmetic operations
      * (ex: 4+3*2)
-     * 
+     *
      * Supported arithmetic operations: + - * / ^ ( )
      * Since each number in the formula can be expressed in user locale,
      * we parse each float value inside the formula using the user context
@@ -385,7 +385,7 @@ var NumericField = InputField.extend({
      * We assume that this function is used as a calculator so operand ^ (xor)
      * is replaced by operand ** (power) so that users that are used to
      * excel or libreoffice are not confused
-     * 
+     *
      * @private
      * @param expr
      * @return a float representing the result of the evaluated formula
@@ -1756,7 +1756,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     },
     /**
      * Returns the image URL from a model.
-     * 
+     *
      * @private
      * @param {string} model    model from which to retrieve the image
      * @param {string} res_id   id of the record
@@ -1769,7 +1769,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             model: model,
             id: JSON.stringify(res_id),
             field: field,
-            // unique forces a reload of the image when the record has been updated	
+            // unique forces a reload of the image when the record has been updated
             unique: field_utils.format.datetime(unique).replace(/[^0-9]/g, ''),
         });
     },
@@ -1811,7 +1811,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     },
     /**
      * Only enable the zoom on image in read-only mode, and if the option is enabled.
-     * 
+     *
      * @override
      * @private
      */
@@ -1833,7 +1833,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     this.$el.addClass(this.attrs.class);
                 }
 
-                var urlThumb = this._getImageUrl(this.model, this.res_id, 'image_medium', unique);
+                var urlThumb = this._getImageUrl(this.model, this.res_id, 'image_128', unique);
 
                 this.$el.empty();
                 $img = this.$el;
@@ -1927,11 +1927,10 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
             ev.stopPropagation();
         } else if (this.res_id) {
             framework.blockUI();
-            var c = crash_manager;
             var filename_fieldname = this.attrs.filename;
             this.getSession().get_file({
-                'url': '/web/content',
-                'data': {
+                complete: framework.unblockUI,
+                data: {
                     'model': this.model,
                     'id': this.res_id,
                     'field': this.name,
@@ -1940,8 +1939,8 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
-                'complete': framework.unblockUI,
-                'error': c.rpc_error.bind(c),
+                error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+                url: '/web/content',
             });
             ev.stopPropagation();
         }
@@ -3204,6 +3203,59 @@ var AceEditor = DebouncedField.extend({
     },
 });
 
+
+/**
+ * The FieldColor widget give a visual representation of a color
+ * Clicking on it bring up an instance of ColorpickerDialog
+ */
+var FieldColor = AbstractField.extend({
+    template: 'FieldColor',
+    events: {
+        'click .o_field_color': '_onColorClick',
+    },
+    custom_events: {
+        'colorpicker:saved': '_onColorpickerSaved',
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+    * @override
+    * @private
+    */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this.$('.o_field_color').data('value', this.value)
+            .css('background-color', this.value)
+            .attr('title', this.value);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+    * @private
+    * @param {MouseEvent} ev
+    */
+    _onColorClick: function (ev) {
+        new ColorpickerDialog(this, {
+            defaultColor: this.value,
+            noTransparency: true,
+        }).open();
+    },
+
+    /**
+    * @private
+    * @param {OdooEvent} ev
+    */
+    _onColorpickerSaved: function (ev) {
+        this._setValue(ev.data.hex);
+    },
+});
+
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
@@ -3247,6 +3299,7 @@ return {
     CharCopyClipboard: CharCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
+    FieldColor: FieldColor,
 };
 
 });

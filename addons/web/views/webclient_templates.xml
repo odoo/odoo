@@ -162,7 +162,7 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
-
+        <script type="text/javascript" src="/web/static/src/js/widgets/colorpicker_dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/zoomodoo.js"></script>
     </template>
 
@@ -217,6 +217,7 @@
         <link rel="stylesheet" type="text/scss" href="/base/static/src/scss/onboarding.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/attachment_preview.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_document_layout.scss"/>
 
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_settings.scss"/>
         <script type="text/javascript" src="/base/static/src/js/res_config_settings.js"></script>
@@ -250,6 +251,7 @@
         <script type="text/javascript" src="/web/static/src/js/core/context.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/data_comparison_utils.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/crash_manager_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/report_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
@@ -385,6 +387,7 @@
         <t t-call="web._assets_frontend_minimal_js"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_crash_manager.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_notification.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
@@ -571,27 +574,9 @@
         <script type="text/javascript" src="/web/static/lib/ace/mode-js.js"></script>
 
         <script type="text/javascript">
-            odoo.define('web.WebClientWithoutServices', function (require) {
-                var ServiceProviderMixin = require('web.ServiceProviderMixin');
-                var WebClient = require('web.WebClient');
-                var WebClientWithoutServices = WebClient.extend({
-                    /**
-                     * Patch web client so that it is no longer a service provider.
-                     *
-                     * @override
-                     */
-                    init: function () {
-                        var originalServiceProviderMixinInit = ServiceProviderMixin.init;
-                        ServiceProviderMixin.init = function () {};
-                        this._super.apply(this, arguments);
-                        ServiceProviderMixin.init = originalServiceProviderMixinInit;
-                    },
-                });
-                return WebClientWithoutServices;
-            });
             // define the 'web.web_client' module because some other modules require it
             odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.WebClientWithoutServices');
+                var WebClient = require('web.WebClient');
                 var web_client = new WebClient();
                 return web_client;
             });
