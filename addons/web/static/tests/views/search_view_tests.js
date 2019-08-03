@@ -209,6 +209,11 @@ QUnit.module('Search View', {
             'partner,9,search': '<search>'+
                 '<filter string="float" name="positive" domain="[(\'date_field\', \'>=\', (context_today() + relativedelta()).strftime(\'%Y-%m-%d\'))]"/>' +
             '</search>',
+            'partner,10,search': '<search>'+
+                    '<field string="Foo" name="foo"/>' +
+                    '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
+                    '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
+                '</search>',
         };
 
 
@@ -1078,6 +1083,89 @@ QUnit.module('Search View', {
 
         assert.containsNone(controlPanel, '.o_facet_values');
         controlPanel.destroy();
+    });
+
+    QUnit.test('toggle favorite correctly clears filter, groupbys and field "options"', async function (assert) {
+        assert.expect(8);
+
+        const unpatchDate = patchDate(2019,6,31,13,43,0);
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                load_filters: function (event) {
+                    return Promise.resolve([{
+                        context: "{}",
+                        domain: "[]",
+                        id: 7,
+                        is_default: false,
+                        name: "My favorite",
+                        sort: "[]",
+                        user_id: [2, "Mitchell Admin"],
+                    }]).then(event.data.on_success);
+                },
+            },
+        });
+
+        this.actions[11].search_view_id = [10, 'search'];
+        await actionManager.doAction(12);
+
+        // activate Foo a
+        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 97);
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+        
+        // activate Date Filter with This Month
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
+        await testUtils.dom.click($('.o_item_option[data-option_id="this_month"]'));
+
+        // activate Date Groupby with Year
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item a'));
+        await testUtils.dom.click($('.o_item_option[data-option_id="year"]'));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "a",
+            "There should be a filter Foo a");
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "Date Field Filter: July 2019",
+            "There should be a filter facet with label 'Date Field Filter: July 2019'");
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(2).text().trim(),
+            "Date Field Groupby: Year",
+            "There should be a groupby facet with label 'Date Field Groupby: Year'");
+
+        // activate the favorite
+        await testUtils.dom.click($('button .fa-star'));
+        await testUtils.dom.click($('.o_favorites_menu .o_menu_item a'));
+
+        assert.containsOnce(actionManager, '.o_searchview_input_container .o_facet_values',
+            "There should be a unique facet in the search bar");
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "My favorite",
+            "There should be a facet with label 'My favorite''");
+
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
+        assert.doesNotHaveClass($('.o_item_option[data-option_id="this_month"]'), 'selected',
+            "The Date Filter option 'This Month' should be deactivated");
+
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item a'));
+        assert.doesNotHaveClass($('.o_item_option[data-option_id="year"]'), 'selected',
+        "The Date Groupby option 'Year' should be deactivated");
+
+        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 98);
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "b",
+            "There should be a filter Foo b");
+
+        actionManager.destroy();
+        unpatchDate();
     });
 
     QUnit.module('Search Arch');
