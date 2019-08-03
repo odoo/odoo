@@ -347,10 +347,13 @@ class AccountVoucher(models.Model):
                         }
                         if company_currency != current_currency:
                             ctx = {}
+                            sign = temp['credit'] and -1 or 1
+                            amount_currency = company_cur._convert(tax_vals['amount'], current_cur, line.company_id,
+                                                 self.account_date or fields.Date.today(), round=True)
                             if self.account_date:
                                 ctx['date'] = self.account_date
                             temp['currency_id'] = current_currency
-                            temp['amount_currency'] = company_cur._convert(tax_vals['amount'], current_cur, line.company_id, self.account_date or fields.Date.today(), round=True)
+                            temp['amount_currency'] = sign * abs(amount_currency)
                         self.env['account.move.line'].create(temp)
 
             # When global rounding is activated, we must wait until all tax lines are computed to
