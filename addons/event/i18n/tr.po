@@ -3,27 +3,28 @@
 # * event
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
-# İlknur Püskül <ilknurpuskull@gmail.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 # Levent Karakaş <levent@mektup.at>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
 # Cem Uygur <cemuygur.beb@gmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Esin Kandemir <esaykandemir@gmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2018
+# İlknur Püskül <ilknurpuskull@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 # checkyoursix <batuhan.akpinar@gmail.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -375,7 +376,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:297
@@ -396,6 +397,8 @@ msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
 msgstr ""
+"<em>(Chamber Works, etkinliği iptal etme, yeniden adlandırma<br>yada "
+"konumunu veya tarihini değiştirme hakkını gili tutar.)</em>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -403,6 +406,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">Odoo "
+"Programlamayı <i>öğrenmek için</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -451,6 +456,7 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
 msgstr ""
+"<i>HTML sayfalarında temel dinamik bileşenleri geliştirebileceksiniz.</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -483,6 +489,10 @@ msgid ""
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
 msgstr ""
+"<span style=\"text-align: -webkit-center; \">Bu konu, süreç hakkında bilgi "
+"sahibi olması <strong>gereken geliştiricilere yöneliktir. </strong>Bu kurs "
+"yeni geliştiriciler veya teknik konular hakkında daha fazla şey öğrenmek "
+"isteyen BT uzmanları içindir..</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -517,7 +527,7 @@ msgstr "<strong>Fiyatlarımız şunları içerir:</strong>"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr ""
+msgstr "<strong>Program:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -529,7 +539,7 @@ msgstr "<strong>Gereklilikler:</strong>"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr ""
+msgstr "<strong>Bizi nerede bulabilirsiniz:</strong>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -1096,6 +1106,18 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"Etkinlik Planlayıcı:\n"
+"                              - Etkinlik: %s (%s)\n"
+"                              - Planlandı: %s\n"
+"                              - Şablon: %s (%s)\n"
+"\n"
+"                            Hata, başarısız oldu:\n"
+"                              - %s\n"
+"\n"
+"                            Bu e-postayı aldınız, çünkü siz:\n"
+"                              - etkinliğin düzenleyicisisiniz,\n"
+"                              - etkinlik sorumlususunuz,\n"
+"                              - Yada şablonun son yazarısınız."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
@@ -1456,7 +1478,7 @@ msgstr "Etkinlik Maili Gönderildi"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr ""
+msgstr "Yönetin &amp; takip edilebilir bir takvim yayınlayın"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1667,7 +1689,7 @@ msgstr "Proje yönetimi, insan kaynakları, bağlantı yönetimi."
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr ""
+msgstr "Satın Alma, Satış &amp; Satın alma yönetimi, finansal muhasebe."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2039,7 +2061,7 @@ msgstr "Kullanıcı"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "Değişkenler &amp; İşletmeci"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -2050,7 +2072,7 @@ msgstr "Görünürlük"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr ""
+msgstr "UYARI: Etkinlik için Etkinlik Planlayıcı Hatası: %s"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -2110,7 +2132,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr ""
+msgstr "Rozetiniz ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
@@ -2120,7 +2142,7 @@ msgstr "Buna Kaydınız ${object.event_id.name}"
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:event.event,description:event.event_0
