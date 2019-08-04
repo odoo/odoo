@@ -33,7 +33,9 @@
                     <filter name="missed_session" string="Missed sessions" domain="[('nbr_speaker','&lt;=', 1)]"/>
                     <filter name="treated_session" string="Treated sessions" domain="[('nbr_speaker','&gt;', 1)]"/>
                     <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d') )]"/>
-                    <filter name="start_date_filter" string="Start Date" date="start_date" default_period="this_week"/>
+                    <filter name="start_date_filter" string="This Week" domain="[
+                        ('start_date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                        ('start_date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_session" string="Code" domain="[]" context="{'group_by':'technical_name'}"/>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>

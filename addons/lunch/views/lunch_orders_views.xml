@@ -13,7 +13,7 @@
                 <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
                 <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
                 <separator/>
-                <filter name="date_filter" string="Date" date="date" default_period="today"/>
+                <filter name="date_filter" string="Today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]" />
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier_id'}"/>

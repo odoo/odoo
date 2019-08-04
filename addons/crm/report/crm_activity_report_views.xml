@@ -54,7 +54,9 @@
                     <filter string="Won" name="won"
                             domain="[('stage_id.is_won', '=', True)]"/>
                     <separator/>
-                    <filter string="Completion Date" name="completion_date" date="date" default_period="last_365_days"/>
+                    <filter string="Completed Last 365 Days" name="completion_date" domain="[
+                        ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <group expand="1" string="Group By">
                         <filter string="Subtype" name="group_by_subtype" context="{'group_by':'subtype_id'}"/>
                         <filter string="Activity Type" name="group_by_activity_type" context="{'group_by':'mail_activity_type_id'}"/>
