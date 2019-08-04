@@ -51,6 +51,7 @@ class Holidays(models.Model):
         # create the timesheet on the vacation project
         for holiday in self.filtered(
                 lambda request: request.holiday_type == 'employee' and
+                                request.holiday_status_id.timesheet_generate and
                                 request.holiday_status_id.timesheet_project_id and
                                 request.holiday_status_id.timesheet_task_id):
             holiday_project = holiday.holiday_status_id.timesheet_project_id

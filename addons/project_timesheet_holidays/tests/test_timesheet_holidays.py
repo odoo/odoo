@@ -56,6 +56,14 @@ class TestTimesheetHolidays(TestTimesheet):
             'timesheet_task_id': False,
             'validity_start': False,
         })
+        self.hr_leave_type_with_no_generate = self.env['hr.leave.type'].create({
+            'name': 'Leave Type with timesheet project and task but disabled generation',
+            'allocation_type': 'no',
+            'timesheet_generate': False,
+            'timesheet_project_id': self.internal_project.id,
+            'timesheet_task_id': self.internal_task_leaves.id,
+            'validity_start': False,
+        })
 
         # HR Officer allocates some leaves to the employee 1
         self.Requests = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
@@ -106,3 +114,17 @@ class TestTimesheetHolidays(TestTimesheet):
         })
         holiday.sudo().action_validate()
         self.assertEquals(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type does not generate timesheet')
+
+    def test_validate_with_timesheet_project_and_task_but_no_generate(self):
+        # employee creates a leave request
+        number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
+        holiday = self.Requests.sudo(self.user_employee.id).create({
+            'name': 'Leave 1',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_no_generate.id,
+            'date_from': self.leave_start_datetime,
+            'date_to': self.leave_end_datetime,
+            'number_of_days': number_of_days,
+        })
+        holiday.sudo().action_validate()
+        self.assertEqual(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type has "Generate Timesheet" set to False')
