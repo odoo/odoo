@@ -1,6 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Account Types-->
+    <!-- Account Tags -->
+    <!-- Account Taxes Tags Ventas -->
+        <record id="tag_cl_sale_mnt_exe" model="account.account.tag">
+            <!-- TotMntExe -->
+            <field name="name">Ventas - Total Monto Exento o No Gravado</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_mnt_neto" model="account.account.tag">
+            <!-- TotMntNeto -->
+            <field name="name">Ventas - Total Monto Neto</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_valor_neto_comis" model="account.account.tag">
+            <!-- TotValComNeto -->
+            <field name="name">Ventas - Total Valor Neto Comisiones y Otros Cargos</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_valor_comisiones_no_afecto" model="account.account.tag">
+            <!-- TotValComExe -->
+            <field name="name">Ventas - Total Valor Neto Comisiones y Otros Cargos No Afectos</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_monto_no_facturable" model="account.account.tag">
+            <!-- TotMntNoFact -->
+            <field name="name">Ventas - Total Monto No Facturable</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_exento_vta_pasajes_nacional" model="account.account.tag">
+            <!-- TotPsjNac -->
+            <field name="name">Ventas - Exento Ventas de Pasajes Nacional</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_sale_exento_vta_pasajes_internacional" model="account.account.tag">
+            <!-- TotPsjInt -->
+            <field name="name">Ventas - Exento Ventas de Pasajes Internacional</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <!-- Account Taxes Tags Commpras -->
+        <record id="tag_cl_purchase_mnt_exe" model="account.account.tag">
+            <!-- TotMntExe -->
+            <field name="name">Compras - Total Monto Exento o No Gravado</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_neto" model="account.account.tag">
+            <!-- TotMntNeto -->
+            <field name="name">Compras - Total Monto Neto</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_neto_uso_comun" model="account.account.tag">
+            <!-- TotMntNeto -->
+            <field name="name">Compras - Total Monto Neto Uso Común</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_neto_no_recup" model="account.account.tag">
+            <!-- TotMntNeto -->
+            <field name="name">Compras - Total Monto Neto No Recuperable</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_mnt_neto_supermercado" model="account.account.tag">
+            <!-- TotMntNeto -->
+            <field name="name">Compras - Total Monto Neto Compras de Supermercado</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+
+        <record id="tag_cl_purchase_mnt_neto_actf" model="account.account.tag">
+            <!-- TotMntActivoFijo -->
+            <field name="name">Compras - Total Monto Neto Activo Fijo</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+
+        <record id="tag_cl_purchase_tab_puros" model="account.account.tag">
+            <!-- TotTabPuros -->
+            <field name="name">Compras - Total Tabacos Manufacturados Puros</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tab_cigar" model="account.account.tag">
+            <!-- TotTabCigarrillos -->
+            <field name="name">Compras - Total Tabacos Manufacturados Cigarrillos</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_purchase_tab_elab" model="account.account.tag">
+            <!-- TotTabCigarrillos -->
+            <field name="name">Compras - Total Tabacos Manufacturados Elaborados</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_remanente_cf" model="account.account.tag">
+            <field name="name">Remantente de Crédito Fiscal</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="tag_cl_impuesto_unico_trabajadores" model="account.account.tag">
+            <field name="name">Impuesto Unico Trabajadores</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <!-- honorarios y otros -->
+        <record id="tag_cl_fees_amount" model="account.account.tag">
+            <field name="name">Honorarios -  Montos Sujetos a Retención Renta 2 Categoría</field>
+            <field name="applicability">accounts</field>
+        </record>
+    <!-- Account Types -->
     <record id="account_account_type_NCLASIFICADO" model="account.account.type">
         <field name="name">Cuentas No Clasificadas</field>
     </record>
@@ -1417,10 +1533,7 @@
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="tag_ids"
-               eval="[
-                   (6,0,[ref('tag_cl_purchase_mnt_neto'),
-                         ref('tag_cl_purchase_tab_puros'),
-                         ref('tag_cl_purchase_tab_cigar)])]"/>s
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto'), ref('tag_cl_purchase_tab_puros'), ref('tag_cl_purchase_tab_cigar')])]"/>
     </record>
     <record id="61_02" model="account.account.template">
         <field name="code">410231</field>
@@ -1442,13 +1555,13 @@
                eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_no_recup')])]"/>
     </record>
     <record id="61_04" model="account.account.template">
-        <field name="code">410232</field>
+        <field name="code">410233</field>
         <field name="name">Compras de Supermercado</field>
         <field ref="account.data_account_type_expenses" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_supermercado')])]f"/>
+               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_supermercado')])]"/>
     </record>
 
     <record id="511_01" model="account.account.template">
