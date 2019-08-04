@@ -18,6 +18,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
         'l10n_latam_document',
         ],
     'data': [
+        'views/account_move_view.xml',
         'views/res_bank_view.xml',
         'views/res_company_view.xml',
         'views/res_country_view.xml',
