@@ -8,7 +8,6 @@
 </template>
 
 <template id="registration_attendee_details_questions" inherit_id="website_event.registration_attendee_details" name="Registration Attendee Details with questions">
-    <data>
         <!-- Attendee specific questions -->
         <xpath expr="//t[@name='attendee_loop']" position="inside">
             <t t-if="event.specific_question_ids">
@@ -49,7 +48,6 @@
                 </div>
             </t>
         </xpath>
-    </data>
 </template>
 
 </odoo>
