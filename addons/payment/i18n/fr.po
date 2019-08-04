@@ -6,11 +6,11 @@
 # Nathan Noël <nathan070@me.com>, 2018
 # Fred Gilson <fgi@odoo.com>, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
-# Martin Trigaux, 2018
 # Alain van de Werve <avw@openerp.com>, 2018
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Rémi CAZENAVE <remi@le-filament.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +67,8 @@ msgid ""
 "<i class=\"fa fa-check text-success\" title=\"This payment method is "
 "verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" title=\"Cette méthode de payement est "
+"verifiee par notre systeme\" role=\"img\" aria-label=\"Ok\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -74,11 +76,13 @@ msgid ""
 "<i class=\"fa fa-close text-danger\" title=\"This payment method has not "
 "been verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
+"<i class=\"fa fa-close text-danger\" title=\"Cette méthode de payement est "
+"verifiée par notre systeme\" role=\"img\" aria-label=\"Pas verifiee\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Accueil\" title=\"Accueil\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -279,12 +283,13 @@ msgstr "Un token est requis pour créer une nouvelle transaction de paiement."
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
 msgstr ""
+"Une transaction %s avec %s a été initiée utilisant la carte de crédit %s."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:663
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "Une transaction %s avec %s a été initiée."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:36
@@ -392,7 +397,7 @@ msgstr "Montant"
 #: code:addons/payment/static/src/xml/payment_processing.xml:17
 #, python-format
 msgid "An error occured during the processing of this payment."
-msgstr ""
+msgstr "Une erreur est survenue lors du traitement du payement "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -494,7 +499,7 @@ msgstr "Annulé"
 #: code:addons/payment/static/src/xml/payment_processing.xml:109
 #, python-format
 msgid "Cancelled payments"
-msgstr ""
+msgstr "Payements annulés"
 
 #. module: payment
 #. openerp-web
@@ -896,7 +901,7 @@ msgstr "Référence interne de la transaction"
 #: code:addons/payment/static/src/xml/payment_processing.xml:145
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "Erreur interne du serveur"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:55
@@ -1974,7 +1979,7 @@ msgstr "Nous ne pouvons pas vous rediriger vers le formulaire de paiement."
 #: code:addons/payment/static/src/js/payment_processing.js:117
 #, python-format
 msgid "We are processing your payments, please wait ..."
-msgstr ""
+msgstr "Votre payement est en cours de traitement, veuillez patienter..."
 
 #. module: payment
 #. openerp-web
@@ -2104,14 +2109,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "Votre commande a été traitée."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "Votre commande est en cours de traitement, veuillez patienter."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -2124,13 +2129,14 @@ msgstr "Votre paiement a été autorisé."
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
 msgstr ""
+"Votre payement a été reçu mais doit encore être confirmée manuellement."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:57
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Votre payement est en attente"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form

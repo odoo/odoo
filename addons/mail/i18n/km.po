@@ -343,6 +343,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"វចនានុក្រម Python "
+"បានបង្ហាញអំពីការវាយតម្លៃទៅលើថ្លៃដើមនៅពេលដែលមានការផ្លាសប្តូរនូវឯកសារសារជាថ្មីៗទៀត។"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:69
@@ -610,7 +612,7 @@ msgstr "ទំនាក់ទំនងបន្ថែម"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Advanced"
-msgstr ""
+msgstr "កម្រិតខ្ពស់"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2291,7 +2293,7 @@ msgstr "ចូលទៅផ្ទាំងការតំឡើង"
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Graph"
-msgstr ""
+msgstr "ក្រាហ្វ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2303,7 +2305,7 @@ msgstr "ជា​ក្រុម​តាម"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Group by..."
-msgstr ""
+msgstr "ដាក់ជាក្រុមដោយ ..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_tree
@@ -2857,7 +2859,7 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #: code:addons/mail/static/src/xml/systray.xml:94
 #, python-format
 msgid "Late"
-msgstr ""
+msgstr "យឺត"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -4044,14 +4046,14 @@ msgstr "សារមេ"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "គម្រូឯកសារ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ប័ណ្ណសម្គាល់កម្មសិទ្ធ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -4062,6 +4064,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"គម្រូឯកសារបានធ្វើការផ្លាស់ប្តូរ។ "
+"គម្រូនេះដែលមានការគឺមិនចាំបាច់ផ្លាស់ប្តូរជាឯកសារយោងបានទេ by alias_model_id "
+"(example: project (parent_model) and task (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -4227,6 +4232,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"គោលការណ័ត្រូវបានបង្ហាញនៅលើសារទៅលើឯកសារដែលកំពុងតែប្រើប្រាស់ mailgateway\n"
+"- អ្នកទាំងអស់គ្នា: អ្នកទាំងអស់គ្នាអាចប្រកាសបាន\n"
+"- ដៃគូ: ដៃគូរជាអ្នកប្រកាសតែមួយគត់\n"
+"- អ្នកដែលពាក់ព័ន្ធ:​​ អ្នកដែលពាក់ព័ន្ធតែម្នាក់ដែលនាំយកឯកសារ ឬសមាជិកនៃតាមការសម្រេចចិត្ត\n"
 
 #. module: mail
 #. openerp-web
@@ -4386,7 +4395,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ប័ណ្ណសម្គាល់អ្នកបន្តវេន"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -5458,6 +5467,13 @@ msgstr ""
 #: code:addons/mail/static/src/js/discuss.js:341
 #, python-format
 msgid "Unsubscribe"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/services/mail_notification_manager.js:454
+#, python-format
+msgid "Unsubscribed"
 msgstr ""
 
 #. module: mail
