@@ -36,7 +36,7 @@ msgstr "\"Check Out\" zamanı \"Check In\" zamanından önce olamaz."
 #: code:addons/hr_attendance/models/hr_attendance.py:29
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr ""
+msgstr "%(empl_name)s kimden %(check_in)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:34
@@ -131,6 +131,8 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"%(empl_name)s çıkışı yapılamıyor, karşılık gelen bir giriş bulunamadı. "
+"Katılımlarınız muhtemelen insan kaynakları tarafından el ile değiştirildi."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
@@ -511,7 +513,7 @@ msgstr "Görüntülenecek katılım kaydı yok"
 #: code:addons/hr_attendance/models/hr_employee.py:72
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
-msgstr ""
+msgstr "Bu barkoda karşılık gelen personel bulunamadı %(barcode)s"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user

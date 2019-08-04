@@ -940,6 +940,11 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
+"ნაღდი ფულის რეგისტრი საშუალებას გვაძლევს, რომ ვმართოთ ნაღდი ფულის გატარებები ნაღდი ფულის \n"
+"                ჟურნალებში.  საშუალებას გვაძლებს ადვილად ვმართოთ ნაღდი ფულით \n"
+"                ყოველდღიური გადახდები. შეგიძლიათ შეიტანოთ თქვენს ხელთ არსებული ხურდის ოდენობა\n"
+"                და მერე გაატაროთ ფულის შემოდინება\n"
+"               და გადინება."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:383
@@ -972,6 +977,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
+"ბანკის ამონაწერი შეიცავს ყველა ფინანსური ტრანზაქციის მონაცემს\n"
+"                რომელიც მოხდა დროის მოცემულ მონაკვეთში საბანკო ანგარიშზე. თქვენ\n"
+"               ამონაწერი უნდა მოგაწოდოთ ბანკმა პერიოდულად."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -994,6 +1002,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"ჟურნალი გამოიყენება ყოველდღიურ საქმიანობის\n"
+"აღრიცხვასთან დაკავშირებული მონაცემების ჩასაწერად."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4638,13 +4648,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_fiscalyear_last_day
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_day
 msgid "Fiscalyear Last Day"
-msgstr ""
+msgstr "ფისკალური წლის ბოლო დღე"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_fiscalyear_last_month
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_month
 msgid "Fiscalyear Last Month"
-msgstr ""
+msgstr "ფისკალური წლის ბოლო თვე"
 
 #. module: account
 #: selection:account.reconcile.model,amount_type:0
@@ -5385,6 +5395,8 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"საშუამავლო ანგარიში, რომელიც ერთი სალიკვიდაციო ანგარიშიდან მეორეზე თანხის "
+"გადმოსატანად გამოიყენება"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_narration
@@ -10919,12 +10931,14 @@ msgstr ""
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
 msgstr ""
+"ინვოისის ხაზის წაშლა შეგიძლიათ მხოლოდ მაშინ, როდესაც ის არის \"დრაფტის\" "
+"მდგომარეობაში"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:141
 #, python-format
 msgid "You can only register payments for open invoices"
-msgstr ""
+msgstr "გადახდების დარეგისტრირება შეგიძლიათ მხოლოდ ღია ინვოისებზე"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_style_overwrite
@@ -11145,7 +11159,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
-msgstr ""
+msgstr "თქვენ გაქვთ"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:505
@@ -11337,12 +11351,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.portal_invoice_error
 #: model:ir.ui.view,arch_db:account.portal_invoice_success
 msgid "close"
-msgstr ""
+msgstr "დახურვა"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "code"
-msgstr ""
+msgstr "კოდი"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11506,7 +11520,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "ტნარზაქცია"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
