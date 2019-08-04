@@ -29,4 +29,6 @@ class AccountMove(models.Model):
             else:
                 sequence = self.journal_id.refund_sequence_number_next
             rec.l10n_latam_document_number = sequence
+            # Consume sequence number
+            rec._get_sequence().next_by_id(sequence_date=rec.date)
         return super().post()

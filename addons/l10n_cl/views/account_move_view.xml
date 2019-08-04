@@ -12,9 +12,7 @@
 
             <field name="journal_id" position="after">
                 <field name="l10n_latam_document_number"
-                    attrs="{'required': [('type', 'not in', ('out_invoice', 'out_refund'))], 'readonly': [('state', '!=', 'draft')]}"/>
-<!--                    attrs="{'invisible': [('type', 'in', ('out_invoice', 'out_refund')), ('l10n_latam_use_documents', '=', True)], 'required': [('type', 'not in', ('out_invoice', 'out_refund'))], 'readonly': [('state', '!=', 'draft')]}"/>-->
-<!--                    attrs="{'invisible': ['|', '|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False), ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True), ('type', 'not in', ('out_invoice', 'out_refund'))], 'readonly': [('state', '!=', 'draft')]}"/>-->
+                       attrs="{'invisible': ['|', '|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False), '&amp;', '&amp;', ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_latam_use_documents', '=', True), ('l10n_latam_document_number', '=', False)], 'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True), ('type', 'not in', ('out_invoice', 'out_refund'))], 'readonly': [('state', '!=', 'draft')]}"/>
             </field>
         </field>
     </record>
