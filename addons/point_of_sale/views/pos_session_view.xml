@@ -178,7 +178,9 @@
                 <field name="name" />
                 <filter name="open_sessions" string="Open" domain="[('state', '=', 'opened')]" />
                 <separator/>
-                <filter string="Start Date" name="start_at_filter" date="start_at" default_period="today"/>
+                <filter string="Start Today" name="start_at_filter" domain="[
+                    ('start_at', '>=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('start_at', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                 <field name="config_id" />
                 <field name="user_id" />
                 <group expand="0" string="Group By">
