@@ -1121,6 +1121,7 @@ class PosOrderLine(models.Model):
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
     _description = "Specify product lot/serial number in pos order line"
+    _rec_name = "lot_name"
 
     pos_order_line_id = fields.Many2one('pos.order.line')
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
