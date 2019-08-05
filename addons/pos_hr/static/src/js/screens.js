@@ -73,11 +73,6 @@ var LoginScreenWidget = ScreenWidget.extend({
                 self.unlock_screen();
             });
         });
-
-        this.$('.close-session').click(function() {
-            self.gui.close();
-        });
-
         this._super();
     },
 
