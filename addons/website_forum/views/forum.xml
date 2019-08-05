@@ -17,6 +17,10 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="total_posts"/>
+                    <field name="total_views"/>
+                    <field name="total_answers"/>
+                    <field name="total_favorites"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -43,7 +47,7 @@
                         </group>
                         <notebook>
                             <page string="Options">
-                              <group string="Order">
+                              <group string="Order" name="group_order">
                                 <field name="default_order"/>
                                 <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
                                 <div groups="base.group_no_one" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
@@ -136,6 +140,9 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="forum_id"/>
+                    <field name="views"/>
+                    <field name="child_count"/>
+                    <field name="favourite_count"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                 </tree>
             </field>

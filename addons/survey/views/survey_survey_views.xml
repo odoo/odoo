@@ -21,12 +21,12 @@
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_survey_user_input_invite"
+                        <button name="action_survey_user_input"
                             type="object"
                             class="oe_stat_button"
                             attrs="{'invisible': [('access_mode', '=', 'public')]}"
                             icon="fa-envelope-o">
-                            <field string="Invitations" name="invite_count" widget="statinfo"/>
+                            <field string="Registered" name="answer_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_certified"
                             type="object"
@@ -132,9 +132,11 @@
                 <field name="certificate" invisible="1"/>
                 <field name="title"/>
                 <field name="state"/>
-                <field name="invite_count"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
+                <field name="certified_count"/>
+                <field name="certified_ratio"/>
+                <field name="answer_score_avg"/>
                 <button name="certificate" icon="fa-trophy" title="Certificate" aria-label="Certificate" attrs="{'invisible': [('certificate', '=', False)]}"/>
                 <!-- Tweak as icons aren't directly supported in xml -->
             </tree>
@@ -144,7 +146,7 @@
         <field name="name">Kanban view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state">
+            <kanban>
                 <field name="state" />
                 <field name="title" />
                 <field name="answer_done_count" />
@@ -221,6 +223,7 @@
                     ]"/>
                 <group expand="0" string="Group By">
                     <filter string="Category" name="groupby_category" context="{'group_by': 'category'}"/>
+                    <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
@@ -230,6 +233,7 @@
         <field name="name">Surveys</field>
         <field name="res_model">survey.survey</field>
         <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_groupby_state': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new survey
