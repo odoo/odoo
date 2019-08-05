@@ -47,16 +47,23 @@ $bronze: #eea91e;
     }
 
     .validate_answer {
-        @include o-position-absolute(0,0,0,0);
+        @include o-position-absolute(0, auto, 0, 0);
+        width: 4px;
         height: 100%;
-        .bg-success {
-            @include o-position-absolute(0,0,0,0);
-            height: 100%;
-            width: 4px;
+        z-index: 1; // On top of card content if an alert is displayed inside
+
+        > .bg-success {
+            @include o-position-absolute(0, 0, 0, 0);
         }
-        span {
-            @include o-position-absolute(10px,0,0,-9px);
+        > span {
+            @include o-position-absolute(10px, 50%);
+            transform: translateX(50%);
             font-size: 20px;
+
+            &[data-href] {
+                cursor: pointer;
+            }
+
             i {
                 padding: 2px 3px;
                 border-radius: 100%;
