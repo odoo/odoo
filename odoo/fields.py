@@ -34,6 +34,7 @@ DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 EMPTY_DICT = frozendict()
 
 RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
+DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead.")]
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__[:-7] + '.schema')
@@ -136,9 +137,6 @@ class Field(MetaField('DummyField', (object,), {})):
             is duplicated (default: ``True`` for normal fields, ``False`` for
             ``one2many`` and computed fields, including property fields and
             related fields)
-
-        :param string oldname: the previous name of this field, so that ORM can rename
-            it automatically at migration
 
         .. _field-computed:
 
@@ -452,6 +450,10 @@ class Field(MetaField('DummyField', (object,), {})):
             if key1 in attrs:
                 _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
                                 self, key1, key2)
+        for key, msg in DEPRECATED_ATTRS:
+            if key in attrs:
+                _logger.warning("Field %s: parameter %r is not longer supported; %s",
+                                self, key, msg)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
@@ -882,11 +884,6 @@ class Field(MetaField('DummyField', (object,), {})):
             return
 
         column = columns.get(self.name)
-        if not column and hasattr(self, 'oldname'):
-            # column not found; check whether it exists under its old name
-            column = columns.get(self.oldname)
-            if column:
-                sql.rename_column(model._cr, model._table, self.oldname, self.name)
 
         # create/update the column, not null constraint, indexes
         self.update_db_column(model, column)
