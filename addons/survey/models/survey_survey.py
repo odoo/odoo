@@ -74,8 +74,8 @@ class Survey(models.Model):
     answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
     answer_score_avg = fields.Float("Avg Score %", compute="_compute_survey_statistic")
-    certified_count = fields.Integer("Certified", compute="_compute_survey_statistic")
-    certified_ratio = fields.Integer("Certified Ratio", compute="_compute_certified_ratio")
+    success_count = fields.Integer("Success", compute="_compute_survey_statistic")
+    success_ratio = fields.Integer("Success Ratio", compute="_compute_survey_statistic")
     # scoring and certification fields
     scoring_type = fields.Selection([
         ('no_scoring', 'No scoring'),
@@ -121,30 +121,26 @@ class Survey(models.Model):
         for survey in self:
             survey.users_can_signup = signup_allowed
 
-    @api.depends('user_input_ids.input_type', 'user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.quizz_score', 'user_input_ids.quizz_passed')
+    @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.quizz_score', 'user_input_ids.quizz_passed')
     def _compute_survey_statistic(self):
-        stat = dict((cid, dict(answer_count=0, answer_done_count=0, certified_count=0, answer_score_avg_total=0.0)) for cid in self.ids)
+        stat = dict((cid, dict(answer_count=0, answer_done_count=0, success_count=0, answer_score_avg_total=0.0)) for cid in self.ids)
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'input_type', 'state', 'quizz_score', 'quizz_passed'], lazy=False)
+        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'quizz_score', 'quizz_passed'], lazy=False)
         for item in read_group_res:
             stat[item['survey_id'][0]]['answer_count'] += item['__count']
             stat[item['survey_id'][0]]['answer_score_avg_total'] += item['quizz_score']
             if item['state'] == 'done':
                 stat[item['survey_id'][0]]['answer_done_count'] += item['__count']
             if item['quizz_passed']:
-                stat[item['survey_id'][0]]['certified_count'] += item['__count']
+                stat[item['survey_id'][0]]['success_count'] += item['__count']
 
         for survey in self:
             avg_total = stat[survey.id].pop('answer_score_avg_total')
             stat[survey.id]['answer_score_avg'] = avg_total / (stat[survey.id]['answer_done_count'] or 1)
+            stat[survey.id]['success_ratio'] = (stat[survey.id]['success_count'] / (stat[survey.id]['answer_done_count'] or 1.0))*100
             survey.update(stat[survey.id])
-
-    @api.depends('certified_count', 'answer_done_count')
-    def _compute_certified_ratio(self):
-        for survey in self:
-            survey.certified_ratio = survey.certified_count / (survey.answer_done_count or 1.0)
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
