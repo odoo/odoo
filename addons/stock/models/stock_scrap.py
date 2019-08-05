@@ -8,6 +8,7 @@ from odoo.tools import float_compare
 
 class StockScrap(models.Model):
     _name = 'stock.scrap'
+    _inherit = ['mail.thread']
     _order = 'id desc'
     _description = 'Scrap'
 
@@ -46,7 +47,7 @@ class StockScrap(models.Model):
     move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, domain="[('company_id', '=', company_id)]")
     location_id = fields.Many2one(
-        'stock.location', 'Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
+        'stock.location', 'Source Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
         required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id)
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
@@ -54,8 +55,8 @@ class StockScrap(models.Model):
     scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('done', 'Done')], string='Status', default="draft")
-    date_expected = fields.Datetime('Expected Date', default=fields.Datetime.now)
+        ('done', 'Done')], string='Status', default="draft", tracking=True)
+    date_done = fields.Datetime('Date')
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
@@ -124,6 +125,7 @@ class StockScrap(models.Model):
             # master: replace context by cancel_backorder
             move.with_context(is_scrap=True)._action_done()
             scrap.write({'move_id': move.id, 'state': 'done'})
+            scrap.date_done = fields.Datetime.now()
         return True
 
     def action_get_stock_picking(self):
