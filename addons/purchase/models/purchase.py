@@ -424,6 +424,21 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.order_line.update({'date_planned': order.date_planned})
 
+    @api.multi
+    def _notify_get_groups(self, message, groups):
+        """ Give access button to users and portal customer as portal is integrated
+        in account. Customers have probably no right to see the document so they
+        don't have the access button. """
+        groups = super(PurchaseOrder, self)._notify_get_groups(message, groups)
+        self.ensure_one()
+
+        if self.state in ('purchase', 'done', 'cancel'):
+            for group_name, group_method, group_data in groups:
+                if group_name != 'customer':
+                    group_data['has_button_access'] = True
+
+        return groups
+
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'

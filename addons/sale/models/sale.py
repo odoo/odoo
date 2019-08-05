@@ -800,16 +800,15 @@ class SaleOrder(models.Model):
     @api.multi
     def _notify_get_groups(self, message, groups):
         """ Give access button to users and portal customer as portal is integrated
-        in sale. Customer and portal group have probably no right to see
-        the document so they don't have the access button. """
+        in sale. Customers have probably no right to see the document so they
+        don't have the access button. """
         groups = super(SaleOrder, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):
             for group_name, group_method, group_data in groups:
-                if group_name in ('customer', 'portal'):
-                    continue
-                group_data['has_button_access'] = True
+                if group_name != 'customer':
+                    group_data['has_button_access'] = True
 
         return groups
 

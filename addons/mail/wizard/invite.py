@@ -72,9 +72,18 @@ class Invite(models.TransientModel):
                     'no_auto_thread': True,
                     'add_sign': True,
                 })
+
+                partners_data = [{
+                    'id': partner.id,
+                    'share': True,
+                    'notif': 'email',
+                    'type': 'user' if not partner.partner_share else 'portal' if partner.user_ids.has_group('base.group_portal') else 'customer',
+                    'groups': []
+                } for partner in new_partners]
+
                 self.env['res.partner'].with_context(auto_delete=True)._notify(
                     message,
-                    [{'id': pid, 'share': True, 'notif': 'email', 'type': 'customer', 'groups': []} for pid in new_partners.ids],
+                    partners_data,
                     document,
                     force_send=True,
                     send_after_commit=False)

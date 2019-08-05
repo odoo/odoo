@@ -358,6 +358,21 @@ class Project(models.Model):
         self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
         return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
 
+    @api.multi
+    def _notify_get_groups(self, message, groups):
+        """ Give access button to users and portal customer as portal is integrated
+        in account. Customers have probably no right to see the document so they
+        don't have the access button. """
+        groups = super(Project, self)._notify_get_groups(message, groups)
+        self.ensure_one()
+
+        if self.privacy_visibility == 'portal':
+            for group_name, group_method, group_data in groups:
+                if group_name != 'customer':
+                    group_data['has_button_access'] = True
+
+        return groups
+
     # ---------------------------------------------------
     #  Actions
     # ---------------------------------------------------
@@ -819,10 +834,10 @@ class Task(models.Model):
 
         groups = [new_group] + groups
 
-        for group_name, group_method, group_data in groups:
-            if group_name == 'customer':
-                continue
-            group_data['has_button_access'] = True
+        if self.project_id.privacy_visibility == 'portal':
+            for group_name, group_method, group_data in groups:
+                if group_name != 'customer':
+                    group_data['has_button_access'] = True
 
         return groups
 
