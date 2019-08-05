@@ -32,7 +32,7 @@
                             class="oe_stat_button"
                             attrs="{'invisible': [('certificate', '=', False)]}"
                             icon="fa-trophy">
-                            <field string="Certified" name="certified_count" widget="statinfo"/>
+                            <field string="Certified" name="success_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_completed"
                             type="object"
@@ -134,8 +134,8 @@
                 <field name="state"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
-                <field name="certified_count"/>
-                <field name="certified_ratio"/>
+                <field name="success_count"/>
+                <field name="success_ratio"/>
                 <field name="answer_score_avg"/>
                 <button name="certificate" icon="fa-trophy" title="Certificate" aria-label="Certificate" attrs="{'invisible': [('certificate', '=', False)]}"/>
                 <!-- Tweak as icons aren't directly supported in xml -->
@@ -151,19 +151,25 @@
                 <field name="title" />
                 <field name="answer_done_count" />
                 <field name="certificate" />
+                <field name="scoring_type" />
                 <field name="color" />
                 <field name="access_mode"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
+                <field name="success_count"/>
+                <field name="success_ratio"/>
                 <templates>
-                    <div t-name="kanban-box" t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click o_kanban_card_survey">
-                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable and !selection_mode">
+                    <div t-name="kanban-box" 
+                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey 
+                            #{record.certificate.raw_value ? 'o_kanban_card_survey_successed' : ''}">
+                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
                             <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
                             </a>
                             <div class="dropdown-menu" role="menu">
                                 <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                                <a t-if="record.state.raw_value != 'closed'" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
                                 <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                 <div role="separator" class="dropdown-divider"/>
                                 <div role="separator" class="dropdown-item-text">Color</div>
@@ -171,29 +177,41 @@
                             </div>
                         </div>
                         <div class="o_kanban_record_top">
-                            <div class="col-10 p-0">
-                                <h4 class="o_kanban_record_title mb4"><field name="title" /></h4>
+                                <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-10 p-0 pb-1">
+                                <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0 or record.state.raw_value != 'draft'">
+                                    <div class="row mt-4 ml-5">
+                                        <div class="col-4 p-0">
+                                            <a name="action_result_survey" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="answer_done_count"/></span>
+                                                <span class="text-muted">Answers</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                            <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="success_count"/></span>
+                                                <span class="text-muted" t-if="!record.certificate.raw_value">Passed</span>
+                                                <span class="text-muted" t-else="">Certified</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                            <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
+                                                <span class="text-muted" >Success</span>
+                                            </a> 
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-2"><i t-if="record.certificate.raw_value === true" title="Certification" class="certification_icon fa fa-trophy"></i></div>
-                        </div>
-                        <div class="o_kanban_record_bottom" t-if="!selection_mode">
-                            <ul class="list-unstyled">
-                                <li>
-                                    <a type="object" name="action_test_survey">Test</a>
-                                </li>
-                                <li>
-                                    <a type="object" name="action_send_survey">Share &amp;amp; Invite</a>
-                                </li>
-                                <li>
-                                    <t t-if="record.answer_done_count.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.answer_done_count.raw_value &gt; 0">(<field name="answer_done_count" />)</span></t>
-                                    <t t-if="record.answer_done_count.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="o_kanban_record_bottom" t-if="!selection_mode">
-                            <div class="oe_kanban_bottom_left"/>
-                            <div class="oe_kanban_bottom_right">
-                                <field name="activity_ids" widget="kanban_activity" />
+                            <div class="col-2 align-self-end">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left"/>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
