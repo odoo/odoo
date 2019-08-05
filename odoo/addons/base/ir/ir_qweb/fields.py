@@ -374,6 +374,8 @@ class FloatTimeConverter(models.AbstractModel):
         if minutes == 60:
             minutes = 0
             hours += 1
+        if hours == 0 and value < 0:
+            return '-%02d:%02d' % (hours, minutes)
         return '%02d:%02d' % (sign * hours, minutes)
 
 
