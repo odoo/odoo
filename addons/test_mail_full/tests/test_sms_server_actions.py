@@ -60,5 +60,8 @@ class TestServerAction(test_mail_full_common.BaseFunctionalTest, sms_common.Mock
         with self.sudo('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
 
-        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'state': 'ready'}], 'Dear %s this is an SMS.' % self.test_record.display_name)
-        self.assertSMSNotification([{'partner': self.env['res.partner'], 'number': self.test_numbers_san[0], 'state': 'ready'}], 'Dear %s this is an SMS.' % self.test_record_2.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSLogged(self.test_record, 'Dear %s this is an SMS.' % self.test_record.display_name)
+
+        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], 'Dear %s this is an SMS.' % self.test_record_2.display_name)
+        self.assertSMSLogged(self.test_record_2, 'Dear %s this is an SMS.' % self.test_record_2.display_name)

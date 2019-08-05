@@ -132,31 +132,84 @@ class TestSMSComposerComment(test_mail_full_common.BaseFunctionalTest, sms_commo
                 composer._action_send_sms()
         self.assertSMSSent(self.random_numbers_san, self._test_body)
 
-    # def test_composer_partners_sanitize(self):
-    #     partner_incorrect = self.env['res.partner'].create({
-    #         'name': 'Jean-Claude Incorrect',
-    #         'email': 'jean.claude@example.com',
-    #         'mobile': 'coincoin',
-    #         })
-    #     partners = self.partner_1 | self.partner_2 | partner_incorrect
-    #     with self.sudo('employee'):
-    #         composer = self.env['sms.composer'].with_context(
-    #             active_model='res.partner',
-    #             active_domain=[('id', 'in', partners.ids)]
-    #         ).create({
-    #             'body': self._test_body,
-    #         })
 
-    #         with self.mockSMSGateway():
-    #             composer.action_send_sms()
-    #     self.assertSMSSent((self.partner_1 | self.partner_2).mapped('mobile'), test_body)
+class TestSMSComposerBatch(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS):
+    @classmethod
+    def setUpClass(cls):
+        super(TestSMSComposerBatch, cls).setUpClass()
+        cls._test_body = 'Zizisse an SMS.'
+
+        cls._create_records_for_batch('mail.test.sms', 3)
+        cls.sms_template = cls._create_sms_template('mail.test.sms')
+
+    def test_composer_batch_active_domain(self):
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='comment',
+                default_res_model='mail.test.sms',
+                default_use_active_domain=True,
+                active_domain=[('id', 'in', self.records.ids)],
+            ).create({
+                'body': self._test_body,
+            })
+
+            with self.mockSMSGateway():
+                messages = composer._action_send_sms()
+
+        for record in self.records:
+            self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
+
+    def test_composer_batch_active_ids(self):
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='comment',
+                default_res_model='mail.test.sms',
+                active_ids=self.records.ids
+            ).create({
+                'body': self._test_body,
+            })
+
+            with self.mockSMSGateway():
+                messages = composer._action_send_sms()
+
+        for record in self.records:
+            self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
+
+    def test_composer_batch_domain(self):
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='comment',
+                default_res_model='mail.test.sms',
+                default_use_active_domain=True,
+                default_active_domain=repr([('id', 'in', self.records.ids)]),
+            ).create({
+                'body': self._test_body,
+            })
+
+            with self.mockSMSGateway():
+                messages = composer._action_send_sms()
+
+        for record in self.records:
+            self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
+
+    def test_composer_batch_res_ids(self):
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='comment',
+                default_res_model='mail.test.sms',
+                default_res_ids=repr(self.records.ids),
+            ).create({
+                'body': self._test_body,
+            })
+
+            with self.mockSMSGateway():
+                messages = composer._action_send_sms()
+
+        for record in self.records:
+            self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
 
 
 class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS):
-    """ TODO LIST
-
-    * add test for mass with log note
-    """
 
     @classmethod
     def setUpClass(cls):
@@ -172,9 +225,10 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 default_composition_mode='mass',
                 default_res_model='mail.test.sms',
                 default_use_active_domain=True,
-                active_domain=repr([('id', 'in', self.records.ids)]),
+                active_domain=[('id', 'in', self.records.ids)],
             ).create({
                 'body': self._test_body,
+                'mass_keep_log': False,
             })
 
             with self.mockSMSGateway():
@@ -189,9 +243,10 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 default_composition_mode='mass',
                 default_res_model='mail.test.sms',
                 default_use_active_domain=True,
-                active_domain=repr([('id', 'in', self.records.ids)]),
+                active_domain=[('id', 'in', self.records.ids)],
                 default_template_id=self.sms_template.id,
             ).create({
+                'mass_keep_log': False,
             })
 
             with self.mockSMSGateway():
@@ -208,6 +263,7 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 active_ids=self.records.ids,
             ).create({
                 'body': self._test_body,
+                'mass_keep_log': False,
             })
 
             with self.mockSMSGateway():
@@ -229,6 +285,7 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 active_ids=self.records.ids,
             ).create({
                 'body': self._test_body,
+                'mass_keep_log': False,
                 'mass_use_blacklist': True,
             })
 
@@ -253,6 +310,7 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 active_ids=self.records.ids,
             ).create({
                 'body': self._test_body,
+                'mass_keep_log': False,
                 'mass_use_blacklist': False,
             })
 
@@ -278,6 +336,7 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 active_ids=self.records.ids,
             ).create({
                 'body': self._test_body,
+                'mass_keep_log': False,
                 'mass_use_blacklist': True,
             })
 
@@ -298,7 +357,9 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 default_res_model='mail.test.sms',
                 active_ids=self.records.ids,
                 default_template_id=self.sms_template.id,
-            ).create({})
+            ).create({
+                'mass_keep_log': False,
+            })
 
             with self.mockSMSGateway():
                 composer.action_send_sms()
@@ -329,7 +390,9 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 default_res_model='mail.test.sms',
                 active_ids=self.records.ids,
                 default_template_id=self.sms_template.id,
-            ).create({})
+            ).create({
+                'mass_keep_log': False,
+            })
 
             with self.mockSMSGateway():
                 composer.action_send_sms()
@@ -339,3 +402,21 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
                 self.assertSMSOutgoing(record.customer_id, None, 'Cher·e· %s ceci est un SMS.' % record.display_name)
             else:
                 self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+
+    def test_composer_mass_active_ids_w_template_and_log(self):
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='mass',
+                default_res_model='mail.test.sms',
+                active_ids=self.records.ids,
+                default_template_id=self.sms_template.id,
+            ).create({
+                'mass_keep_log': True,
+            })
+
+            with self.mockSMSGateway():
+                composer.action_send_sms()
+
+        for record in self.records:
+            self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+            self.assertSMSLogged(record, 'Dear %s this is an SMS.' % record.display_name)

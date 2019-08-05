@@ -127,7 +127,7 @@ class MailThread(models.AbstractModel):
 
         create_vals = {
             'mass_force_send': False,
-            'mass_keep_log': False,
+            'mass_keep_log': True,
         }
         if composer_values:
             create_vals.update(composer_values)
