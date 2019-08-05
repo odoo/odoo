@@ -388,7 +388,7 @@ class IrActionsServer(models.Model):
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
     crud_model_id = fields.Many2one('ir.model', string='Create/Write Target Model',
-                                    oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
+                                    help="Model for record creation / update. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
                                     help="Provide the field used to link the newly created record "
@@ -606,7 +606,7 @@ class IrServerObjectLines(models.Model):
         ('value', 'Value'),
         ('reference', 'Reference'),
         ('equation', 'Python expression')
-    ], 'Evaluation Type', default='value', required=True, change_default=True, oldname='type')
+    ], 'Evaluation Type', default='value', required=True, change_default=True)
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model',
         compute='_compute_resource_ref', inverse='_set_resource_ref')

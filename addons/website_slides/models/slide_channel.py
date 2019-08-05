@@ -118,7 +118,7 @@ class Channel(models.Model):
     nbr_infographic = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
     nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute='_compute_slides_statistics', store=True)
-    total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True, oldname='total')
+    total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True)
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
@@ -578,7 +578,7 @@ class Category(models.Model):
     nbr_infographic = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
     nbr_webpage = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute="_count_presentations", store=True)
-    total_slides = fields.Integer(compute='_count_presentations', store=True, oldname='total')
+    total_slides = fields.Integer(compute='_count_presentations', store=True)
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published')
     def _count_presentations(self):

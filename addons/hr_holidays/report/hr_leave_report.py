@@ -16,7 +16,7 @@ class LeaveReport(models.Model):
     leave_type = fields.Selection([
         ('allocation', 'Allocation Request'),
         ('request', 'Time Off Request')
-        ], string='Request Type', readonly=True, oldname='type')
+        ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
     holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", readonly=True)

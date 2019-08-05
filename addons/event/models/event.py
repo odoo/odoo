@@ -111,33 +111,32 @@ class EventEvent(models.Model):
         default=lambda self: self.env.company.partner_id)
     event_type_id = fields.Many2one(
         'event.type', string='Category',
-        readonly=False, states={'done': [('readonly', True)]},
-        oldname='type')
+        readonly=False, states={'done': [('readonly', True)]})
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
 
     # Seats and computation
     seats_max = fields.Integer(
-        string='Maximum Attendees Number', oldname='register_max',
+        string='Maximum Attendees Number',
         readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
         'Maximum Attendees', required=True, default='unlimited')
     seats_min = fields.Integer(
-        string='Minimum Attendees', oldname='register_min',
+        string='Minimum Attendees',
         help="For each event you can define a minimum reserved seats (number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)")
     seats_reserved = fields.Integer(
-        oldname='register_current', string='Reserved Seats',
+        string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
     seats_available = fields.Integer(
-        oldname='register_avail', string='Available Seats',
+        string='Available Seats',
         store=True, readonly=True, compute='_compute_seats')
     seats_unconfirmed = fields.Integer(
-        oldname='register_prospect', string='Unconfirmed Seat Reservations',
+        string='Unconfirmed Seat Reservations',
         store=True, readonly=True, compute='_compute_seats')
     seats_used = fields.Integer(
-        oldname='register_attended', string='Number of Participants',
+        string='Number of Participants',
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
@@ -173,7 +172,7 @@ class EventEvent(models.Model):
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
     twitter_hashtag = fields.Char('Twitter Hashtag')
     description = fields.Html(
-        string='Description', oldname='note', translate=html_translate, sanitize_attributes=False,
+        string='Description', translate=html_translate, sanitize_attributes=False,
         readonly=False, states={'done': [('readonly', True)]})
     # badge fields
     badge_front = fields.Html(string='Badge Front')

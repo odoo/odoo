@@ -60,7 +60,7 @@ class StockQuant(models.Model):
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
-        readonly=True, oldname='qty')
+        readonly=True)
     inventory_quantity = fields.Float(
         'Inventoried Quantity', compute='_compute_inventory_quantity',
         inverse='_set_inventory_quantity', groups='stock.group_stock_manager')

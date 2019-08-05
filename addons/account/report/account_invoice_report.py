@@ -37,9 +37,9 @@ class AccountInvoiceReport(models.Model):
         ('in_payment', 'In Payment'),
         ('paid', 'paid')
     ], string='Payment Status', readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', readonly=True)
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
     invoice_date = fields.Date(readonly=True, string="Invoice Date")
-    invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', readonly=True)
+    invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True)
     invoice_partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
     nbr_lines = fields.Integer(string='Line Count', readonly=True)
     residual = fields.Float(string='Due Amount', readonly=True)

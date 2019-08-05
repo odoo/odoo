@@ -109,6 +109,6 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     batch_id = fields.Many2one(
-        'stock.picking.batch', string='Batch Picking', oldname="wave_id",
+        'stock.picking.batch', string='Batch Picking',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Batch associated to this picking', copy=False)

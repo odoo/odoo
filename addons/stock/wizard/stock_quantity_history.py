@@ -11,7 +11,7 @@ class StockQuantityHistory(models.TransientModel):
 
     inventory_datetime = fields.Datetime('Inventory at Date',
         help="Choose a date to get the inventory at that date",
-        default=fields.Datetime.now, oldname='date')
+        default=fields.Datetime.now)
 
     def open_at_date(self):
         tree_view_id = self.env.ref('stock.view_stock_product_tree').id

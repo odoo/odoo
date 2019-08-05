@@ -339,7 +339,7 @@ class IrModelFields(models.Model):
                             help="List of options for a selection field, "
                                  "specified as a Python expression defining a list of (key, label) pairs. "
                                  "For example: [('blue','Blue'),('yellow','Yellow')]")
-    copied = fields.Boolean(string='Copied', oldname='copy',
+    copied = fields.Boolean(string='Copied',
                             help="Whether the value is copied when duplicating a record.")
     related = fields.Char(string='Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
     related_field_id = fields.Many2one('ir.model.fields', compute='_compute_related_field_id',
@@ -974,8 +974,8 @@ class IrModelConstraint(models.Model):
     type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
                        help="Type of the constraint: `f` for a foreign key, "
                             "`u` for other constraints.")
-    write_date = fields.Datetime(oldname='date_update')
-    create_date = fields.Datetime(oldname='date_init')
+    write_date = fields.Datetime()
+    create_date = fields.Datetime()
 
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)',
@@ -1108,8 +1108,8 @@ class IrModelRelation(models.Model):
                        help="PostgreSQL table name implementing a many2many relation.")
     model = fields.Many2one('ir.model', required=True, index=True)
     module = fields.Many2one('ir.module.module', required=True, index=True)
-    write_date = fields.Datetime(oldname='date_update')
-    create_date = fields.Datetime(oldname='date_init')
+    write_date = fields.Datetime()
+    create_date = fields.Datetime()
 
     def _module_data_uninstall(self):
         """

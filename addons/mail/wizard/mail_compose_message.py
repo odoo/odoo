@@ -135,8 +135,7 @@ class MailComposer(models.TransientModel):
         ('notification', 'System notification')],
         'Type', required=True, default='comment',
         help="Message type: email for email message, notification for system "
-             "message, comment for other messages such as user replies",
-        oldname='type')
+             "message, comment for other messages such as user replies")
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null', index=True,
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))

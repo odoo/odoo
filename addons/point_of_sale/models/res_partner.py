@@ -12,7 +12,7 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
-    barcode = fields.Char(oldname='ean13', help="Use a barcode to identify this contact from the Point of Sale.", copy=False)
+    barcode = fields.Char(help="Use a barcode to identify this contact from the Point of Sale.", copy=False)
 
     _sql_constraints = [
         ('unique_barcode', 'unique(barcode, company_id)', 'This barcode is already assigned to another contact. Please make sure you assign a unique barcode to this contact.'),

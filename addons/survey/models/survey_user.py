@@ -39,8 +39,7 @@ class SurveyUserInput(models.Model):
     is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
     input_type = fields.Selection([
         ('manually', 'Manual'), ('link', 'Invitation')],
-        string='Answer Type', default='manually', required=True, readonly=True,
-        oldname="type")
+        string='Answer Type', default='manually', required=True, readonly=True)
     state = fields.Selection([
         ('new', 'Not started yet'),
         ('skip', 'Partially completed'),

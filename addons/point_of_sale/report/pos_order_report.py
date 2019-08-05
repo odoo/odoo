@@ -26,7 +26,7 @@ class PosOrderReport(models.Model):
     average_price = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     location_id = fields.Many2one('stock.location', string='Location', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    nbr_lines = fields.Integer(string='Sale Line Count', readonly=True, oldname='nbr')
+    nbr_lines = fields.Integer(string='Sale Line Count', readonly=True)
     product_qty = fields.Integer(string='Product Quantity', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal')
     delay_validation = fields.Integer(string='Delay Validation')

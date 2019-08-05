@@ -222,7 +222,7 @@ class View(models.Model):
                                Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""")
     arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture',
                             help="This field is the same as `arch` field without translations")
-    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch',
+    arch_db = fields.Text(string='Arch Blob', translate=xml_translate,
                           help="This field stores the view arch.")
     arch_fs = fields.Char(string='Arch Filename', help="""File from where the view originates.
                                                           Useful to (hard) reset broken views or to read arch from file in dev-xml mode.""")

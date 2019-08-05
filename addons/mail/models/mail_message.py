@@ -66,7 +66,7 @@ class Message(models.Model):
         'Type', required=True, default='email',
         help="Message type: email for email message, notification for system "
              "message, comment for other messages such as user replies",
-        oldname='type')
+        )
     subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', index=True)
     mail_activity_type_id = fields.Many2one(
         'mail.activity.type', 'Mail Activity Type',
@@ -128,7 +128,7 @@ class Message(models.Model):
     moderator_id = fields.Many2one('res.users', string="Moderated By", index=True)
     need_moderation = fields.Boolean('Need moderation', compute='_compute_need_moderation', search='_search_need_moderation')
     #keep notification layout informations to be able to generate mail again
-    email_layout_xmlid = fields.Char('Layout', copy=False, oldname='layout')  # xml id of layout
+    email_layout_xmlid = fields.Char('Layout', copy=False)  # xml id of layout
     add_sign = fields.Boolean(default=True)
 
     def _get_needaction(self):

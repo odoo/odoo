@@ -41,7 +41,7 @@ class MrpBom(models.Model):
         digits='Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        default=_get_default_product_uom_id, oldname='product_uom', required=True,
+        default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
@@ -230,7 +230,7 @@ class MrpBomLine(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
-        oldname='product_uom', required=True,
+        required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer(
