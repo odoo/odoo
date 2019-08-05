@@ -99,6 +99,7 @@
                                 <field name="product_uom_id" options="{'no_open':True,'no_create':True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
+                                    context="{'default_mo_id': id}"
                                     string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}"/>
                             </div>
                             <field name="bom_id"
