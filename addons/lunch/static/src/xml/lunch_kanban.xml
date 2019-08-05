@@ -13,10 +13,9 @@
                             <div class="o_lunch_location_field py-1"/>
                             <div class="d-flex flex-row py-1">
                                 <span class="flex-grow-1">Your Account</span>
-                                <t t-call="currency_field">
-                                    <t t-set="value" t-value="widget.wallet"/>
-                                    <t t-set="currency" t-value="widget.currency"/>
-                                </t>
+                                <span class="o_field_monetary o_field_number o_field_widget">
+                                    <t t-esc="widget._formatMonetary(widget.wallet)"/>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -48,10 +47,9 @@
                                         <button t-esc="line.product[1]" class="btn btn-link o_lunch_open_wizard" t-attf-data-product-id="{{ line.product[0] }}" t-attf-data-id="{{ line.id }}"/>
                                     </div>
                                     <div class="flex-grow-0">
-                                        <t t-call="currency_field">
-                                            <t t-set="value" t-value="line.product[2]"/>
-                                            <t t-set="currency" t-value="widget.currency"/>
-                                        </t>
+                                        <span class="o_field_monetary o_field_number o_field_widget">
+                                            <t t-esc="widget._formatMonetary(line.product[2])"/>
+                                        </span>
                                     </div>
                                 </div>
                                 <div t-foreach="line.toppings" t-as="topping" class="d-flex flex-row">
@@ -59,10 +57,9 @@
                                         <span>+ <t t-esc="topping[0]"/></span>
                                     </div>
                                     <div class="flex-grow-0">
-                                        <t t-call="currency_field">
-                                            <t t-set="value" t-value="topping[1]"/>
-                                            <t t-set="currency" t-value="widget.currency"/>
-                                        </t>
+                                        <span class="o_field_monetary o_field_number o_field_widget">
+                                            <t t-esc="widget._formatMonetary(topping[1])"/>
+                                        </span>
                                     </div>
                                 </div>
                                 <span t-if="line.note" t-esc="line.note" class="text-muted pl-5"/>
@@ -76,10 +73,9 @@
                     <div class="card-body d-flex flex-column justify-content-between">
                         <h4 class="card-title d-flex py-1">
                             <span class="flex-grow-1">Total</span>
-                            <t t-call="currency_field">
-                                <t t-set="value" t-value="widget.total"/>
-                                <t t-set="currency" t-value="widget.currency"/>
-                            </t>
+                            <span class="o_field_monetary o_field_number o_field_widget">
+                                <t t-esc="widget._formatMonetary(widget.total)"/>
+                            </span>
                         </h4>
                         <button t-if="widget.raw_state == 'new'" class="btn btn-primary w-100 o_lunch_widget_order_button">Order now</button>
                     </div>
@@ -93,23 +89,6 @@
         </t>
     </div>
 
-    <span t-name="currency_field" class="o_field_monetary o_field_number o_field_widget">
-        <t t-js="ctx">
-            ctx.value = _.str.sprintf('%.2f', parseFloat(ctx.value));
-        </t>
-        <t t-if="currency">
-            <t t-if="currency.position == 'after'">
-                <t t-esc="value"/><t t-esc="currency.symbol"/>
-            </t>
-            <t t-else="">
-                <t t-esc="currency.symbol"/><t t-esc="value"/>
-            </t>
-        </t>
-        <t t-else="">
-            <t t-esc="value"/>
-        </t>
-    </span>
-
     <div t-name="lunch.LunchPaymentDialog">
         <span t-esc="widget.message"/>
     </div>
@@ -119,10 +98,9 @@
             <summary class="o_lunch_toggle_cart btn btn-primary w-100">
                 <i class="fa fa-fw fa-shopping-cart"/>
                 Your cart
-                (<t t-call="currency_field">
-                    <t t-set="value" t-value="widget.total"/>
-                    <t t-set="currency" t-value="widget.currency"/>
-                </t>)
+                (<span class="o_field_monetary o_field_number o_field_widget">
+                    <t t-esc="widget._formatMonetary(widget.total)"/>
+                </span>)
             </summary>
             <t t-call="LunchKanbanWidget"/>
         </details>

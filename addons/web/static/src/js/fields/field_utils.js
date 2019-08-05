@@ -341,11 +341,8 @@ function formatMonetary(value, field, options) {
     if (!currency || options.noSymbol) {
         return formatted_value;
     }
-    if (currency.position === "after") {
-        return formatted_value += '&nbsp;' + currency.symbol;
-    } else {
-        return currency.symbol + '&nbsp;' + formatted_value;
-    }
+    return utils.formatMonetaryValue(formatted_value, {'currency' : currency});
+
 }
 /**
  * Returns a string representing the given value (multiplied by 100)

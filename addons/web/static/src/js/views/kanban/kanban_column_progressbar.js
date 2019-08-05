@@ -60,17 +60,6 @@ var KanbanColumnProgressBar = Widget.extend({
         this.$counter = this.$('.o_kanban_counter_side');
         this.$number = this.$counter.find('b');
 
-        if (this.currency) {
-            var $currency = $('<span/>', {
-                text: this.currency.symbol,
-            });
-            if (this.currency.position === 'before') {
-                $currency.prependTo(this.$counter);
-            } else {
-                $currency.appendTo(this.$counter);
-            }
-        }
-
         return this._super.apply(this, arguments).then(function () {
             // This should be executed when the progressbar is fully rendered
             // and is in the DOM, this happens to be always the case with
@@ -211,7 +200,7 @@ var KanbanColumnProgressBar = Widget.extend({
         }
 
         function _getCounterHTML(value) {
-            return utils.human_number(value, 0, 3);
+            return utils.formatMonetaryValue(utils.human_number(value, 0, 3), {currency: self.currency});
         }
     },
     /**

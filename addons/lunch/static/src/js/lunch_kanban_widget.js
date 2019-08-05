@@ -2,6 +2,7 @@ odoo.define('lunch.LunchKanbanWidget', function (require) {
 "use strict";
 
 var core = require('web.core');
+var field_utils = require('web.field_utils');
 var relationalFields = require('web.relational_fields');
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -116,6 +117,16 @@ var LunchKanbanWidget = Widget.extend({
             }
         };
         return new LunchMany2One(this, name, record, options);
+    },
+    /**
+     * Returns a string representing a monetary value.
+     *
+     * @private
+     * @param {string} value the value that should be formatted
+     * @returns {string}
+     */
+    _formatMonetary: function (value) {
+        return field_utils.format.monetary(parseFloat(value), {}, {currency: this.currency});
     },
 
     //--------------------------------------------------------------------------

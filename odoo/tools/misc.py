@@ -1130,6 +1130,24 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
+# currency symbol and negative sign position format
+CURRENCY_FORMAT = {
+    'before': {
+        '0': "{n_symbol1}{symbol}{space}{amount}{n_symbol2}",
+        '1': "{n_symbol1}{symbol}{space}{amount}",
+        '2': "{symbol}{space}{amount}{n_symbol1}",
+        '3': "{symbol}{space}{n_symbol1}{amount}",
+        '4': "{symbol}{space}{amount}{n_symbol1}",
+    },
+    'after': {
+        '0': "{n_symbol1}{amount}{space}{symbol}{n_symbol2}",
+        '1': "{n_symbol1}{amount}{space}{symbol}",
+        '2': "{amount}{space}{symbol}{n_symbol1}",
+        '3': "{n_symbol1}{amount}{space}{symbol}",
+        '4': "{amount}{n_symbol1}{space}{symbol}",
+    },
+}
+
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
     """
         Assuming 'Account' decimal.precision=3:
@@ -1156,10 +1174,19 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
     if currency_obj and currency_obj.symbol:
-        if currency_obj.position == 'after':
-            res = '%s %s' % (res, currency_obj.symbol)
-        elif currency_obj and currency_obj.position == 'before':
-            res = '%s %s' % (currency_obj.symbol, res)
+        n_symbol1 = n_symbol2 = ''
+        is_space = '' if not currency_obj.is_space else u'\N{NO-BREAK SPACE}'
+        # FIXME, when parse negative amount with bracket
+        if res.find('-') == 0:
+            res = res.replace('-', '')
+            if currency_obj.sign_position == '0':
+                n_symbol1 = '('
+                n_symbol2 = ')'
+            else:
+                n_symbol1 = u'-\N{ZERO WIDTH NO-BREAK SPACE}'
+        currency_format = CURRENCY_FORMAT[currency_obj.position][currency_obj.sign_position]
+        formatted_res = currency_format.format(n_symbol1=n_symbol1, n_symbol2=n_symbol2, amount=res, symbol=currency_obj.symbol, space=is_space)
+        return formatted_res
     return res
 
 

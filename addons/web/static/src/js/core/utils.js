@@ -203,6 +203,24 @@ var diacriticsMap = {
 '\u0225': 'z','\u0240': 'z','\u2C6C': 'z','\uA763': 'z',
 };
 
+// currency symbol and negative sign position arrangement
+const currencyFormat = {
+    'before': {
+        '0': "`${nSymbol1}${symbol}${space}${amount}${nSymbol2}`",
+        '1': "`${nSymbol1}${symbol}${space}${amount}`",
+        '2': "`${symbol}${space}${amount}${nSymbol1}`",
+        '3': "`${symbol}${space}${nSymbol1}${amount}`",
+        '4': "`${symbol}${space}${amount}${nSymbol1}`",
+    },
+    'after': {
+        '0': "`${nSymbol1}${amount}${space}${symbol}${nSymbol2}`",
+        '1': "`${nSymbol1}${amount}${space}${symbol}`",
+        '2': "`${amount}${space}${symbol}${nSymbol1}`",
+        '3': "`${nSymbol1}${amount}${space}${symbol}`",
+        '4': "`${amount}${nSymbol1}${space}${symbol}`",
+    },
+};
+
 var utils = {
     /**
      * Throws an error if the given condition is not true
@@ -783,6 +801,36 @@ var utils = {
             ['name', 'like', 'assets_']
         ];
     },
+
+    /**
+     * return the formatted amount with currency symbol, space and sign position
+     *
+     * @param {string} value
+     * @param {Object} [options]
+     */
+    formatMonetaryValue: function (value, options) {
+        var currency = options.currency;
+        if (!currency) {
+            return value;
+        }
+        var nSymbol1 = '',
+            nSymbol2 = '',
+            symbol = currency.symbol,
+            space = currency.is_space ? ' ' : '',
+            amount = value;
+        // FIXME, for negative amount with bracket
+        if (amount.includes('-')) {
+            amount = amount.replace('-', '');
+            if (currency.sign_position === '0') {
+                nSymbol1 = '(';
+                nSymbol2 = ')';
+            } else {
+                nSymbol1 = '-';
+            }
+        }
+        return eval(currencyFormat[currency.position][currency.sign_position]);
+    }
+
 };
 
 return utils;

@@ -178,9 +178,7 @@ class Digest(models.Model):
         return margin
 
     def _format_currency_amount(self, amount, currency_id):
-        pre = currency_id.position == 'before'
-        symbol = u'{symbol}'.format(symbol=currency_id.symbol or '')
-        return u'{pre}{0}{post}'.format(amount, pre=symbol if pre else '', post=symbol if not pre else '')
+        return tools.formatLang(self.env, amount, grouping=True, monetary=True, currency_obj=currency_id)
 
     def _format_human_readable_amount(self, amount, suffix=''):
         for unit in ['', 'K', 'M', 'G']:

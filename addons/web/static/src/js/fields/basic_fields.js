@@ -919,8 +919,14 @@ var FieldMonetary = NumericField.extend({
             // Prepare and add the currency symbol
             var $currencySymbol = $('<span>', {text: this.currency.symbol});
             if (this.currency.position === "after") {
+                if (this.currency.is_space === true) {
+                    $currencySymbol.prepend('&nbsp;');
+                }
                 this.$el.append($currencySymbol);
             } else {
+                if (this.currency.is_space === true) {
+                    $currencySymbol.append('&nbsp;');
+                }
                 this.$el.prepend($currencySymbol);
             }
         }

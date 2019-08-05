@@ -32,11 +32,8 @@ var PosBaseWidget = Widget.extend({
 
         amount = this.format_currency_no_symbol(amount,precision);
 
-        if (currency.position === 'after') {
-            return amount + ' ' + (currency.symbol || '');
-        } else {
-            return (currency.symbol || '') + ' ' + amount;
-        }
+        return utils.formatMonetaryValue(amount, {'currency': currency});
+
     },
     format_currency_no_symbol: function(amount, precision) {
         var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};

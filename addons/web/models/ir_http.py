@@ -79,5 +79,5 @@ class Http(models.AbstractModel):
 
     def get_currencies(self):
         Currency = request.env['res.currency']
-        currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places'])
-        return {c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies}
+        currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places', 'is_space', 'sign_position'])
+        return {c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']], 'is_space': c['is_space'], 'sign_position': c['sign_position']} for c in currencies}

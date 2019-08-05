@@ -90,7 +90,7 @@ class LunchController(http.Controller):
             'wallet': request.env['lunch.cashmove'].get_wallet_balance(user, False),
             'is_manager': is_manager,
             'locations': request.env['lunch.location'].search_read([], ['name']),
-            'currency': {'symbol': currency.symbol, 'position': currency.position},
+            'currency': {'symbol': currency.symbol, 'position': currency.position, 'is_space': currency.is_space, 'sign_position': currency.sign_position},
         })
 
         if not user.last_lunch_location_id:

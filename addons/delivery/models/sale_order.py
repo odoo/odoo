@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 
@@ -123,12 +123,7 @@ class SaleOrder(models.Model):
         return sol
 
     def _format_currency_amount(self, amount):
-        pre = post = u''
-        if self.currency_id.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=self.currency_id.symbol or '')
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
-        return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
+        return tools.formatLang(self.env, amount, grouping=True, monetary=True, currency_obj=self.currency_id)
 
     @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines',
                  'order_line.is_delivery', 'order_line.is_downpayment', 'order_line.product_id.invoice_policy')

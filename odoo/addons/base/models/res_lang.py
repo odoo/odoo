@@ -46,6 +46,18 @@ class Lang(models.Model):
              "Provided ',' as the thousand separator in each case.")
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
+    currency_position = fields.Selection([
+        ('after', 'After Amount'),
+        ('before', 'Before Amount')], default='after', required=True,
+        string='Currency Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
+    sign_position = fields.Selection([
+        ('0', 'Surrounded by parentheses'),
+        ('1', 'Before value and symbol'),
+        ('2', 'After value and symbol'),
+        ('3', 'Before value'),
+        ('4', 'After value')], string='Sign Position',
+        default='1', help="Determines where the negative sign should be placed.")
+    currency_has_space = fields.Boolean(string='Allow space between amount and currency symbol')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
@@ -135,6 +147,10 @@ class Lang(models.Model):
             return str(format)
 
         conv = locale.localeconv()
+        sign_position = conv.get('n_sign_posn')
+        if sign_position == locale.CHAR_MAX:
+            sign_position = 1
+
         lang_info = {
             'code': lang,
             'iso_code': iso_lang,
@@ -145,6 +161,9 @@ class Lang(models.Model):
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),
             'thousands_sep' : fix_xa0(str(conv['thousands_sep'])),
             'grouping' : str(conv.get('grouping', [])),
+            'currency_position': 'before' if conv.get('p_cs_precedes') == 1 else 'after',
+            'currency_has_space': True if conv.get('p_sep_by_space') == 1 else False,
+            'sign_position': str(sign_position)
         }
         try:
             return self.create(lang_info).id

@@ -318,7 +318,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model: 'res.currency',
-        fields: ['name','symbol','position','rounding','rate'],
+        fields: ['name','symbol','position','rounding','rate','is_space','sign_position'],
         ids:    function(self){ return [self.config.currency_id[0], self.company.currency_id[0]]; },
         loaded: function(self, currencies){
             self.currency = currencies[0];

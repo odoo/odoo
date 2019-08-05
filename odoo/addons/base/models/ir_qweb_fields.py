@@ -3,7 +3,7 @@ import base64
 import re
 from collections import OrderedDict
 from io import BytesIO
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from PIL import Image
 import babel
 from lxml import etree
@@ -407,13 +407,6 @@ class MonetaryConverter(models.AbstractModel):
         if not isinstance(value, (int, float)):
             raise ValueError(_("The value send to monetary field is not a number."))
 
-        # lang.format mandates a sprintf-style format. These formats are non-
-        # minimal (they have a default fixed precision instead), and
-        # lang.format will not set one by default. currency.round will not
-        # provide one either. So we need to generate a precision value
-        # (integer > 0) from the currency's rounding (a float generally < 1.0).
-        fmt = "%.{0}f".format(display_currency.decimal_places)
-
         if options.get('from_currency'):
             date = options.get('date') or fields.Date.today()
             company_id = options.get('company_id')
@@ -422,18 +415,10 @@ class MonetaryConverter(models.AbstractModel):
             else:
                 company = self.env.company
             value = options['from_currency']._convert(value, display_currency, company, date)
+        value = display_currency.round(value)
+        formatted_amount = tools.formatLang(self.env, value, grouping=True, monetary=True, currency_obj=display_currency)
 
-        lang = self.user_lang()
-        formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
-
-        pre = post = u''
-        if display_currency.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=display_currency.symbol or '')
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
-
-        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(formatted_amount, pre=pre, post=post)
+        return u'<span class="oe_currency_value" data-price="{0}" data-position="{1}" data-is_space="{2}" data-symbol="{3}" data-sign_position="{4}">{5}</span>'.format(value, display_currency.position, display_currency.is_space, display_currency.symbol, display_currency.sign_position, formatted_amount)
 
     @api.model
     def record_to_html(self, record, field_name, options):
