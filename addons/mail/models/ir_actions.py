@@ -65,7 +65,7 @@ class ServerActions(models.Model):
     @api.constrains('state', 'model_id')
     def _check_activity_mixin(self):
         for action in self:
-            if action.state == 'next_activity' and not issubclass(self.pool[action.model_id.model], self.pool['mail.thread']):
+            if action.state == 'next_activity' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("A next activity can only be planned on models that use the chatter"))
 
     @api.model
