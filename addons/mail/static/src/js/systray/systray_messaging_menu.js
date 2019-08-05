@@ -188,7 +188,7 @@ var MessagingMenu = Widget.extend({
         if (this.isMobile()) {
             // allowing list item swipe for mark read and star message
             var self = this;
-            this._$previews.listSwipe({
+            mobileUtils.listSwipe(this._$previews, {
                 itemSelector: '.o_mail_preview_mobile',
                 rightAction: false,
                 allowAction: function (ev, action) {

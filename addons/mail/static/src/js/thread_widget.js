@@ -230,7 +230,7 @@ var ThreadWidget = Widget.extend({
         }
 
         if (enableSwipe) {
-            this.$el.listSwipe({
+            mobileUtils.listSwipe(this.$el, {
                 itemSelector: '.o_thread_message_mobile',
                 onElementMoving: function (ev, action) {
                     $(ev.currentTarget).find(".swipe-action[data-key='read']").toggleClass("bg-success", action == "right");
@@ -240,9 +240,7 @@ var ThreadWidget = Widget.extend({
                     var target = $(ev.currentTarget);
                     target.find(".swipe-action").removeClass("bg-success");
                     target.animate({ left: '0px' }, 200);
-                    console.log('slideup starting...');
                     target.slideUp("fast", function () {
-                        console.log('slideup starting DONE');
                         new MobileUndobar(self, {
                             message: MARKED_AS_READ,
                             delay: 3000,
@@ -257,10 +255,11 @@ var ThreadWidget = Widget.extend({
                     });
                 },
                 onLeftSwipe: function (ev) {
+                    var target = $(ev.currentTarget);
                     setTimeout(function() {
-                        $(ev.currentTarget).find(".swipe-action").removeClass("bg-warning");
-                        $(ev.currentTarget).animate({ left: '0px' }, 200);
-                        var messageID = $(ev.currentTarget).find(".o_thread_message").data("message-id");
+                        target.find(".swipe-action").removeClass("bg-warning");
+                        target.animate({ left: '0px' }, 200);
+                        var messageID = target.find(".o_thread_message").data("message-id");
                         self.trigger('toggle_star_status', messageID);
                     }, 500);
                 }
