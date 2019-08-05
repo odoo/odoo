@@ -13,12 +13,11 @@ const PublicCrashManager = CrashManager.extend({
     /**
      * @override
      */
-    _displayWarning(message, title, subtitle, options) {
+    _displayWarning(message, title, options) {
         this.displayNotification({
             ...options,
             title,
             message,
-            subtitle,
             sticky: true,
         });
     },

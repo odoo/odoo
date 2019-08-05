@@ -247,9 +247,8 @@ var CrashManager = AbstractService.extend({
             return;
         }
         var message = error.data ? error.data.message : error.message;
-        var title = _.str.capitalize(error.type) || _t("Oops Something went wrong !");
-        var subtitle = error.data ? error.data.title : error.title;
-        return this._displayWarning(message, title, subtitle, options);
+        var title = _.str.capitalize(error.type) || _t("Something went wrong !");
+        return this._displayWarning(message, title, options);
     },
     show_error: function (error) {
         if (!active) {
@@ -315,14 +314,12 @@ var CrashManager = AbstractService.extend({
      * @private
      * @param {string} message
      * @param {string} title
-     * @param {string} subtitle
      * @param {Object} options
      */
-    _displayWarning: function (message, title, subtitle, options) {
+    _displayWarning: function (message, title, options) {
         return new WarningDialog(this, {
             ...options,
             title,
-            subtitle,
         }, {
             message,
         }).open();
