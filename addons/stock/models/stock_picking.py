@@ -29,6 +29,7 @@ class PickingType(models.Model):
     color = fields.Integer('Color')
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one('ir.sequence', 'Reference Sequence', required=True)
+    sequence_code = fields.Char('Code', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
         help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. ")
@@ -63,6 +64,22 @@ class PickingType(models.Model):
     rate_picking_backorders = fields.Integer(compute='_compute_picking_count')
     barcode = fields.Char('Barcode', copy=False)
     company_id = fields.Many2one('res.company', 'Company', related='warehouse_id.company_id', store=True)
+
+    @api.model
+    def create(self, vals):
+        if 'sequence_id' not in vals:
+            vals['sequence_id'] = self.env['ir.sequence'].create({
+                'name': self.wareohouse_id.name + ' ' + _('Sequence Custom'),
+                'prefix': self.warehouse_id.code + '/' + self.sequence_code, 'padding': 5,
+                'company_id': self.warehouse_id.company_id.id,
+            })
+        picking_type = super(PickingType, self).create(vals)
+        return picking_type
+
+    @api.onchange('sequence_code')
+    def _onchange_sequence_code(self):
+        if self.sequence_id:
+            self.sequence_id.prefix = self.warehouse_id.code + '/' + self.sequence_code
 
     def _compute_picking_count(self):
         # TDE TODO count picking can be done using previous two

@@ -823,6 +823,7 @@ class Warehouse(models.Model):
                 'default_location_src_id': False,
                 'sequence': max_sequence + 1,
                 'barcode': self.code.replace(" ", "").upper() + "-RECEIPTS",
+                'sequence_code': 'IN',
             }, 'out_type_id': {
                 'name': _('Delivery Orders'),
                 'code': 'outgoing',
@@ -831,6 +832,7 @@ class Warehouse(models.Model):
                 'default_location_dest_id': False,
                 'sequence': max_sequence + 5,
                 'barcode': self.code.replace(" ", "").upper() + "-DELIVERY",
+                'sequence_code': 'OUT',
             }, 'pack_type_id': {
                 'name': _('Pack'),
                 'code': 'internal',
@@ -840,6 +842,7 @@ class Warehouse(models.Model):
                 'default_location_dest_id': output_loc.id,
                 'sequence': max_sequence + 4,
                 'barcode': self.code.replace(" ", "").upper() + "-PACK",
+                'sequence_code': 'PACK',
             }, 'pick_type_id': {
                 'name': _('Pick'),
                 'code': 'internal',
@@ -848,6 +851,7 @@ class Warehouse(models.Model):
                 'default_location_src_id': self.lot_stock_id.id,
                 'sequence': max_sequence + 3,
                 'barcode': self.code.replace(" ", "").upper() + "-PICK",
+                'sequence_code': 'PICK',
             }, 'int_type_id': {
                 'name': _('Internal Transfers'),
                 'code': 'internal',
@@ -858,6 +862,7 @@ class Warehouse(models.Model):
                 'active': self.reception_steps != 'one_step' or self.delivery_steps != 'ship_only' or self.user_has_groups('stock.group_stock_multi_locations'),
                 'sequence': max_sequence + 2,
                 'barcode': self.code.replace(" ", "").upper() + "-INTERNAL",
+                'sequence_code': 'INT',
             },
         }, max_sequence + 6
 
