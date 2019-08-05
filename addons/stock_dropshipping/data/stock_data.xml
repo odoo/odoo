@@ -10,6 +10,7 @@
 
         <record id="picking_type_dropship" model="stock.picking.type">
             <field name="name">Dropship</field>
+            <field name="sequence_code">DS</field>
             <field name="sequence_id" ref="seq_picking_type_dropship"/>
             <field name="code">incoming</field>
             <field name="warehouse_id" eval="False"/>

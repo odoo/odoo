@@ -40,7 +40,8 @@
                             <group>
                                 <field name="active" invisible="1"/>
                                 <field name="name"/>
-                                <field name="sequence_id"/>
+                                <field name="sequence_id" groups="base.group_no_one"/>
+                                <field name="sequence_code"/>
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                             </group>
                             <group>
@@ -58,6 +59,9 @@
                             <group attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' string="Packages" groups="stock.group_tracking_lot">
                                 <field name="show_entire_packs"/>
                             </group>
+                            <!-- As this group will be hidden without multi_loccation, you will not be able to create a
+                             picking type with the code 'Internal', which make sense, but as the field 'code' on picking
+                             types can't be partially hidden, you can still select the code internal in the form view -->
                             <group string="Locations" groups="stock.group_stock_multi_locations">
                                 <field name="default_location_src_id" options="{'no_create': True}" attrs="{'required': [('code', 'in', ('internal', 'outgoing'))]}"/>
                                 <field name="default_location_dest_id" options="{'no_create': True}" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>

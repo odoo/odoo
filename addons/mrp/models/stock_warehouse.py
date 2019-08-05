@@ -205,7 +205,8 @@ class StockWarehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_src_id': self.lot_stock_id.id,
                 'default_location_dest_id': self.pbm_loc_id.id,
-                'sequence': next_sequence + 1
+                'sequence': next_sequence + 1,
+                'sequence_code': 'PC',
             },
             'sam_type_id': {
                 'name': _('Store Finished Product'),
@@ -214,14 +215,16 @@ class StockWarehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_src_id': self.sam_loc_id.id,
                 'default_location_dest_id': self.lot_stock_id.id,
-                'sequence': next_sequence + 3
+                'sequence': next_sequence + 3,
+                'sequence_code': 'SFP',
             },
             'manu_type_id': {
                 'name': _('Manufacturing'),
                 'code': 'mrp_operation',
                 'use_create_lots': True,
                 'use_existing_lots': True,
-                'sequence': next_sequence + 2
+                'sequence': next_sequence + 2,
+                'sequence_code': 'MO',
             },
         })
         return data, max_sequence + 4
