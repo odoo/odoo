@@ -96,8 +96,14 @@ class AccountPayment(models.Model):
         self.write({'state': 'posted'})
 
     def do_print_checks(self):
-        """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
-        raise UserError(_("You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."))
+        check_layout = self[0].company_id.account_check_printing_layout
+        if check_layout == 'disabled':
+            raise UserError(_("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."))
+        report_action = self.env.ref(check_layout, False)
+        if not report_action:
+            raise UserError(_("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."))
+        self.write({'state': 'sent'})
+        return report_action.report_action(self)
 
 
     def set_check_amount_in_words(self):
