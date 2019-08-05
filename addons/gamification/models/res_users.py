@@ -47,6 +47,7 @@ class Users(models.Model):
     def create(self, values_list):
         res = super(Users, self).create(values_list)
         res._recompute_rank()
+        res.send_mail_new_user()
         return res
 
     def write(self, vals):
@@ -59,6 +60,12 @@ class Users(models.Model):
         for user in self:
             user.karma += karma
         return True
+
+    def send_mail_new_user(self):
+        template = self.env.ref('gamification.mail_template_data_new_user', raise_if_not_found=False)
+        if template:
+            for u in self:
+                template.send_mail(u.id, force_send=len(self) == 1, notif_layout='mail.mail_notification_light')
 
     def _rank_changed(self):
         """
@@ -91,10 +98,6 @@ class Users(models.Model):
             old_rank = user.rank_id
             if user.karma == 0 and ranks:
                 user.write({'next_rank_id': ranks[-1]['rank'].id})
-                template = self.env.ref('gamification.mail_template_data_new_user', raise_if_not_found=False)
-                if template:
-                    template.send_mail(user.id, force_send=len(self) == 1, notif_layout='mail.mail_notification_light')
-
             else:
                 for i in range(0, len(ranks)):
                     if user.karma >= ranks[i]['karma_min']:
