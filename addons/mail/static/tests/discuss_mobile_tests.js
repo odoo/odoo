@@ -159,31 +159,29 @@ QUnit.test('mobile discuss swipe [Mark as Read and Toggle Star]', async function
 
         new Promise(function (resolve) {
             var rightOffset = $message.width() - 50;
-            $message = discuss.$('.o_thread_message_mobile.list_swipe_actions').eq(0);
+            $message = discuss.$('.o_thread_message_mobile.list_swipe_actions').eq(0).get(0);
             // Left side swipe for Toggle Star
-            var touchStart = $.Event( "touchstart", {
-                changedTouches: [{
-                    clientX: rightOffset,
-                    clientY: topOffset
-                }]
-            });
-            testUtils.dom.triggerEvents($message, [touchStart, 'click']);
+            var touchStart = new Event( "touchstart");
+            touchStart.changedTouches = [{
+                clientX: rightOffset,
+                clientY: topOffset
+            }];
+            $message.dispatchEvent(touchStart);
 
-            var touchMove = $.Event( "touchmove", {
-                changedTouches: [{
-                    clientX: rightOffset - 100,
-                    clientY: topOffset
-                }]
-            });
-            testUtils.dom.triggerEvents($message, [touchMove, 'click']);
+            var touchMove = new Event("touchmove");
+            touchMove.changedTouches = [{
+                clientX: rightOffset - 100,
+                clientY: topOffset
+            }];
+            $message.dispatchEvent(touchMove);
 
-            var touchEnd = $.Event( "touchend", {
-                changedTouches: [{
-                    clientX: 400,
-                    clientY: topOffset
-                }]
-            });
-            testUtils.dom.triggerEvents($message, [touchEnd, 'click']);
+            var touchEnd = new Event("touchend");
+            touchEnd.changedTouches = [{
+                clientX: 400,
+                clientY: topOffset
+            }];
+            $message.dispatchEvent(touchEnd);
+
             concurrency.delay(750).then(function () {
                 assert.verifySteps(['toggle_star_status'], "thread message should starred");
                 assert.ok(discuss.$('.o_thread_message .o_thread_message_star.fa-star').length, "messages should be starred");
@@ -191,30 +189,28 @@ QUnit.test('mobile discuss swipe [Mark as Read and Toggle Star]', async function
             });
         }).then(function () {
             // Right side swipe for mark as read
-            $message = discuss.$('.o_thread_message_mobile.list_swipe_actions').eq(0);
-            var touchStart = $.Event( "touchstart", {
-                changedTouches: [{
-                    clientX: 20,
-                    clientY: topOffset
-                }]
-            });
-            testUtils.dom.triggerEvents($message, [touchStart, 'click']);
+            $message = discuss.$('.o_thread_message_mobile.list_swipe_actions').eq(0).get(0);
+            var touchStart = new Event( "touchstart");
+            touchStart.changedTouches = [{
+                clientX: 20,
+                clientY: topOffset
+            }];
+            $message.dispatchEvent(touchStart);
 
-            var touchMove = $.Event( "touchmove", {
-                changedTouches: [{
-                    clientX: 200,
-                    clientY: topOffset
-                }]
-            });
-            testUtils.dom.triggerEvents($message, [touchMove, 'click']);
+            var touchMove = new Event("touchmove");
+            touchMove.changedTouches = [{
+                clientX: 200,
+                clientY: topOffset
+            }];
+            $message.dispatchEvent(touchMove);
 
-            var touchEnd = $.Event( "touchend", {
-                changedTouches: [{
-                    clientX: 400,
-                    clientY: topOffset
-                }]
-            });
-            testUtils.dom.triggerEvents($message, [touchEnd, 'click']);
+            var touchEnd = new Event("touchend");
+            touchEnd.changedTouches = [{
+                clientX: 400,
+                clientY: topOffset
+            }];
+            $message.dispatchEvent(touchEnd);
+
             // jQuery animation delay
             concurrency.delay(650).then(function () {
                 assert.ok($('body > .o_mobile_undobar').length, 'showing undo option for marked as read');
