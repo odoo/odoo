@@ -390,10 +390,11 @@ actual arch.
                     view_docs = view_docs[0]
                 for view_arch in view_docs:
                     check = valid_view(view_arch, env=self.env, model=view.model)
+                    view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                     if not check:
-                        raise ValidationError(_('Invalid view %s definition in %s') % (view.name, view.arch_fs))
+                        raise ValidationError(_('Invalid view %s definition in %s') % (view_name, view.arch_fs))
                     if check == "Warning":
-                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view.name, view.arch_fs, view.arch)
+                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view_name, view.arch_fs, view.arch)
         return True
 
     @api.constrains('type', 'groups_id')

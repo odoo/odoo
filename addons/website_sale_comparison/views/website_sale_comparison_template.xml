@@ -97,7 +97,7 @@
                                         <strong class='float-right'>x</strong>
                                     </a>
                                     <a t-att-href="'/shop/product/%s' % slug(product.product_tmpl_id)">
-                                        <img t-attf-src="/web/image/product.product/#{product.id}/image_large" class="img img-fluid" style="margin:auto;" alt="Product image"/>
+                                        <img t-attf-src="/web/image/product.product/#{product.id}/image_256" class="img img-fluid" style="margin:auto;" alt="Product image"/>
                                     </a>
                                     <div class='product_summary'>
                                         <a class="o_product_comparison_table" t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
@@ -143,7 +143,7 @@
         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
         <div class="row no-gutters align-items-center mt-2 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
             <div class="col-3">
-                <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" alt="Product image"/>
+                <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_64" style="max-height: 50px;" alt="Product image"/>
             </div>
             <div class="col-8 pl-2">
                 <h6>

@@ -10,8 +10,8 @@ class PaymentAcquirer(models.Model):
 
     so_reference_type = fields.Selection(string='Communication',
         selection=[
-            ('so_name', _('Based on Document Reference')),
-            ('partner', _('Based on Customer ID'))], default='so_name',
+            ('so_name', 'Based on Document Reference'),
+            ('partner', 'Based on Customer ID')], default='so_name',
         help='You can set here the communication type that will appear on sales orders.'
              'The communication will be given to the customer when they choose the payment method.')
 

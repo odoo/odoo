@@ -30,8 +30,8 @@ class MailingTrace(models.Model):
     res_id = fields.Integer(string='Document ID')
     # campaign / wave data
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', index=True)
-    mass_mailing_campaign_id = fields.Many2one(
-        related='mass_mailing_id.mass_mailing_campaign_id',
+    campaign_id = fields.Many2one(
+        related='mass_mailing_id.campaign_id',
         string='Mass Mailing Campaign',
         store=True, readonly=True, index=True)
     # Bounce and tracking

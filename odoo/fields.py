@@ -23,7 +23,7 @@ except ImportError:
 import psycopg2
 
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
-    ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator
+    ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
@@ -858,7 +858,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Convert ``value`` from the record format to the export format. """
         if not value:
             return ''
-        return value if record._context.get('export_raw_data') else ustr(value)
+        return value
 
     def convert_to_display_name(self, value, record):
         """ Convert ``value`` from the record format to a suitable display name. """
@@ -1214,9 +1214,7 @@ class Boolean(Field):
         return bool(value)
 
     def convert_to_export(self, value, record):
-        if record._context.get('export_raw_data'):
-            return value
-        return ustr(value)
+        return value
 
 
 class Integer(Field):
@@ -1250,7 +1248,7 @@ class Integer(Field):
 
     def convert_to_export(self, value, record):
         if value or value == 0:
-            return value if record._context.get('export_raw_data') else ustr(value)
+            return value
         return ''
 
 
@@ -1310,7 +1308,7 @@ class Float(Field):
 
     def convert_to_export(self, value, record):
         if value or value == 0.0:
-            return value if record._context.get('export_raw_data') else ustr(value)
+            return value
         return ''
 
 
@@ -1671,7 +1669,7 @@ class Date(Field):
     def convert_to_export(self, value, record):
         if not value:
             return ''
-        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
+        return self.from_string(value)
 
 
 class Datetime(Field):
@@ -1782,7 +1780,7 @@ class Datetime(Field):
         if not value:
             return ''
         value = self.convert_to_display_name(value, record)
-        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
+        return self.from_string(value)
 
     def convert_to_display_name(self, value, record):
         assert record, 'Record expected'
@@ -1908,6 +1906,33 @@ class Binary(Field):
                 atts.unlink()
 
 
+class Image(Binary):
+    _slots = {
+        'max_width': 0,
+        'max_height': 0,
+    }
+
+    def create(self, record_values):
+        new_record_values = []
+        for record, value in record_values:
+            new_record_values.append((record, self._image_process(value)))
+        super(Image, self).create(new_record_values)
+
+    def write(self, records, value):
+        value = self._image_process(value)
+        super(Image, self).write(records, value)
+
+    def _image_process(self, value):
+        if value and (self.max_width or self.max_height):
+            value = image_process(value, size=(self.max_width, self.max_height))
+        return value
+
+    def _compute_related(self, records):
+        super(Image, self)._compute_related(records)
+        for record in records:
+            record[self.name] = self._image_process(record[self.name])
+
+
 class Selection(Field):
     """
     :param selection: specifies the possible values for this field.
@@ -2007,7 +2032,7 @@ class Selection(Field):
         for item in self._description_selection(record.env):
             if item[0] == value:
                 return item[1]
-        return False
+        return ''
 
 
 class Reference(Selection):

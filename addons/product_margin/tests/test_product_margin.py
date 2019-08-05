@@ -29,8 +29,8 @@ class TestProductMargin(common.TransactionCase):
                            get_resource_path('account', 'test', 'account_minimal_test.xml'),
                            {}, 'init', False, 'test', self.registry._assertion_report)
 
-        supplier = self.env['res.partner'].create({'name': 'Supplier', 'supplier': True})
-        customer = self.env['res.partner'].create({'name': 'Customer', 'customer': True})
+        supplier = self.env['res.partner'].create({'name': 'Supplier'})
+        customer = self.env['res.partner'].create({'name': 'Customer'})
         ipad = self.env.ref("product.product_product_4")
 
         # Create supplier invoice and customer invoice to test product margin.

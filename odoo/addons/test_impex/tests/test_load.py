@@ -979,13 +979,13 @@ class test_o2m_multiple(ImporterCase):
 class test_realworld(common.TransactionCase):
     def test_bigfile(self):
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json').decode('utf-8'))
-        result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image'], data)
+        result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image_1920'], data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
 
     def test_backlink(self):
         fnames = ["name", "type", "street", "city", "country_id", "category_id",
-                  "supplier", "customer", "is_company", "parent_id"]
+                  "is_company", "parent_id"]
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json').decode('utf-8'))
         result = self.env['res.partner'].load(fnames, data)
         self.assertFalse(result['messages'])

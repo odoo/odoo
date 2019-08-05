@@ -102,6 +102,7 @@
                 <tree string="Products Price List">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
+                    <field name="discount_policy" groups="product.group_discount_per_so_line"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -122,6 +123,7 @@
                                     </div>
                                     <strong><i class="fa fa-money" role="img" aria-label="Currency" title="Currency"></i> <field name="currency_id"/></strong>
                                 </div>
+                                <field name="discount_policy" groups="product.group_discount_per_so_line"/>
                             </div>
                         </t>
                     </templates>
@@ -140,6 +142,7 @@
                             <h1><field name="name" placeholder="e.g. USD Retailers"/></h1>
                         </div>
                         <group>
+                            <field name="discount_policy" groups="product.group_discount_per_so_line" widget="radio"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>

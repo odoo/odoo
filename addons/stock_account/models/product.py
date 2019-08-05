@@ -570,6 +570,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
 
         candidates = stock_moves\
+            .sudo()\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
@@ -585,7 +586,7 @@ class ProductProduct(models.Model):
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
-            tmp_value += qty_taken_on_candidate * candidate.unit_cost
+            tmp_value += qty_taken_on_candidate * (candidate.value / candidate.quantity)
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=candidate.uom_id.rounding):
                 break
 

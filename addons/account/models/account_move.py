@@ -96,7 +96,7 @@ class AccountMove(models.Model):
             ('in_refund', 'Vendor Credit Note'),
             ('out_receipt', 'Sales Receipt'),
             ('in_receipt', 'Purchase Receipt'),
-        ], String='Type', required=True, store=True, index=True, readonly=True, tracking=True,
+        ], string='Type', required=True, store=True, index=True, readonly=True, tracking=True,
         default="entry")
     to_check = fields.Boolean(string='To Check', default=False,
         help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
@@ -355,9 +355,6 @@ class AccountMove(models.Model):
         if self.is_sale_document(include_receipts=True):
             if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
                 self.narration = self.company_id.invoice_terms or self.env.company.invoice_terms
-            return {'domain': {'partner_id': [('customer', '=', True)]}}
-        elif self.is_purchase_document(include_receipts=True):
-            return {'domain': {'partner_id': [('supplier', '=', True)]}}
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -2154,9 +2151,9 @@ class AccountMoveLine(models.Model):
         compute='_amount_residual',
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False, index=True)
-    matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
+    matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', string='Matched Debits',
         help='Debit journal items that are matched with this journal item.')
-    matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Matched Credits',
+    matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', string='Matched Credits',
         help='Credit journal items that are matched with this journal item.')
 
     # ==== Analytic fields ====

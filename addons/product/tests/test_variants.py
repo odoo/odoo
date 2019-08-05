@@ -501,7 +501,7 @@ class TestVariantsImages(common.TestProductCommon):
             self.images.update({color: base64.b64encode(f.read())})
 
             self.env['product.product'].create({
-                'image_raw_original': self.images[color],
+                'image_variant_max': self.images[color],
                 'attribute_value_ids': [(6, 0, [color_value.id])],
                 'product_tmpl_id': self.template.id,
             })
@@ -511,7 +511,7 @@ class TestVariantsImages(common.TestProductCommon):
         return res
 
     def test_variant_images(self):
-        """Check that on variant, the image used is the image_raw_original if set,
+        """Check that on variant, the image used is the image_variant_max if set,
         and defaults to the template image otherwise.
         """
         f = io.BytesIO()
@@ -519,29 +519,29 @@ class TestVariantsImages(common.TestProductCommon):
         f.seek(0)
         image_black = base64.b64encode(f.read())
 
-        images = self.variants.mapped('image_original')
+        images = self.variants.mapped('image_1920')
         self.assertEqual(len(set(images)), 4)
 
         variant_no_image = self.variants[0]
-        self.assertFalse(variant_no_image.image)
-        self.template.image = image_black
+        self.assertFalse(variant_no_image.image_1920)
+        self.template.image_1920 = image_black
 
         # the first has no image variant, all the others do
-        self.assertFalse(variant_no_image.image_raw_original)
+        self.assertFalse(variant_no_image.image_variant_max)
         self.assertTrue(all(images[1:]))
 
         # template image is the same as this one, since it has no image variant
-        self.assertEqual(variant_no_image.image, self.template.image)
+        self.assertEqual(variant_no_image.image_1920, self.template.image_1920)
         # having changed the template image should not have changed these
-        self.assertEqual(images[1:], self.variants.mapped('image')[1:])
+        self.assertEqual(images[1:], self.variants.mapped('image_1920')[1:])
 
     def test_update_images_with_archived_variants(self):
         """Update images after variants have been archived"""
         self.variants[1:].write({'active': False})
-        self.variants[0].image = self.images['red']
-        self.assertEqual(self.template.image, self.images['red'])
-        self.assertEqual(self.variants[0].image_raw_original, False)
-        self.assertEqual(self.variants[0].image, self.images['red'])
+        self.variants[0].image_1920 = self.images['red']
+        self.assertEqual(self.template.image_1920, self.images['red'])
+        self.assertEqual(self.variants[0].image_variant_max, False)
+        self.assertEqual(self.variants[0].image_1920, self.images['red'])
 
 
 class TestVariantsArchive(common.TestProductCommon):

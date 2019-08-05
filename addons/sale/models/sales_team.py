@@ -9,6 +9,7 @@ from odoo import api, fields, models, _
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
+    use_quotations = fields.Boolean(string='Quotations', help="Check this box if you send quotations to your customers rather than confirming orders straight away.")
     invoiced = fields.Integer(
         compute='_compute_invoiced',
         string='Invoiced This Month', readonly=True,
@@ -58,7 +59,7 @@ class CrmTeam(models.Model):
             ('team_id', 'in', self.ids),
             ('invoice_status','=','to invoice'),
         ], ['team_id'], ['team_id'])
-        data_map = {datum['team_id'][0]: datum['team_id_count'] for datum in sale_order_data }
+        data_map = {datum['team_id'][0]: datum['team_id_count'] for datum in sale_order_data}
         for team in self:
             team.sales_to_invoice_count = data_map.get(team.id,0.0)
 
@@ -124,6 +125,6 @@ class CrmTeam(models.Model):
         if self._context.get('in_sales_app'):
             return self.env.ref('sale.action_order_report_so_salesteam').read()[0]
         return super(CrmTeam, self).action_primary_channel_button()
-            
+
     def update_invoiced_target(self, value):
         return self.write({'invoiced_target': round(float(value or 0))})

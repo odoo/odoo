@@ -1604,10 +1604,10 @@ class Meeting(models.Model):
                 self.env['calendar.alarm_manager']._notify_next_alarm(meeting.partner_ids.ids)
         return meeting
 
-    def export_data(self, fields_to_export, raw_data=False):
+    def export_data(self, fields_to_export):
         """ Override to convert virtual ids to ids """
         records = self.browse(set(get_real_ids(self.ids)))
-        return super(Meeting, records).export_data(fields_to_export, raw_data)
+        return super(Meeting, records).export_data(fields_to_export)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

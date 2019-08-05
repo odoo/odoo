@@ -239,8 +239,8 @@ class EventRegistration(models.Model):
 
     def summary(self):
         res = super(EventRegistration, self).summary()
-        if self.event_ticket_id.product_id.image_medium:
-            res['image'] = '/web/image/product.product/%s/image_medium' % self.event_ticket_id.product_id.id
+        if self.event_ticket_id.product_id.image_128:
+            res['image'] = '/web/image/product.product/%s/image_128' % self.event_ticket_id.product_id.id
         information = res.setdefault('information', {})
         information.append((_('Name'), self.name))
         information.append((_('Ticket'), self.event_ticket_id.name or _('None')))

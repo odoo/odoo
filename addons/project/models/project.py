@@ -530,7 +530,7 @@ class Task(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Circular references are not permitted between tasks and sub-tasks'))
+            raise ValidationError(_('You cannot create recursive tasks.'))
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -910,7 +910,8 @@ class Task(models.Model):
             'view_mode': 'form',
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'context': dict(self._context, create=False)
         }
 
     def action_subtask(self):

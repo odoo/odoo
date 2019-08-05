@@ -71,11 +71,11 @@ class Survey(models.Model):
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
     public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
-    invite_count = fields.Integer("Invite", compute="_compute_survey_statistic")
-    answer_count = fields.Integer("Started", compute="_compute_survey_statistic")
-    answer_done_count = fields.Integer("Completed", compute="_compute_survey_statistic")
-    certified_count = fields.Integer("Certified", compute="_compute_certified_count")
-
+    answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
+    answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
+    answer_score_avg = fields.Float("Avg Score %", compute="_compute_survey_statistic")
+    certified_count = fields.Integer("Certified", compute="_compute_survey_statistic")
+    certified_ratio = fields.Integer("Certified Ratio", compute="_compute_certified_ratio")
     # scoring and certification fields
     scoring_type = fields.Selection([
         ('no_scoring', 'No scoring'),
@@ -121,38 +121,30 @@ class Survey(models.Model):
         for survey in self:
             survey.users_can_signup = signup_allowed
 
-    @api.depends('user_input_ids.state', 'user_input_ids.test_entry')
+    @api.depends('user_input_ids.input_type', 'user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.quizz_score', 'user_input_ids.quizz_passed')
     def _compute_survey_statistic(self):
-        stat = dict((cid, dict(invite_count=0, answer_count=0, answer_done_count=0)) for cid in self.ids)
+        stat = dict((cid, dict(answer_count=0, answer_done_count=0, certified_count=0, answer_score_avg_total=0.0)) for cid in self.ids)
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        read_group_res = UserInput.read_group(base_domain, ['input_type', 'state'], ['survey_id', 'input_type', 'state'], lazy=False)
+        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'input_type', 'state', 'quizz_score', 'quizz_passed'], lazy=False)
         for item in read_group_res:
             stat[item['survey_id'][0]]['answer_count'] += item['__count']
+            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['quizz_score']
             if item['state'] == 'done':
                 stat[item['survey_id'][0]]['answer_done_count'] += item['__count']
-            if item['input_type'] == 'link':
-                stat[item['survey_id'][0]]['invite_count'] += item['__count']
+            if item['quizz_passed']:
+                stat[item['survey_id'][0]]['certified_count'] += item['__count']
 
         for survey in self:
+            avg_total = stat[survey.id].pop('answer_score_avg_total')
+            stat[survey.id]['answer_score_avg'] = avg_total / (stat[survey.id]['answer_done_count'] or 1)
             survey.update(stat[survey.id])
 
-    @api.depends('certificate', 'user_input_ids.quizz_passed', 'user_input_ids.test_entry')
-    def _compute_certified_count(self):
-        stat = dict((cid, 0) for cid in self.ids)
-        certificate_surveys = self.filtered(lambda survey: survey.certificate)
-        if certificate_surveys:
-            read_group_res = self.env['survey.user_input'].read_group(
-                [('survey_id', 'in', certificate_surveys.ids), ('test_entry', '!=', True), ('quizz_passed', '=', True)],
-                [],
-                ['survey_id']
-            )
-            for item in read_group_res:
-                stat[item['survey_id'][0]] += item['survey_id_count']
-
+    @api.depends('certified_count', 'answer_done_count')
+    def _compute_certified_ratio(self):
         for survey in self:
-            survey.certified_count = stat.get(survey.id, 0)
+            survey.certified_ratio = survey.certified_count / (survey.answer_done_count or 1.0)
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
@@ -614,12 +606,11 @@ class Survey(models.Model):
         action['context'] = ctx
         return action
 
-    def action_survey_user_input_invite(self):
+    def action_survey_user_input(self):
         action_rec = self.env.ref('survey.action_survey_user_input_notest')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
-        ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_invite': 1})
+        ctx.update({'search_default_survey_id': self.ids[0]})
         action['context'] = ctx
         return action
 

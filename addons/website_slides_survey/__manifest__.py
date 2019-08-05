@@ -13,6 +13,8 @@
         'views/assets.xml',
         'views/slide_channel_views.xml',
         'views/slide_slide_views.xml',
+        'views/survey_survey_views.xml',
+        'views/website_slides_menu_views.xml',
         'views/website_slides_templates_course.xml',
         'views/website_slides_templates_lesson.xml',
         'views/website_slides_templates_lesson_fullscreen.xml',

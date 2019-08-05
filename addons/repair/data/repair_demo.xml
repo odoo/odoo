@@ -12,6 +12,7 @@
         <field name="address_id" ref="base.res_partner_address_1"/>
         <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
         <field name="invoice_method">none</field>
+        <field name="user_id"/>
         <field name="product_id" ref="product.product_product_3"/>
         <field name="product_uom" ref="uom.product_uom_unit"/>
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
@@ -43,6 +44,7 @@
         <field name="address_id" ref="base.res_partner_address_1"/>
         <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
         <field name="invoice_method">after_repair</field>
+        <field name="user_id"/>
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
@@ -72,6 +74,7 @@
         <field name="address_id" ref="base.res_partner_address_1"/>
         <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
         <field name="invoice_method">b4repair</field>
+        <field name="user_id"/>
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_14"/>
         <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {

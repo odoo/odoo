@@ -12,10 +12,12 @@
         </record>
 
         <record model="crm.team" id="sales_team.team_sales_department">
+            <field name="use_quotations" eval="True"/>
             <field name="invoiced_target">250000</field>
         </record>
 
         <record model="crm.team" id="sales_team.crm_team_1">
+            <field name="use_quotations" eval="True"/>
             <field name="invoiced_target">40000</field>
         </record>
 
@@ -688,7 +690,7 @@ Thanks!</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="company_id" eval="[]"/>
-            <field name="image" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
+            <field name="image_1920" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
             <field name="taxes_id" eval="[]"/>
             <field name="supplier_taxes_id" eval="[]"/>
         </record>

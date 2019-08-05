@@ -36,6 +36,7 @@ var FIELD_CLASSES = {
 var ListRenderer = BasicRenderer.extend({
     className: 'o_list_view',
     events: {
+        "mousedown": "_onMouseDown",
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
         "click .o_optional_columns_dropdown_toggle": "_onToggleOptionalColumnDropdown",
         'click tbody tr': '_onRowClicked',
@@ -1068,6 +1069,7 @@ var ListRenderer = BasicRenderer.extend({
             case $.ui.keyCode.LEFT:
                 ev.preventDefault();
                 $tr = $cell.closest('tr');
+                $tr.closest('tbody').addClass('o_keyboard_navigation');
                 if ($tr.hasClass('o_group_header') && $tr.hasClass('o_group_open')) {
                     this._onToggleGroup(ev);
                 } else {
@@ -1077,6 +1079,7 @@ var ListRenderer = BasicRenderer.extend({
             case $.ui.keyCode.RIGHT:
                 ev.preventDefault();
                 $tr = $cell.closest('tr');
+                $tr.closest('tbody').addClass('o_keyboard_navigation');
                 if ($tr.hasClass('o_group_header') && !$tr.hasClass('o_group_open')) {
                     this._onToggleGroup(ev);
                 } else {
@@ -1085,11 +1088,13 @@ var ListRenderer = BasicRenderer.extend({
                 break;
             case $.ui.keyCode.UP:
                 ev.preventDefault();
+                $cell.closest('tbody').addClass('o_keyboard_navigation');
                 colIndex = this.currentColIndex || $cell.index();
                 $futureCell = this._findConnectedCell($cell, 'prev', colIndex);
                 break;
             case $.ui.keyCode.DOWN:
                 ev.preventDefault();
+                $cell.closest('tbody').addClass('o_keyboard_navigation');
                 colIndex = this.currentColIndex || $cell.index();
                 $futureCell = this._findConnectedCell($cell, 'next', colIndex);
                 break;
@@ -1118,6 +1123,13 @@ var ListRenderer = BasicRenderer.extend({
                 $futureCell.focus();
             }
         }
+    },
+    /**
+     *
+     * @param {MouseEvent} ev
+     */
+    _onMouseDown: function(ev) {
+        $('.o_keyboard_navigation').removeClass('o_keyboard_navigation');
     },
     /**
      * @private

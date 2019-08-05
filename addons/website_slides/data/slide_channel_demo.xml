@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="1">
 
-    <record id="website_slides.channel_public" model="slide.channel">
+    <record id="slide_channel_demo_0_gard_0" model="slide.channel">
         <field name="name">Basics of Gardening</field>
         <field name="enroll">public</field>
         <field name="channel_type">training</field>
         <field name="allow_comment" eval="True"/>
         <field name="promote_strategy">most_voted</field>
+        <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
                                      (4, ref('website_slides.slide_channel_tag_level_basic')),
                                      (4, ref('website_slides.slide_channel_tag_role_gardener')),
                                      (4, ref('website_slides.slide_channel_tag_other_2'))]"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_gardening.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_gardening.jpg"/>
         <field name="description">Learn the basics of gardening !</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=8)"/>
     </record>
@@ -22,12 +23,12 @@
         <field name="channel_type">training</field>
         <field name="allow_comment" eval="True"/>
         <field name="promote_strategy">latest</field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
                                      (4, ref('website_slides.slide_channel_tag_level_intermediate')),
                                      (4, ref('website_slides.slide_channel_tag_role_gardener')),
                                      (4, ref('website_slides.slide_channel_tag_other_0'))]"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_gardening_2.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_gardening_2.jpg"/>
         <field name="description">Learn how to take care of your favorite trees. Learn when to plant, how to manage potted trees, ...</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=7)"/>
     </record>
@@ -48,14 +49,14 @@
         <field name="channel_type">documentation</field>
         <field name="allow_comment" eval="True"/>
         <field name="promote_strategy">most_viewed</field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
                                      (4, ref('website_slides.slide_channel_tag_level_intermediate')),
                                      (4, ref('website_slides.slide_channel_tag_role_gardener')),
                                      (4, ref('website_slides.slide_channel_tag_role_carpenter')),
                                      (4, ref('website_slides.slide_channel_tag_other_0')),
                                      (4, ref('website_slides.slide_channel_tag_other_2'))]"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_flowers.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_flowers.jpg"/>
         <field name="description">A lot of nice documentation: trees, wood, gardens. A gold mine for references.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=6)"/>
     </record>
@@ -76,14 +77,14 @@
         <field name="channel_type">training</field>
         <field name="allow_comment" eval="True"/>
         <field name="promote_strategy">latest</field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
                                      (4, ref('website_slides.slide_channel_tag_level_intermediate')),
                                      (4, ref('website_slides.slide_channel_tag_role_gardener')),
                                      (4, ref('website_slides.slide_channel_tag_role_carpenter')),
                                      (4, ref('website_slides.slide_channel_tag_role_furniture')),
                                      (4, ref('website_slides.slide_channel_tag_other_2'))]"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_tree_1.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_tree_1.jpg"/>
         <field name="description">Knowing which kind of wood to use depending on your application is important. In this course you
 will learn the basics of wood characteristics.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=5)"/>
@@ -100,11 +101,11 @@ will learn the basics of wood characteristics.</field>
         <field name="channel_type">documentation</field>
         <field name="allow_comment" eval="True"/>
         <field name="promote_strategy">most_voted</field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
                                      (4, ref('website_slides.slide_channel_tag_level_basic')),
                                      (4, ref('website_slides.slide_channel_tag_role_furniture'))]"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_furniture_2.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture_2.jpg"/>
         <field name="description">If you are looking for technical specifications, have a look at this documentation.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
     </record>
@@ -120,13 +121,13 @@ will learn the basics of wood characteristics.</field>
         <field name="channel_type">training</field>
         <field name="allow_comment" eval="True"/>
         <field name="promote_strategy">latest</field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
                                      (4, ref('website_slides.slide_channel_tag_level_intermediate')),
                                      (4, ref('website_slides.slide_channel_tag_role_furniture')),
                                      (4, ref('website_slides.slide_channel_tag_other_0')),
                                      (4, ref('website_slides.slide_channel_tag_other_1'))]"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
         <field name="description">All you need to know about furniture creation.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=3)"/>
     </record>
@@ -153,13 +154,13 @@ will learn the basics of wood characteristics.</field>
         <field name="channel_type">training</field>
         <field name="allow_comment" eval="True"/>
         <field name="promote_strategy">most_voted</field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
                                  (4, ref('website_slides.slide_channel_tag_level_advanced')),
                                  (4, ref('website_slides.slide_channel_tag_role_carpenter')),
                                  (4, ref('website_slides.slide_channel_tag_role_furniture')),
                                  (4, ref('website_slides.slide_channel_tag_other_1'))]"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_diy.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_diy.jpg"/>
         <field name="description">So much amazing certification.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=2)"/>
     </record>

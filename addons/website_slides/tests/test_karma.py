@@ -19,7 +19,7 @@ class TestKarmaGain(common.SlidesCase):
             'promote_strategy': 'most_voted',
             'enroll': 'public',
             'visibility': 'public',
-            'website_published': True,
+            'is_published': True,
             'karma_gen_channel_finish': 100,
             'karma_gen_slide_vote': 5,
             'karma_gen_channel_rank': 10,
@@ -29,14 +29,14 @@ class TestKarmaGain(common.SlidesCase):
             'name': 'How to travel through space and time',
             'channel_id': self.channel_2.id,
             'slide_type': 'presentation',
-            'website_published': True,
+            'is_published': True,
             'completion_time': 2.0,
         })
         self.slide_2_1 = self.env['slide.slide'].with_user(self.user_publisher).create({
             'name': 'How to duplicate yourself',
             'channel_id': self.channel_2.id,
             'slide_type': 'presentation',
-            'website_published': True,
+            'is_published': True,
             'completion_time': 2.0,
         })
 

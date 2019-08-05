@@ -6,6 +6,11 @@
             <field name="priority">9</field>
             <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@name='options_active']" position="inside">
+                    <div class="o_row" style="display:inherit">
+                        <field name="use_quotations"/><label for="use_quotations"/>
+                    </div>
+                </xpath>
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="invoiced_target"/>
                 </xpath>
@@ -48,6 +53,7 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//templates" position="before">
+                <field name="use_quotations"/>
                 <field name="invoiced_target"/>
             </xpath>
 
@@ -87,7 +93,7 @@
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
-                <div>
+                <div t-if="record.use_quotations.raw_value">
                     <a name="%(action_quotations_salesteams)d" type="action" class="o_quotation_view_button">Quotations</a>
                 </div>
                 <div>
@@ -99,7 +105,7 @@
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="inside">
-                <div>
+                <div t-if="record.use_quotations.raw_value">
                     <a name="%(action_quotation_form)d" type="action">
                         Quotation
                     </a>

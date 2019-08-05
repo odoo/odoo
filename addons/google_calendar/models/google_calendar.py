@@ -448,7 +448,6 @@ class GoogleCalendar(models.AbstractModel):
                 if not attendee:
                     data = {
                         'email': partner_email,
-                        'customer': False,
                         'name': google_attendee.get("displayName", False) or partner_email
                     }
                     attendee = ResPartner.create(data)

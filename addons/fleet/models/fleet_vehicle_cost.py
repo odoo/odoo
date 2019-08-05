@@ -308,9 +308,9 @@ class FleetVehicleLogFuel(models.Model):
 
     liter = fields.Float()
     price_per_liter = fields.Float()
-    purchaser_id = fields.Many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]")
+    purchaser_id = fields.Many2one('res.partner', 'Purchaser')
     inv_ref = fields.Char('Invoice Reference', size=64)
-    vendor_id = fields.Many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]")
+    vendor_id = fields.Many2one('res.partner', 'Vendor')
     notes = fields.Text()
     cost_id = fields.Many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade')
     # we need to keep this field as a related with store=True because the graph view doesn't support
@@ -360,9 +360,9 @@ class FleetVehicleLogServices(models.Model):
         })
         return res
 
-    purchaser_id = fields.Many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]")
+    purchaser_id = fields.Many2one('res.partner', 'Purchaser')
     inv_ref = fields.Char('Invoice Reference')
-    vendor_id = fields.Many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]")
+    vendor_id = fields.Many2one('res.partner', 'Vendor')
     # we need to keep this field as a related with store=True because the graph view doesn't support
     # (1) to address fields from inherited table and (2) fields that aren't stored in database
     cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)

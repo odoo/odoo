@@ -446,15 +446,11 @@ class PosOrder(models.Model):
         return True
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
-        price_unit = product._stock_account_get_anglo_saxon_price_unit()
-        if product._get_invoice_policy() == "delivery":
-            moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
-                .mapped('picking_id.move_lines')\
-                .filtered(lambda m: m.product_id.id == product.id)\
-                .sorted(lambda x: x.date)
-            average_price_unit = product._compute_average_price(0, quantity, moves)
-            price_unit = average_price_unit or price_unit
-        # In the SO part, the entries will be inverted by function compute_invoice_totals
+        moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
+            .mapped('picking_id.move_lines')\
+            .filtered(lambda m: m.product_id.id == product.id)\
+            .sorted(lambda x: x.date)
+        price_unit = product._compute_average_price(0, quantity, moves)
         return - price_unit
 
     def _reconcile_payments(self):
@@ -483,9 +479,9 @@ class PosOrder(models.Model):
         return self.filtered(lambda order: order.state in filter_states)
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
+    date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
-        comodel_name='res.users', string='User',
+        comodel_name='res.users', string='Responsible',
         help="Person who uses the cash register. It can be a reliever, a student or an interim employee.",
         default=lambda self: self.env.uid,
         states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]},
@@ -527,7 +523,7 @@ class PosOrder(models.Model):
     )
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
-    pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
+    pos_reference = fields.Char(string='PoS Order Reference', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',

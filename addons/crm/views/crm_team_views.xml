@@ -97,36 +97,42 @@
         </record>
 
         <record id="sales_team_form_view_in_crm" model="ir.ui.view">
-                <field name="name">crm.team.form.inherit</field>
-                <field name="model">crm.team</field>
-                <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
-                <field name="priority">12</field>
-                <field name="arch" type="xml">
-                    <xpath expr="//div[@name='options_active']" position="inside">
-                        <div name="opportunities" class="o_row" invisible="1">
+            <field name="name">crm.team.form.inherit</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+            <field name="priority">12</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options_active']" position="inside">
+                    <div class="o_row">
+                        <span name="opportunities">
                             <field name="use_opportunities"/>
                             <label for="use_opportunities"/>
+                        </span>
+                        <span class="o_row" groups="crm.group_use_lead">
+                            <field name="use_leads"/>
+                            <label for="use_leads" string="Leads"/>
+                        </span>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <label for="alias_name" string="Email Alias"
+                        attrs="{'invisible': [('use_leads', '=', False),('use_opportunities', '=', False)]}"/>
+                    <div class="oe_inline" name="alias_def"
+                        attrs="{'invisible': [('use_leads', '=', False),('use_opportunities', '=', False)]}">
+                        <field name="alias_id" class="oe_read_only oe_inline"
+                            string="Email Alias" required="0"/>
+                        <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            <button  icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure domain name" class="btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
                         </div>
-                    </xpath>
-                   <xpath expr="//field[@name='user_id']" position="after">
-                        <label for="alias_name" string="Email Alias"
-                            attrs="{'invisible': [('use_opportunities', '=', False)]}"/>
-                        <div class="oe_inline" name="alias_def"
-                            attrs="{'invisible': [('use_opportunities', '=', False)]}">
-                            <field name="alias_id" class="oe_read_only oe_inline"
-                                string="Email Alias" required="0"/>
-                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            </div>
-                        </div>
-                        <field name="alias_contact" class="oe_inline"
-                            string="Accept Emails From"
-                            attrs="{'invisible': [('use_opportunities', '=', False)]}"/>
-                        <field name="alias_user_id" string="Assign to"/>
-                   </xpath>
-               
-                </field>
-            </record>
+                    </div>
+                    <field name="alias_contact" class="oe_inline"
+                        string="Accept Emails From"
+                        attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
+                    <field name="alias_user_id" string="Assign to"/>
+                </xpath>
+            </field>
+        </record>
 
         <!-- Case Teams Action -->
         <record id="action_crm_tag_kanban_view_salesteams_oppor11" model="ir.actions.act_window.view">
@@ -173,6 +179,10 @@
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         </record>
 
+        <record id="sales_team.crm_team_salesteams_pipelines_act" model="ir.actions.act_window">
+            <field name="domain">[('use_opportunities', '=', True)]</field>
+        </record>
+
         <record id="crm_team_salesteams_view_kanban" model="ir.ui.view">
             <field name="name">crm.team.kanban</field>
             <field name="model">crm.team</field>
@@ -184,10 +194,11 @@
                         <field name="alias_name"/>
                         <field name="alias_domain"/>
                         <field name="use_opportunities"/>
+                        <field name="use_leads"/>
                     </xpath>
 
                     <xpath expr="//div[hasclass('o_primary')]" position="after">
-                        <div t-if="record.alias_name.value and record.alias_domain.value">
+                        <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
                             <small t-translation="off"><i class="fa fa-envelope-o" aria-label="Leads" title="Leads" role="img"></i>&amp;nbsp; <field name="alias_id"/></small>
                         </div>
                     </xpath>
@@ -195,7 +206,7 @@
                     <xpath expr="//t[@name='first_options']" position="after">
                         <div class="row" t-if="record.unassigned_leads_count.raw_value">
                             <div class="col-8">
-                                <a name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned': True}">
+                                <a name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned_leads': 1}">
                                     <field name="unassigned_leads_count"/>
                                     <t t-if="record.unassigned_leads_count.raw_value == 1">Unassigned Lead</t>
                                     <t t-else="">Unassigned Leads</t>
@@ -229,7 +240,7 @@
                     </xpath>
 
                     <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
-                        <div  groups="crm.group_use_lead">
+                        <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                 Leads
                             </a>
@@ -250,7 +261,7 @@
                     </xpath>
 
                     <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                        <div  groups="crm.group_use_lead">
+                        <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(action_report_crm_lead_salesteam)d" type="action">
                                 Leads
                             </a>

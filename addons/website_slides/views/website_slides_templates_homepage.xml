@@ -15,7 +15,7 @@
                         <t t-foreach="top3_users" t-as="user">
                             <img class="rounded-circle img-fluid shadow ml-n4"
                                 style="border: 6px solid white"
-                                t-attf-src="/web/image/res.users/#{user['id']}/image_medium"/>
+                                t-attf-src="/web/image/res.users/#{user['id']}/image_128"/>
                         </t>
                     </div>
                 </div>
@@ -121,6 +121,11 @@
                         </div>
                     </div>
                     <div class="col-lg-9 pr-lg-5 order-lg-1">
+                        <div class="o_wslides_home_content_section mb-3"
+                            t-if="not channels_popular">
+                            <p class="h2">No Course created yet.</p>
+                            <p groups="website.group_website_designer">Click on "New" in the top-right corner to write your first course.</p>
+                        </div>
                         <t t-if="channels_my">
                             <t t-set="void_count" t-value="3 - len(channels_my[:3])"/>
                             <div class="o_wslides_home_content_section mb-3">
@@ -138,7 +143,8 @@
                                 </div>
                             </div>
                         </t>
-                        <div class="o_wslides_home_content_section mb-3">
+                        <div class="o_wslides_home_content_section mb-3"
+                            t-if="channels_popular">
                             <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
@@ -152,7 +158,8 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="o_wslides_home_content_section mb-3">
+                        <div class="o_wslides_home_content_section mb-3"
+                            t-if="channels_newest">
                             <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
@@ -266,8 +273,15 @@
                 </div>
             </div>
             <div class="container o_wslides_home_main pb-5">
-                <div t-if="search_term and not channels" class="alert alert-info mb-5">
-                    No channel was found matching your search <code><t t-esc="search_term"/></code>.
+                <div t-if="not channels and not search_term and not search_slide_type and not search_my and not search_tags and not search_channel_tag_id">
+                    <p class="h2">No Course created yet.</p>
+                    <p groups="website.group_website_designer">Click on "New" in the top-right corner to write your first course.</p>
+                </div>
+                <div t-elif="search_term and not channels" class="alert alert-info mb-5">
+                    No course was found matching your search <code><t t-esc="search_term"/></code>.
+                </div>
+                <div t-elif="not channels" class="alert alert-info mb-5">
+                    No course was found matching your search.
                 </div>
                 <div t-else="" class="row mx-n2">
                     <t t-foreach="channels" t-as="channel">
@@ -283,9 +297,9 @@
 
 <template id='course_card' name="Course Card">
     <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
-        <t t-set="course_image" t-value="'/web/image/slide.channel/%s/image' % channel.id"/>
+        <t t-set="course_image" t-value="'/web/image/slide.channel/%s/image_1024' % channel.id"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
-            <div t-if="channel.image_large" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
+            <div t-if="channel.image_1024" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
             <div t-else="" class="o_wslides_gradient card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
                 <i class="fa fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
             </div>
@@ -394,7 +408,7 @@
     <div class="o_wslides_home_aside">
         <div t-if="user.rank_id" class="d-flex align-items-center">
             <span class="font-weight-bold text-muted mr-2">Current rank:</span>
-            <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
+            <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_64" height="16" alt="" class="mr-1"/>
             <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
         <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
@@ -415,7 +429,7 @@
             <div t-attf-class="d-flex mb-3 align-items-center #{'o_wslides_entry_muted' if not challenge_done else ''}">
                 <img class="mr-2"
                     style="max-height: 36px;"
-                    t-att-src="'/web/image/gamification.badge/%s/image_medium' % challenge.reward_id.id"
+                    t-att-src="'/web/image/gamification.badge/%s/image_128' % challenge.reward_id.id"
                     t-att-alt="challenge.reward_id.name"/>
                 <div class="flex-grow-1">
                     <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
@@ -430,7 +444,7 @@
 <template id='slides_misc_user_image' name="User Avatar">
     <img t-att-class="img_class if img_class else 'rounded-circle float-left'"
         t-att-style="img_style if img_style else 'max-height: 32px;'"
-        t-att-src="'/profile/avatar/%s?field=image_medium' % user.id"
+        t-att-src="'/profile/avatar/%s?field=image_128' % user.id"
         t-att-alt="user.name"/>
 </template>
 </data></odoo>

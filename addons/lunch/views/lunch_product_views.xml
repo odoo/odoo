@@ -46,7 +46,7 @@
                 <field name="currency_id" invisible="1"/>
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label for="name" class="oe-edit-only"/>
                         <h1>
@@ -89,7 +89,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
                             <div class="o_kanban_image_fill_left d-none d-md-block"
-                                t-attf-style="background-image:url('#{kanban_image('lunch.product', 'image_medium', record.product_id.raw_value)}')"/>
+                                t-attf-style="background-image:url('#{kanban_image('lunch.product', 'image_128', record.product_id.raw_value)}')"/>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
@@ -137,7 +137,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
                             <div class="o_kanban_image_fill_left d-none d-md-block"
-                                t-attf-style="background-image:url('#{kanban_image('lunch.product', 'image_medium', record.id.raw_value)}')"/>
+                                t-attf-style="background-image:url('#{kanban_image('lunch.product', 'image_128', record.id.raw_value)}')"/>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
