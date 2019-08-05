@@ -28,7 +28,6 @@ class ResConfigSettings(models.TransientModel):
     po_lead = fields.Float(related='company_id.po_lead', readonly=False)
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",
-        oldname='default_new_po_lead',
         config_parameter='purchase.use_po_lead',
         help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.")
 

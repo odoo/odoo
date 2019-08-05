@@ -167,9 +167,9 @@ class HolidaysRequest(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     first_approver_id = fields.Many2one(
         'hr.employee', string='First Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the time off', oldname='manager_id')
+        help='This area is automatically filled by the user who validate the time off')
     second_approver_id = fields.Many2one(
-        'hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
+        'hr.employee', string='Second Approval', readonly=True, copy=False,
         help='This area is automaticly filled by the user who validate the time off with second level (If time off type need second validation)')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')

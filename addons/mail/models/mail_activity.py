@@ -38,7 +38,7 @@ class MailActivityType(models.Model):
     active = fields.Boolean(default=True)
     create_uid = fields.Many2one('res.users', index=True)
     delay_count = fields.Integer(
-        'Scheduled Date', default=0, oldname='days',
+        'Scheduled Date', default=0,
         help='Number of days/week/month before executing the action. It allows to plan the action deadline.')
     delay_unit = fields.Selection([
         ('days', 'days'),

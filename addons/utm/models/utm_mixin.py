@@ -15,7 +15,7 @@ class UtmMixin(models.AbstractModel):
     source_id = fields.Many2one('utm.source', 'Source',
                                 help="This is the source of the link, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one('utm.medium', 'Medium',
-                                help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad", oldname='channel_id')
+                                help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad")
 
     @api.model
     def default_get(self, fields):

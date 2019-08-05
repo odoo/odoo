@@ -43,7 +43,7 @@ class BaseAutomation(models.Model):
         ('on_unlink', 'On Deletion'),
         ('on_change', 'Based on Form Modification'),
         ('on_time', 'Based on Timed Condition')
-        ], string='Trigger Condition', required=True, oldname="kind")
+        ], string='Trigger Condition', required=True)
     trg_date_id = fields.Many2one('ir.model.fields', string='Trigger Date',
                                   help="""When should the condition be triggered.
                                   If present, will be checked by the scheduler. If empty, will be checked at creation and update.""",

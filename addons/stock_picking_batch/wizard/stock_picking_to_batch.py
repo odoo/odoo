@@ -8,7 +8,7 @@ class StockPickingToBatch(models.TransientModel):
     _name = 'stock.picking.to.batch'
     _description = 'Batch Picking Lines'
 
-    batch_id = fields.Many2one('stock.picking.batch', string='Batch Picking', oldname="wave_id")
+    batch_id = fields.Many2one('stock.picking.batch', string='Batch Picking')
 
     def attach_pickings(self):
         # use active_ids to add picking line to the selected batch

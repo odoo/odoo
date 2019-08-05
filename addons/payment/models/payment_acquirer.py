@@ -82,7 +82,7 @@ class PaymentAcquirer(models.Model):
     environment = fields.Selection([
         ('test', 'Test'),
         ('prod', 'Production')], string='Environment',
-        default='test', oldname='env', required=True)
+        default='test', required=True)
     website_published = fields.Boolean(
         'Visible in Portal / Website', copy=False,
         help="Make this payment acquirer available (Customer invoices, etc.)")
