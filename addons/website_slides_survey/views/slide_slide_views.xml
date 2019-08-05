@@ -12,4 +12,18 @@
             </xpath>
         </field>
     </record>
+
+    <record id="slide_slide_action_certification" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">slide.slide</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="domain">[('slide_type', '=', 'certification')]</field>
+        <field name="context">{'default_slide_type': 'certification'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new certification
+            </p>
+        </field>
+        <field name="view_id" ref="website_slides.view_slide_slide_tree"/>
+    </record>
 </odoo>

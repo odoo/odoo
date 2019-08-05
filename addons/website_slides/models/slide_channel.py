@@ -15,11 +15,11 @@ class ChannelUsersRelation(models.Model):
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
 
-    channel_id = fields.Many2one('slide.channel', index=True, required=True)
+    channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
     completion = fields.Integer('# Completed Slides', compute='_compute_completion', store=True)
-    partner_id = fields.Many2one('res.partner', index=True, required=True)
+    partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
     @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published')
@@ -73,6 +73,7 @@ class ChannelUsersRelation(models.Model):
     def _post_completion_hook(self):
         pass
 
+
 class Channel(models.Model):
     """ A channel is a container of slides. """
     _name = 'slide.channel'
@@ -96,6 +97,7 @@ class Channel(models.Model):
         string="Course type", default="documentation", required=True)
     sequence = fields.Integer(default=10, help='Display order')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
+    color = fields.Integer('Color Index', default=0, help='Used to decorate kanban view')
     tag_ids = fields.Many2many(
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
@@ -120,6 +122,7 @@ class Channel(models.Model):
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
+    rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1))
     # configuration
     allow_comment = fields.Boolean(
         "Allow rating on Course", default=False,
@@ -150,6 +153,7 @@ class Channel(models.Model):
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
         string='Members', help="All members of the channel.", context={'active_test': False})
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
+    members_done_count = fields.Integer('Attendees Done Count', compute='_compute_members_done_count')
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     upload_group_ids = fields.Many2many(
@@ -182,6 +186,13 @@ class Channel(models.Model):
         data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
         for channel in self:
             channel.members_count = data.get(channel.id, 0)
+
+    @api.depends('channel_partner_ids.channel_id', 'channel_partner_ids.completed')
+    def _compute_members_done_count(self):
+        read_group_res = self.env['slide.channel.partner'].sudo().read_group(['&', ('channel_id', 'in', self.ids), ('completed', '=', True)], ['channel_id'], 'channel_id')
+        data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
+        for channel in self:
+            channel.members_done_count = data.get(channel.id, 0)
 
     @api.depends('channel_partner_ids.partner_id')
     @api.model
@@ -230,6 +241,11 @@ class Channel(models.Model):
                 result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
                 result[cid]['total_slides'] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
         return result
+
+    def _compute_rating_stats(self):
+        super(Channel, self)._compute_rating_stats()
+        for record in self:
+            record.rating_avg_stars = record.rating_avg / 2
 
     @api.depends('slide_partner_ids', 'total_slides')
     def _compute_user_statistics(self):
@@ -360,21 +376,34 @@ class Channel(models.Model):
     # Business / Actions
     # ---------------------------------------------------------
 
-    def action_redirect_to_members(self):
-        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
-        action['view_mode'] = 'tree'
-        action['domain'] = [('channel_id', 'in', self.ids)]
+    def action_redirect_to_members(self, state=None):
+        action = self.env.ref('website_slides.res_partner_action_slide_channel').read()[0]
+        action['context'] = {'active_test': False}
+        if state == 'running':
+            action['domain'] = [('id', 'in', self.env['slide.channel.partner'].sudo().search([
+                ('channel_id', 'in', self.ids),
+                ('completed', '=', False)
+            ]).mapped('partner_id').ids)]
+        elif state == 'completed':
+            action['domain'] = [('id', 'in', self.env['slide.channel.partner'].sudo().search([
+                ('channel_id', 'in', self.ids),
+                ('completed', '=', True)
+            ]).mapped('partner_id').ids)]
+        else:
+            action['domain'] = [('id', 'in', self.mapped('partner_ids').ids)]
         if len(self) == 1:
-            action['context'] = {'default_channel_id': self.id}
-
+            action['display_name'] = _('Attendees of %s') % self.name
+            action['context'] = {'active_test': False, 'default_channel_id': self.id}
         return action
+
+    def action_redirect_to_running_members(self):
+        return self.action_redirect_to_members('running')
+
+    def action_redirect_to_done_members(self):
+        return self.action_redirect_to_members('completed')
 
     def action_channel_invite(self):
         self.ensure_one()
-
-        if self.enroll != 'invite':
-            raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
-
         template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
 
         local_context = dict(
@@ -467,6 +496,27 @@ class Channel(models.Model):
 
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+
+    def action_view(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'slide.channel',
+            'res_id': self.id,
+        }
+
+    def action_view_slides(self):
+        action = self.env.ref('website_slides.slide_slide_action').read()[0]
+        action['context'] = {'default_channel_id': self.id}
+        action['domain'] = [('channel_id', "=", self.id)]
+        return action
+
+    def action_view_ratings(self):
+        action = self.env.ref('website_slides.rating_rating_action_slide_channel').read()[0]
+        action['name'] = _('Rating of %s') % (self.name)
+        action['domain'] = [('res_id', 'in', self.ids)]
+        return action
 
     # ---------------------------------------------------------
     # Rating Mixin API
