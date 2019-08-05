@@ -95,10 +95,10 @@
                             </group>
                         </group>
                         <notebook colspan="4">
-                            <page string="Description">
+                            <page name="description" string="Description">
                                 <field name="description" colspan="4" nolabel="1"/>
                             </page>
-                            <page string="Options">
+                            <page name="options" string="Options">
                                 <group>
                                     <group>
                                         <field name="channel_type" widget="radio"/>
@@ -118,28 +118,28 @@
                                     <field name="enroll_msg" colspan="4" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="Communication">
+                            <page name="communication" string="Communication">
                                 <group>
                                     <field name="allow_comment"/>
                                 </group>
                             </page>
                             <page string="Karma Rules" name="karma_rules">
                                 <group>
-                                    <group string="Karma generation">
+                                    <group name="karma_generation" string="Karma generation">
                                         <field name="karma_gen_slide_vote"/>
                                         <field name="karma_gen_channel_rank"/>
                                         <field name="karma_gen_channel_finish"/>
                                     </group>
-                                    <group string="Karma based actions">
+                                    <group name="karma_based_actions" string="Karma based actions">
                                         <field name="karma_review"/>
                                         <field name="karma_slide_comment"/>
                                         <field name="karma_slide_vote"/>
                                     </group>
                                 </group>
                             </page>
-                            <page string="Statistics" groups="base.group_no_one">
+                            <page name="statistics" string="Statistics" groups="base.group_no_one">
                                 <group>
-                                    <group>
+                                    <group name="statistics_nbr">
                                         <field name="nbr_presentation"/>
                                         <field name="nbr_document"/>
                                         <field name="nbr_video"/>
@@ -147,7 +147,7 @@
                                         <field name="nbr_webpage"/>
                                         <field name="total_slides"/>
                                     </group>
-                                    <group>
+                                    <group name="view_stats">
                                         <field name="total_views"/>
                                         <field name="total_votes"/>
                                         <field name="total_time"/>
