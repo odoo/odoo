@@ -57,15 +57,19 @@
                                 <field name="tracking" invisible="1"/>
                                 <field name="package_id" groups="stock.group_tracking_lot"/>
                                 <field name="owner_id" groups="stock.group_tracking_owner"/>
-                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="scrap_location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="origin"/>
-                                <field name="date_expected" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="date_done" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -77,7 +81,7 @@
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
                     <field name="product_id"/>
-                    <field name="date_expected"/>
+                    <field name="date_done"/>
                     <field name="scrap_qty"/>
                     <field name="state"/>
                     <templates>
@@ -87,8 +91,8 @@
                                     <strong class="col-6">
                                         <span t-esc="record.name.value"/>
                                     </strong>
-                                    <strong t-if="record.date_expected.value" class="col-6 text-right">
-                                        <i class="fa fa-clock-o" role="img" aria-label="Expected date" title="Expected date"/><span t-esc="record.date_expected.value"/>
+                                    <strong t-if="record.date_done.value" class="col-6 text-right">
+                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/><span t-esc="record.date_done.value"/>
                                     </strong>
                                     <div class="col-12">
                                         <span t-esc="record.product_id.value"/>
@@ -115,7 +119,7 @@
             <field name="arch" type="xml">
                 <tree decoration-danger="state == 'draft'">
                     <field name="name"/>
-                    <field name="create_date" string="Create Date"/>
+                    <field name="date_done"/>
                     <field name="product_id"/>
                     <field name="scrap_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>
