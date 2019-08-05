@@ -71,7 +71,7 @@ class ProductAttributeValue(models.Model):
 
     is_custom = fields.Boolean('Is custom value', help="Allow users to input custom values for this attribute value")
     html_color = fields.Char(
-        string='HTML Color Index', oldname='color',
+        string='HTML Color Index',
         help="""Here you can set a
         specific HTML color index (e.g. #ff0000) to display the color if the
         attribute type is 'Color'.""")

@@ -38,7 +38,6 @@ class ResConfigSettings(models.TransientModel):
         'Deposit Product',
         domain="[('type', '=', 'service')]",
         config_parameter='sale.default_deposit_product_id',
-        oldname='default_deposit_product_id',
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Sales", config_parameter='sale.auto_done_setting')
     module_website_sale_digital = fields.Boolean("Digital Content")

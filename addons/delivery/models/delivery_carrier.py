@@ -57,7 +57,7 @@ class DeliveryCarrier(models.Model):
     zip_to = fields.Char('Zip To')
 
     margin = fields.Float(help='This percentage will be added to the shipping price.')
-    free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False, oldname='free_if_more_than')
+    free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False)
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
 
     can_generate_return = fields.Boolean(compute="_compute_can_generate_return")

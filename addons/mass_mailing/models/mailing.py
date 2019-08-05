@@ -67,7 +67,7 @@ class MassMailing(models.Model):
     subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
-    sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
+    sent_date = fields.Datetime(string='Sent Date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
@@ -94,7 +94,7 @@ class MassMailing(models.Model):
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
-    mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
+    mailing_domain = fields.Char(string='Domain', default=[])
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")

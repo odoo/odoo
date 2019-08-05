@@ -88,7 +88,6 @@ class ResConfigSettings(models.TransientModel):
     invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
-        oldname='default_use_sale_note',
         config_parameter='account.use_invoice_terms')
 
     def set_values(self):

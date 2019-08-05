@@ -125,7 +125,7 @@ class StockMove(models.Model):
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
     rule_id = fields.Many2one('stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move')
     propagate_cancel = fields.Boolean(
-        'Propagate cancel and split', default=True, oldname='propagate',
+        'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
     propagate_date = fields.Boolean(string="Propagate Rescheduling",
         help='The rescheduling is propagated to the next move.')
