@@ -107,7 +107,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".selection-item:contains('Fixed')",
     }, {
         content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Miscellaneous'):contains('$ 1.00')",
+        trigger: ".product:contains('Miscellaneous'):contains('$1.00')",
         run: function () {}, // it's a check
     }, {
         content: "open customer list",
@@ -130,7 +130,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".button.cancel:visible",
     }, {
         content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Miscellaneous'):contains('$ 18.00')",
+        trigger: ".product:contains('Miscellaneous'):contains('$18.00')",
         run: function () {}, // it's a check
     }, {
         content: "open customer list",
@@ -165,7 +165,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".numpad button.input-button:visible:contains('2')",
     }, {
         content: "verify that unit price of shelf changed to $1",
-        trigger: ".total > .value:contains('$ 2.00')",
+        trigger: ".total > .value:contains('$2.00')",
     }, {
         content: "order different shelf",
         trigger: ".product:contains('Small Shelf')",
@@ -187,7 +187,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     }, {
         content: "verify that the boni shelf have been recomputed and the\
 shelf have not (their price was manually overriden)",
-        trigger: ".total > .value:contains('$ 8.96')",
+        trigger: ".total > .value:contains('$8.96')",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",

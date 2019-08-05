@@ -69,7 +69,7 @@ tour.register('shop_list_view_b2c', {
         },
         {
             content: "check price is 825",
-            trigger: '.product_price .oe_price .oe_currency_value:containsExact("825.00")',
+            trigger: '.product_price .oe_price .oe_currency_value:containsExact("$825.00")',
             run: function () {},
         },
         {
@@ -78,7 +78,7 @@ tour.register('shop_list_view_b2c', {
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: '.product_price .oe_price .oe_currency_value:containsExact("880.44")',
+            trigger: '.product_price .oe_price .oe_currency_value:containsExact("$880.44")',
             run: function () {},
         },
         {
@@ -87,7 +87,7 @@ tour.register('shop_list_view_b2c', {
         },
         {
             content: "check price on /cart",
-            trigger: '#cart_products .oe_currency_value:containsExact("880.44")',
+            trigger: '#cart_products .oe_currency_value:containsExact("$880.44")',
             run: function () {},
         },
     ]

@@ -79,10 +79,12 @@ QUnit.module('Views', {
                         type: "selection",
                         selection: [['after', 'A'], ['before', 'B']],
                     },
+                    is_space: {string: "Allow space between amount and currency symbol", type: "boolean", searchable: true},
+                    sign_position: {string: "Sign Position", type: "selection"},
                 },
                 records: [
-                    {id: 1, display_name: "USD", symbol: '$', position: 'before'},
-                    {id: 2, display_name: "EUR", symbol: '€', position: 'after'},
+                    {id: 1, display_name: "USD", symbol: '$', position: 'before', is_space: false, sign_position: "1"},
+                    {id: 2, display_name: "EUR", symbol: '€', position: 'after', is_space: true, sign_position: "1"},
                 ],
             },
             event: {
@@ -2586,7 +2588,7 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody tr:first td:nth(2)').text().replace(/\s/g, ' '),
             '1200.00 €', "currency_id column should not be in the table");
         assert.strictEqual(list.$('tbody tr:nth(1) td:nth(2)').text().replace(/\s/g, ' '),
-            '$ 500.00', "currency_id column should not be in the table");
+            '$500.00', "currency_id column should not be in the table");
 
         list.destroy();
     });

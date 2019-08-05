@@ -117,29 +117,21 @@ class TestCurrencyExport(TestExport):
         currency = self.create(self.Currency, name="Test", symbol=u"test")
         obj = self.create(self.Model, value=-0.12)
 
-        converted = self.convert(obj, dest=currency)
-
-        self.assertEqual(
-            converted, u'<span class="oe_currency_value">-\N{ZERO WIDTH NO-BREAK SPACE}0.12</span>'
-                       u'\N{NO-BREAK SPACE}{symbol}'.format(
-                obj=obj,
-                symbol=currency.symbol
-            ),)
+        # activate lang with currency symbol position 'after'
+        lang_fr = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_BE')])
+        lang_fr.active = True
+        converted = self.convert(obj, dest=currency.with_context({'lang': 'fr_BE'}))
+        self.assertEqual(converted, u'<span class="oe_currency_value" data-price="{0}" data-position="{1}" data-is_space="{2}" data-symbol="{3}" data-sign_position="{4}">-\ufeff0.12\xa0{3}</span>'.format(currency.round(obj.value), lang_fr.currency_position, lang_fr.currency_has_space, currency.symbol, lang_fr.sign_position))
 
     def test_currency_pre(self):
         currency = self.create(
-            self.Currency, name="Test", symbol=u"test", position='before')
+            self.Currency, name="Test", symbol=u"test")
         obj = self.create(self.Model, value=0.12)
 
         converted = self.convert(obj, dest=currency)
 
         self.assertEqual(
-            converted,
-                      u'{symbol}\N{NO-BREAK SPACE}'
-                      u'<span class="oe_currency_value">0.12</span>'.format(
-                obj=obj,
-                symbol=currency.symbol
-            ),)
+            converted, u'<span class="oe_currency_value" data-price="{0}" data-position="{1}" data-is_space="{2}" data-symbol="{3}" data-sign_position="{4}">{3}0.12</span>'.format(currency.round(obj.value), currency.position, currency.is_space, currency.symbol, currency.sign_position))
 
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
@@ -149,13 +141,7 @@ class TestCurrencyExport(TestExport):
 
         converted = self.convert(obj, dest=currency)
 
-        self.assertEqual(
-            converted,
-                      u'<span class="oe_currency_value">0.12</span>'
-                      u'\N{NO-BREAK SPACE}{symbol}'.format(
-                obj=obj,
-                symbol=currency.symbol
-            ),)
+        self.assertEqual(converted, u'<span class="oe_currency_value" data-price="{0}" data-position="{1}" data-is_space="{2}" data-symbol="{3}" data-sign_position="{4}">{3}0.12</span>'.format(currency.round(obj.value), currency.position, currency.is_space, currency.symbol, currency.sign_position))
 
 
 class TestTextExport(TestBasicExport):

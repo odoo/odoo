@@ -52,4 +52,4 @@ class TestReconciliationWidget(TestReconciliation):
         })
 
         result = self.env['account.reconciliation.widget'].get_bank_statement_line_data(bank_stmt_line.ids)
-        self.assertEqual(result['lines'][0]['reconciliation_proposition'][0]['amount_str'], '$ 50.00')
+        self.assertEqual(result['lines'][0]['reconciliation_proposition'][0]['amount_str'], '$50.00')

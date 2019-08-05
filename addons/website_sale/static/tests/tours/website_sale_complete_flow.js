@@ -19,7 +19,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Check b2b Tax-Excluded Prices",
-        trigger: '.product_price .oe_price .oe_currency_value:containsExact(79.00)',
+        trigger: '.product_price .oe_price .oe_currency_value:containsExact($79.00)',
         run: function () {}, // it's a check
     },
     {
@@ -33,17 +33,17 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Check Price b2b subtotal",
-        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(158.00)',
+        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact($158.00)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2b Sale Tax(15%)",
-        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(23.70)',
+        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact($23.70)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2b Total amount",
-        trigger: 'tr#order_total .oe_currency_value:containsExact(181.70)',
+        trigger: 'tr#order_total .oe_currency_value:containsExact($181.70)',
         run: function () {}, // it's a check
     },
     {
@@ -211,7 +211,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Check b2c Tax-Included Prices",
-        trigger: '.product_price .oe_price .oe_currency_value:containsExact(90.85)',
+        trigger: '.product_price .oe_price .oe_currency_value:containsExact($90.85)',
         run: function () {}, // it's a check
     },
     {
@@ -225,17 +225,17 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Check Price b2c total",
-        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(158.00)',
+        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact($158.00)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2c Sale Tax(15%)",
-        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(23.70)',
+        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact($23.70)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2c Total amount",
-        trigger: 'tr#order_total .oe_currency_value:containsExact(181.70)',
+        trigger: 'tr#order_total .oe_currency_value:containsExact($181.70)',
         run: function () {}, // it's a check
     },
     {

@@ -60,7 +60,7 @@ class TestAccountJournalDashboard(AccountTestUsers):
 
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEquals(dashboard_data['number_draft'], 1)
-        self.assertIn('-13.30', dashboard_data['sum_draft'])
+        self.assertIn('-\ufeff$13.30', dashboard_data['sum_draft'])
 
         self.assertEquals(dashboard_data['number_waiting'], 1)
         self.assertIn('81.72', dashboard_data['sum_waiting'])

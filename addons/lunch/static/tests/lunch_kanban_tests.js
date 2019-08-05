@@ -70,7 +70,9 @@ QUnit.module('LunchKanbanView', {
             is_manager: false,
             currency: {
                 symbol: "\u20ac",
-                position: "after"
+                position: "after",
+                is_space: false,
+                sign_position: 1,
             },
             user_location: [2, "Office 2"],
         };
@@ -80,7 +82,9 @@ QUnit.module('LunchKanbanView', {
             is_manager: true,
             currency: {
                 symbol: "\u20ac",
-                position: "after"
+                position: "after",
+                is_space: false,
+                sign_position: 1,
             },
             user_location: [2, "Office 2"],
         };
