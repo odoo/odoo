@@ -71,6 +71,7 @@ class Inventory(models.Model):
     prefill_counted_quantity = fields.Boolean('Pre-fill counted quantity',
         help='Pre-fill the counted quantity with on hand quantity for all the '
         'products included in the inventory adjustment.', default=True)
+    picking_id = fields.Many2one('stock.picking', string='Picking triggering the inventory')
 
     def unlink(self):
         for inventory in self:
@@ -112,6 +113,10 @@ class Inventory(models.Model):
         self.write({'state': 'done'})
         self.post_inventory()
         return True
+
+    def action_validate_zqc(self):
+        to_validate_pick_ids = self.env.context.get('to_validate_pick_ids')
+        return self.env['stock.picking'].browse(to_validate_pick_ids).with_context({'skip_zqc': True})._button_validate()
 
     def post_inventory(self):
         # The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory

@@ -15,8 +15,8 @@ var InventoryValidationController = ListController.extend({
      * @override
      */
     init: function (parent, model, renderer, params) {
-        var context = renderer.state.getContext();
-        this.inventory_id = context.active_id;
+        this.context = renderer.state.getContext();
+        this.inventory_id = this.context.default_inventory_id || this.context.active_id;
         return this._super.apply(this, arguments);
     },
 
@@ -28,9 +28,18 @@ var InventoryValidationController = ListController.extend({
      * @override
      */
     renderButtons: function ($node) {
-        this._super.apply(this, arguments);
-        var $validationButton = $(qweb.render('InventoryLines.Buttons'));
-        $validationButton.prependTo($node.find('.o_list_buttons'));
+        // Temp fix to prevent rendering the buttons twice in a target new
+        if (!this.$buttons) {
+            this._super.apply(this, arguments);
+            this.validateMethod = 'action_validate';
+            var $renderedValidationButton = $(qweb.render('InventoryLines.Buttons'));
+            $renderedValidationButton.prependTo($node.find('.o_list_buttons'));
+        } else {
+            // If the buttons are already set, it means the method renderButton
+            // was called for the second time because of the target new
+            // wich means the inventory was triggered by a zqc.
+            this.validateMethod = 'action_validate_zqc';
+        }
     },
 
     // -------------------------------------------------------------------------
@@ -58,8 +67,9 @@ var InventoryValidationController = ListController.extend({
         prom.then(function () {
             self._rpc({
                 model: 'stock.inventory',
-                method: 'action_validate',
-                args: [self.inventory_id]
+                method: self.validateMethod,
+                args: [self.inventory_id],
+                context: self.context
             }).then(function (res) {
                 var exitCallback = function (infos) {
                     // In case we discarded a wizard, we do nothing to stay on
@@ -71,13 +81,23 @@ var InventoryValidationController = ListController.extend({
                     self.do_notify(
                         _t("Success"),
                         _t("The inventory has been validated"));
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: 'stock.inventory',
-                        res_id: self.inventory_id,
-                        views: [[false, 'form']],
-                        target: 'main'
-                    });
+
+                    // The presence of 'to_validate_pick_ids' in the context means the call
+                    // was made from a Zero Quantity Count, wich means there's no need to redirect
+                    // to that inventory.
+                    if (!(self.context.to_validate_pick_ids)) {
+                        self.do_action({
+                            type: 'ir.actions.act_window',
+                            res_model: 'stock.inventory',
+                            res_id: self.inventory_id,
+                            views: [[false, 'form']],
+                            target: 'main'
+                        });
+                    } else {
+                        self.do_action({
+                            type: 'ir.actions.act_window_close'
+                        })
+                    }
                 };
 
                 if (_.isObject(res)) {

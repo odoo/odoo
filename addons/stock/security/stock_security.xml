@@ -58,6 +58,11 @@
         <field name="name">A warning can be set on a partner (Stock)</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
+
+    <record id="group_stock_zero_quantity_count" model="res.groups">
+        <field name="name">Zero Quantity Counts</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 </data>
 <data noupdate="1">
     <record id="base.default_user" model="res.users">

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple
 import time
 from datetime import date
 
@@ -291,6 +290,7 @@ class Picking(models.Model):
     immediate_transfer = fields.Boolean(default=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
+    inventory_ids = fields.One2many('stock.inventory', 'picking_id')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -599,6 +599,11 @@ class Picking(models.Model):
 
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now()})
+
+        for inventory in self.mapped('inventory_ids'):
+            if inventory.state == 'confirm':
+                inventory.line_ids.action_refresh_quantity()
+                inventory.action_validate()
         return True
 
     @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
@@ -697,6 +702,12 @@ class Picking(models.Model):
             if backorder_pickings:
                 return self._generate_backorder_wizard(backorder_pickings)
 
+        # Zero Quantity Count Wizard
+        if self.env.user.has_group('stock.group_stock_zero_quantity_count') and not self.env.context.get('skip_zqc'):
+            empty_locations = self._get_empty_locations()
+            if empty_locations:
+                return self._generate_zqc_wizard(empty_locations)
+
         self._action_done()
         return
 
@@ -767,6 +778,21 @@ class Picking(models.Model):
             'context': ctx,
         }
 
+    def _generate_zqc_wizard(self, empty_locations):
+        ctx = dict(self.env.context, default_location_ids=[(6, 0, empty_locations.ids)])
+        ctx.update({'to_validate_pick_ids': self.ids})
+        view = self.env.ref('stock.view_zero_quantity_count')
+        return {
+            'name': _('Zero Quantity Cycle Count'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.zero.quantity.count',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'context': ctx,
+        }
+
     def action_toggle_is_locked(self):
         self.ensure_one()
         self.is_locked = not self.is_locked
@@ -812,6 +838,15 @@ class Picking(models.Model):
                 pickings_to_backorder |= picking
 
         return pickings_to_backorder
+
+    def _get_empty_locations(self):
+        """ Return the locations that will be emptied out when `self` is processed. """
+        locations = self.mapped('move_line_ids.location_id')
+        empty_locations = self.env['stock.location']
+        for loc in locations:
+            if self.mapped('move_line_ids')._will_empty_location(loc):
+                empty_locations |= loc
+        return empty_locations
 
     def _autoconfirm_picking(self):
         for picking in self.filtered(lambda picking: picking.immediate_transfer and picking.state not in ('done', 'cancel') and (picking.move_lines or picking.package_level_ids)):
