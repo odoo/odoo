@@ -68,14 +68,14 @@ tour.register('test_error_website', {
         },
     }, {
         content: "http user error page has title and message",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div.container pre:contains("This is a user http test")',
         run: function () {
                 window.location.href = window.location.origin + '/test_user_error_http?debug=1';
         },
     }, {
         content: "http user error page debug has title and message open",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div#error_main.collapse.show pre:contains("This is a user http test")',
         run: function () {},
     }, {
@@ -86,14 +86,14 @@ tour.register('test_error_website', {
         },
     }, {
         content: "http validation error page has title and message",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div.container pre:contains("This is a validation http test")',
         run: function () {
                 window.location.href = window.location.origin + '/test_validation_error_http?debug=1';
         },
     }, {
         content: "http validation error page debug has title and message open",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div#error_main.collapse.show pre:contains("This is a validation http test")',
         run: function () {},
     }, {
@@ -122,14 +122,14 @@ tour.register('test_error_website', {
         },
     }, {
         content: "http missing error page has title and message",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div.container pre:contains("This is a missing http test")',
         run: function () {
                 window.location.href = window.location.origin + '/test_missing_error_http?debug=1';
         },
     }, {
         content: "http missing error page debug has title and message open",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div#error_main.collapse.show pre:contains("This is a missing http test")',
         run: function () {},
     }, {
@@ -140,14 +140,14 @@ tour.register('test_error_website', {
         },
     }, {
         content: "http karma error page has title and message",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div.container pre:contains("This is a karma http test")',
         run: function () {
                 window.location.href = window.location.origin + '/test_karma_error_http?debug=1';
         },
     }, {
         content: "http karma error page debug has title and message open",
-        extra_trigger: 'h1:contains("Oops! Something went wrong.")',
+        extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div#error_main.collapse.show pre:contains("This is a karma http test")',
         run: function () {},
     }, {
