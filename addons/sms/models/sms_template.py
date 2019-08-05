@@ -16,7 +16,7 @@ class SMSTemplate(models.Model):
             res['model_id'] = self.env['ir.model']._get(res['model']).id
         return res
 
-    name = fields.Char()
+    name = fields.Char('Name', translate=True)
     model_id = fields.Many2one(
         'ir.model', string='Applies to', required=True,
         domain=['&', ('is_mail_thread', '=', True), ('transient', '=', False)],
