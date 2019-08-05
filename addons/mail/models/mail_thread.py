@@ -1324,7 +1324,6 @@ class MailThread(models.AbstractModel):
            :return: A dict with the following structure, where each
                     field may not be present if missing in original
                     message::
-
                     { 'message_id': msg_id,
                       'subject': subject,
                       'from': from,
@@ -2009,6 +2008,7 @@ class MailThread(models.AbstractModel):
                 'mail_message_id': message.id,
                 'res_partner_id': pid,
                 'notification_type': 'inbox',
+                'notification_status': 'sent',
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
 

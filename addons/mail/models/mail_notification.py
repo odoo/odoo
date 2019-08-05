@@ -79,6 +79,6 @@ class Notification(models.Model):
             ('is_read', '=', True),
             ('read_date', '<', fields.Datetime.now() - relativedelta(days=max_age_days)),
             ('res_partner_id.partner_share', '=', False),
-            ('notification_type', '=', 'email')
+            ('notification_status', 'in', ('sent', 'canceled'))
         ]
         return self.search(domain).unlink()
