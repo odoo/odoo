@@ -918,6 +918,42 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record: cancel quick create by clicking on add button on second column', async function (assert) {
+        assert.expect(3);
+
+        // var nbRecords = 4;
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        // click to add an element and cancel the quick creation by clicking on second column add icon
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+
+        var $quickCreate = kanban.$('.o_kanban_group:first .o_kanban_quick_create');
+        assert.strictEqual($quickCreate.length, 1,
+            "should have a quick create element in first kanban group");
+
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').eq(1));
+
+        $quickCreate = kanban.$('.o_kanban_group:first .o_kanban_quick_create');
+        assert.strictEqual($quickCreate.length, 0,
+            "should not have a quick create element in first kanban group");
+
+        $quickCreate = kanban.$('.o_kanban_group:eq(1) .o_kanban_quick_create');
+        assert.strictEqual($quickCreate.length, 1,
+            "should have a quick create element in second kanban group");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record: validate with ENTER', async function (assert) {
         // in this test, we accurately mock the behavior of the webclient by specifying a
         // fieldDebounce > 0, meaning that the changes in an InputField aren't notified to the model

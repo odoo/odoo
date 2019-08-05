@@ -115,10 +115,10 @@ var RecordQuickCreate = Widget.extend({
      * @private
      * @returns {Promise}
      */
-    cancel: function () {
+    cancel: function (doNotTriggerCancel) {
         var self = this;
         return this.controller.commitChanges().then(function () {
-            if (!self.controller.isDirty()) {
+            if (!self.controller.isDirty() && !doNotTriggerCancel) {
                 self._cancel();
             }
         });
