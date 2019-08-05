@@ -109,7 +109,8 @@ class StockWarehouse(models.Model):
                 'code': 'mrp_operation',
                 'use_create_lots': True,
                 'use_existing_lots': True,
-                'sequence': next_sequence + 2
+                'sequence': next_sequence + 2,
+                'sequence_code': 'SBC',
             },
         })
         return data, max_sequence + 4
