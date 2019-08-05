@@ -381,6 +381,28 @@ class HrExpense(models.Model):
             move_line_values_by_expense[expense.id] = move_line_values
         return move_line_values_by_expense
 
+    def prepare_payment_vals(self, move_line_dst):
+        self.ensure_one()
+        journal = self.sheet_id.bank_journal_id
+        total_amount = move_line_dst['debit'] or -move_line_dst['credit']
+        payment_methods = journal.outbound_payment_method_ids if total_amount < 0 else journal.inbound_payment_method_ids
+        journal_currency = journal.currency_id or journal.company_id.currency_id
+        total_amount_currency = move_line_dst['amount_currency']
+        company_currency = self.company_id.currency_id
+        different_currency = self.currency_id != company_currency
+        return {
+            'payment_method_id': payment_methods and payment_methods[0].id or False,
+            'payment_type': 'outbound' if total_amount < 0 else 'inbound',
+            'partner_id': self.employee_id.address_home_id.commercial_partner_id.id,
+            'partner_type': 'supplier',
+            'journal_id': journal.id,
+            'payment_date': self.date,
+            'state': 'reconciled',
+            'currency_id': self.currency_id.id if different_currency else journal_currency.id,
+            'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
+            'name': self.name,
+        }
+
     def action_move_create(self):
         '''
         main function that is called when trying to create the accounting entries related to an expense
@@ -390,8 +412,6 @@ class HrExpense(models.Model):
         move_line_values_by_expense = self._get_account_move_line_values()
 
         for expense in self:
-            company_currency = expense.company_id.currency_id
-            different_currency = expense.currency_id != company_currency
 
             # get the account move of the related sheet
             move = move_group_by_sheet[expense.sheet_id.id]
@@ -399,29 +419,14 @@ class HrExpense(models.Model):
             # get move line values
             move_line_values = move_line_values_by_expense.get(expense.id)
             move_line_dst = move_line_values[-1]
-            total_amount = move_line_dst['debit'] or -move_line_dst['credit']
-            total_amount_currency = move_line_dst['amount_currency']
 
             # create one more move line, a counterline for the total on payable account
             if expense.payment_mode == 'company_account':
                 if not expense.sheet_id.bank_journal_id.default_credit_account_id:
                     raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
-                journal = expense.sheet_id.bank_journal_id
                 # create payment
-                payment_methods = journal.outbound_payment_method_ids if total_amount < 0 else journal.inbound_payment_method_ids
-                journal_currency = journal.currency_id or journal.company_id.currency_id
-                payment = self.env['account.payment'].create({
-                    'payment_method_id': payment_methods and payment_methods[0].id or False,
-                    'payment_type': 'outbound' if total_amount < 0 else 'inbound',
-                    'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
-                    'partner_type': 'supplier',
-                    'journal_id': journal.id,
-                    'payment_date': expense.date,
-                    'state': 'reconciled',
-                    'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
-                    'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
-                    'name': expense.name,
-                })
+                payment_vals = expense.prepare_payment_vals(move_line_dst)
+                payment = self.env['account.payment'].create(payment_vals)
                 move_line_dst['payment_id'] = payment.id
 
             # link move lines to move, and move to expense sheet
