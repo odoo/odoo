@@ -54,6 +54,7 @@
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                                    <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                     <field name="notice"/>
                                 </group>
                             </form>
