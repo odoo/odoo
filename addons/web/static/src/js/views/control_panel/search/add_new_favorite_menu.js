@@ -40,6 +40,12 @@ var AddNewFavoriteMenu = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @param {Object} params
+     */
+    update: function (params) {
+        this.favorites = params.favorites;
+    },
+    /**
      * Close the menu and re-render the widget.
      */
     closeMenu: function () {
