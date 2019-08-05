@@ -67,7 +67,10 @@ PortalComposer.include({
             // rating stars
             self.$input = self.$('input[name="rating_value"]');
             self.$star_list = self.$('.stars').find('i');
-            self.set("star_value", self.options.default_rating_value); // set the default value to trigger the display of star widget
+
+            // set the default value to trigger the display of star widget and update the hidden input value.
+            self.set("star_value", self.options.default_rating_value); 
+            self.$input.val(self.options.default_rating_value * STAR_RATING_RATIO);
         });
     },
 
