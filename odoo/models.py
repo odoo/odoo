@@ -4871,6 +4871,10 @@ Record ids: %(records)s
         method = getattr(cls, name)
         setattr(cls, name, method.origin)
 
+    def issubmodel(self, model, submodel):
+        """ Check if the ``submodel`` is submodel of ``model``. """
+        return issubclass(self.pool[model], self.pool[submodel])
+
     #
     # Instance creation
     #

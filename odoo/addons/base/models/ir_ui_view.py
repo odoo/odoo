@@ -1061,7 +1061,7 @@ actual arch.
                     if not action_id:
                         msg = _("Invalid xmlid %s for button of type action.")
                         self.handle_view_error(msg % name)
-                    if not issubclass(self.pool[model], self.pool['ir.actions.actions']):
+                    if not self.issubmodel(model, 'ir.actions.actions'):
                         msg = _("%s is of type %s, expected a subclass of ir.actions.actions")
                         self.handle_view_error(msg % (name, model))
                 action = self.env['ir.actions.actions'].browse(action_id).exists()

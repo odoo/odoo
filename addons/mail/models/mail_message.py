@@ -1003,7 +1003,7 @@ class Message(models.Model):
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.notification_status))
 
             has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
-            if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
+            if message.attachment_ids and message.res_id and self.issubmodel(message.model, 'mail.thread') and has_access_to_model:
                 main_attachment =  self.env[message.model].browse(message.res_id).message_main_attachment_id
             attachment_ids = []
             for attachment in message.attachment_ids:
@@ -1264,7 +1264,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if self.issubmodel(model, 'mail.thread'):
                 self.env[model].invalidate_cache(fnames=[
                     'message_ids',
                     'message_unread',

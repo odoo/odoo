@@ -105,7 +105,7 @@ class SendSMS(models.TransientModel):
         elif self.composition_mode in ('comment', 'mass') and self.res_model:
             records = self._get_records()
 
-            if records and issubclass(type(records), self.pool['mail.thread']):
+            if records and self.issubmodel(self.res_model, 'mail.thread'):
                 res = records._sms_get_recipients_info(force_field=self.number_field_name)
                 valid_ids = [rid for rid, rvalues in res.items() if rvalues['sanitized']]
                 invalid_ids = [rid for rid, rvalues in res.items() if not rvalues['sanitized']]
@@ -160,7 +160,7 @@ class SendSMS(models.TransientModel):
         if self.composition_mode == 'numbers':
             return self._action_send_sms_numbers()
         elif self.composition_mode == 'comment':
-            if records is not None and issubclass(type(records), self.pool['mail.thread']):
+            if records is not None and self.issubmodel(self.res_model, 'mail.thread'):
                 return self._action_send_sms_comment(records)
             return self._action_send_sms_numbers()
         else:
@@ -193,7 +193,7 @@ class SendSMS(models.TransientModel):
         sms_record_values = self._prepare_mass_sms_values(records)
         sms_all = self._prepare_mass_sms(records, sms_record_values)
 
-        if sms_all and self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
+        if sms_all and self.mass_keep_log and records and self.issubmodel(records._name, 'mail.thread'):
             log_values = self._prepare_mass_log_values(records, sms_record_values)
             records._message_log_batch(**log_values)
 

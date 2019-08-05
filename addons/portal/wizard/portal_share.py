@@ -30,7 +30,7 @@ class PortalShare(models.TransientModel):
             rec.share_link = False
             if rec.res_model:
                 res_model = self.env[rec.res_model]
-                if isinstance(res_model, self.pool['portal.mixin']) and rec.res_id:
+                if self.issubmodel(rec.res_model, 'portal.mixin') and rec.res_id:
                     record = res_model.browse(rec.res_id)
                     rec.share_link = record.get_base_url() + record._get_share_url(redirect=True)
 
@@ -40,7 +40,7 @@ class PortalShare(models.TransientModel):
             rec.access_warning = False
             if rec.res_model:
                 res_model = self.env[rec.res_model]
-                if isinstance(res_model, self.pool['portal.mixin']) and rec.res_id:
+                if self.issubmodel(rec.res_model, 'portal.mixin') and rec.res_id:
                     record = res_model.browse(rec.res_id)
                     rec.access_warning = record.access_warning
 

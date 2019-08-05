@@ -153,9 +153,9 @@ class Mailing(models.Model):
         self.ensure_one()
         target = self.env[self.mailing_model_real]
 
-        if issubclass(type(target), self.pool['mail.thread.phone']):
+        if self.issubmodel(target._name, 'mail.thread.phone'):
             phone_fields = ['phone_sanitized']
-        elif issubclass(type(target), self.pool['mail.thread']):
+        elif self.issubmodel(target._name, 'mail.thread'):
             phone_fields = target._sms_get_number_fields()
         else:
             phone_fields = []

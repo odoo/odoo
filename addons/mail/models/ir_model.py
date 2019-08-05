@@ -76,9 +76,9 @@ class IrModel(models.Model):
 
     def _reflect_model_params(self, model):
         vals = super(IrModel, self)._reflect_model_params(model)
-        vals['is_mail_thread'] = issubclass(type(model), self.pool['mail.thread'])
-        vals['is_mail_activity'] = issubclass(type(model), self.pool['mail.activity.mixin'])
-        vals['is_mail_blacklist'] = issubclass(type(model), self.pool['mail.thread.blacklist'])
+        vals['is_mail_thread'] = self.issubmodel(model._name, 'mail.thread')
+        vals['is_mail_activity'] = self.issubmodel(model._name, 'mail.activity.mixin')
+        vals['is_mail_blacklist'] = self.issubmodel(model._name, 'mail.thread.blacklist')
         return vals
 
     @api.model
