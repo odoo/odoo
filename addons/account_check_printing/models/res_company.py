@@ -5,16 +5,15 @@ from odoo import models, api, fields
 class res_company(models.Model):
     _inherit = "res.company"
 
+    # This field needs to be overridden with `selection_add` in the modules which intends to add report layouts.
+    # The xmlID of all the report actions which are actually Check Layouts has to be kept as key of the selection.
     account_check_printing_layout = fields.Selection(string="Check Layout", required=True,
         help="Select the format corresponding to the check paper you will be printing your checks on.\n"
              "In order to disable the printing feature, select 'None'.",
         selection=[
-            ('disabled', 'None'),
-            ('action_print_check_top', 'check on top'),
-            ('action_print_check_middle', 'check in middle'),
-            ('action_print_check_bottom', 'check on bottom')
+            ('disabled', 'None')
         ],
-        default="action_print_check_top")
+        default='disabled')
 
     account_check_printing_date_label = fields.Boolean('Print Date Label', default=True,
         help="This option allows you to print the date label on the check as per CPA. Disable this if your pre-printed check includes the date label.")
