@@ -249,16 +249,29 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('boolean field has no title', async function (assert) {
-        assert.expect(1);
+    QUnit.test('title for boolean and monetary type field', async function (assert) {
+        assert.expect(2);
+
+        var currencies = {};
+        _.each(this.data.res_currency.records, function (currency) {
+            currencies[currency.id] = currency;
+        });
 
         var list = await createView({
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree><field name="bar"/></tree>',
+            arch: '<tree>' +
+                    '<field name="bar"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                '</tree>',
+            session: {
+                currencies: currencies,
+            },
         });
         assert.equal(list.$('tbody tr:first td:eq(1)').attr('title'), "");
+        assert.equal(list.$('tbody tr:first td:eq(2)').attr('title'), "1200.00 €");
         list.destroy();
     });
 

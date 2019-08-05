@@ -365,7 +365,12 @@ var ListRenderer = BasicRenderer.extend({
             isPassword: 'password' in node.attrs,
         });
         this._handleAttributes($td, node);
-        var title = field.type !== 'boolean' ? formattedValue : '';
+        var title = formattedValue;
+        if (field.type === 'boolean') {
+            title = '';
+        } else if (field.type === 'monetary') {
+            title = formattedValue.replace(/&nbsp;/g, ' ');
+        }
         return $td.html(formattedValue).attr('title', title);
     },
     /**
