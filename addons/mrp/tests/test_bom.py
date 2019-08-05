@@ -68,6 +68,7 @@ class TestBoM(TestMrpCommon):
         tmp_picking_type = self.env['stock.picking.type'].create({
             'name': 'Manufacturing',
             'code': 'mrp_operation',
+            'sequence_code': 'TMP',
             'sequence_id': self.env['ir.sequence'].create({
                 'code': 'mrp.production',
                 'name': 'tmp_production_sequence',
