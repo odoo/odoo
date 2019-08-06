@@ -179,6 +179,7 @@ class StockMove(models.Model):
         for move in self:
             move.display_assign_serial = (
                 move.has_tracking == 'serial' and
+                move.picking_type_id.show_reserved and
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots
             )
@@ -594,10 +595,16 @@ class StockMove(models.Model):
         suffix = splitted[1]
         initial_number = int(initial_number)
 
+        # Depending of picking type configuration, we take all the move lines or
+        # only the move lines the user created.
+        if self.picking_id.show_reserved:
+            move_lines = self.move_line_ids
+        else:
+            move_lines = self.move_line_nosuggest_ids
         # Then, for each move line without `lot_id` and `lot_name`, we compute
         # and assign the `lot_name` and set the `qty_done` to one.
         move_lines_commands = []
-        for move_line in self.move_line_ids:
+        for move_line in move_lines:
             if not move_line.lot_id and not move_line.lot_name:
                 lot_name = '%s%s%s' % (
                     prefix,
