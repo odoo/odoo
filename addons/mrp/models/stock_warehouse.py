@@ -13,6 +13,8 @@ class StockWarehouse(models.Model):
         help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one(
         'stock.rule', 'Manufacture Rule')
+    manufacture_mto_pull_id = fields.Many2one(
+        'stock.rule', 'Manufacture MTO Rule')
     pbm_mto_pull_id = fields.Many2one(
         'stock.rule', 'Picking Before Manufacturing MTO Rule')
     sam_rule_id = fields.Many2one(
@@ -101,6 +103,8 @@ class StockWarehouse(models.Model):
 
     def _get_global_route_rules_values(self):
         rules = super(StockWarehouse, self)._get_global_route_rules_values()
+        location_src = self.manufacture_steps == 'mrp_one_step' and self.lot_stock_id or self.pbm_loc_id
+        production_location = self._get_production_location()
         location_id = self.manufacture_steps == 'pbm_sam' and self.sam_loc_id or self.lot_stock_id
         rules.update({
             'manufacture_pull_id': {
@@ -117,6 +121,23 @@ class StockWarehouse(models.Model):
                     'name': self._format_rulename(location_id, False, 'Production'),
                     'location_id': location_id.id,
                     'propagate_cancel': self.manufacture_steps == 'pbm_sam'
+                },
+            },
+            'manufacture_mto_pull_id': {
+                'depends': ['manufacture_steps', 'manufacture_to_resupply'],
+                'create_values': {
+                    'procure_method': 'make_to_order',
+                    'company_id': self.company_id.id,
+                    'action': 'pull',
+                    'auto': 'manual',
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
+                    'location_id': production_location.id,
+                    'location_src_id': location_src.id,
+                    'picking_type_id': self.manu_type_id.id
+                },
+                'update_values': {
+                    'name': self._format_rulename(location_src, production_location, 'MTO'),
+                    'active': self.manufacture_to_resupply,
                 },
             },
             'pbm_mto_pull_id': {
