@@ -11,6 +11,7 @@ Bridge module for rating on website stuff.
     'depends': ['rating', 'website_mail'],
     'data': [
         'views/website_rating_templates.xml',
+        'views/website_rating_view.xml'
     ],
     'qweb': ['static/src/xml/*.xml'],
     'auto_install': True,
