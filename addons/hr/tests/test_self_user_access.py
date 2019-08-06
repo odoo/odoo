@@ -4,8 +4,24 @@
 from collections import OrderedDict
 
 from odoo.addons.hr.tests.common import TestHrCommon
-from odoo.tests import new_test_user
+from odoo.tests import new_test_user, tagged
 from odoo.exceptions import AccessError
+
+@tagged('post_install', '-at_install')
+class TestSelfAccessProfile(TestHrCommon):
+
+    def test_access_my_profile(self):
+        """ A simple user should be able to read all fields in his profile """
+        james = new_test_user(self.env, login='hel', groups='base.group_user', name='Simple employee', email='ric@example.com')
+        james = james.with_user(james)
+        self.env['hr.employee'].create({
+            'name': 'James',
+            'user_id': james.id,
+        })
+        view = self.env.ref('hr.res_users_view_form_profile')
+        view_infos = james.fields_view_get(view_id=view.id)
+        fields = view_infos['fields'].keys()
+        james.read(fields)
 
 
 class TestSelfAccessRights(TestHrCommon):
