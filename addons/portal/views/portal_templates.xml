@@ -399,7 +399,7 @@
                                 <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="city or partner.city" />
                             </div>
                             <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-xl-6">
-                                <label class="col-form-label" for="zipcode">Zip / Postal Code</label>
+                                <label class="col-form-label label-optional" for="zipcode">Zip / Postal Code</label>
                                 <input type="text" name="zipcode" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="zipcode or partner.zip" />
                             </div>
                             <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-xl-6">

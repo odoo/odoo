@@ -73,8 +73,9 @@ class AccountInvoiceLine(models.Model):
             fields.Date.today(),
             company_id=self.company_id.id
         )
-        self.account_analytic_id = rec.analytic_id.id
-        self.analytic_tag_ids = rec.analytic_tag_ids.ids
+        if rec:
+            self.account_analytic_id = rec.analytic_id.id
+            self.analytic_tag_ids = rec.analytic_tag_ids.ids
         return res
 
     def _set_additional_fields(self, invoice):

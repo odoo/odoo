@@ -270,7 +270,7 @@ class StockRule(models.Model):
             'partner_id': partner.id,
             'picking_type_id': self.picking_type_id.id,
             'company_id': company_id.id,
-            'currency_id': partner.with_context(force_company=company_id.id).property_purchase_currency_id.id or self.env.user.company_id.currency_id.id,
+            'currency_id': partner.with_context(force_company=company_id.id).property_purchase_currency_id.id or company_id.currency_id.id,
             'dest_address_id': values.get('partner_id', False),
             'origin': ', '.join(origins),
             'payment_term_id': partner.with_context(force_company=company_id.id).property_supplier_payment_term_id.id,
