@@ -69,9 +69,12 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_stock_production_lot and tracked_products:
             names = ", ".join(tracked_products.mapped('display_name') if len(tracked_products) <= 10
                     else tracked_products[:10].mapped('display_name') + ["..."])
-            raise UserError(_("You should not remove the 'lots and serial numbers' "
-                              "option while the following products are still tracked by lot "
-                              "or serial number:\n %s") % names)
+            return {'warning': {
+                'title': _('Warning!'),
+                'message': _("You should not remove the 'lots and serial numbers' "
+                             "option while the following products are still tracked by lot "
+                             "or serial number:\n %s") % names,
+            }}
 
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):
