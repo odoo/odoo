@@ -744,6 +744,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onSelectMoveLine: function (event) {
         var $el = $(event.target);
+        $el.prop('disabled', true);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('add_proposition', {'data': moveLineId});

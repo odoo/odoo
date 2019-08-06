@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class TimesheetAttendance(models.Model):
@@ -17,7 +17,7 @@ class TimesheetAttendance(models.Model):
 
     @api.model_cr
     def init(self):
-        self._cr.execute("DROP VIEW IF EXISTS hr_timesheet_attendance_report")
+        tools.drop_view_if_exists(self.env.cr, self._table)
         self._cr.execute("""CREATE OR REPLACE VIEW %s AS (
             SELECT
                 max(id) AS id,
