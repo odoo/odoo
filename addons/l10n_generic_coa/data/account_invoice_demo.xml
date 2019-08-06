@@ -63,14 +63,21 @@
         </record>
 
         <!-- ==== Invoice Demo 6 - Draft Vendor Bill for OCR ==== -->
-        <record id="demo_invoice_extract" model="account.move" context="{'type': 'in_invoice'}">
-            <field name="invoice_user_id" ref="base.user_demo"/>
-        </record>
-
         <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
             <field name="type">binary</field>
             <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo.pdf"/>
             <field name="name">in_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+        </record>
+
+        <record id="demo_invoice_extract" model="account.move" context="{'type': 'in_invoice'}">
+            <field name="type">in_invoice</field>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="message_main_attachment_id" ref="ir_attachment_in_invoice_draft"/>
+        </record>
+
+        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
+            <field name="res_id" ref="demo_invoice_extract"/>
         </record>
 
         <record id="mail_message_in_invoice_0" model="mail.message">
