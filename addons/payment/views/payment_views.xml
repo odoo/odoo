@@ -62,7 +62,8 @@
                                         <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere."/>
                                     </group>
                                     <group string="Payment Followup" name="payment_followup">
-                                        <field name="journal_id" context="{'default_type': 'bank'}"/>
+                                        <field name="journal_id" context="{'default_type': 'bank'}"
+                                          attrs="{'required': [('state', '!=', 'disabled'), ('provider', 'not in', ['manual', 'transfer'])]}"/>
                                     </group>
                                 </group>
                             </page>
