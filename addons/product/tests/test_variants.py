@@ -501,7 +501,7 @@ class TestVariantsImages(common.TestProductCommon):
             self.images.update({color: base64.b64encode(f.read())})
 
             self.env['product.product'].create({
-                'image_variant_max': self.images[color],
+                'image_variant_1920': self.images[color],
                 'attribute_value_ids': [(6, 0, [color_value.id])],
                 'product_tmpl_id': self.template.id,
             })
@@ -511,7 +511,7 @@ class TestVariantsImages(common.TestProductCommon):
         return res
 
     def test_variant_images(self):
-        """Check that on variant, the image used is the image_variant_max if set,
+        """Check that on variant, the image used is the image_variant_1920 if set,
         and defaults to the template image otherwise.
         """
         f = io.BytesIO()
@@ -527,7 +527,7 @@ class TestVariantsImages(common.TestProductCommon):
         self.template.image_1920 = image_black
 
         # the first has no image variant, all the others do
-        self.assertFalse(variant_no_image.image_variant_max)
+        self.assertFalse(variant_no_image.image_variant_1920)
         self.assertTrue(all(images[1:]))
 
         # template image is the same as this one, since it has no image variant
@@ -540,7 +540,7 @@ class TestVariantsImages(common.TestProductCommon):
         self.variants[1:].write({'active': False})
         self.variants[0].image_1920 = self.images['red']
         self.assertEqual(self.template.image_1920, self.images['red'])
-        self.assertEqual(self.variants[0].image_variant_max, False)
+        self.assertEqual(self.variants[0].image_variant_1920, False)
         self.assertEqual(self.variants[0].image_1920, self.images['red'])
 
 
