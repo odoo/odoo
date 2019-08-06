@@ -150,11 +150,21 @@ class ProductTemplate(models.Model):
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items')
 
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
+    has_configurable_attributes = fields.Boolean("Is a configurable product", compute='_compute_has_configurable_attributes', store=True)
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
         for template in self:
             template.can_image_1024_be_zoomed = template.image_1920 and tools.is_image_size_above(template.image_1920, template.image_1024)
+
+    @api.depends('attribute_line_ids', 'attribute_line_ids.value_ids', 'attribute_line_ids.attribute_id.create_variant')
+    def _compute_has_configurable_attributes(self):
+        """A product is considered configurable if:
+        - It has dynamic attributes
+        - It has any attribute line with at least 2 attribute values configured
+        """
+        for product in self:
+            product.has_configurable_attributes = product.has_dynamic_attributes() or any(len(ptal.value_ids) >= 2 for ptal in product.attribute_line_ids)
 
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
@@ -983,6 +993,20 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         return self.env.company
+
+    def get_single_product_variant(self):
+        """ Method used by the product configurator to check if the product is configurable or not.
+
+        We need to open the product configurator if the product:
+        - is configurable (see has_configurable_attributes)
+        - has optional products (method is extended in sale to return optional products info)
+        """
+        self.ensure_one()
+        if self.product_variant_count == 1 and not self.has_configurable_attributes:
+            return {
+                'product_id': self.product_variant_id.id,
+            }
+        return {}
 
     @api.model
     def get_empty_list_help(self, help):
