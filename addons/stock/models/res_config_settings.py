@@ -29,6 +29,7 @@ class ResConfigSettings(models.TransientModel):
     group_warning_stock = fields.Boolean("Warnings for Stock", implied_group='stock.group_warning_stock')
     module_stock_picking_batch = fields.Boolean("Batch Pickings")
     module_stock_barcode = fields.Boolean("Barcode Scanner")
+    module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_dhl = fields.Boolean("DHL USA")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")

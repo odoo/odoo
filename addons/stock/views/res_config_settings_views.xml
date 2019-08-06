@@ -60,8 +60,19 @@
                                 </div>
                             </div>
                         </div>
-                        <h2>Shipping Connectors</h2>
+                        <h2>Shipping</h2>
                         <div class="row mt16 o_settings_container" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
+                            <div class="col-12 col-lg-6 o_setting_box" id="delivery">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery"/>
+                                    <div class="text-muted" id="delivery_carrier">
+                                        Compute shipping costs
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_ups" widget="upgrade_boolean"/>
