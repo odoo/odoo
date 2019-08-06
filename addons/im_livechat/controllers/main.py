@@ -165,12 +165,14 @@ class ImLiveChatController(BusController):
             notifications = []
             for mail_channel in env['mail.channel'].sudo().search([('channel_type', '=', 'livechat'), ('uuid', 'in', list(channels))]):
                 im_status = mail_channel.livechat_operator_id.im_status
-                if im_status != options.get('im_status'):
+                livechat_operator_id = mail_channel.livechat_operator_id.id in mail_channel.livechat_channel_id.mapped('user_ids.partner_id').ids
+                if im_status != options.get('im_status') or livechat_operator_id != options.get('livechat_operator_id'):
                     notifications.append({
                         'channel': mail_channel.uuid,
                         'message': {
                             '_type': 'operator_status',
-                            'im_status': im_status
+                            'im_status': im_status,
+                            'operator': livechat_operator_id
                         }
                     })
             res.extend(notifications)

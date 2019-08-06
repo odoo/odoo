@@ -179,12 +179,13 @@ var LivechatButton = Widget.extend({
                     this._livechat.unregisterTyping({ partnerID: partnerID });
                 }
             } else if (notification[1]._type === 'operator_status') {
-                if (notification[1].im_status === 'offline') {
+                if (notification[1].im_status === 'offline' || !notification[1].operator) {
                     this._chatWindow.$el.find('.o_thread_window_header').after(QWeb.render('im_livechat.ThreadWindow.NoOperatorMessage'));
                 } else {
                     this._chatWindow.$el.find('.o_no_operator_available').remove();
                 }
                 this.call('bus_service', 'updateOption', 'im_status', notification[1].im_status);
+                this.call('bus_service', 'updateOption', 'livechat_operator_id', notification[1].operator);
             } else { // normal message
                 this._addMessage(notification[1]);
                 this._renderMessages();
