@@ -118,7 +118,7 @@ class BaseLanguageInstall(models.TransientModel):
 
     def lang_install(self):
         self.ensure_one()
-        already_installed = self.env['res.lang'].search_count([('code', '=', self.lang)])
+        already_installed = self.lang in [code for code, _ in self.env['res.lang'].get_installed()]
         res = super(BaseLanguageInstall, self).lang_install()
         if already_installed:
             # update of translations instead of new installation
