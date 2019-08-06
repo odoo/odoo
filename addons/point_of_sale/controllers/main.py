@@ -14,15 +14,18 @@ class PosController(http.Controller):
     @http.route('/pos/web', type='http', auth='user')
     def pos_web(self, **k):
         # if user not logged in, log him in
-        pos_sessions = request.env['pos.session'].search([
+        pos_sessions = request.env['pos.session'].sudo().search([
             ('state', '=', 'opened'),
             ('user_id', '=', request.session.uid),
             ('rescue', '=', False)])
         if not pos_sessions:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         pos_sessions.login()
+        # The POS only work in one company, so we enforce the one of the session in the context
+        session_info = request.env['ir.http'].session_info()
+        session_info['user_context']['allowed_company_ids'] = pos_sessions.company_id.ids
         context = {
-            'session_info': json.dumps(request.env['ir.http'].session_info())
+            'session_info': json.dumps(session_info)
         }
         return request.render('point_of_sale.index', qcontext=context)
 
