@@ -163,7 +163,15 @@ class User(models.Model):
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')
-            self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids)]).write(employee_values)
+            if 'image_1920' in vals:
+                without_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '=', False)])
+                with_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '!=', False)])
+                without_image.write(employee_values)
+                if not can_edit_self:
+                    employee_values.pop('image_1920')
+                with_image.write(employee_values)
+            else:
+                self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids)]).write(employee_values)
         return result
 
     @api.model
