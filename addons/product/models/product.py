@@ -123,14 +123,14 @@ class ProductProduct(models.Model):
     # all image fields are base64 encoded and PIL-supported
 
     # all image_variant fields are technical and should not be displayed to the user
-    image_variant_max = fields.Image("Variant Image", max_width=1920, max_height=1920)
+    image_variant_1920 = fields.Image("Variant Image", max_width=1920, max_height=1920)
 
     # resized fields stored (as attachment) for performance
-    image_variant_1024 = fields.Image("Variant Image 1204", related="image_variant_max", max_width=1024, max_height=1024, store=True)
-    image_variant_512 = fields.Image("Variant Image 512", related="image_variant_max", max_width=512, max_height=512, store=True)
-    image_variant_256 = fields.Image("Variant Image 256", related="image_variant_max", max_width=256, max_height=256, store=True)
-    image_variant_128 = fields.Image("Variant Image 128", related="image_variant_max", max_width=128, max_height=128, store=True)
-    image_variant_64 = fields.Image("Variant Image 64", related="image_variant_max", max_width=64, max_height=64, store=True)
+    image_variant_1024 = fields.Image("Variant Image 1204", related="image_variant_1920", max_width=1024, max_height=1024, store=True)
+    image_variant_512 = fields.Image("Variant Image 512", related="image_variant_1920", max_width=512, max_height=512, store=True)
+    image_variant_256 = fields.Image("Variant Image 256", related="image_variant_1920", max_width=256, max_height=256, store=True)
+    image_variant_128 = fields.Image("Variant Image 128", related="image_variant_1920", max_width=128, max_height=128, store=True)
+    image_variant_64 = fields.Image("Variant Image 64", related="image_variant_1920", max_width=64, max_height=64, store=True)
     can_image_variant_1024_be_zoomed = fields.Boolean("Can Variant Image 1024 be zoomed", compute='_compute_can_image_variant_1024_be_zoomed', store=True)
 
     # Computed fields that are used to create a fallback to the template if
@@ -143,22 +143,22 @@ class ProductProduct(models.Model):
     image_64 = fields.Image("Image 64", compute='_compute_image_64')
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
 
-    @api.depends('image_variant_max', 'image_variant_1024')
+    @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:
-            record.can_image_variant_1024_be_zoomed = record.image_variant_max and tools.is_image_size_above(record.image_variant_max, record.image_variant_1024)
+            record.can_image_variant_1024_be_zoomed = record.image_variant_1920 and tools.is_image_size_above(record.image_variant_1920, record.image_variant_1024)
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.image_1920 = record.image_variant_max or record.product_tmpl_id.image_1920
+            record.image_1920 = record.image_variant_1920 or record.product_tmpl_id.image_1920
 
     def _set_image_1920(self):
         for record in self:
             if (
                 # We are trying to remove an image even though it is already
                 # not set, remove it from the template instead.
-                not record.image_1920 and not record.image_variant_max or
+                not record.image_1920 and not record.image_variant_1920 or
                 # We are trying to add an image, but the template image is
                 # not set, write on the template instead.
                 record.image_1920 and not record.product_tmpl_id.image_1920 or
@@ -168,10 +168,10 @@ class ProductProduct(models.Model):
                     ('active', '=', True),
                 ]) <= 1
             ):
-                record.image_variant_max = False
+                record.image_variant_1920 = False
                 record.product_tmpl_id.image_1920 = record.image_1920
             else:
-                record.image_variant_max = record.image_1920
+                record.image_variant_1920 = record.image_1920
 
     def _compute_image_1024(self):
         """Get the image from the template if no image is set on the variant."""
@@ -201,7 +201,7 @@ class ProductProduct(models.Model):
     def _compute_can_image_1024_be_zoomed(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.can_image_1024_be_zoomed = record.can_image_variant_1024_be_zoomed if record.image_variant_max else record.product_tmpl_id.can_image_1024_be_zoomed
+            record.can_image_1024_be_zoomed = record.can_image_variant_1024_be_zoomed if record.image_variant_1920 else record.product_tmpl_id.can_image_1024_be_zoomed
 
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
@@ -374,8 +374,8 @@ class ProductProduct(models.Model):
         for product in self:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
-            if product.image_variant_max and not product.product_tmpl_id.image_1920:
-                product.product_tmpl_id.image_1920 = product.image_variant_max
+            if product.image_variant_1920 and not product.product_tmpl_id.image_1920:
+                product.product_tmpl_id.image_1920 = product.image_variant_1920
             # Check if product still exists, in case it has been unlinked by unlinking its template
             if not product.exists():
                 continue
