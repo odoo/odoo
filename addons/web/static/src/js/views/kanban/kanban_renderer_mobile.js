@@ -112,12 +112,13 @@ KanbanRenderer.include({
     _enableSwipe: function () {
         var self = this;
         var currentColumn = this.widgets[this.activeColumnIndex];
+        var step = _t.database.parameters.direction === 'rtl' ? -1 : 1;
         currentColumn.$el.swipe({
             swipeLeft: function () {
-                self._moveToGroup(self.activeColumnIndex + 1, self.ANIMATE);
+                self._moveToGroup(self.activeColumnIndex + step, self.ANIMATE);
             },
             swipeRight: function () {
-                self._moveToGroup(self.activeColumnIndex - 1, self.ANIMATE);
+                self._moveToGroup(self.activeColumnIndex - step, self.ANIMATE);
             }
         });
     },
