@@ -380,10 +380,10 @@
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
                     <filter name="waiting" string="Waiting" domain="[('state','in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
                     <filter name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
-                    <filter name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]" help="Transfers already processed"/>
                     <filter name="cancel" string="Cancelled" domain="[('state','=', 'cancel')]" help="Cancelled Moves"/>
                     <separator/>
-                    <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Pickings that are late on scheduled time"/>
+                    <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Transfers that are late on scheduled time"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
@@ -556,7 +556,7 @@ action = action_values
             </field>
         </record>
         <record id="do_view_pickings" model="ir.actions.act_window">
-            <field name="name">Pickings for Groups</field>
+            <field name="name">Transfers for Groups</field>
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('group_id','=',active_id)]</field>

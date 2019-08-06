@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Warehouse Management: Batch Picking',
+    'name': 'Warehouse Management: Batch Transfer',
     'version': '1.0',
     'category': 'Warehouse',
     'description': """
-This module adds the batch picking option in warehouse management
-=================================================================
+This module adds the batch transfer option in warehouse management
+==================================================================
     """,
     'depends': ['stock'],
     'data': [
