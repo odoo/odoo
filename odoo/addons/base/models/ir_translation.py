@@ -191,8 +191,7 @@ class IrTranslation(models.Model):
 
     @api.model
     def _get_languages(self):
-        langs = self.env['res.lang'].search([])
-        return [(lang.code, lang.name) for lang in langs]
+        return self.env['res.lang'].get_installed()
 
     def _auto_init(self):
         res = super(IrTranslation, self)._auto_init()
@@ -827,7 +826,7 @@ class IrTranslation(models.Model):
                 [('state', '=', 'installed')], ['name'])]
         if not lang:
             lang = self._context["lang"]
-        langs = self.env['res.lang'].sudo().search([("code", "=", lang)])
+        langs = self.env['res.lang']._lang_get(lang)
         lang_params = None
         if langs:
             lang_params = langs.read([

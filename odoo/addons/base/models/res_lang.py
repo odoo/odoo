@@ -164,7 +164,7 @@ class Lang(models.Model):
         """
         # config['load_language'] is a comma-separated list or None
         lang_code = (tools.config.get('load_language') or 'en_US').split(',')[0]
-        lang = self.search([('code', '=', lang_code)])
+        lang = self._lang_get(lang_code)
         if not lang:
             self.load_lang(lang_code)
         IrDefault = self.env['ir.default']

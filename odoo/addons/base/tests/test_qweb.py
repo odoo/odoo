@@ -524,7 +524,7 @@ class TestQWebNS(TransactionCase):
 
         self.env['res.lang'].load_lang(lang=other_lang)
 
-        self.env['res.lang'].search([('code', '=', other_lang)], limit=1).write({
+        self.env['res.lang']._lang_get(other_lang).write({
             'active': True,
             'decimal_point': '*',
             'thousands_sep': '/'

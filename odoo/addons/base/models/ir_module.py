@@ -878,8 +878,8 @@ class Module(models.Model):
 
     def _update_translations(self, filter_lang=None):
         if not filter_lang:
-            langs = self.env['res.lang'].search([])
-            filter_lang = [lang.code for lang in langs]
+            langs = self.env['res.lang'].get_installed()
+            filter_lang = [code for code, _ in langs]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
 
