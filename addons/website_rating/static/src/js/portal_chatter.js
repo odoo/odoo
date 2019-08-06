@@ -1,12 +1,15 @@
 odoo.define('rating.portal.chatter', function (require) {
 'use strict';
 
+var core = require('web.core');
 var portalChatter = require('portal.chatter');
 var utils = require('web.utils');
+var time = require('web.time');
 
+var _t = core._t;
 var PortalChatter = portalChatter.PortalChatter;
-
-var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db rating range (1-10)
+var qweb = core.qweb;
+var STAR_RATING_RATIO = 2; // conversion factor from the star (1-5) to the db rating range (1-10)
 
 /**
  * PortalChatter
@@ -15,8 +18,15 @@ var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db r
  */
 PortalChatter.include({
     events: _.extend({}, PortalChatter.prototype.events, {
-        "click .o_website_rating_select": "_onClickStarDomain",
-        "click .o_website_rating_select_text": "_onClickStarDomainReset",
+        // star based control
+        'click .o_website_rating_select': '_onClickStarDomain',
+        'click .o_website_rating_select_text': '_onClickStarDomainReset',
+        // publisher comments
+        'click .o_wrating_js_publisher_comment_btn': '_onClickPublisherComment',
+        'click .o_wrating_js_publisher_comment_edit': '_onClickPublisherComment',
+        'click .o_wrating_js_publisher_comment_delete': '_onClickPublisherCommentDelete',
+        'click .o_wrating_js_publisher_comment_submit': '_onClickPublisherCommentSubmit',
+        'click .o_wrating_js_publisher_comment_cancel': '_onClickPublisherCommentCancel',
     }),
     xmlDependencies: (PortalChatter.prototype.xmlDependencies || [])
         .concat([
@@ -56,10 +66,13 @@ PortalChatter.include({
         var self = this;
         messages = this._super.apply(this, arguments);
         if (this.options['display_rating']) {
-            _.each(messages, function (m) {
-                m['rating_value'] = self.roundToHalf(m['rating_value'] / STAR_RATING_RATIO);
+            _.each(messages, function (m, i) {
+                m.rating_value = self.roundToHalf(m['rating_value'] / STAR_RATING_RATIO);
+                m.rating = self._preprocessCommentData(m.rating, i);
             });
         }
+        // save messages in the widget to process correctly the publisher comment templates
+        this.messages = messages;
         return messages;
     },
     /**
@@ -126,16 +139,77 @@ PortalChatter.include({
         return params;
     },
 
+    /**
+     * Default rating data for publisher comment qweb template
+     * @private
+     * @param {Integer} messageIndex 
+     */
+    _newPublisherCommentData: function (messageIndex) {
+        return {
+            mes_index: messageIndex,
+            publisher_id: this.options.partner_id,
+            publisher_avatar: _.str.sprintf('/web/image/%s/%s/image_64/50x50', 'res.partner', this.options.partner_id),
+            publisher_name: _t("Write your comment"),
+            publisher_datetime: '',
+            publisher_comment: '',
+        };
+    }, 
+
+     /**
+     * preprocess the rating data comming from /website/rating/comment or the chatter_init
+     * Can be also use to have new rating data for a new publisher comment
+     * @param {JSON} rawRating 
+     * @returns {JSON} the process rating data
+     */
+    _preprocessCommentData: function (rawRating, messageIndex) {
+        var ratingData = {
+            id: rawRating.id,
+            mes_index: messageIndex,
+            publisher_datetime: rawRating.publisher_datetime ? moment(time.str_to_datetime(rawRating.publisher_datetime)).format('MMMM Do YYYY, h:mm:ss a') : "",
+            publisher_comment: rawRating.publisher_comment ? rawRating.publisher_comment : '',
+        };
+
+        // split array (id, display_name) of publisher_id into publisher_id and publisher_name
+        if (rawRating.publisher_id && rawRating.publisher_id.length >= 2) {
+            ratingData.publisher_id = rawRating.publisher_id[0];
+            ratingData.publisher_name = rawRating.publisher_id[1];
+            ratingData.publisher_avatar = _.str.sprintf('/web/image/%s/%s/image_64/50x50', 'res.partner', ratingData.publisher_id);
+        }
+        var commentData = _.extend(this._newPublisherCommentData(messageIndex), ratingData);
+        return commentData;
+    },
+
+    /** ---------------
+     * Selection of elements for the publisher comment feature
+     * Only available from a source in a publisher_comment or publisher_comment_form template
+     */
+
+    _getCommentContainer: function ($source) {
+        return $source.parents(".o_wrating_publisher_container").first().find(".o_wrating_publisher_comment").first();
+    },
+
+    _getCommentButton: function ($source) {
+        return $source.parents(".o_wrating_publisher_container").first().find(".o_wrating_js_publisher_comment_btn").first();
+    },
+
+    _getCommentTextarea: function ($source) {
+        return $source.parents(".o_wrating_publisher_container").first().find(".o_portal_rating_comment_input").first();
+    },
+
+    _focusTextComment: function ($source) {
+        this._getCommentTextarea($source).focus();
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onClickStarDomain: function (e) {
-        var $tr = this.$(e.currentTarget);
+    _onClickStarDomain: function (ev) {
+        var $tr = this.$(ev.currentTarget);
         var num = $tr.data('star');
         if ($tr.css('opacity') === '1') {
             this.set('rating_value', num);
@@ -153,17 +227,120 @@ PortalChatter.include({
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onClickStarDomainReset: function (e) {
-        e.stopPropagation();
-        e.preventDefault();
+    _onClickStarDomainReset: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
         this.set('rating_value', false);
         this.$('.o_website_rating_select_text').css('visibility', 'hidden');
         this.$('.o_website_rating_select').css({
             'opacity': 1,
         });
     },
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPublisherComment: function (ev) {
+        var $source = this.$(ev.currentTarget);
+        // If the form is already present => like cancel remove the form
+        if (this._getCommentTextarea($source).length === 1) {
+            this._getCommentContainer($source).empty();
+            return;
+        }
+        var messageIndex = $source.data("mes_index");
+        var data = {is_publisher: this.options['is_user_publisher']}; 
+        data.rating = this._newPublisherCommentData(messageIndex);
+        
+        var oldRating = this.messages[messageIndex].rating;
+        data.rating.publisher_comment = oldRating.publisher_comment ? oldRating.publisher_comment : '';
+        this._getCommentContainer($source).html($(qweb.render("website_rating.chatter_rating_publisher_form", data)));
+        this._focusTextComment($source);
+    },
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPublisherCommentDelete: function (ev) {
+        var self = this;
+        var $source = this.$(ev.currentTarget);
+
+        var messageIndex = $source.data("mes_index");
+        var ratingId = this.messages[messageIndex].rating.id;
+
+        this._rpc({
+            route: '/website/rating/comment',
+            params: {
+                "rating_id": ratingId,
+                "publisher_comment": '' // Empty publisher comment means no comment
+            }
+        }).then(function (res) {
+            self.messages[messageIndex].rating = self._preprocessCommentData(res, messageIndex);
+            self._getCommentButton($source).removeClass("d-none");
+            self._getCommentContainer($source).empty();
+        });
+    },  
+
+     /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPublisherCommentSubmit: function (ev) {
+        var self = this;
+        var $source = this.$(ev.currentTarget);
+
+        var messageIndex = $source.data("mes_index");
+        var comment = this._getCommentTextarea($source).val();
+        var ratingId = this.messages[messageIndex].rating.id;
+
+        this._rpc({
+            route: '/website/rating/comment',
+            params: {
+                "rating_id": ratingId,
+                "publisher_comment": comment
+            }
+        }).then(function (res) {
+
+            // Modify the related message
+            self.messages[messageIndex].rating = self._preprocessCommentData(res, messageIndex);
+            if (self.messages[messageIndex].rating.publisher_comment !== '') {
+                // Remove the button comment if exist and render the comment
+                self._getCommentButton($source).addClass('d-none');
+                self._getCommentContainer($source).html($(qweb.render("website_rating.chatter_rating_publisher_comment", { 
+                    rating: self.messages[messageIndex].rating,
+                    is_publisher: self.options.is_user_publisher
+                })));
+            } else {
+                // Empty string or false considers as no comment
+                self._getCommentButton($source).removeClass("d-none");
+                self._getCommentContainer($source).empty();       
+            }
+        });
+    },
+
+     /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPublisherCommentCancel: function (ev) {
+        var $source = this.$(ev.currentTarget);
+        var messageIndex = $source.data("mes_index");
+
+        var comment = this.messages[messageIndex].rating.publisher_comment;
+        if (comment) {
+            var data = {
+                rating: this.messages[messageIndex].rating,
+                is_publisher: this.options.is_user_publisher
+            };
+            this._getCommentContainer($source).html($(qweb.render("website_rating.chatter_rating_publisher_comment", data)));
+        } else {
+            this._getCommentContainer($source).empty();
+        }
+    },
+
     /**
      * @private
      */
