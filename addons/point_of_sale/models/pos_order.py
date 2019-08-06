@@ -328,7 +328,7 @@ class PosOrder(models.Model):
                 res.append({'data_type': 'tax', 'values': data})
         return res
 
-    def _create_account_move_line(self, session=None):
+    def _prepare_account_move_and_lines(self, session=None):
 
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
@@ -471,6 +471,17 @@ class PosOrder(models.Model):
 
         if self and order.company_id.anglo_saxon_accounting:
             add_anglosaxon_lines(grouped_data)
+
+        return {
+            'grouped_data': grouped_data,
+            'move': move,
+        }
+
+    def _create_account_move_line(self, session=None):
+        vals = self._prepare_account_move_and_lines(session)
+
+        grouped_data = vals['grouped_data']
+        move = vals['move']
 
         all_lines = []
         for group_key, group_data in grouped_data.items():
@@ -1149,6 +1160,7 @@ class PosOrderLine(models.Model):
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
     _description = "Specify product lot/serial number in pos order line"
+    _rec_name = "lot_name"
 
     pos_order_line_id = fields.Many2one('pos.order.line')
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
