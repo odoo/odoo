@@ -331,13 +331,12 @@ class AccountVoucher(models.Model):
                 current_cur = Currency.browse(current_currency)
                 for tax_vals in tax_group['taxes']:
                     if tax_vals['amount']:
-                        tax = self.env['account.tax'].browse([tax_vals['id']])
                         account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
                         if not account_id: account_id = line.account_id.id
                         temp = {
                             'account_id': account_id,
                             'name': line.name + ' ' + tax_vals['name'],
-                            'tax_line_id': tax_vals['id'],
+                            'tax_repartition_line_id': tax_vals['tax_repartition_line_id'],
                             'move_id': move_id,
                             'date': self.account_date,
                             'partner_id': self.partner_id.id,
