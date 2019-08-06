@@ -800,7 +800,10 @@
         <div class="card-body">
             <div t-if="answer.is_correct" class="validate_answer">
                 <div class="bg-success"></div>
-                <span title="Question has accepted answer" role="img" aria-label="Question has accepted answer"><i class="fa fa-check-circle text-success bg-white"/></span>
+                <span title="Question has accepted answer" role="img" aria-label="Question has accepted answer"
+                      t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct">
+                    <i class="fa fa-check-circle text-success bg-white"/>
+                </span>
             </div>
             <div class="row">
                 <div class="col-1">

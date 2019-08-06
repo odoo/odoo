@@ -431,7 +431,7 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def with_lang(self):
-        if 'lang' not in self._context:
+        if not self._context.get("lang"):
             return self.with_context(lang=self.env.user.lang)
         return self
 

@@ -40,6 +40,26 @@
             <field name="groups" eval="[(4,ref('lunch.group_lunch_user'))]"/>
         </record>
 
+        <record id="lunch_order_rule_write" model="ir.rule">
+            <field name="name">lunch.order: Don't change confirmed order</field>
+            <field name="model_id" ref="lunch.model_lunch_order"/>
+            <field name="domain_force">[('state', '!=', 'confirmed'), ('user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="lunch_order_rule_write_manager" model="ir.rule">
+            <field name="name">manager can do whatever</field>
+            <field name="model_id" ref="lunch.model_lunch_order"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4, ref('lunch.group_lunch_manager'))]"/>
+        </record>
+
     <data noupdate="1">
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('lunch.group_lunch_manager'))]"/>

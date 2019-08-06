@@ -674,6 +674,115 @@ class TestTemplating(ViewCase):
             second.get('data-oe-id'),
             "second should come from the extension view")
 
+    def test_branding_inherit_replace_node(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<hello>
+                <world></world>
+                <world><t t-esc="hello"/></world>
+                <world></world>
+            </hello>
+            """
+        })
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """<xpath expr="/hello/world[1]" position="replace">
+                <world>Is a ghetto</world>
+                <world>Wonder when I'll find paradise</world>
+            </xpath>
+            """
+        })
+
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        # First world - has been replaced by inheritance
+        [initial] = arch.xpath('/hello[1]/world[1]')
+        self.assertEqual(
+            '/xpath/world[1]',
+            initial.get('data-oe-xpath'),
+            'Inherited nodes have correct xpath')
+
+        # Second world added by inheritance
+        [initial] = arch.xpath('/hello[1]/world[2]')
+        self.assertEqual(
+            '/xpath/world[2]',
+            initial.get('data-oe-xpath'),
+            'Inherited nodes have correct xpath')
+
+        # Third world - is not editable
+        [initial] = arch.xpath('/hello[1]/world[3]')
+        self.assertFalse(
+            initial.get('data-oe-xpath'),
+            'node containing t-esc is not branded')
+
+        # The most important assert
+        # Fourth world - should have a correct oe-xpath, which is 3rd in main view
+        [initial] = arch.xpath('/hello[1]/world[4]')
+        self.assertEqual(
+            '/hello[1]/world[3]',
+            initial.get('data-oe-xpath'),
+            "The node's xpath position should be correct")
+
+    def test_branding_inherit_replace_node2(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<hello>
+                <world></world>
+                <world><t t-esc="hello"/></world>
+                <world></world>
+            </hello>
+            """
+        })
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """<xpath expr="/hello/world[1]" position="replace">
+                <war>Is a ghetto</war>
+                <world>Wonder when I'll find paradise</world>
+            </xpath>
+            """
+        })
+
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        [initial] = arch.xpath('/hello[1]/war[1]')
+        self.assertEqual(
+            '/xpath/war',
+            initial.get('data-oe-xpath'),
+            'Inherited nodes have correct xpath')
+
+        # First world: from inheritance
+        [initial] = arch.xpath('/hello[1]/world[1]')
+        self.assertEqual(
+            '/xpath/world',
+            initial.get('data-oe-xpath'),
+            'Inherited nodes have correct xpath')
+
+        # Second world - is not editable
+        [initial] = arch.xpath('/hello[1]/world[2]')
+        self.assertFalse(
+            initial.get('data-oe-xpath'),
+            'node containing t-esc is not branded')
+
+        # The most important assert
+        # Third world - should have a correct oe-xpath, which is 3rd in main view
+        [initial] = arch.xpath('/hello[1]/world[3]')
+        self.assertEqual(
+            '/hello[1]/world[3]',
+            initial.get('data-oe-xpath'),
+            "The node's xpath position should be correct")
+
     def test_branding_primary_inherit(self):
         view1 = self.View.create({
             'name': "Base view",
