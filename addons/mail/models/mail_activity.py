@@ -315,10 +315,10 @@ class MailActivity(models.Model):
         activity = super(MailActivity, self).create(values)
         need_sudo = False
         try:  # in multicompany, reading the partner might break
-            partner_id = activity_user.user_id.partner_id.id
+            partner_id = activity.user_id.partner_id.id
         except exceptions.AccessError:
             need_sudo = True
-            partner_id = activity_user.user_id.sudo().partner_id.id
+            partner_id = activity.user_id.sudo().partner_id.id
 
         # send a notification to assigned user; in case of manually done activity also check
         # target has rights on document otherwise we prevent its creation. Automated activities
