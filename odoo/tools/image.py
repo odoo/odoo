@@ -388,8 +388,6 @@ def image_guess_size_from_field_name(field_name):
     :rtype: tuple (width, height)
     """
     suffix = '1024' if field_name == 'image' else field_name.split('_')[-1]
-    if suffix == 'max':
-        return (1920, 1920)
     try:
         return (int(suffix), int(suffix))
     except ValueError:

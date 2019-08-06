@@ -430,7 +430,7 @@ class Product(models.Model):
         """
         self.ensure_one()
         variant_images = list(self.product_variant_image_ids)
-        if self.image_variant_max:
+        if self.image_variant_1920:
             # if the main variant image is set, display it first
             variant_images = [self] + variant_images
         else:
