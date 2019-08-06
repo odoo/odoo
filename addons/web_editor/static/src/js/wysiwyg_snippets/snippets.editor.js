@@ -746,6 +746,7 @@ var SnippetsMenu = Widget.extend({
             },
         });
         this.cacheSnippetTemplate[this.options.snippets] = this._defLoadSnippets;
+        return this.cacheSnippetTemplate[this.options.snippets];
     },
     /**
      * Sets the instance variables $editor, $body and selectorEditableArea.
