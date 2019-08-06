@@ -45,7 +45,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             })
 
         cls.rule_1 = cls.rule_0.copy()
-        cls.rule_1.account_id = current_assets_account
+        cls.rule_1.write({'line_ids': [(0, 0, {'account_id': current_assets_account.id})]})
         cls.rule_1.match_partner = True
         cls.rule_1.match_partner_ids |= cls.partner_1 + cls.partner_2
         cls.rule_2 = cls.env['account.reconcile.model'].create({
@@ -53,7 +53,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             'rule_type': 'writeoff_suggestion',
             'match_partner': True,
             'match_partner_ids': [],
-            'account_id': current_assets_account.id,
+            'line_ids': [(0, 0, {'account_id': current_assets_account.id})],
         })
 
         invoice_number = cls.invoice_line_1.move_id.name
@@ -67,14 +67,14 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             'statement_id': cls.bank_st.id,
             'name': 'invoice %s-%s' % (invoice_number.split('/')[1], invoice_number.split('/')[2]),
             'partner_id': cls.partner_1.id,
-            'amount': 100,
+            'amount': '100',
             'sequence': 1,
         })
         cls.bank_line_2 = cls.env['account.bank.statement.line'].create({
             'statement_id': cls.bank_st.id,
             'name': 'xxxxx',
             'partner_id': cls.partner_1.id,
-            'amount': 600,
+            'amount': '600',
             'sequence': 2,
         })
 
@@ -86,14 +86,14 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             'statement_id': cls.cash_st.id,
             'name': 'yyyyy',
             'partner_id': cls.partner_2.id,
-            'amount': -1000,
+            'amount': '-1000',
             'sequence': 1,
         })
 
         cls.tax21 = cls.env['account.tax'].create({
             'name': '21%',
             'type_tax_use': 'purchase',
-            'amount': 21,
+            'amount': '21',
         })
 
     @classmethod
@@ -338,9 +338,11 @@ class TestReconciliationMatchingRules(AccountTestCommon):
 
         self.rule_1.write({
             'auto_reconcile': True,
-            'force_tax_included': True,
-            'tax_ids': [(6, 0, self.tax21.ids)],
             'rule_type': 'writeoff_suggestion',
+            'line_ids': [(1, self.rule_1.line_ids.id, {
+                'force_tax_included': True,
+                'tax_ids': [(6, 0, self.tax21.ids)],
+            })]
         })
 
         self.bank_line_2.unlink()

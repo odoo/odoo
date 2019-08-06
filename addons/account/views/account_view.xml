@@ -802,6 +802,7 @@ action = model.setting_init_bank_account_action()
                         <group>
                             <group>
                                 <field name="rule_type" widget="radio"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
                                 <field name="auto_reconcile" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
@@ -882,69 +883,65 @@ action = model.setting_init_bank_account_action()
                         </group>
                         <group string="Counterpart Values"
                                attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
-                            <group>
-                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]"
-                                       attrs="{'required': ['|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
-                                <field name="amount_type"/>
-                                <field name="tax_ids"
-                                       domain="[('company_id', '=', company_id)]"
-                                       options="{'no_create': True}"
-                                       context="{'append_type_to_tax_name': True}"
-                                       widget="many2many_tags"/>
-                                <field name="show_force_tax_included" invisible="1"/>
-                                <field name="force_tax_included"
-                                       attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
-                                <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
-                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </group>
-                            <group>
-                                <field name="label"/>
-                                <label for="amount" attrs="{'invisible': [('amount_type','=','regex')]}"/>
-                                <div attrs="{'invisible': [('amount_type','=','regex')]}">
-                                    <field name="amount" class="oe_inline"/>
-                                    <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
-                                </div>
-                                <field name="amount_from_label_regex" attrs="{'invisible': [('amount_type','!=','regex')]}"/>
-                                <field name="decimal_separator" attrs="{'invisible': [('amount_type','!=','regex')]}"/>
-                                <field name="journal_id" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" widget="selection"
-                                       attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
-                            </group>
-                        </group>
-                        <div class="oe_edit_only"
-                             attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
-                            <field name="has_second_line" />
-                            <label for="has_second_line" string="Add a second line"/>
-                        </div>
-                        <group name="second_line" attrs="{'invisible':['|', ('has_second_line', '=', False), '&amp;', ('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
-                            <group>
-                                <field name="second_account_id" options="{'no_create': True}" string="Account" domain="[('company_id', '=', company_id)]"
-                                       attrs="{'required': [('has_second_line', '=', True), '|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
-                                <field name="second_amount_type" string="Amount type"/>
-                                <field name="second_tax_ids"
-                                       string="Taxes"
-                                       domain="[('company_id', '=', company_id)]"
-                                       widget="many2many_tags"
-                                       context="{'append_type_to_tax_name': True}"/>
-                                <field name="show_second_force_tax_included" invisible="1"/>
-                                <field name="force_second_tax_included"
-                                       attrs="{'invisible': [('show_second_force_tax_included', '=', False)]}" force_save="1"/>
-                                <field name="second_analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
-                                <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                            </group>
-                            <group>
-                                <field name="second_label" string="Journal Item Label"/>
-                                <label for="second_amount" string="Amount" attrs="{'invisible': [('second_amount_type', '=', 'regex')]}"/>
-                                <div attrs="{'invisible': [('second_amount_type', '=', 'regex')]}">
-                                    <field name="second_amount" class="oe_inline"/>
-                                    <span class="o_form_label oe_inline" attrs="{'invisible':[('second_amount_type','!=','percentage')]}">%</span>
-                                </div>
-                                <field name="second_amount_from_label_regex" attrs="{'invisible': [('second_amount_type','!=','regex')]}"/>
-                                <field name="second_journal_id" string="Journal" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" widget="selection"
-                                       attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
-                            </group>
-                        </group>
+                           <group>
+                               <field name="show_decimal_separator" invisible="1"/>
+                               <field name="decimal_separator" attrs="{'invisible': [('show_decimal_separator', '=', False)]}" groups="base.group_no_one"/>
+                           </group>
+                            <field name="line_ids" default="{'default_model_id': self}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="account_id"/>
+                                    <field name="amount_type"/>
+                                    <field name="journal_id" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
+                                    <field name="amount_string"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_tags"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                    <field name="show_force_tax_included" invisible="1"/>
+                                    <field name="force_tax_included" attrs="{'invisible': [('show_force_tax_included', '=', False)]}" widget="boolean_toggle"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="label"/>
+                                </tree>
+                           </field>
+                       </group>
                     </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_reconcile_model_line_form" model="ir.ui.view">
+            <field name="name">account.reconcile.model.line.form</field>
+            <field name="model">account.reconcile.model.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="model_id" invisible="1"/>
+                    <field name="match_total_amount" invisible="1"/>
+                    <field name="match_total_amount_param" invisible="1"/>
+                    <field name="rule_type" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]"
+                                   attrs="{'required': ['|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
+                            <field name="amount_type"/>
+                            <field name="tax_ids"
+                                   domain="[('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"
+                                   context="{'append_type_to_tax_name': True}"
+                                   widget="many2many_tags"/>
+                            <field name="show_force_tax_included" invisible="1"/>
+                            <field name="force_tax_included"
+                                   attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
+                            <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="label"/>
+                            <label for="amount_string"/>
+                            <div>
+                                <field name="amount_string" class="oe_inline"/>
+                                <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
+                            </div>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -955,9 +952,8 @@ action = model.setting_init_bank_account_action()
                 <tree string="Bank Reconciliation Move Presets">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
-                    <field name="account_id"/>
-                    <field name="amount_type"/>
-                    <field name="journal_id" invisible="1"/>
+                    <field name="rule_type"/>
+                    <field name="auto_reconcile"/>
                 </tree>
             </field>
         </record>
@@ -966,9 +962,9 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
-                        <filter string="With tax" name="withtax" domain="[('tax_ids','!=',False)]"/>
-                        <field name="amount_type"/>
-                        <field name="journal_id"/>
+                        <filter string="With tax" name="withtax" domain="[('line_ids.tax_ids', '!=', False)]"/>
+                        <filter string="Auto Reconcile" name="auto_reconcile" domain="[('auto_reconcile', '=', True)]"/>
+                        <field name="rule_type"/>
                 </search>
             </field>
         </record>

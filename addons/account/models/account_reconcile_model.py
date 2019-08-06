@@ -3,9 +3,81 @@
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
-
 import re
 from math import copysign
+
+
+class AccountReconcileModelLine(models.Model):
+    _name = 'account.reconcile.model.line'
+    _description = 'Rules for the reconciliation model'
+    _order = 'sequence, id'
+
+    model_id = fields.Many2one('account.reconcile.model', readonly=True)
+    match_total_amount = fields.Boolean(related='model_id.match_total_amount')
+    match_total_amount_param = fields.Float(related='model_id.match_total_amount_param')
+    rule_type = fields.Selection(related='model_id.rule_type')
+    company_id = fields.Many2one(related='model_id.company_id')
+    sequence = fields.Integer(required=True, default=10)
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)], required=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
+    label = fields.Char(string='Journal Item Label')
+    amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
+    ], required=True, default='percentage')
+    show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included', help='Technical field used to show the force tax included button')
+    force_tax_included = fields.Boolean(string='Tax Included in Price', help='Force the tax to be managed as a price included tax.')
+    amount = fields.Float(string="Float Amount", compute='_compute_float_amount', store=True, help="Technical shortcut to parse the amount to a float")
+    amount_string = fields.Char(string="Amount", default='100', required=True, help="""Value for the amount of the writeoff line
+    * Percentage: Percentage of the balance, between 0 and 100.
+    * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
+    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)""")
+    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
+                                        relation='account_reconcile_model_analytic_tag_rel')
+
+    @api.onchange('tax_ids')
+    def _onchange_tax_ids(self):
+        # Multiple taxes with force_tax_included results in wrong computation, so we
+        # only allow to set the force_tax_included field if we have one tax selected
+        if len(self.tax_ids) != 1:
+            self.force_tax_included = False
+
+    @api.depends('tax_ids')
+    def _compute_show_force_tax_included(self):
+        for record in self:
+            record.show_force_tax_included = False if len(record.tax_ids) != 1 else True
+
+    @api.onchange('amount_type')
+    def _onchange_amount_type(self):
+        self.amount_string = ''
+        if self.amount_type == 'percentage':
+            self.amount_string = '100'
+        elif self.amount_type == 'regex':
+            self.amount_string = '([\d,]+)'
+
+    @api.depends('amount_string')
+    def _compute_float_amount(self):
+        for record in self:
+            try:
+                record.amount = float(record.amount_string)
+            except ValueError:
+                record.amount = 0
+
+    @api.constrains('amount_string')
+    def _validate_amount(self):
+        for record in self:
+            if record.amount_type == 'fixed' and record.amount == 0:
+                raise UserError(_('The amount is not a number'))
+            if record.amount_type == 'percentage' and not 0 < record.amount <= 100:
+                raise UserError(_('The amount is not a percentage'))
+            if record.amount_type == 'regex':
+                try:
+                    re.compile(record.amount_string)
+                except re.error:
+                    raise UserError(_('The regex is not valid'))
 
 
 class AccountReconcileModel(models.Model):
@@ -88,47 +160,10 @@ class AccountReconcileModel(models.Model):
     match_partner_category_ids = fields.Many2many('res.partner.category', string='Restrict Partner Categories to',
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
-    # ===== Write-Off =====
-    # First part fields.
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
-    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
-    label = fields.Char(string='Journal Item Label')
-    amount_type = fields.Selection([
-        ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance'),
-        ('regex', 'From label'),
-        ], required=True, default='percentage')
-    show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included', help='Technical field used to show the force tax included button')
-    force_tax_included = fields.Boolean(string='Tax Included in Price',
-        help='Force the tax to be managed as a price included tax.')
-    amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    amount_from_label_regex = fields.Char(string="Amount from Label (regex)", default=r"([\d\.,]+)", help="There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)")
+    line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
+
     decimal_separator = fields.Char(default=lambda self: self.env['res.lang']._lang_get(self.env.user.lang).decimal_point, help="Every character that is nor a digit nor this separator will be removed from the matching string")
-    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
-                                        relation='account_reconcile_model_analytic_tag_rel')
-
-    # Second part fields.
-    has_second_line = fields.Boolean(string='Add a second line', default=False)
-    second_account_id = fields.Many2one('account.account', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
-    second_journal_id = fields.Many2one('account.journal', string='Second Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
-    second_label = fields.Char(string='Second Journal Item Label')
-    second_amount_type = fields.Selection([
-        ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance'),
-        ('regex', 'From label'),
-        ], string="Second Amount type",required=True, default='percentage')
-    show_second_force_tax_included = fields.Boolean(compute='_compute_show_second_force_tax_included', help='Technical field used to show the force tax included button')
-    force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
-        help='Force the second tax to be managed as a price included tax.')
-    second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
-    second_tax_ids = fields.Many2many('account.tax', relation='account_reconcile_model_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
-    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
-    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags',
-                                               relation='account_reconcile_model_second_analytic_tag_rel')
-
+    show_decimal_separator = fields.Boolean(compute='_compute_show_decimal_separator', help="Technical field to decide if we should show the decimal separator for the regex matching field.")
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
 
     def action_reconcile_stat(self):
@@ -152,29 +187,10 @@ class AccountReconcileModel(models.Model):
         for model in self:
             model.number_entries = mapped_data.get(model.id, 0)
 
-    @api.onchange('tax_ids')
-    def _onchange_tax_ids(self):
-        # Multiple taxes with force_tax_included results in wrong computation, so we
-        # only allow to set the force_tax_included field if we have one tax selected
-        if len(self.tax_ids) != 1:
-            self.force_tax_included = False
-
-    @api.depends('tax_ids')
-    def _compute_show_force_tax_included(self):
+    @api.depends('line_ids.amount_type')
+    def _compute_show_decimal_separator(self):
         for record in self:
-            record.show_force_tax_included = False if len(record.tax_ids) != 1 else True
-
-    @api.onchange('second_tax_ids')
-    def _onchange_second_tax_ids(self):
-        # Multiple taxes with force_tax_included results in wrong computation, so we
-        # only allow to set the force_tax_included field if we have one tax selected
-        if len(self.second_tax_ids) != 1:
-            self.force_second_tax_included = False
-
-    @api.depends('second_tax_ids')
-    def _compute_show_second_force_tax_included(self):
-        for record in self:
-            record.show_second_force_tax_included = False if len(record.second_tax_ids) != 1 else True
+            record.show_decimal_separator = any(l.amount_type == 'regex' for l in record.line_ids)
 
     @api.onchange('match_total_amount_param')
     def _onchange_match_total_amount_param(self):
@@ -185,13 +201,13 @@ class AccountReconcileModel(models.Model):
     # RECONCILIATION PROCESS
     ####################################################
 
-    @api.model
     def _get_taxes_move_lines_dict(self, tax, base_line_dict):
         ''' Get move.lines dict (to be passed to the create()) corresponding to a tax.
         :param tax:             An account.tax record.
         :param base_line_dict:  A dict representing the move.line containing the base amount.
         :return: A list of dict representing move.lines to be created corresponding to the tax.
         '''
+        self.ensure_one()
         balance = base_line_dict['debit'] - base_line_dict['credit']
         currency = base_line_dict.get('currency_id') and self.env['res.currency'].browse(base_line_dict['currency_id'])
 
@@ -212,7 +228,8 @@ class AccountReconcileModel(models.Model):
                 'tax_exigible': tax_res['tax_exigibility'],
                 'tax_repartition_line_id': tax_res['tax_repartition_line_id'],
                 'tax_ids': tax_res['tax_ids'],
-                'tag_ids': tax_res['tag_ids']
+                'tag_ids': tax_res['tag_ids'],
+                'reconcile_model_id': self.id,
             })
 
             # Handle price included taxes.
@@ -221,7 +238,7 @@ class AccountReconcileModel(models.Model):
         base_line_dict['tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
-    def _get_write_off_move_lines_dict(self, st_line, move_lines=None):
+    def _get_write_off_move_lines_dict(self, st_line, move_lines=None, residual_balance=None):
         ''' Get move.lines dict (to be passed to the create()) corresponding to the reconciliation model's write-off lines.
         :param st_line:     An account.bank.statement.line record.
         :param move_lines:  An account.move.line recordset.
@@ -238,76 +255,43 @@ class AccountReconcileModel(models.Model):
 
         balance = total_residual - line_residual
 
-        if not self.account_id or float_is_zero(balance, precision_rounding=line_currency.rounding):
-            return []
-
-        if self.amount_type == 'percentage':
-            line_balance = balance * (self.amount / 100.0)
-        elif self.amount_type == "regex":
-            match = re.search(self.amount_from_label_regex, st_line.name)
-            if match:
-                line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1), balance)
-            else:
-                line_balance = 0
-        else:
-            line_balance = self.amount * (1 if balance > 0.0 else -1)
-
         new_aml_dicts = []
+        if residual_balance is None:
+            residual_balance = balance
+        for line in self.line_ids:
+            if not line.account_id or float_is_zero(residual_balance, precision_rounding=line_currency.rounding):
+                continue
 
-        # First write-off line.
-        writeoff_line = {
-            'name': self.label or st_line.name,
-            'account_id': self.account_id.id,
-            'analytic_account_id': self.analytic_account_id.id,
-            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'debit': line_balance > 0 and line_balance or 0,
-            'credit': line_balance < 0 and -line_balance or 0,
-            'reconcile_model_id': self.id,
-        }
-        new_aml_dicts.append(writeoff_line)
-
-        if self.tax_ids:
-            writeoff_line['tax_ids'] = [(6, None, self.tax_ids.ids)]
-            tax = self.tax_ids
-            # Multiple taxes with force_tax_included results in wrong computation, so we
-            # only allow to set the force_tax_included field if we have one tax selected
-            if self.force_tax_included:
-                tax = tax[0].with_context(force_price_include=True)
-            new_aml_dicts += self._get_taxes_move_lines_dict(tax, writeoff_line)
-
-        # Second write-off line.
-        if self.has_second_line and self.second_account_id:
-            remaining_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
-            if self.second_amount_type == 'percentage':
-                line_balance = remaining_balance * (self.second_amount / 100.0)
-            elif self.second_amount_type == "regex":
-                match = re.search(self.second_amount_from_label_regex, st_line.name)
+            if line.amount_type == 'percentage':
+                line_balance = residual_balance * (line.amount / 100.0)
+            elif line.amount_type == "regex":
+                match = re.search(line.amount_string, st_line.name)
                 if match:
-                    line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')), remaining_balance)
+                    line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1), balance)
                 else:
                     line_balance = 0
             else:
-                line_balance = self.second_amount * (1 if remaining_balance > 0.0 else -1)
-
-            second_writeoff_line = {
-                'name': self.second_label or st_line.name,
-                'account_id': self.second_account_id.id,
-                'analytic_account_id': self.second_analytic_account_id.id,
-                'analytic_tag_ids': [(6, 0, self.second_analytic_tag_ids.ids)],
+                line_balance = line.amount * (1 if residual_balance > 0.0 else -1)
+            writeoff_line = {
+                'name': line.label or st_line.name,
+                'account_id': line.account_id.id,
+                'analytic_account_id': line.analytic_account_id.id,
+                'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'debit': line_balance > 0 and line_balance or 0,
                 'credit': line_balance < 0 and -line_balance or 0,
                 'reconcile_model_id': self.id,
             }
-            new_aml_dicts.append(second_writeoff_line)
+            new_aml_dicts.append(writeoff_line)
 
-            if self.second_tax_ids:
-                second_writeoff_line['tax_ids'] = [(6, None, self.second_tax_ids.ids)]
-                tax = self.second_tax_ids
+            residual_balance -= line_balance
+            if line.tax_ids:
+                writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
+                tax = line.tax_ids
                 # Multiple taxes with force_tax_included results in wrong computation, so we
                 # only allow to set the force_tax_included field if we have one tax selected
-                if self.force_second_tax_included:
+                if line.force_tax_included:
                     tax = tax[0].with_context(force_price_include=True)
-                new_aml_dicts += self._get_taxes_move_lines_dict(tax, second_writeoff_line)
+                new_aml_dicts += self._get_taxes_move_lines_dict(tax, writeoff_line)
 
         return new_aml_dicts
 
