@@ -730,32 +730,37 @@ class PosOrder(models.Model):
         orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
         order_ids = self.env['pos.order']
         prepared_payments = []
-
+        orders_to_invoice = self.env['pos.order']
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
             if to_invoice:
                 self._match_payment_to_invoice(order)
+
             pos_order = self._process_order(order)
             order_ids |= pos_order
+            if to_invoice:
+                orders_to_invoice |= pos_order
             prepared_payments.append(pos_order._get_payments(order))
 
         self.env['pos.order']._create_payments(prepared_payments)
 
         for pos_order in order_ids:
             pos_order.amount_paid = sum(payment.amount for payment in pos_order.statement_ids)
-            try:
-                pos_order.action_pos_order_paid()
-            except psycopg2.DatabaseError:
-                # do not hide transactional errors, the order(s) won't be saved!
-                raise
-            except Exception as e:
-                _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
-            if to_invoice:
-                pos_order.action_pos_order_invoice()
-                pos_order.invoice_id.sudo().with_context(force_company=self.env.user.company_id.id).action_invoice_open()
-                pos_order.account_move = pos_order.invoice_id.move_id
+        if orders_to_invoice:
+            orders_to_invoice.action_pos_order_invoice()
+            orders_to_invoice.mapped('invoice_id').sudo().with_context(force_company=self.env.user.company_id.id).action_invoice_open()
+            for order in orders_to_invoice:
+                order.account_move = pos_order.invoice_id.move_id
+        try:
+            order_ids.action_pos_order_paid()
+        except psycopg2.DatabaseError:
+            # do not hide transactional errors, the order(s) won't be saved!
+            raise
+        except Exception as e:
+            _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
+
         return order_ids.ids
 
     def test_paid(self):
@@ -774,15 +779,18 @@ class PosOrder(models.Model):
         Picking = self.env['stock.picking']
         Move = self.env['stock.move']
         StockWarehouse = self.env['stock.warehouse']
+        order_picking = {}
+        return_picking = {}
+        moves = Move
+
         for order in self:
             if not order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
                 continue
+            new_picking = Picking
+            new_return = Picking
             address = order.partner_id.address_get(['delivery']) or {}
             picking_type = order.picking_type_id
             return_pick_type = order.picking_type_id.return_picking_type_id or order.picking_type_id
-            order_picking = Picking
-            return_picking = Picking
-            moves = Move
             location_id = order.location_id.id
             if order.partner_id:
                 destination_id = order.partner_id.property_stock_customer.id
@@ -808,8 +816,9 @@ class PosOrder(models.Model):
                 }
                 pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if pos_qty:
-                    order_picking = Picking.create(picking_vals.copy())
-                    order_picking.message_post(body=message)
+                    new_picking = Picking.create(picking_vals.copy())
+                    new_picking.message_post(body=message)
+                    order_picking[order.id] = new_picking
                 neg_qty = any([x.qty < 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if neg_qty:
                     return_vals = picking_vals.copy()
@@ -818,14 +827,14 @@ class PosOrder(models.Model):
                         'location_dest_id': return_pick_type != picking_type and return_pick_type.default_location_dest_id.id or location_id,
                         'picking_type_id': return_pick_type.id
                     })
-                    return_picking = Picking.create(return_vals)
-                    return_picking.message_post(body=message)
-
+                    new_return = Picking.create(return_vals)
+                    new_return.message_post(body=message)
+                    return_picking[order.id] = new_return
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
-                    'picking_id': order_picking.id if line.qty >= 0 else return_picking.id,
+                    'picking_id': new_picking.id if line.qty >= 0 else new_return.id,
                     'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
                     'product_id': line.product_id.id,
                     'product_uom_qty': abs(line.qty),
@@ -835,27 +844,34 @@ class PosOrder(models.Model):
                 })
 
             # prefer associating the regular order picking, not the return
-            order.write({'picking_id': order_picking.id or return_picking.id})
-
-            if return_picking:
-                order._force_picking_done(return_picking)
-            if order_picking:
-                order._force_picking_done(order_picking)
+            order.write({'picking_id': new_picking.id or new_return.id})
 
             # when the pos.config has no picking_type_id set only the moves will be created
-            if moves and not return_picking and not order_picking:
+            if moves and not order.picking_id:
                 moves._action_assign()
                 moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
 
+        if return_picking:
+            self.env['pos.order']._force_picking_done(return_picking)
+        if order_picking:
+            self.env['pos.order']._force_picking_done(order_picking)
+
         return True
 
-    def _force_picking_done(self, picking):
+    def _force_picking_done(self, picking_dict):
         """Force picking in order to be set as done."""
-        self.ensure_one()
-        picking.action_assign()
-        wrong_lots = self.set_pack_operation_lot(picking)
-        if not wrong_lots:
-            picking.action_done()
+        pickings_to_assign = self.env['stock.picking']
+        for order_id, picking in picking_dict.items():
+            pickings_to_assign |= picking
+        pickings_to_assign.action_assign()
+
+        pickings_to_do = self.env['stock.picking']
+        for order_id, picking in picking_dict.items():
+            wrong_lots = self.browse(order_id).set_pack_operation_lot(picking)
+            if not wrong_lots:
+                pickings_to_do |= picking
+
+        pickings_to_do.action_done()
 
     def set_pack_operation_lot(self, picking=None):
         """Set Serial/Lot number in pack operations to mark the pack operation done."""
@@ -960,7 +976,9 @@ class PosOrder(models.Model):
     def _create_payments(self, payments):
         context = dict(self.env.context)
         context.pop('pos_session_id', False)
+        context['recompute'] = False
         self.env['account.bank.statement.line'].with_context(context).create(payments)
+        self.recompute()
 
     def add_payment(self, data):
         """Create a new payment for the order"""
