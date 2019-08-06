@@ -18,4 +18,7 @@
         'views/mrp_bom_views.xml',
         'views/res_partner_views.xml',
     ],
+    'demo': [
+        'data/mrp_subcontracting_demo.xml',
+    ],
 }
