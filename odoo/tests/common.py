@@ -1021,11 +1021,16 @@ def users(*logins):
                 user.login: user.id
                 for user in Users.search([('login', 'in', list(logins))])
             }
-            for login in logins:
+            for index, login in enumerate(logins, 1):
                 with self.subTest(login=login):
                     # switch user and execute func
                     self.uid = user_id[login]
                     func(*args, **kwargs)
+                    # manually cleanup between runs, as subTest won't do it
+                    if index < len(logins):
+                        self.tearDown()
+                        self.doCleanups()
+                        self.setUp()
         finally:
             self.uid = old_uid
 
