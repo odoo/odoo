@@ -64,6 +64,9 @@ class StockPicking(models.Model):
         self.ensure_one()
         return self.move_lines.mapped('move_orig_ids.production_id')
 
+    def _get_warehouse(self, subcontract_move):
+        return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id
+
     def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
         subcontract_move.ensure_one()
         group = self.env['procurement.group'].create({
@@ -71,7 +74,7 @@ class StockPicking(models.Model):
             'partner_id': self.partner_id.id,
         })
         product = subcontract_move.product_id
-        warehouse = subcontract_move.warehouse_id or self.picking_type_id.warehouse_id
+        warehouse = self._get_warehouse(subcontract_move)
         vals = {
             'procurement_group_id': group.id,
             'product_id': product.id,
