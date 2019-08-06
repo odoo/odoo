@@ -95,6 +95,7 @@ class User(models.Model):
             'identification_id',
             'is_address_home_a_company',
             'job_title',
+            'private_email',
             'km_home_work',
             'marital',
             'mobile_phone',
