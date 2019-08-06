@@ -1725,6 +1725,8 @@ class Meeting(models.Model):
                 new_arg = (arg[0], arg[1], get_real_ids(arg[2]))
             new_args.append(new_arg)
 
+        real_args_id = new_args
+
         if not self._context.get('virtual_id', True):
             return super(Meeting, self).search(new_args, offset=offset, limit=limit, order=order, count=count)
 
@@ -1753,14 +1755,14 @@ class Meeting(models.Model):
                     my_args += [argument]
             return my_args
 
-        args_no_dates = args_without_dates(args)
+        args_no_dates = args_without_dates(real_args_id)
         args_no_dates_and_rec = args_no_dates + [('recurrency', '=', 1)]
         events_rec = super(Meeting, self).search(
             args_no_dates_and_rec, offset=0, limit=0, order=order, count=False)
-        all_events_in_domain = super(Meeting, self).search(args, offset=0, limit=0,
+        all_events_in_domain = super(Meeting, self).search(real_args_id, offset=0, limit=0,
                                                      order=order, count=False)
 
-        events_rec_ids = events_rec.get_recurrent_ids(args, order=order)
+        events_rec_ids = events_rec.get_recurrent_ids(real_args_id, order=order)
         non_recurrent_events = all_events_in_domain.get_non_recurrent_events()
         events = self.browse(events_rec_ids + non_recurrent_events)
         if count:
