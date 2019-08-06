@@ -6,8 +6,10 @@
         <field name="arch" type="xml">
             <form string="Assign Serial Numbers">
                 <group>
+                    <field name="move_id" invisible="1"/>
                     <field name="product_id" readonly="1"/>
-                    <field name="next_serial_number" required="1"/>
+                    <field name="next_serial_number"/>
+                    <field name="next_serial_count"/>
                 </group>
                 <footer>
                     <button name="generate_serial_numbers" type="object"

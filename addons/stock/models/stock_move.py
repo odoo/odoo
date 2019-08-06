@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
-from re import search as regex_search, split as regex_split
+from re import findall as regex_findall, split as regex_split
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -167,7 +167,8 @@ class StockMove(models.Model):
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
-    next_serial = fields.Char('Next Serial Number')
+    next_serial = fields.Char('First SN')
+    next_serial_count = fields.Integer('Number of SN')
 
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
@@ -180,6 +181,7 @@ class StockMove(models.Model):
             move.display_assign_serial = (
                 move.has_tracking == 'serial' and
                 move.picking_type_id.use_create_lots and
+                not move.picking_type_id.show_reserved and
                 not move.picking_type_id.use_existing_lots
             )
 
@@ -579,16 +581,20 @@ class StockMove(models.Model):
         moves_to_unreserve.mapped('move_line_ids').unlink()
         return True
 
-    def _generate_serial_numbers(self):
+    def _generate_serial_numbers(self, next_serial_count=False):
         """ This method will generate `lot_name` from a string (field
-        `next_serial`) and assign each `lot_name` to a move line.
+        `next_serial`) and create a move line for each generated `lot_name`.
         """
         self.ensure_one()
+
+        if not next_serial_count:
+            next_serial_count = self.next_serial_count
         # We look if the serial number contains at least one digit.
-        caught_initial_number = regex_search("\d+", self.next_serial)
+        caught_initial_number = regex_findall("\d+", self.next_serial)
         if not caught_initial_number:
             raise UserError(_('The serial number must contain at least one digit.'))
-        initial_number = caught_initial_number.group()
+        # We base the serie on the last number find in the base serial number.
+        initial_number = caught_initial_number[-1]
         padding = len(initial_number)
         # We split the serial number to get the prefix and suffix.
         splitted = regex_split(initial_number, self.next_serial)
@@ -596,21 +602,23 @@ class StockMove(models.Model):
         suffix = splitted[1]
         initial_number = int(initial_number)
 
-        # Then, for each move line without `lot_id` and `lot_name`, we compute
-        # and assign the `lot_name` and set the `qty_done` to one.
         move_lines_commands = []
-        for move_line in self.move_line_ids:
-            if not move_line.lot_id and not move_line.lot_name:
-                lot_name = '%s%s%s' % (
-                    prefix,
-                    str(initial_number).zfill(padding),
-                    suffix
-                )
-                initial_number += 1
-                move_lines_commands.append((1, move_line.id, {
-                    'lot_name': lot_name,
-                    'qty_done': 1
-                }))
+        location_dest = self.location_dest_id._get_putaway_strategy(self.product_id) or self.location_dest_id
+        for i in range(0, next_serial_count):
+            lot_name = '%s%s%s' % (
+                prefix,
+                str(initial_number + i).zfill(padding),
+                suffix
+            )
+            move_lines_commands.append((0, 0, {
+                'lot_name': lot_name,
+                'qty_done': 1,
+                'product_id': self.product_id.id,
+                'product_uom_id': self.product_id.uom_id.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': location_dest.id,
+                'picking_id': self.picking_id.id,
+            }))
         self.write({'move_line_ids': move_lines_commands})
         return True
 
@@ -955,6 +963,10 @@ class StockMove(models.Model):
             )
         return vals
 
+    def _update_next_serial_count(self):
+        self.next_serial = None
+        self.next_serial_count = len(self.move_line_ids)
+
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         """ Create or update move lines.
         """
@@ -1134,6 +1146,8 @@ class StockMove(models.Model):
                             assigned_moves |= move
                             break
                         partially_available_moves |= move
+            if move.product_id.tracking == 'serial':
+                move._update_next_serial_count()
         partially_available_moves.write({'state': 'partially_available'})
         assigned_moves.write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()
