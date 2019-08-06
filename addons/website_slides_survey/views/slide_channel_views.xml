@@ -19,9 +19,9 @@
             <xpath expr="//field[@name='website_published']" position="after">
                 <field name="nbr_certification"/>
             </xpath>
-            <xpath expr="//a[@name='action_redirect_to_done_members']/span" position="replace">
-                <t t-if="record.nbr_certification.raw_value"><span class="text-uppercase">Certified</span></t>
-                <t t-else=""><span class="text-uppercase">Finished</span></t>
+            <xpath expr="//span[@name='done_members_count_label']" position="replace">
+                <t t-if="record.nbr_certification.raw_value"><span class="text-secondary">Certified</span></t>
+                <t t-else=""><span class="text-secondary">Finished</span></t>
             </xpath>
         </field>
     </record>
