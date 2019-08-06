@@ -11,6 +11,7 @@ Bridge module for rating on website stuff.
     'depends': ['rating', 'website_mail'],
     'data': [
         'views/assets.xml',
+        'views/rating_views.xml',
         'views/portal_templates.xml',
         'views/rating_templates.xml',
     ],
