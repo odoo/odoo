@@ -301,11 +301,16 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      * @param {DocumentFragment} fragment
      * @param {integer} nbDivs the number of divs to append
+     * @param {Object} [options]
+     * @param {string} [options.inlineStyle]
      */
-    _renderGhostDivs: function (fragment, nbDivs) {
+    _renderGhostDivs: function (fragment, nbDivs, options) {
         var ghostDefs = [];
         for (var $ghost, i = 0; i < nbDivs; i++) {
             $ghost = $('<div>').addClass('o_kanban_record o_kanban_ghost');
+            if (options && options.inlineStyle) {
+                $ghost.attr('style', options.inlineStyle);
+            }
             var def = $ghost.appendTo(fragment);
             ghostDefs.push(def);
         }
@@ -385,8 +390,9 @@ var KanbanRenderer = BasicRenderer.extend({
     _renderUngrouped: function (fragment) {
         var self = this;
         var KanbanRecord = this.config.KanbanRecord;
+        var kanbanRecord;
         _.each(this.state.data, function (record) {
-            var kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
+            kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
             self.widgets.push(kanbanRecord);
             var def = kanbanRecord.appendTo(fragment);
             self.defs.push(def);
@@ -415,7 +421,11 @@ var KanbanRenderer = BasicRenderer.extend({
 
         // append ghost divs to ensure that all kanban records are left aligned
         var prom = Promise.all(self.defs).then(function () {
-            return self._renderGhostDivs(fragment, 6);
+            var options = {};
+            if (kanbanRecord) {
+                options.inlineStyle = kanbanRecord.$el.attr('style');
+            }
+            return self._renderGhostDivs(fragment, 6, options);
         });
         this.defs.push(prom);
     },
