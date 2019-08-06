@@ -179,13 +179,10 @@ class Lang(models.Model):
 
     @tools.ormcache('code')
     def _lang_get_id(self, code):
-        return (self.search([('code', '=', code)]) or
-                self.search([('code', '=', 'en_US')]) or
-                self.search([], limit=1)).id
+        return self.with_context(active_test=True).search([('code', '=', code)]).id
 
-    @api.model
-    @api.returns('self', lambda value: value.id)
     def _lang_get(self, code):
+        """ Return the language using this code if it is active """
         return self.browse(self._lang_get_id(code))
 
     @tools.ormcache('self.code', 'monetary')
