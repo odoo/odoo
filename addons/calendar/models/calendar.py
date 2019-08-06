@@ -686,7 +686,7 @@ class Meeting(models.Model):
         lang = self._context.get("lang")
         lang_params = {}
         if lang:
-            record_lang = self.env['res.lang'].search([("code", "=", lang)], limit=1)
+            record_lang = self.env['res.lang']._lang_get(lang)
             lang_params = {
                 'date_format': record_lang.date_format,
                 'time_format': record_lang.time_format

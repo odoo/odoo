@@ -31,9 +31,9 @@ class BaseGengoTranslations(models.TransientModel):
         res = super(BaseGengoTranslations, self).default_get(fields)
         res['authorized_credentials'], gengo = self.gengo_authentication()
         if 'lang_id' in fields:
-            res['lang_id'] = self.env['res.lang'].search([
-                ('code', '=', self.env.context.get('lang') or 'en_US')
-            ], limit=1).id
+            res['lang_id'] = self.env['res.lang']._lang_get_id(
+                self.env.context.get('lang') or 'en_US'
+            )
         return res
 
     sync_type = fields.Selection([

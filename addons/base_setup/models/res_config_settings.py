@@ -97,8 +97,6 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_language_count(self):
-        language_count = self.env['res.lang'].search_count([
-            ('active', '=', True),
-        ])
+        language_count = len(self.env['res.lang'].get_installed())
         for record in self:
             record.language_count = language_count

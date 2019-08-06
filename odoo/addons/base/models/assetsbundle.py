@@ -94,8 +94,8 @@ class AssetsBundle(object):
         self.css_errors = []
         self._checksum = None
         self.files = files
-        self.user_direction = self.env['res.lang'].search(
-            [('code', '=', (self.env.context.get('lang') or self.env.user.lang))]
+        self.user_direction = self.env['res.lang']._lang_get(
+            self.env.context.get('lang') or self.env.user.lang
         ).direction
         for f in files:
             if f['atype'] == 'text/sass':
