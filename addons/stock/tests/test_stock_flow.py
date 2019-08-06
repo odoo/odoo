@@ -4,6 +4,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 from odoo.tools import mute_logger, float_round
 from odoo.exceptions import UserError
+from odoo import fields
 
 class TestStockFlow(TestStockCommon):
     def setUp(cls):
@@ -1943,3 +1944,33 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.company)
         self.assertEqual(outgoing_picking.company_id, company_3)
         self.assertEqual(outgoing_picking.move_lines.company_id, company_3)
+
+    def test_picking_scheduled_date_readonlyness(self):
+        """ As it seems we keep breaking this thing over and over this small
+        test ensure the scheduled_date is writable on a picking in state 'draft' or 'confirmed'
+        """
+        partner = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
+        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'type': 'product'})
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        f = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        f.partner_id = partner
+        f.picking_type_id = wh.out_type_id
+        with f.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 5
+        f.scheduled_date = fields.Datetime.now()
+        picking = f.save()
+
+        f = Form(picking, view='stock.view_picking_form')
+        f.scheduled_date = fields.Datetime.now()
+        picking = f.save()
+
+        self.assertEquals(f.state, 'draft')
+        picking.action_confirm()
+
+        f = Form(picking, view='stock.view_picking_form')
+        f.scheduled_date = fields.Datetime.now()
+        picking = f.save()
+
+        self.assertEquals(f.state, 'confirmed')
