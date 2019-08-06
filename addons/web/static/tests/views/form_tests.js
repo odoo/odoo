@@ -3309,6 +3309,74 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('properly apply onchange on one2many fields direct click', async function (assert) {
+        assert.expect(3);
+
+        var def = testUtils.makeTestPromise();
+
+        this.data.partner.records[0].p = [2, 4];
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.p = [
+                    [5],
+                    [1, 2, {display_name: "updated record 1", int_field: obj.int_field}],
+                    [1, 4, {display_name: "updated record 2", int_field: obj.int_field * 2}],
+                ];
+            },
+        };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                    '</group>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                            '<field name="int_field"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    var self = this;
+                    var my_args = arguments;
+                    var my_super = this._super;
+                    return def.then(() => {
+                        return my_super.apply(self, my_args)
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            archs: {
+                'partner,false,form': '<form><group><field name="display_name"/><field name="int_field"/></group></form>'
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+        // Trigger the onchange
+        await testUtils.fields.editInput(form.$('input[name=int_field]'), '2');
+
+        // Open first record in one2many
+        await testUtils.dom.click(form.$('.o_data_row:first'));
+
+        assert.containsNone(document.body, '.modal');
+
+        def.resolve();
+        await testUtils.nextTick();
+
+        assert.containsOnce(document.body, '.modal');
+        assert.strictEqual($('.modal').find('input[name=int_field]').val(), '2');
+
+        form.destroy();
+    });
+
     QUnit.test('update many2many value in one2many after onchange', async function (assert) {
         assert.expect(2);
 
