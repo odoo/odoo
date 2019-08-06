@@ -263,6 +263,71 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEquals(avail_qty_finished, 1)
 
     def test_flow_4(self):
+        """ Tick "Manufacture" and "MTO" on the components and trigger the
+        creation of the subcontracting manufacturing order through a receipt
+        picking. Checks that the delivery to the subcontractor is not created
+        at the receipt creation. Then run the scheduler and check that
+        the delivery and MO exist.
+        """
+        # Tick "manufacture" and MTO on self.comp2
+        mto_route = self.env['stock.location.route'].search([('name', '=', 'Replenish on Order (MTO)')])
+        manufacture_route = self.env['stock.location.route'].search([('name', '=', 'Manufacture')])
+        self.comp2.write({'route_ids': [(4, manufacture_route.id, None)]})
+        self.comp2.write({'route_ids': [(4, mto_route.id, None)]})
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.comp2
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint_form.product_max_qty = 10.0
+        orderpoint_form.location_id = self.env.company.subcontracting_location_id
+        orderpoint_form.save()
+
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 1
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        warehouse = picking_receipt.picking_type_id.warehouse_id
+
+        # Pickings should directly be created
+        mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
+        self.assertEquals(mo.state, 'to_close')
+
+        picking_delivery = mo.picking_ids
+        self.assertFalse(picking_delivery)
+
+        picking_delivery = self.env['stock.picking'].search([('origin', 'ilike', '%' + picking_receipt.name + '%')])
+        self.assertFalse(picking_delivery)
+
+        move = self.env['stock.move'].search([
+            ('product_id', '=', self.comp2.id),
+            ('location_id', '=', warehouse.lot_stock_id.id),
+            ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)
+        ])
+        self.assertFalse(move)
+
+        self.env['procurement.group'].run_scheduler(company_id=self.env.company.id)
+
+        move = self.env['stock.move'].search([
+            ('product_id', '=', self.comp2.id),
+            ('location_id', '=', warehouse.lot_stock_id.id),
+            ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)
+        ])
+        self.assertTrue(move)
+        picking_delivery = move.picking_id
+        self.assertTrue(picking_delivery)
+        self.assertEqual(move.product_uom_qty, 11.0)
+
+        # As well as a manufacturing order for `self.comp2`
+        comp2mo = self.env['mrp.production'].search([('bom_id', '=', self.comp2_bom.id)])
+        self.assertEqual(len(comp2mo), 1)
+
+    def test_flow_5(self):
         """ Check that the correct BoM is chosen accordingly to the partner
         """
         # We create a second partner of type subcontractor
@@ -322,7 +387,7 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEquals(mo_pick1.bom_id, self.bom)
         self.assertEquals(mo_pick2.bom_id, bom2)
 
-    def test_flow_5(self):
+    def test_flow_6(self):
         """ Extra quantity on the move.
         """
         # We create a second partner of type subcontractor
@@ -379,7 +444,7 @@ class TestSubcontractingFlows(SavepointCase):
         self.assertEqual(sum(move_finished.mapped('product_uom_qty')), 3.0)
         self.assertEqual(sum(move_finished.mapped('quantity_done')), 3.0)
 
-    def test_flow_6(self):
+    def test_flow_7(self):
         """ Process a subcontracting receipt with tracked component and
         finished product. Simulate the regiter components button.
         Once the components are registered, try to do a correction on exisiting
