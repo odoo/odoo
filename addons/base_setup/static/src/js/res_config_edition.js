@@ -14,8 +14,11 @@ odoo.define('base_setup.ResConfigEdition', function (require) {
         init: function () {
             this._super.apply(this, arguments);
             this.server_version = session.server_version;
-        },
-   });
 
-   widget_registry.add('res_config_edition', ResConfigEdition);
+        },
+    });
+
+    widget_registry.add('res_config_edition', ResConfigEdition);
+
+    return ResConfigEdition;
 });
