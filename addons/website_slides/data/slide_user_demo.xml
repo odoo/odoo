@@ -191,6 +191,9 @@
         <field name="rating">6</field>
         <field name="feedback">Interesting. Could be great to include more examples.</field>
         <field name="message_id" ref="website_slides.message_channel_1_portal"/>
+        <field name="publisher_comment">Thanks for the feedback! We just updated first lessons to better include newcomers.</field>
+        <field name="publisher_id" ref="base.partner_admin"/>
+        <field name="publisher_datetime" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
     </record>
 
     <function model="slide.channel" name="message_subscribe"

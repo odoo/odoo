@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <template id="message_thread" inherit_id="portal.message_thread">
-        <xpath expr="//div[@id='discussion']" position="attributes">
-            <attribute name="t-att-data-display_rating">display_rating or False</attribute>
-        </xpath>
-    </template>
-
     <!--
         Display static star widget, and open rating composer on click
         This template provide the container of the Popup Rating Composer. The rest is done in js.
@@ -34,5 +27,4 @@
             t-att-data-disable_composer="disable_composer">
         </div>
     </template>
-
 </odoo>
