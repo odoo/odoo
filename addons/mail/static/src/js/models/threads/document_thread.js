@@ -97,7 +97,6 @@ var DocumentThread = Thread.extend({
     fetchMessages: function (options) {
         var self = this;
         return this._fetchMessages(options).then(function () {
-            self.call('mail_service', 'markMessagesAsRead', self._messageIDs);
             return self._messages;
         });
     },
