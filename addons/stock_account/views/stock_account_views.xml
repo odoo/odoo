@@ -91,7 +91,7 @@
             <field name="priority" eval="17"/>
             <field name="arch" type="xml">
                 <search string="Inventory Valuation">
-                    <field name="name" string="Product"/>
+                    <field name="name" string="Product" filter_domain="['|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
                     <field name="categ_id" />
                     <field name="product_tmpl_id" />
                     <field name="attribute_value_ids" />
