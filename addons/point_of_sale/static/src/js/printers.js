@@ -33,10 +33,19 @@ var PrinterMixin = {
     },
 
     /**
+     * Generate a jpeg image from a canvas
+     * @param {DOMElement} canvas 
+     */
+    process_canvas: function (canvas) {
+        return canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,','');
+    },
+
+    /**
      * Renders the html as an image to print it
      * @param {String} receipt: The receipt to be printed, in HTML
      */
-    htmlToImg: function (receipt) {;
+    htmlToImg: function (receipt) {
+        var self = this;
         $('.pos-receipts').html(receipt);
         $('.pos-receipt').addClass('pos-receipt-print');
         var promise = new Promise(function (resolve, reject) {
@@ -52,7 +61,7 @@ var PrinterMixin = {
                 }
             }).then(function (canvas) {
                 $('.pos-receipts').empty();
-                resolve(canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,',''));
+                resolve(self.process_canvas(canvas));
             });
         });
         return promise;
@@ -113,8 +122,85 @@ var Printer = core.Class.extend(PrinterMixin, {
     },
 });
 
+var StarPrinter = core.Class.extend(PrinterMixin, {
+    init: function (url, pos) {
+        PrinterMixin.init.call(this, arguments);
+        this.pos = pos;
+        this.builder = new StarWebPrintBuilder();
+        this.trader = new StarWebPrintTrader({url: url + "/StarWebPRNT/SendMessage"});
+        this.trader.onError = this._onWebPRNTError.bind(this);
+        this.trader.onReceive = this._onWebPRNTReceive.bind(this);
+    },
+
+    /**
+     * Create the print request for webPRNT from a canvas
+     * 
+     * @override
+     */
+    process_canvas: function (canvas) {
+        var request = this.builder.createAlignmentElement({position:'center'});
+        request += this.builder.createBitImageElement({context:canvas.getContext('2d'), x:0, y:0, width:canvas.width, height:canvas.height});
+        request += this.builder.createCutPaperElement({});
+        return request;
+    },
+
+    /**
+     * @override
+     */
+    open_cashbox: function () {
+        var request = this.builder.createPeripheralElement({channel:1, on:200, off:200});
+        return this.trader.sendMessage({request:request});
+    },
+
+    /**
+     * @override
+     */
+    send_printing_job: function (request) {
+        this.request = request;
+        return this.trader.sendMessage({request:request});
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Not applicable to Star webPRNT
+     * @override
+     */
+    _onIoTActionFail: function () {},
+    _onIoTActionResult: function () {},
+
+    /**
+     * Process the response from webPRNT
+     */
+    _onWebPRNTReceive: function (response) {
+        if (response.traderSuccess === 'false'){
+            if (response.traderCode === '2001') { // Printer was busy, retry
+                this.send_printing_job(this.request);
+            } else {
+                this.pos.gui.show_popup('error',{
+                    'title': _t('An error occured while printing'),
+                    'body': response.responseText,
+                });
+            }
+        }
+    },
+
+    /**
+     * Process an error from webPRNT
+     */
+    _onWebPRNTError: function (error) {
+        this.pos.gui.show_popup('error',{
+            'title': _t('Connection to the printer failed'),
+            'body':  _t('Please check if the printer is still connected and that the specified IP address is correct.'),
+        });
+    },
+});
+
 return {
     PrinterMixin: PrinterMixin,
     Printer: Printer,
+    StarPrinter: StarPrinter,
 }
 });

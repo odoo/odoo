@@ -169,7 +169,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         var self = this;
         this.connection = new Session(undefined,url, { use_cors: true});
         this.host = url;
-        if (this.pos.config.iface_print_via_proxy) {
+        if (this.pos.config.iface_print_via_proxy && !this.pos.config.star_printer_ip) {
             this.connect_to_printer();
         }
         this.set_connection_status('connecting',{});
@@ -205,7 +205,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     autoconnect: function (options) {
         var self = this;
         this.set_connection_status('connecting',{});
-        if (this.pos.config.iface_print_via_proxy) {
+        if (this.pos.config.iface_print_via_proxy && !this.pos.config.star_printer_ip) {
             this.connect_to_printer();
         }
         var found_url = new Promise(function () {});

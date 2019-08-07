@@ -4,7 +4,7 @@ odoo.define('pos_restaurant.multiprint', function (require) {
 var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
 var core = require('web.core');
-var Printer = require('point_of_sale.Printer').Printer;
+var Printer = require('point_of_sale.Printer');
 
 var QWeb = core.qweb;
 
@@ -17,13 +17,13 @@ models.PosModel = models.PosModel.extend({
         if(url.indexOf(':', url.indexOf('//') + 2) < 0 && window.location.protocol !== 'https:') {
             url = url + ':8069';
         }
-        return new Printer(url, this);
+        return new Printer.Printer(url, this);
     },
 });
 
 models.load_models({
     model: 'restaurant.printer',
-    fields: ['name','proxy_ip','product_categories_ids'],
+    fields: ['name', 'printer_type', 'proxy_ip', 'star_printer_ip', 'product_categories_ids'],
     domain: null,
     loaded: function(self,printers){
         var active_printers = {};
@@ -37,7 +37,16 @@ models.load_models({
 
         for(var i = 0; i < printers.length; i++){
             if(active_printers[printers[i].id]){
-                var printer = self.create_printer(printers[i]);
+                var printer;
+                if (printers[i].printer_type === "star_webprnt") {
+                    var url = printers[i].star_printer_ip;
+                    if(url.indexOf('//') < 0) {
+                        url = window.location.protocol + '//' + url;
+                    }
+                    printer = new Printer.StarPrinter(url , posmodel);
+                } else {
+                    printer = self.create_printer(printers[i]);
+                }
                 printer.config = printers[i];
                 self.printers.push(printer);
 

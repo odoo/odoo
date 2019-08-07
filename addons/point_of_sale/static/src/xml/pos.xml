@@ -712,7 +712,7 @@
                                 <i class='fa fa-heart' /> Tip
                             </div>
                         </t>
-                        <t t-if='widget.pos.config.iface_cashdrawer'>
+                        <t t-if='widget.pos.proxy.printer &amp;&amp; (widget.pos.config.iface_cashdrawer || widget.pos.config.star_printer_cashdrawer)'>
                             <div class='button js_cashdrawer'>
                                 <i class='fa fa-archive' /> Open Cashbox
                             </div>

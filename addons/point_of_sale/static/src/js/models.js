@@ -3,6 +3,7 @@ odoo.define('point_of_sale.models', function (require) {
 
 var ajax = require('web.ajax');
 var BarcodeParser = require('barcodes.BarcodeParser');
+var StarPrinter = require('point_of_sale.Printer').StarPrinter;
 var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
 var concurrency = require('web.concurrency');
@@ -97,6 +98,16 @@ exports.PosModel = Backbone.Model.extend({
     after_load_server_data: function(){
         this.load_orders();
         this.set_start_order();
+
+        // Use a receipt printer not connected to an IoT Box
+        if (this.config.other_devices && this.config.star_printer_ip) {
+            url = this.config.star_printer_ip;
+            if(url.indexOf('//') < 0) {
+                url = window.location.protocol + "//" + url;
+            }
+            this.proxy.printer = new StarPrinter(url , this);
+        }
+
         if(this.config.use_proxy){
             if (this.config.iface_customer_facing_display) {
                 this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);

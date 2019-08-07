@@ -201,6 +201,9 @@ class PosConfig(models.Model):
              "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
              "the closing of his session saying that he needs to contact his manager.")
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods())
+    other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
+    star_printer_ip = fields.Char(string='Star Printer IP', help="Local IP address of a Star receipt printer.")
+    star_printer_cashdrawer = fields.Boolean(help="Automatically open the cashdrawer.")
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
