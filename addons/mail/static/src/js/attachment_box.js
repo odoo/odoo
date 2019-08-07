@@ -1,6 +1,7 @@
 odoo.define('mail.AttachmentBox', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
@@ -17,6 +18,8 @@ var AttachmentBox = Widget.extend({
         "click .o_attachment_delete_cross": "_onDeleteAttachment",
         "click .o_upload_attachments_button": "_onUploadAttachments",
         "change .o_chatter_attachment_form .o_form_binary_form": "_onAddAttachment",
+        'dragover .o_attachments_file_drop_zone': '_onFileDragover',
+        'drop .o_attachments_file_drop_zone': '_onFileDrop',
     },
     /**
      * @override
@@ -63,6 +66,68 @@ var AttachmentBox = Widget.extend({
     update: function (record) {
         this.currentResID = record.res_id;
         this.currentResModel = record.model;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Calls controller to upload file, separate method is created
+     * to use it in tests to patch it.
+     *
+     * @param {string} controllerUrl
+     * @param {FormData} formData
+     */
+    _callUploadAttachment: function (controllerUrl, formData) {
+        return $.ajax({
+            url: controllerUrl,
+            type: "POST",
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: (result) => {
+                var $el = $(result);
+                $.globalEval($el.contents().text());
+            }
+        });
+    },
+    /**
+     * Making sure that dragging content is external files.
+     * Ignoring other content draging like text.
+     *
+     * @private
+     * @param {DataTransfer} dataTransfer
+     * @returns {boolean}
+     */
+    _isDragSourceExternalFile: function (dataTransfer) {
+        var DragDataType = dataTransfer.types;
+        if (DragDataType.constructor === DOMStringList) {
+            return DragDataType.contains('Files');
+        }
+        if (DragDataType.constructor === Array) {
+            return DragDataType.indexOf('Files') !== -1;
+        }
+        return false;
+    },
+    /**
+     * Upload attachment with drag & drop feature.
+     *
+     * @private
+     * @param {Array<File>} params.files
+     */
+    _processAttachmentChange: function (files) {
+        var self = this;
+        var $form = this.$('form.o_form_binary_form');
+        var formData = new FormData();
+        $form.find("input").each((index, input) => {
+            if (input.name != "ufile") {
+                formData.append(input.name, input.value);
+            }
+        });
+        _.each(files, (file) => formData.append("ufile", file, file.name));
+        self._callUploadAttachment($form.attr("action"), formData);
     },
 
     //--------------------------------------------------------------------------
@@ -129,6 +194,30 @@ var AttachmentBox = Widget.extend({
      */
     _onUploaded: function() {
         this.trigger_up('reload_attachment_box');
+    },
+    /**
+     * Setting drop Effect to copy so when mouse pointer on dropzone
+     * cursor icon changed to copy ('+')
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onFileDragover: function (ev) {
+        ev.originalEvent.dataTransfer.dropEffect = "copy";
+    },
+    /**
+     * Called when user drop selected files on drop area
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onFileDrop: function (ev) {
+        ev.preventDefault();
+        $(".o_attachments_file_drop_zone").addClass("d-none");
+        if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {
+            var files = ev.originalEvent.dataTransfer.files;
+            this._processAttachmentChange(files);
+        }
     },
 });
 
