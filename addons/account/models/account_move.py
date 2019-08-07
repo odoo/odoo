@@ -222,8 +222,8 @@ class AccountMove(models.Model):
         string='Vendor Bill',
         help="Auto-complete from a past bill.")
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
-    invoice_vendor_display_name = fields.Char(compute='_compute_invoice_vendor_display_info', store=True)
-    invoice_vendor_icon = fields.Char(compute='_compute_invoice_vendor_display_info', store=False)
+    invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
+    invoice_partner_icon = fields.Char(compute='_compute_invoice_partner_display_info', store=False)
 
     # ==== Cash rounding fields ====
     invoice_cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
@@ -241,7 +241,7 @@ class AccountMove(models.Model):
     invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain',
         help="Technical field used to have a dynamic domain on journal / taxes in the form view.")
     bank_partner_id = fields.Many2one('res.partner', help='Technical field to get the domain on the bank', compute='_compute_bank_partner_id')
-    invoice_has_matching_supsense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
+    invoice_has_matching_suspense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
         groups='account.group_account_invoice',
         help="Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account.")
     # Technical field to hide Reconciled Entries stat button
@@ -977,7 +977,7 @@ class AccountMove(models.Model):
 
             move.write({'line_ids': to_write})
 
-    def _get_domain_matching_supsense_moves(self):
+    def _get_domain_matching_suspense_moves(self):
         self.ensure_one()
         domain = self.env['account.move.line']._get_suspense_moves_domain()
         domain += ['|', ('partner_id', '=?', self.partner_id.id), ('partner_id', '=', False)]
@@ -991,32 +991,32 @@ class AccountMove(models.Model):
         for r in self:
             res = False
             if r.state == 'posted' and r.is_invoice() and r.invoice_payment_state == 'not_paid':
-                domain = r._get_domain_matching_supsense_moves()
+                domain = r._get_domain_matching_suspense_moves()
                 #there are more than one but less than 5 suspense moves matching the residual amount
                 if (0 < self.env['account.move.line'].search_count(domain) < 5):
                     domain2 = [
                         ('invoice_payment_state', '=', 'not_paid'),
-                        ('state', '=', 'open'),
+                        ('state', '=', 'posted'),
                         ('amount_residual', '=', r.amount_residual),
                         ('type', '=', r.type)]
                     #there are less than 5 other open invoices of the same type with the same residual
                     if self.env['account.move'].search_count(domain2) < 5:
                         res = True
-            r.invoice_has_matching_supsense_amount = res
+            r.invoice_has_matching_suspense_amount = res
 
     @api.depends('partner_id', 'invoice_source_email')
-    def _compute_invoice_vendor_display_info(self):
+    def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.name
             move.invoice_icon = ''
             if not vendor_display_name:
                 if move.invoice_source_email:
                     vendor_display_name = _('From: ') + move.invoice_source_email
-                    move.invoice_vendor_icon = '@'
+                    move.invoice_partner_icon = '@'
                 else:
                     vendor_display_name = _('Created by: %s') % move.sudo().create_uid.name
-                    move.invoice_vendor_icon = '#'
-            move.invoice_vendor_display_name = vendor_display_name
+                    move.invoice_partner_icon = '#'
+            move.invoice_partner_display_name = vendor_display_name
 
     @api.depends('state', 'journal_id', 'invoice_date')
     def _compute_invoice_sequence_number_next(self):
@@ -1976,7 +1976,7 @@ class AccountMove(models.Model):
 
     def action_open_matching_suspense_moves(self):
         self.ensure_one()
-        domain = self._get_domain_matching_supsense_moves()
+        domain = self._get_domain_matching_suspense_moves()
         ids = self.env['account.move.line'].search(domain).mapped('statement_line_id').ids
         action_context = {'show_mode_selector': False, 'company_ids': self.mapped('company_id').ids}
         action_context.update({'suspense_moves_mode': True})
