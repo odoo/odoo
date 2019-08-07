@@ -391,7 +391,8 @@ class HolidaysRequest(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self._sync_employee_details()
-        self.holiday_status_id = False
+        if self.employee_id.user_id != self.env.user:
+            self.holiday_status_id = False
 
     @api.onchange('date_from', 'date_to', 'employee_id')
     def _onchange_leave_dates(self):
@@ -587,9 +588,9 @@ class HolidaysRequest(models.Model):
         if not self._context.get('leave_fast_create'):
             # FIXME remove these, as they should not be needed
             if employee_id:
-                holiday._sync_employee_details()
+                holiday.with_user(SUPERUSER_ID)._sync_employee_details()
             if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
-                holiday._onchange_leave_dates()
+                holiday.with_user(SUPERUSER_ID)._onchange_leave_dates()
 
             # Everything that is done here must be done using sudo because we might
             # have different create and write rights
@@ -630,6 +631,11 @@ class HolidaysRequest(models.Model):
         # Allow an employee to always write his own out of office message
         if len(self) == 1 and values.keys() == {'out_of_office_message'} and self.employee_id.user_id == self.env.user:
             return super(HolidaysRequest, self.sudo()).write(values)
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+
+        if not is_officer:
+            if any(hol.date_from.date() < fields.Date.today() for hol in self):
+                raise UserError(_('You cannot update a leave that already begun'))
 
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create') and values.get('state'):
@@ -647,8 +653,14 @@ class HolidaysRequest(models.Model):
         return result
 
     def unlink(self):
-        for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
-            raise UserError(_('You cannot delete a time off which is in %s state.') % (holiday.state,))
+        error_message = _('You cannot delete a time off which is in %s state')
+
+        if not self.user_has_groups('hr_holidays.groups_hr_user'):
+            if any(hol.state != 'draft' for hol in self):
+                raise UserError(error_message % self[:1].state)
+        else:
+            for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
+                raise UserError(_('You cannot delete a time off which is in %s state.') % (holiday.state,))
         return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
@@ -834,7 +846,7 @@ class HolidaysRequest(models.Model):
             # Post a second message, more verbose than the tracking message
             if holiday.employee_id.user_id:
                 holiday.message_post(
-                    body=_('Your %s planned on %s has been refused' % (holiday.holiday_status_id.display_name, holiday.date_from)),
+                    body=_('Your %s planned on %s has been refused') % (holiday.holiday_status_id.display_name, holiday.date_from),
                     partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
         self._remove_resource_leave()
@@ -855,6 +867,10 @@ class HolidaysRequest(models.Model):
 
             if not is_manager and state != 'confirm':
                 if state == 'draft':
+                    if holiday.state == 'refuse':
+                        raise UserError(_('Only a Leave Manager can reset a refused leave.'))
+                    if holiday.date_from.date() <= fields.Date.today():
+                        raise UserError(_('Only a Leave Manager can reset a started leave.'))
                     if holiday.employee_id != current_employee:
                         raise UserError(_('Only a Leave Manager can reset other people leaves.'))
                 else:
