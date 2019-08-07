@@ -35,16 +35,12 @@ _logger = logging.getLogger(__name__)
 # The following attributes are used, and reflected on wrapping methods:
 #  - method._constrains: set by @constrains, specifies constraint dependencies
 #  - method._depends: set by @depends, specifies compute dependencies
-#  - method._returns: set by @returns, specifies return model
 #  - method._onchange: set by @onchange, specifies onchange fields
 #  - method.clear_cache: set by @ormcache, used to clear the cache
 #
 # On wrapping method only:
 #  - method._api: decorator function, used for re-applying decorator
 #
-
-INHERITED_ATTRS = ('_returns',)
-
 
 class Params(object):
     def __init__(self, args, kwargs):
@@ -72,9 +68,6 @@ class Meta(type):
 
         for key, value in list(attrs.items()):
             if not key.startswith('__') and callable(value):
-                # make the method inherit from decorators
-                value = propagate(getattr(parent, key, None), value)
-
                 if (getattr(value, '_api', None) or '').startswith('cr'):
                     _logger.warning("Deprecated method %s.%s in module %s", name, key, attrs.get('__module__'))
 
@@ -86,16 +79,6 @@ class Meta(type):
 def attrsetter(attr, value):
     """ Return a function that sets ``attr`` on its argument and returns it. """
     return lambda method: setattr(method, attr, value) or method
-
-def propagate(method1, method2):
-    """ Propagate decorators from ``method1`` to ``method2``, and return the
-        resulting method.
-    """
-    if method1:
-        for attr in INHERITED_ATTRS:
-            if hasattr(method1, attr) and not hasattr(method2, attr):
-                setattr(method2, attr, getattr(method1, attr))
-    return method2
 
 
 def constrains(*args):

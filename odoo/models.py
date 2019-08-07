@@ -4930,10 +4930,7 @@ Record ids: %(records)s
         """
         origin = getattr(cls, name)
         method.origin = origin
-        # propagate decorators from origin to method, and apply api decorator
-        wrapped = api.propagate(origin, method)
-        wrapped.origin = origin
-        setattr(cls, name, wrapped)
+        setattr(cls, name, method)
 
     @classmethod
     def _revert_method(cls, name):

@@ -616,7 +616,7 @@ class JsonRequest(WebRequest):
             response['result'] = result
 
         mime = 'application/json'
-        body = json.dumps(response, default=date_utils.json_default)
+        body = json.dumps(response)
 
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,

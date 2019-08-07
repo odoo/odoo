@@ -21,7 +21,7 @@ TIMEOUT = 50
 # Bus
 #----------------------------------------------------------
 def json_dump(v):
-    return json.dumps(v, separators=(',', ':'), default=date_utils.json_default)
+    return json.dumps(v, separators=(',', ':'))
 
 def hashable(key):
     if isinstance(key, list):

@@ -1316,7 +1316,7 @@ class AccountMove(models.Model):
                     'outstanding': False,
                     'content': reconciled_vals,
                 }
-                move.invoice_payments_widget = json.dumps(info, default=date_utils.json_default)
+                move.invoice_payments_widget = json.dumps(info)
             else:
                 move.invoice_payments_widget = json.dumps(False)
 
