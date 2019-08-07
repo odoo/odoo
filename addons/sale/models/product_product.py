@@ -88,6 +88,7 @@ class ProductAttributeCustomValue(models.Model):
     _name = "product.attribute.custom.value"
     _rec_name = 'custom_value'
     _description = 'Product Attribute Custom Value'
+    _order = 'attribute_value_id, id'
 
     attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sale order line')
