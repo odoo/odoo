@@ -108,6 +108,7 @@ var ActivityMenu = Widget.extend({
      */
     _onActivityActionClick: function (ev) {
         ev.stopPropagation();
+        this.$el.dropdown('toggle');
         var targetAction = $(ev.currentTarget);
         var actionXmlid = targetAction.data('action_xmlid');
         if (actionXmlid) {
