@@ -609,7 +609,7 @@ class AccountJournal(models.Model):
         compute='_compute_refund_seq_number_next',
         inverse='_inverse_refund_seq_number_next')
 
-    invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Partner'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
+    invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
     invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default='odoo', help="You can choose different models for each type of reference. The default one is the Odoo reference.")
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
@@ -640,7 +640,7 @@ class AccountJournal(models.Model):
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
-    post_at_bank_rec = fields.Boolean(string="Post At Bank Reconciliation", help="Whether or not the payments made in this journal should be generated in draft state, so that the related journal entries are only posted when performing bank reconciliation.")
+    post_at = fields.Selection([('pay_val', 'Payment Validation'), ('bank_rec', 'Bank Reconciliation')], string="Post At", default='pay_val')
 
     # alias configuration for journals
     alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
@@ -831,8 +831,8 @@ class AccountJournal(models.Model):
                     'refund_sequence_number_next': vals.get('refund_sequence_number_next', journal.refund_sequence_number_next),
                 }
                 journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
-        # Changing the 'post_at_bank_rec' option will post the draft payment moves and change the related invoices' state.
-        if 'post_at_bank_rec' in vals and not vals['post_at_bank_rec']:
+        # Changing the 'post_at' option will post the draft payment moves and change the related invoices' state.
+        if 'post_at' in vals and vals['post_at'] != 'bank_rec':
             draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
             pending_payments = draft_moves.mapped('line_ids.payment_id')
             pending_payments.mapped('move_line_ids.move_id').post()
@@ -1539,7 +1539,7 @@ class AccountTaxRepartitionLine(models.Model):
     factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this repartition line")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account", comodel_name='account.account', help="Account on which to post the tax amount")
-    tag_ids = fields.Many2many(string="Tax Grid", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True)
+    tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True)
     invoice_tax_id = fields.Many2one(comodel_name='account.tax', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
     refund_tax_id = fields.Many2one(comodel_name='account.tax', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')

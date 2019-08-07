@@ -127,7 +127,7 @@
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
                         <button name="action_draft" class="oe_highlight" states="cancelled" string="Set To Draft" type="object"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -136,9 +136,11 @@
                                     groups="account.group_account_user"
                                     attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
-                            <button class="oe_stat_button" name="button_invoices"
-                                    string="Invoices" type="object"
-                                    attrs="{'invisible':[('has_invoices','=',False)]}" icon="fa-bars"/>
+                            <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars">
+                                <field name="reconciled_invoices_count"/>
+                                <span attrs="{'invisible':[('reconciled_invoices_count','&gt;',1)]}">Invoice</span>
+                                <span attrs="{'invisible':[('reconciled_invoices_count','&lt;=',1)]}">Invoices</span>
+                            </button>
                             <button class="oe_stat_button" name="open_payment_matching_screen"
                                     string="Payment Matching" type="object"
                                     groups="account.group_account_user"
@@ -156,17 +158,10 @@
                                 <field name="payment_type" widget="radio"/>
                                 <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
                                 <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True}"/>
-                            </group>
-                            <group name="right_column">
-                                <field name="communication"/>
-                                <field name="payment_date"/>
+                                <field name="company_id" groups="base.group_multi_company" required="1"/>
                             </group>
                             <group>
-                                <label for="amount"/>
-                                <div name="amount_div" class="o_row">
-                                    <field name="amount"/>
-                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
-                                </div>
+                                <field name="amount" invisible="1"/>
                                 <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0), ('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
@@ -176,10 +171,16 @@
                                 <field name="require_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
                             </group>
-                            <group>
-                                <field name="company_id" groups="base.group_multi_company" required="1"/>
+                            <group name="right_column">
+                                <label for="amount"/>
+                                <div name="amount_div" class="o_row">
+                                    <field name="amount"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                                </div>
+                                <field name="payment_date"/>
+                                <field name="communication"/>
                             </group>
-                            <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
+                            <group name="payment_difference" attrs="{'invisible': [('payment_difference', '=', 0.0)]}" groups="account.group_account_user">
                                 <label for="payment_difference"/>
                                 <div>
                                     <field name="payment_difference"/>
@@ -304,6 +305,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//header" position='replace'></xpath>
+                <xpath expr="//div[@name='button_box']" position='replace'></xpath>
                 <xpath expr="//sheet" position='after'>
                     <footer>
                         <field name="state" invisible="1"/>

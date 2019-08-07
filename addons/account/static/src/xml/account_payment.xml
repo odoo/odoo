@@ -22,7 +22,7 @@
                     </t>
                     <t t-if="!outstanding">
                         <td>
-                            <a role="button" tabindex="0" class="js_payment_info fa fa-info-circle" t-att-index="line.index" style="margin-right:5px;" aria-label="Info" title="Info" data-toggle="tooltip"></a>
+                           <a role="button" tabindex="0" class="js_payment_info fa fa-info-circle" t-att-index="line.index" style="margin-right:5px;" aria-label="Info" title="Payment Info" data-toggle="tooltip"></a>
                         </td>
                         <td>
                             <i class="o_field_widget text-right o_payment_label">Paid on <t t-esc="line.date"></t></i>
@@ -49,24 +49,8 @@
         <div>
             <table>
                 <tr>
-                    <td><strong>Name: </strong></td>
-                    <td style="text-align:right;"><t t-esc="name"/></td>
-                </tr>
-                <tr>
-                    <td><strong>Date: </strong></td>
-                    <td style="text-align:right;"><t t-esc="date"/></td>
-                </tr>
-                <tr>
-                    <td><strong>Payment Method: </strong></td>
-                    <td style="text-align:right;"><t t-esc="journal_name"/></td>
-                </tr>
-                <tr>
-                    <td><strong>Memo: </strong></td>
-                    <td style="text-align:right;"><t t-esc="ref"/></td>
-                </tr>
-                <tr>
                     <td><strong>Amount: </strong></td>
-                    <td style="text-align:right;">
+                    <td>
                         <t t-if="position === 'before'">
                             <t t-esc="currency"/>
                         </t>
@@ -75,6 +59,18 @@
                             <t t-esc="currency"/>
                         </t>
                     </td>
+                </tr>
+                 <tr>
+                    <td><strong>Memo: </strong></td>
+                    <td><t t-esc="ref"/></td>
+                </tr>
+                <tr>
+                    <td><strong>Date: </strong></td>
+                    <td><t t-esc="date"/></td>
+                </tr>
+                <tr>
+                    <td><strong>Payment Journal: </strong></td>
+                    <td><t t-esc="journal_name"/><span t-if="payment_method_name"> (<t t-esc="payment_method_name"/>)</span></td>
                 </tr>
             </table>
         </div>

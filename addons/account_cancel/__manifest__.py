@@ -22,7 +22,10 @@ It also operates on invoices, bank statements, payments ...
 Be careful with this module as it has audit implications. Cancelling accounting entries is not authorized in all countries.
 """,
     'depends': ['account'],
-    'data': ['views/account_views.xml'],
+    'data': [
+        'views/account_payment_view.xml',
+        'views/account_views.xml'
+    ],
     'demo': [],
     'installable': True,
     'auto_install': False,
