@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
+from itertools import chain
 
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged
@@ -23,6 +24,31 @@ class TestSelfAccessProfile(TestHrCommon):
         fields = view_infos['fields'].keys()
         james.read(fields)
 
+    def test_profile_view_fields(self):
+        """ A simple user should see all fields in profile view, even if they are protected by groups """
+        view = self.env.ref('hr.res_users_view_form_profile')
+
+        # For reference, check the view with user with every groups protecting user fields
+        all_groups_xml_ids = chain(*[
+            field.groups.split(',')
+            for field in self.env['res.users']._fields.values()
+            if field.groups
+        ])
+        all_groups = self.env['res.groups']
+        for xml_id in all_groups_xml_ids:
+            all_groups |= self.env.ref(xml_id.strip())
+        user_all_groups = new_test_user(self.env, groups='base.group_user', login='hel', name='God')
+        user_all_groups.write({'groups_id': [(4, group.id, False) for group in all_groups]})
+        view_infos = self.env['res.users'].with_user(user_all_groups).fields_view_get(view_id=view.id)
+        full_fields = view_infos['fields']
+
+        # Now check the view for a simple user
+        user = new_test_user(self.env, login='gro', name='Grouillot')
+        view_infos = self.env['res.users'].with_user(user).fields_view_get(view_id=view.id)
+        fields = view_infos['fields']
+
+        # Compare both
+        self.assertEqual(full_fields.keys(), fields.keys(), "View fields should not depend on user's groups")
 
 class TestSelfAccessRights(TestHrCommon):
 
