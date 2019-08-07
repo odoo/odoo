@@ -794,7 +794,7 @@ chrome.OrderSelectorWidget.include({
 var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
     after_load_server_data: function() {
-        _super_posmodel.after_load_server_data.call(this);
+        var res = _super_posmodel.after_load_server_data.call(this);
         if (this.config.iface_floorplan) {
 	    var self = this;
             this.table = null;
@@ -805,6 +805,7 @@ models.PosModel = models.PosModel.extend({
 	    $('.screen').not('.floor-screen').onscroll = 	function() {self.set_idle_timer()};    // scrolling with arrow keys
 	    $('.screen').not('.floor-screen').onkeypress = 	function() {self.set_idle_timer()};
         }
+        return res;
     },
 
     transfer_order_to_different_table: function () {
