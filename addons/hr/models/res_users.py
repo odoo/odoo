@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 
 
@@ -136,7 +136,7 @@ class User(models.Model):
         # avoid breaking `groups` mecanism on res.users form view.
         profile_view = self.env.ref("hr.res_users_view_form_profile")
         if profile_view and view_id == profile_view.id:
-            self = self.sudo()
+            self = self.with_user(SUPERUSER_ID)
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     def write(self, vals):
