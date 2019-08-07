@@ -827,7 +827,7 @@ var KeyboardPlugin = AbstractPlugin.extend({
         }
     },
     /**
-     * Remove the first unbreakable ancestor's next sibling if empty.
+     * Remove the first unbreakable ancestor's next sibling if not a block and empty.
      *
      * @private
      * @param {Node} node
@@ -843,7 +843,7 @@ var KeyboardPlugin = AbstractPlugin.extend({
         var isNextContainsOnlyInvisibleText = nextUnbreakable && _.all($(nextUnbreakable).contents(), function (n) {
             return dom.isText(n) && !self.context.invoke('HelperPlugin.isVisibleText', n);
         });
-        if (isNextEmpty || isNextContainsOnlyInvisibleText) {
+        if (!dom.isBlock(nextUnbreakable) && (isNextEmpty || isNextContainsOnlyInvisibleText)) {
             $(nextUnbreakable).remove();
         }
     },
