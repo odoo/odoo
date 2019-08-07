@@ -40,7 +40,7 @@ class Company(models.Model):
                     'name': _('Time Off'),
                     'project_id': company.leave_timesheet_project_id.id,
                     'active': False,
-                    'company_id': False,
+                    'company_id': company.id,
                 })
                 company.write({
                     'leave_timesheet_task_id': task.id,
