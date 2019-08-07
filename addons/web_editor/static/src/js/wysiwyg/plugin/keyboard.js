@@ -16,8 +16,8 @@ var keycode = ({
     '46': 'DELETE',
 });
 
+var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 var iPhone = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
 
 var KeyboardPlugin = AbstractPlugin.extend({
     events: iPhone ?
@@ -1203,8 +1203,10 @@ var KeyboardPlugin = AbstractPlugin.extend({
      */
     _onKeyPress: function (e) {
         console.log(e.originalEvent);
-        e.preventDefault();
-        this.context.invoke('HelperPlugin.insertTextInline', e.key);
+        if (!isSafari || iPhone) {
+            e.preventDefault();
+            this.context.invoke('HelperPlugin.insertTextInline', e.key);
+        }
     },
     /**
      * Handle char input.
@@ -1213,6 +1215,9 @@ var KeyboardPlugin = AbstractPlugin.extend({
      * @param {jQueryEvent} e
      */
     _onTextInput: function (e) {
+        if (isSafari && !iPhone) {
+            return;
+        }
         e.originalEvent.preventDefault();
 
         var text = e.originalEvent.data;
