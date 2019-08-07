@@ -179,6 +179,11 @@ class MrpWorkorder(models.Model):
         for order in (self - late_orders):
             order.color = 2
 
+    @api.onchange('date_planned_start', 'duration_expected')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.duration_expected:
+            self.date_planned_finished = self.date_planned_start  + relativedelta(minutes=self.duration_expected)
+
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
         """ Update stock.move.lot records, according to the new qty currently
