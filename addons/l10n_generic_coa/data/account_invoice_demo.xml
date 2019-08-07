@@ -6,7 +6,7 @@
             <field name="type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="invoice_user_id" ref="base.user_demo"/>
-            <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
             <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'product_id': ref('product.consu_delivery_02'), 'price_unit': 642.0, 'quantity': 5}),
@@ -54,7 +54,7 @@
             <field name="type">in_invoice</field>
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="invoice_user_id" ref="base.user_demo"/>
-            <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
             <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'product_id': ref('product.product_delivery_01'), 'price_unit': 10.0, 'quantity': 1}),
