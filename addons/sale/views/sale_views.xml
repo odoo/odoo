@@ -1149,8 +1149,13 @@
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
+<<<<<<< 94a25d7f9c38a94e3b203d227502c37c3283637b
                     <xpath expr="//group[@name='sale_info_group']" position="inside">
                         <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+=======
+                    <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
+                        <field name="team_id"/>
+>>>>>>> [IMP] account: improve account views
                     </xpath>
                     <xpath expr="//group[@id='other_tab_group']" position="inside">
                         <group string="Marketing"

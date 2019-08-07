@@ -47,13 +47,14 @@ class account_payment(models.Model):
                                    as it can have been generated first, and reconciled later""")
     reconciled_invoice_ids = fields.Many2many('account.move', string='Reconciled Invoices', compute='_compute_reconciled_invoice_ids', help="Invoices whose journal items have been reconciled with these payments.")
     has_invoices = fields.Boolean(compute="_compute_reconciled_invoice_ids", help="Technical field used for usability purposes")
+    reconciled_invoices_count = fields.Integer(compute="_compute_reconciled_invoice_ids")
 
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
     move_reconciled = fields.Boolean(compute="_get_move_reconciled", readonly=True)
 
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Validated'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, readonly=True, states={'draft': [('readonly', False)]},
+    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
         "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
         "Check: Pay bill by check and print it from Odoo.\n"\
@@ -65,11 +66,11 @@ class account_payment(models.Model):
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], tracking=True, readonly=True, states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string='Partner', tracking=True, readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
-    amount = fields.Monetary(string='Payment Amount', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True)
+    amount = fields.Monetary(string='Amount', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
-    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
+    payment_date = fields.Date(string='Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
@@ -389,6 +390,7 @@ class account_payment(models.Model):
                                + record.move_line_ids.mapped('matched_credit_ids.credit_move_id.move_id')
             record.reconciled_invoice_ids = reconciled_moves.filtered(lambda move: move.is_invoice())
             record.has_invoices = bool(record.reconciled_invoice_ids)
+            record.reconciled_invoices_count = len(record.reconciled_invoice_ids)
 
     def action_register_payment(self):
         active_ids = self.env.context.get('active_ids')
@@ -671,7 +673,7 @@ class account_payment(models.Model):
                     raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
             moves = AccountMove.create(rec._prepare_payment_moves())
-            moves.filtered(lambda move: not move.journal_id.post_at_bank_rec).post()
+            moves.filtered(lambda move: move.journal_id.post_at != 'bank_rec').post()
 
             # Update the state / move before performing any reconciliation.
             rec.write({'state': 'posted', 'move_name': moves[0].name})

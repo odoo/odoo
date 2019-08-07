@@ -335,8 +335,13 @@
                                 </group>
                                 <group name="other_info">
                                     <field name="user_id"/>
+<<<<<<< 94a25d7f9c38a94e3b203d227502c37c3283637b
                                     <field name="invoice_status"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
+=======
+                                    <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
+                                    <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
+>>>>>>> [IMP] account: improve account views
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
                                 </group>
                             </group>

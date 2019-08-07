@@ -240,13 +240,24 @@
                             <group>
                                 <field name="active" invisible="1"/>
                                 <field name="type"/>
-                                <field name="journal_group_ids" widget="many2many_tags" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" options="{'no_create': True}"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
+                            <page name="bank_account" string="Bank Account" attrs="{'invisible': [('type', '!=', 'bank')]}">
+                                <group>
+                                    <group>
+                                        <field name="company_partner_id" invisible="1"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': company_partner_id, 'form_view_ref': 'account.view_company_partner_bank_form'}"/>
+                                        <field name="bank_id"/>
+                                    </group>
+                                    <group >
+                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_user"/>
+                                    </group>
+                                </group>
+                            </page>
                             <page name="journal_entries" string="Journal Entries">
                                 <group>
                                     <group>
@@ -275,37 +286,11 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="bank_account" string="Bank Account" attrs="{'invisible': [('type', '!=', 'bank')]}">
-                                <group>
-                                    <group>
-                                        <field name="company_partner_id" invisible="1"/>
-                                        <field name="bank_account_id" context="{'default_partner_id': company_partner_id, 'form_view_ref': 'account.view_company_partner_bank_form'}"/>
-                                        <field name="bank_id"/>
-                                    </group>
-                                    <group >
-                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_user"/>
-                                    </group>
-                                </group>
-                            </page>
                             <page name="advanced_settings" string="Advanced Settings">
                                 <group>
-                                    <group string="Control-Access" groups="base.group_no_one">
-                                        <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="type_control_ids" widget="many2many_tags"/>
-                                        <field name="account_control_ids" widget="many2many_tags"/>
-                                    </group>
-                                    <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
-                                        <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
-                                        <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
-                                    </group>
-                                    <group string="Invoice References" attrs="{'invisible': [('type', '!=', 'sale')]}">
+                                    <group string="Payment References" attrs="{'invisible': [('type', '!=', 'sale')]}">
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" attrs="{'invisible': [('invoice_reference_type', '=', 'none')]}"/>
-                                    </group>
-                                    <group string="Accounting App Options" attrs="{'invisible': [('type', 'not in', ['bank', 'cash', 'sale', 'purchase'])]}">
-                                        <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="post_at_bank_rec" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                     </group>
                                     <group name="group_alias" string="Email your Invoices/Bills" attrs="{'invisible': [('type', 'not in',  ('sale' ,'purchase'))]}">
                                         <label string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}" for="alias_id"/>
@@ -318,6 +303,20 @@
                                         <div class="content-group" attrs="{'invisible': [('alias_domain', '!=', False)]}">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button"><i class="fa fa-fw o_button_icon fa-arrow-right"/> Configure Email Servers</a>
                                         </div>
+                                    </group>
+                                    <group string="Posting" name="column_posting" groups="account.group_account_user,account.group_account_manager" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
+                                        <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="post_at" widget="radio" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                                    </group>
+                                    <group string="Control-Access" groups="account.group_account_manager">
+                                        <div class="text-muted" colspan="2">Keep empty for no control</div>
+                                        <field name="type_control_ids" widget="many2many_tags"/>
+                                        <field name="account_control_ids" widget="many2many_tags"/>
+                                    </group>
+                                    <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
+                                        <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
+                                        <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                                     </group>
                                 </group>
                             </page>
