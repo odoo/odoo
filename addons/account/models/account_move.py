@@ -83,7 +83,7 @@ class AccountMove(models.Model):
     ref = fields.Char(string='Reference', copy=False)
     narration = fields.Text(string='Internal Note')
     state = fields.Selection(selection=[
-            ('draft', 'Unposted'),
+            ('draft', 'Draft'),
             ('posted', 'Posted'),
             ('cancel', 'Cancelled')
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
@@ -104,6 +104,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         domain="[('company_id', '=', company_id)]",
         default=_get_default_journal)
+    user_id = fields.Many2one(related='invoice_user_id', string='User')
     company_id = fields.Many2one(string='Company', store=True, readonly=True,
         related='journal_id.company_id')
     company_currency_id = fields.Many2one(string='Company Currency', readonly=True,
@@ -175,18 +176,12 @@ class AccountMove(models.Model):
         ('not_paid', 'Not Paid'),
         ('in_payment', 'In Payment'),
         ('paid', 'Paid')],
-        string='Payment Status', store=True, readonly=True, copy=False, tracking=True,
+        string='Payment', store=True, readonly=True, copy=False, tracking=True,
         compute='_compute_amount')
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)]},
-        help="Keep empty to use the current date")
+        states={'draft': [('readonly', False)]})
     invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)]},
-        help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. The Payment terms may compute several due dates, for example 50% "
-             "now and 50% in one month, but if you want to force a due date, make sure that the payment "
-             "term is not set on the invoice. If you keep the Payment terms and the due date empty, it "
-             "means direct payment.")
+        states={'draft': [('readonly', False)]})
     invoice_payment_ref = fields.Char(string='Payment Reference', index=True, copy=False, readonly=True,
         states={'draft': [('readonly', False)]},
         help="The payment reference to set on journal items.")
@@ -195,11 +190,8 @@ class AccountMove(models.Model):
     invoice_origin = fields.Char(string='Origin', readonly=True, tracking=True,
         help="The document(s) that generated the invoice.")
     invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms',
-        readonly=True, states={'draft': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. If you keep the payment terms and the due date empty, it means direct payment. "
-             "The payment terms may compute several due dates, for example 50% now, 50% in one month.")
+        readonly=True, states={'draft': [('readonly', False)]})
     # /!\ invoice_line_ids is just a subset of line_ids.
     invoice_line_ids = fields.One2many('account.move.line', 'move_id', string='Invoice lines',
         copy=False, readonly=True,
@@ -890,7 +882,7 @@ class AccountMove(models.Model):
                     JOIN account_payment payment ON payment.id = rec_line.payment_id
                     JOIN account_journal journal ON journal.id = rec_line.journal_id
                     WHERE payment.state IN ('posted', 'sent')
-                    AND journal.post_at_bank_rec IS TRUE
+                    AND journal.post_at = 'bank_rec'
                     AND move.id IN %s
                 ''', [tuple(invoice_ids)]
             )
@@ -1161,6 +1153,7 @@ class AccountMove(models.Model):
                 'date': counterpart_line.date,
                 'payment_id': counterpart_line.id,
                 'account_payment_id': counterpart_line.payment_id.id,
+                'payment_method_name': counterpart_line.payment_id.payment_method_id.name if counterpart_line.journal_id.type == 'bank' else None,
                 'move_id': counterpart_line.move_id.id,
                 'ref': ref,
             })
@@ -1931,7 +1924,7 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        if self.mapped('line_ids.payment_id') and any(self.mapped('journal_id.post_at_bank_rec')):
+        if self.mapped('line_ids.payment_id') and any(post_at == 'bank_rec' for post_at in self.mapped('journal_id.post_at')):
             raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
         return self.post()
 
@@ -2163,7 +2156,7 @@ class AccountMoveLine(models.Model):
         currency_field='company_currency_id',
         compute='_compute_balance',
         help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
-    amount_currency = fields.Monetary(string='Balance in Currency', store=True, copy=True,
+    amount_currency = fields.Monetary(string='Amount in Currency', store=True, copy=True,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     price_subtotal = fields.Monetary(string='Subtotal', store=True, readonly=True,
         currency_field='always_set_currency_id')
@@ -2172,7 +2165,7 @@ class AccountMoveLine(models.Model):
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due date', index=True,
+    date_maturity = fields.Date(string='Due Date', index=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
