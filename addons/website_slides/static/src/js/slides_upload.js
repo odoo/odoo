@@ -423,6 +423,24 @@ var SlideUploadDialog = Dialog.extend({
                     self._fileReset();
                     self.set('can_submit_form', true);
                 };
+                /**
+                 * The following line fixes PDFJS 'Util' global variable.
+                 * This is (most likely) related to #32181 which lazy loads most assets.
+                 *
+                 * That caused an issue where the global 'Util' variable from PDFJS can be
+                 * (depending of which libraries load first) overridden by the global 'Util'
+                 * variable of bootstrap.
+                 * (See 'lib/bootstrap/js/util.js' and 'lib/pdfjs/src/shared/util.js')
+                 *
+                 * This commit ensures that the global 'Util' variable is set to the one of PDFJS
+                 * right before it's used.
+                 *
+                 * Eventually, we should update or get rid of one of the two libraries since they're
+                 * not compatible together, or make a wrapper that makes them compatible.
+                 * In the mean time, this small fix allows not refactoring all of this and can not
+                 * cause much harm.
+                 */
+                Util = PDFJS.Util;
                 PDFJS.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
                     pdf.getPage(1).then(function getFirstPage(page) {
                         var scale = 1;
