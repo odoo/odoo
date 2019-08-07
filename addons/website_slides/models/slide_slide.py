@@ -134,7 +134,6 @@ class Slide(models.Model):
         string='Type', required=True,
         default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
-    index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
@@ -353,8 +352,6 @@ class Slide(models.Model):
             # 'website_published' is handled by mixin
             values['date_published'] = False
 
-        if not values.get('index_content'):
-            values['index_content'] = values.get('description')
         if values.get('slide_type') == 'infographic' and not values.get('image_1920'):
             values['image_1920'] = values['datas']
         if values.get('is_category'):
@@ -756,11 +753,6 @@ class Slide(models.Model):
             values['slide_type'] = get_slide_type(values)
             if 'exportLinks' in google_values:
                 values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf')['values']
-                # Content indexing
-                if google_values['exportLinks'].get('text/plain'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/plain'], params)['values']
-                elif google_values['exportLinks'].get('text/csv'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/csv'], params)['values']
         elif google_values['mimeType'] == 'application/pdf':
             # TODO: Google Drive PDF document doesn't provide plain text transcript
             values['datas'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']
