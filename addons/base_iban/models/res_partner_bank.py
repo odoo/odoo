@@ -92,6 +92,12 @@ class ResPartnerBank(models.Model):
             if bank.acc_type == 'iban':
                 validate_iban(bank.acc_number)
 
+    def check_iban(self, iban=''):
+        try:
+            validate_iban(iban)
+            return True
+        except ValidationError:
+            return False
 
 # Map ISO 3166-1 -> IBAN template, as described here :
 # http://en.wikipedia.org/wiki/International_Bank_Account_Number#IBAN_formats_by_country
