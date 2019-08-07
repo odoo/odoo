@@ -377,36 +377,7 @@ var SelectCreateDialog = ViewDialog.extend({
         return view.getController(this).then(function (controller) {
             self.viewController = controller;
             // render the footer buttons
-            self.__buttons = [{
-                text: _t("Cancel"),
-                classes: 'btn-secondary o_form_button_cancel',
-                close: true,
-            }];
-            if (!self.options.no_create) {
-                self.__buttons.unshift({
-                    text: _t("Create"),
-                    classes: 'btn-primary',
-                    click: self.create_edit_record.bind(self)
-                });
-            }
-            if (!self.options.disable_multiple_selection) {
-                self.__buttons.unshift({
-                    text: _t("Select"),
-                    classes: 'btn-primary o_select_button',
-                    disabled: true,
-                    close: true,
-                    click: function () {
-                        var records = self.viewController.getSelectedRecords();
-                        var values = _.map(records, function (record) {
-                            return {
-                                id: record.res_id,
-                                display_name: record.data.display_name,
-                            };
-                        });
-                        self.on_selected(values);
-                    },
-                });
-            }
+            self._prepareButtons();
             return self.viewController.appendTo(fragment);
         }).then(function () {
             return fragment;
@@ -437,6 +408,43 @@ var SelectCreateDialog = ViewDialog.extend({
             },
         });
         return isFocusSet;
+    },
+    /**
+     * prepare buttons for dialog footer based on options
+     *
+     * @private
+     */
+    _prepareButtons: function () {
+        this.__buttons = [{
+            text: _t("Cancel"),
+            classes: 'btn-secondary o_form_button_cancel',
+            close: true,
+        }];
+        if (!this.options.no_create) {
+            this.__buttons.unshift({
+                text: _t("Create"),
+                classes: 'btn-primary',
+                click: this.create_edit_record.bind(this)
+            });
+        }
+        if (!this.options.disable_multiple_selection) {
+            this.__buttons.unshift({
+                text: _t("Select"),
+                classes: 'btn-primary o_select_button',
+                disabled: true,
+                close: true,
+                click: function () {
+                    var records = this.viewController.getSelectedRecords();
+                    var values = _.map(records, function (record) {
+                        return {
+                            id: record.res_id,
+                            display_name: record.data.display_name,
+                        };
+                    });
+                    this.on_selected(values);
+                },
+            });
+        }
     },
 });
 
