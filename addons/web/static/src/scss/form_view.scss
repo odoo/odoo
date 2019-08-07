@@ -578,10 +578,11 @@
     .o_field_translate {
         padding: 0;
         cursor: pointer;
-        width: 12px !important;
+        width: 35px !important;
         vertical-align: top;
         &::before { // seems to be useful for some old browser
             position: relative;
+            content: attr(data-code);
         }
     }
 

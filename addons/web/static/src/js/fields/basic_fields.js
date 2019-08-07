@@ -41,9 +41,11 @@ var TranslatableFieldMixin = {
      */
     _renderTranslateButton: function () {
         if (_t.database.multi_lang && this.field.translate && this.res_id) {
+            var lang = _t.database.parameters.code.split('_')[0].toUpperCase();
             return $('<button>', {
                     type: 'button',
                     'class': 'o_field_translate fa fa-globe btn btn-link',
+                    'data-code': lang,
                 })
                 .on('click', this._onTranslate.bind(this));
         }

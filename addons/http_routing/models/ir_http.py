@@ -246,6 +246,7 @@ class IrHttp(models.AbstractModel):
             'lang_parameters': lang_params,
             'modules': translations,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
+            'lang': lang,
         }
 
         session_info.update({
