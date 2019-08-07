@@ -678,6 +678,7 @@ var SnippetsMenu = Widget.extend({
         // on text changes
         this.$document.on('click.snippets_menu', '.o_default_snippet_text', function (ev) {
             $(ev.target).selectContent();
+            $(ev.target).removeClass('o_default_snippet_text');
         });
         this.$document.on('keyup.snippets_menu', function () {
             var range = Wysiwyg.getRange(this);
