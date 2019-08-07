@@ -309,7 +309,7 @@ var utils = {
         }
         var normalized_value = value / precision;
         var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
-        var epsilon = Math.pow(2, epsilon_magnitude - 53);
+        var epsilon = Math.pow(2, epsilon_magnitude - 52);
         normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
 
         /**
