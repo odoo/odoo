@@ -335,13 +335,8 @@
                                 </group>
                                 <group name="other_info">
                                     <field name="user_id"/>
-<<<<<<< 94a25d7f9c38a94e3b203d227502c37c3283637b
-                                    <field name="invoice_status"/>
-                                    <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
-=======
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
-                                    <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
->>>>>>> [IMP] account: improve account views
+                                    <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
                                 </group>
                             </group>
@@ -407,7 +402,7 @@
                     <separator/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status', '=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
-                    <separator/>    
+                    <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
