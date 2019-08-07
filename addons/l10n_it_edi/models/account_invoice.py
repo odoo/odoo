@@ -110,7 +110,7 @@ class AccountInvoice(models.Model):
             raise UserError(_("%s must have a country.") % (seller.display_name))
 
         # <1.4.1>
-        if not buyer.vat and not buyer.l10n_it_codice_fiscale:
+        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code != 'IT':
             raise UserError(_("The buyer, %s, or his company must have either a VAT number either a tax code (Codice Fiscale).") % (buyer.display_name))
 
         # <1.4.2>
