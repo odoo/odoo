@@ -457,17 +457,16 @@ var ControlPanelModel = mvc.Model.extend({
      * @private
      */
     _activateDefaultFilters: function () {
-        var self = this;
-        Object.keys(this.filters).forEach(function (filterId) {
-            var filter = self.filters[filterId];
-            // if we are here, this means there is no favorite with isDefault set to true
-            if (filter.isDefault && filter.type !== 'favorite') {
-                if (filter.hasOptions) {
-                    self.toggleFilterWithOptions(filter.id);
+        Object.values(this.filters)
+            .filter(f => f.isDefault && f.type !== 'favorite')
+            .sort((f1, f2) => (f1.defaultRank || 100) - (f2.defaultRank || 100))
+            .forEach(f => {
+                if (f.hasOptions) {
+                    this.toggleFilterWithOptions(f.id);
                 } else {
-                    self.toggleFilter(filter.id);
+                    this.toggleFilter(f.id);
                 }
-        }});
+            });
     },
     /**
      * If defaultTimeRanges param is provided, activate the filter of type

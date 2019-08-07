@@ -318,6 +318,56 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('default groupbys can be ordered', async function (assert) {
+        assert.expect(7);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<field name="bar"/>' +
+                '<filter string="Foo" name="foo" domain="[]" />' +
+                '<filter string="Foo 2" name="foo_2" domain="[]" />' +
+                '<filter string="Filter Date Field" name="date" date="date_field"/>' +
+                '<filter string="Groupby Date Field Day" name="gb_day" context="{\'group_by\': \'date_field:day\'}"/>' +
+                '<filter string="Groupby Foo" name="gb_foo" context="{\'group_by\': \'foo\'}"/>' +
+                '<filter string="Groupby Bar" name="gb_bar" context="{\'group_by\': \'bar\'}"/>' +
+            '</search>';
+        this.actions[0].views = [[false, 'graph']],
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {
+            search_default_foo: true,
+            search_default_date: true,
+            search_default_bar: 3,
+            search_default_gb_foo: 1,
+            search_default_gb_day: 5,
+            search_default_gb_bar: true,
+            time_ranges: {field: 'date_field', range: 'this_week'},
+        };
+        await actionManager.doAction(1);
+
+        const $facetValues = $('.o_searchview .o_searchview_facet .o_facet_values span:not(.o_facet_values_sep)');
+        const expectedLabels = [
+            "Third record",
+            "Foo",
+            "Filter Date Field: This Month",
+            "Groupby Foo",
+            "Groupby Date Field Day: Day",
+            "Groupby Bar",
+            "Date: This Week"
+        ];
+
+        for (let i = 0; i < expectedLabels.length; i++) {
+            assert.strictEqual($facetValues.eq(i).text(), expectedLabels[i],
+            `first facet value should be ${expectedLabels[i]}`);
+        }
+        actionManager.destroy();
+    });
+
     QUnit.module('GroupByMenu');
 
     QUnit.test('click on groupby filter adds a facet', async function (assert) {
