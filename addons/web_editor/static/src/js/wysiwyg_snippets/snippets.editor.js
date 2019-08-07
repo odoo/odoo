@@ -1359,6 +1359,7 @@ var SnippetsMenu = Widget.extend({
                         if (!dropped) {
                             dropped = true;
                             $(this).first().after($toInsert).addClass('d-none');
+                            $toInsert.removeClass('oe_snippet_body');
                         }
                     },
                     out: function () {
@@ -1367,6 +1368,7 @@ var SnippetsMenu = Widget.extend({
                             dropped = false;
                             $toInsert.detach();
                             $(this).removeClass('d-none');
+                            $toInsert.addClass('oe_snippet_body');
                         }
                     },
                 });
