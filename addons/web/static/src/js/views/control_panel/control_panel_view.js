@@ -157,6 +157,9 @@ var ControlPanelView = Factory.extend({
                                 attrs.domain ||
                                 'Ω';
         if (filter.type === 'filter') {
+            if (filter.isDefault) {
+                filter.defaultRank = -5;
+            }
             filter.domain = attrs.domain;
             filter.context = pyUtils.eval('context', attrs.context);
             if (attrs.date) {
@@ -174,6 +177,10 @@ var ControlPanelView = Factory.extend({
                 filter.invisible = true;
             }
         } else if (filter.type === 'groupBy') {
+            if (filter.isDefault) {
+                const val = this.searchDefaults[attrs.name];
+                filter.defaultRank = typeof val === 'number' ? val : 100;
+            }
             filter.fieldName = attrs.fieldName;
             filter.fieldType = this.fields[attrs.fieldName].type;
             if (_.contains(['date', 'datetime'], filter.fieldType)) {
@@ -184,6 +191,9 @@ var ControlPanelView = Factory.extend({
                 filter.currentOptionId = false;
             }
         } else if (filter.type === 'field') {
+            if (filter.isDefault) {
+                filter.defaultRank = -10;
+            }
             var field = this.fields[attrs.name];
             filter.attrs = attrs;
             filter.autoCompleteValues = [];
