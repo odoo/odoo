@@ -169,10 +169,10 @@
                     <field name="warehouse_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -201,35 +201,43 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="arch" type="xml">
                 <form string="Reordering Rules">
+                    <group>
+                        <div class="alert alert-info" role="alert">
+                            <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
+                        </div>
+                    </group>
                     <sheet>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <group>
-                            <div class="alert alert-info" role="alert">
-                                <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
-                            </div>
-                        </group>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
-                                <field name="name" />
                                 <field name="active" invisible="1"/>
                                 <field name="product_id"/>
+                                <label for="product_min_qty"/>
+                                <div class="o_row">
+                                    <field name="product_min_qty"/>
+                                    <field name="product_uom_name"/>
+                                </div>
+                                <label for="product_max_qty"/>
+                                <div class="o_row">
+                                    <field name="product_max_qty"/>
+                                    <field name="product_uom_name"/>
+                                </div>
+                                <field name="qty_multiple" string="Quantity Multiple"/>
                             </group>
                             <group>
                                 <field name="allowed_location_ids" invisible="1"/>
                                 <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
-                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
-                                <field name="group_id" groups="stock.group_adv_location"/>
+                                <label for="group_id" groups="base.group_no_one"/>
+                                <div groups="base.group_no_one">
+                                    <field name="group_id" groups="stock.group_adv_location"/>
+                                </div>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group string="Rules">
-                                <field name="product_min_qty"/>
-                                <field name="product_max_qty"/>
-                                <field name="qty_multiple" string="Quantity Multiple"/>
-                            </group>
-                            <group string="Misc">
                                 <label for="lead_days"/>
                                 <div class="o_row">
                                     <field name="lead_days"/>
