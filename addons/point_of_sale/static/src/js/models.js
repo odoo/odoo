@@ -109,6 +109,7 @@ exports.PosModel = Backbone.Model.extend({
 
             return this.connect_to_proxy();
         }
+        return Promise.resolve();
     },
     // releases ressources holds by the model at the end of life of the posmodel
     destroy: function(){

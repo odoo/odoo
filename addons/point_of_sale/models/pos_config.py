@@ -204,6 +204,7 @@ class PosConfig(models.Model):
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods())
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
+    other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
 
     @api.depends('company_id')
     def _compute_company_has_template(self):
