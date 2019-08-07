@@ -595,7 +595,6 @@ class AccountAccount(models.Model):
             result.append((account.id, name))
         return result
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         if default.get('code', False):
@@ -1116,7 +1115,6 @@ class AccountJournal(models.Model):
         bank_accounts.unlink()
         return ret
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         default.update(
@@ -1539,7 +1537,6 @@ class AccountTax(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your tax since there are some journal items linked to it."))
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)

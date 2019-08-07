@@ -138,7 +138,6 @@ class Page(models.Model):
 
         return url
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default:
             if not default.get('view_id'):

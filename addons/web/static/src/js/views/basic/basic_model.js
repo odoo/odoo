@@ -519,14 +519,14 @@ var BasicModel = AbstractModel.extend({
                 args: [record.data.id],
                 context: context,
             })
-            .then(function (res_id) {
+            .then(function (res_ids) {
                 var index = record.res_ids.indexOf(record.res_id);
-                record.res_ids.splice(index + 1, 0, res_id);
+                record.res_ids.splice(index + 1, 0, res_ids[0]);
                 return self.load({
                     fieldsInfo: record.fieldsInfo,
                     fields: record.fields,
                     modelName: record.model,
-                    res_id: res_id,
+                    res_id: res_ids[0],
                     res_ids: record.res_ids.slice(0),
                     viewType: record.viewType,
                     context: context,

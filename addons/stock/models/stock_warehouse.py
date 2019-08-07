@@ -926,7 +926,6 @@ class Warehouse(models.Model):
             name = self._get_route_name(route_type)
         return '%s: %s' % (self.name, name)
 
-    @api.returns('self')
     def _get_all_routes(self):
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
         routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])

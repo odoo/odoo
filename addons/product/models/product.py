@@ -399,7 +399,6 @@ class ProductProduct(models.Model):
                     # This is the case from existing stock reordering rules.
                     self.write({'active': False})
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         """Variants are generated depending on the configuration of attributes
         and values on the template, so copying them does not make sense.

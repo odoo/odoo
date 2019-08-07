@@ -453,7 +453,7 @@ var MockServer = Class.extend({
         var duplicateRecord = _.extend({}, originalRecord, {id: newID});
         duplicateRecord.display_name = originalRecord.display_name + ' (copy)';
         model.records.push(duplicateRecord);
-        return newID;
+        return [newID];
     },
     /**
      * Simulate a 'create' operation.  This is basically a 'write' with the

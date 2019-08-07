@@ -166,13 +166,13 @@ return core.Class.extend({
                 model: 'ir.filters',
                 method: 'create_or_replace',
             })
-            .then(function (filterId) {
+            .then(function (filterIds) {
                 var key = [
                     filter.model_id,
                     filter.action_id || false,
                 ].join(',');
                 self._invalidate(self._cache.filters, key);
-                return filterId;
+                return filterIds[0];
             });
     },
 

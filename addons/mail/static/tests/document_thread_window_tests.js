@@ -193,7 +193,7 @@ QUnit.test('post messages in a document thread window', async function (assert) 
                 // add the message to the fake DB
                 this.data['mail.message'].records.push(newMessage);
                 this.data['some.res.model'].records[0].message_ids.push(6783);
-                return Promise.resolve(6783);
+                return Promise.resolve([6783]);
             }
             return this._super.apply(this, arguments);
         },

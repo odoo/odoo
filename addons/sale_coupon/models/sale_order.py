@@ -36,7 +36,6 @@ class SaleOrder(models.Model):
             order._create_new_no_code_promo_reward_lines()
             order._update_existing_reward_lines()
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         order = super(SaleOrder, self).copy(default)
         order._get_reward_lines().unlink()

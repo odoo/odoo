@@ -340,11 +340,11 @@ var DocumentThread = Thread.extend({
                         args: [resID],
                         kwargs: messageData,
                     })
-                    .then(function (messageID) {
+                    .then(function (messageIDs) {
                         return self._rpc({
                                 model: 'mail.message',
                                 method: 'message_format',
-                                args: [[messageID]],
+                                args: [messageIDs],
                             })
                             .then(function (messages) {
                                 messages[0].model = resModel;

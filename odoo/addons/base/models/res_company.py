@@ -178,7 +178,6 @@ class Company(models.Model):
         return super(Company, newself.with_context(context))._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
-    @api.returns('self', lambda value: value.id)
     def _company_default_get(self, object=False, field=False):
         """ Returns the user's company
             - Deprecated

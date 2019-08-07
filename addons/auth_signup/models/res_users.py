@@ -242,7 +242,6 @@ class ResUsers(models.Model):
                 user.partner_id.with_context(create_user=True).signup_cancel()
         return user
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         sup = super(ResUsers, self)

@@ -487,7 +487,6 @@ actual arch.
             self.inherit_children_ids.unlink()
         super(View, self).unlink()
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         if self.key and default and 'key' not in default:

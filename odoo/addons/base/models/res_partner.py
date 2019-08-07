@@ -834,7 +834,6 @@ class Partner(models.Model):
         return _('Partners: ') + self.env['res.partner.category'].browse(self._context['category_id']).name
 
     @api.model
-    @api.returns('self')
     def main_partner(self):
         ''' Return the main partner '''
         return self.env.ref('base.main_partner')

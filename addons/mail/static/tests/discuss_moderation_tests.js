@@ -575,7 +575,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
                 await testUtils.nextTick();
 
                 messagePostDef.resolve();
-                return Promise.resolve(message.id);
+                return Promise.resolve([message.id]);
             }
             return this._super.apply(this, arguments);
         },

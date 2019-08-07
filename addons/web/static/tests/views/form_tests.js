@@ -7027,9 +7027,9 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'copy') {
-                    return result.then(function (id) {
-                        newRecordID = id;
-                        return id;
+                    return result.then(function (ids) {
+                        newRecordID = ids[0];
+                        return ids;
                     });
                 }
                 if (args.method === 'unlink') {

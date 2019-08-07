@@ -1837,7 +1837,6 @@ class MailThread(models.AbstractModel):
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,

@@ -32,7 +32,6 @@ class SMSTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                         "of the related document model")
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
                        name=_("%s (copy)") % self.name)
