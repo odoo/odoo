@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple
-import time
+from ast import literal_eval
 from datetime import date
-
 from itertools import groupby
+from operator import itemgetter
+import time
+
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
-from operator import itemgetter
 
 
 class PickingType(models.Model):
@@ -123,11 +123,23 @@ class PickingType(models.Model):
         )
 
     def _get_action(self, action_xmlid):
-        # TDE TODO check to have one view + custo in methods
         action = self.env.ref(action_xmlid).read()[0]
         if self:
             action['display_name'] = self.display_name
-        return action
+
+        default_immediate_tranfer = True
+        if self.env['ir.config_parameter'].sudo().get_param('stock.no_default_immediate_tranfer'):
+            default_immediate_tranfer = False
+
+        context = {
+            'search_default_picking_type_id': [self.id],
+            'default_picking_type_id': self.id,
+            'default_immediate_transfer': default_immediate_tranfer,
+        }
+
+        action_context = literal_eval(action['context'])
+        action_context.update(context)
+        return dict(action, context=action_context)
 
     def get_action_picking_tree_late(self):
         return self._get_action('stock.action_picking_tree_late')
