@@ -965,9 +965,10 @@ class Orderpoint(models.Model):
         'product.product', 'Product',
         domain=[('type', '=', 'product')], ondelete='cascade', required=True)
     product_uom = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure', related='product_id.uom_id',
+        'uom.uom', 'Unit of Measure', related='product_id.uom_id',
         readonly=True, required=True,
         default=lambda self: self._context.get('product_uom', False))
+    product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Minimum Quantity', digits='Product Unit of Measure', required=True,
         help="When the virtual stock equals to or goes below the Min Quantity specified for this field, Odoo generates "
