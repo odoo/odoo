@@ -60,7 +60,10 @@ MailManager.include({
             this._handleChannelFetchedNotification(params.channelID, params.data);
         } else if (params.data && params.data.info === 'channel_seen') {
             this._handleChannelSeenNotification(params.channelID, params.data);
-        } else {
+        } else if (params.data.info === 'channel_closed') {
+            this._handleChannelClosedNotification(params.channelID, params.data);
+        }
+        else {
             this._handleChannelMessageNotification(params.data);
         }
     },
@@ -111,6 +114,14 @@ MailManager.include({
                 incrementUnread: channelAlreadyInCache
             });
         });
+    },
+
+    _handleChannelClosedNotification: function (channelID, data) {
+        var channel = this.getChannel(channelID);
+        if (!channel) {
+            return;
+        }
+        channel.registerVisitorLeft(channelID);
     },
     /**
      * Called when a channel has been seen, and the server responses with the

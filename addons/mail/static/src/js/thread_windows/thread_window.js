@@ -5,6 +5,7 @@ var AbstractThreadWindow = require('mail.AbstractThreadWindow');
 var BasicComposer = require('mail.composer.Basic');
 
 var core = require('web.core');
+var QWeb = core.qweb;
 
 var _t = core._t;
 
@@ -58,7 +59,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
 
         this.call('mail_service', 'getMailBus')
             .on('update_typing_partners', this, this._onUpdateTypingPartners)
-            .on('update_channel', this, this._onUpdateChannel);
+            .on('update_channel', this, this._onUpdateChannel)
+            .on('update_visitors', this, this._onVisitorsUpdated);
 
         var composerDef;
         if (!this.hasThread()) {
@@ -409,6 +411,10 @@ var ThreadWindow = AbstractThreadWindow.extend({
             return;
         }
         this.render();
+    },
+
+    _onVisitorsUpdated: function () {
+        this.$el.find('.o_thread_window_header').after(QWeb.render('im_livechat.ThreadWindow.VisitorLeftMessage'));
     },
 });
 

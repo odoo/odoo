@@ -458,6 +458,11 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this.call('mail_service', 'getMailBus')
             .trigger('update_typing_partners', this.getID());
     },
+
+    _warnUpdatedChannelClosedVisitors: function () {
+        this.call('mail_service', 'getMailBus')
+            .trigger('update_visitors', this.getID());
+    }
 });
 
 return Channel;

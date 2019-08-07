@@ -149,9 +149,16 @@ var LivechatButton = Widget.extend({
      * @private
      */
     _closeChat: function () {
-        this.call('bus_service', 'deleteChannel', this._livechat.getUUID());
-        this._chatWindow.destroy();
-        utils.set_cookie('im_livechat_session', "", -1); // remove cookie
+        var self = this;
+        if (this._livechat.getUUID()) {
+            return session.rpc('/im_livechat/notify_visitor', {
+                uuid: this._livechat.getUUID(),
+            }).then(function () {
+                self.call('bus_service', 'deleteChannel', self._livechat.getUUID());
+                self._chatWindow.destroy();
+                utils.set_cookie('im_livechat_session', "", -1); // remove cookie
+            });
+        }
     },
     /**
      * @private

@@ -815,6 +815,16 @@ class Channel(models.Model):
             notifications.append([channel.uuid, data]) # notify frontend users
         self.env['bus.bus'].sendmany(notifications)
 
+    def notify_visitor(self):
+        notifications = []
+        for channel in self:
+            data = {
+                'info': 'channel_closed',
+            }
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), data]) # notify backend users
+            notifications.append([channel.uuid, data]) # notify frontend users
+        self.env['bus.bus'].sendmany(notifications)
+
     #------------------------------------------------------
     # Instant Messaging View Specific (Slack Client Action)
     #------------------------------------------------------

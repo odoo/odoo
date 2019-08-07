@@ -178,6 +178,9 @@ var ThreadTypingMixin = {
         this._typingPartnerIDs.push(params.partnerID);
         this._warnUpdatedTypingPartners();
     },
+    registerVisitorLeft: function (params) {
+        this._warnUpdatedChannelClosedVisitors();
+    },
     /**
      * This method must be called when the user starts or stops typing something
      * in the composer of the thread.
