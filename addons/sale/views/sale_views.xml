@@ -308,12 +308,12 @@
                         </group>
                         <group>
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
-                            <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"> 
-                                <label for="date_order" string="Quotation Date"/> 
+                            <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                                <label for="date_order" string="Quotation Date"/>
                             </div>
                             <field name="date_order" nolabel="1" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
-                            <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}"> 
-                                <label for="date_order" string="Order Date"/> 
+                            <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
+                                <label for="date_order" string="Order Date"/>
                             </div>
                             <field name="date_order" attrs="{'required': [('state', 'in', ['sale', 'done'])], 'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
                             <field name="pricelist_id" groups="product.group_product_pricelist" options="{'no_open':True,'no_create': True}"/>
@@ -1149,13 +1149,8 @@
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
-<<<<<<< 94a25d7f9c38a94e3b203d227502c37c3283637b
-                    <xpath expr="//group[@name='sale_info_group']" position="inside">
-                        <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
-=======
                     <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
-                        <field name="team_id"/>
->>>>>>> [IMP] account: improve account views
+                        <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </xpath>
                     <xpath expr="//group[@id='other_tab_group']" position="inside">
                         <group string="Marketing"
