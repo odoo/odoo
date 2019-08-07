@@ -129,7 +129,6 @@ var SlideUploadDialog = Dialog.extend({
             'name': this._formGetFieldValue('name'),
             'url': this._formGetFieldValue('url'),
             'description': this._formGetFieldValue('description'),
-            'index_content': this._formGetFieldValue('index_content'),
             'duration': this._formGetFieldValue('duration'),
             'is_published': forcePublished,
         }, this._getSelect2DropdownValues()); // add tags and category
@@ -463,32 +462,6 @@ var SlideUploadDialog = Dialog.extend({
                             loaded = true;
                         });
                     });
-                    var maxPages = pdf.pdfInfo.numPages;
-                    var page, j;
-                    self.index_content = '';
-                    for (j = 1; j <= maxPages; j += 1) {
-                        page = pdf.getPage(j);
-                        page.then(function (pageObj) {
-                            var pageNumber = pageObj.pageIndex + 1;
-                            pageObj.getTextContent().then(function (data) {
-                                var pageContent = '';
-                                _.each(data.items, function (obj) {
-                                    pageContent = pageContent + obj.str + ' ';
-                                });
-                                // page_content may contain null characters
-                                pageContent = pageContent.replace(/\0/g, '');
-                                var indexContent = self._formGetFieldValue('index_content') + pageNumber + '. ' + pageContent + '\n';
-                                self._formSetFieldValue('index_content', indexContent);
-
-                                if (maxPages === pageNumber) {
-                                    if (loaded) {
-                                        self.set('can_submit_form', false);
-                                    }
-                                    loaded = true;
-                                }
-                            });
-                        });
-                    }
                 });
             };
         }

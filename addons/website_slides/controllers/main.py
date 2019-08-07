@@ -359,7 +359,6 @@ class WebsiteSlides(WebsiteProfile):
                 '|', '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
-                ('index_content', 'ilike', search),
                 ('html_content', 'ilike', search)]
             pager_args['search'] = search
         else:
@@ -842,7 +841,7 @@ class WebsiteSlides(WebsiteProfile):
 
     def _get_valid_slide_post_values(self):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-                'mime_type', 'datas', 'description', 'image_1920', 'index_content', 'is_published']
+                'mime_type', 'datas', 'description', 'image_1920', 'is_published']
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
