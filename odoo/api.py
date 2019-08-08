@@ -214,57 +214,6 @@ def depends_context(*args):
     return attrsetter('_depends_context', args)
 
 
-def returns(model, downgrade=None, upgrade=None):
-    """ Return a decorator for methods that return instances of ``model``.
-
-        :param model: a model name, or ``'self'`` for the current model
-
-        :param downgrade: a function ``downgrade(self, value, *args, **kwargs)``
-            to convert the record-style ``value`` to a traditional-style output
-
-        :param upgrade: a function ``upgrade(self, value, *args, **kwargs)``
-            to convert the traditional-style ``value`` to a record-style output
-
-        The arguments ``self``, ``*args`` and ``**kwargs`` are the ones passed
-        to the method in the record-style.
-
-        The decorator adapts the method output to the api style: ``id``, ``ids`` or
-        ``False`` for the traditional style, and recordset for the record style::
-
-            @model
-            @returns('res.partner')
-            def find_partner(self, arg):
-                ...     # return some record
-
-            # output depends on call style: traditional vs record style
-            partner_id = model.find_partner(cr, uid, arg, context=context)
-
-            # recs = model.browse(cr, uid, ids, context)
-            partner_record = recs.find_partner(arg)
-
-        Note that the decorated method must satisfy that convention.
-
-        Those decorators are automatically *inherited*: a method that overrides
-        a decorated existing method will be decorated with the same
-        ``@returns(model)``.
-    """
-    return attrsetter('_returns', (model, downgrade, upgrade))
-
-
-def downgrade(method, value, self, args, kwargs):
-    """ Convert ``value`` returned by ``method`` on ``self`` to traditional style. """
-    spec = getattr(method, '_returns', None)
-    if not spec:
-        return value
-    _, convert, _ = spec
-    if convert and len(signature(convert).parameters) > 1:
-        return convert(self, value, *args, **kwargs)
-    elif convert:
-        return convert(value)
-    else:
-        return value.ids
-
-
 def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
@@ -335,8 +284,7 @@ def _call_kw_model(method, self, args, kwargs):
     context, args, kwargs = split_context(method, args, kwargs)
     recs = self.with_context(context or {})
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
-    return downgrade(method, result, recs, args, kwargs)
+    return method(recs, *args, **kwargs)
 
 
 def _call_kw_model_create(method, self, args, kwargs):
@@ -353,8 +301,7 @@ def _call_kw_multi(method, self, args, kwargs):
     context, args, kwargs = split_context(method, args, kwargs)
     recs = self.with_context(context or {}).browse(ids)
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
-    return downgrade(method, result, recs, args, kwargs)
+    return method(recs, *args, **kwargs)
 
 
 def call_kw(model, name, args, kwargs):
