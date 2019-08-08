@@ -36,7 +36,7 @@ class FetchmailServer(models.Model):
     def _check_pec(self):
         for record in self:
             if record.l10n_it_is_pec and record.type != 'imap':
-                raise ValidationError("PEC mail server must be of type IMAP.")
+                raise ValidationError(_("PEC mail server must be of type IMAP."))
 
     @api.multi
     def fetch_mail(self):
