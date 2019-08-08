@@ -60,7 +60,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this.call('mail_service', 'getMailBus')
             .on('update_typing_partners', this, this._onUpdateTypingPartners)
             .on('update_channel', this, this._onUpdateChannel)
-            .on('update_visitors', this, this._onVisitorsUpdated);
+            .on('update_visitors', this, this._onUpdateVisitors);
 
         var composerDef;
         if (!this.hasThread()) {
@@ -413,8 +413,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this.render();
     },
 
-    _onVisitorsUpdated: function () {
-        this.$el.find('.o_thread_window_header').after(QWeb.render('im_livechat.ThreadWindow.VisitorLeftMessage'));
+    _onUpdateVisitors: function () {
+        this.$el.find('.o_thread_window_header').after(QWeb.render('mail.ThreadWindow.NoVisitorMessage'));
     },
 });
 

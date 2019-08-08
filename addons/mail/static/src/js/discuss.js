@@ -1003,7 +1003,8 @@ var Discuss = AbstractAction.extend({
             .on('activity_updated', this, this._onActivityUpdated)
             .on('update_moderation_counter', this, this._onUpdateModerationCounter)
             .on('update_typing_partners', this, this._onTypingPartnersUpdated)
-            .on('update_channel', this, this._onUpdateChannel);
+            .on('update_channel', this, this._onUpdateChannel)
+            .on('update_visitors', this, this._onUpdateVisitors);
     },
     /**
      * @private
@@ -1611,6 +1612,9 @@ var Discuss = AbstractAction.extend({
      */
     _onUpdateThreadUnreadCounter: function () {
         this._throttledUpdateThreads();
+    },
+    _onUpdateVisitors: function (ev) {
+        this.$el.find('.o_thread_date_separator').after(QWeb.render('mail.ThreadWindow.NoVisitorMessage'));
     },
 });
 

@@ -151,7 +151,7 @@ var LivechatButton = Widget.extend({
     _closeChat: function () {
         var self = this;
         if (this._livechat.getUUID()) {
-            return session.rpc('/im_livechat/notify_visitor', {
+            return session.rpc('/im_livechat/notify_visitor_left', {
                 uuid: this._livechat.getUUID(),
             }).then(function () {
                 self.call('bus_service', 'deleteChannel', self._livechat.getUUID());

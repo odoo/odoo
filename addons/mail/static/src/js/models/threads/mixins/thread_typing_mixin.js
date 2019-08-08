@@ -179,7 +179,7 @@ var ThreadTypingMixin = {
         this._warnUpdatedTypingPartners();
     },
     registerVisitorLeft: function (params) {
-        this._warnUpdatedChannelClosedVisitors();
+        this._warnUpdatedChannelVisitors();
     },
     /**
      * This method must be called when the user starts or stops typing something

@@ -60,7 +60,7 @@ MailManager.include({
             this._handleChannelFetchedNotification(params.channelID, params.data);
         } else if (params.data && params.data.info === 'channel_seen') {
             this._handleChannelSeenNotification(params.channelID, params.data);
-        } else if (params.data.info === 'channel_closed') {
+        } else if (params.data && params.data.info === 'channel_closed') {
             this._handleChannelClosedNotification(params.channelID, params.data);
         }
         else {
@@ -116,11 +116,12 @@ MailManager.include({
         });
     },
 
-    _handleChannelClosedNotification: function (channelID, data) {
+    _handleChannelClosedNotification: function (channelID) {
         var channel = this.getChannel(channelID);
         if (!channel) {
             return;
         }
+        channel.noVisitor = true;
         channel.registerVisitorLeft(channelID);
     },
     /**

@@ -17,7 +17,14 @@
                 <span> To: </span>
                 <input type="text" placeholder="User name"/>
             </div>
+            <t t-call="mail.ThreadWindow.NoVisitorMessage"/>
         </t>
+    </t>
+
+    <t t-name="mail.ThreadWindow.NoVisitorMessage">
+        <div class="o_no_operator_available" t-if="widget and widget._thread._type  == 'livechat' and widget._thread.noVisitor">
+            <span> Visitor left the channel </span>
+        </div>
     </t>
 
     <!--

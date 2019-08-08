@@ -152,11 +152,11 @@ class LivechatController(http.Controller):
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
         channel.notify_typing(is_typing=is_typing, is_website_user=True)
 
-    @http.route('/im_livechat/notify_visitor', type='json', auth='public', cors="*")
-    def notify_visitor(self, uuid):
+    @http.route('/im_livechat/notify_visitor_left', type='json', auth='public', cors="*")
+    def notify_visitor_left(self, uuid):
         Channel = request.env['mail.channel']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
-        channel.notify_visitor()
+        channel.notify_visitor_left()
 
 
 class ImLiveChatController(BusController):
