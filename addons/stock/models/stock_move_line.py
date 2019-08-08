@@ -113,6 +113,9 @@ class StockMoveLine(models.Model):
             if not self.qty_done:
                 self.qty_done = 1
 
+            if self.lot_id:
+                self.owner_id = self.env['stock.quant'].search([('product_id', '=', self.product_id.id), ('lot_id', '=', self.lot_id.id)], limit=1).owner_id
+
             message = None
             if self.lot_name or self.lot_id:
                 move_lines_to_check = self._get_similar_move_lines() - self
