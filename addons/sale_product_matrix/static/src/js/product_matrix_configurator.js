@@ -27,6 +27,7 @@ ProductConfiguratorWidget.include({
     },
 
     _openGridConfigurator: function (productTemplateId, dataPointId, edit) {
+        var self = this;
         var attribs = edit ? this._getPTAVS() : [];
         this.trigger_up('open_matrix', {
             product_template_id: productTemplateId,
@@ -35,6 +36,9 @@ ProductConfiguratorWidget.include({
             edit: edit,
             editedCellAttributes: attribs,
         });
+        if (self.getParent().arch.tag === 'form') {
+            self.trigger_up('formClose', {res_model: 'sale.order.line'});
+        }
     },
 
     _onEditProductConfiguration: function () {

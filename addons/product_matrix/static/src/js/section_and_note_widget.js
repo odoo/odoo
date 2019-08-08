@@ -57,6 +57,7 @@ SectionAndNoteFieldOne2Many.include({
         var productTemplateId = ev.data.product_template_id;
         var editedCellAttributes = ev.data.editedCellAttributes;
         if (!ev.data.edit) {
+            // VFE NOTE In mobile/responsive, the delete operation has no impact.
             // remove the line used to open the matrix
             this._setValue({operation: 'DELETE', ids: [dataPointId]});
         }

@@ -153,6 +153,7 @@ var MatrixConfiguratorWidget = relationalFields.FieldMany2One.extend({
     },
 
     _openMatrix: function (productTemplateId, dataPointId, edit) {
+        var self = this;
         var attribs = edit ? this._getPTAVS() : [];
         this.trigger_up('open_matrix', {
             product_template_id: productTemplateId,
@@ -162,6 +163,9 @@ var MatrixConfiguratorWidget = relationalFields.FieldMany2One.extend({
             editedCellAttributes: attribs,
             // used to focus the cell representing the line on which the pencil was clicked.
         });
+        if (self.getParent().arch.tag === 'form') {
+            self.trigger_up('formClose', {res_model: 'purchase.order.line'});
+        }
     },
 
     /**
