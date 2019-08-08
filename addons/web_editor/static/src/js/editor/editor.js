@@ -6,6 +6,7 @@ var Widget = require('web.Widget');
 var core = require('web.core');
 var rte = require('web_editor.rte');
 var snippetsEditor = require('web_editor.snippet.editor');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 var _t = core._t;
 
@@ -26,7 +27,7 @@ var EditorMenuBar = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent) {
+    init: function (parent, options) {
         var self = this;
         var res = this._super.apply(this, arguments);
         var Editor = options.Editor || rte.Class;
@@ -48,8 +49,6 @@ var EditorMenuBar = Widget.extend({
         var $editable = this.rte.editable();
         window.__EditorMenuBar_$editable = $editable; // TODO remove this hack asap
 
-
-        var options = this.getParent().params;
         if (options.snippets) {
             this.snippetsMenu = new snippetsEditor.Class(this, Object.assign({
                 $el: $editable,
@@ -185,6 +184,32 @@ var EditorMenuBar = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _getDefaultConfig: function ($editable) {
+        return {
+            'airMode' : true,
+            'focus': false,
+            'airPopover': [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['history', ['undo', 'redo']],
+            ],
+            'styleWithSpan': false,
+            'inlinemedia' : ['p'],
+            'lang': 'odoo',
+            'onChange': function (html, $editable) {
+                $editable.trigger('content_changed');
+            },
+            'colors': summernoteCustomColors,
+        };
+    },
     /**
      * Reloads the page in non-editable mode, with the right scrolling.
      *
