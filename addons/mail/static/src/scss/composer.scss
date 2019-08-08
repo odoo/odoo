@@ -227,6 +227,8 @@
             .o_mail_emoji_container {
                 @include o-position-absolute(auto, 0, 100%, 0);
                 border-bottom-width: 1px;
+                max-height: calc(100vh - 100%);
+                overflow-y: auto;
             }
         }
         .o_composer_input {

@@ -121,7 +121,7 @@
 
     <record id="account_tax_report_line_izdani_10" model="account.tax.report.line">
         <field name="name">II.1 Izdani računi po stopi 10%</field>
-        <field name="tag_name">II.1 Izdani računi po stopi 10%</field>
+        <field name="tag_name">II.1 Izdani računi po stopi 10% (osnovica)</field>
         <field name="code">izdani_10</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_oporezive"/>
@@ -137,7 +137,7 @@
 
     <record id="account_tax_report_line_izdani_25" model="account.tax.report.line">
         <field name="name">II.3 Izdani računi po stopi 25%</field>
-        <field name="tag_name">II.3 Izdani računi po stopi 25%</field>
+        <field name="tag_name">II.3 Izdani računi po stopi 25% (osnovica)</field>
         <field name="code">izdani_25</field>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_oporezive"/>
@@ -168,7 +168,7 @@
 
     <record id="account_tax_report_line_pretporez_10" model="account.tax.report.line">
         <field name="name">III.1. Pretporez 10%</field>
-        <field name="tag_name">III.1. Pretporez 10%</field>
+        <field name="tag_name">III.1. Pretporez 10% (osnovica)</field>
         <field name="code">pretporez_10</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani"/>
@@ -211,7 +211,7 @@
 
     <record id="account_tax_report_line_placeni_uvozu" model="account.tax.report.line">
         <field name="name">III.4. Plaćeni PP pri uvozu</field>
-        <field name="tag_name">III.4. Plaćeni PP pri uvozu</field>
+        <field name="tag_name">III.4. Plaćeni PP pri uvozu (osnovica)</field>
         <field name="code">placeni_uvozu</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani"/>
@@ -220,7 +220,7 @@
 
     <record id="account_tax_report_line_placeni_usluge_10" model="account.tax.report.line">
         <field name="name">III.5. Plaćeni PP na ino usluge 10%</field>
-        <field name="tag_name">III.5. Plaćeni PP na ino usluge 10%</field>
+        <field name="tag_name">III.5. Plaćeni PP na ino usluge 10% (osnovica)</field>
         <field name="code">placeni_usluge_10</field>
         <field name="sequence" eval="5"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani"/>
@@ -237,7 +237,7 @@
 
     <record id="account_tax_report_line_placeni_usluge_25" model="account.tax.report.line">
         <field name="name">III.7. Plaćeni PP na ino usluge 25%</field>
-        <field name="tag_name">III.7. Plaćeni PP na ino usluge 25%</field>
+        <field name="tag_name">III.7. Plaćeni PP na ino usluge 25% (osnovica)</field>
         <field name="code">placeni_usluge_25</field>
         <field name="sequence" eval="7"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani"/>
@@ -283,7 +283,7 @@
 
     <record id="account_tax_report_line_izdani_racuni" model="account.tax.report.line">
         <field name="name">II.1 Izdani računi po stopi 10%</field>
-        <field name="tag_name">II.1 Izdani računi po stopi 10%</field>
+        <field name="tag_name">II.1 Izdani računi po stopi 10% (porez)</field>
         <field name="code">izdani_racuni</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_oporezive_isporuke"/>
@@ -299,7 +299,7 @@
 
     <record id="account_tax_report_line_izdani_racuni_25" model="account.tax.report.line">
         <field name="name">II.3 Izdani računi po stopi 25%</field>
-        <field name="tag_name">II.3 Izdani računi po stopi 25%</field>
+        <field name="tag_name">II.3 Izdani računi po stopi 25% (porez)</field>
         <field name="code">izdani_racuni_25</field>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_oporezive_isporuke"/>
@@ -322,7 +322,7 @@
 
     <record id="account_tax_report_line_pretporez_10_tax" model="account.tax.report.line">
         <field name="name">III.1. Pretporez 10%</field>
-        <field name="tag_name">III.1. Pretporez 10%</field>
+        <field name="tag_name">III.1. Pretporez 10% (porez)</field>
         <field name="code">pretporez_10_tax</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani_pretporez"/>
@@ -347,7 +347,7 @@
 
     <record id="account_tax_report_line_placeni_uvozu_tax" model="account.tax.report.line">
         <field name="name">III.4. Plaćeni PP pri uvozu</field>
-        <field name="tag_name">III.4. Plaćeni PP pri uvozu</field>
+        <field name="tag_name">III.4. Plaćeni PP pri uvozu (porez)</field>
         <field name="code">placeni_uvozu_tax</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani_pretporez"/>
@@ -356,7 +356,7 @@
 
     <record id="account_tax_report_line_placeni_usluge_10_tax" model="account.tax.report.line">
         <field name="name">III.5. Plaćeni PP na ino usluge 10%</field>
-        <field name="tag_name">III.5. Plaćeni PP na ino usluge 10%</field>
+        <field name="tag_name">III.5. Plaćeni PP na ino usluge 10% (porez)</field>
         <field name="code">placeni_usluge_10_tax</field>
         <field name="sequence" eval="5"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani_pretporez"/>
@@ -372,7 +372,7 @@
 
     <record id="account_tax_report_line_placeni_usluge_25_tax" model="account.tax.report.line">
         <field name="name">III.7. Plaćeni PP na ino usluge 25%</field>
-        <field name="tag_name">III.7. Plaćeni PP na ino usluge 25%</field>
+        <field name="tag_name">III.7. Plaćeni PP na ino usluge 25% (porez)</field>
         <field name="code">placeni_usluge_25_ta</field>
         <field name="sequence" eval="7"/>
         <field name="parent_id" ref="account_tax_report_line_obracunani_pretporez"/>

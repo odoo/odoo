@@ -1,230 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="schedule6_sgst_tag_tax" model="account.account.tag">
-        <field name="name">SGST</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="schedule6_cgst_tag_tax" model="account.account.tag">
-        <field name="name">CGST</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="schedule6_igst_tag_tax" model="account.account.tag">
-        <field name="name">IGST</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="schedule6_cess_tag_tax" model="account.account.tag">
-        <field name="name">CESS</field>
-        <field name="applicability">taxes</field>
-    </record>
-
     <!-- Account Tax Templates -->
 
     <!-- Sale Taxes -->
-
-    <record id="schedule6_sgst_sale_0_5" model="account.tax.template">
-        <field name="name">(schedule6)SGST Sale 0.5%</field>
-        <field name="description">SGST 0.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="account_id" ref="c114210"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-
-    </record>
-
-    <record id="schedule6_cgst_sale_0_5" model="account.tax.template">
-        <field name="name">(schedule6)CGST Sale 0.5%</field>
-        <field name="description">CGST 0.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="account_id" ref="c114211"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
-    </record>
 
     <record id="schedule6_sgst_sale_1" model="account.tax.template">
         <field name="name">(schedule6)GST 1%</field>
         <field name="description">GST 1%</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_sale_0_5'), ref('schedule6_cgst_sale_0_5'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_sale_1_2" model="account.tax.template">
-        <field name="name">(schedule6)SGST Sale 1%</field>
-        <field name="description">SGST 1%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
         <field name="amount">1</field>
-        <field name="account_id" ref="c114210"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_sale_1_2" model="account.tax.template">
-        <field name="name">(schedule6)CGST Sale 1%</field>
-        <field name="description">CGST 1%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">1</field>
-        <field name="account_id" ref="c114211"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114210'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114211'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_sale_2" model="account.tax.template">
         <field name="name">(schedule6)GST 2%</field>
         <field name="description">GST 2%</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_sale_1_2'), ref('schedule6_cgst_sale_1_2'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_sale_2_5" model="account.tax.template">
-        <field name="name">(schedule6)SGST Sale 2.5%</field>
-        <field name="description">SGST 2.5%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">2.5</field>
-        <field name="account_id" ref="c114210"/>
+        <field name="amount">2</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_sale_2_5" model="account.tax.template">
-        <field name="name">(schedule6)CGST Sale 2.5%</field>
-        <field name="description">CGST 2.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">2.5</field>
-        <field name="account_id" ref="c114211"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114210'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114211'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_sale_5" model="account.tax.template">
         <field name="name">(schedule6)GST 5%</field>
         <field name="description">GST 5%</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_sale_2_5'), ref('schedule6_cgst_sale_2_5'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_sale_6" model="account.tax.template">
-        <field name="name">(schedule6)SGST Sale 6%</field>
-        <field name="description">SGST 6%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">6</field>
-        <field name="account_id" ref="c114210"/>
+        <field name="amount">5</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_sale_6" model="account.tax.template">
-        <field name="name">(schedule6)CGST Sale 6%</field>
-        <field name="description">CGST 6%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">6</field>
-        <field name="account_id" ref="c114211"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114210'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114211'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_sale_12" model="account.tax.template">
         <field name="name">(schedule6)GST 12%</field>
         <field name="description">GST 12%</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_sale_6'),ref('schedule6_cgst_sale_6'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_sale_9" model="account.tax.template">
-        <field name="name">(schedule6)SGST Sale 9%</field>
-        <field name="description">SGST 9%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">9</field>
-        <field name="account_id" ref="c114210"/>
+        <field name="amount">12</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_sale_9" model="account.tax.template">
-        <field name="name">(schedule6)CGST Sale 9%</field>
-        <field name="description">CGST 9%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">9</field>
-        <field name="account_id" ref="c114211"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114210'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114211'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_sale_18" model="account.tax.template">
         <field name="name">(schedule6)GST 18%</field>
         <field name="description">GST 18%</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_sale_9'),ref('schedule6_cgst_sale_9'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_sale_14" model="account.tax.template">
-        <field name="name">(schedule6)SGST Sale 14%</field>
-        <field name="description">SGST 14%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">14</field>
-        <field name="account_id" ref="c114210"/>
+        <field name="amount">18</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_sale_14" model="account.tax.template">
-        <field name="name">(schedule6)CGST Sale 14%</field>
-        <field name="description">CGST 14%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">14</field>
-        <field name="account_id" ref="c114211"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114210'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114211'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_sale_28" model="account.tax.template">
         <field name="name">(schedule6)GST 28%</field>
         <field name="description">GST 28%</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">28</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_sale_14'),ref('schedule6_cgst_sale_14'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114210'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c114211'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base'
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+
     </record>
 
     <record id="schedule6_igst_sale_1" model="account.tax.template">
@@ -233,9 +246,28 @@
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">1</field>
-        <field name="account_id" ref="c114212"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c114212'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -245,9 +277,28 @@
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">2</field>
-        <field name="account_id" ref="c114212"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c114212'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -257,9 +308,28 @@
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">5</field>
-        <field name="account_id" ref="c114212"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c114212'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -269,9 +339,28 @@
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">12</field>
-        <field name="account_id" ref="c114212"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c114212'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -281,9 +370,28 @@
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">18</field>
-        <field name="account_id" ref="c114212"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c114212'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -293,9 +401,28 @@
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">28</field>
-        <field name="account_id" ref="c114212"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c114212'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -307,7 +434,26 @@
         <field name="amount">5</field>
         <field name="tax_group_id" ref="schedule6_cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cess_tag_tax'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
     </record>
 
     <record id="schedule6_cess_sale_1591" model="account.tax.template">
@@ -318,7 +464,26 @@
         <field name="amount">1.591</field>
         <field name="tax_group_id" ref="schedule6_cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cess_tag_tax'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
     </record>
 
     <record id="schedule6_cess_5_plus_1591_sale" model="account.tax.template">
@@ -329,7 +494,6 @@
         <field name="amount">0</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_cess_sale_5'),ref('schedule6_cess_sale_1591'),])]"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cess_tag_tax'),])]"/>
     </record>
 
     <record id="schedule6_cess_21_4170_higer_sale" model="account.tax.template">
@@ -343,213 +507,262 @@ tax=quantity * 4.17
 if tax > result:result=tax</field>
         <field name="tax_group_id" ref="schedule6_cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cess_tag_tax'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
     </record>
 
     <!-- Purchase Taxes -->
-
-    <record id="schedule6_sgst_purchase_0_5" model="account.tax.template">
-        <field name="name">(schedule6)SGST Purchase 0.5%</field>
-        <field name="description">SGST 0.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="account_id" ref="c121611"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_purchase_0_5" model="account.tax.template">
-        <field name="name">(schedule6)CGST Purchase 0.5%</field>
-        <field name="description">CGST 0.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="account_id" ref="c121612"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
-    </record>
 
     <record id="schedule6_sgst_purchase_1" model="account.tax.template">
         <field name="name">(schedule6)GST 1%</field>
         <field name="description">GST 1%</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_purchase_0_5'),ref('schedule6_cgst_purchase_0_5'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_purchase_1_2" model="account.tax.template">
-        <field name="name">(schedule6)SGST Purchase 1%</field>
-        <field name="description">SGST 1%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
         <field name="amount">1</field>
-        <field name="account_id" ref="c121611"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_purchase_1_2" model="account.tax.template">
-        <field name="name">(schedule6)CGST Purchase 1%</field>
-        <field name="description">CGST 1%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">1</field>
-        <field name="account_id" ref="c121612"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121611'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121612'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_purchase_2" model="account.tax.template">
         <field name="name">(schedule6)GST 2%</field>
         <field name="description">GST 2%</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_purchase_1_2'),ref('schedule6_cgst_purchase_1_2'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_purchase_2_5" model="account.tax.template">
-        <field name="name">(schedule6)SGST Purchase 2.5%</field>
-        <field name="description">SGST 2.5%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">2.5</field>
-        <field name="account_id" ref="c121611"/>
+        <field name="amount">2</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_purchase_2_5" model="account.tax.template">
-        <field name="name">(schedule6)CGST Purchase 2.5%</field>
-        <field name="description">CGST 2.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">2.5</field>
-        <field name="account_id" ref="c121612"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121611'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121612'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_purchase_5" model="account.tax.template">
         <field name="name">(schedule6)GST 5%</field>
         <field name="description">GST 5%</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_purchase_2_5'),ref('schedule6_cgst_purchase_2_5'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_purchase_6" model="account.tax.template">
-        <field name="name">(schedule6)SGST Purchase 6%</field>
-        <field name="description">SGST 6%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">6</field>
-        <field name="account_id" ref="c121611"/>
+        <field name="amount">5</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_purchase_6" model="account.tax.template">
-        <field name="name">(schedule6)CGST Purchase 6%</field>
-        <field name="description">CGST 6%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">6</field>
-        <field name="account_id" ref="c121612"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121611'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121612'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_purchase_12" model="account.tax.template">
         <field name="name">(schedule6)GST 12%</field>
         <field name="description">GST 12%</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_purchase_6'),ref('schedule6_cgst_purchase_6'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_purchase_9" model="account.tax.template">
-        <field name="name">(schedule6)SGST Purchase 9%</field>
-        <field name="description">SGST 9%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">9</field>
-        <field name="account_id" ref="c121611"/>
+        <field name="amount">12</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_purchase_9" model="account.tax.template">
-        <field name="name">(schedule6)CGST Purchase 9%</field>
-        <field name="description">CGST 9%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">9</field>
-        <field name="account_id" ref="c121612"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121611'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121612'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_purchase_18" model="account.tax.template">
         <field name="name">(schedule6)GST 18%</field>
         <field name="description">GST 18%</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_purchase_9'),ref('schedule6_cgst_purchase_9'),])]"/>
-    </record>
-
-    <record id="schedule6_sgst_purchase_14" model="account.tax.template">
-        <field name="name">(schedule6)SGST Purchase 14%</field>
-        <field name="description">SGST 14%</field>
-        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">14</field>
-        <field name="account_id" ref="c121611"/>
+        <field name="amount">18</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_sgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_sgst_group"/>
-    </record>
-
-    <record id="schedule6_cgst_purchase_14" model="account.tax.template">
-        <field name="name">(schedule6)CGST Purchase 14%</field>
-        <field name="description">CGST 14%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">14</field>
-        <field name="account_id" ref="c121612"/>
-        <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cgst_tag_tax'),])]"/>
-        <field name="tax_group_id" ref="schedule6_cgst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121611'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121612'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_sgst_purchase_28" model="account.tax.template">
         <field name="name">(schedule6)GST 28%</field>
         <field name="description">GST 28%</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount_type">group</field>
-        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">28</field>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('schedule6_sgst_purchase_14'),ref('schedule6_cgst_purchase_14'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121611'),
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('c121612'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
     </record>
 
     <record id="schedule6_igst_purchase_1" model="account.tax.template">
@@ -558,9 +771,28 @@ if tax > result:result=tax</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">1</field>
-        <field name="account_id" ref="c121613"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c121613'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -570,9 +802,28 @@ if tax > result:result=tax</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">2</field>
-        <field name="account_id" ref="c121613"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c121613'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -582,9 +833,28 @@ if tax > result:result=tax</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">5</field>
-        <field name="account_id" ref="c121613"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c121613'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -594,9 +864,28 @@ if tax > result:result=tax</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">12</field>
-        <field name="account_id" ref="c121613"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c121613'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -606,9 +895,28 @@ if tax > result:result=tax</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">18</field>
-        <field name="account_id" ref="c121613"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c121613'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -618,9 +926,28 @@ if tax > result:result=tax</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">28</field>
-        <field name="account_id" ref="c121613"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('c121613'),
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_igst_tag_tax'),])]"/>
         <field name="tax_group_id" ref="schedule6_igst_group"/>
     </record>
 
@@ -632,7 +959,26 @@ if tax > result:result=tax</field>
         <field name="amount">5</field>
         <field name="tax_group_id" ref="schedule6_cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cess_tag_tax'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
     </record>
 
     <record id="schedule6_cess_purchase_1591" model="account.tax.template">
@@ -643,7 +989,26 @@ if tax > result:result=tax</field>
         <field name="amount">1.591</field>
         <field name="tax_group_id" ref="schedule6_cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cess_tag_tax'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
     </record>
 
     <record id="schedule6_cess_5_plus_1591_purchase" model="account.tax.template">
@@ -667,7 +1032,26 @@ tax=quantity * 4.17
 if tax > result:result=tax</field>
         <field name="tax_group_id" ref="schedule6_cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        <field name="tag_ids" eval="[(6,0,[ref('schedule6_cess_tag_tax'),])]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+        ]"/>
     </record>
 
 </odoo>

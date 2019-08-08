@@ -766,6 +766,11 @@ var TextPlugin = AbstractPlugin.extend({
      * @param {jQueryEvent} e
      */
     _onPaste: function (se, e) {
+        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        var iPhone = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isSafari && !iPhone) {
+            return;
+        }
         se.preventDefault();
         se.stopImmediatePropagation();
         e.preventDefault();
