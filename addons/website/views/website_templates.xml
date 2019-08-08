@@ -88,6 +88,12 @@
     <t t-call-assets="website.assets_wysiwyg"/>
 </template>
 
+<template id="website.wysiwyg_iframe_editor_assets" inherit_id="web_editor.wysiwyg_iframe_editor_assets">
+    <xpath expr="//t[@t-call-assets='web_editor.assets_wysiwyg']" position="after">
+        <t t-call-assets="website.assets_wysiwyg"/>
+    </xpath>
+</template>
+
 <template id="website.assets_wysiwyg" name="Website Editor Assets (used in website editor)">
     <t t-call="web._assets_helpers">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>

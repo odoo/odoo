@@ -1,8 +1,5 @@
 odoo.define('web_editor.wysiwyg.multizone', function (require) {
 'use strict';
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var editor = require('web_editor.editor');
 var Wysiwyg = require('web_editor.wysiwyg');
 
 
@@ -16,18 +13,64 @@ var Wysiwyg = require('web_editor.wysiwyg');
  *
  */
 var WysiwygMultizone = Wysiwyg.extend({
-    init: function (parent, params) {
-        this._super.apply(this, arguments);
-        this.params = params;
-    },
-    willStart: async function () {
-        await this._super.apply(this, arguments);
-        this.editor = new (editor.Class)(this);
-        return this.editor.prependTo(document.body);
-    },
+
+    /**
+     * @override
+     */
     start: function () {
-        $('#web_editor-toolbars').prependTo('#web_editor-top-edit');
-    }
+        var self = this;
+        this.options.toolbarHandler = $('#web_editor-top-edit');
+        this.options.saveElement = function ($el, context, withLang) {
+            var outerHTML = this._getEscapedElement($el).prop('outerHTML');
+            return self._saveElement(outerHTML, self.options.recordInfo, $el[0]);
+        };
+        return this._super();
+    },
+    /**
+     * @override
+     * @returns {Promise}
+     */
+    save: function () {
+        if (this.isDirty()) {
+            return this.editor.save().then(function() {
+                return {isDirty: true};
+            });
+        } else {
+            return {isDirty: false};
+        }
+    },
+
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _getEditableArea: function() {
+        return $(':o_editable');
+    },
+    /**
+     * Saves one (dirty) element of the page.
+     *
+     * @private
+     * @param {jQuery} $el - the element to save
+     * @param {Object} context - the context to use for the saving rpc
+     * @param {boolean} [withLang=false]
+     *        false if the lang must be omitted in the context (saving "master"
+     *        page element)
+     */
+    _saveElement: function (outerHTML, recordInfo, editable) {
+        var $el = $(editable);
+        return this._rpc({
+            model: 'ir.ui.view',
+            method: 'save',
+            args: [
+                $el.data('oe-id'),
+                outerHTML,
+                $el.data('oe-xpath') || null,
+            ],
+            context: recordInfo.context,
+        });
+    },
 });
 
 return WysiwygMultizone;
