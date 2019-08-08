@@ -160,7 +160,7 @@ return AbstractRenderer.extend({
             measure: this.fields[this.state.measure].string,
             tooltipItems: tooltipItems,
             maxWidth: maxTooltipLabelWidth,
-        }));
+        })).css({top: '2px', left: '2px'});
         const $container = this.$el.find('.o_graph_canvas_container');
         $container.append(this.$tooltip);
 
