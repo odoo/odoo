@@ -59,6 +59,10 @@ var ViewDialog = Dialog.extend({
  * Create and edit dialog (displays a form view record and leave once saved)
  */
 var FormViewDialog = ViewDialog.extend({
+    custom_events: _.extend({}, Dialog.prototype.custom_events, {
+        saveAndClose: '_onSaveAndClose',
+        formClose: '_onFormClose',
+    }),
     /**
      * @param {Widget} parent
      * @param {Object} [options]
@@ -243,6 +247,35 @@ var FormViewDialog = ViewDialog.extend({
             },
         });
         return isFocusSet;
+    },
+
+    /**
+     * Closes the dialog without saving its content.
+     *
+     * @param {OdooEvent} [ev]
+     * @param {string} [ev.data.res_model] Restricted res_model for which
+     * the event applies.  Security check to ensure this event is targeted
+     * and cannot impact unexpected dialogs.
+     * @private
+     */
+    _onFormClose: function (ev) {
+        ev.stopPropagation();
+        if (this.res_model === ev.data.res_model) {
+            this.close();
+        }
+    },
+
+    /**
+     * Try to save and close the current dialog.
+     * Will raise an Error to the User if required fields aren't set.
+     *
+     * @param {OdooEvent} [ev]
+     * @private
+     */
+    _onSaveAndClose: function (ev) {
+        ev.stopPropagation();
+        var self = this;
+        this._save().then(self.close.bind(self));
     },
 
     /**
