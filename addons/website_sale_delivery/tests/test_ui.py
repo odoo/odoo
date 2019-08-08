@@ -12,4 +12,8 @@ class TestUi(odoo.tests.HttpCase):
             'free_over': True,
             'amount': 10,
         })
+        self.env.ref("delivery.delivery_carrier").write({
+            'sequence': 9999,  # ensure last to load price async
+            'website_published': True,
+        })
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('check_free_delivery')", "odoo.__DEBUG__.services['web_tour.tour'].tours.check_free_delivery.ready", login="admin")

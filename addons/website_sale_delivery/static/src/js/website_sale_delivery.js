@@ -59,7 +59,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _handleCarrierUpdateResult: function (result) {
         this._handleCarrierUpdateResultBadge(result);
-        var $payButton = $('#o_payment_form_pay .monetary_field');
+        var $payButton = $('#o_payment_form_pay');
         var $amountDelivery = $('#order_delivery .monetary_field');
         var $amountUntaxed = $('#order_total_untaxed .monetary_field');
         var $amountTax = $('#order_total_taxes .monetary_field');
