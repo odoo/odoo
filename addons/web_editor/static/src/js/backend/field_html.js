@@ -179,8 +179,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
-        var iPhone = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
         return Object.assign({}, this.nodeOptions, {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
@@ -193,6 +191,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             snippets: this.nodeOptions.snippets,
 
             tabsize: 0,
+            height: 180,
             generateOptions: function (options) {
                 var para = _.find(options.toolbar, function (item) {
                     return item[0] === 'para';

@@ -2,8 +2,12 @@
 <odoo>
 
 <template id="wysiwyg_iframe_css_assets" name="CSS assets for wysiwyg iframe content">
-    <t t-call-assets="web.assets_common" t-js="false"/>
-    <t t-call-assets="web.assets_backend" t-js="false"/>
+</template>
+
+<template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content">
+    <t t-call-assets="web.assets_common"/>
+    <t t-call-assets="web.assets_frontend" t-js="false"/>
+    <t t-call-assets="web_editor.assets_wysiwyg"/>
 </template>
 
 <template id="compiled_assets_wysiwyg" name="Wysiwyg Editor">
@@ -53,6 +57,8 @@
     <!-- Launcher -->
 
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
 </template>
 
 <template id="summernote" name="Summernote">
@@ -152,6 +158,7 @@
     </xpath>
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js" />
     </xpath>
 </template>
 
