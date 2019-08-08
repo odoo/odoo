@@ -67,7 +67,7 @@ var SnippetEditor = Widget.extend({
         defs.push(this._initializeOptions());
 
         // Initialize move/clone/remove buttons
-        if (!this.options.isEditableNode(this.$target[0])) {
+        if (!this.$target.is(':o_editable')) {
             this.$el.find('.oe_snippet_move, .oe_snippet_clone, .oe_snippet_remove').remove();
         } else {
             this.dropped = false;
@@ -1249,6 +1249,7 @@ var SnippetsMenu = Widget.extend({
 
         this.$el.addClass('o_loaded');
         $('body.editor_enable').addClass('editor_has_snippets');
+        this.trigger_up('snippets_loaded', self.$el);
     },
     /**
      * Creates a snippet editor to associated to the given snippet. If the given

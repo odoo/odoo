@@ -13,6 +13,14 @@ $o-wysiwyg-handle-border-width: 1px !default;
 
 $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
+// OVERRIDES FOR EDITOR WITH SNIPPETS
+body.editor_enable.editor_has_snippets {
+    padding-left: $o-we-sidebar-width !important;
+
+    #web_editor-top-edit .note-popover .popover {
+        margin: 0 0 0 $o-we-sidebar-width;
+    }
+}
 
 // NOTE EDITOR
 .note-editor.o_snippets_loaded {
@@ -38,8 +46,8 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
     display: flex;
     flex-flow: column nowrap;
-    @include o-position-absolute(0, auto, 0, -$o-wysiwyg-sidebar-width);
-    position: absolute;
+    position: fixed;
+    top: 0;
     width: $o-wysiwyg-sidebar-width;
     z-index: $o-wysiwyg-zindex - 1;
 
@@ -52,7 +60,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
     #snippets_menu {
         flex: 0 0 auto;
-        height: $o-wysiwyg-sidebar-height;
+        height: $o-wysiwyg-toolbar-height;
         line-height: $o-wysiwyg-sidebar-height;
         margin: 0;
         padding: 0;
@@ -341,6 +349,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 // MANIPULATORS
 #oe_manipulators {
     position: relative;
+    z-index: 1;
 
     // SNIPPET MANIPULATORS
     .oe_overlay {

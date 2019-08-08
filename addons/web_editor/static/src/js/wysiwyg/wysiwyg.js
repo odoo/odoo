@@ -2,7 +2,6 @@ odoo.define('web_editor.wysiwyg', function (require) {
 'use strict';
 var Widget = require('web.Widget');
 var SummernoteManager = require('web_editor.rte.summernote');
-var transcoder = require('web_editor.transcoder');
 var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 var id = 0;
 
@@ -32,28 +31,26 @@ var Wysiwyg = Widget.extend({
         },
     },
     /**
-     * @params {Object} params
-     * @params {Object} params.recordInfo
-     * @params {Object} params.recordInfo.context
-     * @params {String} [params.recordInfo.context]
-     * @params {integer} [params.recordInfo.res_id]
-     * @params {String} [params.recordInfo.data_res_model]
-     * @params {integer} [params.recordInfo.data_res_id]
+     * @options {Object} options
+     * @options {Object} options.recordInfo
+     * @options {Object} options.recordInfo.context
+     * @options {String} [options.recordInfo.context]
+     * @options {integer} [options.recordInfo.res_id]
+     * @options {String} [options.recordInfo.data_res_model]
+     * @options {integer} [options.recordInfo.data_res_id]
      *   @see _onGetRecordInfo
      *   @see _getAttachmentsDomain in /wysiwyg/widgets/media.js
-     * @params {Object} params.attachments
+     * @options {Object} options.attachments
      *   @see _onGetRecordInfo
      *   @see _getAttachmentsDomain in /wysiwyg/widgets/media.js (for attachmentIDs)
-     * @params {function} params.generateOptions
+     * @options {function} options.generateOptions
      *   called with the summernote configuration object used before sending to summernote
      *   @see _editorOptions
      **/
-    init: function (parent, params) {
+    init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.params = params;
-        this.params.isEditableNode = function (node) {
-            return $(node).is(':o_editable');
-        };
+        this.id = ++id;
+        this.options = options;
     },
     /**
      * Load assets and color picker template then call summernote API
@@ -64,14 +61,13 @@ var Wysiwyg = Widget.extend({
     willStart: function () {
         new SummernoteManager(this);
         this.$target = this.$el;
-        return this._super.apply(this, arguments);
+        return this._super();
     },
     /**
      *
      * @override
      */
     start: function () {
-        var self = this;
         this.$target.wrap('<odoo-wysiwyg-container>');
         this.$el = this.$target.parent();
         var options = this._editorOptions();
@@ -80,7 +76,6 @@ var Wysiwyg = Widget.extend({
         this.$editor.data('wysiwyg', this);
         this.$editor.data('oe-model', options.recordInfo.res_model);
         this.$editor.data('oe-id', options.recordInfo.res_id);
-        var $wysiwyg = this.$editor.closest('odoo-wysiwyg-container');
         $(document).on('mousedown', this._blur);
         this._value = this.$target.html() || this.$target.val();
         return this._super.apply(this, arguments).then(() => {
@@ -106,7 +101,7 @@ var Wysiwyg = Widget.extend({
      * @returns {jQuery}
      */
     getEditable: function () {
-        console.log('getEditable');
+        return this.$editor;
     },
     /**
      * Return true if the content has changed.
@@ -115,27 +110,6 @@ var Wysiwyg = Widget.extend({
      */
     isDirty: function () {
         return this._value !== (this.$editor.html() || this.$editor.val());
-    },
-    /**
-     * Return true if the current node is unbreakable.
-     * An unbreakable node can be removed or added but can't by split into
-     * different nodes (for keypress and selection).
-     * An unbreakable node can contain nodes that can be edited.
-     *
-     * @param {Node} node
-     * @returns {Boolean}
-     */
-    isUnbreakableNode: function (node) {
-        console.log('isUnbreakableNode');
-    },
-    /**
-     * Return true if the current node is editable (for keypress and selection).
-     *
-     * @param {Node} node
-     * @returns {Boolean}
-     */
-    isEditableNode: function (node) {
-        console.log('isEditableNode');
     },
     /**
      * Set the focus on the element.
@@ -193,12 +167,6 @@ var Wysiwyg = Widget.extend({
             this.$target.html(value);
         }
         this.$editor.html(value);
-        if (this.params['style-inline']) {
-            transcoder.styleToClass(this.$editor);
-            transcoder.imgToFont(this.$editor);
-            transcoder.linkImgToAttachmentThumbnail(this.$editor);
-        }
-        this._value = (this.$target.html() || this.$target.val());
     },
     //--------------------------------------------------------------------------
     // Private
@@ -246,8 +214,21 @@ Wysiwyg.getRange = function (node) {
         eo: range.eo,
     };
 };
-Wysiwyg.setRange = function () {
-    console.log('setRange');
+/**
+ * @param {Node} startNode
+ * @param {Number} startOffset
+ * @param {Node} endNode
+ * @param {Number} endOffset
+ */
+Wysiwyg.setRange = function (startNode, startOffset, endNode, endOffset) {
+    $(startNode).focus();
+    if (endNode) {
+        $.summernote.core.range.create(startNode, startOffset, endNode, endOffset).select();
+    } else {
+        $.summernote.core.range.create(startNode, startOffset).select();
+    }
+    // trigger for Unbreakable
+    $(startNode.tagName ? startNode : startNode.parentNode).trigger('wysiwyg.range');
 };
 /**
  * @param {Node} node - dom node
