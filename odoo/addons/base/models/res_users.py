@@ -834,7 +834,7 @@ class Users(models.Model):
         cfg = self.env['ir.config_parameter'].sudo()
         min_failures = int(cfg.get_param('base.login_cooldown_after', 5))
         if min_failures == 0:
-            return True
+            return False
 
         delay = int(cfg.get_param('base.login_cooldown_duration', 60))
         return failures >= min_failures and (datetime.datetime.now() - previous) < datetime.timedelta(seconds=delay)
