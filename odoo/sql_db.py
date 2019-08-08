@@ -156,6 +156,8 @@ class Cursor(object):
 
         self.sql_log_count = 0
 
+        self.sql_analyze = False
+
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initialisations
         self._closed = True
@@ -229,6 +231,10 @@ class Cursor(object):
         # simple query count is always computed
         self.sql_log_count += 1
         delay = (time.time() - now)
+
+        if self.sql_analyze:
+            self.sql_analyze(self, query, params, log_exceptions, delay)
+
         if hasattr(threading.current_thread(), 'query_count'):
             threading.current_thread().query_count += 1
             threading.current_thread().query_time += delay

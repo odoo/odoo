@@ -259,7 +259,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             return self._assertRaises(exception)
 
     @contextmanager
-    def assertQueryCount(self, default=0, **counters):
+    def assertQueryCount(self, default=0, analyze=False, **counters):
         """ Context manager that counts queries. It may be invoked either with
             one value, or with a set of named arguments like ``login=value``::
 
@@ -277,7 +277,11 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 login = self.env.user.login
                 expected = counters.get(login, default)
                 count0 = self.cr.sql_log_count
+                if analyze:
+                    self.env.cr.sql_analyze = analyze
                 yield
+                if analyze:
+                    self.env.cr.sql_analyze = False
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count

@@ -78,16 +78,24 @@ class TestMailPerformance(BaseMailPerformance):
         with self.assertQueryCount(__system__=5, demo=5):  # test_mail only: 5 - 5
             records.write({'value': 42})
 
-    @users('__system__', 'demo')
+    @users('demo')
     @warmup
     def test_write_mail_with_tracking(self):
         """ Write records inheriting from 'mail.thread' (with field tracking). """
+        partner_id = self.env.ref('base.res_partner_12').id
         record = self.env['test_performance.mail'].create({
             'name': 'Test',
             'track': 'Y',
             'value': 40,
-            'partner_id': self.env.ref('base.res_partner_12').id,
+            'partner_id': partner_id,
         })
+
+        # record should be in cache after create since data are read by tracking
+        with self.assertQueryCount(__system__=0, demo=0):
+            record.name
+        
+        self.env.cr.sql_analyze=False
+        self.env.cache.debug = False
 
         with self.assertQueryCount(__system__=4, demo=4):  # test_mail only: 4 - 4
             record.track = 'X'
@@ -101,12 +109,13 @@ class TestMailPerformance(BaseMailPerformance):
         with self.assertQueryCount(__system__=3, demo=3):  # test_mail only: 3 - 3
             model.with_context(tracking_disable=True).create({'name': 'X'})
 
-    @users('__system__', 'demo')
+    @users('demo')
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
+        import odoo
         with self.assertQueryCount(__system__=8, demo=8):  # test_mail only: 8 - 8
-            self.env['test_performance.mail'].create({'name': 'X'})
+            record = self.env['test_performance.mail'].create({'name': 'X'})
 
     @users('__system__', 'emp')
     @warmup

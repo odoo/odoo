@@ -685,6 +685,7 @@ class Cache(object):
     def __init__(self):
         # {key: {field: {record_id: value}}}
         self._data = defaultdict(lambda: defaultdict(dict))
+        self.debug = False
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
@@ -710,6 +711,7 @@ class Cache(object):
         """ Set the values of ``field`` for several ``records``. """
         key = records.env.cache_key(field)
         self._data[key][field].update(zip(records._ids, values))
+
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
@@ -779,6 +781,7 @@ class Cache(object):
     def copy(self, records, env):
         """ Copy the cache of ``records`` to ``env``. """
         src, dst = records.env, env
+
         for src_key, dst_key in [(src, dst), (src._cache_key, dst._cache_key)]:
             if src_key == dst_key:
                 break
@@ -794,6 +797,14 @@ class Cache(object):
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """
+        model_spec = spec and [r for r in spec if 'test_performance' in str(r[0])]
+
+        if self.debug and (spec is None or model_spec):
+            print(self)
+            print('------ invalidate', model_spec)
+            import traceback
+            print(''.join(traceback.format_stack()[20:-1]))
+
         if spec is None:
             self._data.clear()
         elif spec:
