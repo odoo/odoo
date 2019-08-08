@@ -21,12 +21,9 @@ $o-wslides-fs-side-width: 300px;
 
 .o_wslides_course_pict {
     @include size(100%);
-    padding-top: 30%;
-    background-size: cover;
-    background-position: center;
+    object-fit: cover;
 
     @include media-breakpoint-up(md)  {
-        padding-top: 70%;
         border: 1px solid darken(#875A7B, 10%);
         border-bottom-width: 0;
     }

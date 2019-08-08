@@ -119,8 +119,8 @@
                     <div class="row align-items-end align-items-md-stretch">
                         <!-- ==== Header Left ==== -->
                         <div class="col-12 col-md-4 col-lg-3">
-                            <div class="d-flex align-items-start justify-content-around h-100">
-                                <div class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0" t-attf-style="background-image: url(#{website.image_url(channel, 'image_1024')});" t-ignore="True"/>
+                            <div class="d-flex align-items-end justify-content-around h-100">
+                                <div t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
                             </div>
                         </div>
 
