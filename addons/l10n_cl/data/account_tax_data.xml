@@ -53,7 +53,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('110710'),
+                'account_id': ref('account_110710'),
                 'plus_report_line_ids': [ref('tax_report_compras_iva_recup')],
             }),
         ]"/>
@@ -66,7 +66,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('110710'),
+                'account_id': ref('account_110710'),
                 'minus_report_line_ids': [ref('tax_report_compras_iva_recup')],
             }),
         ]"/>
@@ -80,8 +80,8 @@
         <field name="sequence" eval="2"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="refund_account_id" ref="244"/>
-        <field name="account_id" ref="244"/>
+        <field name="refund_account_id" ref="account_210740"/>
+        <field name="account_id" ref="account_210740"/>
         <field name="tax_group_id" ref="tax_group_2da_categ"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -117,8 +117,8 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="sequence" eval="5"/>
-        <field name="refund_account_id" ref="110710"/>
-        <field name="account_id" ref="110710"/>
+        <field name="refund_account_id" ref="account_110710"/>
+        <field name="account_id" ref="account_110710"/>
         <field name="tax_group_id" ref="tax_group_impuestos_especificos"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -150,8 +150,8 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="sequence" eval="6"/>
-        <field name="refund_account_id" ref="125"/>
-        <field name="account_id" ref="125"/>
+        <field name="refund_account_id" ref="account_110740"/>
+        <field name="account_id" ref="account_110740"/>
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -187,8 +187,8 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="sequence" eval="6"/>
-        <field name="refund_account_id" ref="125"/>
-        <field name="account_id" ref="125"/>
+        <field name="refund_account_id" ref="account_110740"/>
+        <field name="account_id" ref="account_110740"/>
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -224,8 +224,8 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="sequence" eval="6"/>
-        <field name="refund_account_id" ref="125"/>
-        <field name="account_id" ref="125"/>
+        <field name="refund_account_id" ref="account_110740"/>
+        <field name="account_id" ref="account_110740"/>
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
