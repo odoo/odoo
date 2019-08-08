@@ -1901,7 +1901,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 	}
 
 	if (! open_paymentline) {
-            this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
+            this.pos.get_order().add_paymentline( this.pos.payment_methods[0]);
             this.render_paymentlines();
         }
 
@@ -1971,14 +1971,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
         lines.appendTo(this.$('.paymentlines-container'));
     },
     click_paymentmethods: function(id) {
-        var cashregister = null;
-        for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
-            if ( this.pos.cashregisters[i].journal_id[0] === id ){
-                cashregister = this.pos.cashregisters[i];
-                break;
-            }
-        }
-        this.pos.get_order().add_paymentline( cashregister );
+        var payment_method = this.pos.payment_methods_by_id[id]
+        this.pos.get_order().add_paymentline(payment_method);
         this.reset_input();
         this.render_paymentlines();
     },
@@ -2132,8 +2126,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
         // The exact amount must be paid if there is no cash payment method defined.
         if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
             var cash = false;
-            for (var i = 0; i < this.pos.cashregisters.length; i++) {
-                cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
+            for (var i = 0; i < this.pos.payment_methods.length; i++) {
+                cash = cash || (this.pos.payment_methods[i].is_cash_count);
             }
             if (!cash) {
                 this.gui.show_popup('error',{
