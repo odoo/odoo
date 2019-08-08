@@ -746,7 +746,7 @@ class Partner(models.Model):
         return super(Partner, self)._search(args, offset=offset, limit=limit, order=order,
                                             count=count, access_rights_uid=access_rights_uid)
 
-    def _get_name_search_join_clause(self):
+    def _get_name_search_order_by_fields(self):
         return ''
 
     @api.model
@@ -757,7 +757,8 @@ class Partner(models.Model):
         self.flush()
         if args is None:
             args = []
-        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+        order_by_rank = self.env.context.get('res_partner_search_mode') 
+        if (name or order_by_rank) and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             self.check_access_rights('read')
             where_query = self._where_calc(args)
             self._apply_ir_rules(where_query, 'read')
@@ -774,21 +775,19 @@ class Partner(models.Model):
 
             unaccent = get_unaccent_wrapper(self.env.cr)
 
-            join_clause = self._get_name_search_join_clause()
+            fields = self._get_name_search_order_by_fields()
 
             query = """SELECT res_partner.id
                          FROM {from_str}
-                         {join}
                       {where} ({email} {operator} {percent}
                            OR {display_name} {operator} {percent}
                            OR {reference} {operator} {percent}
                            OR {vat} {operator} {percent})
                            -- don't panic, trust postgres bitmap
-                     GROUP BY res_partner.id
-                     ORDER BY COUNT(*) DESC, {display_name} {operator} {percent} desc,
+                     ORDER BY {fields} {display_name} {operator} {percent} desc,
                               {display_name}
                     """.format(from_str=from_str,
-                               join=join_clause,
+                               fields=fields,
                                where=where_str,
                                operator=operator,
                                email=unaccent('res_partner.email'),
