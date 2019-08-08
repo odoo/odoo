@@ -181,5 +181,6 @@ class User(models.Model):
         self.ensure_one()
         self.env['hr.employee'].create(dict(
             user_id=self.id,
+            name=self.name,
             **self.env['hr.employee']._sync_user(self)
         ))
