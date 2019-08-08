@@ -91,13 +91,11 @@ class TestMailPerformance(BaseMailPerformance):
         })
 
         # record should be in cache after create since data are read by tracking
-        with self.assertQueryCount(__system__=0, demo=0):
-            record.name
-        
+
         self.env.cr.sql_analyze=False
         self.env.cache.debug = False
 
-        with self.assertQueryCount(__system__=4, demo=4):  # test_mail only: 4 - 4
+        with self.assertQueryCount(__system__=5, demo=5):  # test_mail only: 5 - 5
             record.track = 'X'
 
     @users('__system__', 'demo')
