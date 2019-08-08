@@ -652,13 +652,12 @@
 
     <t t-name="PaymentScreen-Paymentmethods">
         <div class='paymentmethods'>
-            <t t-foreach="widget.pos.cashregisters" t-as="cashregister">
-                <div class="button paymentmethod" t-att-data-id="cashregister.journal_id[0]">
-                    <t t-esc="cashregister.journal_id[1]" />
+            <t t-foreach="widget.pos.payment_methods" t-as="payment_method">
+                <div class="button paymentmethod" t-att-data-id="payment_method.id">
+                    <t t-esc="payment_method.name" />
                 </div>
             </t>
         </div>
-
     </t>
 
     <t t-name="PaymentScreenWidget">

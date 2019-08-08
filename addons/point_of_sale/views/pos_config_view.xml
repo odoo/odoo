@@ -311,17 +311,17 @@
                     </div>
                     <h2>Payments</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" id="payment_methods">
+                        <div class="col-12 col-lg-6 o_setting_box" id="payment_methods_new">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Payment Methods</span>
                                 <div class="text-muted">
                                     Payment methods available
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="journal_ids" required="1" colspan="4" nolabel="1" context="{'default_journal_user': 1, 'default_type': 'cash'}" widget="many2many_tags"/>
+                                    <field name="payment_method_ids" colspan="4" nolabel="1" context="{}" widget="many2many_tags"/>
                                 </div>
                                 <div>
-                                    <button name="%(account_journal_action_point_of_sale)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
+                                    <button name="%(action_payment_methods_tree)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
@@ -472,10 +472,6 @@
                                     <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
                                         <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" widget="selection"/>
                                         <field name="journal_id" required="1" domain="[('company_id', '=', company_id), ('type', '=', 'sale')]" context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
-                                    </div>
-                                    <div class="row" groups="account.group_account_user" title="Get one journal item per product rather than one journal item per receipt line. This works for any anonymous order. If the customer is set on the order, one journal item is created for each receipt line. This option is recommended for an easy review of your journal entries when managing lots of orders.">
-                                        <label string="Group Journal Items" for="group_by" class="col-lg-3 o_light_label"/>
-                                        <field name="group_by"/>
                                     </div>
                                 </div>
                             </div>
