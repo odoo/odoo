@@ -46,7 +46,7 @@
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                         </group>
                         <notebook>
-                            <page string="Options">
+                            <page name="options" string="Options">
                               <group string="Order" name="group_order">
                                 <field name="default_order"/>
                                 <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
@@ -55,8 +55,8 @@
                                 </div>
                               </group>
                             </page>
-                            <page string='Karma Gains'>
-                                <group>
+                            <page name="karma_gains" string="Karma Gains">
+                                <group name="karma_gain_details">
                                     <field name="karma_gen_question_new"/>
                                     <field name="karma_gen_question_upvote"/>
                                     <field name="karma_gen_question_downvote"/>
@@ -67,9 +67,9 @@
                                     <field name="karma_gen_answer_flagged"/>
                                 </group>
                             </page>
-                            <page string='Karma Related Rights'>
+                            <page name="karma_rights" string="Karma Related Rights">
                                 <group>
-                                    <group>
+                                    <group name="karma_rights_left">
                                         <field name="karma_ask"/>
                                         <field name="karma_answer"/>
                                         <field name="karma_upvote"/>
@@ -84,7 +84,7 @@
                                         <field name="karma_answer_accept_own"/>
                                         <field name="karma_answer_accept_all"/>
                                     </group>
-                                    <group>
+                                    <group name="karma_rights_right">
                                         <field name="karma_editor"/>
                                         <field name="karma_comment_own"/>
                                         <field name="karma_comment_all"/>
@@ -160,23 +160,26 @@
                             <field name="name" placeholder="Name"/>
                         </h1>
                         <group>
-                            <group>
+                            <group name="forum_details">
                                 <field name="active" invisible="1"/>
                                 <field name="forum_id"/>
                                 <field name="website_id" groups="website.group_multi_website"/>
                                 <field name="parent_id"/>
-                            </group><group>
+                            </group>
+                            <group name="post_details">
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 <field name="state"/>
                                 <field name="closed_reason_id"/>
                                 <field name="closed_uid"/>
                                 <field name="closed_date"/>
-                            </group><group>
+                            </group>
+                            <group name="creation_details">
                                 <field name="create_uid"/>
                                 <field name="create_date"/>
                                 <field name="write_uid"/>
                                 <field name="write_date"/>
-                            </group><group>
+                            </group>
+                            <group name="post_statistics">
                                 <field name="is_correct"/>
                                 <field name="views"/>
                                 <field name="vote_count"/>
@@ -185,7 +188,7 @@
                                 <field name="relevancy"/>
                             </group>
                         </group>
-                        <group string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
+                        <group name="answers" string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
                             <field name="child_ids" nolabel="1">
                                 <tree>
                                     <field name="create_uid" string="Answered by"/>
