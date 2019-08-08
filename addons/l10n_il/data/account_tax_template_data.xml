@@ -251,7 +251,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_retention_10')])]"/>
-        <field name="tax_group_id" ref="tax_group_retention_10"/>
+        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
     </record>
 
     <record id="il_vat_retention_35" model="account.tax.template">
@@ -265,7 +265,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_retention_35')])]"/>
-        <field name="tax_group_id" ref="tax_group_retention_35"/>
+        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
     </record>
 
     <record id="il_vat_retention_30" model="account.tax.template">
@@ -279,7 +279,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_retention_30')])]"/>
-        <field name="tax_group_id" ref="tax_group_retention_30"/>
+        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
     </record>
 
     <record id="il_vat_retention_25" model="account.tax.template">
@@ -293,7 +293,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_retention_25')])]"/>
-        <field name="tax_group_id" ref="tax_group_retention_25"/>
+        <field name="tax_group_id" ref="tax_group_retention_purchase"/>
     </record>
 
     <record id="il_vat_sale_retention_10" model="account.tax.template">
@@ -307,7 +307,7 @@
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_retention_10')])]"/>
-        <field name="tax_group_id" ref="tax_group_retention_10"/>
+        <field name="tax_group_id" ref="tax_group_retention_sale"/>
     </record>
 
     <record id="il_vat_sale_retention_35" model="account.tax.template">
@@ -321,6 +321,6 @@
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="il_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_retention_35')])]"/>
-        <field name="tax_group_id" ref="tax_group_retention_35"/>
+        <field name="tax_group_id" ref="tax_group_retention_sale"/>
     </record>
 </odoo>
