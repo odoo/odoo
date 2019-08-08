@@ -24,6 +24,9 @@
                 </a>
             </div>
         </div>
+        <a t-if="widget.moduleToInstall" id="wslides_import_survey_button" href="#" class="w-100 text-center mb-4 btn rounded border text-600 p-3">
+            <i class="fa fa-trophy"></i> Evaluate and certificate your students.
+        </a>
     </t>
 
     <!--
@@ -36,6 +39,13 @@
             </div>
             <h4>Uploading document ...</h4>
         </div>
+    </t>
+
+    <!--
+        Import module template
+    -->
+    <t t-name="website.slide.upload.modal.import">
+        <p id="import_module_text"/>
     </t>
 
     <!--

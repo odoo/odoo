@@ -409,6 +409,8 @@ class WebsiteSlides(WebsiteProfile):
             'user': request.env.user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
+            # display upload modal
+            'enable_slide_upload': 'enable_slide_upload' in kw,
         }
         if not request.env.user._is_public():
             last_message_values = request.env['mail.message'].search([
@@ -429,6 +431,15 @@ class WebsiteSlides(WebsiteProfile):
                     'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
                     'message_post_pid': request.env.user.partner_id.id,
                 })
+
+        if request.env.user.has_group('base.group_system'):
+            # check if survey app is installed
+            module = request.env.ref('base.module_survey')
+            if module.state != 'installed':
+                values['module_to_install'] = {
+                    'id': module.id,
+                    'name': module.shortdesc
+                }
 
         # fetch slides and handle uncategorized slides; done as sudo because we want to display all
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)

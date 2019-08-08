@@ -12,6 +12,7 @@ var _t = core._t;
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
     events: _.extend({}, Dialog.prototype.events, {
+        'click #wslides_import_survey_button': '_onClickImportSurveyModule',
         'click .o_wslides_select_type': '_onClickSlideTypeIcon',
         'change input#upload': '_onChangeSlideUpload',
         'change input#url': '_onChangeSlideUrl',
@@ -34,6 +35,7 @@ var SlideUploadDialog = Dialog.extend({
         this.defaultCategoryID = parseInt(options.categoryId,10);
         this.canUpload = options.canUpload === 'True';
         this.canPublish = options.canPublish === 'True';
+        this.moduleToInstall = options.moduleToInstall ? JSON.parse(options.moduleToInstall.replace(/'/g, '"')) : null;
 
         this.set('state', '_select');
         this.on('change:state', this, this._onChangeType);
@@ -42,6 +44,7 @@ var SlideUploadDialog = Dialog.extend({
 
         this.file = {};
         this.isValidUrl = true;
+        this.importModuleInfo = null;
     },
     start: function () {
         var self = this;
@@ -180,6 +183,11 @@ var SlideUploadDialog = Dialog.extend({
         var state = this.get('state');
         if (state === '_select') {
             btnList.push({text: _t("Cancel"), classes: 'o_w_slide_cancel', close: true});
+        } else if (state === '_import') {
+            if (!this.importModuleInfo.installing) {
+                btnList.push({text: this.importModuleInfo.failed ? _t("Retry") : _t("Install"), classes: 'btn-primary o_w_slide_import', click: this._onClickConfirmImportModule.bind(this)});
+            }
+            btnList.push({text: _t("Go Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
         } else if (state !== '_upload') { // no button when uploading
             if (this.canUpload) {
                 if (this.canPublish) {
@@ -365,6 +373,8 @@ var SlideUploadDialog = Dialog.extend({
             tmpl = 'website.slide.upload.modal.select';
         } else if (currentType === '_upload') {
             tmpl = 'website.slide.upload.modal.uploading';
+        } else if (currentType === '_import') {
+            tmpl = 'website.slide.upload.modal.import';
         } else {
             tmpl = this.slide_type_data[currentType]['template'];
         }
@@ -372,6 +382,12 @@ var SlideUploadDialog = Dialog.extend({
         this.$('.o_w_slide_upload_modal_container').append(QWeb.render(tmpl, {widget: this}));
 
         this._resetModalButton();
+
+        if (currentType === '_import') {
+            this.set_title(_t("New Certification"));
+        } else {
+            this.set_title(_t("Upload a document"));
+        }
     },
     _onChangeCanSubmitForm: function (ev) {
         if (this.get('can_submit_form')) {
@@ -499,9 +515,48 @@ var SlideUploadDialog = Dialog.extend({
             }
         });
     },
+    _onClickConfirmImportModule: function (ev) {
+        var self = this;
+        var $el = this.$('#import_module_text');
+        $el.text(_.str.sprintf(_t('Installing "%s".'), this.importModuleInfo.name));
+        this.importModuleInfo.installing = true;
+        this._resetModalButton();
+        this._rpc({
+            model: 'ir.module.module',
+            method: 'button_immediate_install',
+            args: [[this.importModuleInfo.id]],
+        }).then(function () {
+            window.location.href = window.location.origin + window.location.pathname + '?enable_slide_upload';
+        }, function () {
+            $el.text(_.str.sprintf(_t('Failed to install "%s".'), self.importModuleInfo.name));
+            self.importModuleInfo.installing = false;
+            self.importModuleInfo.failed = true;
+            self._resetModalButton();
+        });
+    },
+    _onClickImportSurveyModule: function (ev) {
+        if (this.importModuleInfo) {
+            this.set('state', '_import');
+            if (this.importModuleInfo.installing) {
+                this.$('#import_module_text')
+                    .text(_.str.sprintf(_t('Already installing "%s".'), this.importModuleInfo.name));
+            } else if (this.importModuleInfo.failed) {
+                this.$('#import_module_text')
+                    .text(_.str.sprintf(_t('Failed to install "%s".'), this.importModuleInfo.name));
+            }
+        } else {
+            this.importModuleInfo = Object.assign(this.moduleToInstall);
+            this.set('state', '_import');
+            this.$('#import_module_text')
+                .text(_.str.sprintf(_t('Do you want to install the "%s" app?'), this.importModuleInfo.name));
+        }
+    },
     _onClickGoBack: function (ev) {
         this.set('state', '_select');
         this.isValidUrl = true;
+        if (this.importModuleInfo && !this.importModuleInfo.installing) {
+            this.importModuleInfo = null;
+        }
     },
     _onClickFormSubmit: function (ev) {
         var self = this;
@@ -544,7 +599,8 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
      */
     start: function () {
         // Automatically open the upload dialog if requested from query string
-        if ($.deparam.querystring().enable_slide_upload !== undefined) {
+        if (this.$el.attr('data-open-modal')) {
+            this.$el.removeAttr('data-open-modal');
             this._openDialog(this.$el);
         }
         return this._super.apply(this, arguments);
