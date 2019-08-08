@@ -1916,25 +1916,19 @@ var PaymentScreenWidget = ScreenWidget.extend({
         return numpad;
     },
     click_delete_paymentline: function(cid){
-        var lines = this.pos.get_order().get_paymentlines();
-        for ( var i = 0; i < lines.length; i++ ) {
-            if (lines[i].cid === cid) {
-                this.pos.get_order().remove_paymentline(lines[i]);
-                this.reset_input();
-                this.render_paymentlines();
-                return;
-            }
+        var line = this.pos.get_order().paymentlines._byId[cid];
+        if (line) {
+            this.pos.get_order().remove_paymentline(line);
+            this.reset_input();
+            this.render_paymentlines();
         }
     },
     click_paymentline: function(cid){
-        var lines = this.pos.get_order().get_paymentlines();
-        for ( var i = 0; i < lines.length; i++ ) {
-            if (lines[i].cid === cid) {
-                this.pos.get_order().select_paymentline(lines[i]);
-                this.reset_input();
-                this.render_paymentlines();
-                return;
-            }
+        var line = this.pos.get_order().paymentlines._byId[cid];
+        if (line) {
+            this.pos.get_order().select_paymentline(line);
+            this.reset_input();
+            this.render_paymentlines();
         }
     },
     render_paymentlines: function() {

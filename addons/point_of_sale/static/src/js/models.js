@@ -763,7 +763,8 @@ exports.PosModel = Backbone.Model.extend({
     /**
      * @returns {Promise<string>}
      */
-    render_html_for_customer_facing_display: function () {
+    render_html_for_customer_facing_display: function (options) {
+        options = options || {};
         var self = this;
         var order = this.get_order();
         var rendered_html = this.config.customer_facing_display_html;
@@ -794,7 +795,7 @@ exports.PosModel = Backbone.Model.extend({
             var order_total_with_tax = self.chrome.format_currency(0);
 
             if (order) {
-                rendered_order_lines = QWeb.render('CustomerFacingDisplayOrderLines', {
+                rendered_order_lines = options.rendered_order_lines || QWeb.render('CustomerFacingDisplayOrderLines', {
                     'orderlines': order.get_orderlines(),
                     'widget': self.chrome,
                 });

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates id="template" inherit_id="point_of_sale.template">
+
+    <t t-name="CustomerFacingDisplayQrCode">
+        <div style="display: flex;justify-content: center;align-items: center;height: 100%;">
+            <div style="justify-content: center;border: solid gray;text-align: center;">
+                <h2>Scan this QR Code To Validate Payment</h2>
+                <img t-att-src="'data:image/jpeg;base64,' + QrCode"/> 
+            </div>
+        </div>
+    </t>
+
+    <t t-extend="PaymentScreenWidget">
+        <t t-jquery='.payment-numpad' t-operation='after'>
+            <t t-if="widget.pos.get_order() &amp;&amp; widget.pos.get_order().QrCode">
+                <div class="payment-qr-code">
+                    <h2>Scan this QR Code To Validate Payment</h2>
+                    <img t-att-src="'data:image/jpeg;base64,' + widget.pos.get_order().QrCode"/>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <!-- The same as in enterprise pos_iot, should be seperated for shared use -->
+    <t t-extend="PaymentScreen-Paymentlines">
+        <t t-jquery='.delete-button' t-operation='replace'>
+            <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done'].includes(line.payment_status)">
+                <td></td>
+            </t>
+            <t t-else=''>
+                <td class='delete-button' t-att-data-cid='line.cid' aria-label="Delete" title="Delete">
+                    <i class='fa fa-times-circle'/> 
+                </td>
+            </t>
+        </t>
+        <t t-jquery='.col-tendered.edit' t-operation='replace'>
+            <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'waitingCard', 'waiting'].includes(line.payment_status)">
+                <td class='col-tendered'>
+                    <t t-esc='widget.inputbuffer' />
+                </td>
+            </t>
+            <t t-else="">
+                <td class='col-tendered edit'>
+                    <t t-esc='widget.inputbuffer' />
+                </td>
+            </t>
+        </t>
+        <t t-jquery='.paymentline' t-operation='append'>
+            <t t-if="line &amp;&amp; line.get_amount() != 0 &amp;&amp; line.payment_status">
+                <tr class="send_request paymentline electronic_payment"/>
+                <tr class="paymentline electronic_payment">
+                    <t t-if="line.payment_status=='pending'">
+                        <td colspan="3">
+                            Payment request pending
+                        </td>
+                        <td colspan="2" class='button send_payment_request highlight' title="Send Payment Request">
+                            Send
+                        </td>
+                    </t>
+                    <t t-if="line.payment_status=='retry'">
+                        <td colspan="3">
+                            Retry Electronic payment
+                        </td>
+                        <td colspan="2" class='button send_payment_request highlight' title="Send Payment Request">
+                            Retry
+                        </td>
+                    </t>
+                    <t t-if="line.payment_status=='force_done'">
+                        <td colspan="3">
+                            Connection error
+                        </td>
+                        <td colspan="2" class='button send_force_done' title="Force Done">
+                            Force done
+                        </td>
+                    </t>
+                    <t t-elif="['waitingCard','waitingScan'].includes(line.payment_status)">
+                        <td colspan="3">
+                            Waiting for payment
+                        </td>
+                        <td colspan="2" class='button send_payment_cancel' title="Cancel Payment Request">
+                            Cancel
+                        </td>
+                    </t>
+                    <t t-elif="['waiting', 'waitingCancel','processing'].includes(line.payment_status)">
+                        <t t-if="line.payment_status != 'processing'"> 
+                            <td colspan="3">
+                                Request send
+                            </td>
+                        </t>
+                        <t t-else="">
+                            <td colspan="3">
+                                Processing Payment
+                            </td>
+                        </t>
+                        <td colspan="2">
+                            <i class='fa fa-spinner fa-spin' role='img'/>
+                        </td>
+                    </t>
+                    <t t-elif="['done'].includes(line.payment_status)">
+                        <td colspan="4">
+                            Payment Successful
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </t>
+        <!-- End of the same as in enterprise pos_iot -->
+    </t>
+</templates>
