@@ -18,16 +18,16 @@
                 <xpath expr="//field[@name='email']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//group[@name='preferences']" position="before">
-                    <separator string="Email &amp; Notifications" />
-                </xpath>
                 <field name="signature" position="replace" />
-                <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="signature" />
+                <xpath expr="//group[@name='preference_contact']" position="before">
+                    <group>
+                        <field name="signature" />
+                    </group>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+                <button name="preference_change_password" position="replace"/>
             </field>
         </record>
 
@@ -50,38 +50,39 @@
                 <form position="replace">
                 <form create="false" js_class="hr_employee_profile_form">
                     <field name="hr_presence_state" invisible="1"/>
-                    <header></header> <!-- Used by other modules to add buttons -->
+                    <header>
+                        <button name="preference_change_password" type="object" string="Change password" class="btn btn-primary"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button
                                 id="hr_presence_button"
                                 class="oe_stat_button"
                                 disabled="1"
-                                attrs="{'invisible': [('hr_presence_state', '=', 'absent')]}">
+                                invisible="context.get('from_my_profile', False)"
+                                attrs="{'invisible': ['|', ('hr_presence_state', '=', 'absent')]}">
                                 <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
                                 <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
                                 <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
 
                                 <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}">
-                                    <span class="o_stat_value">
-                                        <field name="last_activity"/>
-                                    </span>
                                     <span class="o_stat_text">
-                                        Last Activity
+                                        Not Connected
                                     </span>
                                 </div>
                                 <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
-                                    <span class="o_stat_text">Connected</span>
+                                    <span class="o_stat_value">
+                                        <field name="last_activity"/>
+                                    </span>
+                                    <span class="o_stat_text">Connected Since</span>
                                 </div>
                             </button>
                         </div>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" placeholder="Employee's Name" required="True"/>
+                                <field name="name" placeholder="Employee's Name" required="True" readonly="context.get('from_my_profile', False)"/>
                             </h1>
-                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags" groups="hr.group_hr_user"/>
                         </div>
                         <h2>
                             <field name="job_title" placeholder="Job Position"/>
@@ -90,12 +91,10 @@
                             <group>
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="work_phone" widget="phone"/>
-                                <field name="work_email" widget="email"/>
                             </group>
                             <group>
-                                <field name="department_id"/>
+                                <field name="work_email" widget="email"/>
                                 <field name="company_id" invisible="1"/>
-                                <field name="employee_parent_id"/>
                             </group>
                         </group>
                         <notebook>
@@ -106,12 +105,14 @@
                                 <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main">
                                         <group string="Location">
+                                            <field name="department_id"/>
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
                                             <field name="work_location"/>
                                         </group>
                                         <group name="managers" string="Responsibles">
+                                            <field name="employee_parent_id"/>
                                             <field name="coach_id"/>
                                         </group>
                                     </div>
@@ -186,6 +187,7 @@
             <field name="name">Change my Preferences</field>
             <field name="res_model">res.users</field>
             <field name="view_mode">form</field>
+            <field name="context">{'from_my_profile': True}</field>
             <field name="view_id" ref="hr.res_users_view_form_profile"/>
         </record>
 

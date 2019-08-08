@@ -151,13 +151,13 @@
                         class="oe_stat_button"
                         context="{'search_default_employee_id': active_id}"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
+                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
                         </span>
                         <span class="o_stat_text">
-                            Absent Until
+                            Off Till
                         </span>
                     </div>
                 </button>
@@ -171,7 +171,7 @@
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="allocation_used_display"/>/<field name="allocation_display"/>
+                            <field name="allocation_used_display"/>/<field name="allocation_display"/> Days
                         </span>
                         <span class="o_stat_text">
                             Time Off
@@ -197,13 +197,13 @@
                 <button disabled="1"
                         class="oe_stat_button"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Absent Until" title="Absent Until"/>
+                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
                         </span>
                         <span class="o_stat_text">
-                            Absent Until
+                            Off Till
                         </span>
                     </div>
                 </button>
@@ -237,14 +237,15 @@
                 <field name="is_absent" invisible="1"/>
                 <button name="%(hr_leave_action_new_request)d" type="action"
                         class="oe_stat_button"
+                        invisible="context.get('from_my_profile', False)"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Absent Until" title="Absent Until"/>
+                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
                         </span>
                         <span class="o_stat_text">
-                            Absent Until
+                            Off Till
                         </span>
                     </div>
                 </button>
@@ -257,8 +258,7 @@
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="allocation_used_display"/>/
-                            <field name="allocation_display"/>
+                            <field name="allocation_used_display"/>/<field name="allocation_display"/> Days
                         </span>
                         <span class="o_stat_text">
                             Time Off

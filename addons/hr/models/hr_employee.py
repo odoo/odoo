@@ -35,7 +35,7 @@ class HrEmployeePrivate(models.Model):
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
-    name = fields.Char(related='resource_id.name', store=True, readonly=False, tracking=True)
+    name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
@@ -101,7 +101,7 @@ class HrEmployeePrivate(models.Model):
     coach_id = fields.Many2one('hr.employee', 'Coach')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'emp_id', 'category_id', groups="hr.group_hr_user",
+        'emp_id', 'category_id', groups="hr.group_hr_manager",
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")

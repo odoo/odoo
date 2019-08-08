@@ -25,11 +25,11 @@
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
                     <div class="o_stat_info" attrs="{'invisible': ['|', ('last_check_in', '=', False), ('last_check_out', '!=', False)]}">
-                        <span class="o_stat_text">Present Since</span>
+                        <span class="o_stat_text">Attended Since</span>
                         <span class="o_stat_value"><field name="last_check_in" widget="relative_time"/></span>
                     </div>
                     <div class="o_stat_info" attrs="{'invisible': [('last_check_out', '=', False)]}">
-                        <span class="o_stat_text">Absent Since</span>
+                        <span class="o_stat_text">Not Attended Since</span>
                         <span class="o_stat_value"><field name="last_check_out" widget="relative_time"/></span>
                     </div>
                     <div class="o_stat_info" attrs="{'invisible': [('last_check_in', '!=', False)]}">
@@ -37,8 +37,8 @@
                     </div>
                 </button>
                 <button name="%(hr_attendance_action)d"
-                        class="fa-clock-o"
-                        icon="fa-calendar"
+                        class="oe_stat_button"
+                        icon="fa-clock-o"
                         type="action"
                         context="{'search_default_employee_id': active_id, 'search_default_check_in_filter': '1'}"
                         groups="base.group_user"
@@ -71,15 +71,16 @@
                 <button name="%(hr_attendance_action_my_attendances)d"
                     id="hr_attendance_button"
                     class="oe_stat_button"
+                    invisible="context.get('from_my_profile', False)"
                     type="action" attrs="{'invisible': ['|', ('attendance_state', '=', False), '&amp;', ('hr_presence_state', '=', 'present'), ('attendance_state', '=', 'checked_out')]}">
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
                     <div class="o_stat_info" attrs="{'invisible': ['|', ('last_check_in', '=', False), ('last_check_out', '!=', False)]}">
-                        <span class="o_stat_text">Present Since</span>
+                        <span class="o_stat_text">Attended Since</span>
                         <span class="o_stat_value"><field name="last_check_in" widget="relative_time"/></span>
                     </div>
                     <div class="o_stat_info" attrs="{'invisible': [('last_check_out', '=', False)]}">
-                        <span class="o_stat_text">Absent Since</span>
+                        <span class="o_stat_text">Not Attended Since</span>
                         <span class="o_stat_value"><field name="last_check_out" widget="relative_time"/></span>
                     </div>
                     <div class="o_stat_info" attrs="{'invisible': [('last_check_in', '!=', False)]}">
