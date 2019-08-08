@@ -58,11 +58,11 @@ odoo.define('website_slides.fullscreen', function (require) {
                 // function called when the Youtube asset is loaded
                 // see https://developers.google.com/youtube/iframe_api_reference#Requirements
                 onYouTubeIframeAPIReady = function () {
-                    def.resolve();
+                    Promise.resolve(def);
                 };
 
             } else {
-                def.resolve();
+                Promise.resolve(def);
             }
             return def;
         },

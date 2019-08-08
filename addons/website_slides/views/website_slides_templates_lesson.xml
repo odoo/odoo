@@ -113,12 +113,9 @@
         </div>
         <ul id="collapse_slide_aside" class="list-unstyled my-0 pb-3 collapse d-lg-block">
             <t t-set="i" t-value="0"/>
-            <t t-if="uncategorized_slides" t-call="website_slides.slide_aside_training_category">
-                <t t-set="category_slide_ids" t-value="uncategorized_slides"/>
-            </t>
-            <t t-foreach="slide.channel_id.category_ids" t-as="category">
+            <t t-if="category.get('slides')" t-foreach="category_data" t-as="category">
                 <t t-call="website_slides.slide_aside_training_category">
-                    <t t-set="category_slide_ids" t-value="category.slide_ids"/>
+                    <t t-set="category_slide_ids" t-value="category['slides']"/>
                 </t>
             </t>
         </ul>
@@ -126,6 +123,7 @@
 </template>
 
 <template id="slide_aside_training_category" name="Category item for the slide detailed view list">
+    <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section mt-2">
         <a t-att-href="('#collapse-%s') % (category.id if category else 0)" data-toggle="collapse" role="button" aria-expanded="true"
             class="o_wslides_lesson_aside_list_link pl-2 text-600 text-uppercase text-decoration-none py-1 small d-block"

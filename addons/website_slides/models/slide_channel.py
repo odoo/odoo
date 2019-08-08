@@ -101,9 +101,10 @@ class Channel(models.Model):
     tag_ids = fields.Many2many(
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
-    category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
     # slides: promote, statistics
-    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
+    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories")
+    slide_content_ids = fields.One2many('slide.slide', string='Slides', compute="_compute_category_and_slide_ids")
+    slide_category_ids = fields.One2many('slide.slide', string='Categories', compute="_compute_category_and_slide_ids")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
     slide_partner_ids = fields.One2many('slide.slide.partner', 'channel_id', string="Slide User Data", groups='website.group_website_publisher')
     promote_strategy = fields.Selection([
@@ -112,16 +113,16 @@ class Channel(models.Model):
         ('most_viewed', 'Most Viewed')],
         string="Featuring Policy", default='latest', required=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
-    nbr_presentation = fields.Integer('Number of Presentations', compute='_compute_slides_statistics', store=True)
-    nbr_document = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
-    nbr_video = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
-    nbr_infographic = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
-    nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
+    nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
+    nbr_video = fields.Integer('Videos', compute='_compute_slides_statistics', store=True)
+    nbr_infographic = fields.Integer('Infographics', compute='_compute_slides_statistics', store=True)
+    nbr_webpage = fields.Integer("Webpages", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute='_compute_slides_statistics', store=True)
-    total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True)
-    total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
-    total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
-    total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
+    total_slides = fields.Integer('Content', compute='_compute_slides_statistics', store=True)
+    total_views = fields.Integer('Visits', compute='_compute_slides_statistics', store=True)
+    total_votes = fields.Integer('Votes', compute='_compute_slides_statistics', store=True)
+    total_time = fields.Float('Duration', compute='_compute_slides_statistics', digits=(10, 2), store=True)
     rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1))
     # configuration
     allow_comment = fields.Boolean(
@@ -130,7 +131,7 @@ class Channel(models.Model):
              " * like content and post comments on documentation course;\n"
              " * post comment and review on training course;")
     publish_template_id = fields.Many2one(
-        'mail.template', string='Published Template',
+        'mail.template', string='New Content Email',
         help="Email template to send slide publication through email",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_published'))
     share_template_id = fields.Many2one(
@@ -168,9 +169,9 @@ class Channel(models.Model):
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
     karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
     # Karma based actions
-    karma_review = fields.Integer('Add a review', default=10, help="Karma needed to add a review on the course")
-    karma_slide_comment = fields.Integer('Add a comment', default=3, help="Karma needed to add a comment on a slide of this course")
-    karma_slide_vote = fields.Integer('Vote on slide', default=3, help="Karma needed to like/dislike a slide of this course.")
+    karma_review = fields.Integer('Add Review', default=10, help="Karma needed to add a review on the course")
+    karma_slide_comment = fields.Integer('Add Comment', default=3, help="Karma needed to add a comment on a slide of this course")
+    karma_slide_vote = fields.Integer('Vote', default=3, help="Karma needed to like/dislike a slide of this course.")
     can_review = fields.Boolean('Can Review', compute='_compute_action_rights')
     can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights')
     can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights')
@@ -206,12 +207,18 @@ class Channel(models.Model):
         for channel in self:
             channel.is_member = channel.is_member = self.env.user.partner_id.id in result.get(channel.id, [])
 
+    @api.depends('slide_ids.is_category')
+    def _compute_category_and_slide_ids(self):
+        for channel in self:
+            channel.slide_category_ids = channel.slide_ids.filtered(lambda slide: slide.is_category)
+            channel.slide_content_ids = channel.slide_ids - channel.slide_category_ids
+
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
-                 'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
+                 'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category')
     def _compute_slides_statistics(self):
         result = dict((cid, dict(total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
-            [('website_published', '=', True), ('channel_id', 'in', self.ids)],
+            [('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_type'],
             lazy=False)
@@ -227,19 +234,19 @@ class Channel(models.Model):
             result[cid].update(cdata)
 
         for record in self:
-            record.update(result[record.id])
+            record.update(result.get(record.id, {}))
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Compute statistics based on all existing slide types """
         slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
         keys = ['nbr_%s' % slide_type for slide_type in slide_types]
-        keys.append('total_slides')
         result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
+            result[cid]['total_slides'] = 0
             for slide_type in slide_types:
                 result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
-                result[cid]['total_slides'] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
+                result[cid]['total_slides'] += result[cid]['nbr_%s' % slide_type]
         return result
 
     def _compute_rating_stats(self):
@@ -535,7 +542,7 @@ class Channel(models.Model):
         """ Return an ordered structure of slides by categories within a given
         base_domain that must fulfill slides. """
         self.ensure_one()
-        all_categories = self.env['slide.category'].search([('channel_id', '=', self.id)])
+        all_categories = self.env['slide.slide'].sudo().search([('channel_id', '=', self.id), ('is_category', '=', True)])
         all_slides = self.env['slide.slide'].sudo().search(base_domain, order=order)
         category_data = []
 
@@ -561,49 +568,25 @@ class Channel(models.Model):
             })
         return category_data
 
+    def _resequence_slides(self, slide):
+        ids_to_resequence = self.slide_ids.ids
+        index_of_added_slide = ids_to_resequence.index(slide.id)
+        category_id = slide.category_id.id
+        next_category_id = None
+        if self.slide_category_ids:
+            index_of_category = self.slide_category_ids.ids.index(category_id) if category_id else None
+            if index_of_category is None:
+                next_category_id = self.slide_category_ids.ids[0]
+            elif index_of_category < len(self.slide_category_ids.ids) - 1:
+                next_category_id = self.slide_category_ids.ids[index_of_category + 1]
 
-class Category(models.Model):
-    """ Channel contain various categories to manage its slides """
-    _name = 'slide.category'
-    _description = "Slides Category"
-    _order = "sequence, id"
-
-    name = fields.Char('Name', translate=True, required=True)
-    channel_id = fields.Many2one('slide.channel', string="Channel", required=True, ondelete='cascade')
-    sequence = fields.Integer(default=10, help='Display order')
-    slide_ids = fields.One2many('slide.slide', 'category_id', string="Slides")
-    nbr_presentation = fields.Integer("Number of Presentations", compute='_count_presentations', store=True)
-    nbr_document = fields.Integer("Number of Documents", compute='_count_presentations', store=True)
-    nbr_video = fields.Integer("Number of Videos", compute='_count_presentations', store=True)
-    nbr_infographic = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
-    nbr_webpage = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
-    nbr_quiz = fields.Integer("Number of Quizs", compute="_count_presentations", store=True)
-    total_slides = fields.Integer(compute='_count_presentations', store=True)
-
-    @api.depends('slide_ids.slide_type', 'slide_ids.is_published')
-    def _count_presentations(self):
-        result = dict.fromkeys(self.ids, dict())
-        res = self.env['slide.slide'].read_group(
-            [('website_published', '=', True), ('category_id', 'in', self.ids)],
-            ['category_id', 'slide_type'], ['category_id', 'slide_type'],
-            lazy=False)
-
-        type_stats = self._compute_slides_statistics_type(res)
-        for cid, cdata in type_stats.items():
-            result[cid].update(cdata)
-
-        for record in self:
-            record.update(result[record.id])
-
-    def _compute_slides_statistics_type(self, read_group_res):
-        """ Compute statistics based on all existing slide types """
-        slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
-        keys = ['nbr_%s' % slide_type for slide_type in slide_types]
-        keys.append('total_slides')
-        result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
-        for res_group in read_group_res:
-            cid = res_group['category_id'][0]
-            for slide_type in slide_types:
-                result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
-                result[cid]['total_slides'] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
-        return result
+        if next_category_id:
+            added_slide_id = ids_to_resequence.pop(index_of_added_slide)
+            index_of_next_category = ids_to_resequence.index(next_category_id)
+            ids_to_resequence.insert(index_of_next_category, added_slide_id)
+            for i, record in enumerate(self.env['slide.slide'].browse(ids_to_resequence)):
+                record.write({'sequence': i})
+        else:
+            slide.write({
+                'sequence': self.env['slide.slide'].browse(ids_to_resequence[-1]).sequence + 1
+            })
