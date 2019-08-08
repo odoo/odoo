@@ -708,24 +708,27 @@ return AbstractRenderer.extend({
      */
     _renderEventPopover: function (eventData, $eventElement) {
         var self = this;
-        $eventElement.popover({
-            animation: false,
-            delay: {
-                show: 50,
-                hide: 100
-            },
-            trigger: 'manual',
-            html: true,
-            title: eventData.record.display_name,
-            template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.color_index)}),
-            container: eventData.allDay ? '.fc-view' : '.fc-scroller',
-        }).on('shown.bs.popover', function () {
-            var $popover = $($(this).data('bs.popover').tip);
-            $popover.find('.o_cw_popover_close').on('click', self._unselectEvent.bind(self));
-            // Initialize popover widget
-            var calendarPopover = new self.config.CalendarPopover(self, self._getPopoverContext(eventData));
-            calendarPopover.replace($popover.find('.o_cw_body'));
-        }).popover('show');
+
+        // Initialize popover widget
+        var calendarPopover = new self.config.CalendarPopover(self, self._getPopoverContext(eventData));
+        calendarPopover.appendTo($('<div>')).then(() => {
+            $eventElement.popover({
+                animation: false,
+                delay: {
+                    show: 50,
+                    hide: 100
+                },
+                trigger: 'manual',
+                html: true,
+                title: eventData.record.display_name,
+                template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.color_index)}),
+                container: eventData.allDay ? '.fc-view' : '.fc-scroller',
+            }).on('shown.bs.popover', function () {
+                var $popover = $($(this).data('bs.popover').tip);
+                $popover.find('.o_cw_popover_close').on('click', self._unselectEvent.bind(self));
+                $popover.find('.o_cw_body').replaceWith(calendarPopover.$el);
+            }).popover('show');
+        });
     },
 
     //--------------------------------------------------------------------------
