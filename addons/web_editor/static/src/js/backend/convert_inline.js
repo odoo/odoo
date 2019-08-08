@@ -452,7 +452,7 @@ FieldHtml.include({
      * @override
      */
     _onLoadWysiwyg: function () {
-        if (this.nodeOptions['style-inline'] && this.isRendered) {
+        if (this.nodeOptions['style-inline']) {
             this._fromInline();
         }
         this._super();
