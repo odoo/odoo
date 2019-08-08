@@ -4645,7 +4645,7 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {
-                footerToButtons: true,
+                inDialog: true,
                 mode: 'edit',
             },
         });
@@ -4682,7 +4682,7 @@ QUnit.module('Views', {
                         '</footer>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {footerToButtons: true},
+            viewOptions: {inDialog: true},
         });
 
         assert.containsOnce(form.$('.o_control_panel'), 'button.infooter');
@@ -4842,6 +4842,58 @@ QUnit.module('Views', {
             "foo field should have focus");
 
         form.destroy();
+    });
+
+    QUnit.test('Click on save or discard in a form in a modal closes the modal', async function (assert) {
+        assert.expect(5);
+
+        this.actions[0].views = [[false, 'form']];
+        this.actions.push({
+            id: 2,
+            name: 'Partners Action 2',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'form']],
+            target: 'new',
+        });
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            data: this.data,
+            archs: {
+                'partner,false,form': '<form>'+
+                                            '<field name="name"/>'+
+                                        '</form>',
+                'partner,false,search': '<search></search>',
+            },
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/ir.ui.view/check_access_rights") {
+                    return Promise.resolve(true);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.containsNone(document.body, '.modal', 'There should be no modal');
+
+        // open a form view in a dialog
+        await actionManager.doAction(2);
+        assert.containsOnce(document.body, '.modal', 'There should be a modal');
+        // click on save
+        await testUtils.dom.click($('.modal button.o_form_button_save'));
+        // the modal should be closed
+        assert.containsNone(document.body, '.modal', 'There should be no modal');
+
+        // open a form view in a dialog
+        await actionManager.doAction(2);
+        assert.containsOnce(document.body, '.modal', 'There should be a modal');
+        // click on discard
+        await testUtils.dom.click($('.modal button.o_form_button_cancel'));
+        // the modal should be closed
+        assert.containsNone(document.body, '.modal', 'There should be no modal');
+
+        actionManager.destroy();
     });
 
     QUnit.module('focus and scroll test', async function () {

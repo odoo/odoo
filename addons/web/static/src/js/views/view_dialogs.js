@@ -200,7 +200,7 @@ var FormViewDialog = ViewDialog.extend({
                 currentId: self.res_id || undefined,
                 index: 0,
                 mode: self.res_id && self.options.readonly ? 'readonly' : 'edit',
-                footerToButtons: true,
+                inDialog: true,
                 default_buttons: false,
                 withControlPanel: false,
                 model: self.model,

@@ -41,7 +41,7 @@ var FormView = BasicView.extend({
         this.controllerParams.hasSidebar = hasSidebar;
         this.controllerParams.disableAutofocus = params.disable_autofocus;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
-        this.controllerParams.footerToButtons = params.footerToButtons;
+        this.controllerParams.inDialog = params.inDialog;
 
         var defaultButtons = 'default_buttons' in params ? params.default_buttons : true;
         this.controllerParams.defaultButtons = defaultButtons;
@@ -77,7 +77,7 @@ var FormView = BasicView.extend({
         var inline = action.target === 'inline';
         var fullscreen = action.target === 'fullscreen';
         params.withControlPanel = !(inDialog || inline);
-        params.footerToButtons = inDialog;
+        params.inDialog = inDialog;
         params.hasSearchView = inDialog ? false : params.hasSearchView;
         params.hasSidebar = !inDialog && !inline;
         params.searchMenuTypes = inDialog ? [] : params.searchMenuTypes;

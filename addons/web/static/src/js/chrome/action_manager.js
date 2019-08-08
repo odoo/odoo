@@ -24,6 +24,7 @@ var ActionManager = Widget.extend({
     className: 'o_action_manager',
     custom_events: {
         breadcrumb_clicked: '_onBreadcrumbClicked',
+        close_dialog: '_onCloseDialog',
         history_back: '_onHistoryBack',
         push_state: '_onPushState',
         redirect: '_onRedirect',
@@ -876,11 +877,23 @@ var ActionManager = Widget.extend({
     /**
      * @private
      * @param {OdooEvent} ev
-     * @param {OdooEvent} ev.data.controllerID
+     * @param {string} ev.data.controllerID
      */
     _onBreadcrumbClicked: function (ev) {
         ev.stopPropagation();
         this._restoreController(ev.data.controllerID);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} ev.data.controllerID
+     */
+    _onCloseDialog: function (ev) {
+        ev.stopPropagation();
+        const controller = this.controllers[ev.data.controllerID];
+        if (controller && controller.dialog) {
+            controller.dialog.close();
+        }
     },
     /**
      * Goes back in the history: if a controller is opened in a dialog, closes

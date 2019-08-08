@@ -34,7 +34,7 @@ var FormController = BasicController.extend({
 
         this.actionButtons = params.actionButtons;
         this.disableAutofocus = params.disableAutofocus;
-        this.footerToButtons = params.footerToButtons;
+        this.inDialog = params.inDialog;
         this.defaultButtons = params.defaultButtons;
         this.hasSidebar = params.hasSidebar;
         this.toolbarActions = params.toolbarActions || {};
@@ -136,7 +136,7 @@ var FormController = BasicController.extend({
      * @param {jQueryElement} $node
      */
     renderButtons: function ($node) {
-        var $footer = this.footerToButtons ? this.renderer.$('footer') : null;
+        var $footer = this.inDialog ? this.renderer.$('footer') : null;
         var mustRenderFooterButtons = $footer && $footer.length;
         if (!this.defaultButtons && !mustRenderFooterButtons) {
             return;
@@ -482,7 +482,7 @@ var FormController = BasicController.extend({
      */
     _updateButtons: function () {
         if (this.$buttons) {
-            if (this.footerToButtons) {
+            if (this.inDialog) {
                 var $footer = this.renderer.$('footer');
                 if ($footer.length) {
                     this.$buttons.empty().append($footer);
@@ -604,7 +604,12 @@ var FormController = BasicController.extend({
      * @private
      */
     _onDiscard: function () {
-        this._discardChanges();
+        const self = this;
+        this._discardChanges().then(function () {
+            if (self.inDialog) {
+                self.trigger_up('close_dialog', {controllerID: self.controllerID});
+            }
+        });
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar
@@ -735,9 +740,16 @@ var FormController = BasicController.extend({
      */
     _onSave: function (ev) {
         ev.stopPropagation(); // Prevent x2m lines to be auto-saved
-        var self = this;
+        const self = this;
         this._disableButtons();
-        this.saveRecord().then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
+        this.saveRecord()
+            .then(function () {
+                self._enableButtons();
+                if (self.inDialog) {
+                    self.trigger_up('close_dialog', {controllerID: self.controllerID});
+                }
+            })
+            .guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * Called when user swipes left. Move to next record.
