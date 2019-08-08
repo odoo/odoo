@@ -59,11 +59,3 @@ class res_partner(models.Model):
     supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
     purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')
-
-    def _get_name_search_join_clause(self):
-        res = super()._get_name_search_join_clause()
-        partner_search_mode = self.env.context.get('res_partner_search_mode')
-        if partner_search_mode == 'supplier':
-            join_clause = "LEFT JOIN {table} ON res_partner.id = {table}.partner_id".format(table=self.env['purchase.order']._table)
-            return '%s %s' % (res, join_clause) if res else join_clause
-        return res
