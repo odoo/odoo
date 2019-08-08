@@ -94,7 +94,7 @@ tour.register('shop_mail', {
     },
     {
         content: "click on the first email",
-        trigger: '.o_data_cell:contains("(Ref SO")',
+        trigger: '.o_data_cell:contains("(Ref S")',
     },
     {
         content: "check it's the correct email, and the URL is correct too",

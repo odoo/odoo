@@ -69,13 +69,8 @@ tour.register('sale_tour', {
     position: "right",
     id: "form_button_save_clicked"
 }, {
-    trigger: ".o_sale_print",
-    extra_trigger: ".o_sale_order.o_form_readonly",
-    content: _t("Print this quotation to preview it."),
-    position: "bottom"
-}, {
     trigger: ".breadcrumb-item:not(.active):last",
-    extra_trigger: ".o_sale_order [data-value='sent'].btn-primary",
+    extra_trigger: ".o_sale_order [data-value='draft'].btn-primary",
     content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
     position: "bottom"
 }, {
