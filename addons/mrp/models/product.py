@@ -64,6 +64,17 @@ class ProductProduct(models.Model):
         for product in self:
             product.used_in_bom_count = self.env['mrp.bom'].search_count([('bom_line_ids.product_id', '=', product.id)])
 
+    def get_components(self):
+        """ Return the components list ids in case of kit product.
+        Return the product itself otherwise"""
+        self.ensure_one()
+        bom_kit = self.env['mrp.bom']._bom_find(product=self, bom_type='phantom')
+        if bom_kit:
+            boms, bom_sub_lines = bom_kit.explode(self, 1)
+            return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.type == 'product']
+        else:
+            return super(ProductProduct, self).get_components()
+
     def action_used_in_bom(self):
         self.ensure_one()
         action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
@@ -101,6 +112,9 @@ class ProductProduct(models.Model):
                 ratios_free_qty = []
                 for bom_line, bom_line_data in bom_sub_lines:
                     component = bom_line.product_id
+                    if component.type != 'product':
+                        # Consumable product have 0 qty_available so we exclude them
+                        continue
                     uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
                     qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
                     ratios_virtual_available.append(component.virtual_available / qty_per_kit)
@@ -108,7 +122,7 @@ class ProductProduct(models.Model):
                     ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
                     ratios_outgoing_qty.append(component.outgoing_qty / qty_per_kit)
                     ratios_free_qty.append(component.free_qty / qty_per_kit)
-                if bom_sub_lines:
+                if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                     product.virtual_available = min(ratios_virtual_available) // 1
                     product.qty_available = min(ratios_qty_available) // 1
                     product.incoming_qty = min(ratios_incoming_qty) // 1

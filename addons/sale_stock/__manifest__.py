@@ -35,6 +35,7 @@ Preferences
         'wizard/stock_rules_report_views.xml',
     ],
     'demo': ['data/sale_order_demo.xml'],
+    'qweb': ['static/src/xml/qty_at_date.xml'],
     'installable': True,
     'auto_install': True,
 }
