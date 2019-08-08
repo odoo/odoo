@@ -1822,8 +1822,11 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
         if(this.nodeOptions.zoom) {
             var unique = this.recordData.__last_update;
-            var url = this._getImageUrl(this.model, this.res_id, 'image', unique);
+            var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
             var $img;
+            var imageField = _.find(Object.keys(this.recordData), function(o) {
+                return o.startsWith('image_');
+            });
 
             if(this.nodeOptions.background)
             {
@@ -1844,7 +1847,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                 $img = this.$('img');
             }
 
-            if(this.recordData.image) {
+            if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
                 $img.attr('data-zoom-image', url);
 
