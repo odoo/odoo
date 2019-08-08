@@ -1491,7 +1491,7 @@ class MailThread(models.AbstractModel):
                 message = message.encode('utf-8')
             message = email.message_from_string(message)
 
-        message_id = message['message-id']
+        message_id = message['message-id'].strip()
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
             message_id = "<%s@localhost>" % time.time()
