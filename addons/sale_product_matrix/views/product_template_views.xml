@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='variants']" position="inside">
                 <group name="product_mode" attrs="{'invisible': [('has_configurable_attributes', '=', False)]}">
-                    <group string="How to select a variant in the sale order">
+                    <group string="Sales Variant Selection">
                         <field name="has_configurable_attributes" invisible="1"/>
                         <field name="product_add_mode" widget="radio" nolabel="1"/>
                     </group>
