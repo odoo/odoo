@@ -57,7 +57,6 @@ exports.PosModel = Backbone.Model.extend({
         this.employee = {name: null, id: null, barcode: null, user_id:null, pin:null};
         this.employees = [];
         this.partners = [];
-        this.cashregisters = [];
         this.taxes = [];
         this.pos_session = null;
         this.config = null;
@@ -250,10 +249,11 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'pos.session',
-        fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number','login_number'],
+        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'login_number', 'payment_method_ids'],
         domain: function(self){ return [['state','=','opened'],['user_id','=',session.uid]]; },
-        loaded: function(self,pos_sessions){
+        loaded: function(self,pos_sessions,tmp){
             self.pos_session = pos_sessions[0];
+            tmp.payment_method_ids = pos_sessions[0].payment_method_ids;
         },
     },{
         model: 'pos.config',
@@ -365,54 +365,28 @@ exports.PosModel = Backbone.Model.extend({
             }));
         },
     },{
-        model:  'account.bank.statement',
-        fields: ['account_id','currency_id','journal_id','state','name','user_id','pos_session_id'],
-        domain: function(self){ return [['state', '=', 'open'],['pos_session_id', '=', self.pos_session.id]]; },
-        loaded: function(self, cashregisters, tmp){
-            self.cashregisters = cashregisters;
-
-            tmp.journals = [];
-            _.each(cashregisters,function(statement){
-                tmp.journals.push(statement.journal_id[0]);
-            });
+        model:  'pos.payment.method',
+        fields: ['name', 'is_cash_count'],
+        domain: function(self, tmp) {
+            return [['id', 'in', tmp.payment_method_ids]];
         },
-    },{
-        model:  'account.journal',
-        fields: ['type', 'sequence'],
-        domain: function(self,tmp){ return [['id','in',tmp.journals]]; },
-        loaded: function(self, journals){
-            var i;
-            self.journals = journals;
-
-            // associate the bank statements with their journals.
-            var cashregisters = self.cashregisters;
-            var ilen = cashregisters.length;
-            for(i = 0; i < ilen; i++){
-                for(var j = 0, jlen = journals.length; j < jlen; j++){
-                    if(cashregisters[i].journal_id[0] === journals[j].id){
-                        cashregisters[i].journal = journals[j];
-                    }
-                }
-            }
-
-            self.cashregisters_by_id = {};
-            for (i = 0; i < self.cashregisters.length; i++) {
-                self.cashregisters_by_id[self.cashregisters[i].id] = self.cashregisters[i];
-            }
-
-            self.cashregisters = self.cashregisters.sort(function(a,b){
-                // prefer cashregisters to be first in the list
-                if (a.journal.type == "cash" && b.journal.type != "cash") {
+        loaded: function(self, payment_methods) {
+            self.payment_methods = payment_methods.sort(function(a,b){
+                // prefer cash payment_method to be first in the list
+                if (a.is_cash_count && !b.is_cash_count) {
                     return -1;
-                } else if (a.journal.type != "cash" && b.journal.type == "cash") {
+                } else if (!a.is_cash_count && b.is_cash_count) {
                     return 1;
                 } else {
-                    return a.journal.sequence - b.journal.sequence;
+                    return a.id - b.id;
                 }
             });
-
-        },
-    },  {
+            self.payment_methods_by_id = {}
+            _.each(self.payment_methods, function(payment_method) {
+                self.payment_methods_by_id[payment_method.id] = payment_method
+            })
+        }
+    },{
         model:  'account.fiscal.position',
         fields: [],
         domain: function(self){ return [['id','in',self.config.fiscal_position_ids]]; },
@@ -2039,16 +2013,15 @@ exports.Paymentline = Backbone.Model.extend({
             this.init_from_JSON(options.json);
             return;
         }
-        this.cashregister = options.cashregister;
-        if (this.cashregister === undefined) {
+        this.payment_method = options.payment_method;
+        if (this.payment_method === undefined) {
             throw new Error(_t('Please configure a payment method in your POS.'));
         }
-        this.name = this.cashregister.journal_id[1];
+        this.name = this.payment_method.name;
     },
     init_from_JSON: function(json){
         this.amount = json.amount;
-        this.cashregister = this.pos.cashregisters_by_id[json.statement_id];
-        this.name = this.cashregister.journal_id[1];
+        this.payment_method = this.pos.payment_methods_by_id[json.payment_method_id];
     },
     //sets the amount of money on this payment line
     set_amount: function(value){
@@ -2069,18 +2042,12 @@ exports.Paymentline = Backbone.Model.extend({
             this.trigger('change',this);
         }
     },
-    // returns the payment type: 'cash' | 'bank'
-    get_type: function(){
-        return this.cashregister.journal.type;
-    },
     // returns the associated cashregister
     //exports as JSON for server communication
     export_as_JSON: function(){
         return {
             name: time.datetime_to_str(new Date()),
-            statement_id: this.cashregister.id,
-            account_id: this.cashregister.account_id[0],
-            journal_id: this.cashregister.journal_id[0],
+            payment_method_id: this.payment_method.id,
             amount: this.get_amount()
         };
     },
@@ -2088,7 +2055,7 @@ exports.Paymentline = Backbone.Model.extend({
     export_for_printing: function(){
         return {
             amount: this.get_amount(),
-            journal: this.cashregister.journal_id[1],
+            payment_method: this.payment_method.name,
         };
     },
 });
@@ -2574,12 +2541,12 @@ exports.Order = Backbone.Model.extend({
     },
 
     /* ---- Payment Lines --- */
-    add_paymentline: function(cashregister) {
+    add_paymentline: function(payment_method) {
         this.assert_editable();
-        var newPaymentline = new exports.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
-        if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
+        var newPaymentline = new exports.Paymentline({},{order: this, payment_method:payment_method, pos: this.pos});
+        if(!payment_method.is_cash_count || this.pos.config.iface_precompute_cash){
             newPaymentline.set_amount( this.get_due() );
-        }
+        };
         this.paymentlines.add(newPaymentline);
         this.select_paymentline(newPaymentline);
 
@@ -2751,7 +2718,7 @@ exports.Order = Backbone.Model.extend({
     },
     is_paid_with_cash: function(){
         return !!this.paymentlines.find( function(pl){
-            return pl.cashregister.journal.type === 'cash';
+            return pl.payment_method.is_cash_count;
         });
     },
     finalize: function(){

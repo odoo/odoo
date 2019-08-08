@@ -5,7 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class AccountBankStmtCashWizard(models.Model):
@@ -81,9 +81,8 @@ class PosConfig(models.Model):
     def _default_invoice_journal(self):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
 
-    def _get_default_journal_ids(self):
-        journals = self.env['account.journal'].search([('journal_user', '=', True), ('type', 'in', ['cash','bank']), ('company_id', '=', self.env.company.id)])
-        return journals or False
+    def _default_payment_methods(self):
+        return self.env['pos.payment.method'].search([('split_transactions', '=', False), ('company_id', '=', self.env.company.id)])
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('currency_id', '=', self.env.company.currency_id.id)], limit=1)
@@ -101,11 +100,6 @@ class PosConfig(models.Model):
     name = fields.Char(string='Point of Sale', index=True, required=True, help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
-    journal_ids = fields.Many2many(
-        'account.journal', 'pos_config_journal_rel',
-        'pos_config_id', 'journal_id', string='Available Payment Methods',
-        domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]",
-        default=lambda self: self._get_default_journal_ids())
     picking_type_id = fields.Many2one(
         'stock.picking.type',
         string='Operation Type',
@@ -169,8 +163,6 @@ class PosConfig(models.Model):
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
-    group_by = fields.Boolean(string='Group Journal Items', default=True,
-        help="Check this if you want to group the Journal Items by Product while closing a Session.")
     pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
@@ -208,6 +200,7 @@ class PosConfig(models.Model):
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
              "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
              "the closing of his session saying that he needs to contact his manager.")
+    payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods())
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
@@ -281,12 +274,12 @@ class PosConfig(models.Model):
         if self.invoice_journal_id and self.invoice_journal_id.company_id.id != self.company_id.id:
             raise ValidationError(_("The invoice journal and the point of sale must belong to the same company."))
 
-    @api.constrains('company_id', 'journal_ids')
+    @api.constrains('company_id', 'payment_method_ids')
     def _check_company_payment(self):
-        if self.env['account.journal'].search_count([('id', 'in', self.journal_ids.ids), ('company_id', '!=', self.company_id.id)]):
+        if self.env['pos.payment.method'].search_count([('id', 'in', self.payment_method_ids.ids), ('company_id', '!=', self.company_id.id)]):
             raise ValidationError(_("The method payments and the point of sale must belong to the same company."))
 
-    @api.constrains('pricelist_id', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'journal_ids')
+    @api.constrains('pricelist_id', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
     def _check_currencies(self):
         if self.pricelist_id not in self.available_pricelist_ids:
             raise ValidationError(_("The default pricelist must be included in the available pricelists."))
@@ -296,7 +289,11 @@ class PosConfig(models.Model):
                                     " the Accounting application."))
         if self.invoice_journal_id.currency_id and self.invoice_journal_id.currency_id != self.currency_id:
             raise ValidationError(_("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
-        if any(self.journal_ids.mapped(lambda journal: self.currency_id not in (journal.company_id.currency_id, journal.currency_id))):
+        if any(
+            self.payment_method_ids\
+                .filtered(lambda pm: pm.is_cash_count)\
+                .mapped(lambda pm: self.currency_id not in (self.company_id.currency_id | pm.cash_journal_id.currency_id))
+        ):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
     @api.constrains('company_id', 'available_pricelist_ids')
@@ -412,6 +409,9 @@ class PosConfig(models.Model):
         if config_display:
             super(PosConfig, config_display).write({'customer_facing_display_html': self._compute_default_customer_html()})
 
+        if self.current_session_id:
+            raise UserError(_('Unable to modify this PoS Configuration because there is an open PoS Session based on it.'))
+
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
@@ -526,9 +526,24 @@ class PosConfig(models.Model):
         for company in companies:
             if company.chart_template_id:
                 cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
-                cash_journal.write({'journal_user':True})
-                existing_pos_config = self.env['pos.config'].search([('company_id', '=', company.id), ('journal_ids', '=', False)])
-                existing_pos_config.write({'journal_ids': [(6, 0, cash_journal.ids)]})
+                pos_receivable_account = company.account_default_pos_receivable_account_id
+                payment_methods = self.env['pos.payment.method']
+                if cash_journal:
+                    payment_methods |= payment_methods.create({
+                        'name': _('Cash'),
+                        'receivable_account_id': pos_receivable_account.id,
+                        'is_cash_count': True,
+                        'cash_journal_id': cash_journal.id,
+                        'company_id': company.id,
+                    })
+                payment_methods |= payment_methods.create({
+                    'name': _('Bank'),
+                    'receivable_account_id': pos_receivable_account.id,
+                    'is_cash_count': False,
+                    'company_id': company.id,
+                })
+                existing_pos_config = self.env['pos.config'].search([('company_id', '=', company.id), ('payment_method_ids', '=', False)])
+                existing_pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
 
     @api.model
     def generate_pos_journal(self, companies=False):
