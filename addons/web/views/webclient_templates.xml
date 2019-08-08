@@ -478,9 +478,25 @@
         </xpath>
     </template>
 
+    <template id="brand_promotion_message" name="Brand Promotion Message">
+        <t t-set="odoo_logo">
+            <a target="_blank"
+                t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
+                class="badge badge-light">
+                <img alt="Odoo"
+                        src="/web/static/src/img/odoo_logo_tiny.png"
+                        style="height: 1em; vertical-align: baseline;"/>
+            </a>
+        </t>
+        <t t-set="final_message">Powered by %s%s</t>
+        <t t-raw="final_message % (odoo_logo, _message and ('- %s' % _message) or '')"/>
+    </template>
     <template id="brand_promotion" name="Brand Promotion">
         <div class="o_brand_promotion">
-            Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message"></t>
+                <t t-set="_utm_medium">portal</t>
+            </t>
         </div>
     </template>
 
