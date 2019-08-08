@@ -807,29 +807,28 @@ class AccountMove(models.Model):
         :param recompute_all_taxes: Force the computation of taxes. If set to False, the computation will be done
                                     or not depending of the field 'recompute_tax_line' in lines.
         '''
-        self.ensure_one()
+        for invoice in self:
+            # Dispatch lines and pre-compute some aggregated values like taxes.
+            for line in invoice.line_ids:
+                if line.recompute_tax_line:
+                    recompute_all_taxes = True
+                    line.recompute_tax_line = False
 
-        # Dispatch lines and pre-compute some aggregated values like taxes.
-        for line in self.line_ids:
-            if line.recompute_tax_line:
-                recompute_all_taxes = True
-                line.recompute_tax_line = False
+            # Compute taxes.
+            if recompute_all_taxes:
+                invoice._recompute_tax_lines()
 
-        # Compute taxes.
-        if recompute_all_taxes:
-            self._recompute_tax_lines()
+            if invoice.is_invoice(include_receipts=True):
 
-        if self.is_invoice(include_receipts=True):
+                # Compute cash rounding.
+                invoice._recompute_cash_rounding_lines()
 
-            # Compute cash rounding.
-            self._recompute_cash_rounding_lines()
+                # Compute payment terms.
+                invoice._recompute_payment_terms_lines()
 
-            # Compute payment terms.
-            self._recompute_payment_terms_lines()
-
-            # Only synchronize one2many in onchange.
-            if self != self._origin:
-                self.invoice_line_ids = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
+                # Only synchronize one2many in onchange.
+                if invoice != invoice._origin:
+                    invoice.invoice_line_ids = invoice.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
 
     def onchange(self, values, field_name, field_onchange):
         # OVERRIDE
