@@ -204,5 +204,47 @@
                 </group>
             </field>
         </record>
+
+        <record id="res_partner_view_search" model="ir.ui.view">
+            <field name="name">res.partner.search.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="before">
+                   <filter string="Customers" name="customer" domain="[('customer_rank','>', 0)]"/>
+                   <filter string="Vendors" name="supplier" domain="[('supplier_rank','>', 0)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_action_customer" model="ir.actions.act_window">
+            <field name="name">Customers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new customer in your address book
+              </p><p>
+                Odoo helps you easily track all activities related to a customer.
+              </p>
+            </field>
+        </record>
+
+        <record id="res_partner_action_supplier" model="ir.actions.act_window">
+            <field name="name">Suppliers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new supplier in your address book
+              </p><p>
+                Odoo helps you easily track all activities related to a supplier.
+              </p>
+            </field>
+        </record>
     </data>
 </odoo>
