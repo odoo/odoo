@@ -59,9 +59,9 @@
                             <field name="tag_ids" attrs="{'invisible': [('is_category', '=', True)]}" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
                         <notebook attrs="{'invisible': [('is_category', '=', True)]}">
-                            <page string="Document">
+                            <page name="document" string="Document">
                                 <group>
-                                    <group>
+                                    <group name="lesson_details">
                                         <field name="active" invisible="1"/>
                                         <field name="slide_type"/>
                                         <field name="url" attrs="{
@@ -72,7 +72,7 @@
                                         <field name="datas" string="Attachment"
                                             attrs="{'invisible': [('slide_type', 'not in', ('document', 'presentation'))]}"/>
                                     </group>
-                                    <group>
+                                    <group name="related_details">
                                         <field name="user_id"/>
                                         <field name="channel_id"/>
                                         <field name="website_id" groups="website.group_multi_website"/>
@@ -87,7 +87,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Description">
+                            <page name="description" string="Description">
                                 <field name="description"/>
                             </page>
                             <page string="External Links" name="external_links" >
@@ -100,9 +100,9 @@
                                     </field>
                                 </group>
                             </page>
-                            <page string="Quiz">
-                                <group name="container_row_2">
-                                    <group string="Rewards">
+                            <page name="quiz" string="Quiz">
+                                <group name="quiz_details">
+                                    <group name="quiz_rewards" string="Rewards">
                                         <group>
                                             <field string="First attempt" name="quiz_first_attempt_reward"/>
                                             <field string="Second attempt" name="quiz_second_attempt_reward"/>
@@ -120,9 +120,9 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Statistics">
+                            <page name="statistics" string="Statistics">
                                 <group>
-                                    <group string="Views">
+                                    <group name="view_statistics" string="Views">
                                         <field string="Member views" name="slide_views"/>
                                         <field string="Public views" name="public_views" readonly="1"/>
                                         <field string="Total views" name="total_views"/>
