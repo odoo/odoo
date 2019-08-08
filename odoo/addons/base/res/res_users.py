@@ -335,6 +335,12 @@ class Users(models.Model):
         return super(Users, self)._search(args, offset=offset, limit=limit, order=order, count=count,
                                           access_rights_uid=access_rights_uid)
 
+    def update_partner_company(self, company_id):
+        for user in self:
+            # if partner is global we keep it that way
+            if user.partner_id.company_id and user.partner_id.company_id.id != company_id:
+                user.partner_id.write({'company_id': user.company_id.id})
+
     @api.model
     def create(self, vals):
         user = super(Users, self).create(vals)
@@ -365,10 +371,7 @@ class Users(models.Model):
 
         res = super(Users, self).write(values)
         if 'company_id' in values:
-            for user in self:
-                # if partner is global we keep it that way
-                if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
-                    user.partner_id.write({'company_id': user.company_id.id})
+            self.update_partner_company(values['company_id'])
             # clear default ir values when company changes
             self.env['ir.default'].clear_caches()
 
