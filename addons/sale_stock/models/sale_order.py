@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
@@ -192,6 +193,92 @@ class SaleOrderLine(models.Model):
     product_packaging = fields.Many2one('product.packaging', string='Package', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
+    product_type = fields.Selection(related='product_id.type')
+    virtual_available_at_date = fields.Float(compute='_compute_qty_at_date')
+    scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
+    free_qty_today = fields.Float(compute='_compute_qty_at_date')
+    qty_available_today = fields.Float(compute='_compute_qty_at_date')
+    warehouse_id = fields.Many2one(related='order_id.warehouse_id')
+    qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver')
+    is_mto = fields.Boolean(compute='_compute_is_mto')
+    display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
+
+    @api.depends('product_id', 'product_uom_qty', 'qty_delivered', 'state')
+    def _compute_qty_to_deliver(self):
+        """Compute the visibility of the inventory widget."""
+        for line in self:
+            line.qty_to_deliver = line.product_uom_qty - line.qty_delivered
+            if line.state == 'draft' and line.product_type == 'product' and line.qty_to_deliver > 0:
+                line.display_qty_widget = True
+            else:
+                line.display_qty_widget = False
+
+    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'order_id.warehouse_id', 'order_id.commitment_date')
+    def _compute_qty_at_date(self):
+        """ Compute the quantity forecasted of product at delivery date. There are
+        two cases:
+         1. The quotation has a commitment_date, we take it as delivery date
+         2. The quotation hasn't commitment_date, we compute the estimated delivery
+            date based on lead time"""
+        qty_processed_per_product = defaultdict(lambda: 0)
+        grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
+        # We first loop over the SO lines to group them by warehouse and schedule
+        # date in order to batch the read of the quantities computed field.
+        for line in self:
+            if not line.display_qty_widget:
+                continue
+            warehouse = line.order_id.warehouse_id
+            if line.order_id.commitment_date:
+                date = line.order_id.commitment_date
+            else:
+                confirm_date = line.order_id.confirmation_date if line.order_id.state in ['sale', 'done'] else datetime.now()
+                date = confirm_date + timedelta(days=line.customer_lead or 0.0)
+            grouped_lines[(warehouse.id, date)] |= line
+
+        for (warehouse, scheduled_date), lines in grouped_lines.items():
+            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse=warehouse).read([
+                'qty_available',
+                'free_qty',
+                'virtual_available',
+            ])
+            qties_per_product = {
+                product['id']: (product['qty_available'], product['free_qty'], product['virtual_available'])
+                for product in product_qties
+            }
+            for line in lines:
+                line.scheduled_date = scheduled_date
+                qty_available_today, free_qty_today, virtual_available_at_date = qties_per_product[line.product_id.id]
+                line.qty_available_today = qty_available_today - qty_processed_per_product[line.product_id.id]
+                line.free_qty_today = free_qty_today - qty_processed_per_product[line.product_id.id]
+                line.virtual_available_at_date = virtual_available_at_date - qty_processed_per_product[line.product_id.id]
+                qty_processed_per_product[line.product_id.id] += line.product_uom_qty
+
+    @api.depends('product_id', 'route_id', 'order_id.warehouse_id')
+    def _compute_is_mto(self):
+        """ Verify the route of the product based on the warehouse
+            set 'is_available' at True if the product availibility in stock does
+            not need to be verified, which is the case in MTO, Cross-Dock or Drop-Shipping
+        """
+        for line in self:
+            if not line.display_qty_widget:
+                continue
+            product = line.product_id
+            line.is_mto = False
+            product_routes = line.route_id or (product.route_ids + product.categ_id.total_route_ids)
+
+            # Check MTO
+            wh_mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
+            if wh_mto_route and wh_mto_route.mapped('sequence') <= product_routes.mapped('sequence'):
+                line.is_mto = True
+            else:
+                mto_route = False
+                try:
+                    mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
+                except UserError:
+                    # if route MTO not found in ir_model_data, we treat the product as in MTS
+                    pass
+                if mto_route and mto_route in product_routes:
+                    line.is_mto = True
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
@@ -261,56 +348,6 @@ class SaleOrderLine(models.Model):
     def _onchange_product_packaging(self):
         if self.product_packaging:
             return self._check_package()
-
-    @api.onchange('product_id')
-    def _onchange_product_id_uom_check_availability(self):
-        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
-            self.product_uom = self.product_id.uom_id
-        self._onchange_product_id_check_availability()
-
-    @api.onchange('product_uom_qty', 'product_uom', 'route_id')
-    def _onchange_product_id_check_availability(self):
-        if not self.product_id or not self.product_uom_qty or not self.product_uom:
-            self.product_packaging = False
-            return {}
-        return self._check_availability(self.product_id)
-
-    def _check_availability(self, product_id):
-        """ The purpose of this method is only to be overridden if
-        'product_id' is a kit
-        """
-        product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
-        return self._check_availability_warning(product_id, product_qty)
-
-    def _check_availability_warning(self, product_id, product_qty, ignore_warehouse=False):
-        if product_id.type == 'product':
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product_by_wh = product_id.with_context(
-                warehouse=self.order_id.warehouse_id.id,
-                lang=self.order_id.partner_id.lang or self.env.user.lang or 'en_US'
-            )
-            if float_compare(product_by_wh.virtual_available, product_qty, precision_digits=precision) == -1:
-                is_available = self._check_routing(product_id)
-                if not is_available:
-                    message = _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
-                              (self.product_uom_qty, self.product_uom.name, product_id.name,
-                               product_by_wh.virtual_available,
-                               product_by_wh.uom_id.name, self.order_id.warehouse_id.name)
-                    # We check if some products are available in other warehouses.
-                    if not ignore_warehouse and float_compare(product_by_wh.virtual_available, product_id.virtual_available,
-                                     precision_digits=precision) == -1:
-                        message += _('\nThere are %s %s available across all warehouses.\n\n') % \
-                                   (product_id.virtual_available, product_by_wh.uom_id.name)
-                        for warehouse in self.env['stock.warehouse'].search([]):
-                            quantity = product_id.with_context(warehouse=warehouse.id).virtual_available
-                            if quantity > 0:
-                                message += "%s: %s %s\n" % (warehouse.name, quantity, product_id.uom_id.name)
-                    warning_mess = {
-                        'title': _('Not enough inventory!'),
-                        'message': message
-                    }
-                    return {'warning': warning_mess}
-        return {}
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
@@ -449,38 +486,6 @@ class SaleOrderLine(models.Model):
                 },
             }
         return {}
-
-    def _check_routing(self, product_id):
-        """ Verify the route of the product based on the warehouse
-            return True if the product availibility in stock does not need to be verified,
-            which is the case in MTO, Cross-Dock or Drop-Shipping
-        """
-        is_available = False
-        product_routes = self.route_id or (product_id.route_ids + product_id.categ_id.total_route_ids)
-
-        # Check MTO
-        wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id
-        if wh_mto_route and wh_mto_route <= product_routes:
-            is_available = True
-        else:
-            mto_route = False
-            try:
-                mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
-            except UserError:
-                # if route MTO not found in ir_model_data, we treat the product as in MTS
-                pass
-            if mto_route and mto_route in product_routes:
-                is_available = True
-
-        # Check Drop-Shipping
-        if not is_available:
-            for pull_rule in product_routes.mapped('rule_ids'):
-                if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
-                        pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
-                    is_available = True
-                    break
-
-        return is_available
 
     def _update_line_quantity(self, values):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

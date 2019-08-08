@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime, timedelta
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
@@ -559,3 +560,49 @@ class TestSaleStock(TestSale):
         self.assertEqual(so1.order_line.qty_delivered, 5)
         self.assertEqual(so1.picking_ids[-1].move_lines.product_qty, 10)
 
+    def test_09_qty_available(self):
+        """ create a sale order in warehouse1, change to warehouse2 and check the
+        available quantities on sale order lines are well updated """
+        # sell two products
+        item1 = self.products['prod_order']
+        item1.type = 'product'
+        warehouse1 = self.env.ref('stock.warehouse0')
+        self.env['stock.quant']._update_available_quantity(item1, warehouse1.lot_stock_id, 10)
+        self.env['stock.quant']._update_reserved_quantity(item1, warehouse1.lot_stock_id, 3)
+        warehouse2 = self.env['stock.warehouse'].search([('id', '!=', warehouse1.id)], limit=1)
+        self.env['stock.quant']._update_available_quantity(item1, warehouse2.lot_stock_id, 5)
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+            ],
+        })
+        line = so.order_line[0]
+        self.assertAlmostEqual(line.scheduled_date, datetime.now(), delta=timedelta(seconds=10))
+        self.assertEqual(line.virtual_available_at_date, 10)
+        self.assertEqual(line.free_qty_today, 7)
+        self.assertEqual(line.qty_available_today, 10)
+        self.assertEqual(line.warehouse_id, warehouse1)
+        self.assertEqual(line.qty_to_deliver, 1)
+        so.warehouse_id = warehouse2
+        self.assertEqual(line.virtual_available_at_date, 5)
+        self.assertEqual(line.free_qty_today, 5)
+        self.assertEqual(line.qty_available_today, 5)
+        self.assertEqual(line.warehouse_id, warehouse2)
+        self.assertEqual(line.qty_to_deliver, 1)
+
+    def test_10_qty_available(self):
+        """create a sale order containing three times the same product. The
+        quantity available should be different for the 3 lines"""
+        item1 = self.products['prod_order']
+        item1.type = 'product'
+        self.env['stock.quant']._update_available_quantity(item1, self.env.ref('stock.stock_location_stock'), 10)
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+            ],
+        })
+        self.assertEqual(so.order_line.mapped('free_qty_today'), [10, 5, 0])
