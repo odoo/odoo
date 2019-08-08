@@ -1900,7 +1900,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 }
 
                 paymentline.set_amount(amount);
-                this.order_changes();
                 this.render_paymentlines();
                 this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
             }
@@ -2094,7 +2093,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
 
             this.render_paymentlines();
-            this.order_changes();
         }
     },
     render_paymentmethods: function() {
@@ -2130,7 +2128,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             'value': self.format_currency_no_symbol(value),
             'confirm': function(value) {
                 order.set_tip(field_utils.parse.float(value));
-                self.order_changes();
                 self.render_paymentlines();
             }
         });
@@ -2185,7 +2182,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.pos.get_order().clean_empty_paymentlines();
         this.reset_input();
         this.render_paymentlines();
-        this.order_changes();
         // that one comes from BarcodeEvents
         $('body').keypress(this.keyboard_handler);
         // that one comes from the pos, but we prefer to cover all the basis
@@ -2216,6 +2212,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         order.bind('all',function(){
             self.order_changes();
         });
+        order.paymentlines.bind('all', self.order_changes.bind(self));
         this.old_order = order;
     },
     // called when the order is changed, used to show if
