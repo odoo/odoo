@@ -82,10 +82,10 @@ class Forum(models.Model):
                                       'of the forum content.')
     # posts statistics
     post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
-    total_posts = fields.Integer('Post Count', compute='_compute_slides_statistics')
-    total_views = fields.Integer('Views Count', compute='_compute_slides_statistics')
-    total_answers = fields.Integer('Answers Count', compute='_compute_slides_statistics')
-    total_favorites = fields.Integer('Favorites Count', compute='_compute_slides_statistics')
+    total_posts = fields.Integer('Post Count', compute='_compute_forum_statistics')
+    total_views = fields.Integer('Views Count', compute='_compute_forum_statistics')
+    total_answers = fields.Integer('Answers Count', compute='_compute_forum_statistics')
+    total_favorites = fields.Integer('Favorites Count', compute='_compute_forum_statistics')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
@@ -127,7 +127,7 @@ class Forum(models.Model):
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
-    def _compute_slides_statistics(self):
+    def _compute_forum_statistics(self):
         result = dict((cid, dict(total_posts=0, total_views=0, total_answers=0, total_favorites=0)) for cid in self.ids)
         read_group_res = self.env['forum.post'].read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close'))],
