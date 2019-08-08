@@ -25,7 +25,7 @@
 
     <record id="tax_report_tp_wht_per_service" model="account.tax.report.line">
         <field name="name">Personal Withholding Tax (Service)</field>
-        <field name="tag_name">Personal Withholding Tax (Service)</field>
+        <field name="tag_name">Personal Withholding Tax (Service) (to be paid)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_tp_wht_per"/>
         <field name="country_id" ref="base.th"/>
@@ -48,7 +48,7 @@
 
     <record id="tax_report_tp_wht_cmp_service" model="account.tax.report.line">
         <field name="name">Company Withholding Tax (Service)</field>
-        <field name="tag_name">Company Withholding Tax (Service)</field>
+        <field name="tag_name">Company Withholding Tax (Service) (to be paid)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_tp_wht_cmp"/>
         <field name="country_id" ref="base.th"/>
@@ -56,7 +56,7 @@
 
     <record id="tax_report_tp_wht_cmp_other" model="account.tax.report.line">
         <field name="name">Company Withholding Tax (Other)</field>
-        <field name="tag_name">Company Withholding Tax (Other)</field>
+        <field name="tag_name">Company Withholding Tax (Other) (to be paid)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_tp_wht_cmp"/>
         <field name="country_id" ref="base.th"/>
@@ -72,7 +72,7 @@
 
     <record id="tax_report_tp_vat_out" model="account.tax.report.line">
         <field name="name">Output VAT</field>
-        <field name="tag_name">Output VAT</field>
+        <field name="tag_name">Output VAT (to be paid)</field>
         <field name="code">tax_th_PP30_5</field>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="tax_report_tp_vat"/>
@@ -81,7 +81,7 @@
 
     <record id="tax_report_tp_vat_in" model="account.tax.report.line">
         <field name="name">Input VAT</field>
-        <field name="tag_name">Input VAT</field>
+        <field name="tag_name">Input VAT (to be paid)</field>
         <field name="code">tax_th_PP30_7</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="tax_report_tp_vat"/>
@@ -111,7 +111,7 @@
 
     <record id="tax_report_ta_wht_per_service" model="account.tax.report.line">
         <field name="name">Personal Withholding Tax (Service)</field>
-        <field name="tag_name">Personal Withholding Tax (Service)</field>
+        <field name="tag_name">Personal Withholding Tax (Service) (taxable)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_ta_wht_per"/>
         <field name="country_id" ref="base.th"/>
@@ -133,7 +133,7 @@
 
     <record id="tax_report_ta_wht_cmp_service" model="account.tax.report.line">
         <field name="name">Company Withholding Tax (Service)</field>
-        <field name="tag_name">Company Withholding Tax (Service)</field>
+        <field name="tag_name">Company Withholding Tax (Service) (taxable)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_ta_wht_cmp"/>
         <field name="country_id" ref="base.th"/>
@@ -141,7 +141,7 @@
 
     <record id="tax_report_ta_wht_cmp_other" model="account.tax.report.line">
         <field name="name">Company Withholding Tax (Other)</field>
-        <field name="tag_name">Company Withholding Tax (Other)</field>
+        <field name="tag_name">Company Withholding Tax (Other) (taxable)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_ta_wht_cmp"/>
         <field name="country_id" ref="base.th"/>
@@ -156,7 +156,7 @@
 
     <record id="tax_report_ta_vat_out" model="account.tax.report.line">
         <field name="name">Output VAT</field>
-        <field name="tag_name">Output VAT</field>
+        <field name="tag_name">Output VAT (taxable)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_ta_vat"/>
         <field name="country_id" ref="base.th"/>
@@ -164,7 +164,7 @@
 
     <record id="tax_report_ta_vat_in" model="account.tax.report.line">
         <field name="name">Input VAT</field>
-        <field name="tag_name">Input VAT</field>
+        <field name="tag_name">Input VAT (taxable)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_ta_vat"/>
         <field name="country_id" ref="base.th"/>

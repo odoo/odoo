@@ -14,19 +14,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_line_03_02_01_vn')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('chart1331'),
-                    'minus_report_line_ids': [ref('account_tax_report_line_03_01_01_vn')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_03_02_01_vn')],
                 }),
                 (0,0, {
@@ -34,6 +21,19 @@
                     'repartition_type': 'tax',
                     'account_id': ref('chart1331'),
                     'plus_report_line_ids': [ref('account_tax_report_line_03_01_01_vn')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_03_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_03_01_01_vn')],
                 }),
             ]"/>
     </record>
@@ -49,19 +49,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_line_02_02_01_vn')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('chart1331'),
-                    'minus_report_line_ids': [ref('account_tax_report_line_02_01_01_vn')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_02_02_01_vn')],
                 }),
                 (0,0, {
@@ -69,6 +56,19 @@
                     'repartition_type': 'tax',
                     'account_id': ref('chart1331'),
                     'plus_report_line_ids': [ref('account_tax_report_line_02_01_01_vn')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_02_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_02_01_01_vn')],
                 }),
             ]"/>
     </record>
@@ -84,24 +84,22 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_line_01_02_01_vn')],
+                    'plus_report_line_ids': [ref('account_tax_report_line_01_02_01_vn')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('chart1331'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_line_01_02_01_vn')],
+                    'minus_report_line_ids': [ref('account_tax_report_line_01_02_01_vn')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('chart1331'),
                 }),
             ]"/>
     </record>
@@ -194,7 +192,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('chart33311'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -206,7 +203,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('chart33311'),
                 }),
             ]"/>
     </record>

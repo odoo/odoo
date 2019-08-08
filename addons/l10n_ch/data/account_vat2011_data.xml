@@ -622,7 +622,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('ch_coa_2200'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -634,7 +633,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('ch_coa_2200'),
                 }),
             ]"/>
         </record>
@@ -656,7 +654,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('ch_coa_2200'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -668,7 +665,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('ch_coa_2200'),
                 }),
             ]"/>
         </record>
@@ -701,7 +697,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('ch_coa_1171'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -713,7 +708,6 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('ch_coa_1171'),
                 }),
             ]"/>
         </record>
@@ -736,7 +730,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
-                    'plus_report_line_ids': [ref('account_tax_report_line_chtax_382b')],
+                    'minus_report_line_ids': [ref('account_tax_report_line_chtax_382b')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -749,7 +743,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
-                    'minus_report_line_ids': [ref('account_tax_report_line_chtax_382b')],
+                    'plus_report_line_ids': [ref('account_tax_report_line_chtax_382b')],
                 }),
             ]"/>
         </record>

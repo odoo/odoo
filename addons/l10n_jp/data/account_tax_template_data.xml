@@ -20,6 +20,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('A21809'),
                 'plus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8')],
             }),
         ]"/>
@@ -32,6 +33,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('A21809'),
                 'minus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8')],
             }),
         ]"/>
@@ -56,6 +58,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('A21809'),
                 'plus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8')],
             }),
         ]"/>
@@ -68,6 +71,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('A21809'),
                 'minus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8')],
             }),
         ]"/>
@@ -92,7 +96,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_duty_free')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -104,7 +107,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_duty_free')],
             }),
         ]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -128,12 +130,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_tax_free')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_tax_free')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -145,12 +141,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_tax_free')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_tax_free')],
             }),
         ]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -250,7 +240,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_import_8')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -262,7 +251,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_import_8')],
             }),
         ]"/>
         <field name="tax_group_id" ref="tax_group_0"/>

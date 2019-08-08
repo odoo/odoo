@@ -937,7 +937,7 @@ _.extend(wysiwygTranslation.image, {
 dom.isVideo = function (node) {
     node = node && !node.tagName ? node.parentNode : node;
     return (node.tagName === "IFRAME" || node.tagName === "DIV") &&
-        (node.parentNode.className && node.parentNode.className.indexOf('media_iframe_video') !== -1 ||
+        (node.parentNode && node.parentNode.className && node.parentNode.className.indexOf('media_iframe_video') !== -1 ||
             node.className.indexOf('media_iframe_video') !== -1);
 };
 

@@ -45,7 +45,7 @@ class TestDropship(common.TransactionCase):
         self.assertAlmostEqual(po_line.product_qty, 1.00)
 
         # Update qty on SO and check PO
-        so.order_line.product_uom_qty = 2.00
+        so.write({'order_line': [[1, so.order_line.id, {'product_uom_qty': 2.00}]]})
         self.assertAlmostEqual(po_line.product_qty, 2.00)
 
         # Create a new so line

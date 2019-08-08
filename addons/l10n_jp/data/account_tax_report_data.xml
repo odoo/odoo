@@ -32,7 +32,7 @@
 
     <record id="tax_report_to_pay_temp_tx_tax_free" model="account.tax.report.line">
         <field name="name">不課税</field>
-        <field name="tag_name">不課税</field>
+        <field name="tag_name">不課税 (仮受税額)</field>
         <field name="parent_id" ref="tax_report_to_pay_temp_tx"/>
         <field name="sequence">3</field>
         <field name="country_id" ref="base.jp"/>
@@ -63,7 +63,7 @@
 
     <record id="tax_report_to_pay_temp_pmt_tax_free" model="account.tax.report.line">
         <field name="name">不課税</field>
-        <field name="tag_name">不課税</field>
+        <field name="tag_name">不課税 (仮払税額)</field>
         <field name="parent_id" ref="tax_report_to_pay_temp_pmt"/>
         <field name="sequence">3</field>
         <field name="country_id" ref="base.jp"/>

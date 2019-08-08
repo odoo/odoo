@@ -678,6 +678,7 @@ var SnippetsMenu = Widget.extend({
         // on text changes
         this.$document.on('click.snippets_menu', '.o_default_snippet_text', function (ev) {
             $(ev.target).selectContent();
+            $(ev.target).removeClass('o_default_snippet_text');
         });
         this.$document.on('keyup.snippets_menu', function () {
             var range = Wysiwyg.getRange(this);
@@ -746,6 +747,7 @@ var SnippetsMenu = Widget.extend({
             },
         });
         this.cacheSnippetTemplate[this.options.snippets] = this._defLoadSnippets;
+        return this.cacheSnippetTemplate[this.options.snippets];
     },
     /**
      * Sets the instance variables $editor, $body and selectorEditableArea.
@@ -1358,6 +1360,7 @@ var SnippetsMenu = Widget.extend({
                         if (!dropped) {
                             dropped = true;
                             $(this).first().after($toInsert).addClass('d-none');
+                            $toInsert.removeClass('oe_snippet_body');
                         }
                     },
                     out: function () {
@@ -1366,6 +1369,7 @@ var SnippetsMenu = Widget.extend({
                             dropped = false;
                             $toInsert.detach();
                             $(this).removeClass('d-none');
+                            $toInsert.addClass('oe_snippet_body');
                         }
                     },
                 });
