@@ -418,6 +418,8 @@ class WebsiteSlides(WebsiteProfile):
             'user': request.env.user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
+            # display upload modal
+            'enable_slide_upload': 'enable_slide_upload' in kw,
         }
         if not request.env.user._is_public():
             last_message_values = request.env['mail.message'].search([
@@ -450,6 +452,17 @@ class WebsiteSlides(WebsiteProfile):
             limit=False if channel.channel_type != 'documentation' else self._slides_per_page if category else self._slides_per_category,
             offset=pager['offset'])
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
+
+        # for sys admins: prepare data to install directly modules from eLearning when
+        # uploading slides. Currently supporting only survey, because why not.
+        if request.env.user.has_group('base.group_system'):
+            module = request.env.ref('base.module_survey')
+            if module.state != 'installed':
+                values['modules_to_install'] = [{
+                    'id': module.id,
+                    'name': module.shortdesc,
+                    'motivational': _('Evaluate and certificate your students.'),
+                }]
 
         values = self._prepare_additional_channel_values(values, **kw)
         return request.render('website_slides.course_main', values)
