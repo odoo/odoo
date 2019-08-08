@@ -31,6 +31,7 @@ var Chatter = Widget.extend({
         discard_record_changes: '_onDiscardRecordChanges',
         reload_attachment_box: '_onReloadAttachmentBox',
         reload_mail_fields: '_onReloadMailFields',
+        need_refresh_suggested_partner: '_refresh_suggested_partner',
     },
     events: {
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
@@ -473,6 +474,11 @@ var Chatter = Widget.extend({
                 return !_.findWhere(followerSuggestions, { id: partner.id });
             }));
         });
+    },
+
+
+    _refresh_suggested_partner: function (focus) {
+        this.suggested_partners_def = undefined;
     },
 
     //--------------------------------------------------------------------------

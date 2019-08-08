@@ -124,6 +124,9 @@ var ChatterComposer = BasicComposer.extend({
                             },
                             title: _t("Please complete customer's informations"),
                             disable_multiple_selection: true,
+                            on_saved: function (record) {
+                                self.trigger_up('need_refresh_suggested_partner');
+                            },
                         }).open();
                         dialog.on('closed', self, function () {
                             innerResolve();
