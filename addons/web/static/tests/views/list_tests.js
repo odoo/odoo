@@ -231,7 +231,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable rendering with handle', async function (assert) {
-        assert.expect(6);
+        assert.expect(4);
 
         var list = await createView({
             View: ListView,
@@ -248,8 +248,6 @@ QUnit.module('Views', {
         assert.hasClass(list.$('thead th:eq(1)'), 'o_handle_cell');
         assert.strictEqual(list.$('thead th:eq(1)').text(), '',
             "the handle field shouldn't have a header description");
-        assert.strictEqual(list.$('thead th:eq(2)').attr('style'), "width: 50%;");
-        assert.strictEqual(list.$('thead th:eq(3)').attr('style'), "width: 50%;");
         list.destroy();
     });
 
@@ -1425,39 +1423,6 @@ QUnit.module('Views', {
             "table should have kept the same width when switching from edit to readonly mode");
         assert.deepEqual(readonlyWidths, editionWidths,
             "width of columns should remain unchanged when switching from edit to readonly mode");
-
-        list.destroy();
-    });
-
-    QUnit.test('width of some of the fields should be hardcoded', async function (assert) {
-        const assertions = [
-            { field: 'bar', expected: 40, type: 'Boolean' },
-            { field: 'int_field', expected: 80, type: 'Integer' },
-            { field: 'qux', expected: 100, type: 'Float' },
-            { field: 'date', expected: 100, type: 'Date' },
-            { field: 'datetime', expected: 150, type: 'Datetime' },
-        ];
-        assert.expect(assertions.length + 1);
-
-        var list = await createView({
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: '<tree editable="top">' +
-                        '<field name="bar"/>' +
-                        '<field name="foo"/>' +
-                        '<field name="int_field"/>' +
-                        '<field name="qux"/>' +
-                        '<field name="date"/>' +
-                        '<field name="datetime"/>' +
-                    '</tree>',
-        });
-
-        assertions.forEach(a => {
-            assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
-                `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
-        });
-        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%', "Char field should occupy the remaining space");
 
         list.destroy();
     });

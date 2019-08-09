@@ -68,6 +68,7 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
+        this.hasFixedLayout = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
     },
@@ -80,6 +81,13 @@ var ListRenderer = BasicRenderer.extend({
     willStart: function() {
         this._processColumns(this.columnInvisibleFields || {});
         return this._super.apply(this, arguments);
+    },
+
+    on_attach_callback: function () {
+        if (this.hasFixedLayout) {
+            this._setFixedLayout();
+        }
+        this._super();
     },
 
     //--------------------------------------------------------------------------
@@ -311,6 +319,9 @@ var ListRenderer = BasicRenderer.extend({
                 }
             }
         });
+        if (this.hasFixedLayout) {
+            this._setFixedLayout();
+        }
     },
     /**
      * Render a list of <td>, with aggregates if available.  It can be displayed
@@ -962,6 +973,19 @@ var ListRenderer = BasicRenderer.extend({
             $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
         });
     },
+    _setFixedLayout: function () {
+        if (!this.$el) {
+            return;
+        }
+        this.hasFixedLayout = true;
+        var $thead = this.$('thead');
+        $thead.find('th').each(function () {
+            var $th = $(this);
+            $th.css('width', $th.outerWidth() + 'px');
+        });
+        this.$('table').css('table-layout', 'fixed');
+    },
+
     /**
      * Update the footer aggregate values.  This method should be called each
      * time the state of some field is changed, to make sure their sum are kept

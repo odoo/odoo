@@ -477,48 +477,6 @@ ListRenderer.include({
         }
     },
     /**
-     * Returns the relative width according to the widget or the field type.
-     * @see _renderHeader
-     *
-     * @param {Object} column an arch node
-     * @returns {integer | string} either a weight factor (number) or a css
-     *   width description (string)
-     */
-    _getColumnWidthFactor: function (column) {
-        if (!this.state.fieldsInfo.list[column.attrs.name]) {
-            // Unnamed columns get default value
-            return 1;
-        }
-        var field = this.state.fields[column.attrs.name];
-        if (!field) {
-            // this is not a field. Probably a button or something of unknown
-            // width.
-            return 1;
-        }
-        var widget = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
-        if ('widthFactor' in widget) {
-            return widget.widthFactor;
-        }
-        switch (field.type) {
-            case 'binary': return 1;
-            case 'boolean': return '40px';
-            case 'char': return 1;
-            case 'date': return '100px';
-            case 'datetime': return '150px';
-            case 'float': return '100px';
-            case 'html': return 3;
-            case 'integer': return '80px';
-            case 'many2many': return 2;
-            case 'many2one': return 2;
-            case 'monetary': return 1.2;
-            case 'one2many': return 2.5;
-            case 'reference': return 1.5;
-            case 'selection': return 1.5;
-            case 'text': return 2.5;
-            default: return 1;
-        }
-    },
-    /**
      *
      * @returns {integer}
      */
@@ -725,32 +683,6 @@ ListRenderer.include({
                 });
             }
         });
-    },
-    /**
-     * Overridden to set weights or explicit width on columns for the fixed layout.
-     *
-     * @override
-     * @private
-     */
-    _processColumns: function () {
-        this._super.apply(this, arguments);
-        if (this.editable) {
-            var self = this;
-            this.columns.forEach(function (column) {
-                if (column.attrs.width) {
-                    // nothing to do
-                } else if (column.attrs.width_factor) {
-                    column.attrs.widthFactor = parseFloat(column.attrs.width_factor, 10);
-                } else {
-                    var factor = self._getColumnWidthFactor(column);
-                    if (typeof factor === 'string') {
-                        column.attrs.width = factor;
-                    } else {
-                        column.attrs.widthFactor = factor;
-                    }
-                }
-            });
-        }
     },
     /**
      * @override
