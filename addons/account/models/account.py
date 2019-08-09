@@ -1430,13 +1430,16 @@ class AccountTax(models.Model):
             repartition_lines_to_treat = len(tax_repartition_lines)
             total_amount = 0
             for repartition_line in tax_repartition_lines:
-                # In case some rounding error occurs, we compensate for it on the last line
-                line_amount = round(sign * tax_amount * repartition_line.factor if repartition_lines_to_treat != 1 else sign * (tax_amount - total_amount), prec)
+                if repartition_lines_to_treat != 1:
+                    line_amount = round(tax_amount * repartition_line.factor, prec)
+                else:
+                    # In case some rounding error occurs, we compensate for it on the last line
+                    line_amount = round(tax_amount - total_amount, prec)
 
                 taxes_vals.append({
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
-                    'amount': line_amount,
+                    'amount': sign * line_amount,
                     'base': round(sign * base, prec),
                     'sequence': tax.sequence,
                     'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
