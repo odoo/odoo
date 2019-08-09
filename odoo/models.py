@@ -5388,6 +5388,7 @@ Fields:
                 result['warnings'].add((
                     res['warning'].get('title') or _("Warning"),
                     res['warning'].get('message') or "",
+                    res['warning'].get('type') or "",
                 ))
 
         if onchange in ("1", "true"):
@@ -5611,13 +5612,15 @@ Fields:
         # format warnings
         warnings = result.pop('warnings')
         if len(warnings) == 1:
-            title, message = warnings.pop()
-            result['warning'] = dict(title=title, message=message)
+            title, message, type = warnings.pop()
+            if not type:
+                type = 'dialog'
+            result['warning'] = dict(title=title, message=message, type=type)
         elif len(warnings) > 1:
             # concatenate warning titles and messages
             title = _("Warnings")
-            message = "\n\n".join(itertools.chain(*warnings))
-            result['warning'] = dict(title=title, message=message)
+            message = '\n\n'.join([warn_title + '\n\n' + warn_message for warn_title, warn_message, warn_type in warnings])
+            result['warning'] = dict(title=title, message=message, type='dialog')
 
         return result
 
