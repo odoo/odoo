@@ -59,6 +59,7 @@
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="domain">[]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">

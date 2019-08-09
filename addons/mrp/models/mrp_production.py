@@ -6,7 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, float_is_zero
 
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
@@ -179,7 +179,7 @@ class MrpProduction(models.Model):
     def _compute_picking_ids(self):
         for order in self:
             order.picking_ids = self.env['stock.picking'].search([
-                ('group_id', '=', order.procurement_group_id.id),
+                ('group_id', '=', order.procurement_group_id.id), ('group_id', '!=', False),
             ])
             order.delivery_count = len(order.picking_ids)
 
@@ -509,12 +509,13 @@ class MrpProduction(models.Model):
                 move[0]._recompute_state()
                 move[0]._action_assign()
                 move[0].unit_factor = quantity / move[0].raw_material_production_id.product_qty
-            elif quantity < 0:  # Do not remove 0 lines
+                return move[0], old_qty, quantity
+            else:
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
                 move[0]._action_cancel()
                 move[0].unlink()
-            return move[0], old_qty, quantity
+                return self.env['stock.move'], old_qty, quantity
         else:
             move = self._generate_raw_move(bom_line, line_data)
             return move, 0, quantity
@@ -693,9 +694,15 @@ class MrpProduction(models.Model):
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 raise UserError(_('Work order %s is still running') % wo.name)
         self._check_lots()
+
         self.post_inventory()
-        moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
-        moves_to_cancel._action_cancel()
+        # Moves without quantity done are not posted => set them as done instead of canceling. In
+        # case the user edits the MO later on and sets some consumed quantity on those, we do not
+        # want the move lines to be canceled.
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
+            'state': 'done',
+            'product_uom_qty': 0.0,
+        })
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         return self.write({'state': 'done'})
 

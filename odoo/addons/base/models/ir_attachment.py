@@ -442,6 +442,16 @@ class IrAttachment(models.Model):
 
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
+
+        # If the original search reached the limit, it is important the
+        # filtered record set does so too. When a JS view recieve a
+        # record set whose length is bellow the limit, it thinks it
+        # reached the last page.
+        if len(orig_ids) == limit and len(result) < len(orig_ids):
+            result.extend(self._search(args, offset=offset + len(orig_ids),
+                                       limit=limit, order=order, count=count,
+                                       access_rights_uid=access_rights_uid)[:limit - len(result)])
+
         return len(result) if count else list(result)
 
     @api.multi

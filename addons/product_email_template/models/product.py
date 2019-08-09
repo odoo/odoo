@@ -11,4 +11,6 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     email_template_id = fields.Many2one('mail.template', string='Product Email Template',
-        help='Send a product-specific email once the invoice is paid.')
+        help='When validating an invoice, an email will be sent to the customer '
+        'based on this template. The customer will receive an email for each '
+        'product linked to an email template.')

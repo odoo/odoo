@@ -140,12 +140,15 @@ class Website(models.Model):
 
     @api.multi
     def write(self, values):
+        public_user_to_change_websites = self.env['website']
         self._get_languages.clear_cache(self)
         if 'company_id' in values and 'user_id' not in values:
-            company = self.env['res.company'].browse(values['company_id'])
-            values['user_id'] = company._get_public_user().id
+            public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
+            if public_user_to_change_websites:
+                company = self.env['res.company'].browse(values['company_id'])
+                super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
 
-        result = super(Website, self).write(values)
+        result = super(Website, self - public_user_to_change_websites).write(values)
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
             self.env['ir.qweb'].clear_caches()
@@ -169,6 +172,8 @@ class Website(models.Model):
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
+        # prevent /-1 as homepage URL
+        self.homepage_id.url = '/'
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
@@ -1306,7 +1311,7 @@ class Menu(models.Model):
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
-                page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
+                page = self.env['website.page'].search(self.env["website"].website_domain(website_id) + ['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url
@@ -1326,6 +1331,6 @@ class WebsiteRedirect(models.Model):
     type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True, default='301')
     url_from = fields.Char('Redirect From', required=True)
     url_to = fields.Char('Redirect To', required=True)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     active = fields.Boolean(default=True)
     sequence = fields.Integer()

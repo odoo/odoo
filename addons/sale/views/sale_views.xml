@@ -457,6 +457,7 @@
                                         name="analytic_tag_ids"
                                         groups="analytic.group_analytic_tags"
                                         widget="many2many_tags"
+                                        options="{'color_field': 'color'}"
                                     />
                                     <field
                                         name="price_unit"
@@ -488,6 +489,7 @@
                                     <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
                                     <field name="display_type"/>
+                                    <field name="tax_id" invisible="1"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
@@ -1171,7 +1173,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
-            <field name="domain">[('state', '=', 'sale'),('invoice_status','=','to invoice')]</field>
+            <field name="domain">[('invoice_status','=','to invoice')]</field>
             <field name="context">{
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,

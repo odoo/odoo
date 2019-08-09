@@ -160,7 +160,7 @@ var CalendarController = AbstractController.extend({
      * @returns {Deferred}
      */
     _updateRecord: function (record) {
-        return this.model.updateRecord(record).then(this.reload.bind(this));
+        return this.model.updateRecord(record).always(this.reload.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -204,7 +204,9 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onDropRecord: function (event) {
-        this._updateRecord(event.data);
+        this._updateRecord(_.extend({}, event.data, {
+            'drop': true,
+        }));
     },
     /**
      * @private

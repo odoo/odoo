@@ -198,11 +198,11 @@ def concat_xml(file_list):
 
     :param list(str) file_list: list of files to check
     :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
+    :rtype: (bytes, str)
     """
     checksum = hashlib.new('sha1')
     if not file_list:
-        return '', checksum.hexdigest()
+        return b'', checksum.hexdigest()
 
     root = None
     for fname in file_list:

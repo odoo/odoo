@@ -18,7 +18,8 @@ class SaleOrderLine(models.Model):
         if product_uom_id != product_id.uom_id:
             purchase_price = product_id.uom_id._compute_price(purchase_price, product_uom_id)
         price = frm_cur._convert(
-            purchase_price, to_cur, order_id.company_id, order_id.date_order or fields.Date.today(), round=False)
+            purchase_price, to_cur, order_id.company_id or self.env.user.company_id,
+            order_id.date_order or fields.Date.today(), round=False)
         return price
 
     @api.model

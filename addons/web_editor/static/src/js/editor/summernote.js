@@ -1181,6 +1181,20 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
 
     var br = $("<br/>")[0];
 
+    // set selection outside of A if range is at beginning or end
+    var elem = dom.isBR(elem) ? elem.parentNode : dom.node(r.sc);
+    if (elem.tagName === "A") {
+        if (r.so === 0 && dom.firstChild(elem) === r.sc) {
+            r.ec = r.sc = dom.hasContentBefore(elem) || $(dom.createText('')).insertBefore(elem)[0];
+            r.eo = r.so = dom.nodeLength(r.sc);
+            r.select();
+        } else if (dom.nodeLength(r.sc) === r.so && dom.lastChild(elem) === r.sc) {
+            r.ec = r.sc = dom.hasContentAfter(elem) || dom.insertAfter(dom.createText(''), elem);
+            r.eo = r.so = 0;
+            r.select();
+        }
+    }
+
     var node;
     var $node;
     var $clone;
@@ -2284,7 +2298,7 @@ $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backC
 
 options.onCreateLink = function (sLinkUrl) {
     if (sLinkUrl.indexOf('mailto:') === 0 || sLinkUrl.indexOf('tel:') === 0) {
-      // pass
+      sLinkUrl = sLinkUrl.replace(/^tel:([0-9]+)$/, 'tel://$1');
     } else if (sLinkUrl.indexOf('@') !== -1 && sLinkUrl.indexOf(':') === -1) {
       sLinkUrl =  'mailto:' + sLinkUrl;
     } else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl[0] !== '/'

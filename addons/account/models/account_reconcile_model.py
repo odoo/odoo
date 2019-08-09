@@ -154,6 +154,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax.tax_exigibility == 'on_payment',
+                'tax_line_id': tax.id,
             })
 
             # Handle price included taxes.
@@ -441,6 +442,8 @@ class AccountReconcileModel(models.Model):
                     OR
                     (
                         line_partner.partner_id = 0
+                        AND
+                        TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')) != ''
                         AND
                         (
                             regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')

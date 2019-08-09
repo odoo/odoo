@@ -10,12 +10,12 @@
                  <page string="Byproducts" attrs="{'invisible': [('type','=','phantom')]}">
                      <field name="sub_products">
                          <tree string="Byproducts"  editable="top">
-                             <field name="product_id"/>
+                             <field name="product_id" domain="[('id', '!=', parent.product_id)]"/>
                              <field name="product_qty"/>
                              <field name="product_uom_id" groups="uom.group_uom"/>
                          </tree>
                          <form string="Byproducts">
-                             <field name="product_id"/>
+                             <field name="product_id" domain="[('id', '!=', parent.product_id)]"/>
                              <field name="product_qty"/>
                              <field name="product_uom_id" groups="uom.group_uom"/>
                          </form>

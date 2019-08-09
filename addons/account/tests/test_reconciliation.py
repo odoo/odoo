@@ -90,6 +90,11 @@ class TestReconciliation(AccountingTestCase):
             'code': 'CABA',
             'type': 'general',
         })
+        self.general_journal = self.env['account.journal'].create({
+            'name': 'general',
+            'code': 'GENE',
+            'type': 'general',
+        })
 
         # Tax Cash Basis
         self.tax_cash_basis = self.env['account.tax'].create({
@@ -1999,3 +2004,68 @@ class TestReconciliationExec(TestReconciliation):
         pay_receivable_line1 = payment1.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
         self.assertTrue(pay_receivable_line1.reconciled)
         self.assertEqual(pay_receivable_line1.matched_debit_ids, move_caba1.tax_cash_basis_rec_id)
+
+    def test_reconciliation_with_currency(self):
+        #reconciliation on an account having a foreign currency being
+        #the same as the company one
+        account_rcv = self.account_rcv
+        account_rcv.currency_id = self.currency_euro_id
+        aml_obj = self.env['account.move.line'].with_context(
+            check_move_validity=False)
+        general_move1 = self.env['account.move'].create({
+            'name': 'general1',
+            'journal_id': self.general_journal.id,
+        })
+        aml_obj.create({
+            'name': 'debit1',
+            'account_id': account_rcv.id,
+            'debit': 11,
+            'move_id': general_move1.id,
+        })
+        aml_obj.create({
+            'name': 'credit1',
+            'account_id': self.account_rsa.id,
+            'credit': 11,
+            'move_id': general_move1.id,
+        })
+        general_move1.post()
+        general_move2 = self.env['account.move'].create({
+            'name': 'general2',
+            'journal_id': self.general_journal.id,
+        })
+        aml_obj.create({
+            'name': 'credit2',
+            'account_id': account_rcv.id,
+            'credit': 10,
+            'move_id': general_move2.id,
+        })
+        aml_obj.create({
+            'name': 'debit2',
+            'account_id': self.account_rsa.id,
+            'debit': 10,
+            'move_id': general_move2.id,
+        })
+        general_move2.post()
+        general_move3 = self.env['account.move'].create({
+            'name': 'general3',
+            'journal_id': self.general_journal.id,
+        })
+        aml_obj.create({
+            'name': 'credit3',
+            'account_id': account_rcv.id,
+            'credit': 1,
+            'move_id': general_move3.id,
+        })
+        aml_obj.create({
+            'name': 'debit3',
+            'account_id': self.account_rsa.id,
+            'debit': 1,
+            'move_id': general_move3.id,
+        })
+        general_move3.post()
+        to_reconcile = ((general_move1 + general_move2 + general_move3)
+            .mapped('line_ids')
+            .filtered(lambda l: l.account_id.id == account_rcv.id))
+        to_reconcile.reconcile()
+        for aml in to_reconcile:
+            self.assertEqual(aml.amount_residual, 0.0)

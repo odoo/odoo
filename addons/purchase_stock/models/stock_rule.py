@@ -106,11 +106,15 @@ class StockRule(models.Model):
             price_unit = seller.currency_id._convert(
                 price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
 
-        return {
+        res = {
             'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
+        orderpoint_id = values.get('orderpoint_id')
+        if orderpoint_id:
+            res['orderpoint_id'] = orderpoint_id.id
+        return res
 
     @api.multi
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, partner):
@@ -168,7 +172,7 @@ class StockRule(models.Model):
             'partner_id': partner.id,
             'picking_type_id': self.picking_type_id.id,
             'company_id': values['company_id'].id,
-            'currency_id': partner.with_context(force_company=values['company_id'].id).property_purchase_currency_id.id or self.env.user.company_id.currency_id.id,
+            'currency_id': partner.with_context(force_company=values['company_id'].id).property_purchase_currency_id.id or values['company_id'].currency_id.id,
             'dest_address_id': values.get('partner_id', False),
             'origin': origin,
             'payment_term_id': partner.with_context(force_company=values['company_id'].id).property_supplier_payment_term_id.id,

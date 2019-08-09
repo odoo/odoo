@@ -52,7 +52,7 @@ class PosSaleReport(models.Model):
                     LEFT JOIN product_pricelist pp ON (so.pricelist_id = pp.id)
                     LEFT JOIN uom_uom u on (u.id=sol.product_uom)
                     LEFT JOIN uom_uom u2 on (u2.id=pt.uom_id)
-            WHERE so.state != 'cancel'
+            WHERE so.state in ('sale','done')
         """
         return so_str
 

@@ -671,3 +671,58 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             self.assertAlmostEqual(a, b)
         for a, b in pycompat.izip(sorted(amount_currency_lines), [-855.0, -777.27, -81.82, -45.0, 1752.75]):
             self.assertAlmostEqual(a, b)
+
+    def test_order_to_invoice_no_tax(self):
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        self.pos_order_pos1 = self.PosOrder.create({
+            'company_id': self.company_id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 5.0,
+                'qty': 2.0,
+                'price_subtotal': 855,
+                'price_subtotal_incl': 855,
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 5.0,
+                'qty': 3.0,
+                'price_subtotal': 855,
+                'price_subtotal_incl': 855,
+            })],
+            'amount_tax': 855 * 2,
+            'amount_total': 855 * 2,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+
+        # I click on the "Make Payment" wizard to pay the PoS order
+        context_make_payment = {"active_ids": [self.pos_order_pos1.id], "active_id": self.pos_order_pos1.id}
+        self.pos_make_payment = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 855 * 2,
+        })
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos1.id}
+        self.pos_make_payment.with_context(context_payment).check()
+
+        # I check that the order is marked as paid and there is no invoice
+        # attached to it
+        self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
+        self.assertFalse(self.pos_order_pos1.invoice_id, 'Invoice should not be attached to order.')
+
+        # I generate an invoice from the order
+        res = self.pos_order_pos1.action_pos_order_invoice()
+        self.assertIn('res_id', res, "No invoice created")
+
+        # I test that the total of the attached invoice is correct
+        invoice = self.env['account.invoice'].browse(res['res_id'])
+        self.assertAlmostEqual(
+            invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
+
+        for iline in invoice.invoice_line_ids:
+            self.assertFalse(iline.invoice_line_tax_ids)

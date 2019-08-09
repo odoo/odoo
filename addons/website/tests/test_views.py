@@ -610,6 +610,20 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': '<div position="inside">, sub ext</div>',
             'key': 'II',
         })
+
+        #  B
+        #  |
+        #  I
+        #  |
+        #  II
+
+        # First, test that children of inactive children are not returned (not multiwebsite related)
+        self.inherit_view.active = False
+        views = View.get_related_views('B')
+        self.assertEqual(views.mapped('key'), ['B', 'I'], "As 'I' is inactive, 'II' (its own child) should not be returned.")
+        self.inherit_view.active = True
+
+        # Second, test multi-website
         self.inherit_view.with_context(website_id=1).write({'name': 'Extension'})  # Trigger cow on hierarchy
         View.create({
             'name': 'II2',
@@ -796,6 +810,91 @@ class TestCowViewSaving(common.TransactionCase):
         })])
         all_title_updated = specific_view.website_meta_title == self.base_view.website_meta_title == "A bug got fixed by updating this field"
         self.assertEqual(all_title_updated, True, "Update on top level generic views should also be applied on specific views")
+
+    def test_module_new_inherit_view_on_parent_already_forked_xpath_replace(self):
+        """ Deeper, more specific test of above behavior.
+            A module install should add/update the COW view (if allowed fields,
+            eg not modified or prohibited (website_id, inherit_id..)).
+            This test ensure it does not crash if the child view is a primary view.
+        """
+        View = self.env['ir.ui.view']
+
+        # Simulate layout views
+        base_view = View.create({
+            'name': 'Main Frontend Layout',
+            'type': 'qweb',
+            'arch': '<t t-call="web.layout"><t t-set="head_website"/></t>',
+            'key': '_portal.frontend_layout',
+        }).with_context(load_all_views=True)
+
+        inherit_view = View.create({
+            'name': 'Main layout',
+            'mode': 'extension',
+            'inherit_id': base_view.id,
+            'arch': '<xpath expr="//t[@t-set=\'head_website\']" position="replace"><t t-call-assets="web_editor.summernote" t-js="false" groups="website.group_website_publisher"/></xpath>',
+            'key': '_website.layout',
+        })
+
+        # Trigger cow on website_sale hierarchy for website 1
+        base_view.with_context(website_id=1).write({'name': 'Main Frontend Layout (W1)'})
+
+        # Simulate website_sale_comparison install, that's the real test, it
+        # should not crash.
+        View._load_records([dict(xml_id='_website_forum.layout', values={
+            'name': 'Forum Layout',
+            'mode': 'primary',
+            'inherit_id': inherit_view.id,
+            'arch': '<xpath expr="//t[@t-call-assets=\'web_editor.summernote\'][@t-js=\'false\']" position="attributes"><attribute name="groups"/></xpath>',
+            'key': '_website_forum.layout',
+        })])
+
+    def test_multiple_inherit_level(self):
+        """ Test multi-level inheritance:
+            Base
+            |
+            ---> Extension (Website-specific)
+                |
+                ---> Extension 2 (Website-specific)
+        """
+        View = self.env['ir.ui.view']
+
+        self.inherit_view.website_id = 1
+        inherit_view_2 = View.create({
+            'name': 'Extension 2',
+            'mode': 'extension',
+            'inherit_id': self.inherit_view.id,
+            'arch': '<div position="inside">, extended content 2</div>',
+            'key': 'website.extension_view_2',
+            'website_id': 1,
+        })
+
+        total_views = View.search_count([])
+
+        # id | name        | content               | website_id | inherit  | key
+        # --------------------------------------------------------------------------------------------
+        # 1  | Base        |  base content         |     /      |     /    |  website.base_view
+        # 2  | Extension   |  , extended content   |     1      |     1    |  website.extension_view
+        # 3  | Extension 2 |  , extended content 2 |     1      |     2    |  website.extension_view_2
+
+        self.base_view.with_context(website_id=1).write({'arch': '<div>modified content</div>'})
+
+        # 2 views are created, one is deleted
+        self.assertEqual(View.search_count([]), total_views + 1)
+        self.assertFalse(self.inherit_view.exists())
+        self.assertTrue(inherit_view_2.exists())
+
+        # Verify the inheritance
+        base_specific = View.search([('key', '=', self.base_view.key), ('website_id', '=', 1)]).with_context(load_all_views=True)
+        extend_specific = View.search([('key', '=', 'website.extension_view'), ('website_id', '=', 1)])
+        self.assertEqual(extend_specific.inherit_id, base_specific)
+        self.assertEqual(inherit_view_2.inherit_id, extend_specific)
+
+        # id | name        | content               | website_id | inherit  | key
+        # --------------------------------------------------------------------------------------------
+        # 1  | Base        |  base content         |     /      |     /    |  website.base_view
+        # 4  | Base        |  modified content     |     1      |     /    |  website.base_view
+        # 5  | Extension   |  , extended content   |     1      |     4    |  website.extension_view
+        # 3  | Extension 2 |  , extended content 2 |     1      |     5    |  website.extension_view_2
 
 
 class Crawler(HttpCase):

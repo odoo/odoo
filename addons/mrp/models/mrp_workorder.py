@@ -179,6 +179,11 @@ class MrpWorkorder(models.Model):
         for order in (self - late_orders):
             order.color = 2
 
+    @api.onchange('date_planned_start', 'duration_expected')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.duration_expected:
+            self.date_planned_finished = self.date_planned_start  + relativedelta(minutes=self.duration_expected)
+
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
         """ Update stock.move.lot records, according to the new qty currently
@@ -367,7 +372,7 @@ class MrpWorkorder(models.Model):
                              'location_dest_id': location_dest_id,
                     })
             else:
-                production_move.quantity_done += self.qty_producing
+                production_move._set_quantity_done(self.qty_producing)
 
         if not self.next_work_order_id:
             for by_product_move in self._get_byproduct_move_to_update():
@@ -402,7 +407,7 @@ class MrpWorkorder(models.Model):
             self.qty_producing = float_round(self.production_id.product_qty - self.qty_produced, precision_rounding=rounding)
             self._generate_lot_ids()
 
-        if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
+        if self.next_work_order_id and self.next_work_order_id.state not in ['done', 'cancel'] and self.production_id.product_id.tracking != 'none':
             self.next_work_order_id._assign_default_final_lot_id()
 
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:

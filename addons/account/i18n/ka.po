@@ -11,13 +11,14 @@
 # Martin Trigaux, 2019
 # Giorgi Melitauri <gmelitauri@live.com>, 2019
 # Gizo Kobakhidze <040168@gmail.com>, 2019
+# Vasil Grigalashvili <info@clouddesk.info>, 2019
 # Gvantsa Gvinianidze <gvantsa@live.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-07-10 09:57+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Gvantsa Gvinianidze <gvantsa@live.com>, 2019\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
@@ -38,9 +39,9 @@ msgid ""
 msgstr ""
 " * სტატუსი\"დრაფტი\"  გამოიყენება მაშინ, როდესაც მომხმარებელი ახდენს ახალი და დაუდასტურებელი ინვოისის კოდირებას.\n"
 " * სტატუსი \"ღია\" გამოიყენება მომხმარებლის მიერ ინვოისის შექმნისას, ამ დროს ინვოისის ნომერი გენერირდება.გადახდამდე ინვოისის ინარჩეუნებს სტატუსს \"ღია\".\n"
-" * The 'In Payment' status is used when payments have been registered for the entirety of the invoice in a journal configured to post entries at bank reconciliation only, and some of them haven't been reconciled with a bank statement line yet.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
-" * The 'Cancelled' status is used when user cancel invoice."
+" * სტატუსი 'გადახდის პროცესში' როდესაც გადასახდელები დარეგისტრირებულია გადამხდელ ერთეულზე კონფიგურირებულ ჟურნალში და ელოდება ჩანაწერების გატარებას შედარებისთვის. და რემოდენიმე მათგანი არ ემთხვევა.\n"
+" * სტატუსი 'გადახდილი' ენიჭება ინვოისს სრულად გადახდისთანავე. მისი შეშესაბამისი ჯურნალური ჩანაწერები შესაძლოა ემთხვეოდეს ან არ ემთხვეოდეს.\n"
+" * სტატუსი \"გაუქმებული' ენიჭება ინვოისს მაშინ როდესაც მომხმარებელი მას გააუქმებს."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -68,7 +69,7 @@ msgstr ""
 #: code:addons/account/models/account.py:937
 #, python-format
 msgid "%s (Copy)"
-msgstr "%s (კოპირება)"
+msgstr "%s (ასლი)"
 
 #. module: account
 #: code:addons/account/models/account.py:242
@@ -78,7 +79,7 @@ msgstr "%s (კოპირება)"
 #: code:addons/account/models/account.py:598
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (კოპირება)"
+msgstr "%s (ასლი)"
 
 #. module: account
 #: code:addons/account/models/account.py:688
@@ -268,7 +269,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
-msgstr "<i class=\"fa fa-fw fa-comments\"/><b>გაგზავნეთ შეტყობინება</b>"
+msgstr "<i class=\"fa fa-fw fa-comments\"/><b>გაგზავნე შეტყობინება</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -370,6 +371,11 @@ msgid ""
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">Bill </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">Credit Note </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}\">Draft Bill</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('sequence_number_next_prefix','=',False)]}\">- First Number:</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}\">Draft Credit Note</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">Bill </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">Credit Note </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -378,6 +384,9 @@ msgid ""
 "['|',('state','=','draft'), ('type','!=','out_refund')]}\">Credit "
 "Note</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': "
+"['|',('state','=','draft'), ('type','!=','out_refund')]}\">საკრედიტო "
+"ნოტა</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -385,6 +394,8 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
 "'between')]}\">and</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
+"'between')]}\">და</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -392,6 +403,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">ჟურნალის ყველა მონიშნული ჩანაწერი დამოწმდება და"
+" გატარდება, რის შემდეგაც მათ ვერ შეცვლით. </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -399,6 +412,8 @@ msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">სტანდარტული გადასახადები</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -406,6 +421,8 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">ფისკალური ლოკალიზაცია</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -413,16 +430,22 @@ msgid ""
 "<span class=\"o_form_label\">Main Currency</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">ძირ. ვალუტა</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Rounding Method</span>"
+msgid ""
+"<span class=\"o_form_label\">Rounding Method</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">დამრგვალება</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "<span class=\"o_form_label\">of the month</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">ამ თვის</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -435,31 +458,42 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">მხოლოდ საბანკო ანკარიშთან დაუკავშირებელი "
+"ჟურნალები წარმოდგება</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">რაოდენობა</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">სულ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr ""
+msgstr "<span name=\"button_import_placeholder\"/> ამონაწერები"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">New</span>"
-msgstr ""
+msgstr "<span role=\"separator\">ახალი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr ""
+msgstr "<span role=\"separator\">შედარება</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">View</span>"
-msgstr ""
+msgstr "<span role=\"separator\">ჭრილი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">ნაშთი მთავარ ჟურნალში</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -479,37 +513,37 @@ msgstr "-მდე"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount Paid</span>"
-msgstr ""
+msgstr "<span>გადახდილი ოდენობა</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Balance</span>"
-msgstr ""
+msgstr "<span>ნაშთი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Description</span>"
-msgstr ""
+msgstr "<span>აღწერა</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.(%)</span>"
-msgstr ""
+msgstr "<span>ფასდაკლება(%)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr ""
+msgstr "<span>ანგარიშების იმპორტი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Date</span>"
-msgstr ""
+msgstr "<span>ინვოისის თარიღი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
-msgstr ""
+msgstr "<span>ინვოისის ნომერი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -539,12 +573,12 @@ msgstr "ოპერაციები"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "<span>საწყისი ოდენობა</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr ""
+msgstr "<span>რაოდენობა</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -554,17 +588,17 @@ msgstr "<span> ანგარიშგება</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Source Document</span>"
-msgstr ""
+msgstr "<span>წყარო დოკუმენტი</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>გადასახადები</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr ""
+msgstr "<span>ერთეულის ღირებულება</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -574,7 +608,7 @@ msgstr "ხედი"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr ""
+msgstr "<strong class=\"mr16\">ჯამი</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -582,6 +616,8 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr ""
+"<strong class=\"text-center\">დაასკანერე ბანკის "
+"აპლიკაციით</strong><br/><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -589,11 +625,13 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\"> SEPA QR Code არ არის მითითებული "
+"სწორად.</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Your Contact</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">თქვენი კონტაქტი</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -710,18 +748,24 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
+"ნაღდი ფულის რეგისტრი საშუალებას გვაძლევს, რომ ვმართოთ ნაღდი ფულის გატარებები ნაღდი ფულის \n"
+"                ჟურნალებში.  საშუალებას გვაძლებს ადვილად ვმართოთ ნაღდი ფულით \n"
+"                ყოველდღიური გადახდები. შეგიძლიათ შეიტანოთ თქვენს ხელთ არსებული ხურდის ოდენობა\n"
+"                და მერე გაატაროთ ფულის შემოდინება\n"
+"               და გადინება."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1895
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
+"გადახდის პირობები შესაძლოა შეიცავდეს მხოლოდ ერთ ბალანსის ტიპის ჩანაწერს."
 
 #. module: account
 #: code:addons/account/models/account.py:854
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr ""
+msgstr "ბანკის ანგარიში შესაძლოა ეკუთვნოდეს მხოლოდ ერთ ჟურნალს."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -730,11 +774,16 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
+"ბანკის ამონაწერი შეიცავს ყველა ფინანსური ტრანზაქციის მონაცემს\n"
+"                რომელიც მოხდა დროის მოცემულ მონაკვეთში საბანკო ანგარიშზე. თქვენ\n"
+"               ამონაწერი უნდა მოგაწოდოთ ბანკმა პერიოდულად."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
 msgstr ""
+"საბანკო ამონაწერის სტრიქონი წარმოადგენს ერთ ფინანსურ ტრანზაქციას, რომელიც "
+"ანგარიშზე განხორციელდა."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -751,6 +800,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"ჟურნალი გამოიყენება ყოველდღიურ საქმიანობის\n"
+"აღრიცხვასთან დაკავშირებული მონაცემების ჩასაწერად."
 
 #. module: account
 #: code:addons/account/models/account_move.py:324
@@ -761,6 +812,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
+"გადახდების ჟურნალის ჩანაწერი, რომელიც შეიქმნა ისეთ ჟურნალში, რომელიც "
+"კონფიგურაციით, მხოლოდ ახდენს გატარებებს გადახდების შედარებისას, არ შეიძლება "
+"გატარდეს ხელით. ეს ჩანაწერები გატარდება ავტომატურად, როდესაც მოხდება ბანკთან"
+" შედარება. "
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -794,6 +849,8 @@ msgstr "შერჩეული განცხადების ხაზი 
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
+"საგადასახადო ფისკალური პოზიცია მხოლოდ ერთი და იმავე გადასახადებისთვის  "
+"ერთხელ შეიძლება განისაზღვროს."
 
 #. module: account
 #: code:addons/account/models/res_users.py:17
@@ -805,6 +862,11 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"მომხმარებელს არ შეიძლება ჰქონდეს ორივე Tax B2B და Tax B2C:\n"
+"პრობლემური მომხმარებელი: %s\n"
+"ძირითად პარამეტრებში, აირჩიოთ პროდუქციის ფასების გამოჩენა\n"
+" 'გადასახადის შემცველობით' ან  'გადასახადის გარეშე\n"
+"( ან ჩეცვალეთ ორჯერ თუ უკვე სასურველ ჩვენებაში იმყოფებით )."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -814,7 +876,7 @@ msgstr "გაფრთხილება შეიძლება განი�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "გაფრთხილება წვდომაზე"
 
 #. module: account
 #. openerp-web
@@ -841,27 +903,24 @@ msgid "Account"
 msgstr "ანგარიში"
 
 #. module: account
-#: code:addons/account/models/account_move.py:914
+#: code:addons/account/models/account_move.py:948
 #, python-format
 msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
-msgid "Account Accountant"
-msgstr ""
+"ანგარიშის %s (%s) შედარება არ შეიძლება. ჯერ შეცვალეთ კონფიგურაცია ისე, რომ "
+"ანგარიშმა ამის ნება მოგცეთ."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "ანგარიში ნაღდი ფულის დამრგვალება "
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "ანგარიშთა გეგმის ნიმუში"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -900,17 +959,17 @@ msgstr "ანგარიშის ჯგუფები"
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "ანგარიშის მფლობელი"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "ანგარიშის მფლობელის სახელი"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr ""
+msgstr "ანგარიშის ინვოისი გაგზავნილია"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -924,7 +983,7 @@ msgstr "ანგარიშის ჟურნალი"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
 msgid "Account Journal Report"
-msgstr ""
+msgstr "ანგარიშის ჟურნალის რეპორტი"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -970,7 +1029,7 @@ msgstr "დებიტორული დავალიანება"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "ანგარიშების შედარების მოწყობილობა"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1087,6 +1146,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"ანგარიშის მფლობელის სახელი, იმშემტხვევაში, თუ ის განსხვავებულია ამგარიშის "
+"მფლობელისგან"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1096,7 +1157,7 @@ msgstr "პროდუქტის ანგარიში"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr ""
+msgstr "ანგარიშის რეპორტი გადახდის სტრიქონებით"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1163,6 +1224,7 @@ msgid "Account; Reverse entries"
 msgstr "ანგარიში; უკუგატარებები"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -1235,7 +1297,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_payment__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "საჭიროა ქმედება"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -1262,7 +1324,7 @@ msgstr "აქტიური"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
 msgid "Active domain"
-msgstr ""
+msgstr "აქტიური დომენი"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_ids
@@ -1272,7 +1334,7 @@ msgstr "ქმედებები"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "მოქმედენის მდგომარეობა"
 
 #. module: account
 #. openerp-web
@@ -1554,7 +1616,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_cash_box_out__amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__amount
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -1884,7 +1945,7 @@ msgstr "აპრილი"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Archived"
-msgstr ""
+msgstr "დაარქივებული"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -1931,7 +1992,7 @@ msgstr "ფაილის მიბმა"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_payment__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "დანართების რაოდენობა"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
@@ -2174,7 +2235,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
-msgstr ""
+msgstr "საბანკო ამონაწერი"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:591
@@ -3056,7 +3117,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "კონფიგურაციის პარამეტრები"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -3143,7 +3204,7 @@ msgstr "კონტაქტი"
 #: selection:account.reconcile.model,match_label:0
 #: selection:account.reconcile.model.template,match_label:0
 msgid "Contains"
-msgstr ""
+msgstr "შეიცავს"
 
 #. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
@@ -3400,6 +3461,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
 msgid "Created by"
 msgstr "შემქმნელი"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:419
+#, python-format
+msgid "Created by: %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -4041,7 +4108,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "დაიჯესტი"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__group_products_in_bills
@@ -4149,7 +4216,7 @@ msgstr ""
 #: code:addons/account/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "არ გაქვთ წვდომა, გამოტოვეთ ეს ჩანაწერები"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
@@ -4584,7 +4651,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_fiscal_year
 msgid "Fiscal Years"
-msgstr ""
+msgstr "ფისკალური წლები"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -4600,13 +4667,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_last_day
 msgid "Fiscalyear Last Day"
-msgstr ""
+msgstr "ფისკალური წლის ბოლო დღე"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_month
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_last_month
 msgid "Fiscalyear Last Month"
-msgstr ""
+msgstr "ფისკალური წლის ბოლო თვე"
 
 #. module: account
 #: selection:account.reconcile.model,amount_type:0
@@ -5389,6 +5456,8 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"საშუამავლო ანგარიში, რომელიც ერთი სალიკვიდაციო ანგარიშიდან მეორეზე თანხის "
+"გადმოსატანად გამოიყენება"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_group
@@ -10022,6 +10091,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_invoice_send.py:59
+#, python-format
+msgid ""
+"The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -10770,7 +10847,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Transfers"
-msgstr ""
+msgstr "ტრანსფერები"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -10821,7 +10898,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "საზომი ერთეული"
 
 #. module: account
 #: code:addons/account/report/account_aged_partner_balance.py:207
@@ -11068,7 +11145,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "დაადასტურე"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
@@ -11087,7 +11164,7 @@ msgstr ""
 #: selection:account.bank.statement,state:0
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "დადასტურებულია"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
@@ -11102,7 +11179,7 @@ msgstr "მნიშვნელობა"
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
 msgid "Vendor"
-msgstr ""
+msgstr "მომწოდებელი"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -11190,7 +11267,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Vendors"
-msgstr ""
+msgstr "მომწოდებლები"
 
 #. module: account
 #. openerp-web
@@ -11263,14 +11340,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "ვებ-გვერდის შეტყობინებები"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__website_message_ids
 #: model:ir.model.fields,help:account.field_account_invoice__website_message_ids
 #: model:ir.model.fields,help:account.field_account_payment__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "ვებ-გვერდის კომუნიკაციის ისტორია"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11372,18 +11449,22 @@ msgid ""
 "You can not have an overlap between two fiscal years, please correct the "
 "start and/or end dates of your fiscal years."
 msgstr ""
+"არ შეიძლება ფისკალური წლების გადაფარვა! გთხოვთ შეამოწმეთ პერიოდების დაწყების"
+" და დასრულების თარიღები."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1784
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
 msgstr ""
+"ინვოისის ხაზის წაშლა შეგიძლიათ მხოლოდ მაშინ, როდესაც ის არის \"დრაფტის\" "
+"მდგომარეობაში"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:86
 #, python-format
 msgid "You can only register payments for open invoices"
-msgstr ""
+msgstr "გადახდების დარეგისტრირება შეგიძლიათ მხოლოდ ღია ინვოისებზე"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__invoice_reference_type
@@ -11444,7 +11525,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:583
 #, python-format
 msgid "You cannot delete a payment that is already posted."
-msgstr ""
+msgstr "არ შეიძლება უკვე გატარებული გადახდის წაშლა."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:729
@@ -11626,7 +11707,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
-msgstr ""
+msgstr "თქვენ გაქვთ"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:622
@@ -11653,7 +11734,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:1683
 #, python-format
 msgid "You must first select a partner."
-msgstr ""
+msgstr "ჯერ უნდა აირჩიოთ პარტნიორი."
 
 #. module: account
 #. openerp-web
@@ -11726,32 +11807,32 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_success
 msgid "close"
-msgstr ""
+msgstr "დახურვა"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "code"
-msgstr ""
+msgstr "კოდი"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "day(s) after the end of the invoice month"
-msgstr ""
+msgstr "დღე (ები) ინვოისის თვის დასრულებიდან"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "day(s) after the invoice date"
-msgstr ""
+msgstr "დღე(ები) ინვოისის თარიღიდან"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g BE15001559627230"
-msgstr ""
+msgstr "e.g BE15001559627230"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Bank of America"
-msgstr ""
+msgstr "e.g Bank of America"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -11778,6 +11859,11 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:318
 #, python-format
 msgid "have been reconciled automatically."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
+msgid "number of invoice(s) that will not be sent"
 msgstr ""
 
 #. module: account
@@ -11845,7 +11931,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:55
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "ტნარზაქცია"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__amount_by_group

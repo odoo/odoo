@@ -7,7 +7,7 @@ from odoo.http import request
 class ProductWishlist(models.Model):
     _name = 'product.wishlist'
     _description = 'Product Wishlist'
-    _sql_constrains = [
+    _sql_constraints = [
         ("product_unique_partner_id",
          "UNIQUE(product_id, partner_id)",
          "Duplicated wishlisted product for this partner."),
@@ -33,7 +33,7 @@ class ProductWishlist(models.Model):
         else:
             wish = self.search([("partner_id", "=", self.env.user.partner_id.id)])
 
-        return wish.filtered('product_id.product_tmpl_id.website_published')
+        return wish.sudo().filtered('product_id.product_tmpl_id.website_published')
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False):

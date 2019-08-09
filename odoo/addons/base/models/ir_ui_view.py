@@ -646,9 +646,19 @@ actual arch.
                     if node.getparent() is None:
                         source = copy.deepcopy(spec[0])
                     else:
+                        replaced_node_tag = None
                         for child in spec:
                             if child.get('position') == 'move':
                                 child = extract(child)
+
+                            if self._context.get('inherit_branding') and not replaced_node_tag and child.tag is not etree.Comment:
+                                # To make a correct branding, we need to
+                                # - know exactly which node has been replaced
+                                # - store it before anything else has altered the Tree
+                                # Do it exactly here :D
+                                child.set('meta-oe-xpath-replacing', node.tag)
+                                replaced_node_tag = node.tag  # We just store the replaced node tag on the first child of the xpath replacing it
+
                             node.addprevious(child)
                         node.getparent().remove(node)
                 elif pos == 'attributes':
@@ -1246,6 +1256,11 @@ actual arch.
                     if child.get('data-oe-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
+                        # Also, if a node is known to have been replaced during applying xpath
+                        # increment its index to compute an accurate xpath for susequent nodes
+                        replaced_node_tag = child.attrib.pop('meta-oe-xpath-replacing', None)
+                        if replaced_node_tag:
+                            indexes[replaced_node_tag] += 1
                         self.distribute_branding(child)
                     else:
                         indexes[child.tag] += 1

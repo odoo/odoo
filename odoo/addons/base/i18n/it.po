@@ -20,7 +20,7 @@
 # Pietro Della Notte <pdellanotte@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
+# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2018
 # p_amoruso <p.amoruso@elvenstudio.it>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # David Minneci <david@numeko.it>, 2018
@@ -31,16 +31,16 @@
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Paolo Valier, 2018
 # Martin Trigaux, 2018
-# mymage <stefano.consolaro@mymage.it>, 2019
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -6987,6 +6987,20 @@ msgid ""
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
 msgstr ""
+"\n"
+"WMS modulo contabilità\n"
+"======================\n"
+"Questo modulo collega i moduli \"magazzino\" e \"contabilità\" e consente di creare registrazioni contabili per valorizzare i movimenti di magazzino\n"
+"\n"
+"Caratteristiche chiave\n"
+"------------\n"
+"* Valorizzazionei di magazzino (periodica o automatica)\n"
+"* Fatturazione da prelievo\n"
+"\n"
+"Bacheca / Report della gestione magazzino includono:\n"
+"------------------------------------------------------\n"
+"* Valutazione del magazzino alla data (con date nel passato)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_forum
@@ -8410,6 +8424,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Nome per il titolare del conto, nel caso sia diverso da quello del titolare "
+"del conto stesso."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -8548,7 +8564,7 @@ msgstr "Azione da svolgere"
 #: model:ir.model.fields,field_description:base.field_ir_cron__type
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Action Type"
-msgstr "Tipo Azione"
+msgstr "Tipo azione"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_url
@@ -8559,7 +8575,7 @@ msgstr "URL dell'azione"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__usage
 msgid "Action Usage"
-msgstr "Utilizzo Azione"
+msgstr "Uso azione"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
@@ -8606,7 +8622,7 @@ msgstr "Azioni"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Active"
-msgstr "Attivo"
+msgstr "Attiva"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
@@ -9092,9 +9108,7 @@ msgid "Application"
 msgstr "Applicazione"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Permessi applicazione"
 
@@ -9145,7 +9159,7 @@ msgstr "Scrittura"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_calendar
 msgid "Appointments"
-msgstr "Appuntamenti"
+msgstr "appuntamenti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal
@@ -9365,12 +9379,12 @@ msgstr "Acquirente di Pagamenti Authorize.Net"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__auto_search
 msgid "Auto Search"
-msgstr "Auto ricerca"
+msgstr "Ricerca automatica"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
-msgstr "Regole Azione Automatiche"
+msgstr "Regole per azioni automatiche"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
@@ -9380,7 +9394,7 @@ msgstr "Azione Automatica basata sui Contratti dei Dipendenti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_gengo
 msgid "Automated Translations through Gengo API"
-msgstr "Tradotto Automaticamente con Gengo API"
+msgstr "Traduzioni automatiche con le API Gengo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -10150,6 +10164,12 @@ msgid "Cannot aggregate field %r."
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:228
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
@@ -10211,7 +10231,7 @@ msgstr "Chad"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_my
 msgid "Change My Preferences"
-msgstr "Cambia le Mie Preferenze"
+msgstr "Modifica preferenze personali"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
@@ -10973,7 +10993,7 @@ msgstr "Contesto"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__context
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__context
 msgid "Context Value"
-msgstr "Valore Contesto"
+msgstr "Valore contesto"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__context
@@ -12391,7 +12411,7 @@ msgstr "Dominio"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__domain
 msgid "Domain Value"
-msgstr "Valore Dominio"
+msgstr "Valore dominio"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -12529,7 +12549,7 @@ msgstr "Ecuador - Contabilità"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 msgid "Edit Translations"
-msgstr "Modifica Traduzioni"
+msgstr "Modifica traduzioni"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
@@ -12637,7 +12657,7 @@ msgstr "Gateway di posta elettronica"
 #: model:ir.module.category,name:base.module_category_mass_mailing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr "Marketing via email"
+msgstr "Marketing via e-mail"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -12940,7 +12960,7 @@ msgstr "Nome esportato"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Settings"
-msgstr "Esporta Impostazioni"
+msgstr "Esporta impostazioni"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
@@ -12989,7 +13009,7 @@ msgstr "Indirizzi estesi"
 #. module: base
 #: selection:ir.ui.view,mode:0
 msgid "Extension View"
-msgstr "Vista estensione"
+msgstr "Vista estesa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_snailmail_account_reports_followup
@@ -14454,7 +14474,7 @@ msgstr "Driver hardware"
 #: model:ir.module.module,shortdesc:base.module_hw_drivers
 #: model:ir.module.module,shortdesc:base.module_hw_proxy
 msgid "Hardware Proxy"
-msgstr "Proxy Hardware"
+msgstr "Proxy hardware"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__qr_code_valid
@@ -14674,7 +14694,7 @@ msgstr "Nascondi secondi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "History"
-msgstr "Storico"
+msgstr "Cronologia"
 
 #. module: base
 #: model:res.country,name:base.va
@@ -15365,7 +15385,7 @@ msgstr "Data Inizio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_setup
 msgid "Initial Setup Tools"
-msgstr "Strumenti setup iniziale"
+msgstr "Strumenti per installazione iniziale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__date_init
@@ -15708,7 +15728,7 @@ msgstr "Gestione fatturazione"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
 msgid "IoT Box Homepage"
-msgstr "Pagina principale box IoT"
+msgstr "Pagina iniziale box IoT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_iot
@@ -16442,12 +16462,12 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_link_tracker
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
-msgstr "Link Tracker"
+msgstr "Monitoraggio link"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale
 msgid "Link module between Point of Sale and Sales"
-msgstr "Modulo di collegamento tra il punto vendita e le vendite"
+msgstr "Modulo di collegamento tra punto vendita e vendite"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
@@ -20336,8 +20356,7 @@ msgid "Original currency"
 msgstr "Valuta di origine"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -20420,7 +20439,7 @@ msgstr "Il nome %r è utilizzato due volte."
 #: model:ir.model.fields,field_description:base.field_base_language_import__overwrite
 #: model:ir.model.fields,field_description:base.field_base_language_install__overwrite
 msgid "Overwrite Existing Terms"
-msgstr "Sovrascrivere termini esistenti"
+msgstr "Sovrascrivi termini esistenti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -21309,7 +21328,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_blog
 msgid "Publish blog posts, announces, news"
-msgstr "Pubblicazione di articoli, annunci, notizie in un blog"
+msgstr "Pubblicazione di articoli, annunci e notizie in un blog"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
@@ -21965,7 +21984,7 @@ msgstr "Limitare"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__multi
 msgid "Restrict to lists"
-msgstr "Limita agli elenci"
+msgstr "Limita agli elenchi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_right
@@ -22376,7 +22395,7 @@ msgstr "Visualizzazione della ricerca"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
 msgid "Search View Ref."
-msgstr "Rif. Vista Ricerca"
+msgstr "Rif. vista di ricerca"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -22951,12 +22970,12 @@ msgstr "Campo di ordinamento %s non trovato sul modello %s"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__src_model
 msgid "Source Model"
-msgstr "Modello di Origine"
+msgstr "Modello origine"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Source Object"
-msgstr "Oggetto Origine"
+msgstr "Oggetto origine"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_form
@@ -23440,7 +23459,7 @@ msgstr "Tanzania"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__target
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__target
 msgid "Target Window"
-msgstr "Finestra di Destinazione"
+msgstr "Finestra obiettivo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
@@ -24057,6 +24076,7 @@ msgstr "Nome tecnico"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Impostazioni tecniche"
 
@@ -25033,7 +25053,7 @@ msgstr "Gestire i biglietti di supporto"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr "Monitoraggio dei lead e chiusura opportunità"
+msgstr "Monitoraggio dei contatti e chiusura delle opportunità"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -25782,9 +25802,7 @@ msgid "User Login"
 msgstr "Login Utente"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "Tipo utente"
 
@@ -26053,7 +26071,7 @@ msgstr "Vista ID"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_mode
 msgid "View Mode"
-msgstr "Modo di vista"
+msgstr "Modalità vista"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__name
@@ -26063,7 +26081,7 @@ msgstr "Nome vista"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_id
 msgid "View Ref."
-msgstr "Rif. Vista"
+msgstr "Rif. vista"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_type
@@ -26081,7 +26099,7 @@ msgstr "Vedi e crea report"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
-msgstr "Modo eredità della vista"
+msgstr "Modo ereditarietà della vista"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__view_type
@@ -26147,7 +26165,7 @@ msgstr "Visibile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr "WMS Contabilità"
+msgstr "Contabilità SGM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
@@ -26846,8 +26864,8 @@ msgstr "es. it_IT"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "es. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "es. https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
@@ -26867,7 +26885,7 @@ msgstr "Consegne eCommerce"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_link_tracker
 msgid "eCommerce Link Tracker"
-msgstr ""
+msgstr "Monitoraggio link e-commerce"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form

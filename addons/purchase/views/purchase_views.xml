@@ -169,7 +169,7 @@
                                 placeholder="Name, TIN, Email, or Reference"
                             />
                             <field name="partner_ref"/>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
                         </group>
                         <group>
                             <field name="date_order"/>
@@ -371,7 +371,7 @@
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                    <field name="invoice_status" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -389,6 +389,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+            <field name="domain">[]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
