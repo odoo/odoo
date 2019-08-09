@@ -26,6 +26,6 @@ class ProductTemplate(models.Model):
 
     def get_variant_groups(self):
         res = OrderedDict()
-        for var in self.attribute_line_ids.sorted(lambda x: x.attribute_id.sequence):
+        for var in self.attribute_line_ids.sorted(lambda x: (x.attribute_id.category_id.sequence, x.attribute_id.sequence)):
             res.setdefault(var.attribute_id.category_id.name or _('Uncategorized'), []).append(var)
         return res
