@@ -13,6 +13,8 @@
 
     <menuitem id="menu_product_in_config_stock" name="Products" parent="stock.menu_stock_config_settings" sequence="4"/>
 
+    <menuitem id="menu_variant_in_config_stock" name="Variants" parent="stock.menu_stock_config_settings" sequence="4" groups="product.group_product_variant"/>
+
     <menuitem id="menu_wms_barcode_nomenclature_all" parent="menu_product_in_config_stock" action="barcodes.action_barcode_nomenclature_form"
         sequence="50" groups="base.group_no_one"/>
 
@@ -24,10 +26,10 @@
         parent="stock.menu_product_in_config_stock" sequence="2"/>
     <menuitem
         action="product.attribute_action" id="menu_attribute_action"
-        parent="menu_product_in_config_stock" sequence="4" groups="product.group_product_variant"/>
+        parent="menu_variant_in_config_stock" sequence="4"/>
     <menuitem
         action="product.variants_action" id="menu_variants_action"
-        parent="menu_product_in_config_stock" sequence="5" groups="product.group_product_variant"/>
+        parent="menu_variant_in_config_stock" sequence="5" groups="base.group_no_one"/>
     <menuitem
         action="uom.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
         name="UoM Categories"
