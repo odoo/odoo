@@ -608,7 +608,7 @@
                                 <group name="sales_person" string="Sales">
                                     <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" string="Quotation Date" groups="base.group_no_one"/>
                                     <field name="user_id"/>
-                                    <field name="team_id" options="{'no_create': True}"/>
+                                    <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="require_signature" groups="base.group_no_one"/>
                                     <field name="require_payment" groups="base.group_no_one"/>
@@ -1135,7 +1135,7 @@
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
                     <xpath expr="//group[@name='sale_info_group']" position="inside">
-                        <field name="team_id"/>
+                        <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </xpath>
                     <xpath expr="//group[@id='other_tab_group']" position="inside">
                         <group string="Marketing"

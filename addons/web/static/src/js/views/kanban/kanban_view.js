@@ -36,6 +36,7 @@ var KanbanView = BasicView.extend({
         // false so that they will won't be loaded by the initial load
         this.loadParams.openGroupByDefault = config.device.isMobile ? false : true;
         this.loadParams.type = 'list';
+        this.noDefaultGroupby = params.noDefaultGroupby;
         var progressBar;
         utils.traverse(this.arch, function (n) {
             var isProgressBar = (n.tag === 'progressbar');
@@ -70,6 +71,7 @@ var KanbanView = BasicView.extend({
             editable: activeActions.edit,
             deletable: activeActions.delete,
             read_only_mode: params.readOnlyMode,
+            selectionMode: params.selectionMode,
         };
         this.rendererParams.quickCreateEnabled = this._isQuickCreateEnabled();
         this.rendererParams.readOnlyMode = params.readOnlyMode;
@@ -79,7 +81,7 @@ var KanbanView = BasicView.extend({
         }
 
         this.controllerParams.on_create = archAttrs.on_create;
-        this.controllerParams.hasButtons = true;
+        this.controllerParams.hasButtons = !params.selectionMode ? true : false;
         this.controllerParams.quickCreateEnabled = this.rendererParams.quickCreateEnabled;
 
 
@@ -114,10 +116,12 @@ var KanbanView = BasicView.extend({
      */
     _updateMVCParams: function () {
         this._super.apply(this, arguments);
-        var defaultGroupBy = this.arch.attrs.default_group_by;
-        this.loadParams.groupBy = defaultGroupBy ?
-                                    [defaultGroupBy] :
-                                    (this.loadParams.groupedBy || []);
+        if (!this.noDefaultGroupby) {
+            var defaultGroupBy = this.arch.attrs.default_group_by;
+            this.loadParams.groupBy = defaultGroupBy ?
+                                        [defaultGroupBy] :
+                                        (this.loadParams.groupedBy || []);
+        }
     },
 });
 

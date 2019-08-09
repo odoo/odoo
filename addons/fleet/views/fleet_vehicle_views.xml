@@ -247,7 +247,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="o_kanban_button">
+                            <div class="o_kanban_button" t-if="!selection_mode">
                                 <a t-if="record.contract_count.raw_value>0" data-type="object"
                                    data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
                                    data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
@@ -261,7 +261,7 @@
                                     </span>
                                 </a>
                             </div>
-                            <div class="o_kanban_inline_block">
+                            <div class="o_kanban_inline_block" t-if="!selection_mode">
                                 <field name="activity_ids" widget="kanban_activity"/>
                             </div>
                         </div>

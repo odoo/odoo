@@ -167,9 +167,9 @@
                                     <t t-if="installed">
                                         <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
                                     </t>
-                                    <button t-if="!installed" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
-                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary float-right">Activate</button>
-                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary float-right">Configure</button>
+                                    <button t-if="!installed and !selection_mode" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
+                                    <button t-if="installed and !record.website_published.raw_value and !selection_mode" type="edit" class="btn btn-primary float-right">Activate</button>
+                                    <button t-if="installed and record.website_published.raw_value and !selection_mode" type="edit" class="btn btn-primary float-right">Configure</button>
                                 </div>
                             </div>
                         </t>

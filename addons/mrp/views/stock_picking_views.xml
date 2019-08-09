@@ -12,20 +12,21 @@
             </field>
 
             <xpath expr='//div[@name="stock_picking"]' position="after">
-                <div t-if="record.code.raw_value == 'mrp_operation'" t-attf-class="#{kanban_color(record.color.raw_value)}">
+                <div t-if="record.code.raw_value == 'mrp_operation'" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                     <div>
                         <div t-attf-class="o_kanban_card_header">
                             <div class="o_kanban_card_header_title">
-                                <a type="object" name="get_mrp_stock_picking_action_picking_type" class="o_primary">
+                                <a type="object" name="get_mrp_stock_picking_action_picking_type" class="o_primary" t-if="!selection_mode">
                                     <field name="name"/>
                                 </a>
+                                <span class="o_primary" t-if="selection_mode"><field name="name"/></span>
                                 <div class="o_secondary"><field class="o_secondary"  name="warehouse_id"/></div>
                             </div>
-                            <div class="o_kanban_manage_button_section">
+                            <div class="o_kanban_manage_button_section" t-if="!selection_mode">
                                 <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                             </div>
                         </div>
-                        <div class="container o_kanban_card_content">
+                        <div class="container o_kanban_card_content" t-if="!selection_mode">
                             <div class="row">
                                 <div class="col-6 o_kanban_primary_left">
                                     <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_todo': 1}">
