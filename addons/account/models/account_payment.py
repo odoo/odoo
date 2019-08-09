@@ -603,7 +603,10 @@ class account_payment(models.Model):
                     move.line_ids.remove_move_reconcile()
                 move.button_cancel()
                 move.unlink()
-            rec.state = 'cancelled'
+            rec.write({
+                'state': 'cancelled',
+                'move_name': False,
+            })
 
     @api.multi
     def unlink(self):
