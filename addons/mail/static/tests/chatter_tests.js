@@ -3074,6 +3074,82 @@ QUnit.test('chatter: mention prefetched partners (followers & employees)', async
     form.destroy();
 });
 
+QUnit.test('chatter: display suggested partners only once', async function (assert) {
+    assert.expect(3);
+
+    let isMessageSent = false;
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread" options="{'display_log_button': True}"/>
+                </div>
+            </form>`,
+        res_id: 2,
+        async mockRPC(route, args) {
+            if (route === '/mail/read_followers') {
+                return {
+                    followers: [],
+                    subtypes: [],
+                };
+            }
+            if (route === '/mail/get_suggested_recipients') {
+                if (isMessageSent) {
+                    return {
+                        2: [],
+                    };
+                }
+                return {
+                    2: [[2, "Jack <jack@example.com>", "Partner Profile"]],
+                };
+            }
+            if (args.method === 'message_post') {
+                isMessageSent = true;
+                return 57923;
+            }
+            if (args.method === 'message_format') {
+                return [{
+                    author_id: ["42", "Me"],
+                    model: 'partner',
+                }];
+            }
+            return this._super(route, args);
+        },
+        session: {},
+    });
+
+    await testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    const $input = form.$('.oe_chatter .o_composer_text_field:first()');
+    assert.containsOnce(
+        form,
+        'div.o_composer_suggested_partners input',
+        "should show one suggested recipient");
+    assert.strictEqual(
+        form.$('div.o_composer_suggested_partners label').text().replace(/\s+/g, ''),
+        "Jack(jack@example.com)",
+        "should have the correct label");
+
+    $input.val("BBQ and beers tonight! Are you in?");
+    await testUtils.dom.click(form.$('.o_composer_button_send'));
+    // Open composer for new message
+    await testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    assert.containsNone(
+        form,
+        'div.o_composer_suggested_partners input',
+        "should no longer show the suggested recipient");
+
+    form.destroy();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach: function () {
         this.data = {
