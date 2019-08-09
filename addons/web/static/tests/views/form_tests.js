@@ -3026,7 +3026,8 @@ QUnit.module('Views', {
                         value: { int_field: 10 },
                         warning: {
                             title: "Warning",
-                            message: "You must first select a partner"
+                            message: "You must first select a partner",
+                            type: 'dialog',
                         }
                     });
                 }
@@ -3035,6 +3036,55 @@ QUnit.module('Views', {
             intercepts: {
                 warning: function (event) {
                     assert.strictEqual(event.data.type, 'dialog',
+                        "should have triggered an event with the correct data");
+                    assert.strictEqual(event.data.title, "Warning",
+                        "should have triggered an event with the correct data");
+                    assert.strictEqual(event.data.message, "You must first select a partner",
+                        "should have triggered an event with the correct data");
+                },
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('input[name=int_field]').val(), '9');
+
+        await testUtils.fields.editInput(form.$('input[name=foo]'), 'tralala');
+
+        assert.strictEqual(form.$('input[name=int_field]').val(), '10');
+
+        form.destroy();
+    });
+
+    QUnit.test('display a notificaton if onchange result is a warning with type notification', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.onchanges = { foo: true };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/><field name="int_field"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        value: { int_field: 10 },
+                        warning: {
+                            title: "Warning",
+                            message: "You must first select a partner",
+                            type: 'notification',
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                warning: function (event) {
+                    assert.strictEqual(event.data.type, 'notification',
                         "should have triggered an event with the correct data");
                     assert.strictEqual(event.data.title, "Warning",
                         "should have triggered an event with the correct data");
@@ -3114,7 +3164,7 @@ QUnit.module('Views', {
                         value: {},
                         warning: {
                             title: "Warning",
-                            message: "You must first select a partner"
+                            message: "You must first select a partner",
                         }
                     });
                 }

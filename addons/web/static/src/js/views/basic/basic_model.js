@@ -4059,11 +4059,7 @@ var BasicModel = AbstractModel.extend({
                     return;
                 }
                 if (result.warning) {
-                    self.trigger_up('warning', {
-                        message: result.warning.message,
-                        title: result.warning.title,
-                        type: 'dialog',
-                    });
+                    self.trigger_up('warning', result.warning);
                     record._warning = true;
                 }
                 if (result.domain) {

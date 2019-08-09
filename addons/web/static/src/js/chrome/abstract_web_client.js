@@ -396,7 +396,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 title: data.title,
             }, data).open();
         } else {
-            this.call('notification', 'notify', e.data);
+            data.type = 'warning';
+            this.call('notification', 'notify', data);
         }
     },
     /**
