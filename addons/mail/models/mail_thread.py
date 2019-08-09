@@ -1699,7 +1699,7 @@ class MailThread(models.AbstractModel):
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self,
                      body='', subject=None, message_type='notification',
-                     email_from=False, author_id=None, parent_id=False,
+                     email_from=None, author_id=None, parent_id=False,
                      subtype_id=False, subtype=None, partner_ids=None, channel_ids=None,
                      attachments=None, attachment_ids=None,
                      add_sign=True, record_name=False,
@@ -1750,10 +1750,8 @@ class MailThread(models.AbstractModel):
             raise ValueError('message_post partner_ids and channel_ids must be integer list, not commands')
 
         # Find the message's author
-        if author_id is None:  # keep False values
-            author_id = self.env.user.partner_id.id
-        if not email_from:
-            email_from = self.env['res.partner'].browse(author_id).sudo().email_formatted if author_id else self.env['mail.message']._get_default_from()
+        author_info = self._message_compute_author(author_id, email_from, raise_exception=True)
+        author_id, email_from = author_info['author_id'], author_info['email_from']
 
         if not subtype_id:
             subtype = subtype or 'mt_note'
@@ -1786,6 +1784,7 @@ class MailThread(models.AbstractModel):
         values = dict(msg_kwargs)
         values.update({
             'author_id': author_id,
+            'email_from': email_from,
             'model': self._name,
             'res_id': self.id,
             'body': body,
@@ -1797,7 +1796,6 @@ class MailThread(models.AbstractModel):
             'channel_ids': channel_ids,
             'add_sign': add_sign,
             'record_name': record_name,
-            'email_from': email_from,
         })
         attachments = attachments or []
         attachment_ids = attachment_ids or []
@@ -1887,7 +1885,7 @@ class MailThread(models.AbstractModel):
         return composer.send_mail()
 
     def message_notify(self, partner_ids=False, parent_id=False, model=False, res_id=False,
-                       author_id=False, body='', subject=False, **kwargs):
+                       author_id=None, email_from=None, body='', subject=False, **kwargs):
         """ Shortcut allowing to notify partners of messages that shouldn't be 
         displayed on a document. It pushes notifications on inbox or by email depending
         on the user configuration, like other notifications. """
@@ -1897,16 +1895,8 @@ class MailThread(models.AbstractModel):
         msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
         notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
 
-        if author_id:
-            author = self.env['res.partner'].sudo().browse(author_id)
-        else:
-            author = self.env.user.partner_id
-
-        if not author.email:
-            raise exceptions.UserError(_("Unable to notify message, please configure the sender's email address."))
-        email_from = author.email_formatted
-
-        partner_ids = partner_ids or set()
+        author_info = self._message_compute_author(author_id, email_from, raise_exception=True)
+        author_id, email_from = author_info['author_id'], author_info['email_from']
 
         if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
@@ -1924,7 +1914,7 @@ class MailThread(models.AbstractModel):
             'message_type': 'user_notification',
             'subject': subject,
             'body': body,
-            'author_id': author.id,
+            'author_id': author_id,
             'email_from': email_from,
             'partner_ids': partner_ids,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
@@ -1937,7 +1927,7 @@ class MailThread(models.AbstractModel):
         MailThread._notify_thread(new_message, values, **notif_kwargs)
         return new_message
 
-    def _message_log(self, body='', author_id=None, subject=False, message_type='notification', **kwargs):
+    def _message_log(self, body='', author_id=None, email_from=None, subject=False, message_type='notification', **kwargs):
         """ Shortcut allowing to post note on a document. It does not perform
         any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -1945,24 +1935,13 @@ class MailThread(models.AbstractModel):
         the log process. This method should be called within methods where
         access rights are already granted to avoid privilege escalation. """
         self.ensure_one()
-        if author_id:
-            author = self.env['res.partner'].sudo().browse(author_id)
-        else:
-            author = self.env.user.partner_id
-            author_id = author.id
-
-        if author.email:
-            email_from = author.email_formatted
-        elif self.env.su:
-            # superuser mode without author email -> probably public user; anyway we don't want to crash
-            email_from = False
-        else:
-            raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
+        author_info = self._message_compute_author(author_id, email_from, raise_exception=False)
+        author_id, email_from = author_info['author_id'], author_info['email_from']
 
         message_values = {
             'subject': subject,
             'body': body,
-            'author_id': author.id,
+            'author_id': author_id,
             'email_from': email_from,
             'message_type': message_type,
             'model': kwargs.get('model', self._name),
@@ -1973,14 +1952,73 @@ class MailThread(models.AbstractModel):
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
         }
         message_values.update(kwargs)
-        message = self.sudo()._message_create(message_values)
-        return message
+        return self.sudo()._message_create(message_values)
 
-    def _message_create(self, values):
-        create_values = dict(values)
-        create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
-        create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
-        return self.env['mail.message'].create(create_values)
+    def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False, message_type='notification'):
+        """ Shortcut allowing to post notes on a batch of documents. It achieve the
+        same purpose as _message_log, done in batch to speedup quick note log.
+
+          :param bodies: dict {record_id: body}
+        """
+        author_info = self._message_compute_author(author_id, email_from, raise_exception=False)
+        author_id, email_from = author_info['author_id'], author_info['email_from']
+
+        base_message_values = {
+            'subject': subject,
+            'author_id': author_id,
+            'email_from': email_from,
+            'message_type': message_type,
+            'model': self._name,
+            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'record_name': False,
+            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, records=None)[False],
+            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+        }
+        values_list = [dict(base_message_values,
+                            res_id=record.id,
+                            body=bodies.get(record.id, ''))
+                       for record in self]
+        return self.sudo()._message_create(values_list)
+
+    def _message_compute_author(self, author_id=None, email_from=None, raise_exception=True):
+        """ Tool method computing author information for messages. Purpose is
+        to ensure maximum coherence between author / current user / email_from
+        when sending emails. """
+        if author_id is None:
+            if email_from:
+                author = self._mail_find_partner_from_emails([email_from])[0]
+            else:
+                author = self.env.user.partner_id
+                email_from = author.email_formatted
+            author_id = author.id
+
+        if email_from is None:
+            if author_id:
+                author = self.env['res.partner'].browse(author_id)
+                email_from = author.email_formatted
+
+        # superuser mode without author email -> probably public user; anyway we don't want to crash
+        if not email_from and not self.env.su and raise_exception:
+            raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
+
+        return {
+            'author_id': author_id,
+            'email_from': email_from,
+        }
+
+    def _message_create(self, values_list):
+        if not isinstance(values_list, (list)):
+            values_list = [values_list]
+        create_values_list = []
+        for values in values_list:
+            create_values = dict(values)
+            # Avoid warnings about non-existing fields
+            for x in ('from', 'to', 'cc', 'canned_response_ids'):
+                create_values.pop(x, None)
+            create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
+            create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
+            create_values_list.append(create_values)
+        return self.env['mail.message'].create(create_values_list)
 
     # ------------------------------------------------------
     # Notification API
