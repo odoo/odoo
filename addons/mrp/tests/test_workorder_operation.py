@@ -1038,3 +1038,30 @@ class TestWorkOrderProcess(TestMrpCommon):
         mo.action_confirm()
         with self.assertRaises(UserError):
             mo.button_plan()
+
+    def test_plan_unplan_date(self):
+        """ Testing planning a workorder then cancel it and then plan it again.
+        The planned date must be the same the first time and the second time the
+        workorder is planned."""
+        planned_date = datetime(2019, 5, 13, 9, 0)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_qty = 1
+        mo_form.date_start_wo = planned_date
+        mo = mo_form.save()
+        mo.action_confirm()
+        # Plans the MO and checks the date.
+        mo.button_plan()
+        self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
+        self.assertEqual(bool(mo.workorder_ids.exists()), True)
+        leave = mo.workorder_ids.leave_id
+        self.assertEqual(bool(leave.exists()), True)
+        # Unplans the MO and checks the workorder and its leave no more exist.
+        mo.button_unplan()
+        self.assertEqual(bool(mo.workorder_ids.exists()), False)
+        self.assertEqual(bool(leave.exists()), False)
+        # Plans (again) the MO and checks the date is still the same.
+        mo.button_plan()
+        self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(mo.date_planned_start, mo.workorder_ids.date_planned_start, delta=timedelta(seconds=10))
