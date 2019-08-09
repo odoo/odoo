@@ -567,7 +567,7 @@ class StockQuant(models.Model):
         """
         self._quant_tasks()
         action = {
-            'name': _('Stock On Hand'),
+            'name': _('Update Quantity'),
             'view_type': 'tree',
             'view_mode': 'list',
             'res_model': 'stock.quant',

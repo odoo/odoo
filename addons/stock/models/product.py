@@ -490,7 +490,9 @@ class Product(models.Model):
             )
         else:
             self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
-        return self.env['stock.quant']._get_quants_action(domain)
+        ctx = dict(self.env.context)
+        ctx.update({'no_at_date': True})
+        return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
 
     def action_update_quantity_on_hand(self):
         return self.product_tmpl_id.with_context({'default_product_id': self.id}).action_update_quantity_on_hand()
