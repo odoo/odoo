@@ -906,6 +906,12 @@ var FieldX2Many = AbstractField.extend({
         return this._renderControlPanel().then(this._super.bind(this));
     },
 
+    on_attach_callback: function () {
+        if (this.renderer) {
+            this.renderer.on_attach_callback();
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
