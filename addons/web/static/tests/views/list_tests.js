@@ -230,9 +230,10 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable rendering with handle', async function (assert) {
+    QUnit.test('editable rendering with handle and no data', async function (assert) {
         assert.expect(6);
 
+        this.data.foo.records = [];
         var list = await createView({
             View: ListView,
             model: 'foo',
@@ -1429,7 +1430,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('width of some of the fields should be hardcoded', async function (assert) {
+    QUnit.test('column widths should depend on the content when there is data', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.records[0].foo = 'Some very very long value for a char field';
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
+                    '</tree>',
+            viewOptions: {
+                limit: 2,
+            },
+        });
+
+        var widthPage1 = list.$(`th[data-name=foo]`)[0].offsetWidth;
+
+        await testUtils.dom.click(list.$('.o_pager_next'));
+
+        var widthPage2 = list.$(`th[data-name=foo]`)[0].offsetWidth;
+        assert.ok(widthPage1 > widthPage2,
+            'column widths should be computed dynamically according to the content');
+
+        list.destroy();
+    });
+
+    QUnit.test('width of some of the fields should be hardcoded if no data', async function (assert) {
         const assertions = [
             { field: 'bar', expected: 40, type: 'Boolean' },
             { field: 'int_field', expected: 74, type: 'Integer' },
@@ -1439,6 +1473,7 @@ QUnit.module('Views', {
         ];
         assert.expect(assertions.length + 1);
 
+        this.data.foo.records = [];
         var list = await createView({
             View: ListView,
             model: 'foo',

@@ -55,7 +55,7 @@
         }
         }
 
-        .o_column_sortable {
+        .o_column_sortable:not(.o_handle_cell) {
             position: relative;
             user-select: none;  // Prevent unwanted selection while sorting
 
@@ -180,7 +180,9 @@
         //--------------------------------------------------------------------------
 
         &.o_editable_list {
-            table-layout: fixed;
+            &.o_empty_list {
+                table-layout: fixed;
+            }
 
             .o_list_record_remove_header, .o_handle_cell {
                 width: 32px;
