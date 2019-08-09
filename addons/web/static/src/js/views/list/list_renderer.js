@@ -44,6 +44,8 @@ var ListRenderer = BasicRenderer.extend({
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
         'click thead .o_list_record_selector input': '_onToggleSelection',
+        'mousedown span.o_resize': '_onStartResize',
+        'click span.o_resize': '_onClickResize',
         'keypress thead tr td': '_onKeyPress',
         'keydown td': '_onKeyDown',
         'keydown th': '_onKeyDown',
@@ -732,6 +734,7 @@ var ListRenderer = BasicRenderer.extend({
     _renderHeader: function () {
         var $tr = $('<tr>')
             .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
+        $tr.find('span.o_resize').last().remove();
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('th'));
         }
@@ -789,6 +792,7 @@ var ListRenderer = BasicRenderer.extend({
         } else {
             $th.attr('title', description);
         }
+        $th.append($('<span class="o_resize"/>'));
         return $th;
     },
     /**
@@ -1202,8 +1206,48 @@ var ListRenderer = BasicRenderer.extend({
      * @param {MouseEvent} ev
      */
     _onSortColumn: function (ev) {
+        if (this._isResizing) {
+            return;
+        }
         var name = $(ev.currentTarget).data('name');
         this.trigger_up('toggle_column_order', { id: this.state.id, name: name });
+    },
+    _onClickResize: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+    },
+    _onStartResize: function (ev) {
+        var self = this;
+        this._isResizing = true;
+        this._setFixedLayout();
+        var $table = this.$('table');
+        var $th = $(ev.target).closest('th');
+        $table.addClass('o_resizing');
+        var initialX = ev.clientX;
+        var initialWidth = $th.width();
+        var initialTableWidth = $table.width();
+        function resizeHeader(ev) {
+            var delta = ev.clientX - initialX;
+            var newWidth = Math.max(10, initialWidth + delta);
+            var tableDelta = newWidth - initialWidth;
+            $th.width(newWidth);
+            $table.width(initialTableWidth + tableDelta);
+        }
+        window.addEventListener('mousemove', resizeHeader);
+        function stopResize() {
+            setTimeout(function () {
+                self._isResizing = false;
+            }, 100);
+            window.removeEventListener('mousemove', resizeHeader);
+            $table.removeClass('o_resizing');
+            window.removeEventListener('mouseup', stopResize);
+
+            // we remove the focus to make sure that the there is no focus inside
+            // the tr.  If that is the case, there is some css to darken the whole
+            // thead, and it looks quite weird with the small css hover effect.
+            document.activeElement.blur();
+        }
+        window.addEventListener('mouseup', stopResize);
     },
     /**
      * @private
