@@ -19,8 +19,8 @@ class MailTestSMS(models.Model):
     mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
 
-    def _sms_get_default_partners(self):
-        return self.mapped('customer_id')
+    def _sms_get_partner_fields(self):
+        return ['customer_id']
 
     def _sms_get_number_fields(self):
         return ['phone_nbr', 'mobile_nbr']
@@ -41,8 +41,8 @@ class MailTestSMSBL(models.Model):
     mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
 
-    def _sms_get_default_partners(self):
-        return self.mapped('customer_id')
+    def _sms_get_partner_fields(self):
+        return ['customer_id']
 
     def _sms_get_number_fields(self):
         return ['phone_nbr', 'mobile_nbr']

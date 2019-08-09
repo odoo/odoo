@@ -35,15 +35,25 @@ class MailThread(models.AbstractModel):
     def _search_message_has_sms_error(self, operator, operand):
         return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
+    def _sms_get_partner_fields(self):
+        """ This method returns the fields to use to find the contact to link
+        whensending an SMS. Having partner is not necessary, having only phone
+        number fields is possible. However it gives more flexibility to
+        notifications management when having partners. """
+        fields = []
+        if hasattr(self, 'partner_id'):
+            fields.append('partner_id')
+        if hasattr(self, 'partner_ids'):
+            fields.append('partner_ids')
+        return fields
+
     def _sms_get_default_partners(self):
         """ This method will likely need to be overridden by inherited models.
                :returns partners: recordset of res.partner
         """
         partners = self.env['res.partner']
-        if hasattr(self, 'partner_id'):
-            partners |= self.mapped('partner_id')
-        if hasattr(self, 'partner_ids'):
-            partners |= self.mapped('partner_ids')
+        for fname in self._sms_get_partner_fields():
+            partners |= self.mapped(fname)
         return partners
 
     def _sms_get_number_fields(self):
