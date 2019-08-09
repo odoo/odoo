@@ -11,7 +11,7 @@ from collections import defaultdict
 import uuid
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import AccessError, ValidationError, MissingError
+from odoo.exceptions import AccessError, ValidationError, MissingError, UserError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -41,6 +41,8 @@ class IrAttachment(models.Model):
             if attachment.res_model and attachment.res_id:
                 record = self.env[attachment.res_model].browse(attachment.res_id)
                 attachment.res_name = record.display_name
+            else:
+                attachment.res_name = False
 
     @api.model
     def _storage(self):
@@ -51,20 +53,28 @@ class IrAttachment(models.Model):
         return config.filestore(self._cr.dbname)
 
     @api.model
+    def _get_storage_domain(self, storage):
+        return {
+            "db": [("db_datas", "=", False)],
+            "file": [("store_fname", "=", False)],
+        }[storage]
+
+    @api.model
     def force_storage(self):
-        """Force all attachments to be stored in the currently configured storage"""
         if not self.env.is_admin():
             raise AccessError(_('Only administrators can execute this action.'))
+        # Migrate only binary attachments and make sure to miragte those that belong 
+        # to a field as well as attachments that are not assigned to a field. 
+        self.search(expression.AND([self._get_storage_domain(self._storage()), [
+            '&', ('type', '=', 'binary'), '|', ('res_field', '=', False), ('res_field', '!=', False) 
+        ]])).migrate()
 
-        # domain to retrieve the attachments to migrate
-        domain = {
-            'db': [('store_fname', '!=', False)],
-            'file': [('db_datas', '!=', False)],
-        }[self._storage()]
-
-        for attach in self.search(domain):
-            attach.write({'datas': attach.datas})
-        return True
+    def migrate(self):
+        record_count = len(self)
+        storage = self._storage().upper()
+        for index, attach in enumerate(self):
+            _logger.info(_("Migrate Attachment %s of %s to %s") % (index + 1, record_count, storage))
+            attach.write({'datas': attach.datas, 'mimetype': attach.mimetype})
 
     @api.model
     def _full_path(self, path):
@@ -88,6 +98,9 @@ class IrAttachment(models.Model):
         dirname = os.path.dirname(full_path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
+        # prevent sha-1 collision
+        if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
+            raise UserError("The attachment is colliding with an existing file.")
         return fname, full_path
 
     @api.model
@@ -98,7 +111,8 @@ class IrAttachment(models.Model):
             if bin_size:
                 r = human_size(os.path.getsize(full_path))
             else:
-                r = base64.b64encode(open(full_path,'rb').read())
+                with open(full_path,'rb') as fd:
+                    r = base64.b64encode(fd.read())
         except (IOError, OSError):
             _logger.info("_read_file reading %s", full_path, exc_info=True)
         return r
@@ -192,23 +206,8 @@ class IrAttachment(models.Model):
                 attach.datas = attach.db_datas
 
     def _inverse_datas(self):
-        location = self._storage()
         for attach in self:
-            # compute the fields that depend on datas
-            value = attach.datas
-            bin_data = base64.b64decode(value) if value else b''
-            vals = {
-                'file_size': len(bin_data),
-                'checksum': self._compute_checksum(bin_data),
-                'index_content': self._index(bin_data, attach.mimetype),
-                'store_fname': False,
-                'db_datas': value,
-            }
-            if value and location != 'db':
-                # save it to the filestore
-                vals['store_fname'] = self._file_write(value, vals['checksum'])
-                vals['db_datas'] = False
-
+            vals = self._get_datas_related_values(attach.datas, attach.mimetype)
             # take current location in filestore to possibly garbage-collect it
             fname = attach.store_fname
             # write as superuser, as user probably does not have write access
@@ -216,12 +215,41 @@ class IrAttachment(models.Model):
             if fname:
                 self._file_delete(fname)
 
+    def _get_datas_related_values(self, data, mimetype):
+        # compute the fields that depend on datas
+        bin_data = base64.b64decode(data) if data else b''
+        values = {
+            'file_size': len(bin_data),
+            'checksum': self._compute_checksum(bin_data),
+            'index_content': self._index(bin_data, mimetype),
+            'store_fname': False,
+            'db_datas': data,
+        }
+        if data and self._storage() != 'db':
+            values['store_fname'] = self._file_write(data, values['checksum'])
+            values['db_datas'] = False
+        return values
+
     def _compute_checksum(self, bin_data):
         """ compute the checksum for the given datas
             :param bin_data : datas in its binary form
         """
         # an empty file has a checksum too (for caching)
         return hashlib.sha1(bin_data or b'').hexdigest()
+
+    @api.model
+    def _same_content(self, bin_data, filepath):
+        BLOCK_SIZE = 1024
+        with open(filepath, 'rb') as fd:
+            i = 0
+            while True:
+                data = fd.read(BLOCK_SIZE)
+                if data != bin_data[i * BLOCK_SIZE:(i + 1) * BLOCK_SIZE]:
+                    return False
+                if not data:
+                    break
+                i += 1
+        return True
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values
@@ -278,7 +306,8 @@ class IrAttachment(models.Model):
     res_name = fields.Char('Resource Name', compute='_compute_res_name')
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
     res_field = fields.Char('Resource Field', readonly=True)
-    res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model',
+                                      readonly=True, help="The record id this is attached to.")
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
                                  default=lambda self: self.env.company)
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
@@ -331,6 +360,8 @@ class IrAttachment(models.Model):
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         require_employee = False
         if self:
+            # DLE P173: `test_01_portal_attachment`
+            self.env['ir.attachment'].flush(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
             self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
             for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
                 if not self.env.is_system() and res_field:
@@ -501,6 +532,8 @@ class IrAttachment(models.Model):
             for field in ('file_size', 'checksum'):
                 values.pop(field, False)
             values = self._check_contents(values)
+            if 'datas' in values:
+                values.update(self._get_datas_related_values(values.pop('datas'), values['mimetype']))
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when 
             # creating multiple attachments on a single record.
