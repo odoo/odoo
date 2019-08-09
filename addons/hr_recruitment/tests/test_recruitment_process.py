@@ -27,7 +27,7 @@ class TestRecruitmentProcess(common.TransactionCase):
             'hr.applicant', request_message, custom_values={"job_id": self.env.ref('hr.job_developer').id})
 
         # After getting the mail, I check the details of the new applicant.
-        applicant = self.env['hr.applicant'].search([('email_from', '=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')], limit=1)
+        applicant = self.env['hr.applicant'].search([('email_from', 'ilike', 'Richard_Anderson@yahoo.com')], limit=1)
         self.assertTrue(applicant, "Applicant is not created after getting the mail")
         resume_ids = self.env['ir.attachment'].search([
             ('name', '=', 'resume.pdf'),

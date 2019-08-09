@@ -648,12 +648,12 @@ class MailThread(models.AbstractModel):
     # Mail gateway
     # ------------------------------------------------------
 
-    def _routing_warn(self, error_message, warn_suffix, message_id, route, raise_exception):
-        """ Tools method used in message_route_verify: whether to log a warning or raise an error """
+    def _routing_warn(self, error_message, message_id, route, raise_exception=True):
+        """ Tools method used in _routing_check_route: whether to log a warning or raise an error """
         short_message = _("Mailbox unavailable - %s") % error_message
         full_message = ('Routing mail with Message-Id %s: route %s: %s' %
                         (message_id, route, error_message))
-        _logger.info(full_message + (warn_suffix and '; %s' % warn_suffix or ''))
+        _logger.info(full_message)
         if raise_exception:
             # sender should not see private diagnostics info, just the error
             raise ValueError(short_message)
@@ -673,10 +673,61 @@ class MailThread(models.AbstractModel):
         self.env['mail.mail'].create(bounce_mail_values).send()
 
     @api.model
-    def message_route_verify(self, message, message_dict, route,
-                             update_author=True, assert_model=True,
-                             create_fallback=True, allow_private=False,
-                             drop_alias=False):
+    def _routing_handle_bounce(self, email_message, message_dict):
+        """ Handle bounce of incoming email. Based on values of the bounce (email
+        and related partner, send message and its messageID)
+
+          * find blacklist-enabled records with email_normalized = bounced email
+            and call ``_message_receive_bounce`` on each of them to propagate
+            bounce information through various records linked to same email;
+          * if not already done (i.e. if original record is not blacklist enabled
+            like a bounce on an applicant), find record linked to bounced message
+            and call ``_message_receive_bounce``;
+
+        :param email_message: incoming email;
+        :type email_message: email.message;
+        :param message_dict: dictionary holding already-parsed values and in
+            which bounce-related values will be added;
+        :type message_dict: dictionary;
+        """
+        bounced_record, bounced_record_done = False, False
+        bounced_email, bounced_partner = message_dict['bounced_email'], message_dict['bounced_partner']
+        bounced_msg_id, bounced_message = message_dict['bounced_msg_id'], message_dict['bounced_message']
+
+        if bounced_email:
+            bounced_model, bounced_res_id = bounced_message.model, bounced_message.res_id
+
+            if bounced_model and bounced_model in self.env and bounced_res_id:
+                bounced_record = self.env[bounced_model].sudo().browse(bounced_res_id).exists()
+
+            bl_models = self.env['ir.model'].sudo().search(['&', ('is_mail_blacklist', '=', True), ('model', '!=', 'mail.thread.blacklist')])
+            for model in [bl_model for bl_model in bl_models if bl_model.model in self.env]:  # transient test mode
+                rec_bounce_w_email = self.env[model.model].sudo().search([('email_normalized', '=', bounced_email)])
+                rec_bounce_w_email._message_receive_bounce(bounced_email, bounced_partner)
+                bounced_record_done = bool(bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
+
+            # set record as bounced unless already done due to blacklist mixin
+            if bounced_record and not bounced_record_done and issubclass(type(bounced_record), self.pool['mail.thread']):
+                bounced_record._message_receive_bounce(bounced_email, bounced_partner)
+
+            if bounced_partner and bounced_message:
+                self.env['mail.notification'].sudo().search([
+                    ('mail_message_id', '=', bounced_message.id),
+                    ('res_partner_id', 'in', bounced_partner.ids)]
+                ).write({'notification_status': 'bounce'})
+
+        if bounced_record:
+            _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email from %s replying to %s (model %s ID %s)',
+                         message_dict['email_from'], message_dict['to'], message_dict['message_id'], bounced_email, bounced_msg_id, bounced_model, bounced_res_id)
+        elif bounced_email:
+            _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email from %s replying to %s (no document found)',
+                         message_dict['email_from'], message_dict['to'], message_dict['message_id'], bounced_email, bounced_msg_id)
+        else:
+            _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email.',
+                         message_dict['email_from'], message_dict['to'], message_dict['message_id'])
+
+    @api.model
+    def _routing_check_route(self, message, message_dict, route, raise_exception=True):
         """ Verify route validity. Check and rules:
             1 - if thread_id -> check that document effectively exists; otherwise
                 fallback on a message_new by resetting thread_id
@@ -696,23 +747,16 @@ class MailThread(models.AbstractModel):
                              mail_message.create()
         :param route: route to check which is a tuple (model, thread_id,
                       custom_values, uid, alias)
-        :param update_author: update message_dict['author_id']. TDE TODO: move me
-        :param assert_model: if an error occurs, tell whether to raise an error
-                             or just log a warning and try other processing or
-                             invalidate route
-        :param create_fallback: if the route aims at updating a record and that
-                                record does not exists or does not support update
-                                either fallback on creating a new record in the
-                                same model or raise / warn
-        :param allow_private: allow void model / thread_id routes, aka private
-                              discussions
+        :param raise_exception: if an error occurs, tell whether to raise an error
+                                or just log a warning and try other processing or
+                                invalidate route
         """
 
         assert isinstance(route, (list, tuple)), 'A route should be a list or a tuple'
         assert len(route) == 5, 'A route should contain 5 elements: model, thread_id, custom_values, uid, alias record'
 
-        message_id = message.get('Message-Id')
-        email_from = tools.decode_message_header(message, 'From')
+        message_id = message_dict['message_id']
+        email_from = message_dict['email_from']
         author_id = message_dict.get('author_id')
         model, thread_id, alias = route[0], route[1], route[4]
         record_set = None
@@ -721,78 +765,71 @@ class MailThread(models.AbstractModel):
 <p>Hello,</p>
 <p>The following email sent to %s cannot be accepted because this is a private email address.
    Only allowed people can contact us at this address.</p>
-</div><blockquote>%s</blockquote>""" % (message.get('to'), message_dict.get('body'))
+</div><blockquote>%s</blockquote>""" % (message_dict.get('to'), message_dict.get('body'))
 
         # Wrong model
-        if model and model not in self.env:
-            self._routing_warn(_('unknown target model %s') % model, '', message_id, route, assert_model)
-            return ()
-
-        # Private message
         if not model:
-            # should not contain any thread_id
-            if thread_id:
-                self._routing_warn(_('posting a message without model should be with a null res_id (private message), received %s') % thread_id, _('resetting thread_id'), message_id, route, assert_model)
-                thread_id = 0
-            # should have a parent_id (only answers)
-            if not message_dict.get('parent_id'):
-                self._routing_warn(_('posting a message without model should be with a parent_id (private message)'), _('skipping'), message_id, route, assert_model)
-                return False
-
-        if model and thread_id:
-            record_set = self.env[model].browse(thread_id)
-        elif model:
-            record_set = self.env[model]
+            self._routing_warn(_('target model unspecified'), message_id, route, raise_exception)
+            return ()
+        elif model not in self.env:
+            self._routing_warn(_('unknown target model %s') % model, message_id, route, raise_exception)
+            return ()
+        record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
 
         # Existing Document: check if exists and model accepts the mailgateway; if not, fallback on create if allowed
         if thread_id:
-            if not record_set.exists() and create_fallback:
-                self._routing_warn(_('reply to missing document (%s,%s), fall back on new document creation') % (model, thread_id), '', message_id, route, False)
-                thread_id = None
-            elif not hasattr(record_set, 'message_update') and create_fallback:
-                self._routing_warn(_('model %s does not accept document update, fall back on document creation') % model, '', message_id, route, False)
-                thread_id = None
-
             if not record_set.exists():
-                self._routing_warn(_('reply to missing document (%s,%s)') % (model, thread_id), _('skipping'), message_id, route, assert_model)
-                return False
+                self._routing_warn(_('reply to missing document (%s,%s), fall back on document creation') % (model, thread_id), message_id, route, False)
+                thread_id = None
             elif not hasattr(record_set, 'message_update'):
-                self._routing_warn(_('model %s does not accept document update') % model, _('skipping'), message_id, route, assert_model)
-                return False
+                self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation') % model, message_id, route, False)
+                thread_id = None
 
         # New Document: check model accepts the mailgateway
         if not thread_id and model and not hasattr(record_set, 'message_new'):
-            self._routing_warn(_('model %s does not accept document creation') % model, _('skipping'), message_id, route, assert_model)
-            return False
+            self._routing_warn(_('model %s does not accept document creation') % model, message_id, route, raise_exception)
+            return ()
 
         # Update message author if asked. We do it now because we need it for aliases (contact settings)
-        if not author_id and update_author:
+        if not author_id:
             authors = self._mail_find_partner_from_emails([email_from], records=record_set)
             if authors:
                 message_dict['author_id'] = authors[0].id
 
         # Alias: check alias_contact settings
         if alias:
-            obj = None
             if thread_id:
                 obj = record_set[0]
             elif alias.alias_parent_model_id and alias.alias_parent_thread_id:
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-            elif model:
+            else:
                 obj = self.env[model]
             if hasattr(obj, '_alias_check_contact'):
                 check_result = obj._alias_check_contact(message, message_dict, alias)
             else:
                 check_result = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
             if check_result is not True:
-                self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), _('skipping'), message_id, route, False)
+                self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), message_id, route, False)
                 self._routing_create_bounce_email(email_from, check_result.get('error_template', _generic_bounce_body_html), message)
                 return False
 
-        if not model and not thread_id and not alias and not allow_private:
-            return False
+        return (model, thread_id, route[2], route[3], route[4])
 
-        return (model, thread_id, route[2], route[3], None if drop_alias else route[4])
+    @api.model
+    def _routing_reset_bounce(self, email_message, message_dict):
+        """Called by ``message_process`` when a new mail is received from an email address.
+        If the email is related to a partner, we consider that the number of message_bounce
+        is not relevant anymore as the email is valid - as we received an email from this
+        address. The model is here hardcoded because we cannot know with which model the
+        incomming mail match. We consider that if a mail arrives, we have to clear bounce for
+        each model having bounce count.
+
+        :param email_from: email address that sent the incoming email."""
+        valid_email = message_dict['email_from']
+        if valid_email:
+            bl_models = self.env['ir.model'].sudo().search(['&', ('is_mail_blacklist', '=', True), ('model', '!=', 'mail.thread.blacklist')])
+            for model in [bl_model for bl_model in bl_models if bl_model.model in self.env]:  # transient test mode
+                self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', valid_email)])._message_reset_bounce(valid_email)
 
     @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
@@ -806,15 +843,11 @@ class MailThread(models.AbstractModel):
          * if the message replies to an existing thread by having a Message-Id
            that matches an existing mail_message.message_id, we take the original
            message model/thread_id pair and ignore custom_value as no creation will
-           take place
-         * if the message replies to an existing thread by having In-Reply-To or
-           References matching odoo model/thread_id Message-Id and if this thread
-           has messages without message_id, take this model/thread_id pair and
-           ignore custom_value as no creation will take place (6.1 compatibility)
+           take place;
          * look for a mail.alias entry matching the message recipients and use the
            corresponding model, thread_id, custom_values and user_id. This could
-           lead to a thread update or creation depending on the alias
-         * fallback on provided ``model``, ``thread_id`` and ``custom_values``
+           lead to a thread update or creation depending on the alias;
+         * fallback on provided ``model``, ``thread_id`` and ``custom_values``;
          * raise an exception as no route has been found
 
         :param string message: an email.message instance
@@ -835,125 +868,76 @@ class MailThread(models.AbstractModel):
         """
         if not isinstance(message, Message):
             raise TypeError('message must be an email.message.Message at this point')
-        MailMessage = self.env['mail.message']
-        Alias, dest_aliases = self.env['mail.alias'], self.env['mail.alias']
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         fallback_model = model
 
         # get email.message.Message variables for future processing
         local_hostname = socket.gethostname()
-        message_id = message.get('Message-Id')
+        message_id = message_dict['message_id']
 
         # compute references to find if message is a reply to an existing thread
-        references = tools.decode_message_header(message, 'References')
-        in_reply_to = tools.decode_message_header(message, 'In-Reply-To').strip()
-        thread_references = references or in_reply_to
-        reply_match, reply_model, reply_thread_id, reply_hostname, reply_private = tools.email_references(thread_references)
+        thread_references = message_dict['references'] or message_dict['in_reply_to']
+        msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
+        mail_messages = self.env['mail.message'].sudo().search([('message_id', 'in', msg_references)], limit=1)
+        is_a_reply = bool(mail_messages)
+        reply_model, reply_thread_id = mail_messages.model, mail_messages.res_id
 
         # author and recipients
-        email_from = tools.decode_message_header(message, 'From')
+        email_from = message_dict['email_from']
         email_from_localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
-        email_to = tools.decode_message_header(message, 'To')
+        email_to = message_dict['to']
         email_to_localpart = (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower()
-
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos = ','.join([
-            tools.decode_message_header(message, 'Delivered-To'),
-            tools.decode_message_header(message, 'To'),
-            tools.decode_message_header(message, 'Cc'),
-            tools.decode_message_header(message, 'Resent-To'),
-            tools.decode_message_header(message, 'Resent-Cc')])
-        rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
+        rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(message_dict['recipients'])]
 
-        # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
+        # 0. Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
+        #    Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
+        #       group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID 
+        #    Bounce message (not alias)
+        #       See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
+        #        As all MTA does not respect this RFC (googlemail is one of them),
+        #       we also need to verify if the message come from "mailer-daemon"
+        #    If not a bounce: reset bounce information
         if bounce_alias and bounce_alias in email_to_localpart:
-            # Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
-            # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
             bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
             bounce_match = bounce_re.search(email_to)
-
             if bounce_match:
-                bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), bounce_match.group(3)
-
-                email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
-                dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
-
-                partners, partner_address = self.env['res.partner'], False
-                if dsn_part and len(dsn_part.get_payload()) > 1:
-                    dsn = dsn_part.get_payload()[1]
-                    final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
-                    partner_address = final_recipient_data.split(';', 1)[1].strip()
-                    if partner_address:
-                        partners = partners.sudo().search([('email', '=', partner_address)])
-                        for partner in partners:
-                            partner._message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
-
-                mail_message = self.env['mail.message']
-                if email_part:
-                    email = email_part.get_payload()[0]
-                    bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
-                    mail_message = MailMessage.sudo().search([('message_id', 'in', bounced_message_id)])
-
-                if partners and mail_message:
-                    notifications = self.env['mail.notification'].sudo().search([
-                        ('mail_message_id', '=', mail_message.id),
-                        ('res_partner_id', 'in', partners.ids)])
-                    notifications.write({
-                        'notification_status': 'bounce'
-                    })
-
-                if bounced_model in self.env and hasattr(self.env[bounced_model], '_message_receive_bounce') and bounced_thread_id:
-                    self.env[bounced_model].browse(int(bounced_thread_id))._message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
-
-                _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s)',
-                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners)
+                self._routing_handle_bounce(message, message_dict)
                 return []
-
-        # 0. First check if this is a bounce message or not.
-        #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
-        #    As all MTA does not respect this RFC (googlemail is one of them),
-        #    we also need to verify if the message come from "mailer-daemon"
         if message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':
-            _logger.info('Routing mail with Message-Id %s: not routing bounce email from %s to %s',
-                         message_id, email_from, email_to)
+            self._routing_handle_bounce(message, message_dict)
             return []
+        self._routing_reset_bounce(message, message_dict)
 
-        # 1. Check if message is a reply on a thread
-        msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
-        mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
-        is_a_reply = bool(mail_messages)
-
-        # 1.1 Handle forward to an alias with a different model: do not consider it as a reply
+        # 1. Handle reply
+        #    if destination = alias with different model -> consider it is a forward and not a reply
+        #    if destination = alias with same model -> check contact settings as they still apply
         if reply_model and reply_thread_id:
-            other_alias = Alias.search([
+            other_alias = self.env['mail.alias'].search([
                 '&',
                 ('alias_name', '!=', False),
                 ('alias_name', '=', email_to_localpart)
             ])
             if other_alias and other_alias.alias_model_id.model != reply_model:
                 is_a_reply = False
-
         if is_a_reply:
-            model, thread_id = mail_messages.model, mail_messages.res_id
-            if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
-                dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
+            dest_aliases = self.env['mail.alias'].search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
 
-            route = self.message_route_verify(
+            route = self._routing_check_route(
                 message, message_dict,
-                (model, thread_id, custom_values, self._uid, dest_aliases),
-                update_author=True, assert_model=reply_private, create_fallback=True,
-                allow_private=reply_private, drop_alias=True)
+                (reply_model, reply_thread_id, custom_values, self._uid, dest_aliases),
+                raise_exception=False)
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                    email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
+                    email_from, email_to, message_id, reply_model, reply_thread_id, custom_values, self._uid)
                 return [route]
             elif route is False:
                 return []
 
-        # 2. Look for a matching mail.alias entry
+        # 2. Handle new incoming email by checking aliases and applying their settings
         if rcpt_tos_localparts:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
@@ -967,7 +951,7 @@ class MailThread(models.AbstractModel):
                 self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.company.email)
                 return []
 
-            dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
+            dest_aliases = self.env['mail.alias'].search([('alias_name', 'in', rcpt_tos_localparts)])
             if dest_aliases:
                 routes = []
                 for alias in dest_aliases:
@@ -981,9 +965,7 @@ class MailThread(models.AbstractModel):
                         user_id = self._uid
                         _logger.info('No matching user_id for the alias %s', alias.alias_name)
                     route = (alias.alias_model_id.model, alias.alias_force_thread_id, safe_eval(alias.alias_defaults), user_id, alias)
-                    route = self.message_route_verify(
-                        message, message_dict, route,
-                        update_author=True, assert_model=True, create_fallback=True)
+                    route = self._routing_check_route(message, message_dict, route, raise_exception=True)
                     if route:
                         _logger.info(
                             'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
@@ -991,14 +973,14 @@ class MailThread(models.AbstractModel):
                         routes.append(route)
                 return routes
 
-        # 5. Fallback to the provided parameters, if they work
+        # 3. Fallback to the provided parameters, if they work
         if fallback_model:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
-            route = self.message_route_verify(
+            route = self._routing_check_route(
                 message, message_dict,
                 (fallback_model, thread_id, custom_values, self._uid, None),
-                update_author=True, assert_model=True)
+                raise_exception=True)
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
@@ -1020,31 +1002,26 @@ class MailThread(models.AbstractModel):
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes or ():
             subtype_id = False
-            if model:
-                Model = self.env[model]
-                if not (thread_id and hasattr(Model, 'message_update') or hasattr(Model, 'message_new')):
-                    raise ValueError(
-                        "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" %
-                        (message_dict['message_id'], model)
-                    )
+            Model = self.env[model]
+            if not (thread_id and hasattr(Model, 'message_update') or hasattr(Model, 'message_new')):
+                raise ValueError(
+                    "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" %
+                    (message_dict['message_id'], model)
+                )
 
-                # disabled subscriptions during message_new/update to avoid having the system user running the
-                # email gateway become a follower of all inbound messages
-                MessageModel = Model.with_user(user_id).with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
-                if thread_id and hasattr(MessageModel, 'message_update'):
-                    thread = MessageModel.browse(thread_id)
-                    thread.message_update(message_dict)
-                else:
-                    # if a new thread is created, parent is irrelevant
-                    message_dict.pop('parent_id', None)
-                    thread = MessageModel.message_new(message_dict, custom_values)
-                    thread_id = thread.id
-                    subtype = thread._creation_subtype()
-                    subtype_id = subtype.id if subtype else False
+            # disabled subscriptions during message_new/update to avoid having the system user running the
+            # email gateway become a follower of all inbound messages
+            MessageModel = Model.with_user(user_id).with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
+            if thread_id and hasattr(MessageModel, 'message_update'):
+                thread = MessageModel.browse(thread_id)
+                thread.message_update(message_dict)
             else:
-                if thread_id:
-                    raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
-                thread = self.env['mail.thread']
+                # if a new thread is created, parent is irrelevant
+                message_dict.pop('parent_id', None)
+                thread = MessageModel.message_new(message_dict, custom_values)
+                thread_id = thread.id
+                subtype = thread._creation_subtype()
+                subtype_id = subtype.id if subtype else False
 
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
@@ -1061,6 +1038,9 @@ class MailThread(models.AbstractModel):
                     subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
             post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
+            # remove computational values not stored on mail.message and avoid warnings when creating it
+            for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'bounced_email', 'bounced_message', 'bounced_msg_id', 'bounced_partner'):
+                post_params.pop(x, None)
             new_msg = False
             if thread._name == 'mail.thread':  # message with parent_id not linked to record
                 new_msg = thread.message_notify(**post_params)
@@ -1084,11 +1064,6 @@ class MailThread(models.AbstractModel):
             Once the target model is known, its ``message_new`` method
             is called with the new message (if the thread record did not exist)
             or its ``message_update`` method (if it did).
-
-            There is a special case where the target model is False: a reply
-            to a private message. In this case, we skip the message_new /
-            message_update step, to just post a new message using mail_thread
-            message_post.
 
            :param string model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
@@ -1115,23 +1090,22 @@ class MailThread(models.AbstractModel):
             message = bytes(message.data)
         if isinstance(message, str):
             message = message.encode('utf-8')
-        msg_txt = email.message_from_bytes(message)
+        message = email.message_from_bytes(message)
 
         # parse the message, verify we are not in a loop by checking message_id is not duplicated
-        msg = self.message_parse(msg_txt, save_original=save_original)
+        msg_dict = self.message_parse(message, save_original=save_original)
         if strip_attachments:
-            msg.pop('attachments', None)
+            msg_dict.pop('attachments', None)
 
-        if msg.get('message_id'):   # should always be True as message_parse generate one if missing
-            existing_msg_ids = self.env['mail.message'].search([('message_id', '=', msg.get('message_id'))])
-            if existing_msg_ids:
-                _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
-                                msg.get('from'), msg.get('to'), msg.get('message_id'))
-                return False
+        existing_msg_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['message_id'])], limit=1)
+        if existing_msg_ids:
+            _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
+                         msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
+            return False
 
         # find possible routes for the message
-        routes = self.message_route(msg_txt, msg, model, thread_id, custom_values)
-        thread_id = self.message_route_process(msg_txt, msg, routes)
+        routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
+        thread_id = self.message_route_process(message, msg_dict, routes)
         return thread_id
 
     @api.model
@@ -1180,7 +1154,7 @@ class MailThread(models.AbstractModel):
             self.write(update_vals)
         return True
 
-    def _message_receive_bounce(self, email, partner, mail_id=None):
+    def _message_receive_bounce(self, email, partner):
         """Called by ``message_process`` when a bounce email (such as Undelivered
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to do nothing. This method is meant to be overridden in various
@@ -1188,22 +1162,30 @@ class MailThread(models.AbstractModel):
         mailing statistics update. check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented.
 
-        :param record partner: partner matching the bounced email address, if any;
         :param string email: email that caused the bounce;
-        :param mail_id: ID of the sent email that bounced. It may not exist anymore
-                        but it could be useful if the information was kept. This is
-                        used notably in mass mailing;
+        :param record partner: partner matching the bounced email address, if any;
         """
         pass
 
-    def _message_extract_payload_postprocess(self, message, body, attachments):
+    def _message_reset_bounce(self, email):
+        """Called by ``message_process`` when an email is considered as not being
+        a bounce. The default behavior is to do nothing. This method is meant to
+        be overridden in various modules to add some specific behavior like
+        blacklist management.
+
+        :param string email: email for which to reset bounce information
+        """
+        pass
+
+    def _message_parse_extract_payload_postprocess(self, message, payload_dict):
         """ Perform some cleaning / postprocess in the body and attachments
         extracted from the email. Note that this processing is specific to the
         mail module, and should not contain security or generic html cleaning.
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
+        body, attachments = payload_dict['body'], payload_dict['attachments']
         if not body:
-            return body, attachments
+            return payload_dict
         try:
             root = lxml.html.fromstring(body)
         except ValueError:
@@ -1229,9 +1211,9 @@ class MailThread(models.AbstractModel):
             node.getparent().remove(node)
         if postprocessed:
             body = etree.tostring(root, pretty_print=False, encoding='unicode')
-        return body, attachments
+        return {'body': body, 'attachments': attachments}
 
-    def _message_extract_payload(self, message, save_original=False):
+    def _message_parse_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
         attachments = []
         body = u''
@@ -1306,43 +1288,81 @@ class MailThread(models.AbstractModel):
                 else:
                     attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
 
-        body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
-        return body, attachments
+        return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
+
+    def _message_parse_extract_bounce(self, email_message, message_dict):
+        """ Parse email and extract bounce information to be used in future
+        processing.
+
+        :param email_message: an email.message instance;
+        :param message_dict: dictionary holding already-parsed values and in
+            which bounce-related values will be added;
+        """
+        if not isinstance(email_message, Message):
+            raise TypeError('message must be an email.message.Message at this point')
+
+        email_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/rfc822'), None)
+        dsn_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/delivery-status'), None)
+
+        bounced_email = False
+        bounced_partner = self.env['res.partner'].sudo()
+        if dsn_part and len(dsn_part.get_payload()) > 1:
+            dsn = dsn_part.get_payload()[1]
+            final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
+            bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
+            if bounced_email:
+                bounced_partner = self.env['res.partner'].sudo().search([('email_normalized', '=', bounced_email)])
+
+        bounced_msg_id = False
+        bounced_message = self.env['mail.message'].sudo()
+        if email_part:
+            email = email_part.get_payload()[0]
+            bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
+            if bounced_msg_id:
+                bounced_message = self.env['mail.message'].sudo().search([('message_id', 'in', bounced_msg_id)])
+
+        return {
+            'bounced_email': bounced_email,
+            'bounced_partner': bounced_partner,
+            'bounced_msg_id': bounced_msg_id,
+            'bounced_message': bounced_message,
+        }
 
     @api.model
     def message_parse(self, message, save_original=False):
-        """Parses a string or email.message.Message representing an
-           RFC-2822 email, and returns a generic dict holding the
-           message details.
+        """ Parses an email.message.Message representing an RFC-2822 email
+        and returns a generic dict holding the message details.
 
-           :param message: the message to parse
-           :type message: email.message.Message | string | unicode
-           :param bool save_original: whether the returned dict
-               should include an ``original`` attachment containing
-               the source of the message
-           :rtype: dict
-           :return: A dict with the following structure, where each
-                    field may not be present if missing in original
-                    message::
-                    { 'message_id': msg_id,
-                      'subject': subject,
-                      'from': from,
-                      'to': to,
-                      'cc': cc,
-                      'body': unified_body,
-                      'attachments': [('file1', 'bytes'),
-                                      ('file2', 'bytes')}
-                    }
+        :param message: email to parse
+        :type message: email.message.Message
+        :param bool save_original: whether the returned dict should include
+            an ``original`` attachment containing the source of the message
+        :rtype: dict
+        :return: A dict with the following structure, where each field may not
+            be present if missing in original message::
+
+            { 'message_id': msg_id,
+              'subject': subject,
+              'email_from': from,
+              'to': to + delivered-to,
+              'cc': cc,
+              'recipients': delivered-to + to + cc + resent-to + resent-cc,
+              'partner_ids': partners found based on recipients emails,
+              'body': unified_body,
+              'references': references,
+              'in_reply_to': in-reply-to,
+              'parent_id': parent mail.message based on in_reply_to or references,
+              'internal': answer to an internal message (note),
+              'date': date,
+              'attachments': [('file1', 'bytes'),
+                              ('file2', 'bytes')}
+            }
         """
-        msg_dict = {
-            'message_type': 'email',
-        }
         if not isinstance(message, Message):
-            # message_from_string works on a native str
-            message = pycompat.to_text(message)
-            message = email.message_from_string(message)
+            raise ValueError(_('Message should be a valid Message instance'))
+        msg_dict = {'message_type': 'email'}
 
-        message_id = message['message-id']
+        message_id = message.get('Message-Id')
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
             message_id = "<%s@localhost>" % time.time()
@@ -1350,19 +1370,42 @@ class MailThread(models.AbstractModel):
         msg_dict['message_id'] = message_id
 
         if message.get('Subject'):
-            msg_dict['subject'] = tools.decode_smtp_header(message.get('Subject'))
+            msg_dict['subject'] = tools.decode_message_header(message, 'Subject')
 
-        # Envelope fields not stored in mail.message but made available for message_new()
-        msg_dict['from'] = tools.decode_smtp_header(message.get('from'))
-        msg_dict['to'] = tools.decode_smtp_header(message.get('to'))
-        msg_dict['cc'] = tools.decode_smtp_header(message.get('cc'))
-        msg_dict['email_from'] = tools.decode_smtp_header(message.get('from'))
-        recipient_emails = ', '.join([tools.decode_smtp_header(message.get(h)) for h in ['To', 'Cc'] if message.get(h)])
-        partner_ids = [x.id for x in self._mail_find_partner_from_emails(tools.email_split(recipient_emails), records=self) if x]
+        email_from = tools.decode_message_header(message, 'From')
+        email_cc = tools.decode_message_header(message, 'cc')
+        email_from_list = tools.email_split_and_format(email_from)
+        email_cc_list = tools.email_split_and_format(email_cc)
+        msg_dict['email_from'] = email_from_list[0] if email_from_list else email_from
+        msg_dict['from'] = msg_dict['email_from']  # compatibility for message_new
+        msg_dict['cc'] = ','.join(email_cc_list) if email_cc_list else email_cc
+        # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
+        # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
+        msg_dict['recipients'] = ','.join(formatted_email
+            for address in [
+                tools.decode_message_header(message, 'Delivered-To'),
+                tools.decode_message_header(message, 'To'),
+                tools.decode_message_header(message, 'Cc'),
+                tools.decode_message_header(message, 'Resent-To'),
+                tools.decode_message_header(message, 'Resent-Cc')
+            ] if address
+            for formatted_email in tools.email_split_and_format(address)
+        )
+        msg_dict['to'] = ','.join(formatted_email
+            for address in [
+                tools.decode_message_header(message, 'Delivered-To'),
+                tools.decode_message_header(message, 'To')
+            ] if address
+            for formatted_email in tools.email_split_and_format(address))
+        partner_ids = [x.id for x in self._mail_find_partner_from_emails(tools.email_split(msg_dict['recipients']), records=self) if x]
         msg_dict['partner_ids'] = partner_ids
+        # compute references to find if email_message is a reply to an existing thread
+        msg_dict['references'] = tools.decode_message_header(message, 'References')
+        msg_dict['in_reply_to'] = tools.decode_message_header(message, 'In-Reply-To').strip()
+
         if message.get('Date'):
             try:
-                date_hdr = tools.decode_smtp_header(message.get('Date'))
+                date_hdr = tools.decode_message_header(message, 'Date')
                 parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
                 if parsed_date.utcoffset() is None:
                     # naive datetime, so we arbitrarily decide to make it
@@ -1373,25 +1416,26 @@ class MailThread(models.AbstractModel):
                     stored_date = parsed_date.astimezone(tz=pytz.utc)
             except Exception:
                 _logger.info('Failed to parse Date header %r in incoming mail '
-                                'with message-id %r, assuming current date/time.',
-                                message.get('Date'), message_id)
+                             'with message-id %r, assuming current date/time.',
+                             message.get('Date'), message_id)
                 stored_date = datetime.datetime.now()
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-        if message.get('In-Reply-To'):
-            parent_ids = self.env['mail.message'].search([('message_id', '=', tools.decode_smtp_header(message['In-Reply-To'].strip()))], limit=1)
+        if msg_dict['in_reply_to']:
+            parent_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['in_reply_to'])], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
                 msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
-        if message.get('References') and 'parent_id' not in msg_dict:
-            msg_list = tools.mail_header_msgid_re.findall(tools.decode_smtp_header(message['References']))
-            parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in msg_list])], limit=1)
+        if msg_dict['references'] and 'parent_id' not in msg_dict:
+            references_msg_id_list = tools.mail_header_msgid_re.findall(msg_dict['references'])
+            parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in references_msg_id_list])], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
                 msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
-        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
+        msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
+        msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         return msg_dict
 
     # ------------------------------------------------------
@@ -1667,8 +1711,7 @@ class MailThread(models.AbstractModel):
             :param str subject: subject of the message
             :param str message_type: see mail_message.message_type field. Can be anything but 
                 user_notification, reserved for message_notify
-            :param int parent_id: handle reply to a previous message by adding the
-                parent partners to the message in case of private discussion
+            :param int parent_id: handle thread formation
             :param int subtype_id: subtype_id of the message, mainly use fore
                 followers mechanism
             :param int subtype: xmlid that will be used to compute subtype_id
@@ -1706,7 +1749,7 @@ class MailThread(models.AbstractModel):
         if any(not isinstance(pc_id, int) for pc_id in partner_ids | channel_ids):
             raise ValueError('message_post partner_ids and channel_ids must be integer list, not commands')
 
-        # Find the message's author, because we need it for private discussion
+        # Find the message's author
         if author_id is None:  # keep False values
             author_id = self.env.user.partner_id.id
         if not email_from:
@@ -1864,13 +1907,6 @@ class MailThread(models.AbstractModel):
         email_from = author.email_formatted
 
         partner_ids = partner_ids or set()
-        if parent_id:  # looks like no test case are going throug this condition. Linked to private discussion. This may be removed soon.
-            parent_message = self.env['mail.message'].browse(parent_id)
-            private_followers = set([partner.id for partner in parent_message.partner_ids])
-            if parent_message.author_id:
-                private_followers.add(parent_message.author.id)
-            private_followers -= set([author.id])
-            partner_ids |= private_followers
 
         if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
@@ -1942,9 +1978,6 @@ class MailThread(models.AbstractModel):
 
     def _message_create(self, values):
         create_values = dict(values)
-        # Avoid warnings about non-existing fields
-        for x in ('from', 'to', 'cc', 'canned_response_ids'):
-            create_values.pop(x, None)
         create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
         create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
         return self.env['mail.message'].create(create_values)

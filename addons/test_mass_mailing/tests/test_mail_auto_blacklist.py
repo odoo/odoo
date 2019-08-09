@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import common
+
 import datetime
+
+from odoo import tools
+from odoo.tests import common
+
 
 class TestAutoBlacklist(common.TransactionCase):
 
@@ -10,40 +14,29 @@ class TestAutoBlacklist(common.TransactionCase):
         mass_mailing = self.env['mailing.mailing']
         mail_blacklist = self.env['mail.blacklist']
         mail_statistics = self.env['mailing.trace']
-        mail_thread = self.env['mail.thread']
 
         # create mailing contact record
         self.mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email 1', 'email': 'Test1@email.com'})
 
-        # create bounced history
-        mail_statistics.create({
-            'model': 'mailing.contact',
-            'res_id': self.mailing_contact_1.id,
-            'bounced': datetime.datetime.now() - datetime.timedelta(weeks=2),
-            'email': self.mailing_contact_1.email
-        })
-        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
-        mail_statistics.create({
-            'model': 'mailing.contact',
-            'res_id': self.mailing_contact_1.id,
-            'bounced': datetime.datetime.now() - datetime.timedelta(weeks=3),
-            'email': self.mailing_contact_1.email
-        })
-        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
-        mail_statistics.create({
-            'model': 'mailing.contact',
-            'res_id': self.mailing_contact_1.id,
-            'bounced': datetime.datetime.now() - datetime.timedelta(weeks=4),
-            'email': self.mailing_contact_1.email
-        })
-        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
-        mail_statistics.create({
-            'model': 'mailing.contact',
-            'res_id': self.mailing_contact_1.id,
-            'bounced': datetime.datetime.now() - datetime.timedelta(weeks=5),
-            'email': self.mailing_contact_1.email
-        })
-        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
+        base_parsed_values = {
+            'email_from': 'toto@yaourth.com', 'to': 'tata@yaourth.com', 'message_id': '<123.321@yaourth.com>',
+            'bounced_partner': self.env['res.partner'].sudo(), 'bounced_message': self.env['mail.message'].sudo()
+        }
+
+        # create bounced history of 4 statistics
+        for idx in range(4):
+            mail_statistics.create({
+                'model': 'mailing.contact',
+                'res_id': self.mailing_contact_1.id,
+                'bounced': datetime.datetime.now() - datetime.timedelta(weeks=idx+2),
+                'email': self.mailing_contact_1.email,
+                'message_id': '<123.00%s@iron.sky>' % idx,
+            })
+            base_parsed_values.update({
+                'bounced_email': tools.email_normalize(self.mailing_contact_1.email),
+                'bounced_msg_id': '<123.00%s@iron.sky>' % idx
+            })
+            self.env['mail.thread']._routing_handle_bounce(False, base_parsed_values)
 
         # create mass mailing record
         self.mass_mailing = mass_mailing.create({
@@ -73,10 +66,15 @@ class TestAutoBlacklist(common.TransactionCase):
             'model': 'mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now(),
-            'email': self.mailing_contact_1.email
+            'email': self.mailing_contact_1.email,
+            'message_id': '<123.004@iron.sky>',
+        })
+        base_parsed_values.update({
+            'bounced_email': tools.email_normalize(self.mailing_contact_1.email),
+            'bounced_msg_id': '<123.004@iron.sky>'
         })
         # call bounced
-        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
+        self.env['mail.thread']._routing_handle_bounce(False, base_parsed_values)
 
         # check blacklist
         blacklist_record = mail_blacklist.search([('email', '=', self.mailing_contact_1.email)])
