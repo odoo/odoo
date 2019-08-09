@@ -17,10 +17,11 @@ var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var ControlPanelView = require('web.ControlPanelView');
-var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var dialogs = require('web.view_dialogs');
+var dom = require('web.dom');
 var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
@@ -905,6 +906,22 @@ var FieldX2Many = AbstractField.extend({
     start: function () {
         return this._renderControlPanel().then(this._super.bind(this));
     },
+    /**
+     * For the list renderer to properly work, it must know if it is in the DOM,
+     * and be notified when it is attached to the DOM.
+     */
+    on_attach_callback: function () {
+        this.isInDOM = true;
+        if (this.renderer) {
+            this.renderer.on_attach_callback();
+        }
+    },
+    /**
+     * For the list renderer to properly work, it must know if it is in the DOM.
+     */
+    on_detach_callback: function () {
+        this.isInDOM = false;
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -1096,7 +1113,16 @@ var FieldX2Many = AbstractField.extend({
         this.renderer = new Renderer(this, this.value, rendererParams);
 
         this.$el.addClass('o_field_x2many o_field_x2many_' + viewType);
-        return this.renderer ? this.renderer.appendTo(this.$el) : this._super();
+        if (this.renderer) {
+            return this.renderer.appendTo(document.createDocumentFragment()).then(function () {
+                dom.append(self.$el, self.renderer.$el, {
+                    in_DOM: self.isInDOM,
+                    callbacks: [{widget: self.renderer}],
+                });
+            });
+        } else {
+            return this._super();
+        }
     },
     /**
      * Instanciates a control panel with the appropriate buttons and a pager.
