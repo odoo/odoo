@@ -18,7 +18,7 @@
         <field name="name">stock.inventory.line.tree2</field>
         <field name="model">stock.inventory.line</field>
         <field name="arch" type="xml">
-            <tree editable="top" string="Inventory Details" js_class="inventory_validate_button"
+            <tree default_order="location_id,product_id" editable="top" string="Inventory Details" js_class="inventory_validate_button"
                   decoration-danger="product_qty != theoretical_qty"
                   decoration-muted="product_qty == theoretical_qty"
                   decoration-bf="is_editable">
