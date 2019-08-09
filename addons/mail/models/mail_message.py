@@ -985,78 +985,77 @@ class Message(models.Model):
                     'message_needaction_counter',
                 ], ids=[res_id])
 
-    @api.model
-    def create(self, values):
-        # coming from mail.js that does not have pid in its values
-        if self.env.context.get('default_starred'):
-            self = self.with_context({'default_starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+    @api.model_create_multi
+    def create(self, values_list):
+        tracking_values_list = []
+        for values in values_list:
+            if 'email_from' not in values:  # needed to compute reply_to
+                values['email_from'] = self._get_default_from()
+            if not values.get('message_id'):
+                values['message_id'] = self._get_message_id(values)
+            if 'reply_to' not in values:
+                values['reply_to'] = self._get_reply_to(values)
+            if 'record_name' not in values and 'default_record_name' not in self.env.context:
+                values['record_name'] = self._get_record_name(values)
 
-        if 'email_from' not in values:  # needed to compute reply_to
-            values['email_from'] = self._get_default_from()
-        if not values.get('message_id'):
-            values['message_id'] = self._get_message_id(values)
-        if 'reply_to' not in values:
-            values['reply_to'] = self._get_reply_to(values)
-        if 'record_name' not in values and 'default_record_name' not in self.env.context:
-            values['record_name'] = self._get_record_name(values)
+            if 'attachment_ids' not in values:
+                values['attachment_ids'] = []
+            # extract base64 images
+            if 'body' in values:
+                Attachments = self.env['ir.attachment']
+                data_to_url = {}
+                def base64_to_boundary(match):
+                    key = match.group(2)
+                    if not data_to_url.get(key):
+                        name = match.group(4) if match.group(4) else 'image%s' % len(data_to_url)
+                        try:
+                            attachment = Attachments.create({
+                                'name': name,
+                                'datas': match.group(2),
+                                'res_model': values.get('model'),
+                                'res_id': values.get('res_id'),
+                            })
+                        except binascii_error:
+                            _logger.warning("Impossible to create an attachment out of badly formated base64 embedded image. Image has been removed.")
+                            return match.group(3)  # group(3) is the url ending single/double quote matched by the regexp
+                        else:
+                            attachment.generate_access_token()
+                            values['attachment_ids'].append((4, attachment.id))
+                            data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
+                    return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
+                values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
 
-        if 'attachment_ids' not in values:
-            values['attachment_ids'] = []
-        # extract base64 images
-        if 'body' in values:
-            Attachments = self.env['ir.attachment']
-            data_to_url = {}
-            def base64_to_boundary(match):
-                key = match.group(2)
-                if not data_to_url.get(key):
-                    name = match.group(4) if match.group(4) else 'image%s' % len(data_to_url)
-                    try:
-                        attachment = Attachments.create({
-                            'name': name,
-                            'datas': match.group(2),
-                            'res_model': values.get('model'),
-                            'res_id': values.get('res_id'),
-                        })
-                    except binascii_error:
-                        _logger.warning("Impossible to create an attachment out of badly formated base64 embedded image. Image has been removed.")
-                        return match.group(3)  # group(3) is the url ending single/double quote matched by the regexp
-                    else:
-                        attachment.generate_access_token()
-                        values['attachment_ids'].append((4, attachment.id))
-                        data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
-                return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
-            values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
+            # delegate creation of tracking after the create as sudo to avoid access rights issues
+            tracking_values_list.append(values.pop('tracking_value_ids', False))
 
-        # delegate creation of tracking after the create as sudo to avoid access rights issues
-        tracking_values_cmd = values.pop('tracking_value_ids', False)
-        message = super(Message, self).create(values)
+        messages = super(Message, self).create(values_list)
 
-        # check attachement access
-        if values.get('attachment_ids'):
-            attachment_ids = []
-            if all(isinstance(command, int) or command[0] in (4, 6) for command in values.get('attachment_ids')):
-                attachment_ids = []
+        check_attachment_access = []
+        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+            for values in values_list:
                 for command in values.get('attachment_ids'):
                     if isinstance(command, int):
-                        attachment_ids += [command]
+                        check_attachment_access += [command]
                     elif command[0] == 6:
-                        attachment_ids += command[2]
-                    else: # command[0] == 4:
-                        attachment_ids += [command[1]]
-            else:
-                attachment_ids = message.mapped('attachment_ids').ids  # fallback on read if any unknow command
-            self.env['ir.attachment'].browse(attachment_ids).check(mode='read')
+                        check_attachment_access += command[2]
+                    else:  # command[0] == 4:
+                        check_attachment_access += [command[1]]
+        else:
+            check_attachment_access = messages.mapped('attachment_ids').ids  # fallback on read if any unknow command
+        if check_attachment_access:
+            self.env['ir.attachment'].browse(check_attachment_access).check(mode='read')
 
-        if tracking_values_cmd:
-            vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
-            other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
-            if vals_lst:
-                self.env['mail.tracking.value'].sudo().create(vals_lst)
-            if other_cmd:
-                message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+        for message, values, tracking_values_cmd in zip(messages, values_list, tracking_values_list):
+            if tracking_values_cmd:
+                vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
+                other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
+                if vals_lst:
+                    self.env['mail.tracking.value'].sudo().create(vals_lst)
+                if other_cmd:
+                    message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
-        if message.is_thread_message(values):
-            message._invalidate_documents(values.get('model'), values.get('res_id'))
+            if message.is_thread_message(values):
+                message._invalidate_documents(values.get('model'), values.get('res_id'))
 
         return message
 
