@@ -31,6 +31,7 @@ var Chatter = Widget.extend({
         discard_record_changes: '_onDiscardRecordChanges',
         reload_attachment_box: '_onReloadAttachmentBox',
         reload_mail_fields: '_onReloadMailFields',
+        reset_suggested_partners: '_onResetSuggestedPartners',
     },
     events: {
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
@@ -68,6 +69,7 @@ var Chatter = Widget.extend({
         // suggestions as well once fetched
         this._mentionPartnerSuggestions = this.call('mail_service', 'getMentionPartnerSuggestions');
         this._mentionSuggestions = this._mentionPartnerSuggestions;
+        this._suggestedPartnersProm = undefined;
 
         if (mailFields.mail_activity) {
             this.fields.activity = new Activity(this, mailFields.mail_activity, record, options);
@@ -408,6 +410,12 @@ var Chatter = Widget.extend({
     },
     /**
      * @private
+     */
+    _resetSuggestedPartners() {
+        this._suggestedPartnersProm = undefined;
+    },
+    /**
+     * @private
      * @param {Object} record
      * @param {integer} [record.res_id]
      * @param {string} [record.model]
@@ -422,9 +430,9 @@ var Chatter = Widget.extend({
                 default_res_id: record.res_id || false,
                 default_model: record.model || false,
             };
-            // reset the suggested_partners_def to ensure a reload of the
+            // reset the _suggestedPartnersProm to ensure a reload of the
             // suggested partners when opening the composer on another record
-            this.suggested_partners_def = undefined;
+            this._resetSuggestedPartners();
         }
         this.record = record;
         this.recordName = record.data.display_name;
@@ -474,6 +482,7 @@ var Chatter = Widget.extend({
             }));
         });
     },
+
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -537,8 +546,8 @@ var Chatter = Widget.extend({
     },
     _onOpenComposerMessage: function () {
         var self = this;
-        if (!this.suggested_partners_def) {
-            this.suggested_partners_def = new Promise(function (resolve, reject) {
+        if (!this._suggestedPartnersProm) {
+            this._suggestedPartnersProm = new Promise(function (resolve, reject) {
                 self._rpc({
                     route: '/mail/get_suggested_recipients',
                     params: {
@@ -546,7 +555,7 @@ var Chatter = Widget.extend({
                         res_ids: [self.context.default_res_id],
                     },
                 }).then(function (result) {
-                    if (!self.suggested_partners_def) {
+                    if (!self._suggestedPartnersProm) {
                         return; // widget has been reset (e.g. we just switched to another record)
                     }
                     var suggested_partners = [];
@@ -566,7 +575,7 @@ var Chatter = Widget.extend({
                 });
             });
         }
-        this.suggested_partners_def.then(function (suggested_partners) {
+        this._suggestedPartnersProm.then(function (suggested_partners) {
             self._openComposer({ isLog: false, suggested_partners: suggested_partners });
         });
     },
@@ -609,6 +618,14 @@ var Chatter = Widget.extend({
             fieldNames: fieldNames,
             keepChanges: true,
         });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onResetSuggestedPartners(ev) {
+        ev.stopPropagation();
+        this._resetSuggestedPartners();
     },
     /**
      * @private
