@@ -102,7 +102,10 @@ var ScreenWidget = PosBaseWidget.extend({
     barcode_client_action: function(code){
         var partner = this.pos.db.get_partner_by_barcode(code.code);
         if(partner){
-            this.pos.get_order().set_client(partner);
+            if (this.pos.get_order().get_client() !== partner) {
+                this.pos.get_order().set_client(partner);
+                this.pos.get_order().set_pricelist(_.findWhere(this.pos.pricelists, {'id': partner.property_product_pricelist[0]}) || this.pos.default_pricelist);
+            }
             return true;
         }
         this.barcode_error_action(code);
