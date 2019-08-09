@@ -1847,6 +1847,28 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_tags_avatar', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="partner_ids" widget="many2many_tags_avatar"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2, "should have 2 records");
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/partner/2/image_64',
+            "should have correct avatar image");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldRadio');
 
     QUnit.test('fieldradio widget on a many2one in a new record', async function (assert) {
