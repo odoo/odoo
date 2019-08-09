@@ -748,6 +748,7 @@ class PoFileWriter:
         for typy, name, res_id in tnrs:
             if typy == 'code':
                 code = True
+                res_id = 0
             if isinstance(res_id, int) or res_id.isdigit():
                 # second term of occurrence must be a digit
                 # occurrence line at 0 are discarded when rendered to string
