@@ -67,7 +67,6 @@ var ListRenderer = BasicRenderer.extend({
         this.hasSelectors = params.hasSelectors;
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
-        this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
     },

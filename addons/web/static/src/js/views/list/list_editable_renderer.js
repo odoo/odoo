@@ -43,6 +43,8 @@ ListRenderer.include({
         var self = this;
         this._super.apply(this, arguments);
 
+        this.editable = params.editable;
+
         // if addCreateLine (resp. addCreateLineInGroups) is true, the renderer
         // will add a 'Add a line' link at the bottom of the list view (resp.
         // at the bottom of each group)
@@ -106,6 +108,29 @@ ListRenderer.include({
             core.bus.on('click', this, this._onWindowClicked.bind(this));
         }
         return this._super();
+    },
+    /**
+     * The list renderer needs to know if it is in the DOM, and to be notified
+     * when it is attached to the DOM to properly compute column widths.
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        this.isInDOM = true;
+        if (this.editable) {
+            this._freezeColumnWidths();
+        }
+        this._super();
+    },
+    /**
+     * The list renderer needs to know if it is in the DOM to properly compute
+     * column widths.
+     *
+     * @override
+     */
+    on_detach_callback: function () {
+        this.isInDOM = false;
+        this._super();
     },
 
     //--------------------------------------------------------------------------
@@ -493,9 +518,39 @@ ListRenderer.include({
         }
     },
     /**
-     * Returns the relative width according to the widget or the field type.
-     * @see _renderHeader
+     * This function freezes the column widths and forces a fixed table-layout,
+     * once the browser has computed the optimal width of each column according
+     * to the displayed records. We want to freeze widths s.t. it doesn't
+     * flicker when we switch a row in edition.
      *
+     * We skip this when there is no record as we don't want to fix widths
+     * according to column's labels. In this case, we fallback on the 'weight'
+     * heuristic, which assigns to each column a fixed or relative width
+     * depending on the widget or field type.
+     *
+     * Note that the list must be in the DOM when this function is called.
+     *
+     * @private
+     */
+    _freezeColumnWidths: function () {
+        if (!this.state.data.length) {
+            // there is no record -> don't force column's widths w.r.t. their label
+            return;
+        }
+        var $thead = this.$('thead');
+        $thead.find('th').each(function () {
+            var $th = $(this);
+            $th.css('width', $th.outerWidth() + 'px');
+        });
+        this.$('table').css('table-layout', 'fixed');
+    },
+    /**
+     * Returns the relative width according to the widget or the field type.
+     * This is only used when there is no record in the list (i.e. when we can't
+     * let the browser compute the optimal width of each column).
+     *
+     * @see _renderHeader
+     * @private
      * @param {Object} column an arch node
      * @returns {integer | string} either a weight factor (number) or a css
      *   width description (string)
@@ -516,22 +571,13 @@ ListRenderer.include({
             return widget.widthFactor;
         }
         switch (field.type) {
-            case 'binary': return 1;
             case 'boolean': return '40px';
-            case 'char': return 2;
             case 'date': return '92px';
             case 'datetime': return '146px';
             case 'float': return '92px';
-            case 'html': return 3;
             case 'integer': return '74px';
-            case 'many2many': return 2;
-            case 'many2one': return 2;
             case 'monetary': return '104px';
-            case 'one2many': return 2;
-            case 'reference': return 1.5;
-            case 'selection': return 1.5;
-            case 'text': return 2.5;
-            default: return 1;
+            default: return 1; // evenly distribute the remaining space
         }
     },
     /**
@@ -842,7 +888,7 @@ ListRenderer.include({
     _renderHeader: function () {
         var $thead = this._super.apply(this, arguments);
 
-        if (this.editable) {
+        if (this.editable && !this.state.data.length) {
             // we compute the sum of the weights for each columns, excluding
             // those with a fixed width.
             var totalWidth = this.columns.reduce(function (acc, column) {
@@ -934,8 +980,17 @@ ListRenderer.include({
         this.currentRow = null;
         this.allRecordsIds = null;
         return this._super.apply(this, arguments).then(function () {
-            if (self.editable) {
-                self.$('table').addClass('o_editable_list');
+            var table = self.el.getElementsByTagName('table')[0];
+            if (table) { // no table if no content helper displayed
+                if (!self.state.data.length) { // FIXME: only handles ungrouped case
+                    table.classList.add('o_empty_list');
+                }
+                if (self.editable) {
+                    table.classList.add('o_editable_list');
+                    if (self.isInDOM) {
+                        self._freezeColumnWidths();
+                    }
+                }
             }
         });
     },
