@@ -210,6 +210,7 @@ class MrpWorkorder(models.Model):
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
         (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
+        self.mapped('leave_id').unlink()
         return super(MrpWorkorder, self).unlink()
 
     @api.depends('production_id.product_qty', 'qty_produced')
