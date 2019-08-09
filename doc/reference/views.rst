@@ -1363,6 +1363,11 @@ take the following attributes:
   If specified when clicking the add button on the view, instead of opening a generic dialog, launch a client action.
   this should hold the xmlid of the action (eg: ``on_create="%(my_module.my_wizard)d"``
 
+``form_view_id``
+  view to open when the user create or edit a record. Note that if this attribute
+  is not set, the gantt view will fall back to the id of the form view in the
+  current action, if any.
+
 .. _reference/views/diagram:
 
 Diagram
@@ -2010,10 +2015,10 @@ has the effect to activate first ``bar`` then ``foo``.
 Map
 ===
 
-This view is able to display records on a map and the routes between them. The record are represented by pins. It also allows the visualization of fields from the model in a popup tied to the record's pin. 
+This view is able to display records on a map and the routes between them. The record are represented by pins. It also allows the visualization of fields from the model in a popup tied to the record's pin.
 
 .. note::
-    
+
     The model on which the view is applied should contains a res.partner many2one since the view relies on the res.partner's address and coordinates fields to localize the records.
 
 .. warning::
@@ -2026,7 +2031,7 @@ Api
 ---
 
 The view uses location data platforms' api to fetch the tiles (the map's background), do the geoforwarding (converting addresses to a set of coordinates) and fetch the routes.
-The view implements two api, the default one, openstreet map is able to fetch `tiles`_ and do `geoforwarding`_. This api does not require a token. 
+The view implements two api, the default one, openstreet map is able to fetch `tiles`_ and do `geoforwarding`_. This api does not require a token.
 As soon as a valid `MapBox`_ token is provided in the general settings the view switches to the Mapbox api. This api is faster and allows the computation of routes. The token are available by `signing up`_ to MapBox
 
 
@@ -2042,8 +2047,8 @@ The view's root element is ``<map>`` multiple attributes are allowed
     Contains the res.partner many2one. If not provided the view will resort to create an empty  map.
 ``default_order``
     If a field is provided the view will override the model's default order. The field must be apart of the model on which the view is applied not from res.partner
-``routing`` 
-    if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)   
+``routing``
+    if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)
 
 The only element allowed within the ``<map>`` element is the ``<marker-popup>``. This element is able to contain multiple ``<field>`` elements. Each of these elements will be interpreted as a line in the marker's popup. The field's attributes are the following:
 
@@ -2119,7 +2124,7 @@ The main additions of qweb-as-view to the basic qweb-as-template are:
                        should only contain xpath elements
                        <reference/views/inheritance>`
 
-.. _geoforwarding: https://nominatim.org/release-docs/develop/ 
+.. _geoforwarding: https://nominatim.org/release-docs/develop/
 .. _tiles: https://wiki.openstreetmap.org/wiki/Tile_data_server
 .. _MapBox: https://docs.mapbox.com/api/
 .. _signing up: https://account.mapbox.com/auth/signup/
