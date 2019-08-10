@@ -8,6 +8,8 @@ class AccountMove(models.Model):
 
     l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
     partner_id_vat = fields.Char(related='partner_id.vat', string='VAT No')
+    l10n_latam_internal_type = fields.Selection(related='l10n_latam_document_type_id.internal_type',
+                                                string='L10n Latam Internal Type')
 
     def get_document_type_sequence(self):
         """ Return the match sequences for the given journal and invoice """
