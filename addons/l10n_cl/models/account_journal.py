@@ -23,21 +23,12 @@ class AccountJournal(models.Model):
         sequences = self.l10n_cl_sequence_ids
         sequences.unlink()
 
-        # Create Sequences
-        # letters = self.get_journal_letter()
         internal_types = ['invoice', 'debit_note', 'credit_note']
-        # domain = [('country_id.code', '=', 'CL'),
-        #           ('internal_type', 'in', internal_types),
-        #           '|', ('l10n_cl_letter', '=', False),
-        #           ('l10n_cl_letter', 'in', letters)]
         domain = [
             ('country_id.code', '=', 'CL'),
             ('internal_type', 'in', internal_types),
             ('active', '=', True)
         ]
-        # codes = self.get_journal_codes()
-        # if codes:
-        #     domain.append(('code', 'in', codes))
         documents = self.env['l10n_latam.document.type'].search(domain)
         for document in documents:
             sequences |= self.env['ir.sequence'].create(
