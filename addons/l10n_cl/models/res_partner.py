@@ -30,7 +30,6 @@ class ResPartner(models.Model):
         '4 - Extranjero'
     )
 
-    # TODO: change to a selection l10n_latam_identification_type (punto 2)
     l10n_latam_identification_type_id = fields.Many2one(
         string="Identification Type",
         comodel_name='l10n_latam.identification.type',
@@ -38,13 +37,18 @@ class ResPartner(models.Model):
         auto_join=True,
         help='The type of identifications used in Chile that could identify'
              ' a physical or legal person',
+        default=lambda self: self.env.ref('l10n_cl.it_RUT', raise_if_not_found=False)
+        if self.country_id == self.env.ref('base.cl')
+        else self.env.ref('l10n_latam_base.it_vat', raise_if_not_found=False),
     )
+
     l10n_cl_rut = fields.Char(
         compute='_compute_l10n_cl_rut',
         string="Invoicing RUT",
         help='Computed field that will convert the given rut number to often'
              ' local used format',
     )
+
     l10n_cl_rut_dv = fields.Char(
         compute='_compute_l10n_cl_rut',
         string="RUT's DV",

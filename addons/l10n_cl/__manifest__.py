@@ -3,7 +3,7 @@
 # Copyright (c) 2019 - Blanco Martín & Asociados. https://www.bmya.cl
 {
     'name': 'Chile - Accounting',
-    'version': '3.0',
+    'version': '13.0.3.0.0',
     'description': """
 Chilean accounting chart and tax localization.
 Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
@@ -24,6 +24,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
         'views/res_bank_view.xml',
         'views/res_company_view.xml',
         'views/res_country_view.xml',
+        'views/res_partner.xml',
         'data/l10n_cl_chart_data.xml',
         'data/account_tax_report_data.xml',
         'data/account_tax_group_data.xml',
@@ -41,6 +42,9 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
         'data/res_partner.xml',
         'data/account_fiscal_template.xml',
         'data/account_chart_template_data.xml',
+    ],
+    'demo': [
+        'demo/partner_demo.xml',
     ],
     'post_init_hook': 'post_init_hook',
 }
