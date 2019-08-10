@@ -7,25 +7,6 @@ class L10nLatamDocumentType(models.Model):
 
     _inherit = 'l10n_latam.document.type'
 
-    l10n_cl_letter = fields.Selection([
-        ('A', 'A'),
-        ('B', 'B'),
-        ('C', 'C'),
-        ('D', 'D'),
-        ('E', 'E'),
-        ('I', 'I'),
-        ('M', 'M'),
-        ('R', 'R'),
-        ('S', 'S'),
-        ('T', 'T'),
-        ('X', 'X'),
-        ('L', 'L'),
-
-    ],
-        'Letters',
-        help='We user letters structure to change the document behaviour inside odoo'
-    )
-
     internal_type = fields.Selection(
         selection_add=[
             ('invoice', 'Invoices'),
