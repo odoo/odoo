@@ -19,7 +19,7 @@
         <field name="name">account.move.tree2</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
+            <tree decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
                 <field name="l10n_latam_document_type_id_code"/>
                 <field name="l10n_latam_document_number" string="Folio"/>
                 <field name="partner_id_vat"/>
@@ -32,8 +32,8 @@
                 <field name="invoice_user_id" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="invoice_origin" optional="show" string="Source Document"/>
-                <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
-                <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
+                <field name="amount_untaxed_signed" string="Amount Untaxed" sum="Total" optional="show"/>
+                <field name="amount_tax_signed" string="Tax" sum="Total" optional="show"/>
                 <field name="amount_total_signed" string="Total" sum="Total" optional="show"/>
                 <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
                 <field name="currency_id" invisible="1"/>
