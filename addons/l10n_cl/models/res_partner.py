@@ -103,7 +103,6 @@ class ResPartner(models.Model):
             if not module[0]:
                 continue
             rec.l10n_cl_rut = module[0].format(rec.vat)
-            _logger.info('validation country: %s' % module[1])
             if module[1] == 'cl':
                 rec.l10n_cl_rut = rec.l10n_cl_rut.replace('.', '')
                 rec.vat = rec.l10n_cl_rut
