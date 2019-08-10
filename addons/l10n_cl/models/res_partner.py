@@ -121,13 +121,3 @@ class ResPartner(models.Model):
             raise UserError(_(
                 'No RUT configured for partner [%i] %s') % (self.id, self.name))
         return self.l10n_cl_rut
-
-    @api.onchange('country_id')
-    def _adjust_identification_type(self):
-        if self.country_id == self.env.ref('base.cl'):
-            self.l10n_latam_identification_type_id = self.env.ref(
-                'l10n_cl.it_RUT')
-        else:
-            self.l10n_latam_identification_type_id = self.env.ref(
-                'l10n_latam_base.it_vat')
-        self.vat = self.l10n_cl_rut = self.l10n_cl_rut_dv = False
