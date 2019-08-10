@@ -53,7 +53,7 @@ msgstr "%s %% sleva"
 #: code:addons/product/models/product_pricelist.py:464
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% sleva a %s příplatek"
 
 #. module: product
 #: code:addons/product/models/product_template.py:357
@@ -147,6 +147,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Upozornění</strong>: přidání nebo odstranění atributů\n"
+"odstraní a znovu vytvoří stávající varianty a vede\n"
+"ke ztrátě jejich možných úprav."
 
 #. module: product
 #: sql_constraint:product.product:0
@@ -242,6 +245,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Umožňuje spravovat různé ceny na základě pravidel pro jednotlivé kategorie zákazníků.\n"
+"Příklad: 10% pro maloobchodníky, promo 5 EUR na tento produkt atd."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -264,7 +269,7 @@ msgstr "Použitelný na"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "Použít na"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -350,6 +355,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Základní cena pro výpočet.\n"
+"Veřejná cena: Základní cena bude Prodejní / veřejná cena.\n"
+"Velkoobchodní cena : Základní cena bude velkoobchodní cena.\n"
+"Ostatní Ceník: Výpočet základní ceny na základě jiného Ceníku."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -538,7 +547,7 @@ msgstr "Náklady"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Měna nákladů"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template__standard_price
@@ -641,7 +650,7 @@ msgstr "Měna"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "reference na zákazníka"
 
 #. module: product
 #: model:product.product,name:product.product_product_4
@@ -672,7 +681,7 @@ msgstr "Desetinná přesnost"
 #: code:addons/product/models/res_company.py:59
 #, python-format
 msgid "Default %(currency)s pricelist for %(company)s"
-msgstr ""
+msgstr "Výchozí %(currency)s ceník pro %(company)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -711,7 +720,7 @@ msgstr "Popis"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
-msgstr ""
+msgstr "Popis pro zákazníky"
 
 #. module: product
 #: model:product.product,name:product.product_product_3
@@ -787,6 +796,8 @@ msgid ""
 "Dvorak keyboard\n"
 "left-handed mouse"
 msgstr ""
+"Dvorak klávesnice\n"
+"myš pro levou ruku"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -797,12 +808,12 @@ msgstr "Datum ukončení"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Datum ukončení této ceny dodavatele"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
+msgstr "Ukončení platnosti pro ověření položky ceníku"
 
 #. module: product
 #: code:addons/product/models/product.py:300
@@ -810,12 +821,12 @@ msgstr ""
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
-msgstr ""
+msgstr "Chyba! Není povoleno vybrat více než jednu hodnotu pro daný atribut."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
 msgid "Exclude for"
-msgstr ""
+msgstr "Vyloučit"
 
 #. module: product
 #: model:product.category,name:product.cat_expense
@@ -842,7 +853,7 @@ msgstr "Pevná cena"
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
-msgstr ""
+msgstr "Převrátit"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
@@ -868,6 +879,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"Aby toto pravidlo platilo, musí být nakoupené / prodané množství větší nebo rovno minimálnímu množství uvedenému v tomto poli.\n"
+"Vyjádřeno ve výchozí měrné jednotce produktu."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -974,6 +987,8 @@ msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
 msgstr ""
+"Pokud není nastavena, bude se prodejní cena vztahovat na všechny varianty "
+"tohoto produktu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1102,7 +1117,7 @@ msgstr "Velká skříňka"
 #: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
-msgstr ""
+msgstr "Velký stůl"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_02
@@ -1177,11 +1192,13 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"Dodací lhůta ve dnech mezi potvrzením objednávky a přijetím produktů ve "
+"vašem skladu. Používá plánovač pro automatický výpočet plánování objednávky."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Legs"
-msgstr ""
+msgstr "Nohy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
@@ -1205,11 +1222,13 @@ msgid ""
 "Make this attribute value not compatible with\n"
 "        other values of the product or some attribute values of optional and accessory products."
 msgstr ""
+"Aby tato hodnota atributu nebyla kompatibilní\n"
+"jiné hodnoty produktu nebo některé hodnoty atributů volitelných a doplňkových produktů."
 
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Správa položek ceníku"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1219,7 +1238,7 @@ msgstr "Spravovat balení výrobků"
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Správa variant produktu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1350,7 +1369,7 @@ msgstr "Počet nepřečtených zpráv"
 #: model:product.product,name:product.product_delivery_01
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
-msgstr ""
+msgstr "Kancelářská židle"
 
 #. module: product
 #: model:product.product,name:product.product_product_12
@@ -1362,23 +1381,23 @@ msgstr "Kancelářská židle černá"
 #: model:product.product,name:product.product_order_01
 #: model:product.template,name:product.product_order_01_product_template
 msgid "Office Design Software"
-msgstr ""
+msgstr "Kancelářský designový software"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Office Furniture"
-msgstr ""
+msgstr "Kancelářský nábytek"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
 #: model:product.template,name:product.product_delivery_02_product_template
 msgid "Office Lamp"
-msgstr ""
+msgstr "Kancelářská lampa"
 
 #. module: product
 #: selection:product.attribute,create_variant:0
 msgid "Only when the product is added to a sales order"
-msgstr ""
+msgstr "Pouze pokud je produkt přidán do prodejní objednávky"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1424,17 +1443,17 @@ msgstr "Nadřazená cesta"
 #: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
-msgstr ""
+msgstr "Koš na pedál"
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Procenta (sleva)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "Procenta Cena"
 
 #. module: product
 #: selection:product.product,activity_state:0
@@ -1445,7 +1464,7 @@ msgstr "Plánováno"
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
 msgid "Pound"
-msgstr ""
+msgstr "Libra"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -1475,6 +1494,8 @@ msgid ""
 "Price Extra: Extra price for the variant with\n"
 "        this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
+"Cena Extra: Extra cena za variantu s\n"
+"touto hodnotou atributu v prodejní ceně. např. 200 cena navíc, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -1533,7 +1554,7 @@ msgstr "Položka ceníku"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "Položka ceníku použitelná na vybranou možnost"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
@@ -1545,7 +1566,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Položky ceníku"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
@@ -1561,7 +1582,7 @@ msgstr "Ceníky"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Ceníky produktů"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
@@ -1615,7 +1636,7 @@ msgstr "Hodnota atributu produktu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr ""
+msgstr "Hodnoty atributů produktu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
@@ -1632,7 +1653,7 @@ msgstr "Vlastnosti výrobku"
 #: model:ir.actions.report,name:product.report_product_product_barcode
 #: model:ir.actions.report,name:product.report_product_template_barcode
 msgid "Product Barcode (PDF)"
-msgstr ""
+msgstr "Čárový kód produktu (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1655,7 +1676,7 @@ msgstr "Kategorie výrobku"
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Product Label (PDF)"
-msgstr ""
+msgstr "Štítek produktu (PDF)"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1667,7 +1688,7 @@ msgstr "Název výrobku"
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr ""
+msgstr "Balíčky produktů"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -1678,14 +1699,14 @@ msgstr "Balení produktu"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr ""
+msgstr "Balení produktu (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr ""
+msgstr "Obaly produktů"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
@@ -1717,12 +1738,12 @@ msgstr "Šablona výrobku"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr ""
+msgstr "Vyloučení atributu šablony produktu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Řádek atributu šablony produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -1741,7 +1762,7 @@ msgstr "Varianta výrobku"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 msgid "Product Variant Values"
-msgstr ""
+msgstr "Hodnoty varianty produktu"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1936,7 +1957,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "Sdílet produkt se všemi společnostmi"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__company_share_product
@@ -1945,6 +1966,9 @@ msgid ""
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
 msgstr ""
+"Sdílejte svůj produkt se všemi společnostmi definovanými ve vaší instanci.\n"
+"* Zaškrtnuto: Produkt je viditelný pro každou společnost, i když je společnost definována u partnera.\n"
+"* Nezaškrtnuto: Každá společnost může vidět pouze svůj produkt (produkt, kde je společnost definována). Produkt nesouvisející se společností je viditelný pro všechny společnosti."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1955,7 +1979,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "Zobrazit ceníky produktů"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_pricelist_item
@@ -2038,12 +2062,12 @@ msgstr "Datum zahájení"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Datum zahájení pro tuto cenu dodavatele"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
 msgid "Starting date for the pricelist item validation"
-msgstr ""
+msgstr "Počáteční datum pro ověření položky ceníku"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2062,7 +2086,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
 msgid "Steel"
-msgstr ""
+msgstr "Ocel"
 
 #. module: product
 #: selection:product.template,type:0
@@ -2073,7 +2097,7 @@ msgstr "Skladovatelný produkt"
 #: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
-msgstr ""
+msgstr "Úložný box"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -2098,7 +2122,7 @@ msgstr "Ceník dodavatele"
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_wnva_ids
 msgid "Technical compute"
-msgstr ""
+msgstr "Technické výpočty"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__pricelist_id
@@ -2106,11 +2130,13 @@ msgstr ""
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Technický obor. Používá se pro vyhledávání v cenících, ne uložených v "
+"databázi."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
 msgid "Template Attribute Values"
-msgstr ""
+msgstr "Hodnoty atributů šablon"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2126,11 +2152,12 @@ msgid ""
 "The default Unit of Measure and the purchase Unit of Measure must be in the "
 "same category."
 msgstr ""
+"Výchozí měrná jednotka a kupní měrná jednotka musí být ve stejné kategorii."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "První v pořadí je výchozí."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -2139,19 +2166,21 @@ msgid ""
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
+"Minimální množství k nákupu od tohoto dodavatele, vyjádřené v měrné jednotce"
+" produktu dodavatele, pokud není, pak ve výchozí měrné jednotce produktu."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:443
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "Minimální marže by měla být nižší než maximální marže."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "Počet produktů v této kategorii (Nezohledňuje podřízené kategorie)"
 
 #. module: product
 #: code:addons/product/models/product_template.py:480
@@ -2162,6 +2191,10 @@ msgid ""
 "sales order. To do so, open the form view of attributes and change the mode "
 "of *Create Variants*."
 msgstr ""
+"Počet variant k vygenerování je příliš vysoký. Buď byste neměli generovat "
+"varianty pro každou kombinaci nebo je generovat na vyžádání z prodejní "
+"objednávky. Chcete-li tak učinit, otevřete zobrazení atributů ve formuláři a"
+" změňte režim *Vytvořit varianty*."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:85
@@ -2170,17 +2203,19 @@ msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
 msgstr ""
+"Operaci nelze dokončit:\n"
+"Pokoušíte se odstranit hodnotu atributu s odkazem na variantu produktu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "Cena za nákup produktu"
 
 #. module: product
 #: code:addons/product/models/product_template.py:943
 #, python-format
 msgid "The product template is archived so no combination is possible."
-msgstr ""
+msgstr "Šablona produktu je archivována, takže není možná žádná kombinace."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price

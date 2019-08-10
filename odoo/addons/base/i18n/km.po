@@ -37,6 +37,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -58,6 +67,22 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Add Structured Communication to customer invoices.\n"
+"--------------------------------------------------\n"
+"\n"
+"Using BBA structured communication simplifies the reconciliation between invoices and payments.\n"
+"You can select the structured communication as payment communication in Invoicing/Accounting settings.\n"
+"Three algorithms are suggested:\n"
+"\n"
+"    1) Random : +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** Random Digits, **DD =** Check Digits\n"
+"    2) Date : +++DOY/YEAR/SSSDD+++\n"
+"        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits\n"
+"    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
+"        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -67,6 +92,10 @@ msgid ""
 "Allow cashier to reprint receipts\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"អនុញ្ញាតឱ្យអ្នកគិតលុយបោះពុម្ពឡើងវិញនូវវិក័យប័ត្រ\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -83,6 +112,17 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
+"\n"
+"\n"
+"ការរាលដាលដែលមានបែបផែននៃ Hungarian\n"
+"==========================================\n"
+"\n"
+"បែបផែនទាំងនេះ:\n"
+"\n"
+" - តារាងគណនីទូទៅរបស់Hungarian\n"
+" - ពន្ធនៃHungarian\n"
+" - ពត៌មានធនាគារនៃHungarian \n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -155,6 +195,73 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Localization Module for Dominican Republic\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -176,6 +283,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Overview:\n"
+"---------\n"
+"\n"
+"* តារាងនៃគណនី និងតារាងពន្ធសម្រាប់ក្រុមហ៊ុនក្នុងប្រទេសជប៉ុន។\n"
+"* នេះប្រហែលជាមិនរាប់បញ្ចូលគណនីចាំបាច់ទាំងអស់សម្រាប់ក្រុមហ៊ុនទេ។ អ្នកត្រូវបានគេរំពឹងថានឹងបន្ថែម / លុប / កែប្រែគណនីដោយផ្អែកលើគំរូនេះ។\n"
+"\n"
+"ចំណាំ\n"
+"-----\n"
+"\n"
+"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -189,6 +312,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"ការស្គាល់ពីចំណូល\n"
+"====================\n"
+"ការគ្រប់គ្រងលើការស្គាល់ពីចំណូលទៅលើទំនិញដែលលក់\n"
+"តាមដានការតំឡើងការទទួលស្គាល់ប្រាក់ចំណូលនិងបង្កើតធាតុទិនានុប្បវត្តិដែលត្រូវគ្នា។\n"
+"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:316
@@ -198,6 +328,9 @@ msgid ""
 "\n"
 "This addon is already installed on your system"
 msgstr ""
+"\n"
+"\n"
+"កម្មវិធីបន្ថែមនេះត្រូវបានតំឡើងរួចហើយនៅក្នុងប្រព័ន្ធរបស់អ្នក"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -285,6 +418,8 @@ msgid ""
 "        Accounting reports for Brazilian\n"
 "    "
 msgstr ""
+"\n"
+"របាយការណ៌គណនេយ្យពីប្រទេសប្រេស៊ីល"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_reports
@@ -293,6 +428,8 @@ msgid ""
 "        Accounting reports for Chile\n"
 "    "
 msgstr ""
+"\n"
+"របាយការណ៌គណនីសម្រាប់កុមារ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
@@ -303,6 +440,9 @@ msgid ""
 "        Also add DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+"របាយការណ៌គណីនេយ្យពីប្រទេសអាឡឺម៉ង់\n"
+"សមតុល្យជាមួយការចំណេញនិង​ខាត"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_reports
@@ -375,6 +515,9 @@ msgid ""
 "        Accounting reports for Uruguay\n"
 "\n"
 msgstr ""
+"\n"
+"របាយការណ៌សំរាប់Uruguay\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -390,6 +533,8 @@ msgid ""
 "\n"
 "        Allows to use python code to define taxes"
 msgstr ""
+"\n"
+"ការអនុញ្ញាតដោយមានការប្រើប្រាសលេខកូដក្នុងនិយមន័យពន្ឋ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -405,6 +550,8 @@ msgid ""
 "\n"
 "        Auto-complete partner companies' data"
 msgstr ""
+"\n"
+"ការបំពេញរបាយការទិន្នន័យក្រុមហ៊ុនដោយប្រព័ន្ឋស្វ័យប្រវត្ត"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -420,6 +567,8 @@ msgid ""
 "\n"
 "        Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"ធនធានមនុស្សនិងការថែទាំ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_intrastat
@@ -428,6 +577,8 @@ msgid ""
 "        Bridge module between sale and intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"ជាគំរូរវាងអ្នកលក់និង intrastat"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -443,6 +594,8 @@ msgid ""
 "\n"
 "        Correct address formating when both modules are installed"
 msgstr ""
+"\n"
+"ទំរង់ការកែលម្អរទំម្រង់ក្នុងពេលជាមួយគ្នាសំរាប់ការតឡើង"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -454,6 +607,11 @@ msgid ""
 "        DIOT Report\n"
 "    "
 msgstr ""
+"\n"
+"របាយការអេឡិត្រូនិត\n"
+"- COA\n"
+"- Trial Balance\n"
+"DIOT Report"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -461,6 +619,8 @@ msgid ""
 "\n"
 "        Enable a cache on products for a lower POS loading time."
 msgstr ""
+"\n"
+"បើកដំណើរការឃ្លាំងសម្ងាត់លើផលិតផលសម្រាប់ពេលផ្ទុក POS ទាប។"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_customs
@@ -496,6 +656,8 @@ msgid ""
 "\n"
 "        Make calls using a VOIP system"
 msgstr ""
+"\n"
+"ប្រើប្រាស់ការតេក្នុងប្រព័ន្ឋ VOIP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_check
@@ -511,6 +673,8 @@ msgid ""
 "\n"
 "        Social media connectors for company settings."
 msgstr ""
+"\n"
+"ប្រព័ន្ឋផ្សព្វផ្សាយសំរាក់ការតភ្ជាប់ទៅកាន់ក្រុមហ៊ុន"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -522,6 +686,11 @@ msgid ""
 "        fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 "    "
 msgstr ""
+"\n"
+"ក្នុងគោលបំណងជាគំរូដែលមានប្រតិត្តបត្តការ\n"
+"នោះគឺភាគច្រើនគ្មានន័យ។ ការអនុវត្តនេះជៀសវាង PostgreSQL ។\n"
+"        ដែនកំណត់លើចំនួនជួរឈរនៅក្នុងតារាង។ តម្លៃនៃការរាយប៉ាយទាំងអស់។\n"
+"        វាលត្រូវបានរក្សាទុកនៅក្នុងប្រអប់“ សៀរៀល” ក្នុងទម្រង់ជាផែនទី JSON ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_media
@@ -539,6 +708,8 @@ msgid ""
 "        This module adds support for barcodes scanning to the delivery packages.\n"
 "    "
 msgstr ""
+"\n"
+"ក្នុងទម្រង់ត្រូវបានឧបត្តមដោយការពិនិត្យក្នុងការដឹកជញ្ជូនជាកញ្ជប់"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -572,6 +743,8 @@ msgid ""
 "\n"
 "        This module bring templates to produce labels in the Stock app (and derivatives) for Zebra printers. Those devices print thermal barcode label and shipping labels. Printers make label from ZPL script which is built in Odoo."
 msgstr ""
+"\n"
+"ម៉ូឌុលនេះនាំមកនូវគំរូដើម្បីផលិតផ្លាកផ្លាកនៅក្នុងកម្មវិធីភាគហ៊ុន (និងនិស្សន្ទវត្ថុ) សម្រាប់ម៉ាស៊ីនព្រីនសេប។ ឧបករណ៍ទាំងនោះបោះពុម្ពផ្លាកបារកូដកម្ដៅនិងស្លាកដឹកជញ្ជូន។ ព្រីនធ័រធ្វើស្លាកពីអក្សរ ZPL ដែលត្រូវបានសាងសង់នៅអូដូ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -608,6 +781,36 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"ម៉ូឌុលនេះអាចជួយបង្កើតឯកសារអេសអេសអេចអេសអេចអេសអេមអេសអេមអេសអេម (ស្រប\n"
+"        ដោយមានការឈឺចាប់.008.001.02) ដើម្បីផ្ញើទៅធនាគាររបស់អ្នកតាមលំដាប់លំដោយ។\n"
+"        ប្រមូលសំណុំនៃការបង់ប្រាក់។\n"
+"\n"
+"        ដើម្បីអាចទទួលយកបានចំពោះវិធីទូទាត់ប្រាក់នេះអតិថិជនត្រូវតែមានមុនគេ។\n"
+"        បានវិលត្រឡប់អាណត្តិទៅឱ្យក្រុមហ៊ុនដោយផ្តល់ការយល់ព្រមរបស់គាត់ក្នុងការប្រើឥណពន្ធផ្ទាល់។\n"
+"        ការព្រមព្រៀងនេះច្បាស់ជាត្រូវបានអ៊ិនកូដជា“ អាណត្តិរបស់អតិថិជន” ទៅក្នុង Odoo ។\n"
+"\n"
+"        អ្នកក៏ត្រូវបំពេញតាមតម្រូវការដូចខាងក្រោមដើម្បីធ្វើឱ្យបានត្រឹមត្រូវ។\n"
+"        បង្កើតឯកសារ SDD៖\n"
+"        - គណនីក្រុមហ៊ុនរបស់អ្នកត្រូវតែកំណត់ទៅលេខ IBAN ដែលមានសុពលភាព។\n"
+"        - គណនីក្រុមហ៊ុនរបស់អ្នកត្រូវតែជាប់ទាក់ទងនឹងធនាគារដែលមានប័ណ្ណព័ត៌មានត្រឹមត្រូវ។\n"
+"        ក្រុមហ៊ុនរបស់អ្នកច្បាស់ជាត្រូវបានគេផ្តល់អត្តសញ្ញាណសម្គាល់ម្ចាស់បំណុល (វាអាចធ្វើទៅបាននៅក្នុងមឺនុយ“ ការកំណត់” នៃម៉ូឌុលគណនេយ្យ) ។\n"
+"        ក្រុមហ៊ុនរបស់អ្នកច្បាស់ជាបានកំណត់ទិនានុប្បវត្តិមួយដើម្បីទទួលបានការទូទាត់ SDD (ជាថ្មីម្តងទៀតនៅក្នុង“ ការកំណត់” នៃម៉ូឌុលគណនេយ្យ)\n"
+"        - រាល់អតិថិជនដែលអ្នកធ្វើការទូទាត់ត្រូវតែមានលេខគណនី IBAN ដែលមានសុពលភាពនៅក្នុងធនាគារដែលជាប់ទាក់ទងជាមួយ BIC ត្រឹមត្រូវ។\n"
+"\n"
+"        អូដូនឹងប្រាប់អ្នកឱ្យដឹងថាតើតម្រូវការណាមួយក្នុងចំណោមតម្រូវការទាំងនេះមិនពេញចិត្ត។\n"
+"\n"
+"        វិក័យប័ត្រណាមួយដែលមានសុពលភាពសម្រាប់អតិថិជនដែលមានអាណត្តិនឹងមាន។\n"
+"        កំណត់ដោយស្វ័យប្រវត្តិនៅក្នុងស្ថានភាព 'បង់ប្រាក់' ហើយការទូទាត់នឹងត្រូវបានបង្កើត។ មួយ។\n"
+"        ជម្រើសនៅក្នុងផ្ទាំងព័ត៌មានបន្ទាប់មកអនុញ្ញាតឱ្យអ្នកមើលការទូទាត់ទាំងអស់ដែលបានបង្កើត។\n"
+"        តាមរយៈ SDD និងដើម្បីបង្កើតឯកសារប្រមូល XML សម្រាប់ពួកគេដាក់ជាក្រុម។\n"
+"        អ្នកមើលឃើញថាសម។\n"
+"\n"
+"        វិធីសាស្រ្តទូទាត់ប្រាក់បំណុល 'SEPA ផ្ទាល់ក៏អាចប្រើបានផងដែរ។\n"
+"        បើកវិក័យប័ត្រនៅពេលជ្រើសរើសគណនីធនាគារនៅក្នុងអ្នកជំនួយការ 'ចុះឈ្មោះទូទាត់' ។\n"
+"        ប្រើវាដើម្បីបង្កើតការទូទាត់ SDD សម្រាប់វិក្កយបត្រប្រសិនបើអ្នកបន្ថែមអាណត្តិ។\n"
+"        សម្រាប់ម្ចាស់របស់វាបន្ទាប់ពីសុពលភាពរបស់វា។ អ្នកនឹងឃើញសារកំហុសមួយប្រសិនបើអ្នក។\n"
+"        ព្យាយាមប្រើវិធីសាស្ត្រនេះនៅលើវិក័យប័ត្រដែលការទូទាត់គ្មានអាណត្តិអាចត្រូវបានប្រើ។"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -615,6 +818,8 @@ msgid ""
 "\n"
 "        This module is used for Online bank synchronization."
 msgstr ""
+"\n"
+"ម៉ូឌុលនេះត្រូវបានប្រើសម្រាប់ការធ្វើសមកាលកម្មធនាគារតាមអ៊ីនធឺណិត។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_sync
@@ -623,6 +828,8 @@ msgid ""
 "        This module is used for Online bank synchronization. It provides basic methods to synchronize bank statement.\n"
 "    "
 msgstr ""
+"\n"
+"ម៉ូឌុលនេះត្រូវបានប្រើសម្រាប់ការធ្វើសមកាលកម្មធនាគារតាមអ៊ីនធឺណិត។ វាផ្តល់នូវវិធីសាស្ត្រមូលដ្ឋានដើម្បីធ្វើសមកាលកម្មរបាយការណ៍ធនាគារ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -631,6 +838,8 @@ msgid ""
 "        This module provides the core of the Odoo Mobile App.\n"
 "        "
 msgstr ""
+"\n"
+"ម៉ូឌុលនេះផ្តល់នូវស្នូលនៃកម្មវិធីទូរស័ព្ទចល័ត Odoo ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -638,6 +847,8 @@ msgid ""
 "\n"
 "        Track equipments and maintenance requests"
 msgstr ""
+"\n"
+"តាមដានឧបករណ៍និងសំភារៈថែទាំ។"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_plaid
@@ -645,6 +856,8 @@ msgid ""
 "\n"
 "        Use Plaid.com to retrieve bank statements"
 msgstr ""
+"\n"
+"ប្រើ Plaid.com ដើម្បីទាញយករបាយការណ៍ធនាគារ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_plaid
@@ -653,6 +866,8 @@ msgid ""
 "        Use Plaid.com to retrieve bank statements.\n"
 "    "
 msgstr ""
+"\n"
+"ប្រើ Plaid.com ដើម្បីទាញយករបាយការណ៍ធនាគារ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -663,6 +878,10 @@ msgid ""
 "        to allow you to define interviews for different jobs.\n"
 "    "
 msgstr ""
+"\n"
+"ប្រើទម្រង់សម្ភាសន៍ក្នុងពេលជ្រើសរើសបុគ្គលិក។\n"
+" ម៉ូឌុលនេះត្រូវបានបញ្ចូលជាមួយម៉ូឌុលស្ទង់មតិ។\n"
+"ដើម្បីអនុញ្ញាតឱ្យអ្នកកំណត់សំភាសន៍សម្រាប់ការងារផ្សេងគ្នា។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_sale
@@ -672,6 +891,9 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+"នៅពេលដែលវិក័យប័ត្រតារាងពេលវេលា, អនុញ្ញាតឱ្យវិក័យប័ត្រទាំងសន្លឹកកិច្ចការទាំងអស់។\n"
+" ភ្ជាប់ទៅនឹងSO, ឬមានតែសន្លឹកពេលវេលាដែលមានសុពលភាព"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_zebra
@@ -679,6 +901,8 @@ msgid ""
 "\n"
 "        Zebra printers integration for mrp module"
 msgstr ""
+"\n"
+"ការរួមបញ្ចូលម៉ាស៊ីនបោះពុម្ពសេបរ៉ាសម្រាប់ម៉ូឌុល mrp ។"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_zebra
@@ -686,6 +910,8 @@ msgid ""
 "\n"
 "        Zebra printers integration for stock module"
 msgstr ""
+"\n"
+"ការរួមបញ្ចូលម៉ាស៊ីនបោះពុម្ពសេបរ៉ាសម្រាប់ម៉ូឌុលស្តុក។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -694,6 +920,8 @@ msgid ""
 "       Auto-complete partner companies' data\n"
 "    "
 msgstr ""
+"\n"
+"ទិន្នន័យរបស់ក្រុមហ៊ុនដៃគូរដោយស្វ័យប្រវត្តិ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -706,6 +934,12 @@ msgid ""
 "          templates to target objects.\n"
 "    "
 msgstr ""
+"\n"
+"* ការគាំទ្រច្រើនភាសាសំរាប់តារាងគណនេយ្យពន្ធលេខកូដពន្ធទិនានុប្បវត្តិ។\n"
+"ពុម្ពគណនេយ្យតារាងវិភាគគណនីនិងទិន្នាកាវិភាគ។\n"
+"* ផ្លាស់ប្តូរអ្នកជំនួយការដំឡើង។\n"
+"- ថតចម្លងការបកប្រែសម្រាប់ COA ពន្ធលេខកូដពន្ធនិងទីតាំងសារពើពន្ធពី។\n"
+" គំរូដើម្បីវត្ថុគោលដៅ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -713,6 +947,8 @@ msgid ""
 "\n"
 "    Adds Quality Control to workorders.\n"
 msgstr ""
+"\n"
+"បន្ថែមការត្រួតពិនិត្យគុណភាពទៅនឹងកន្លែងធ្វើការ។\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -720,6 +956,8 @@ msgid ""
 "\n"
 "    Adds workcenters to Quality Control\n"
 msgstr ""
+"\n"
+"បន្ថែមអ្នកធ្វើការក្នុងការត្រួតពិនិត្យគុណភាព។\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_iot
@@ -728,6 +966,10 @@ msgid ""
 "    Configure IoT devices to be used in certain \n"
 "    quality steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"\n"
+"កំណត់រចនាសម្ព័ន្ធឧបករណ៍អាយអូធីដើម្បីប្រើក្នុងភាពជាក់លាក់។\n"
+" ជំហ៊ានប្រកបដោយគុណភាពសំរាប់ចាត់វិធាន,ការថតរូប, ...។\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -738,6 +980,11 @@ msgid ""
 "    syntax-checked and tested.\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"មានបំណែកនៃកូដដែលត្រូវប្រើជាឧទាហរណ៍ឯកសារបច្ចេកទេស។\n"
+"(តាមរយៈសេចក្តីណែនាំ `` ព្យញ្ជនៈព្យញ្ជនៈ `) ក្នុងស្ថានភាពដែលពួកគេអាចធ្វើបាន។\n"
+"ពិនិត្យវាក្យសម្ព័ន្ធនិងសាកល្បង។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -758,6 +1005,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"ធ្វើឱ្យកាលបរិច្ឆេទចាក់សោមិនអាចត្រឡប់វិញបាន៖\n"
+"\n"
+"    * អ្នកមិនអាចកំណត់លក្ខខណ្ឌតឹងរ៉ឹងជាងទីប្រឹក្សាជាងអ្នកប្រើ។ បន្ទាប់មកកាលបរិច្ឆេទចាក់សោរលើទីប្រឹក្សាត្រូវកំណត់មុនកាលបរិច្ឆេទចាក់សោរសម្រាប់អ្នកប្រើប្រាស់។\n"
+"    * អ្នកមិនអាចចាក់សោរយៈពេលដែលមិនទាន់បញ្ចប់ទេ។ បន្ទាប់មកកាលបរិច្ឆេទចាក់សោសម្រាប់អ្នកប្រឹក្សាត្រូវកំណត់មុនថ្ងៃចុងក្រោយនៃខែមុន។\n"
+"    * កាលបរិច្ឆេទចាក់សោថ្មីសម្រាប់ទីប្រឹក្សាត្រូវកំណត់បន្ទាប់ពីកាលបរិច្ឆេទចាក់សោមុន។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -776,6 +1029,10 @@ msgid ""
 "    PayUmoney payment gateway supports only INR currency.\n"
 "    "
 msgstr ""
+"\n"
+"អ្នកទទួលបានការទូទាត់ប្រាក់ PayuMoney សម្រាប់ប្រទេសឥណ្ឌា។\n"
+"\n"
+" ច្រកចេញចូលរបស់ PayUmoney គាំទ្រតែរូបិយប័ណ្ណ INR ។"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_tax_cash_basis
@@ -785,6 +1042,9 @@ msgid ""
 "    currencies the Tax must be set at date of payment\n"
 "    "
 msgstr ""
+"\n"
+"បង្កើតធាតុទិនានុប្បវត្តិឱ្យបានត្រឹមត្រូវនៅលើមូលដ្ឋានសាច់ប្រាក់ពន្ធនៅពេលប្រើបរទេស។\n"
+"រូបិយប័ណ្ណពន្ធត្រូវតែត្រូវបានកំណត់នៅកាលបរិច្ឆេទនៃការទូទាត់។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -793,6 +1053,8 @@ msgid ""
 "    Schedule your teams across projects and estimate deadlines more accurately.\n"
 "    "
 msgstr ""
+"\n"
+"កំណត់ពេលវេលាក្រុមរបស់អ្នកនៅទូទាំងគម្រោងនិងប៉ាន់ស្មានពេលវេលាកំណត់កាន់តែត្រឹមត្រូវ។"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -800,6 +1062,8 @@ msgid ""
 "\n"
 "  Publish your products on eBay"
 msgstr ""
+"\n"
+"ផ្សព្វផ្សាយផលិតផលរបស់អ្នកនៅលើអ៊ីបេយ។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -820,6 +1084,10 @@ msgid ""
 "This module gives the details of the goods traded between the countries of\n"
 "European Union."
 msgstr ""
+"\n"
+"ម៉ូឌុលដែលបន្ថែមការគ្រប់គ្រងភាគហ៊ុននៅក្នុងរបាយការណ៍ផ្ទៃក្នុង។\n"
+" ================================================== ========== ។\n"
+" ម៉ូឌុលនេះផ្តល់នូវព័ត៌មានលំអិតនៃទំនិញដែលបានធ្វើពាណិជ្ជកម្មរវាងប្រទេសទាំងពីរ។ សហភាព​អឺរ៉ុប។ ចំណាំអ្នកអភិវឌ្ឍន៍។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1039,6 +1307,10 @@ msgid ""
 "================================\n"
 "    "
 msgstr ""
+"\n"
+"ឯកសារគណនេយ្យសម្រា់បជប៉ុន\n"
+"================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -1048,6 +1320,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"ឯកសារគណនេយ្យសម្រាប់Luxembourg\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_reports
@@ -1057,6 +1333,10 @@ msgid ""
 "================================\n"
 "    "
 msgstr ""
+"\n"
+"ឯកសារគណនេយ្យសម្រាប់ Maroc\n"
+"================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -10941,7 +11221,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
 msgid "Fleet"
-msgstr ""
+msgstr "គ្រឿងយានយន្ត"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -17059,7 +17339,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_payment_acquirer
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "ការបង់ថ្លៃទំនិញ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
@@ -18645,7 +18925,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "Search"
-msgstr ""
+msgstr "ការស្រាវជ្រាវ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
@@ -20526,7 +20806,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The company this user is currently working for."
-msgstr ""
+msgstr "ក្រុមហ៊ុនដែលអ្នកប្រើប្រាស់នេះបច្ចុប្បន្នកំពុងធ្វើការ"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -22656,6 +22936,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"អ្នកអាចបញ្ចូលឯកសារពីកុំព្យូទ័ររបស់អ្នកឬចម្លង / "
+"បិទភ្ជាប់អ៊ីនធឺណិតទៅឯកសាររបស់អ្នក។"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:88
