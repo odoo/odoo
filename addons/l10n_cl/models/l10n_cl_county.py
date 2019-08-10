@@ -10,6 +10,5 @@ class L10nCLCounty(models.Model):
     name = fields.Char("name")
     type = fields.Selection(
         [('view', 'View'), ('normal', 'Normal')], 'Type', default='normal')
-    state_id = fields.Many2one('res.country.state')
     city = fields.Char('City')
     country_id = fields.Many2one('res.country', string="Country")
