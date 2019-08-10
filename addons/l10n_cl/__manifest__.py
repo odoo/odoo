@@ -19,6 +19,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
         'uom',
         ],
     'data': [
+        'views/account_journal_view.xml',
         'views/account_move_view.xml',
         'views/res_bank_view.xml',
         'views/res_company_view.xml',

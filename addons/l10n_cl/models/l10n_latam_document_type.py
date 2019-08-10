@@ -36,11 +36,18 @@ class L10nLatamDocumentType(models.Model):
     # take a look if I put here a fiscal position (preferred fiscal position).
 
     def get_document_sequence_vals(self, journal):
-        vals = super(L10nLatamDocumentType, self).get_document_sequence_vals(
+        values = super(L10nLatamDocumentType, self).get_document_sequence_vals(
             journal)
-        if self.country_id.code == 'CL':
-            vals.update({
-                'padding': 6,
-                'implementation': 'no_gap',
-            })
-        return vals
+        if self.country_id != self.env.ref('base.cl'):
+            return values
+        values.update({
+            'padding': 6,
+            'implementation': 'no_gap',
+            'l10n_latam_journal_id': journal.id
+        })
+        if journal.l10n_cl_share_sequences:
+            values.update({'name': '%s - Letter %s Documents' % (journal.name, self.l10n_cl_letter),
+                           'l10n_cl_letter': self.l10n_ck_letter})
+        else:
+            values.update({'name': '%s - %s' % (journal.name, self.name), 'l10n_latam_document_type_id': self.id})
+        return values
