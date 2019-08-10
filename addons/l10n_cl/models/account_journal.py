@@ -13,7 +13,6 @@ class AccountJournal(models.Model):
         'Unified Book',
         help='Use same sequence for documents with the same letter')
 
-
     def create_document_sequences(self):
         self.ensure_one()
         if self.company_id.country_id != self.env.ref('base.cl'):
@@ -41,10 +40,6 @@ class AccountJournal(models.Model):
         #     domain.append(('code', 'in', codes))
         documents = self.env['l10n_latam.document.type'].search(domain)
         for document in documents:
-            if self.l10n_cl_share_sequences and self.l10n_cl_sequence_ids.filtered(
-                    lambda x: x.l10n_cl_letter == document.l10n_cl_letter):
-                continue
-
             sequences |= self.env['ir.sequence'].create(
                 document.get_document_sequence_vals(self))
         return sequences

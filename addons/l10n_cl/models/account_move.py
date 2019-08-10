@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, fields
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
+    partner_id_vat = fields.Char(related='partner_id.vat', string='VAT No')
+
     def get_document_type_sequence(self):
         """ Return the match sequences for the given journal and invoice """
         self.ensure_one()
         if self.journal_id.l10n_latam_use_documents and self.l10n_latam_country_code == 'CL':
-            if self.journal_id.l10n_cl_share_sequences:
-                return self.journal_id.l10n_cl_sequence_ids.filtered(
-                    lambda x: x.l10n_cl_letter == self.l10n_latam_document_type_id.l10n_cl_letter)
             res = self.journal_id.l10n_cl_sequence_ids.filtered(
                 lambda x: x.l10n_latam_document_type_id == self.l10n_latam_document_type_id)
             return res
