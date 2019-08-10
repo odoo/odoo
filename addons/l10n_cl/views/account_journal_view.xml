@@ -3,12 +3,12 @@
 
     <record id="view_account_journal_form_inherit_l10n_cl" model="ir.ui.view">
         <field name="model">account.journal</field>
-        <field name="name">account.journal.form</field>
+        <field name="name">account.journal.form.inherit.cl</field>
         <field name="inherit_id" ref="l10n_latam_document.view_account_journal_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='code']/.." position="inside">
                 <field name="l10n_cl_sequence_ids" nolabel="1" colspan="2" attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('l10n_latam_country_code', '!=', 'CL')]}">
-                    <tree create="false" delete="false" editable="top" default_order="id">
+                    <tree create="false" delete="true" editable="top" default_order="id">
                         <field name="name" readonly="True" string="Sequence"/>
                         <field name="number_next_actual" string="Next Number"/>
                         <field name="id" invisible="1"/>
