@@ -21,15 +21,14 @@ class AccountMove(models.Model):
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
-        domain += [('active', '=', True)]
         if (self.journal_id.l10n_latam_use_documents and
                 self.journal_id.company_id.country_id == self.env.ref('base.cl')):
-            account_move_type = self._context.get('default_type') or self.type
-            # if account_move_type in ['in_invoice', 'out_invoice']:
-            #     seq = self.journal_id.l10n_cl_sequence_ids
-            # else:
-            #     seq = self.journal_id.refund_sequence_id
-            # domain = [('id', '=', seq.l10n_latam_document_type_id.id)]
+            domain += [('active', '=', True)]
+            sequences = self.env['ir.sequence'].search([('l10n_latam_journal_id', '=', self.journal_id.id)])
+            if sequences:
+                domain += [
+                    ('id', 'in', sequences.l10n_latam_document_type_id.ids)
+                ]
         return domain
 
     # def _get_account_move_type(self):
