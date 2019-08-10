@@ -13,45 +13,6 @@ class AccountJournal(models.Model):
         'Unified Book',
         help='Use same sequence for documents with the same letter')
 
-    def get_journal_letter(self, counterpart_partner=False):
-        """ Regarding the AFIP responsibility of the company and the type of journal (sale/purchase), get the allowed
-        letters. Optionally, receive the counterpart partner (customer/supplier) and get the allowed letters to work
-        with him. This method is used to populate document types on journals and also to filter document types on
-        specific invoices to/from customer/supplier
-        """
-        self.ensure_one()
-        # letters_data = {
-        #     'issued': {
-        #         '1': ['A', 'B', 'E', 'M'],
-        #         '3': [],
-        #         '4': ['C'],
-        #         '5': [],
-        #         '6': ['C', 'E'],
-        #         '8': ['I'],
-        #         '9': [],
-        #         '10': [],
-        #         '13': ['C', 'E'],
-        #     },
-        #     'received': {
-        #         '1': ['A', 'C', 'M', 'I'],
-        #         '3': ['B', 'C', 'I'],
-        #         '4': ['B', 'C', 'I'],
-        #         '5': ['B', 'C', 'I'],
-        #         '6': ['B', 'C', 'I'],
-        #         '8': ['E'],
-        #         '9': ['E'],
-        #         '10': ['E'],
-        #         '13': ['B', 'C', 'I'],
-        #     },
-        # }
-        #
-        # letters = letters_data['issued' if self.type == 'sale' else 'received']
-        # if not counterpart_partner:
-        #     return letters
-        #
-        # counterpart_letters = letters_data['issued' if self.type == 'purchase' else 'received']
-        # letters = list(set(letters) & set(counterpart_letters))
-        # return letters
 
     def create_document_sequences(self):
         self.ensure_one()
