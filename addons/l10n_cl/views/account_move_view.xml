@@ -15,4 +15,25 @@
 <!--        </field>-->
 <!--    </record>-->
 
+    <record model="ir.actions.act_window" id="sale_invoices_credit_notes">
+        <field name="name">Sale Invoices and Credit Notes</field>
+        <field name="res_model">account.move</field>
+        <field name="domain">[('type', 'in', ['out_invoice', 'out_refund'])]</field>
+        <field name="context">{'default_type': 'out_invoice'}</field>
+        <field name="target">current</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="vendor_bills_and_refunds">
+        <field name="name">Vendor Bills and Refunds</field>
+        <field name="res_model">account.move</field>
+        <field name="domain">[('type', 'in', ['in_invoice', 'in_refund'])]</field>
+        <field name="context">{'default_type': 'in_invoice'}</field>
+        <field name="target">current</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_sale_invoices_credit_notes" parent="account.menu_finance_receivables" sequence="0" action="sale_invoices_credit_notes" name="Sale Invoices and Credit Notes"/>
+    <menuitem id="menu_vendor_bills_and_refunds" parent="account.menu_finance_payables" sequence="0" action="vendor_bills_and_refunds" name="Vendor Bills and Refunds"/>
+
 </odoo>
