@@ -7,10 +7,10 @@
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <field name="street2" position="attributes">
-                <attribute name="placeholder">Datos adic direccion y Ciudad</attribute>
+                <attribute name="placeholder">Datos adic. dirección y Ciudad</attribute>
             </field>
             <field name="city" position="attributes">
-                <attribute name="placeholder">Comuna</attribute>
+                <attribute name="attrs">{'placeholder': 'Comuna'}</attribute>
             </field>
             <field name="state_id" position="attributes">
                 <attribute name="placeholder">Región</attribute>
