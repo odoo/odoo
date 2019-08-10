@@ -24,11 +24,8 @@ class L10nLatamDocumentType(models.Model):
         values.update({
             'padding': 6,
             'implementation': 'no_gap',
-            'l10n_latam_journal_id': journal.id
+            'l10n_latam_journal_id': journal.id,
+            'l10n_latam_document_type_id': self.id,
+            'prefix': None
         })
-        if journal.l10n_cl_share_sequences:
-            values.update({'name': '%s - Letter %s Documents' % (journal.name, self.l10n_cl_letter),
-                           'l10n_cl_letter': self.l10n_ck_letter})
-        else:
-            values.update({'name': '%s - %s' % (journal.name, self.name), 'l10n_latam_document_type_id': self.id})
         return values
