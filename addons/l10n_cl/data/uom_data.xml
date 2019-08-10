@@ -8,29 +8,47 @@
         <field name="name">Otros</field>
       </record>
 
-      <record id="product_uom_sum" model="uom.uom">
-        <field name="l10n_cl_sii_code">0</field>
-        <field name="name">S.U.M</field>
-        <field name="category_id" ref="uom.product_uom_categ_unit"/>
-      </record>
-
-      <record id="product_uom_tmb" model="uomF.uom">
-        <field name="l10n_cl_sii_code">1</field>
-        <field name="name">TMB</field>
-        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
-        <field name="uom_type">bigger</field>
-      </record>
-
       <record id="uom.product_uom_unit" model="uom.uom">
         <field name="l10n_cl_sii_code">10</field>
         <field name="name">U</field>
-        <field name="category_id" ref="uom.product_uom_categ_unit"/>
       </record>
 
       <record id="uom.product_uom_dozen" model="uom.uom">
         <field name="l10n_cl_sii_code">11</field>
         <field name="name">DOC</field>
+      </record>
+
+      <record id="uom.product_uom_meter" model="uom.uom">
+        <field name="l10n_cl_sii_code">14</field>
+        <field name="name">MT</field>
+      </record>
+
+      <record id="uom.product_uom_foot" model="uom.uom">
+        <field name="l10n_cl_sii_code">13</field>
+        <field name="name">P2</field>
+      </record>
+
+      <record id="uom.product_uom_kgm" model="uom.uom">
+        <field name="l10n_cl_sii_code">6</field>
+        <field name="name">KN</field>
+      </record>
+
+      <record id="uom.product_uom_litre" model="uom.uom">
+        <field name="l10n_cl_sii_code">9</field>
+        <field name="name">LT</field>
+      </record>
+
+      <record id="product_uom_sum" model="uom.uom">
+        <field name="l10n_cl_sii_code">0</field>
+        <field name="name">S.U.M</field>
         <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="uom_type">smaller</field>
+      </record>
+
+      <record id="product_uom_tmb" model="uom.uom">
+        <field name="l10n_cl_sii_code">1</field>
+        <field name="name">TMB</field>
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
         <field name="uom_type">bigger</field>
       </record>
 
@@ -40,20 +58,6 @@
         <field name="category_id" ref="uom.product_uom_categ_unit"/>
         <field name="uom_type">bigger</field>
       </record>
-
-      <record id="uom.product_uom_foot" model="uom.uom">
-        <field name="l10n_cl_sii_code">13</field>
-        <field name="name">P2</field>
-        <field name="category_id" ref="uom.uom_categ_length"/>
-        <field name="uom_type">bigger</field>
-      </record>
-
-      <record id="uom.product_uom_meter" model="uom.uom">
-        <field name="l10n_cl_sii_code">14</field>
-        <field name="name">MT</field>
-        <field name="category_id" ref="uom.uom_categ_length"/>
-      </record>
-
 
       <record id="product_uom_mt2" model="uom.uom">
         <field name="l10n_cl_sii_code">15</field>
@@ -101,7 +105,6 @@
         <field name="l10n_cl_sii_code">20</field>
         <field name="name">KWH</field>
         <field name="category_id" ref="uom_categ_energy"/>
-        <field name="uom_type">bigger</field>
       </record>
 
       <record id="product_uom_bar" model="uom.uom">
@@ -139,17 +142,9 @@
         <field name="uom_type">bigger</field>
       </record>
 
-      <record id="uom.product_uom_kgm" model="uom.uom">
-        <field name="l10n_cl_sii_code">6</field>
-        <field name="name">KN</field>
-        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
-        <field name="uom_type">bigger</field>
-      </record>
-
       <record id="uom.product_uom_gram" model="uom.uom">
         <field name="l10n_cl_sii_code">7</field>
         <field name="name">GN</field>
-        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
         <field name="uom_type">smaller</field>
       </record>
 
@@ -160,16 +155,11 @@
         <field name="uom_type">bigger</field>
       </record>
 
-      <record id="uom.product_uom_litre" model="uom.uom">
-        <field name="l10n_cl_sii_code">9</field>
-        <field name="name">LT</field>
-        <field name="category_id" ref="uom.product_uom_categ_vol"/>
-      </record>
-
       <record id="product_uom_sum_99" model="uom.uom">
         <field name="l10n_cl_sii_code">99</field>
         <field name="name">S.U.M</field>
         <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="uom_type">bigger</field>
       </record>
     </data>
 </odoo>
