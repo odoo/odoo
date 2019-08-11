@@ -11,6 +11,12 @@ from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _
 from odoo.tests.common import Form
 
+TYPE_TAX_USE = [
+    ('sale', 'Sales'),
+    ('purchase', 'Purchases'),
+    ('none', 'None'),
+]
+
 
 class AccountAccountType(models.Model):
     _name = "account.account.type"
@@ -1035,7 +1041,7 @@ class AccountTax(models.Model):
         return self.env['account.tax.group'].search([], limit=1)
 
     name = fields.Char(string='Tax Name', required=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None'), ('adjustment', 'Adjustment')], string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Scope', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')],
