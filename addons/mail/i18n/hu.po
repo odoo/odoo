@@ -9,9 +9,9 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # Tamás Dombos, 2019
 # krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2416,12 +2416,12 @@ msgstr "HTTP irányítás"
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle by Emails"
-msgstr ""
+msgstr "E-mailen keresztül"
 
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle in Odoo"
-msgstr ""
+msgstr "Odoo-n keresztül"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
@@ -3107,7 +3107,7 @@ msgstr "Egy Belső megjegyzés rögzítése"
 #: code:addons/mail/static/src/xml/chatter.xml:99
 #, python-format
 msgid "Log note"
-msgstr ""
+msgstr "Megjegyzés rögzítése"
 
 #. module: mail
 #. openerp-web
@@ -3899,7 +3899,7 @@ msgstr "Értesítés"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__notification_type
 msgid "Notification Management"
-msgstr ""
+msgstr "Értesítés kezelés"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify_msg
@@ -5065,7 +5065,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:96
 #, python-format
 msgid "Send message"
-msgstr ""
+msgstr "Üzenet küldése"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__email_send
@@ -5661,6 +5661,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Szerver akció típusa. A következő értékek állnak rendelkezésre:\n"
+"- 'Python kód végrehajtása': python kód blokk végrehajtása\n"
+"- 'Új rekord létrehozása vagy másolása': új rekord létrehozása új értékekkel, vagy létező rekord másolása\n"
+"- 'Rekord írása': létező rekord értékeinek frissítése\n"
+"- 'Több akció végrehajtása': olyan akció definiálása, mely több más szerver akciót hajt végre\n"
+"- 'Követők hozzáadása': követők hozzáadása egy rekordhoz (Csevegés app-ban elérhető)\n"
+"- 'E-mail küdése': e-mail küldése automatikusan (e-mail sablonban elérhető)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -5678,18 +5685,21 @@ msgstr ""
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
 msgstr ""
+"Nem sikerült az üzenet rögzítése, konfigurálja be a küldő e-mail címét."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2157
 #, python-format
 msgid "Unable to notify message, please configure the sender's email address."
 msgstr ""
+"Nem sikerült az üzenet értesítés, konfigurálja be a küldő e-mail címét."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:34
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"Nem sikerült az üzenet elküldése, konfigurálja be a küldő e-mail címét."
 
 #. module: mail
 #. openerp-web
@@ -5805,7 +5815,7 @@ msgstr ""
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Update the Record"
-msgstr ""
+msgstr "Rekord frissítése"
 
 #. module: mail
 #. openerp-web
