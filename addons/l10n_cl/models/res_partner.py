@@ -13,10 +13,10 @@ class ResPartner(models.Model):
         default=lambda self: self.env.ref('base.cl'))
 
     _sii_taxpayer_types = [
-        ('1', 'IVA Afecto 1ra Categoría'),
-        ('2', 'Emisor de Boletas 2da Categoría'),
-        ('3', 'Consumidor Final'),
-        ('4', 'Extranjero'),
+        ('1', _('VAT Affected (1st Category)')),
+        ('2', _('Fees Receipt Issuer (2nd category)')),
+        ('3', _('End Consumer')),
+        ('4', _('Foreigner')),
     ]
 
     l10n_cl_sii_taxpayer_type = fields.Selection(
@@ -24,10 +24,10 @@ class ResPartner(models.Model):
         'Taxpayer Types',
         index=True,
         default='1',
-        help='1 - IVA Afecto (la mayoría de los casos)\n'
-        '2 - Emisor Boletas (aplica solo para proveedores emisores de boleta)\n'
-        '3 - Consumidor Final (se le emitirán siempre boletas)\n'
-        '4 - Extranjero'
+        help='1 - VAT Affected (1st Category) (Most of the cases)\n'
+        '2 - Fees Receipt Issuer (Applies to suppliers who issue fees receipt)\n'
+        '3 - End consumer (only receipts)\n'
+        '4 - Foreigner'
     )
 
     l10n_cl_rut = fields.Char(

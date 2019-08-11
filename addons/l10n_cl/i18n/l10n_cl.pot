@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-10 02:59+0000\n"
-"PO-Revision-Date: 2019-08-10 02:59+0000\n"
+"POT-Creation-Date: 2019-08-11 18:27+0000\n"
+"PO-Revision-Date: 2019-08-11 18:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,10 +19,10 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_cl.field_res_partner__l10n_cl_sii_taxpayer_type
 #: model:ir.model.fields,help:l10n_cl.field_res_users__l10n_cl_sii_taxpayer_type
 msgid ""
-"1 - IVA Afecto (la mayoría de los casos)\n"
-"2 - Emisor Boletas (aplica solo para proveedores emisores de boleta)\n"
-"3 - Consumidor Final (se le emitirán siempre boletas)\n"
-"4 - Extranjero"
+"1 - VAT Affected (1st Category) (Most of the cases)\n"
+"2 - Fees Receipt Issuer (Applies to suppliers who issue fees receipt)\n"
+"3 - End consumer (only receipts)\n"
+"4 - Foreigner"
 msgstr ""
 
 #. module: l10n_cl
@@ -47,6 +47,7 @@ msgid "Amount Untaxed"
 msgstr ""
 
 #. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_account_move__l10n_latam_internal_type
 #: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__internal_type
 msgid ""
 "Analog to odoo account.move.type but with more options allowing to identify "
@@ -71,7 +72,7 @@ msgstr ""
 
 #. module: l10n_cl
 #: model:l10n_latam.identification.type,name:l10n_cl.it_CIe
-msgid "CI extranjera"
+msgid "CIe"
 msgstr ""
 
 #. module: l10n_cl
@@ -81,23 +82,8 @@ msgid "Cargo para calculo de Ad-Valorem en DIN"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_res_country_state__child_ids
-msgid "Child States"
-msgstr ""
-
-#. module: l10n_cl
 #: model:ir.ui.menu,name:l10n_cl.account_reports_cl_statements_menu
 msgid "Chile"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model,name:l10n_cl.model_l10n_cl_county
-msgid "Chilean Counties"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__city
-msgid "City"
 msgstr ""
 
 #. module: l10n_cl
@@ -134,36 +120,15 @@ msgid ""
 msgstr ""
 
 #. module: l10n_cl
-#: selection:res.partner,l10n_cl_sii_taxpayer_type:0
-msgid "Consumidor Final"
-msgstr ""
-
-#. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_partner
 msgid "Contact"
 msgstr ""
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_country
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__country_id
 #: model:ir.model.fields,field_description:l10n_cl.field_res_partner__country_id
 #: model:ir.model.fields,field_description:l10n_cl.field_res_users__country_id
 msgid "Country"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model,name:l10n_cl.model_res_country_state
-msgid "Country state"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__create_date
-msgid "Created on"
 msgstr ""
 
 #. module: l10n_cl
@@ -198,13 +163,13 @@ msgid "Customs Name"
 msgstr ""
 
 #. module: l10n_cl
-#: model:l10n_latam.identification.type,name:l10n_cl.it_RUN
-msgid "Cédula"
+#: model:l10n_latam.identification.type,name:l10n_cl.it_DNI
+msgid "DNI"
 msgstr ""
 
 #. module: l10n_cl
-#: model:l10n_latam.identification.type,name:l10n_cl.it_DNI
-msgid "DNI Extranjero"
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
+msgid "Datos adic. dirección y Ciudad"
 msgstr ""
 
 #. module: l10n_cl
@@ -213,18 +178,15 @@ msgid "Debit Notes"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_account_move__l10n_latam_document_type_id_code
 msgid "Doc Type"
 msgstr ""
 
 #. module: l10n_cl
+#: code:addons/l10n_cl/models/res_partner.py:18
 #: selection:res.partner,l10n_cl_sii_taxpayer_type:0
-msgid "Emisor de Boletas 2da Categoría"
+#, python-format
+msgid "End Consumer"
 msgstr ""
 
 #. module: l10n_cl
@@ -233,8 +195,10 @@ msgid "Energía"
 msgstr ""
 
 #. module: l10n_cl
+#: code:addons/l10n_cl/models/res_partner.py:17
 #: selection:res.partner,l10n_cl_sii_taxpayer_type:0
-msgid "Extranjero"
+#, python-format
+msgid "Fees Receipt Issuer (2nd category)"
 msgstr ""
 
 #. module: l10n_cl
@@ -243,13 +207,15 @@ msgid "Folio"
 msgstr ""
 
 #. module: l10n_cl
-#: model:uom.uom,name:l10n_cl.product_uom_hl
-msgid "HL"
+#: code:addons/l10n_cl/models/res_partner.py:19
+#: selection:res.partner,l10n_cl_sii_taxpayer_type:0
+#, python-format
+msgid "Foreigner"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__id
-msgid "ID"
+#: model:uom.uom,name:l10n_cl.product_uom_hl
+msgid "HL"
 msgstr ""
 
 #. module: l10n_cl
@@ -263,20 +229,8 @@ msgid "IVA 19%"
 msgstr ""
 
 #. module: l10n_cl
-#: selection:res.partner,l10n_cl_sii_taxpayer_type:0
-msgid "IVA Afecto 1ra Categoría"
-msgstr ""
-
-#. module: l10n_cl
 #: model:ir.model.fields,help:l10n_cl.field_account_move__partner_id_vat
 msgid "Identification Number for selected type."
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_res_company__l10n_latam_identification_type_id
-#: model:ir.model.fields,field_description:l10n_cl.field_res_partner__l10n_latam_identification_type_id
-#: model:ir.model.fields,field_description:l10n_cl.field_res_users__l10n_latam_identification_type_id
-msgid "Identification Type"
 msgstr ""
 
 #. module: l10n_cl
@@ -290,7 +244,7 @@ msgid "Internal Type"
 msgstr ""
 
 #. module: l10n_cl
-#: code:addons/l10n_cl/models/res_partner.py:86
+#: code:addons/l10n_cl/models/res_partner.py:78
 #, python-format
 msgid "Invalid length."
 msgstr ""
@@ -313,6 +267,11 @@ msgid "Invoicing RUT"
 msgstr ""
 
 #. module: l10n_cl
+#: model:ir.model,name:l10n_cl.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_account_move
 msgid "Journal Entries"
 msgstr ""
@@ -328,18 +287,8 @@ msgid "KWH"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__write_date
-msgid "Last Updated on"
+#: model:ir.model.fields,field_description:l10n_cl.field_account_move__l10n_latam_internal_type
+msgid "L10n Latam Internal Type"
 msgstr ""
 
 #. module: l10n_cl
@@ -368,18 +317,18 @@ msgid "MT2"
 msgstr ""
 
 #. module: l10n_cl
-#: code:addons/l10n_cl/models/res_partner.py:117
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_account_journal_form_inherit_l10n_cl
+msgid "Next Number"
+msgstr ""
+
+#. module: l10n_cl
+#: code:addons/l10n_cl/models/res_partner.py:109
 #, python-format
 msgid "No RUT configured for partner [%i] %s"
 msgstr ""
 
 #. module: l10n_cl
-#: selection:l10n_cl.county,type:0 selection:res.country.state,type:0
-msgid "Normal"
-msgstr ""
-
-#. module: l10n_cl
-#: code:addons/l10n_cl/models/res_partner.py:88
+#: code:addons/l10n_cl/models/res_partner.py:80
 #, python-format
 msgid "Only numbers allowed."
 msgstr ""
@@ -395,13 +344,13 @@ msgid "PAR"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_res_country_state__parent_id
-msgid "Parent State"
+#: model:l10n_latam.identification.type,name:l10n_cl.it_PAS
+msgid "PAS"
 msgstr ""
 
 #. module: l10n_cl
-#: model:l10n_latam.identification.type,name:l10n_cl.it_PAS
-msgid "Pasaporte"
+#: model:ir.model,name:l10n_cl.model_uom_uom
+msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: l10n_cl
@@ -417,6 +366,11 @@ msgstr ""
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_qnt
 msgid "QNT"
+msgstr ""
+
+#. module: l10n_cl
+#: model:l10n_latam.identification.type,name:l10n_cl.it_RUN
+msgid "RUN"
 msgstr ""
 
 #. module: l10n_cl
@@ -437,6 +391,11 @@ msgid "Receipt Invoice"
 msgstr ""
 
 #. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
+msgid "Región"
+msgstr ""
+
+#. module: l10n_cl
 #: model:account.tax.group,name:l10n_cl.tax_group_retenciones
 msgid "Retenciones"
 msgstr ""
@@ -453,6 +412,11 @@ msgid "S.U.M"
 msgstr ""
 
 #. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_uom_uom__l10n_cl_sii_code
+msgid "SII Code"
+msgstr ""
+
+#. module: l10n_cl
 #: model:ir.actions.act_window,name:l10n_cl.sale_invoices_credit_notes
 #: model:ir.ui.menu,name:l10n_cl.menu_sale_invoices_credit_notes
 msgid "Sale Invoices and Credit Notes"
@@ -464,6 +428,16 @@ msgid "Sales Person"
 msgstr ""
 
 #. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_account_journal_form_inherit_l10n_cl
+msgid "Sequence"
+msgstr ""
+
+#. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_journal__l10n_cl_sequence_ids
+msgid "Sequences"
+msgstr ""
+
+#. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_currency__l10n_cl_short_name
 msgid "Short Name"
 msgstr ""
@@ -471,11 +445,6 @@ msgstr ""
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Source Document"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__state_id
-msgid "State"
 msgstr ""
 
 #. module: l10n_cl
@@ -500,16 +469,7 @@ msgid "Taxpayer Types"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,help:l10n_cl.field_res_company__l10n_latam_identification_type_id
-#: model:ir.model.fields,help:l10n_cl.field_res_partner__l10n_latam_identification_type_id
-#: model:ir.model.fields,help:l10n_cl.field_res_users__l10n_latam_identification_type_id
-msgid ""
-"The type of identifications used in Chile that could identify a physical or "
-"legal person"
-msgstr ""
-
-#. module: l10n_cl
-#: code:addons/l10n_cl/models/res_partner.py:84
+#: code:addons/l10n_cl/models/res_partner.py:76
 #, python-format
 msgid "The validation digit is not valid."
 msgstr ""
@@ -520,20 +480,25 @@ msgid "Total"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__type
-#: model:ir.model.fields,field_description:l10n_cl.field_res_country_state__type
-msgid "Type"
-msgstr ""
-
-#. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_u
 msgid "U(JGO)"
 msgstr ""
 
 #. module: l10n_cl
-#: model:product.product,uom_name:l10n_cl.product_product_ad_valorem
-#: model:product.template,uom_name:l10n_cl.product_product_ad_valorem_product_template
-msgid "Units"
+#: model:ir.model.fields,field_description:l10n_cl.field_account_journal__l10n_cl_share_sequences
+msgid "Unified Book"
+msgstr ""
+
+#. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_account_journal__l10n_cl_share_sequences
+msgid "Use same sequence for documents with the same letter"
+msgstr ""
+
+#. module: l10n_cl
+#: code:addons/l10n_cl/models/res_partner.py:16
+#: selection:res.partner,l10n_cl_sii_taxpayer_type:0
+#, python-format
+msgid "VAT Affected (1st Category)"
 msgstr ""
 
 #. module: l10n_cl
@@ -548,11 +513,7 @@ msgid "Vendor Bills and Refunds"
 msgstr ""
 
 #. module: l10n_cl
-#: selection:l10n_cl.county,type:0 selection:res.country.state,type:0
-msgid "View"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_cl_county__name
-msgid "name"
+#: code:addons/l10n_cl/models/account_move.py:54
+#, python-format
+msgid "You can not use a %s document type with this tax payer type"
 msgstr ""
