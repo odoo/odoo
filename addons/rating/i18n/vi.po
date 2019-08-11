@@ -10,6 +10,7 @@
 # Martin Trigaux, 2017
 # Duy BQ <duybq86@gmail.com>, 2018
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
+"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,27 +32,31 @@ msgid ""
 "<br/>\n"
 "                            on our services on \""
 msgstr ""
+"<br/>\n"
+"                            on our services on \""
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nguồn lực</span>"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_access_token
 msgid "Access token to set the rating of the value"
-msgstr ""
+msgstr "Nhập mã truy cập để điền đánh giá"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
+"Tin nhắn liên quan khi đăng một đánh giá. Chủ yếu dùng cho các phần mở rộng "
+"của website."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_partner_id
 msgid "Author of the rating"
-msgstr ""
+msgstr "Người đánh giá"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_feedback
@@ -103,17 +108,17 @@ msgstr "Email Thread"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_consumed
 msgid "Enabled if the rating has been filled."
-msgstr ""
+msgstr "Cho phép nếu đánh giá đã được điền."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "Đã đánh giá"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go to our website"
-msgstr ""
+msgstr "Truy cập website"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -124,7 +129,7 @@ msgstr "Nhóm theo"
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
-msgstr ""
+msgstr "Rất không hài lòng"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin_id
@@ -135,7 +140,7 @@ msgstr "ID"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_res_id
 msgid "Identifier of the rated object"
-msgstr ""
+msgstr "Xác định đối tượng được đánh giá"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_rating_image
@@ -161,7 +166,7 @@ msgstr "Cập nhật lần cuối"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_message_id
 msgid "Linked message"
-msgstr ""
+msgstr "Tin nhắn được liên kết"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_message
@@ -181,53 +186,53 @@ msgstr "Tháng"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr ""
+msgstr "Đánh giá của tôi"
 
 #. module: rating
 #: selection:rating.rating,rating_text:0
 msgid "No Rating yet"
-msgstr ""
+msgstr "Chưa có đánh giá"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
-msgstr ""
+msgstr "Không hài lòng"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_rated_partner_id
 msgid "Owner of the rated resource"
-msgstr ""
+msgstr "Người phụ trách nguồn lực liên quan"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "Tài liệu cha"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "Mẫu tài liệu cha"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "Tên tài liệu cha"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "Mẫu tài liệu cha liên quan"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
-msgstr ""
+msgstr "Nhân viên được đánh giá"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_rated_partner_id
 msgid "Rated person"
-msgstr ""
+msgstr "Người được đánh giá"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
@@ -248,7 +253,7 @@ msgstr "Đánh giá"
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
-msgstr ""
+msgstr "Điểm đánh giá trung bình"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_feedback
@@ -277,7 +282,7 @@ msgstr "Rating Last Value"
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
-msgstr ""
+msgstr "Rating Mixin"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_compose_message_rating_value
@@ -298,12 +303,12 @@ msgstr "Rating count"
 #. module: rating
 #: sql_constraint:rating.rating:0
 msgid "Rating should be between 0 to 10"
-msgstr ""
+msgstr "Điểm đánh giá từ 0 đến 10"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_rating
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr ""
+msgstr "Điểm đánh giá: 0 = Không hài lòng, 10 = Hài lòng"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -340,13 +345,13 @@ msgstr "Nguồn lực"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_res_name
 msgid "Resource name"
-msgstr ""
+msgstr "Tên nguồn lực"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Satisfied"
-msgstr ""
+msgstr "Hài lòng"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_access_token
@@ -356,23 +361,23 @@ msgstr "Mã bảo mật"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr ""
+msgstr "Đã gửi phản hồi"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
-msgstr ""
+msgstr "Gửi lúc"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thanks! We appreciate your feedback."
-msgstr ""
+msgstr "Cảm ơn phản hồi của bạn!"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_res_name
 msgid "The name of the rated resource."
-msgstr ""
+msgstr "Tên của nguồn lực liên quan."
 
 #. module: rating
 #: model:ir.actions.act_window,help:rating.action_view_rating
@@ -382,12 +387,12 @@ msgstr "Hiện tại không có xếp hạng cho đối tượng này."
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "We appreciate your feedback!"
-msgstr ""
+msgstr "Cảm ơn phản hồi của bạn!"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Would be great if you can provide more information:"
-msgstr ""
+msgstr "Thật tuyệt nếu bạn cung cấp nhiều thông tin hơn: "
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -397,7 +402,7 @@ msgstr "Năm"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Your rating has been submitted."
-msgstr ""
+msgstr "Đánh giá của bạn đã được ghi nhận"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -414,13 +419,13 @@ msgstr "trong"
 #: code:addons/rating/controllers/main.py:21
 #, python-format
 msgid "highly dissatisfied"
-msgstr ""
+msgstr "Rất không hài lòng"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:20
 #, python-format
 msgid "not satisfied"
-msgstr ""
+msgstr "không hài lòng"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
@@ -431,9 +436,9 @@ msgstr "trên"
 #: code:addons/rating/controllers/main.py:22
 #, python-format
 msgid "satisfied"
-msgstr ""
+msgstr "hài lòng"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "you are"
-msgstr ""
+msgstr "Bạn là"

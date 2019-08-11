@@ -11,6 +11,7 @@
 # fanha99 <fanha99@hotmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Christine Nguyen <dungnt@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
+"Last-Translator: Christine Nguyen <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -425,7 +426,7 @@ msgstr "Mã vạch"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_barcode
 msgid "Barcode used for packaging identification."
-msgstr ""
+msgstr "Mã vạch được sử dụng để nhận dạng gói hàng"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_base
@@ -435,6 +436,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Giá cơ sở để tính toán. \n"
+"Giá chung: Giá cơ bản sẽ là giá bán/ giá chung. \n"
+"Giá vốn: Giá cơ sở sẽ là giá vốn. \n"
+"Bảng giá khác: Tính toán giá cơ sở dựa trên bảng giá khác."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -767,7 +772,7 @@ msgstr "Chi phí"
 #: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Đơn vị tiền tệ giá vốn"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -1005,7 +1010,7 @@ msgstr "Tá"
 msgid ""
 "Dvorak keyboard\n"
 "left-handed mouse"
-msgstr ""
+msgstr "Bàn phím Dvorak \\ nchuột trái"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -1038,7 +1043,7 @@ msgstr "Ngày kết thúc đối với giá nhà cung cấp này"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
+msgstr "Kết thúc hợp lệ cho xác nhận chi tiết bảng giá"
 
 #. module: product
 #: code:addons/product/models/product.py:56
@@ -1195,6 +1200,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"Để quy tắc được áp dụng, số lượng mua / bán phải lớn hơn hoặc bằng số lượng tối thiểu được chỉ định trong trường này. \n"
+"Được biểu thị theo đơn vị tính mặc định của sản phẩm."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1248,7 +1255,7 @@ msgstr "Genius. Your own personal DJ."
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
 #: model:ir.model.fields,help:product.field_product_template_packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr ""
+msgstr "Cung cấp các cách khác nhau để đóng gói cùng một sản phẩm."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
@@ -1501,7 +1508,7 @@ msgstr "Tồn kho"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "Là biến thể sản phẩm"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
@@ -1934,7 +1941,7 @@ msgstr "Mục báo giá"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "Bảng giá áp dụng theo tùy chọn đã chọn"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
@@ -3459,13 +3466,13 @@ msgstr "qt"
 #: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "raid 1, 512ECC ram"
-msgstr ""
+msgstr "raid 1, 512ECC ram"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "raid 10, 2048ECC ram"
-msgstr ""
+msgstr "raid 10, 2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
