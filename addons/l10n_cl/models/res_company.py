@@ -6,10 +6,6 @@ from odoo import models, fields
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    l10n_latam_identification_type_id = fields.Many2one(
-        related='partner_id.l10n_latam_identification_type_id',
-        readonly=True,
-    )
     l10n_cl_rut = fields.Char(
         related='partner_id.l10n_cl_rut',
         readonly=True

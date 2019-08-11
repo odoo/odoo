@@ -30,18 +30,6 @@ class ResPartner(models.Model):
         '4 - Extranjero'
     )
 
-    l10n_latam_identification_type_id = fields.Many2one(
-        string="Identification Type",
-        comodel_name='l10n_latam.identification.type',
-        index=True,
-        auto_join=True,
-        help='The type of identifications used in Chile that could identify'
-             ' a physical or legal person',
-        default=lambda self: self.env.ref('l10n_cl.it_RUT', raise_if_not_found=False)
-        if self.country_id == self.env.ref('base.cl')
-        else self.env.ref('l10n_latam_base.it_vat', raise_if_not_found=False),
-    )
-
     l10n_cl_rut = fields.Char(
         compute='_compute_l10n_cl_rut',
         string="Invoicing RUT",
