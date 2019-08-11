@@ -15,9 +15,9 @@
 # Paolo Valier, 2018
 # Alessandro Forte <a.forte1010@gmail.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2019
 # mymage <stefano.consolaro@mymage.it>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1475,6 +1475,10 @@ msgid ""
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
 msgstr ""
+"Errore: l'utente deve appartenere allo stessa azienda del punto vendita. "
+"Probabilmente si sta cercando di caricare il punto vendita come "
+"amministratore di una configurazione multi-azienda, ma con l'account "
+"impostato sull'azienda sbagliata."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1828,7 +1832,7 @@ msgstr "Fatturazione"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_installed_account_accountant
 msgid "Is Installed Account Accountant"
-msgstr "È installato Account Accountant"
+msgstr "È installato «Account Accountant»"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_restaurant
@@ -1962,7 +1966,7 @@ msgstr "Caricamento"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_location_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_location_id
 msgid "Location"
-msgstr "Posizione"
+msgstr "Ubicazione"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_login_number
@@ -1986,7 +1990,7 @@ msgstr "Nome lotto"
 #: code:addons/point_of_sale/static/src/js/models.js:2371
 #, python-format
 msgid "Lot/Serial Number(s) Required"
-msgstr "Richiesto numero(i) di lotto/serie"
+msgstr "Richiesti numeri di lotto/serie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_pack_lot_ids
@@ -2651,7 +2655,7 @@ msgstr "Confermare l'importo elevato"
 #: code:addons/point_of_sale/models/pos_order.py:369
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Definire un conto di ricavo per questo prodotto: \"%s\" (id:%d)."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3308,7 +3312,7 @@ msgstr "Selezionare imposta"
 #: code:addons/point_of_sale/models/pos_order.py:249
 #, python-format
 msgid "Selected orders do not have the same session!"
-msgstr "Gli ordini selezionati non appartengono alla stessa sessione!"
+msgstr "Gli ordini selezionati non appartengono alla stessa sessione."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_sequence
@@ -3389,7 +3393,7 @@ msgstr "Imposta cliente"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_start_category
 msgid "Set Start Category"
-msgstr "Impostazione categoria iniziale"
+msgstr "Impostare categoria iniziale"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3454,9 +3458,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Immagine piccola della categoria. Viene automaticamente ridimensionata a "
-"64x64px, conservando le proporzioni. Questo campo viene usato ovunque un "
-"immagine piccola è richiesta."
+"Immagine piccola per la categoria. Ridimensionata automaticamente a 64x64px "
+"con proporzioni conservate. Usare questo campo dove è richiesta un'immagine "
+"di piccole dimensioni."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3900,8 +3904,8 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
-"Sono presenti operazioni in sospeso che non è stato possibile salvare nel "
-"database, sei sicuro di voler uscire?"
+"Sono presenti operazioni in sospeso che non è possibile salvare nel "
+"database. Uscire veramente?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3934,7 +3938,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:835
 #, python-format
 msgid "There is no receivable account defined to make payment."
-msgstr "Non è stato definito un conto ricevibile per effettuare un pagamento"
+msgstr "Non è stato definito alcun conto cliente per effettuare pagamenti."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4039,7 +4043,7 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
-"Questa sequenza è generata automaticamente da Odoo ma è possibile "
+"Questa sequenza è generata automaticamente da Odoo, ma è possibile "
 "modificarla per personalizzare i numeri di riferimento delle righe d'ordine."
 
 #. module: point_of_sale
@@ -4048,8 +4052,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
-"La sequenza viene automaticamente creata da Odoo, ma è possibile modificarla"
-" per personalizzare i numeri di riferimento all'interno degli ordini."
+"Questa sequenza è generata automaticamente da Odoo, ma è possibile "
+"modificarla per personalizzare i numeri di riferimento degli ordini."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:699
@@ -4501,7 +4505,7 @@ msgstr "Per fatturare un ordine è necessario prima selezionare il cliente."
 #: code:addons/point_of_sale/models/pos_session.py:166
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr "Dovrebbe essere assegnato un punto vendita alla sessione."
+msgstr "Deve essere assegnato un punto vendita alla sessione."
 
 #. module: point_of_sale
 #. openerp-web

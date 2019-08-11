@@ -14,14 +14,13 @@
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # David Minneci <david@numeko.it>, 2018
-# Cécile Collart <cco@odoo.com>, 2018
+# Davide Corio <enlightx@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
 # Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
-# Davide Corio <enlightx@gmail.com>, 2018
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
@@ -143,7 +142,7 @@ msgstr ""
 "* Vista: ubicazione virtuale usata per creare strutture gerarchiche per il magazzino, aggregando le ubicazioni figlie; non può contenere direttamente i prodotti.\n"
 "* Ubicazione interna: ubicazione fisica nel magazzino.\n"
 "* Ubicazione cliente: ubicazione virtuale che corrisponde all'ubicazione di destinazione dei prodotti inviati ai clienti.\n"
-"* Perdita inventario: ubicazione virtuale che funge da contraparte per le operazioni di inventario usate per correggere i livelli delle scorte (inventari fisici).\n"
+"* Rettifiche di magazzino: ubicazione virtuale che funge da controparte per le operazioni di magazzino usate per correggere i livelli delle scorte (magazzini fisici).\n"
 "* Approvvigionamento: ubicazione virtuale che funge da controparte temporanea per le operazioni di approvvigionamento quando la fonte (fornitore o produzione) non è ancore conosciuta. Questa ubicazione dovrebbe essere vuota al termine della schedulazione approvvigionamenti.\n"
 "* Produzione: ubicazione virtuale di controparte per le operazioni di produzione: questa ubicazione consuma la materia prima e produce prodotti finiti.\n"
 "* Ubicazione di transito: ubicazione di controparte da usare nelle operazioni inter-aziendali o inter-magazzini."
@@ -527,7 +526,7 @@ msgstr "<strong>Importare dati</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Inventory</strong>"
-msgstr "<strong>Inventario</strong>"
+msgstr "<strong>Magazzino</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -634,7 +633,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order (Origin)</strong>"
-msgstr "<strong>Ordine (Origine)</strong>"
+msgstr "<strong>Ordine (origine)</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -768,7 +767,7 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
-"Un prodotto stoccabile è un prodotto per il quale si gestisce la giacenza. L’applicazione \"Inventario\" deve essere installata.\n"
+"Un prodotto stoccabile è un prodotto per il quale si gestisce la giacenza. L’applicazione \"Magazzino\" deve essere installata.\n"
 "Un prodotto consumabile, d’altra parte, è un prodotto per il quale la giacenza non è gestita.\n"
 "Un servizio è un prodotto non materiale da fornire.\n"
 "Un contenuto digitale è un prodotto non materiale che si vende online. I file allegati ai prodotti sono quelli che vengono venduti sull’e-commerce come e-book, musica, immagini, … Il modulo \"Prodotto digitale\" deve essere installato."
@@ -923,7 +922,7 @@ msgstr "Cuffie auricolari Apple"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_4
 msgid "Apple Wireless Keyboard"
-msgstr "Tastiera wireless Apple"
+msgstr "Tastiera senza fili Apple"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -1340,14 +1339,14 @@ msgstr "Quantità controllata"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history_date
 msgid "Choose a date to get the inventory at that date"
-msgstr "Scegliere la data dell’inventario da ottenere"
+msgstr "Scegliere la data dell’inventario da valutare"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history_compute_at_date
 msgid ""
 "Choose to analyze the current inventory or from a specific date in the past."
 msgstr ""
-"Scegliere di analizzare l’inventario attuale o in data specifica nel "
+"Scegliere di analizzare il magazzino attuale o in data specifica nel "
 "passato."
 
 #. module: stock
@@ -1535,7 +1534,7 @@ msgstr "Congratulazioni!"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_owner
 msgid "Consignment"
-msgstr "Consegna"
+msgstr "Consegna in conto deposito"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
@@ -1788,7 +1787,7 @@ msgstr "Ubicazione di destinazione corrente"
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "Current Inventory"
-msgstr "Giacenza corrente"
+msgstr "Magazzino corrente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_id
@@ -2068,7 +2067,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Delay"
-msgstr "Ritardo"
+msgstr "In ritardo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_delay
@@ -2438,7 +2437,7 @@ msgstr "Nota esterna …"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
-msgstr "FIFO, LIFO …"
+msgstr "FIFO, LIFO…"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FAS
@@ -3069,8 +3068,8 @@ msgid ""
 "In short, you will get a more efficient warehouse management that leads\n"
 "                        to inventory reduction and better efficiencies in your daily operations."
 msgstr ""
-"In breve, otterrai una gestione del magazzino più efficiente che porterà a una\n"
-"                        riduzione dell’inventario e migliori efficienze nelle operazioni quotidiane. "
+"In breve, si avrà una gestione del magazzino più efficiente che porterà una\n"
+"                        riduzione delle giacenze e migliori efficienze nelle operazioni quotidiane. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
@@ -3134,7 +3133,7 @@ msgstr "Domanda iniziale"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Initial Inventory"
-msgstr "Giacenza iniziale"
+msgstr "Inventario iniziale"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:97
@@ -3264,7 +3263,7 @@ msgstr "Inventari"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventories Month"
-msgstr "Mese degli inventari"
+msgstr "Inventari mensili"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -3278,19 +3277,19 @@ msgstr "Mese degli inventari"
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Inventario"
+msgstr "Magazzino"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr "Aggiustamento dell’inventario"
+msgstr "Rettifica dell’inventario"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Aggiustamenti dell’inventario"
+msgstr "Rettifiche dell’inventario"
 
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
@@ -3300,7 +3299,7 @@ msgstr "Configurazione dell'inventario: guida passo-passo."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_date
 msgid "Inventory Date"
-msgstr "Data di inventario"
+msgstr "Data dell'inventario"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
@@ -3332,7 +3331,7 @@ msgstr "Ubicazioni inventario"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Inventory Loss"
-msgstr "Perdita di inventario"
+msgstr "Perdita di magazzino"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -3343,12 +3342,12 @@ msgstr "Prodotto di inventario"
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Reference"
-msgstr "Riferimenti di inventario"
+msgstr "Riferimento inventario"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 msgid "Inventory Report"
-msgstr "Rapporto di inventario"
+msgstr "Resoconto inventario"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3383,7 +3382,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_date
 msgid "Inventory at Date"
-msgstr "Giacenza alla data"
+msgstr "Inventario alla data"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_filter
@@ -3785,7 +3784,7 @@ msgstr "Lotto/Seriale"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial :"
-msgstr "Lotto/Seriale :"
+msgstr "Lotto/Seriale:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_lot_id
@@ -3807,7 +3806,7 @@ msgstr "Lotto/Numero seriale"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr "Giacenza lotto/numero seriale"
+msgstr "Inventario lotto/numero seriale"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_production_lot
@@ -3896,7 +3895,7 @@ msgstr "Gestione dei colli"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr "Gestione flussi di inventario di invio e richiesta "
+msgstr "Gestione flussi di invio e richiesta di magazzoino"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4568,7 +4567,7 @@ msgstr "Proprietario "
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Owner :"
-msgstr "Proprietario :"
+msgstr "Proprietario:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_partner_id
@@ -4775,7 +4774,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Periodical Tasks"
-msgstr "Attività periodiche"
+msgstr "Lavori periodici"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5263,7 +5262,7 @@ msgstr "Mettere Via"
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "QUANTITY"
-msgstr "QUANTITÅ"
+msgstr "QUANTITÀ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_qty_multiple
@@ -5310,7 +5309,7 @@ msgstr "Quantità"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Quantity :"
-msgstr "Quantità :"
+msgstr "Quantità:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_quantity_done
@@ -5530,7 +5529,7 @@ msgstr "Sequenza di riferimento"
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per company!"
-msgstr "Il riferimento deve essere unico per ogni azienda!"
+msgstr "Il riferimento deve essere univoco per azienda."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_origin
@@ -5599,7 +5598,7 @@ msgstr "Ricerca regole riordino"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 msgid "Reporting"
-msgstr "Report"
+msgstr "Rendicontazione"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_use_propagation_minimum_delta
@@ -5682,7 +5681,7 @@ msgstr "Magazzini di rifornimento"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Retrieve the Inventory Quantities"
-msgstr "Recuperare le quantità d'inventario"
+msgstr "Recuperare le quantità di magazzino"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5871,12 +5870,12 @@ msgstr "Scarti"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Search Inventory"
-msgstr "Cerca inventario"
+msgstr "Ricerca inventario"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr "Cerca righe inventario"
+msgstr "Ricerca righe inventario"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_filter
@@ -6204,37 +6203,28 @@ msgstr "L'ubicazione di origine è azione=movimento"
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr ""
-"Specifica un lotto/numero di serie per concentrare l'inventario su un "
-"particolare lotto/numero di serie."
+msgstr "Specifica il lotto/numero di serie su cui concentrare l'inventario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
-"Specifica un proprietario per concentrare l'inventario su un particolare "
-"proprietario. "
+msgstr "Specifica il proprietario su cui concentrare l'inventario. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_package_id
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
-"Specifica un pacco per concentrare l'inventario su un particolare pacco."
+msgstr "Specifica il collo su cui concentrare l'inventario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
-msgstr ""
-"Specifica una categoria di prodotto per concentrare l'inventario su una "
-"particolare categoria."
+msgstr "Specifica la categoria di prodotto su cui concentrare l'inventario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
-"Specifica un prodotto per concentrare l'inventario su un particolare "
-"prodotto."
+msgstr "Specifica il prodotto su cui concentrare l'inventario."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6855,7 +6845,7 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
-"Questa è la quantità di prodotti dal punto di vista dell'inventario. Per i "
+"Questa è la quantità di prodotti dal punto di vista del magazzino. Per i "
 "movimenti nello stato \"Completato\" è la quantità di prodotti che è stata "
 "effettivamente movimentata. Per gli altri movimenti è la quantità di "
 "prodotti che si intende movimentare. Ridurre questa quantità non genera un "
@@ -6879,7 +6869,7 @@ msgid ""
 "                to see all the past or future movements for the product."
 msgstr ""
 "Questo menu offre una completa tracciabilità delle operazioni\n"
-"                di inventario per un determinato prodotto. Puoi filtrare sul prodotto\n"
+"                di magazzino per un determinato prodotto. Si può filtrare sul prodotto\n"
 "                per visualizzare tutti i movimenti passati o futuri del prodotto. "
 
 #. module: stock
@@ -7094,7 +7084,7 @@ msgstr "Tracciabilità"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Traceability Report"
-msgstr "Report di tracciabilità"
+msgstr "Documento di tracciabilità"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_product_expiry
@@ -7602,8 +7592,9 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form.  It will take priority over the Warehouse route. "
 msgstr ""
-"Quando selezionata, la rotta può essere utilizzata nella scheda inventario "
-"della maschera prodotto. Essa avrà la priorità sulla rotta del magazzino."
+"Quando selezionata, la rotta può essere utilizzata nella scheda "
+"\"magazzino\" della maschera prodotto. Essa avrà la priorità sulla rotta del"
+" magazzino."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_categ_selectable
