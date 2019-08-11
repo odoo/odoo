@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields
+from odoo.exceptions import ValidationError
+
+from odoo import models, fields, api, _
 
 
 class AccountMove(models.Model):
@@ -24,11 +26,26 @@ class AccountMove(models.Model):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
         if (self.journal_id.l10n_latam_use_documents and
-                self.journal_id.company_id.country_id == self.env.ref('base.cl')):
+                self.journal_id.company_id.country_id == self.env.ref(
+                    'base.cl')
+        ):
             domain += [('active', '=', True)]
-            sequences = self.env['ir.sequence'].search([('l10n_latam_journal_id', '=', self.journal_id.id)])
+            sequences = self.env['ir.sequence'].search(
+                [('l10n_latam_journal_id', '=', self.journal_id.id)])
             if sequences:
                 domain += [
                     ('id', 'in', sequences.l10n_latam_document_type_id.ids)
                 ]
         return domain
+
+    @api.constrains('type', 'l10n_latam_document_type_id')
+    def _check_invoice_type_document_type(self):
+        for rec in self.filtered('l10n_latam_document_type_id'):
+            tax_payer_type = rec.partner_id.l10n_cl_sii_taxpayer_type
+            latam_document_type_code = rec.l10n_latam_document_type_id.code
+            invoice_type = rec.type
+            if (invoice_type == 'out_invoice' and tax_payer_type == '3' and
+                    latam_document_type_code not in {'35', '38', '39', '41'}):
+                raise ValidationError(
+                    _('You can not use %s with this tax payer type'
+                      ) % rec.l10n_latam_document_type_id.name)
