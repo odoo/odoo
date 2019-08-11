@@ -4,18 +4,13 @@ import time
 import odoo
 from odoo import fields
 from odoo.tools import float_compare, mute_logger, test_reports
+from odoo.tests.common import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
-    def test_register_open(self):
-        """
-            In order to test the Point of Sale module, I will open all cash registers through the wizard
-            """
-        # open all statements/cash registers
-        self.env['pos.open.statement'].create({}).open_statement()
 
     def test_order_refund(self):
         self.pos_config.open_session_cb()
@@ -47,9 +42,17 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             })],
             'amount_total': 1710.0,
             'amount_tax': 0.0,
-            'amount_paid': 1710.0,
+            'amount_paid': 0.0,
             'amount_return': 0.0,
         })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        self.assertAlmostEqual(order.amount_total, order.amount_paid, msg='Order should be fully paid.')
 
         # I create a refund
         refund_action = order.refund()
@@ -60,13 +63,18 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         payment_context = {"active_ids": refund.ids, "active_id": refund.id}
         refund_payment = self.PosMakePayment.with_context(**payment_context).create({
-            'amount': refund.amount_total
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
         })
 
         # I click on the validate button to register the payment.
         refund_payment.with_context(**payment_context).check()
 
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
+        self.assertTrue(refund.payment_ids.payment_method_id.is_cash_count, msg='There should only be one payment and paid in cash.')
+
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
 
     def test_order_to_picking(self):
         """
@@ -287,7 +295,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I close the session to generate the journal entries
         self.pos_config.current_session_id.action_pos_session_closing_control()
 
-
     def test_order_to_invoice(self):
 
         def compute_tax(product, price, qty=1, taxes=None):
@@ -350,12 +357,15 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I generate an invoice from the order
         res = self.pos_order_pos1.action_pos_order_invoice()
-        self.assertIn('res_id', res, "No invoice created")
+        self.assertIn('res_id', res, "Invoice should be created")
 
         # I test that the total of the attached invoice is correct
         invoice = self.env['account.move'].browse(res['res_id'])
         self.assertAlmostEqual(
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
+
+        # I close the session to generate the journal entries
+        current_session.action_pos_session_closing_control()
 
         """In order to test the reports on Bank Statement defined in point_of_sale module, I create a bank statement line, confirm it and print the reports"""
 
@@ -450,11 +460,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'sequence_number': 2,
            'statement_ids': [[0,
              0,
-             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
-              'amount': untax + atax,
-              'journal_id': self.pos_config.journal_ids[0].id,
+             {'amount': untax + atax,
               'name': fields.Datetime.now(),
-              'statement_id': current_session.statement_ids[0].id}]],
+              'payment_method_id': self.cash_payment_method.id}]],
            'uid': '00042-003-0014',
            'user_id': self.env.uid},
           'id': '00042-003-0014',
@@ -486,11 +494,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'sequence_number': self.pos_config.journal_id.id,
            'statement_ids': [[0,
              0,
-             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
-              'amount': untax + atax,
-              'journal_id': self.pos_config.journal_ids[0].id,
+             {'amount': untax + atax,
               'name': fields.Datetime.now(),
-              'statement_id': current_session.statement_ids[0].id}]],
+              'payment_method_id': self.credit_payment_method.id}]],
            'uid': '00043-003-0014',
            'user_id': self.env.uid},
           'id': '00043-003-0014',
@@ -522,11 +528,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'sequence_number': self.pos_config.journal_id.id,
            'statement_ids': [[0,
              0,
-             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
-              'amount': untax + atax,
-              'journal_id': self.pos_config.journal_ids[0].id,
+             {'amount': untax + atax,
               'name': fields.Datetime.now(),
-              'statement_id': current_session.statement_ids[0].id}]],
+              'payment_method_id': self.bank_payment_method.id}]],
            'uid': '00044-003-0014',
            'user_id': self.env.uid},
           'id': '00044-003-0014',
@@ -588,19 +592,39 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             untax = res['total_excluded']
             return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
+        # make a config that has currency different from the company
+        eur_pricelist = self.partner1.property_product_pricelist.copy(default={'currency_id': self.env.ref('base.EUR').id})
+        sale_journal = self.env['account.journal'].create({
+            'name': 'PoS Sale EUR',
+            'type': 'sale',
+            'code': 'POSE',
+            'company_id': self.company.id,
+            'sequence': 12,
+            'currency_id': self.env.ref('base.EUR').id
+        })
+        eur_config = self.pos_config.create({
+            'name': 'Shop EUR Test',
+            'module_account': False,
+            'journal_id': sale_journal.id,
+            'use_pricelist': True,
+            'available_pricelist_ids': [(6, 0, eur_pricelist.ids)],
+            'pricelist_id': eur_pricelist.id,
+            'payment_method_ids': [(6, 0, self.bank_payment_method.ids)]
+        })
+
         # I click on create a new session button
-        self.pos_config.open_session_cb()
-        current_session = self.pos_config.current_session_id
+        eur_config.open_session_cb()
+        current_session = eur_config.current_session_id
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl)
         # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
 
-        untax1, atax1 = compute_tax(self.product3, 450*0.95, 2)
-        untax2, atax2 = compute_tax(self.product4, 300*0.95, 3)
+        untax1, atax1 = compute_tax(self.product3, 450, 2)
+        untax2, atax2 = compute_tax(self.product4, 300, 3)
         self.pos_order_pos0 = self.PosOrder.create({
             'company_id': self.company_id,
             'session_id': current_session.id,
-            'pricelist_id': self.partner1.property_product_pricelist.copy(default={'currency_id': self.env.ref('base.EUR').id}).id,
+            'pricelist_id': eur_pricelist.id,
             'partner_id': self.partner1.id,
             'lines': [(0, 0, {
                 'name': "OL/0001",
@@ -630,14 +654,15 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I check that the total of the order is now equal to (450*2 +
         # 300*3*1.05)*0.95
         self.assertLess(
-            abs(self.pos_order_pos0.amount_total - (450 * 2 + 300 * 3 * 1.05) * 0.95),
+            abs(self.pos_order_pos0.amount_total - (450 * 2 + 300 * 3 * 1.05)),
             0.01, 'The order has a wrong total including tax and discounts')
 
         # I click on the "Make Payment" wizard to pay the PoS order with a
         # partial amount of 100.0 EUR
         context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
         self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 100.0
+            'amount': 100.0,
+            'payment_method_id': self.bank_payment_method.id,
         })
 
         # I click on the validate button to register the payment.
@@ -652,14 +677,15 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         defs = self.pos_make_payment_0.with_context({'active_id': self.pos_order_pos0.id}).default_get(['amount'])
 
         self.assertLess(
-            abs(defs['amount'] - ((450 * 2 + 300 * 3 * 1.05) * 0.95 - 100.0)), 0.01, "The remaining balance is incorrect.")
+            abs(defs['amount'] - ((450 * 2 + 300 * 3 * 1.05) - 100.0)), 0.01, "The remaining balance is incorrect.")
 
         #'I pay the remaining balance.
         context_make_payment = {
             "active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
 
         self.pos_make_payment_1 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': (450 * 2 + 300 * 3 * 1.05) * 0.95 - 100.0
+            'amount': (450 * 2 + 300 * 3 * 1.05) - 100.0,
+            'payment_method_id': self.bank_payment_method.id,
         })
 
         # I click on the validate button to register the payment.
@@ -669,20 +695,20 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(self.pos_order_pos0.state, 'paid', 'Order should be in paid state.')
 
         # I generate the journal entries
-        self.pos_order_pos0._create_account_move_line()
+        current_session.action_pos_session_validate()
 
         # I test that the generated journal entry is attached to the PoS order
-        self.assertTrue(self.pos_order_pos0.account_move, "Journal entry has not been attached to Pos order.")
+        self.assertTrue(current_session.move_id, "Journal entry should have been attached to the session.")
 
         # Check the amounts
-        debit_lines = self.pos_order_pos0.account_move.mapped('line_ids.debit')
-        credit_lines = self.pos_order_pos0.account_move.mapped('line_ids.credit')
-        amount_currency_lines = self.pos_order_pos0.account_move.mapped('line_ids.amount_currency')
-        for a, b in zip(sorted(debit_lines), [0.0, 0.0, 0.0, 0.0, 879.55]):
+        debit_lines = current_session.move_id.mapped('line_ids.debit')
+        credit_lines = current_session.move_id.mapped('line_ids.credit')
+        amount_currency_lines = current_session.move_id.mapped('line_ids.amount_currency')
+        for a, b in zip(sorted(debit_lines), [0.0, 0.0, 0.0, 0.0, 922.5]):
             self.assertAlmostEqual(a, b)
-        for a, b in zip(sorted(credit_lines), [0.0, 22.5, 40.91, 388.64, 427.5]):
+        for a, b in zip(sorted(credit_lines), [0.0, 22.5, 40.91, 409.09, 450]):
             self.assertAlmostEqual(a, b)
-        for a, b in zip(sorted(amount_currency_lines), [-855.0, -777.27, -81.82, -45.0, 1752.75]):
+        for a, b in zip(sorted(amount_currency_lines), [-900, -818.18, -81.82, -45, 1845]):
             self.assertAlmostEqual(a, b)
 
     def test_order_to_invoice_no_tax(self):
@@ -731,7 +757,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I check that the order is marked as paid and there is no invoice
         # attached to it
         self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
-        self.assertFalse(self.pos_order_pos1.account_move, 'Invoice should not be attached to order.')
+        self.assertFalse(self.pos_order_pos1.account_move, 'Invoice should not be attached to order yet.')
 
         # I generate an invoice from the order
         res = self.pos_order_pos1.action_pos_order_invoice()
@@ -744,3 +770,5 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         for iline in invoice.invoice_line_ids:
             self.assertFalse(iline.tax_ids)
+
+        self.pos_config.current_session_id.action_pos_session_closing_control()

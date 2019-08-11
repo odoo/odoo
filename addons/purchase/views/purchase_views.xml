@@ -98,8 +98,9 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="date_planned" color="partner_id">
+                <calendar string="Calendar View" date_start="date_planned" color="partner_id" hide_time="true" event_limit="5">
                     <field name="name"/>
+                    <field name="partner_ref"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="partner_id"/>
                 </calendar>
@@ -338,13 +339,13 @@
                         </page>
                         <page string="Other Information" name="purchase_delivery_invoice">
                             <group>
-                                <group>
+                                <group name="planning">
                                     <label for="date_planned"/>
                                     <div>
                                         <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
                                     </div>
                                 </group>
-                                <group>
+                                <group name="other_info">
                                     <field name="user_id"/>
                                     <field name="invoice_status"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
@@ -383,18 +384,16 @@
                     <separator/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
-                    <separator/>
-                    <filter string="My Activities" name="activities_my"
-                        domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
@@ -432,6 +431,7 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value and record.date_order.value.split(' ')[0] or False"/></span>
+                                        <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success', 'approved': 'warning'}}"/>
@@ -464,6 +464,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show"/>
                     <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>

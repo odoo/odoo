@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple
-import time
+from ast import literal_eval
 from datetime import date
-
 from itertools import groupby
+from operator import itemgetter
+import time
+
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
-from operator import itemgetter
 
 
 class PickingType(models.Model):
@@ -123,11 +123,23 @@ class PickingType(models.Model):
         )
 
     def _get_action(self, action_xmlid):
-        # TDE TODO check to have one view + custo in methods
         action = self.env.ref(action_xmlid).read()[0]
         if self:
             action['display_name'] = self.display_name
-        return action
+
+        default_immediate_tranfer = True
+        if self.env['ir.config_parameter'].sudo().get_param('stock.no_default_immediate_tranfer'):
+            default_immediate_tranfer = False
+
+        context = {
+            'search_default_picking_type_id': [self.id],
+            'default_picking_type_id': self.id,
+            'default_immediate_transfer': default_immediate_tranfer,
+        }
+
+        action_context = literal_eval(action['context'])
+        action_context.update(context)
+        return dict(action, context=action_context)
 
     def get_action_picking_tree_late(self):
         return self._get_action('stock.action_picking_tree_late')
@@ -276,9 +288,9 @@ class Picking(models.Model):
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
 
     owner_id = fields.Many2one(
-        'res.partner', 'Owner',
+        'res.partner', 'Assign owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help="Default Owner")
+        help="When validating the transfer, the products will be assigned to this owner.")
     printed = fields.Boolean('Printed')
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
@@ -519,10 +531,6 @@ class Picking(models.Model):
     # Actions
     # ----------------------------------------
 
-    def action_assign_owner(self):
-        for picking in self:
-            picking.move_line_ids.write({'owner_id': picking.owner_id.id})
-
     def action_assign_partner(self):
         for picking in self:
             picking.move_lines.write({'partner_id': picking.partner_id.id})
@@ -575,6 +583,10 @@ class Picking(models.Model):
         todo_moves = self.mapped('move_lines').filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         # Check if there are ops not linked to moves yet
         for pick in self:
+            if pick.owner_id:
+                pick.move_lines.write({'restrict_partner_id': pick.owner_id.id})
+                pick.move_line_ids.write({'owner_id': pick.owner_id.id})
+
             # # Explode manually added packages
             # for ops in pick.move_line_ids.filtered(lambda x: not x.move_id and not x.product_id):
             #     for quant in ops.package_id.quant_ids: #Or use get_content for multiple levels
@@ -608,6 +620,7 @@ class Picking(models.Model):
                                                     'location_dest_id': pick.location_dest_id.id,
                                                     'picking_id': pick.id,
                                                     'picking_type_id': pick.picking_type_id.id,
+                                                    'restrict_partner_id': pick.owner_id.id
                                                    })
                     ops.move_id = new_move.id
                     new_move._action_confirm()
@@ -887,7 +900,7 @@ class Picking(models.Model):
                         visited_documents[(document, responsible)] = visited
             grouped_moves = grouped_moves.items()
         else:
-            raise UserError(_('Unknow stream.'))
+            raise UserError(_('Unknown stream.'))
 
         documents = {}
         for (parent, responsible), moves in grouped_moves:

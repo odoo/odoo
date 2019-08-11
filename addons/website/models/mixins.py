@@ -42,9 +42,9 @@ class SeoMetadata(models.AbstractModel):
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
         if request.website.social_default_image:
-            img = '/web/image/website/%s/social_default_image' % request.website.id
+            img = request.website.image_url(request.website, 'social_default_image')
         else:
-            img = '/web/image/res.company/%s/logo' % company.id
+            img = request.website.image_url(company, 'logo')
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
@@ -70,7 +70,7 @@ class SeoMetadata(models.AbstractModel):
     def get_website_meta(self):
         """ This method will return final meta information. It will replace
             default values with user's custom value (if user modified it from
-            the seo popup of fronted)
+            the seo popup of frontend)
 
             This method is not meant for overridden. To customize meta values
             override `_default_website_meta` method instead of this method. This
@@ -132,11 +132,6 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     def website_publish_button(self):
         self.ensure_one()
-        if self.env.user.has_group('website.group_website_publisher') and self.website_url != '#':
-            # Force website to land on record's website to publish/unpublish it
-            if 'website_id' in self and self.env.user.has_group('website.group_multi_website'):
-                self.website_id._force()
-            return self.open_website_url()
         return self.write({'website_published': not self.website_published})
 
     def open_website_url(self):

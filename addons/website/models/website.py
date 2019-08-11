@@ -46,8 +46,8 @@ class Website(models.Model):
 
     def _default_language(self):
         lang_code = self.env['ir.default'].get('res.partner', 'lang')
-        def_lang = self.env['res.lang'].search([('code', '=', lang_code)], limit=1)
-        return def_lang.id if def_lang else self._active_languages()[0]
+        def_lang_id = self.env['res.lang']._lang_get_id(lang_code)
+        return def_lang_id or self._active_languages()[0]
 
     name = fields.Char('Website Name', required=True)
     domain = fields.Char('Website Domain')
@@ -252,7 +252,7 @@ class Website(models.Model):
         if ispage:
             page = self.env['website.page'].create({
                 'url': page_url,
-                'website_id': website.id,  # remove it if only one webiste or not?
+                'website_id': website.id,  # remove it if only one website or not?
                 'view_id': view.id,
             })
             result['view_id'] = view.id

@@ -22,7 +22,7 @@ class TestCRMPLS(TransactionCase):
 
     def test_predictive_lead_scoring(self):
         """ We test here computation of lead probability based on PLS Bayes.
-                We will use 3 differents values for each possible variables:
+                We will use 3 different values for each possible variables:
                 country_id : 1,2,3
                 state_id: 1,2,3
                 email_state: correct, incorrect, None

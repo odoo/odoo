@@ -459,12 +459,12 @@
             </div>
         </form>
         <div t-if="not buy" class="alert alert-info" role="status">
-            <t t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
+            <span t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
                 Event registration not yet started.
-            </t>
-            <t t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
+            </span>
+            <span t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
                 Event registration is closed.
-            </t>
+            </span>
             <t t-if="request.env.user.has_group('event.group_event_manager')">
                 <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
                     <em><i class="fa fa-plus-circle" role="img" aria-label="Create" title="Create"></i>
@@ -717,16 +717,6 @@
         </t>
     </t>
 </template>
-
-<template id="website_event.brand_promotion" inherit_id="website.brand_promotion">
-    <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
-        <div class="o_brand_promotion">
-            Powered by <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">Odoo</a>.
-            Try the <a target="_blank" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">open source website builder</a>.
-        </div>
-    </xpath>
-</template>
-
 
 <!-- User Navbar -->
 <template id="user_navbar_inherit_website_event" inherit_id="website.user_navbar">

@@ -1,0 +1,93 @@
+.o_web_client .o_view_grid {
+    cursor: default;
+
+    table {
+        margin-bottom: 0;
+        table-layout: fixed;
+        min-width: 100%;
+        width: auto;
+        max-width: none;
+    }
+    th, td {
+        border: 0 !important;
+        vertical-align: middle;
+        width: 5em;
+    }
+    .o_grid_title_header {
+        width: 10em;
+    }
+    thead {
+        color: $o-main-text-color;
+        background-color: $o-brand-lightsecondary;
+        th {
+            text-align: center;
+            white-space: pre-line;
+        }
+    }
+    tbody {
+        background-color: $o-view-background-color;
+        text-align: right;
+        th > div {
+            display: flex;
+            > div {
+                flex: 1 1 auto;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                &:before {
+                    content: "/\00a0";
+                    padding: 0 2px;
+                }
+                &:first-child:before {
+                    content: " ";
+                }
+                &:last-child {
+                    flex: 100 1 auto;
+                }
+            }
+        }
+        tr:nth-of-type(odd) th > div:after {
+            background-color: $table-accent-bg;
+        }
+        .o_grid_cell_container {
+            display: flex;
+            align-items: center;
+
+            &:hover {
+                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 5px $o-brand-primary;
+
+            }
+        }
+        .o_grid_input {
+            cursor: text;
+            text-align: right;
+            &:focus {
+                opacity: 1 !important;
+                background-color: $o-view-background-color;
+                outline: none;
+            }
+        }
+    }
+    .o_grid_text_muted{
+        color: lighten($o-main-text-color, 15%);
+        font-style: italic;
+    }
+
+    // ensure white background completely surrounds nocontent bubble
+    .o_grid_nocontent_container {
+        overflow: auto;
+
+        .oe_view_nocontent_img_link {
+            padding:10px;
+        }
+    }
+}
+
+.o_product_variant_grid {
+    .form-control {
+        &:focus {
+            box-shadow: none;
+            border: 1px solid $gray-400;
+        }
+    }
+}

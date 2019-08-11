@@ -95,7 +95,7 @@ class ProductProduct(models.Model):
         'product.template', 'Product Template',
         auto_join=True, index=True, ondelete="cascade", required=True)
     barcode = fields.Char(
-        'Barcode', copy=False, oldname='ean13',
+        'Barcode', copy=False,
         help="International Article Number used for product identification.")
     attribute_value_ids = fields.Many2many(
         'product.attribute.value', string='Attribute Values', ondelete='restrict')
@@ -784,7 +784,7 @@ class SupplierInfo(models.Model):
         help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
-        index=True, ondelete='cascade', oldname='product_id')
+        index=True, ondelete='cascade')
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,

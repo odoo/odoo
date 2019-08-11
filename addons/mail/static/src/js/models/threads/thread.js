@@ -41,7 +41,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * Updates the _detached state of the thread. Must be overriden to reflect
+     * Updates the _detached state of the thread. Must be overridden to reflect
      * the new state in the interface.
      */
     close: function () {
@@ -50,7 +50,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         this._warnUpdatedWindowState();
     },
     /**
-     * Updates the _detached state of the thread. Must be overriden to reflect
+     * Updates the _detached state of the thread. Must be overridden to reflect
      * the new state in the interface.
      *
      * @param {Object} [options={}]
@@ -86,7 +86,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         return Promise.resolve([]);
     },
     /**
-     * Updates the folded state of the thread. Must be overriden to reflect
+     * Updates the folded state of the thread. Must be overridden to reflect
      * the new state in the interface.
      *
      * @override

@@ -30,19 +30,6 @@ class AuthorizeController(http.Controller):
             'return_url': urls.url_join(base_url, "/payment/process")
         })
 
-    @http.route(['/payment/authorize/s2s/create_json'], type='json', auth='public')
-    def authorize_s2s_create_json(self, **kwargs):
-        acquirer_id = int(kwargs.get('acquirer_id'))
-        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
-        if not kwargs.get('partner_id'):
-            kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
-        try:
-           return acquirer.s2s_process(kwargs).id
-        except (ValidationError, UserError) as e:
-           return {
-               'error': e.name,
-           }
-
     @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def authorize_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
         token = False

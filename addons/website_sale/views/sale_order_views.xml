@@ -141,7 +141,7 @@
                 action = records.action_recovery_email_send()
         </field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,form</field>
     </record>
 
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
@@ -266,7 +266,7 @@
                 <attribute name="context">{'display_website': True}</attribute>
             </field>
             <field name="team_id" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" attrs="{'invisible': [('website_id', '=', False)]}" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>

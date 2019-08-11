@@ -13,6 +13,7 @@ from base64 import b64encode
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -66,7 +67,7 @@ class MassMailing(models.Model):
     subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
-    sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
+    sent_date = fields.Datetime(string='Sent Date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
@@ -93,7 +94,7 @@ class MassMailing(models.Model):
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
-    mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
+    mailing_domain = fields.Char(string='Domain', default=[])
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
@@ -193,19 +194,27 @@ class MassMailing(models.Model):
             else:
                 mass_mailing.next_departure = cron_time
 
-    @api.onchange('mailing_model_id', 'contact_list_ids')
+    @api.onchange('mailing_model_name', 'contact_list_ids')
     def _onchange_model_and_list(self):
-        mailing_domain = []
+        mailing_domain = literal_eval(self.mailing_domain) if self.mailing_domain else []
         if self.mailing_model_name:
-            if self.mailing_model_name == 'mailing.list':
-                if self.contact_list_ids:
-                    mailing_domain.append(('list_ids', 'in', self.contact_list_ids.ids))
-                else:
-                    mailing_domain.append((0, '=', 1))
-            elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
-                mailing_domain.append(('opt_out', '=', False))
+            if mailing_domain:
+                try:
+                    self.env[self.mailing_model_real].search(mailing_domain, limit=1)
+                except:
+                    mailing_domain = []
+            if not mailing_domain:
+                if self.mailing_model_name == 'mailing.list':
+                    if self.contact_list_ids:
+                        mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
+                    else:
+                        mailing_domain = [(0, '=', 1)]
+                elif self.mailing_model_name == 'res.partner':
+                    mailing_domain = [('customer', '=', True)]
+                elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
+                    mailing_domain = [('opt_out', '=', False)]
         else:
-            mailing_domain.append((0, '=', 1))
+            mailing_domain = [(0, '=', 1)]
         self.mailing_domain = repr(mailing_domain)
 
     @api.onchange('subject')

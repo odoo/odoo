@@ -612,7 +612,15 @@
             <field name="name">2000 bis 2007 Forderungen aus Lief. und Leist. Inland</field>
             <field name="chart_template_id" ref="austria_chart_template"/>
         </record>
-         
+
+        <record id="chart2000_01" model="account.account.template">
+            <field name="code">20001</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="name">2000 bis 2007 Forderungen aus Lief. und Leist. Inland (PoS)</field>
+            <field name="chart_template_id" ref="austria_chart_template"/>
+        </record>
+
         <record id="chart2080" model="account.account.template">
             <field name="code">2080</field>
             <field name="reconcile" eval="True"/>
@@ -2073,6 +2081,7 @@
             <field name="property_account_income_id" ref="chart4000"/>
             <field name="income_currency_exchange_account_id" ref="chart8400"/>
             <field name="expense_currency_exchange_account_id" ref="chart8450"/>
+            <field name="default_pos_receivable_account_id" ref="chart2000_01"/>
         </record>
             
     </data>

@@ -298,6 +298,13 @@
             <field name="name">Kundefordringer</field>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
+        <record id="chart1501" model="account.account.template">
+            <field name="code">1501</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable" />
+            <field name="name">Kundefordringer (PoS)</field>
+            <field name="chart_template_id" ref="no_chart_template"/>
+        </record>
         <record id="chart1513" model="account.account.template">
             <field name="code">1513</field>
             <field name="reconcile" eval="False"/>
@@ -2478,6 +2485,7 @@
             <field name="property_account_income_id" ref="chart3000"/> <!-- To be corrected,possibly -->
             <field name="income_currency_exchange_account_id" ref="chart8060"/>
             <field name="expense_currency_exchange_account_id" ref="chart8160"/>
+            <field name="default_pos_receivable_account_id" ref="chart1501" />
         </record>
     </data>
 </odoo>

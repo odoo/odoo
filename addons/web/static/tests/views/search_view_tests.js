@@ -21,7 +21,7 @@ QUnit.module('Search View', {
                     birthday: {string: "Birthday", type: "date", store: true, sortable: true},
                     foo: {string: "Foo", type: "char", store: true, sortable: true},
                     bar: {string: "Bar", type: "many2one", relation: 'partner'},
-                    float_field: {string: "Float", type: "float"},
+                    float_field: {string: "Float", type: "float", group_operator: 'sum'},
                 },
                 records: [
                     {id: 1, display_name: "First record", foo: "yop", bar: 2, date_field: "2017-01-25", birthday: "1983-07-15", float_field: 1},
@@ -315,6 +315,56 @@ QUnit.module('Search View', {
         assert.strictEqual(actionManager.$('.o_searchview input.o_searchview_input')[0], document.activeElement,
             "searchview input should be focused");
 
+        actionManager.destroy();
+    });
+
+    QUnit.test('default groupbys can be ordered', async function (assert) {
+        assert.expect(7);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<field name="bar"/>' +
+                '<filter string="Foo" name="foo" domain="[]" />' +
+                '<filter string="Foo 2" name="foo_2" domain="[]" />' +
+                '<filter string="Filter Date Field" name="date" date="date_field"/>' +
+                '<filter string="Groupby Date Field Day" name="gb_day" context="{\'group_by\': \'date_field:day\'}"/>' +
+                '<filter string="Groupby Foo" name="gb_foo" context="{\'group_by\': \'foo\'}"/>' +
+                '<filter string="Groupby Bar" name="gb_bar" context="{\'group_by\': \'bar\'}"/>' +
+            '</search>';
+        this.actions[0].views = [[false, 'graph']],
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {
+            search_default_foo: true,
+            search_default_date: true,
+            search_default_bar: 3,
+            search_default_gb_foo: 1,
+            search_default_gb_day: 5,
+            search_default_gb_bar: true,
+            time_ranges: {field: 'date_field', range: 'this_week'},
+        };
+        await actionManager.doAction(1);
+
+        const $facetValues = $('.o_searchview .o_searchview_facet .o_facet_values span:not(.o_facet_values_sep)');
+        const expectedLabels = [
+            "Third record",
+            "Foo",
+            "Filter Date Field: This Month",
+            "Groupby Foo",
+            "Groupby Date Field Day: Day",
+            "Groupby Bar",
+            "Date: This Week"
+        ];
+
+        for (let i = 0; i < expectedLabels.length; i++) {
+            assert.strictEqual($facetValues.eq(i).text(), expectedLabels[i],
+            `first facet value should be ${expectedLabels[i]}`);
+        }
         actionManager.destroy();
     });
 
@@ -1254,14 +1304,15 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('a default time range only in context is taken into account', async function (assert) {
-        assert.expect(2);
+        assert.expect(1);
 
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
             mockRPC: function (route, args) {
-                // there are two read_group calls (for the groupby lists [] and ["date_field:day"])
+                // there are only one read_group call (for the groupby lists [])
+                // the read group for the list ["date_field:day"] is not done since no data is available for today)
                 if (route === '/web/dataset/call_kw/partner/read_group') {
                     var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
                     assert.ok(timeRangeMenuData.timeRange.length > 0, "time range should be non empty");

@@ -134,7 +134,7 @@ class StockMove(SavepointCase):
             self.assertNotEqual(quant.in_date, False)
 
     def test_in_3(self):
-        """ Receive 5 serial-tracked products from a supplier. The system should create 5 differents
+        """ Receive 5 serial-tracked products from a supplier. The system should create 5 different
         move line.
         """
         # creation

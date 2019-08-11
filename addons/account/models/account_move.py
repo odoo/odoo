@@ -140,7 +140,7 @@ class AccountMove(models.Model):
         compute='_compute_amount')
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
-        help="Technical field used by web_studio to allow an easy edition of the invoice report by drag/drop of the field. Return type: [(name, amount, base, formated amount, formated base)]")
+        help="technical field used in report and in invoice form view with a widget to display the detail of taxes (grouped by tax group) under the subtotal")
 
     # ==== Cash basis feature fields ====
     tax_cash_basis_rec_id = fields.Many2one(
@@ -222,8 +222,8 @@ class AccountMove(models.Model):
         string='Vendor Bill',
         help="Auto-complete from a past bill.")
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
-    invoice_vendor_display_name = fields.Char(compute='_compute_invoice_vendor_display_info', store=True)
-    invoice_vendor_icon = fields.Char(compute='_compute_invoice_vendor_display_info', store=False)
+    invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
+    invoice_partner_icon = fields.Char(compute='_compute_invoice_partner_display_info', store=False)
 
     # ==== Cash rounding fields ====
     invoice_cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
@@ -241,7 +241,7 @@ class AccountMove(models.Model):
     invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain',
         help="Technical field used to have a dynamic domain on journal / taxes in the form view.")
     bank_partner_id = fields.Many2one('res.partner', help='Technical field to get the domain on the bank', compute='_compute_bank_partner_id')
-    invoice_has_matching_supsense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
+    invoice_has_matching_suspense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
         groups='account.group_account_invoice',
         help="Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account.")
     # Technical field to hide Reconciled Entries stat button
@@ -977,7 +977,7 @@ class AccountMove(models.Model):
 
             move.write({'line_ids': to_write})
 
-    def _get_domain_matching_supsense_moves(self):
+    def _get_domain_matching_suspense_moves(self):
         self.ensure_one()
         domain = self.env['account.move.line']._get_suspense_moves_domain()
         domain += ['|', ('partner_id', '=?', self.partner_id.id), ('partner_id', '=', False)]
@@ -991,32 +991,32 @@ class AccountMove(models.Model):
         for r in self:
             res = False
             if r.state == 'posted' and r.is_invoice() and r.invoice_payment_state == 'not_paid':
-                domain = r._get_domain_matching_supsense_moves()
+                domain = r._get_domain_matching_suspense_moves()
                 #there are more than one but less than 5 suspense moves matching the residual amount
                 if (0 < self.env['account.move.line'].search_count(domain) < 5):
                     domain2 = [
                         ('invoice_payment_state', '=', 'not_paid'),
-                        ('state', '=', 'open'),
+                        ('state', '=', 'posted'),
                         ('amount_residual', '=', r.amount_residual),
                         ('type', '=', r.type)]
                     #there are less than 5 other open invoices of the same type with the same residual
                     if self.env['account.move'].search_count(domain2) < 5:
                         res = True
-            r.invoice_has_matching_supsense_amount = res
+            r.invoice_has_matching_suspense_amount = res
 
     @api.depends('partner_id', 'invoice_source_email')
-    def _compute_invoice_vendor_display_info(self):
+    def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.name
             move.invoice_icon = ''
             if not vendor_display_name:
                 if move.invoice_source_email:
                     vendor_display_name = _('From: ') + move.invoice_source_email
-                    move.invoice_vendor_icon = '@'
+                    move.invoice_partner_icon = '@'
                 else:
                     vendor_display_name = _('Created by: %s') % move.sudo().create_uid.name
-                    move.invoice_vendor_icon = '#'
-            move.invoice_vendor_display_name = vendor_display_name
+                    move.invoice_partner_icon = '#'
+            move.invoice_partner_display_name = vendor_display_name
 
     @api.depends('state', 'journal_id', 'invoice_date')
     def _compute_invoice_sequence_number_next(self):
@@ -1190,7 +1190,9 @@ class AccountMove(models.Model):
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
+                group.id
             ) for group, amounts in res]
+
 
     # -------------------------------------------------------------------------
     # CONSTRAINS METHODS
@@ -1974,7 +1976,7 @@ class AccountMove(models.Model):
 
     def action_open_matching_suspense_moves(self):
         self.ensure_one()
-        domain = self._get_domain_matching_supsense_moves()
+        domain = self._get_domain_matching_suspense_moves()
         ids = self.env['account.move.line'].search(domain).mapped('statement_line_id').ids
         action_context = {'show_mode_selector': False, 'company_ids': self.mapped('company_id').ids}
         action_context.update({'suspense_moves_mode': True})
@@ -2128,6 +2130,9 @@ class AccountMoveLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes')
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id')
+    tax_group_id = fields.Many2one(related='tax_line_id.tax_group_id', string='Originator tax group',
+        readonly=True, store=True,
+        help='technical field for widget tax-group-custom-field')
     tax_base_amount = fields.Monetary(string="Base Amount", store=True,
         currency_field='company_currency_id')
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
@@ -2976,7 +2981,7 @@ class AccountMoveLine(models.Model):
         else:
             amls = self.browse(list(amls))
 
-        # If we have multiple currency, we can only base ourselve on debit-credit to see if it is fully reconciled
+        # If we have multiple currency, we can only base ourselves on debit-credit to see if it is fully reconciled
         currency = set([a.currency_id for a in amls if a.currency_id.id != False])
         multiple_currency = False
         if len(currency) != 1:
@@ -3009,7 +3014,7 @@ class AccountMoveLine(models.Model):
                 to_balance[aml.currency_id][1] += aml.amount_residual != 0 and aml.amount_residual or aml.amount_residual_currency
 
         # Check if reconciliation is total
-        # To check if reconciliation is total we have 3 differents use case:
+        # To check if reconciliation is total we have 3 different use case:
         # 1) There are multiple currency different than company currency, in that case we check using debit-credit
         # 2) We only have one currency which is different than company currency, in that case we check using amount_currency
         # 3) We have only one currency and some entries that don't have a secundary currency, in that case we check debit-credit
@@ -3193,7 +3198,7 @@ class AccountMoveLine(models.Model):
         """ Create a writeoff move per journal for the account.move.lines in self. If debit/credit is not specified in vals,
             the writeoff amount will be computed as the sum of amount_residual of the given recordset.
             :param writeoff_vals: list of dicts containing values suitable for account_move_line.create(). The data in vals will
-                be processed to create bot writeoff acount.move.line and their enclosing account.move.
+                be processed to create bot writeoff account.move.line and their enclosing account.move.
         """
         def compute_writeoff_counterpart_vals(values):
             line_values = values.copy()

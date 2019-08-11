@@ -222,7 +222,7 @@ class Project(models.Model):
         ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
     ], 'Rating Frequency')
 
-    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False, oldname='website_published')
+    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False)
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -472,7 +472,7 @@ class Task(models.Model):
     stage_id = fields.Many2one('project.task.type', string='Stage', ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False)
-    tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
+    tag_ids = fields.Many2many('project.tags', string='Tags')
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),

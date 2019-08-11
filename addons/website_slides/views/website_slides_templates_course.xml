@@ -120,7 +120,7 @@
                         <!-- ==== Header Left ==== -->
                         <div class="col-12 col-md-4 col-lg-3">
                             <div class="d-flex align-items-start justify-content-around h-100">
-                                <div class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0" t-attf-style="background-image:url(/web/image/slide.channel/#{channel.id}/image_1024)" t-ignore="True"/>
+                                <div class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0" t-attf-style="background-image: url(#{website.image_url(channel, 'image_1024')});" t-ignore="True"/>
                             </div>
                         </div>
 
@@ -343,7 +343,7 @@
             <t t-foreach="category_data" t-as="category">
                 <t t-set="category_id" t-value="category['id'] if category['id'] else None"/>
 
-                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category mb-2' if category_id else 'mb-3'" t-att-data-category-id="category_id">
+                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category o_wslides_js_list_item mb-2' if category_id else 'mb-3'" t-att-data-slide-id="category_id" t-att-data-category-id="category_id">
                     <div t-att-data-category-id="category_id"
                          t-att-class="'o_wslides_slide_list_category_header position-relative d-flex justify-content-between align-items-center %s' % ('o_wslides_js_category bg-white shadow-sm border-bottom-0' if category_id and channel.can_upload  else 'border-0 py-1')">
                         <div t-att-class="'d-flex align-items-center pl-3 %s' % ('o_wslides_slides_list_drag' if channel.can_publish else '')">
@@ -396,7 +396,7 @@
 </template>
 
 <template id="course_slides_list_slide" name="Slide template for a training channel">
-    <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id" t-attf-class="o_wslides_slides_list_slide bg-white-50 border-top-0 d-flex align-items-center pl-2 #{'py-1 pr-2' if not channel.can_upload else ''}">
+    <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id" t-attf-class="o_wslides_slides_list_slide o_wslides_js_list_item bg-white-50 border-top-0 d-flex align-items-center pl-2 #{'py-1 pr-2' if not channel.can_upload else ''}">
         <div t-if="channel.can_publish" class=" o_wslides_slides_list_drag border-right p-2">
             <i class="fa fa-bars mr-2"></i>
         </div>
@@ -534,7 +534,7 @@
     <!-- Featured lesson  -->
     <div t-if="not search and not search_slide_type and slide_promoted" class="container py-1 mb-2">
         <div class="card flex-column flex-lg-row">
-            <t t-set="image_url" t-value="'/web/image/slide.slide/%s/image_1024' % slide_promoted.id"/>
+            <t t-set="image_url" t-value="website.image_url(slide_promoted, 'image_1024')"/>
 
             <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
                t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
@@ -609,7 +609,7 @@
         <t t-set="can_access" t-value="slide.is_preview or channel.is_member or channel.can_publish"/>
 
         <t t-if="slide.image_1024">
-            <t t-set="lesson_image" t-value="'/web/image/slide.slide/%s/image_1024' % slide.id"/>
+            <t t-set="lesson_image" t-value="website.image_url(slide, 'image_1024')"/>
             <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name">
                 <div class="card-img-top border-bottom" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
             </a>

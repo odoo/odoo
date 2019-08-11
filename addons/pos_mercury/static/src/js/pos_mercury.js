@@ -13,31 +13,19 @@ var PopupWidget = require('point_of_sale.popups');
 var ScreenWidget = screens.ScreenWidget;
 var PaymentScreenWidget = screens.PaymentScreenWidget;
 
-pos_model.load_fields("account.journal", "pos_mercury_config_id");
+pos_model.load_fields('pos.payment.method', 'pos_mercury_config_id');
 
 pos_model.PosModel = pos_model.PosModel.extend({
-    getOnlinePaymentJournals: function () {
-        var self = this;
-        var online_payment_journals = [];
+    getOnlinePaymentMethods: function () {
+        var online_payment_methods = [];
 
-        $.each(this.journals, function (i, val) {
-            if (val.pos_mercury_config_id) {
-                online_payment_journals.push({label:self.getCashRegisterByJournalID(val.id).journal_id[1], item:val.id});
+        $.each(this.payment_methods, function (i, payment_method) {
+            if (payment_method.pos_mercury_config_id) {
+                online_payment_methods.push({label: payment_method.name, item: payment_method.id});
             }
         });
 
-        return online_payment_journals;
-    },
-    getCashRegisterByJournalID: function (journal_id) {
-        var cashregister_return;
-
-        $.each(this.cashregisters, function (index, cashregister) {
-            if (cashregister.journal_id[0] === journal_id) {
-                cashregister_return = cashregister;
-            }
-        });
-
-        return cashregister_return;
+        return online_payment_methods;
     },
     decodeMagtek: function (magtekInput) {
         // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
@@ -258,7 +246,7 @@ ScreenWidget.include({
 
     show: function () {
         this._super();
-        if(this.pos.getOnlinePaymentJournals().length !== 0) {
+        if(this.pos.getOnlinePaymentMethods().length !== 0) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_error_action, this));
         }
     }
@@ -348,7 +336,7 @@ PaymentScreenWidget.include({
             return;
         }
 
-        if(this.pos.getOnlinePaymentJournals().length === 0) {
+        if(this.pos.getOnlinePaymentMethods().length === 0) {
             return;
         }
 
@@ -379,7 +367,7 @@ PaymentScreenWidget.include({
             'transaction_code'  : 'Sale',
             'invoice_no'        : self.pos.get_order().uid.replace(/-/g,''),
             'purchase'          : purchase_amount,
-            'journal_id'        : parsed_result.journal_id,
+            'payment_method_id' : parsed_result.payment_method_id,
         };
 
         var def = old_deferred || new $.Deferred();
@@ -426,7 +414,7 @@ PaymentScreenWidget.include({
                 }
 
                 var response = self.pos.decodeMercuryResponse(data);
-                response.journal_id = parsed_result.journal_id;
+                response.payment_method_id = parsed_result.payment_method_id;
 
                 if (response.status === 'Approved') {
                     // AP* indicates a duplicate request, so don't add anything for those
@@ -443,7 +431,7 @@ PaymentScreenWidget.include({
                         if (swipe_pending_line) {
                             order.select_paymentline(swipe_pending_line);
                         } else {
-                            order.add_paymentline(self.pos.getCashRegisterByJournalID(parsed_result.journal_id));
+                            order.add_paymentline(self.payment_methods_by_id[parsed_result.payment_method_id]);
                         }
 
                         order.selected_paymentline.paid = true;
@@ -502,17 +490,17 @@ PaymentScreenWidget.include({
 
     credit_code_action: function (parsed_result) {
         var self = this;
-        var online_payment_journals = this.pos.getOnlinePaymentJournals();
+        var online_payment_methods = this.pos.getOnlinePaymentMethods();
 
-        if (online_payment_journals.length === 1) {
-            parsed_result.journal_id = online_payment_journals[0].item;
+        if (online_payment_methods.length === 1) {
+            parsed_result.payment_method_id = online_payment_methods[0].item;
             self.credit_code_transaction(parsed_result);
         } else { // this is for supporting another payment system like mercury
             this.gui.show_popup('selection',{
                 title:   _t('Pay with: '),
-                list:    online_payment_journals,
+                list:    online_payment_methods,
                 confirm: function (item) {
-                    parsed_result.journal_id = item;
+                    parsed_result.payment_method_id = item;
                     self.credit_code_transaction(parsed_result);
                 },
                 cancel:  self.credit_code_cancel,
@@ -628,20 +616,15 @@ PaymentScreenWidget.include({
     click_paymentmethods: function (id) {
         var i;
         var order = this.pos.get_order();
-        var cashregister = null;
-        for (i = 0; i < this.pos.cashregisters.length; i++) {
-            if (this.pos.cashregisters[i].journal_id[0] === id){
-                cashregister = this.pos.cashregisters[i];
-                break;
-            }
-        }
+        var payment_method = this.pos.payment_methods_by_id[id]
+        // this.pos.get_order().add_paymentline(payment_method);
 
-        if (cashregister.journal.pos_mercury_config_id) {
+        if (payment_method.pos_mercury_config_id) {
             var already_swipe_pending = false;
             var lines = order.get_paymentlines();
 
             for (i = 0; i < lines.length; i++) {
-                if (lines[i].cashregister.journal.pos_mercury_config_id && lines[i].mercury_swipe_pending) {
+                if (lines[i].payment_method.pos_mercury_config_id && lines[i].mercury_swipe_pending) {
                     already_swipe_pending = true;
                 }
             }
@@ -666,7 +649,7 @@ PaymentScreenWidget.include({
 
     show: function () {
         this._super();
-        if (this.pos.getOnlinePaymentJournals().length !== 0) {
+        if (this.pos.getOnlinePaymentMethods().length !== 0) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_code_action, this));
         }
     },

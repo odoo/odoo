@@ -29,12 +29,12 @@ gui.define_screen({name:'bill', widget: BillScreenWidget});
 
 var PrintBillButton = screens.ActionButtonWidget.extend({
     template: 'PrintBillButton',
-    print_xml: function(){
+    print_html: function(){
         var order = this.pos.get('selectedOrder');
         if(order.get_orderlines().length > 0){
             var receipt = order.export_for_printing();
             receipt.bill = true;
-            this.pos.proxy.print_receipt(QWeb.render('BillReceipt',{
+            this.pos.proxy.printer.print_receipt(QWeb.render('BillReceipt',{
                 receipt: receipt, widget: this, pos: this.pos, order: order,
             }));
         }
@@ -43,7 +43,7 @@ var PrintBillButton = screens.ActionButtonWidget.extend({
         if (!this.pos.config.iface_print_via_proxy) {
             this.gui.show_screen('bill');
         } else {
-            this.print_xml();
+            this.print_html();
         }
     },
 });

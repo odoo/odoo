@@ -22,6 +22,8 @@ class User(models.Model):
             'hours_last_month',
             'hours_last_month_display',
             'attendance_state',
+            'last_check_in',
+            'last_check_out'
         ]
         super(User, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference

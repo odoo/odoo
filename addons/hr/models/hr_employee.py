@@ -35,7 +35,7 @@ class HrEmployeePrivate(models.Model):
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
-    name = fields.Char(related='resource_id.name', store=True, oldname='name_related', readonly=False, tracking=True)
+    name = fields.Char(related='resource_id.name', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
@@ -44,7 +44,7 @@ class HrEmployeePrivate(models.Model):
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
         groups="hr.group_hr_user", tracking=True)
     is_address_home_a_company = fields.Boolean(
-        'The employee adress has a company linked',
+        'The employee address has a company linked',
         compute='_compute_is_address_home_a_company',
     )
     private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False, groups="hr.group_hr_user")
@@ -293,7 +293,7 @@ class HrEmployeePrivate(models.Model):
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
-        """Checks that choosen address (res.partner) is not linked to a company.
+        """Checks that chosen address (res.partner) is not linked to a company.
         """
         for employee in self:
             try:

@@ -62,17 +62,17 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><field name="name"/></div>
                                         <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
                                     </div>
-                                    <div class="o_kanban_manage_button_section">
+                                    <div class="o_kanban_manage_button_section" t-if="!selection_mode">
                                         <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content">
+                                <div class="container o_kanban_card_content" t-if="!selection_mode">
                                     <div class="row">
                                         <div class="col-6 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>

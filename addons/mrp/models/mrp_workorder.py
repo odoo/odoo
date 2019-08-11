@@ -55,14 +55,14 @@ class MrpWorkorder(models.Model):
         'Scheduled Date Start',
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
-        search='_search_date_planned_start',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        store=True)
     date_planned_finished = fields.Datetime(
         'Scheduled Date Finished',
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
-        search='_search_date_planned_finished',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        store=True)
     date_start = fields.Datetime(
         'Effective Start Date',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
@@ -131,8 +131,7 @@ class MrpWorkorder(models.Model):
     # fields Changes. As the ORM doesn't batch the write on related fields and instead
     # makes multiple call, the constraint check_dates() is raised.
     # That's why the compute and set methods are needed. to ensure the dates are updated
-    # in the same time. The two next search method are needed as the field are non stored and
-    # not direct related fields.
+    # in the same time.
     @api.depends('leave_id')
     def _compute_dates_planned(self):
         for workorder in self:
@@ -146,12 +145,6 @@ class MrpWorkorder(models.Model):
             'date_from': date_from,
             'date_to': date_to,
         })
-
-    def _search_date_planned_start(self, operator, value):
-        return [('leave_id.date_from', operator, value)]
-
-    def _search_date_planned_finished(self, operator, value):
-        return [('leave_id.date_to', operator, value)]
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):

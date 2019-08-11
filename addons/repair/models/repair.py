@@ -75,7 +75,7 @@ class Repair(models.Model):
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id)]",
-        help="Products repaired are all belonging to this lot", oldname="prodlot_id")
+        help="Products repaired are all belonging to this lot")
     guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
     operations = fields.One2many(
         'repair.line', 'repair_id', 'Parts',

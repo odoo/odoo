@@ -1490,11 +1490,11 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(
                 recordPartner.getContext({ fieldName: "product_id" }),
                 { hello2: "world", test2: "gnap" },
-                "field context should have been overriden by xml attribute");
+                "field context should have been overridden by xml attribute");
             assert.deepEqual(
                 recordPartner.getDomain({ fieldName: "product_id" }),
                 [["hello2", "like", "world"], ["test2", "like", "gnap"]],
-                "field domain should have been overriden by xml attribute");
+                "field domain should have been overridden by xml attribute");
             model.destroy();
         });
 
@@ -1782,6 +1782,37 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.partner_ids.data[0].data, { id: 1, display_name: 'first partner' },
                 "many2many should contain the partner with id 1");
             assert.strictEqual(rpcCount, 0, "makeRecord should not have done any rpc");
+            model.destroy();
+        });
+
+        QUnit.test('call makeRecord with a selection field', async function (assert) {
+            assert.expect(4);
+            var rpcCount = 0;
+
+            var model = createModel({
+                Model: BasicModel,
+                data: this.data,
+                mockRPC: function (route, args) {
+                    rpcCount++;
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            var recordID = await model.makeRecord('partner', [{
+                name: 'status',
+                string: 'Status',
+                type: 'selection',
+                selection: [['draft', 'Draft'], ['done', 'Done'], ['failed', 'Failed']],
+                value: 'done',
+            }]);
+            var record = model.get(recordID);
+            assert.deepEqual(record.fieldsInfo.default.status, {},
+                "makeRecord should have generated the fieldsInfo");
+            assert.strictEqual(record.data.status, 'done',
+                "should have a value 'done'");
+            assert.strictEqual(record.fields.status.selection.length, 3,
+                "should have 3 keys for selection");
+            assert.strictEqual(rpcCount, 0, "makeRecord should have done 0 rpc");
             model.destroy();
         });
 

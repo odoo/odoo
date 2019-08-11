@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_session_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='config_id']" position="after">
-                <field name="crm_team_id"/>
+                <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
             </xpath>
         </field>
     </record>
@@ -25,7 +25,7 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_config_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="crm_team_id"/>
+                <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
             </xpath>
         </field>
     </record>

@@ -80,7 +80,7 @@ class ImageProcess():
 
         :param quality: quality setting to apply. Default to 0.
             - for JPEG: 1 is worse, 95 is best. Values above 95 should be
-                avoided. Fasly values will fallback to 95, but only if the image
+                avoided. Falsy values will fallback to 95, but only if the image
                 was changed, otherwise the original image is returned.
             - for PNG: set falsy to prevent conversion to a WEB palette.
             - for other formats: no effect.
@@ -245,7 +245,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0
     """Process the `base64_source` image by executing the given operations and
     return the result as a base64 encoded image.
     """
-    if (not base64_source or not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format:
+    if not base64_source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
         # for performance: don't do anything if the image is falsy or if
         # no operations have been requested
         return base64_source

@@ -39,7 +39,7 @@ Warning = UserError
 
 class RedirectWarning(Exception):
     """ Warning with a possibility to redirect the user instead of simply
-    diplaying the warning message.
+    displaying the warning message.
 
     Should receive as parameters:
       :param int action_id: id of the action where to perform the redirection

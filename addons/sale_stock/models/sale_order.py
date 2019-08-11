@@ -276,7 +276,7 @@ class SaleOrderLine(models.Model):
         return self._check_availability(self.product_id)
 
     def _check_availability(self, product_id):
-        """ The purpose of this method is only to be overriden if
+        """ The purpose of this method is only to be overridden if
         'product_id' is a kit
         """
         product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)

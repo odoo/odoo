@@ -127,10 +127,11 @@
             <field name="model">stock.picking</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="scheduled_date" color="partner_id">
+                <calendar string="Calendar View" date_start="scheduled_date" color="partner_id" event_limit="5">
+                    <field name="partner_id"/>
                     <field name="origin"/>
                     <field name="picking_type_id"/>
-                    <field name="partner_id"/>
+                    <field name="state"/>
                 </calendar>
             </field>
         </record>
@@ -161,6 +162,7 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <t t-esc="record.partner_id.value"/>
+                                        <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <t t-esc="record.date.value and record.date.value.split(' ')[0] or False"/>
@@ -192,6 +194,7 @@
                     <field name="priority" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -268,11 +271,8 @@
                             <field name="scheduled_date" attrs="{'readonly': ['|', ('id', '=', False), ('state', 'in', ('done', 'cancel'))], 'required': [('id', '!=', False)]}"/>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
-                            <field name="owner_id" groups="stock.group_tracking_owner"/>
-                            <div groups="stock.group_tracking_owner" colspan="2" col="2">
-                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('move_line_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
-                                    class="oe_link"/>
-                            </div>
+                            <field name="owner_id" groups="stock.group_tracking_owner"
+                                   attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -287,7 +287,7 @@
                                     <field name="package_id" groups="stock.group_tracking_lot" domain="[('location_id', '=', location_id)]"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot" domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]"/>
                                     <field name="lots_visible" invisible="1"/>
-                                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}"/>
                                     <field name="state" invisible="1"/>
                                     <field name="lot_id" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', True)], 'invisible': [('lots_visible', '=', False)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
                                     <field name="lot_name" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', False)], 'invisible': [('lots_visible', '=', False)]}" context="{'default_product_id': product_id}"/>
@@ -330,7 +330,8 @@
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list"
+                                            attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                     <button name="action_assign_serial" type="object"
                                             class="btn-sm btn-primary fa fa-plus-square-o"
                                             style="line-height: 1;"
@@ -388,17 +389,16 @@
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
-                    <filter string="My Activities" name="activities_my"
-                        domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="product_id"/>
                     <field name="picking_type_id"/>
@@ -436,10 +436,7 @@ action = action_values
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{
-                    'contact_display': 'partner_address',
-            }
-            </field>
+            <field name="context">{'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -456,33 +453,7 @@ action = action_values
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-            }
-            </field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Define a new transfer
-              </p>
-            </field>
-        </record>
-
-        <record id="action_picking_tree_done" model="ir.actions.act_window">
-            <field name="name">Done Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-                    'search_default_done': 1,
-            }
-            </field>
+            <field name="context">{'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -497,13 +468,7 @@ action = action_values
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-                    'search_default_available': 1,
-            }
-            </field>
+            <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
              <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -512,41 +477,13 @@ action = action_values
             </field>
        </record>
 
-        <record id="action_picking_tree_done_grouped" model="ir.actions.act_window">
-            <field name="name">Done Transfers by Date</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-                    'search_default_done': 1,
-                    'group_by': ['date'],
-            }
-            </field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Define a new transfer
-              </p>
-            </field>
-        </record>
-
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
             <field name="name">Waiting Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-                    'search_default_waiting': 1,
-            }
-            </field>
+            <field name="context">{'contact_display': 'partner_address', 'search_default_waiting': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -561,13 +498,7 @@ action = action_values
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-                    'search_default_late': 1,
-            }
-            </field>
+            <field name="context">{'contact_display': 'partner_address', 'search_default_late': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -582,13 +513,7 @@ action = action_values
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-                    'search_default_backorder': 1,
-            }
-            </field>
+            <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -596,31 +521,6 @@ action = action_values
               </p>
             </field>
         </record>
-
-        <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{
-                    'search_default_picking_type_id': [active_id],
-                    'default_picking_type_id': active_id,
-                    'contact_display': 'partner_address',
-            }
-            </field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new stock operation
-              </p><p>
-                Most operations are prepared automatically by Odoo according
-                to your preconfigured logistics rules, but you can also record
-                manual stock movements.
-              </p>
-            </field>
-        </record>
-
 
         <record id="action_picking_form" model="ir.actions.act_window">
             <field name="name">New Transfer</field>
@@ -662,22 +562,25 @@ action = action_values
                     <field name="count_picking_backorders"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{kanban_color(record.color.raw_value)}" name="stock_picking">
+                            <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
                                 <div>
                                     <div t-attf-class="o_kanban_card_header">
                                         <div class="o_kanban_card_header_title">
-                                            <div class="o_primary">
+                                            <div class="o_primary" t-if="!selection_mode">
                                                 <a type="object" name="get_stock_picking_action_picking_type">
                                                     <field name="name"/>
                                                 </a>
                                             </div>
+                                            <div class="o_primary" t-if="selection_mode">
+                                                <field name="name"/>
+                                            </div>
                                             <div class="o_secondary"><field class="o_secondary"  name="warehouse_id"/></div>
                                         </div>
-                                        <div class="o_kanban_manage_button_section">
+                                        <div class="o_kanban_manage_button_section" t-if="!selection_mode">
                                             <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                         </div>
                                     </div>
-                                    <div class="container o_kanban_card_content">
+                                    <div class="container o_kanban_card_content" t-if="!selection_mode">
                                         <div class="row">
                                             <div class="col-6 o_kanban_primary_left">
                                                 <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
@@ -734,7 +637,7 @@ action = action_values
                                                     <a name="get_stock_picking_action_picking_type" type="object">All</a>
                                                 </div>
                                                 <div role="menuitem">
-                                                    <a name="%(action_picking_tree_ready)d" type="action">Ready</a>
+                                                    <a name="get_action_picking_tree_ready" type="object">Ready</a>
                                                 </div>
                                                 <div role="menuitem">
                                                     <a name="get_action_picking_tree_waiting" type="object">Waiting</a>

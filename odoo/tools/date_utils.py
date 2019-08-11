@@ -214,7 +214,7 @@ def json_default(obj):
 def date_range(start, end, step=relativedelta(months=1)):
     """Date range generator with a step interval.
 
-    :param start datetime: begining date of the range.
+    :param start datetime: beginning date of the range.
     :param end datetime: ending date of the range.
     :param step relativedelta: interval of the range.
     :return: a range of datetime from start to end.

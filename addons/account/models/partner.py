@@ -391,29 +391,29 @@ class ResPartner(models.Model):
         string="Currency", help='Utility field to express amount currency')
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
-        string="Account Payable", oldname="property_account_payable",
+        string="Account Payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
-        string="Account Receivable", oldname="property_account_receivable",
+        string="Account Receivable",
         domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        help="The fiscal position determines the taxes/accounts used for this contact.", oldname="property_account_position")
+        help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
-        help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")
+        help="This payment term will be used instead of the default one for sales orders and customer invoices")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
-        help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
+        help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
-        string='Companies that refers to partner', oldname="ref_companies")
+        string='Companies that refers to partner')
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
         help="The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
+    last_time_entries_checked = fields.Datetime(
         string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
         help='Last time the invoices & payments matching was performed for this partner. '
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '

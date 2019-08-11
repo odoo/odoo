@@ -20,14 +20,16 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.partner = self.env.ref('base.res_partner_1')
         self.category = self.env.ref('product.product_category_1')
         self.category = self.category.copy({'name': 'New category','property_valuation': 'real_time'})
-        account_type_rcv = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'receivable'})
-        account_type_oth = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other'})
+        account_type_rcv = self.env.ref('account.data_account_type_receivable')
+        account_type_inc = self.env.ref('account.data_account_type_revenue')
+        account_type_exp = self.env.ref('account.data_account_type_expenses')
         self.account = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type_rcv.id, 'reconcile': True})
-        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type_oth.id, 'reconcile': True})
-        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type_oth.id, 'reconcile': True})
-        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'user_type_id': account_type_oth.id, 'reconcile': True})
+        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type_exp.id, 'reconcile': True})
+        account_income = self.env['account.account'].create({'name': 'Income', 'code': 'INC00' , 'user_type_id': account_type_inc.id, 'reconcile': True})
+        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type_exp.id, 'reconcile': True})
+        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'user_type_id': account_type_exp.id, 'reconcile': True})
         self.partner.property_account_receivable_id = self.account
-        self.category.property_account_income_categ_id = self.account
+        self.category.property_account_income_categ_id = account_income
         self.category.property_account_expense_categ_id = account_expense
         self.category.property_stock_account_input_categ_id = self.account
         self.category.property_stock_account_output_categ_id = account_output
@@ -39,12 +41,20 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.company.anglo_saxon_accounting = True
         self.product.categ_id = self.category
         self.product.property_account_expense_id = account_expense
-        self.product.property_account_income_id = self.account
+        self.product.property_account_income_id = account_income
         sale_journal = self.env['account.journal'].create({'name': 'POS journal', 'type': 'sale', 'code': 'POS00'})
         self.pos_config.journal_id = sale_journal
         self.cash_journal = self.env['account.journal'].create({'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
-        self.pos_config.invoice_journal_id = False
+        self.sale_journal = self.env['account.journal'].create({'name': 'SALE journal', 'type': 'sale', 'code': 'INV00'})
+        self.pos_config.invoice_journal_id = self.sale_journal
         self.pos_config.journal_ids = [self.cash_journal.id]
+        self.cash_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Cash Test',
+            'is_cash_count': True,
+            'cash_journal_id': self.cash_journal.id,
+            'receivable_account_id': self.account.id,
+        })
+        self.pos_config.write({'payment_method_ids': [(6, 0, self.cash_payment_method.ids)]})
 
 
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
@@ -53,17 +63,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold in a company using anglo-saxon
         self.pos_config.open_session_cb()
-        self.pos_config.current_session_id.write({'journal_ids': [(6, 0, [self.cash_journal.id])]})
+        current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
-        self.pos_statement = self.Statement.create({
-            'balance_start': 0.0,
-            'balance_end_real': 0.0,
-            'date': time.strftime('%Y-%m-%d'),
-            'journal_id': self.cash_journal.id,
-            'company_id': self.company.id,
-            'name': 'pos session test',
-        })
-        self.pos_config.current_session_id.write({'statement_ids': [(6, 0, [self.pos_statement.id])]})
 
         # I create a PoS order with 1 unit of New product at 450 EUR
         self.pos_order_pos0 = self.PosOrder.create({
@@ -90,7 +91,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
         self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
             'amount': 450.0,
-            'journal_id': self.cash_journal.id,
+            'payment_method_id': self.cash_payment_method.id,
         })
 
         # I click on the validate button to register the payment.
@@ -107,16 +108,23 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         current_session_id.action_pos_session_close()
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
+        # Check if there is account_move in the order.
+        # There shouldn't be because the order is not invoiced.
+        self.assertFalse(self.pos_order_pos0.account_move, 'There should be no invoice in the order.')
+
         # I test that the generated journal entries are correct.
         account_output = self.category.property_stock_account_output_categ_id
         expense_account = self.category.property_account_expense_categ_id
-        aml = self.pos_order_pos0.account_move.line_ids
+        aml = current_session.move_id.line_ids
         aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
         aml_expense = aml.filtered(lambda l: l.account_id.id == expense_account.id)
         self.assertEqual(aml_output.credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense.debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
 
-    def test_2041208(self):
+    def _prepare_pos_order(self):
+        """ Set the cost method of `self.product` as FIFO. Receive 5@5 and 5@1 and
+        create a `pos.order` record selling 7 units @ 450.
+        """
         # check fifo Costing Method of product.category
         self.product.categ_id.property_cost_method = 'fifo'
         self.product.standard_price = 5.0
@@ -134,10 +142,10 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(self.product.value_svl, 30, "Value should be (5*5 + 5*1) = 30")
         self.assertEqual(self.product.quantity_svl, 10)
 
-        self.pos_config.open_session_cb()
         self.pos_config.module_account = True
+        self.pos_config.open_session_cb()
 
-        self.pos_order_pos0 = self.PosOrder.create({
+        pos_order_values = {
             'company_id': self.company.id,
             'partner_id': self.partner.id,
             'pricelist_id': self.company.partner_id.property_product_pricelist.id,
@@ -155,19 +163,59 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'amount_tax': 0,
             'amount_paid': 0,
             'amount_return': 0,
-        })
+        }
 
-        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        return self.PosOrder.create(pos_order_values)
+
+    def test_fifo_valuation_no_invoice(self):
+        """Register a payment and validate a session after selling a fifo
+        product without making an invoice for the customer"""
+        pos_order_pos0 = self._prepare_pos_order()
+        context_make_payment = {"active_ids": [pos_order_pos0.id], "active_id": pos_order_pos0.id}
         self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
             'amount': 7 * 450.0,
-            'journal_id': self.cash_journal.id,
+            'payment_method_id': self.cash_payment_method.id,
         })
 
-        # I click on the validate button to register the payment.
-        context_payment = {'active_id': self.pos_order_pos0.id}
+        # register the payment
+        context_payment = {'active_id': pos_order_pos0.id}
         self.pos_make_payment_0.with_context(context_payment).check()
+
+        # validate the session
         current_session_id = self.pos_config.current_session_id
         current_session_id.action_pos_session_validate()
 
-        line = self.pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
+        # check the anglo saxon move lines
+        # with uninvoiced orders, the account_move field of pos.order is empty.
+        # the accounting lines are in move_id of pos.session.
+        session_move = pos_order_pos0.session_id.move_id
+        line = session_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
+        self.assertEqual(session_move.journal_id, self.pos_config.journal_id)
+        self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
+
+    def test_fifo_valuation_with_invoice(self):
+        """Register a payment and validate a session after selling a fifo
+        product and make an invoice for the customer"""
+        pos_order_pos0 = self._prepare_pos_order()
+        context_make_payment = {"active_ids": [pos_order_pos0.id], "active_id": pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 7 * 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+
+        # register the payment
+        context_payment = {'active_id': pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        # Create the customer invoice
+        pos_order_pos0.action_pos_order_invoice()
+        pos_order_pos0.account_move.post()
+
+        # validate the session
+        current_session_id = self.pos_config.current_session_id
+        current_session_id.action_pos_session_validate()
+
+        # check the anglo saxon move lines
+        line = pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
+        self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
