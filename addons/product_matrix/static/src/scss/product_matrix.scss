@@ -1,4 +1,4 @@
-.o_web_client .o_view_grid {
+.o_web_client .o_matrix_input_table {
     cursor: default;
 
     table {
@@ -13,7 +13,7 @@
         vertical-align: middle;
         width: 5em;
     }
-    .o_grid_title_header {
+    .o_matrix_title_header {
         width: 10em;
     }
     thead {
@@ -27,54 +27,22 @@
     tbody {
         background-color: $o-view-background-color;
         text-align: right;
-        th > div {
-            display: flex;
-            > div {
-                flex: 1 1 auto;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                &:before {
-                    content: "/\00a0";
-                    padding: 0 2px;
-                }
-                &:first-child:before {
-                    content: " ";
-                }
-                &:last-child {
-                    flex: 100 1 auto;
-                }
-            }
+        tr {
+            border-top: 1px solid $o-form-lightsecondary;
+            border-bottom: 1px solid $o-form-lightsecondary;
         }
-        tr:nth-of-type(odd) th > div:after {
-            background-color: $table-accent-bg;
-        }
-        .o_grid_cell_container {
-            display: flex;
-            align-items: center;
-
-            &:hover {
-                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 5px $o-brand-primary;
-
-            }
-        }
-        .o_grid_input {
-            cursor: text;
+        .o_matrix_input {
             text-align: right;
-            &:focus {
-                opacity: 1 !important;
-                background-color: $o-view-background-color;
-                outline: none;
-            }
+            border: none;
         }
     }
-    .o_grid_text_muted{
+    .o_matrix_text_muted{
         color: lighten($o-main-text-color, 15%);
         font-style: italic;
     }
 
     // ensure white background completely surrounds nocontent bubble
-    .o_grid_nocontent_container {
+    .o_matrix_nocontent_container {
         overflow: auto;
 
         .oe_view_nocontent_img_link {
@@ -83,7 +51,7 @@
     }
 }
 
-.o_product_variant_grid {
+.o_product_variant_matrix {
     .form-control {
         &:focus {
             box-shadow: none;
