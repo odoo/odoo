@@ -5,13 +5,13 @@ import werkzeug
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
 from odoo.addons.mail.controllers.main import MailController
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError
 
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
@@ -25,7 +25,7 @@ def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
         raise Forbidden()
 
 
-def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True, **kw):
+def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=False, nosubscribe=True, **kw):
     """ Generic chatter function, allowing to write on *any* object that inherits mail.thread. We
         distinguish 2 cases:
             1/ If a token is specified, all logged in users will be able to write a message regardless
@@ -55,9 +55,9 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
 
     # check if user can post with special token/signed token. The "else" will try to post message with the
     # current user access rights (_mail_post_access use case).
-    if token or (kw.get('hash') and kw.get('pid')):
-        pid = int(kw['pid']) if kw.get('pid') else False
-        if _check_special_access(res_model, res_id, token=token, _hash=kw.get('hash'), pid=pid):
+    if token or (_hash and pid):
+        pid = int(pid) if pid else False
+        if _check_special_access(res_model, res_id, token=token, _hash=_hash, pid=pid):
             record = record.sudo()
         else:
             raise Forbidden()
@@ -75,15 +75,9 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
             if not author_id:
                 raise NotFound()
     # Signed Token Case: author_id is forced
-    elif kw.get('hash') and kw.get('pid'):
-        author_id = int(kw.get('pid'))
+    elif _hash and pid:
+        author_id = pid
 
-    kw.pop('csrf_token', None)
-    kw.pop('redirect', None)
-    kw.pop('attachment_ids', None)
-    kw.pop('attachment_tokens', None)
-    kw.pop('hash', None)
-    kw.pop('pid', None)
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(
         body=message, message_type=kw.pop('message_type', "comment"),
         subtype=kw.pop('subtype', "mt_comment"), author_id=author_id, **kw)
@@ -91,45 +85,8 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
 
 class PortalChatter(http.Controller):
 
-    def _post_process_portal_attachments(self, message, res_model, res_id, attachment_ids, attachment_tokens):
-        """Associate "pending" attachments to a message and its main record.
-
-        The user must have the rights to all attachments or he must provide a
-        valid access_token for each of them. The attachments have to be on a
-        "pending" state as well: res_id=0 and res_model='mail.compose.message'.
-
-        :param message: the related message on which to link the attachments
-        :type message: recordset of one `mail.message`
-
-        :param res_model: the related model that will be saved on the attachment
-        :type res_model: string
-
-        :param res_id: the id of the record that will be saved on the attachment
-        :type res_id: int
-
-        :param attachment_ids: id of the attachments to associate
-        :type attachment_ids: iterable of int
-
-        :param attachment_tokens: access_token of the attachments to associate.
-            Must always be the same length as `attachment_ids`, but only has to
-            contain a valid access_token if the user does not have the rights to
-            access the attachment without token.
-        :type attachment_tokens: iterable of string
-        """
-        message.ensure_one()
-        attachments = request.env['ir.attachment'].sudo()
-        for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
-            try:
-                attachment = CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
-                if attachment.res_model == 'mail.compose.message' and attachment.res_id == 0:
-                    attachments += attachment
-            except (AccessError, MissingError):
-                pass
-        attachments.write({'res_model': res_model, 'res_id': res_id})
-        message.attachment_ids |= attachments
-
     @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
-    def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids=None, attachment_tokens=None, **kw):
+    def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids='', attachment_tokens='', **kw):
         """Create a new `mail.message` with the given `message` and/or
         `attachment_ids` and redirect the user to the newly created message.
 
@@ -138,18 +95,33 @@ class PortalChatter(http.Controller):
         must provide valid identifiers through `kw`. See `_message_post_helper`.
         """
         url = redirect or (request.httprequest.referrer and request.httprequest.referrer + "#discussion") or '/my'
-        if message or (attachment_ids and attachment_tokens):
-            res_id = int(res_id)
+
+        res_id = int(res_id)
+
+        attachment_ids = [int(res_id) for res_id in attachment_ids.split(',')]
+        attachment_tokens = attachment_tokens.split(',')
+        if len(attachment_tokens) != len(attachment_ids):
+            raise UserError(_("An access token must be provided for each attachment."))
+        for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
+            try:
+                CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
+            except (AccessError, MissingError):
+                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.") % attachment_id)
+
+        if message or attachment_ids:
             # message is received in plaintext and saved in html
             if message:
                 message = plaintext2html(message)
-            message = _message_post_helper(res_model=res_model, res_id=res_id, message=message, **kw)
-
-            if attachment_ids and attachment_tokens and message:
-                attachment_ids = [int(res_id) for res_id in attachment_ids.split(',')]
-                attachment_tokens = attachment_tokens.split(',')
-                self._post_process_portal_attachments(message=message, res_model=res_model, res_id=res_id,
-                    attachment_ids=attachment_ids, attachment_tokens=attachment_tokens)
+            message = _message_post_helper(
+                res_model=res_model,
+                res_id=res_id,
+                token=kw.get('token'),
+                _hash=kw.get('hash'),
+                pid=kw.get('pid'),
+                message=message,
+                send_after_commit=False,
+                attachment_ids=attachment_ids
+            )
 
         return request.redirect(url)
 
