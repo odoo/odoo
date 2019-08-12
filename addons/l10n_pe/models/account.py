@@ -55,19 +55,15 @@ class AccountAccount(models.Model):
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-
-    # todo: esplota si ya tiene cuenta.
-    # todo: pendiente
-    # def create(self, vals):
-    #     journal = super().create(vals)
-    #     if not journal.company_id.country_id == self.env.ref('base.pe')\
-    #             or not journal.default_debit_account_id:
-    #         return journal
-    #     """For Peru it will not make sense an auto created account without group then simply adding this helper for
-    #     more information we did it for the core but it was refused, if you decide make this in the core here is the PR
-    #     related for a quick reference and avoid empty debates. https://github.com/odoo/odoo/pull/33079 this would be
-    #     more elegant if we had a _prepare_account_vals method for this creation (I could not solve the liquidity
-    #     transfer account with this technique because it is auto install:  True and I can not inherit from here its
-    #     behavior without have a recursive problem)."""
-    #     journal.default_debit_account_id.onchange_code()
-    #     return journal
+    def create(self, vals):
+        journal = super().create(vals)
+        if not journal.company_id.country_id == self.env.ref('base.pe') or not journal.default_debit_account_id:
+            return journal
+        """For Peru it will not make sense an auto created account without group then simply adding this helper for
+        more information we did it for the core but it was refused, if you decide make this in the core here is the PR
+        related for a quick reference and avoid empty debates. https://github.com/odoo/odoo/pull/33079 this would be
+        more elegant if we had a _prepare_account_vals method for this creation (I could not solve the liquidity
+        transfer account with this technique because it is auto install:  True and I can not inherit from here its
+        behavior without have a recursive problem)."""
+        journal.default_debit_account_id.onchange_code()
+        return journal
