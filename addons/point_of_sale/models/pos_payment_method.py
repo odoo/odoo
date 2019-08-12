@@ -59,8 +59,11 @@ class PosPaymentMethod(models.Model):
         if not self.is_cash_count:
             self.cash_journal_id = False
 
+    def _is_write_forbidden(self, fields):
+        return bool(fields and self.open_session_ids)
+
     def write(self, vals):
-        if self.open_session_ids:
+        if self._is_write_forbidden(set(vals.keys())):
             raise UserError('Kindly close and validate the following open PoS Sessions before modifying this payment method.\n'
                             'Open sessions: %s' % (' '.join(self.open_session_ids.mapped('name')),))
         return super(PosPaymentMethod, self).write(vals)
