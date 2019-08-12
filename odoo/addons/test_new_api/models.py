@@ -612,3 +612,21 @@ class DecimalPrecisionTestModel(models.Model):
     float = fields.Float()
     float_2 = fields.Float(digits=(16, 2))
     float_4 = fields.Float(digits=(16, 4))
+
+
+class ModelA(models.Model):
+    _name = 'test_new_api.model_a'
+    _description = 'Model A'
+
+    name = fields.Char()
+    a_restricted_b_ids = fields.Many2many('test_new_api.model_b', relation='rel_model_a_model_b_1')
+    b_restricted_b_ids = fields.Many2many('test_new_api.model_b', relation='rel_model_a_model_b_2', ondelete='restrict')
+
+
+class ModelB(models.Model):
+    _name = 'test_new_api.model_b'
+    _description = 'Model B'
+
+    name = fields.Char()
+    a_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_1', ondelete='restrict')
+    b_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_2')
