@@ -112,13 +112,12 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
 
-    def action_done(self):
-        res = super(StockPicking, self).action_done()
+    def _send_confirmation_email(self):
         for pick in self:
             if pick.carrier_id:
                 if pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming':
                     pick.send_to_shipper()
-        return res
+        return super(StockPicking, self)._send_confirmation_email()
 
     def _pre_put_in_pack_hook(self, move_line_ids):
         res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
@@ -147,27 +146,6 @@ class StockPicking(models.Model):
                 current_package_carrier_type=self.carrier_id.delivery_type,
                 default_picking_id=self.id
             ),
-        }
-
-    def action_send_confirmation_email(self):
-        self.ensure_one()
-        delivery_template_id = self.env.ref('delivery.mail_template_data_delivery_confirmation').id
-        compose_form_id = self.env.ref('mail.email_compose_message_wizard_form').id
-        ctx = dict(
-            default_composition_mode='comment',
-            default_res_id=self.id,
-            default_model='stock.picking',
-            default_use_template=bool(delivery_template_id),
-            default_template_id=delivery_template_id,
-            custom_layout='mail.mail_notification_light'
-        )
-        return {
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'view_id': compose_form_id,
-            'target': 'new',
-            'context': ctx,
         }
 
     def send_to_shipper(self):
