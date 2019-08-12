@@ -26,19 +26,25 @@
 <template name="Join Channel: Product Button" id='course_sidebar' inherit_id="website_slides.course_sidebar">
     <!-- Channel main template: override button to join channel -->
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
-        <t t-if="not channel.is_member and channel.enroll == 'payment'">
+        <t t-if="(not channel.is_member or channel.can_publish) and channel.enroll == 'payment'">
             <t t-if="channel.product_id.website_published">
                 <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
-                    <!-- real price -->
-                    <div class="oe_price font-weight-bold text-nowrap h2 my-2"
-                        t-esc="product_info['price']"
-                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
-                    <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
-                    <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency_id'].name"/>
-                    <!-- original discounted price, if any -->
-                    <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
-                        t-esc="product_info['list_price']"
-                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                    <div class="css_editable_mode_hidden">
+                        <!-- real price -->
+                        <div class="oe_price font-weight-bold text-nowrap h2 my-2"
+                             t-esc="product_info['price']"
+                             t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                        <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
+                        <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency_id'].name"/>
+                        <!-- original discounted price, if any -->
+                        <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
+                             t-esc="product_info['list_price']"
+                             t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                    </div>
+                    <div class="css_non_editable_mode_hidden decimal_precision oe_price font-weight-bold text-nowrap h2 my-2"
+                         t-att-data-precision="str(product_info['currency_id'].decimal_places)">
+                        <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                    </div>
                 </div>
                 <div class="oe_website_sale">
                     <div class="add_to_cart_button">

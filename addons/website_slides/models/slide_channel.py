@@ -6,7 +6,7 @@ import uuid
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 
@@ -22,13 +22,16 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published')
+    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed',
+                 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published',
+                 'channel_id.slide_partner_ids.slide_id.active')
     def _compute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
              ('completed', '=', True),
-             ('slide_id.is_published', '=', True)],
+             ('slide_id.is_published', '=', True),
+             ('slide_id.active', '=', True)],
             ['channel_id', 'partner_id'],
             groupby=['channel_id', 'partner_id'], lazy=False)
         mapped_data = dict()
@@ -72,6 +75,23 @@ class ChannelUsersRelation(models.Model):
 
     def _post_completion_hook(self):
         pass
+
+    def unlink(self):
+        """
+        Override unlink method :
+        Remove attendee from a channel, then also remove slide.slide.partner related to.
+        """
+        removed_slide_partner_domain = []
+        for channel_partner in self:
+            # find all slide link to the channel and the partner
+            removed_slide_partner_domain = expression.OR([
+                removed_slide_partner_domain,
+                [('partner_id', '=', channel_partner.partner_id.id),
+                 ('slide_id', 'in', channel_partner.channel_id.slide_ids.ids)]
+            ])
+        if removed_slide_partner_domain:
+            self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
+        return super(ChannelUsersRelation, self).unlink()
 
 
 class Channel(models.Model):
@@ -214,11 +234,11 @@ class Channel(models.Model):
             channel.slide_content_ids = channel.slide_ids - channel.slide_category_ids
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
-                 'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category')
+                 'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
         result = dict((cid, dict(total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
-            [('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
+            [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_type'],
             lazy=False)
@@ -384,23 +404,13 @@ class Channel(models.Model):
     # ---------------------------------------------------------
 
     def action_redirect_to_members(self, state=None):
-        action = self.env.ref('website_slides.res_partner_action_slide_channel').read()[0]
-        action['context'] = {'active_test': False}
-        if state == 'running':
-            action['domain'] = [('id', 'in', self.env['slide.channel.partner'].sudo().search([
-                ('channel_id', 'in', self.ids),
-                ('completed', '=', False)
-            ]).mapped('partner_id').ids)]
-        elif state == 'completed':
-            action['domain'] = [('id', 'in', self.env['slide.channel.partner'].sudo().search([
-                ('channel_id', 'in', self.ids),
-                ('completed', '=', True)
-            ]).mapped('partner_id').ids)]
-        else:
-            action['domain'] = [('id', 'in', self.mapped('partner_ids').ids)]
+        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action['domain'] = [('channel_id', 'in', self.ids)]
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s') % self.name
             action['context'] = {'active_test': False, 'default_channel_id': self.id}
+        if state:
+            action['domain'] += [('completed', '=', state == 'completed')]
         return action
 
     def action_redirect_to_running_members(self):
@@ -479,27 +489,17 @@ class Channel(models.Model):
 
     def _remove_membership(self, partner_ids):
         """ Unlink (!!!) the relationships between the passed partner_ids
-        and the channels and their slides. """
+        and the channels and their slides (done in the unlink of slide.channel.partner model). """
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
 
-        removed_slide_partner_domain = []
         removed_channel_partner_domain = []
         for channel in self:
-            removed_slide_partner_domain = expression.OR([
-                removed_slide_partner_domain,
-                [('partner_id', 'in', partner_ids.ids),
-                 ('slide_id', 'in', channel.slide_ids.ids)]
-            ])
-
             removed_channel_partner_domain = expression.OR([
                 removed_channel_partner_domain,
                 [('partner_id', 'in', partner_ids.ids),
                  ('channel_id', '=', channel.id)]
             ])
-
-        if removed_slide_partner_domain:
-            self.env['slide.slide.partner'].sudo().search(removed_slide_partner_domain).unlink()
 
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()

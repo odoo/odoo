@@ -24,18 +24,34 @@
                 </a>
             </div>
         </div>
+        <t t-if="widget.modulesToInstall">
+            <t t-foreach="widget.modulesToInstall" t-as="module_info">
+                <a class="o_wslides_js_upload_install_button w-100 text-center mb-4 btn rounded border text-600 p-3"
+                    href="#" t-att-title="module_info['name']"
+                    t-att-data-module-id="module_info['id']">
+                    <i class="fa fa-trophy"></i> <t t-esc="module_info['motivational']"/>
+                </a>
+            </t>
+        </t>
     </t>
 
     <!--
         Uploading template
     -->
     <t t-name="website.slide.upload.modal.uploading">
-        <div class="oe_slides_upload_loading text-center" aria-hidden="true" role="status">
+        <div class="text-center" aria-hidden="true" role="status">
             <div class="fa-3x">
                 <i class="fas fa-spinner fa-pulse"></i>
             </div>
             <h4>Uploading document ...</h4>
         </div>
+    </t>
+
+    <!--
+        Import module template
+    -->
+    <t t-name="website.slide.upload.modal.import">
+        <p id="o_wslides_install_module_text"/>
     </t>
 
     <!--
@@ -61,9 +77,9 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="is_preview" class="col-form-label col-md-3">Always visible</label>
-            <div class="controls col-md-9 mt8">
-                <input id="is_preview" name="is_preview" type="checkbox"/>
+            <label for="duration" class="col-form-label col-md-3">Completion Time (minutes)</label>
+            <div class="col-md-9">
+                <input type="number" id="duration" name="duration" placeholder="Estimated slide completion time" class="form-control"/>
             </div>
         </div>
     </t>
@@ -89,7 +105,6 @@
                                     <label for="upload" class="col-form-label">PDF or Image File</label>
                                 </h5>
                                 <input id="upload" name="file" class="form-control" accept="image/*,application/pdf" type="file" required="required"/>
-                                <input id="index_content" name="index_content" type="hidden"/>
                             </li>
                         </ul>
                     </div>
@@ -173,7 +188,7 @@
                         <h3 class="modal-title">Upload Image</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                     </header>
-                    <div class="oe_slides_upload_loading text-center" style="display:none" aria-hidden="true" role="status">
+                    <div class="text-center" style="display:none" aria-hidden="true" role="status">
                         <h4><i class='fa fa-spinner fa-spin'></i> Uploading Image...  </h4>
                     </div>
                     <main class="modal-body">

@@ -6,6 +6,7 @@ import datetime
 import io
 import re
 import requests
+import PyPDF2
 
 from PIL import Image
 from werkzeug import urls
@@ -104,7 +105,7 @@ class Slide(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
-    completion_time = fields.Float('Duration', default=1, digits=(10, 2))
+    completion_time = fields.Float('Completion Time', digits=(10, 4), help="The estimated completion time for this slide")
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
     category_id = fields.Many2one('slide.slide', string="Category", compute="_compute_category_id", store=True)
@@ -133,7 +134,6 @@ class Slide(models.Model):
         string='Type', required=True,
         default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
-    index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
@@ -305,6 +305,15 @@ class Slide(models.Model):
             for key, value in values.items():
                 self[key] = value
 
+    @api.onchange('datas')
+    def _on_change_datas(self):
+        """ For PDFs, we assume that it takes 5 minutes to read a page. """
+        if self.datas:
+            data = base64.b64decode(self.datas)
+            if data.startswith(b'%PDF-'):
+                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
+                self.completion_time = (5 * len(pdf.pages)) / 60
+
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
         # TDE FIXME: clena this link.tracker strange stuff
@@ -343,8 +352,6 @@ class Slide(models.Model):
             # 'website_published' is handled by mixin
             values['date_published'] = False
 
-        if not values.get('index_content'):
-            values['index_content'] = values.get('description')
         if values.get('slide_type') == 'infographic' and not values.get('image_1920'):
             values['image_1920'] = values['datas']
         if values.get('is_category'):
@@ -655,8 +662,11 @@ class Slide(models.Model):
         return {'error': _('Unknown document')}
 
     def _parse_youtube_document(self, document_id, only_preview_fields):
+        """ If we receive a duration (YT video), we use it to determine the slide duration.
+        The received duration is under a special format (e.g: PT1M21S15, meaning 1h 21m 15s). """
+
         key = self.env['website'].get_current_website().website_slide_google_app_key
-        fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet', 'fields': 'items(id,snippet)'}, 'json')
+        fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
         if fetch_res.get('error'):
             return fetch_res
 
@@ -665,6 +675,14 @@ class Slide(models.Model):
         if not items:
             return {'error': _('Please enter valid Youtube or Google Doc URL')}
         youtube_values = items[0]
+
+        youtube_duration = youtube_values.get('contentDetails', {}).get('duration')
+        if youtube_duration:
+            parsed_duration = re.search(r'^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$', youtube_duration)
+            values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
+                                        (int(parsed_duration.group(2) or 0) / 60) + \
+                                        (int(parsed_duration.group(3) or 0) / 3600)
+
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
             if only_preview_fields:
@@ -673,7 +691,9 @@ class Slide(models.Model):
                     'title': snippet['title'],
                     'description': snippet['description']
                 })
+
                 return values
+
             values.update({
                 'name': snippet['title'],
                 'image_1920': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
@@ -733,11 +753,6 @@ class Slide(models.Model):
             values['slide_type'] = get_slide_type(values)
             if 'exportLinks' in google_values:
                 values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf')['values']
-                # Content indexing
-                if google_values['exportLinks'].get('text/plain'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/plain'], params)['values']
-                elif google_values['exportLinks'].get('text/csv'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/csv'], params)['values']
         elif google_values['mimeType'] == 'application/pdf':
             # TODO: Google Drive PDF document doesn't provide plain text transcript
             values['datas'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']

@@ -359,7 +359,6 @@ class WebsiteSlides(WebsiteProfile):
                 '|', '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
-                ('index_content', 'ilike', search),
                 ('html_content', 'ilike', search)]
             pager_args['search'] = search
         else:
@@ -419,6 +418,8 @@ class WebsiteSlides(WebsiteProfile):
             'user': request.env.user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
+            # display upload modal
+            'enable_slide_upload': 'enable_slide_upload' in kw,
         }
         if not request.env.user._is_public():
             last_message_values = request.env['mail.message'].search([
@@ -451,6 +452,17 @@ class WebsiteSlides(WebsiteProfile):
             limit=False if channel.channel_type != 'documentation' else self._slides_per_page if category else self._slides_per_category,
             offset=pager['offset'])
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
+
+        # for sys admins: prepare data to install directly modules from eLearning when
+        # uploading slides. Currently supporting only survey, because why not.
+        if request.env.user.has_group('base.group_system'):
+            module = request.env.ref('base.module_survey')
+            if module.state != 'installed':
+                values['modules_to_install'] = [{
+                    'id': module.id,
+                    'name': module.shortdesc,
+                    'motivational': _('Evaluate and certificate your students.'),
+                }]
 
         values = self._prepare_additional_channel_values(values, **kw)
         return request.render('website_slides.course_main', values)
@@ -795,6 +807,10 @@ class WebsiteSlides(WebsiteProfile):
             if not can_upload:
                 return {'error': _('You cannot upload on this channel.')}
 
+        if post.get('duration'):
+            # minutes to hours conversion
+            values['completion_time'] = int(post['duration']) / 60
+
         # handle creation of new categories on the fly
         if post.get('category_id'):
             if post['category_id'][0] == 0:
@@ -838,7 +854,7 @@ class WebsiteSlides(WebsiteProfile):
 
     def _get_valid_slide_post_values(self):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-                'mime_type', 'datas', 'description', 'image_1920', 'index_content', 'is_published']
+                'mime_type', 'datas', 'description', 'image_1920', 'is_published']
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):

@@ -278,6 +278,10 @@
                     <th class="border-top-0">Last Update</th>
                     <td class="border-top-0"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
                 </tr>
+                <tr t-if="channel.total_time">
+                    <th class="border-top-0">Completion Time</th>
+                    <td class="border-top-0"><t class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/></td>
+                </tr>
                 <tr>
                     <th>Members</th>
                     <td><t t-esc="channel.members_count"/></td>
@@ -325,6 +329,7 @@
             <div t-if="channel.can_upload" class="justify-content-center mt-1">
                 <a role="button" class="btn btn-link btn-block o_wslides_js_slide_upload" title="Upload Presentation"
                     aria-label="Upload Presentation" href="#"
+                    t-att-data-modules-to-install="modules_to_install"
                     t-att-data-channel-id="channel.id"
                     t-att-data-can-upload="channel.can_upload"
                     t-att-data-can-publish="channel.can_publish">
@@ -359,6 +364,7 @@
                                 role="button"
                                 aria-label="Upload Presentation"
                                 href="#"
+                                t-att-data-modules-to-install="modules_to_install"
                                 t-att-data-channel-id="channel.id"
                                 t-att-data-category-id="category_id"
                                 t-att-data-can-upload="channel.can_upload"
@@ -384,6 +390,8 @@
                 role="button"
                 aria-label="Upload Presentation"
                 href="#"
+                t-att-data-open-modal="enable_slide_upload"
+                t-att-data-modules-to-install="modules_to_install"
                 t-att-data-channel-id="channel.id"
                 t-att-data-can-upload="channel.can_upload"
                 t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus mr-1 align-middle"/><span>Add Content</span></a>
