@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail_template_no_more_credit_sms" model="mail.template">
+            <field name="name">IAP SMS Confirmation Notification</field>
+            <field name="email_from">iap@odoo.com</field>
+            <field name="subject">IAP SMS Confirmation Notification</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="html">
+                <p>Dear ${object.name},</p>
+                <br/>
+                <p>There are no more credits on your IAP SMS account.<br/>
+                You can charge your IAP SMS account from the Settings of the Inventory app or from the General Settings.<br/></p>
+                <br/>
+                <p>Best regards,</p>
+                <p>Odoo S.A.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
