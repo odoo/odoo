@@ -5,6 +5,7 @@
         <field name="model">account.account</field>
         <field name="inherit_id" ref="account.view_account_list"/>
         <field name="priority" eval="900"/>
+        <field name="groups_id" eval="[(4, ref('l10n_pe.l10n_pe_views_group'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='code']" position="attributes">
                 <attribute name="code">1</attribute>

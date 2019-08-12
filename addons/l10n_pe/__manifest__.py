@@ -14,6 +14,7 @@
         'l10n_latam_base',
     ],
     'data': [
+        'security/groups.xml',
         'security/ir.model.access.csv',
         'views/account_tax_view.xml',
         'views/account_view.xml',
