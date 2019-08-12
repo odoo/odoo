@@ -27,15 +27,16 @@ class AccountMove(models.Model):
         domain = super()._get_l10n_latam_documents_domain()
         if (self.journal_id.l10n_latam_use_documents and
                 self.journal_id.company_id.country_id == self.env.ref(
-                    'base.cl')
-        ):
-            domain += [('active', '=', True)]
-            sequences = self.env['ir.sequence'].search(
-                [('l10n_latam_journal_id', '=', self.journal_id.id)])
-            if sequences:
-                domain += [
-                    ('id', 'in', sequences.l10n_latam_document_type_id.ids)
-                ]
+                    'base.cl')):
+            sequences = self.env['ir.sequence'].search([
+                ('l10n_latam_journal_id', '=', self.journal_id.id)
+            ])
+            domain += [
+                ('active', '=', True),
+                ('id', 'in', sequences.l10n_latam_document_type_id.ids)
+            ]
+            if self.partner_id.l10n_cl_sii_taxpayer_type == '3':
+                domain += [('code', 'in', ['35', '38', '39', '41'])]
         return domain
 
     @api.constrains('type', 'l10n_latam_document_type_id')
