@@ -94,7 +94,7 @@ class Company(models.Model):
     base_onboarding_company_state = fields.Selection([
         ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
     favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
-    font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
+    font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()
     _sql_constraints = [
