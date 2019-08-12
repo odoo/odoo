@@ -4,26 +4,25 @@ from odoo import fields, models
 class AccountGroup(models.Model):
     _inherit = "account.group"
 
+    full_name_on_account = fields.Boolean(
+        help="If set the name on the account will be shown using the full path in the group.")
+
     def name_get(self):
-        if not self.env.company.country_id == self.env.ref('base.pe'):
+        if not self.full_name_on_account:
             return super().name_get()
-        """For Peru the tree view is important because the last name of the account is a construction of the tree on 
-        groups by law (using the groups as a reporter for the tree view only)."""
         result = []
         for group in self:
+            if not group.parent_id:
+                continue
             me = group
             name = group.name
             if group.code_prefix and not group.parent_id:
                 code = '[' + group.code_prefix + '] '
                 name = code + name
             result.append((group.id, name))
-            if not group.parent_id:
-                continue
             while group.parent_id:
                 group = group.parent_id
-                if not name:
-                    name = 'No Name'
-                name = group.name + "/ " + name
+                name = group.name + " / " + name
             result.append((me.id, "[%s] %s" % (me.code_prefix, name)))
         return result
 
@@ -42,7 +41,7 @@ class AccountAccount(models.Model):
             if not account.group_id:
                 name = '[' + account.code + '] ' + account.name
             if account.group_id.name == account.name:
-                name = account.group_id.display_name.replace(
+                name = account.group_id.display_name.replace(  # TODO:
                     account.group_id.code_prefix, account.code)
             if not name:
                 element = account.group_id.display_name.replace(
