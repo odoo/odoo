@@ -497,6 +497,11 @@ class Product(models.Model):
     def action_update_quantity_on_hand(self):
         return self.product_tmpl_id.with_context({'default_product_id': self.id}).action_update_quantity_on_hand()
 
+    def action_product_forecast_report(self):
+        action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
+        return action
+
     @api.model
     def get_theoretical_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, to_uom=None):
         product_id = self.env['product.product'].browse(product_id)
@@ -757,6 +762,11 @@ class ProductTemplate(models.Model):
                 'default_product_id': self.product_variant_id.id,
             }
 
+        return action
+
+    def action_product_tmpl_forecast_report(self):
+        action = self.env.ref('stock.report_stock_quantity_action').read()[0]
+        action['domain'] = [('product_id', 'in', self.product_variant_ids.ids)]
         return action
 
 class ProductCategory(models.Model):
