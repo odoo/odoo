@@ -318,7 +318,7 @@
         </div>
         <div class="card-footer bg-white text-600 px-3">
             <div class="d-flex justify-content-between align-items-center">
-                <small t-if="channel.total_time" class="font-weight-bold"><t t-esc="channel.total_time * 60" t-options="{&quot;widget&quot;: &quot;integer&quot;}"/> min</small>
+                <small t-if="channel.total_time" class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <t t-if="channel.is_member and channel.completed">
                         <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fa fa-check"/> Completed</span>

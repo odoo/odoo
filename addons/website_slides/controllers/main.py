@@ -795,6 +795,10 @@ class WebsiteSlides(WebsiteProfile):
             if not can_upload:
                 return {'error': _('You cannot upload on this channel.')}
 
+        if post.get('duration'):
+            # minutes to hours conversion
+            values['completion_time'] = int(post['duration']) / 60
+
         # handle creation of new categories on the fly
         if post.get('category_id'):
             if post['category_id'][0] == 0:
