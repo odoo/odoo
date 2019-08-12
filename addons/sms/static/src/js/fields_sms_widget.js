@@ -115,7 +115,7 @@ var SmsWidget = FieldText.extend({
      * @private
      */
     _renderSMSInfo: function () {
-        var string = _.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
+        var string = _.str.sprintf(_t('%s characters, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
         var $span = $('<span>', {
             'class': 'text-muted o_sms_count',
         });
@@ -129,7 +129,7 @@ var SmsWidget = FieldText.extend({
      */
     _updateSMSInfo: function ()  {
         this._compute();
-        var string = _.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
+        var string = _.str.sprintf(_t('%s characters, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
         this.$('.o_sms_count').text(string);
     },
 

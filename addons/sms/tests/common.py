@@ -74,7 +74,7 @@ class MockSMS(common.BaseCase):
         """ Check canceled SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
         if number is None and partner:
-            number = phone_validation.phone_get_sanitized_record_number(partner)
+            number = partner.phone_get_sanitized_number()
         sms = self.env['sms.sms'].sudo().search([
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'canceled')
@@ -88,7 +88,7 @@ class MockSMS(common.BaseCase):
         """ Check failed SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
         if number is None and partner:
-            number = phone_validation.phone_get_sanitized_record_number(partner)
+            number = partner.phone_get_sanitized_number()
         sms = self.env['sms.sms'].sudo().search([
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'error')
@@ -102,7 +102,7 @@ class MockSMS(common.BaseCase):
         """ Check outgoing SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
         if number is None and partner:
-            number = phone_validation.phone_get_sanitized_record_number(partner)
+            number = partner.phone_get_sanitized_number()
         sms = self.env['sms.sms'].sudo().search([
             ('partner_id', '=', partner.id), ('number', '=', number),
             ('state', '=', 'outgoing')
@@ -139,7 +139,7 @@ class MockSMS(common.BaseCase):
             number = recipient_info.get('number')
             state = recipient_info.get('state', 'sent')
             if number is None and partner:
-                number = phone_validation.phone_get_sanitized_record_number(partner)
+                number = partner.phone_get_sanitized_number()
 
             notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
             self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
@@ -161,3 +161,10 @@ class MockSMS(common.BaseCase):
         if messages is not None:
             for message in messages:
                 self.assertEqual(content, tools.html2plaintext(message.body).rstrip('\n'))
+
+    def assertSMSLogged(self, records, body):
+        for record in records:
+            message = record.message_ids[-1]
+            self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+            self.assertEqual(message.message_type, 'sms')
+            self.assertEqual(tools.html2plaintext(message.body).rstrip('\n'), body)

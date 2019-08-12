@@ -33,6 +33,7 @@ MASS_MAILING_BUSINESS_MODELS = [
 # Used to find inline images
 image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
+
 class MassMailing(models.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
     A mass mailing is an occurence of sending emails. """
@@ -85,6 +86,7 @@ class MassMailing(models.Model):
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     # mailing options
+    mailing_type = fields.Selection([('mail', 'Email')], string="Mailing Type", default="mail", required=True)
     reply_to_mode = fields.Selection(
         [('thread', 'Recipient Followers'), ('email', 'Specified Email Address')], string='Reply-To Mode', required=True)
     reply_to = fields.Char(string='Reply To', help='Preferred Reply-To Address',
@@ -155,10 +157,9 @@ class MassMailing(models.Model):
                 m.id as mailing_id,
                 COUNT(s.id) AS expected,
                 COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is null THEN 1 ELSE null END) AS scheduled,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is null AND s.bounced is null THEN 1 ELSE null END) AS scheduled,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
-                COUNT(CASE WHEN s.sent is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN s.sent is not null AND s.exception is null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
                 COUNT(CASE WHEN s.clicked is not null THEN 1 ELSE null END) AS clicked,
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
@@ -217,10 +218,20 @@ class MassMailing(models.Model):
             mailing_domain = [(0, '=', 1)]
         self.mailing_domain = repr(mailing_domain)
 
+    @api.onchange('mailing_type')
+    def _onchange_mailing_type(self):
+        if self.mailing_type == 'mail' and not self.medium_id:
+            self.medium_id = self.env.ref('utm.utm_medium_email').id
+
     @api.onchange('subject')
     def _onchange_subject(self):
         if self.subject and not self.name:
             self.name = self.subject
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        if self.name and not self.subject:
+            self.subject = self.name
 
     # ------------------------------------------------------
     # ORM
@@ -232,7 +243,7 @@ class MassMailing(models.Model):
             values['subject'] = values['name']
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        if 'medium_id' not in values:
+        if 'medium_id' not in values and values.get('mailing_type', 'mail') == 'mail':
             values['medium_id'] = self.env.ref('utm.utm_medium_email').id
         return super(MassMailing, self).create(values)
 
@@ -270,7 +281,7 @@ class MassMailing(models.Model):
             }
         return False
 
-    def action_test_mailing(self):
+    def action_test(self):
         self.ensure_one()
         ctx = dict(self.env.context, default_mass_mailing_id=self.id)
         return {
@@ -282,29 +293,43 @@ class MassMailing(models.Model):
             'context': ctx,
         }
 
-    def action_schedule_date(self):
+    def action_schedule(self):
         self.ensure_one()
         action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
         action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
         return action
 
-    def put_in_queue(self):
+    def action_put_in_queue(self):
         self.write({'state': 'in_queue'})
 
-    def cancel_mass_mailing(self):
+    def action_cancel(self):
         self.write({'state': 'draft', 'schedule_date': False})
 
-    def retry_failed_mail(self):
-        failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
+    def action_retry_failed(self):
+        failed_mails = self.env['mail.mail'].sudo().search([
+            ('mailing_id', 'in', self.ids),
+            ('state', '=', 'exception')
+        ])
         failed_mails.mapped('mailing_trace_ids').unlink()
-        failed_mails.sudo().unlink()
-        res_ids = self._get_recipients()
-        except_mailed = self.env['mailing.trace'].search([
-            ('model', '=', self.mailing_model_real),
-            ('res_id', 'in', res_ids),
-            ('exception', '!=', False),
-            ('mass_mailing_id', '=', self.id)]).unlink()
+        failed_mails.unlink()
         self.write({'state': 'in_queue'})
+
+    def action_view_traces_scheduled(self):
+        return self._action_view_traces_filtered('scheduled')
+
+    def action_view_traces_ignored(self):
+        return self._action_view_traces_filtered('ignored')
+
+    def action_view_traces_failed(self):
+        return self._action_view_traces_filtered('failed')
+
+    def _action_view_traces_filtered(self, view_filter):
+        action = self.env.ref('mass_mailing.mailing_trace_action').read()[0]
+        action['name'] = _('%s Traces') % (self.name)
+        action['context'] = {'search_default_mass_mailing_id': self.id,}
+        filter_key = 'search_default_filter_%s' % (view_filter)
+        action['context'][filter_key] = True
+        return action
 
     def action_view_sent(self):
         return self._action_view_documents_filtered('sent')
@@ -387,7 +412,7 @@ class MassMailing(models.Model):
             _logger.info("Mass-mailing %s targets %s, no opt out list available", self, target._name)
         return opt_out
 
-    def _get_convert_links(self):
+    def _get_link_tracker_values(self):
         self.ensure_one()
         vals = {'mass_mailing_id': self.id}
 
@@ -456,7 +481,7 @@ class MassMailing(models.Model):
         return {
             'mass_mailing_opt_out_list': self._get_opt_out_list(),
             'mass_mailing_seen_list': self._get_seen_list(),
-            'post_convert_links': self._get_convert_links(),
+            'post_convert_links': self._get_link_tracker_values(),
         }
 
     def _get_recipients(self):

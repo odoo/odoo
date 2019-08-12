@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'SMS gateway',
+    'version': '2.0',
     'category': 'Tools',
     'summary': 'SMS Text Messaging',
     'description': """
@@ -32,5 +33,5 @@ The service is provided by the In App Purchase Odoo platform.
         'static/src/xml/thread.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

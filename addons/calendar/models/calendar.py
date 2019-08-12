@@ -545,7 +545,7 @@ class Meeting(models.Model):
     """
 
     _name = 'calendar.event'
-    _description = "Event"
+    _description = "Calendar Event"
     _order = "id desc"
     _inherit = ["mail.thread"]
 

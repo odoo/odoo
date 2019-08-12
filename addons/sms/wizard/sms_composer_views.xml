@@ -18,51 +18,28 @@
                         <field name="numbers" invisible="1"/>
                         <field name="sanitized_numbers" invisible="1"/>
 
-                        <!-- Recipient warning -->
-                        <div colspan="2" class="alert alert-danger" role="alert"
-                            attrs="{'invisible': [('recipient_invalid', '=', False)]}">
-                            <strong>Some recipients are invalid</strong><br />
-                            <field name="recipient_invalid"/>
-                        </div>
                         <!-- Mass mode information (res_ids versus active domain) -->
-                        <div colspan="2" class="oe_form_box_info bg-info oe_text_center mb-3"
+                        <div colspan="2" class="alert alert-info text-center mb-3" role="alert"
                                 attrs="{'invisible': [('composition_mode', '=', 'comment')]}">
-                            <p attrs="{'invisible': [('use_active_domain', '=', False)]}">
-                                <strong>All records matching your current search filter will receive a SMS,
-                                not only the ids selected in the list view.</strong><br />
-                                The SMS will be sent for all the records selected in the list.<br />
-                                Confirming this wizard will probably take a few minutes blocking your browser.
-                            </p>
-                            <p attrs="{'invisible': [('use_active_domain', '=', True)]}">
-                                <strong>Only records checked in list view will be used.</strong><br />
-                                The SMS will be sent for all the records selected in the list.
-                            </p>
-                            <p class="mt8">
-                                <span attrs="{'invisible': [('use_active_domain', '=', True)]}">
-                                    If you want to send it for all the records matching your search criterion, check this box :
+                            <p>
+                                <span attrs="{'invisible': [('use_active_domain', '=', 'True')]}">
+                                    <field class="oe_inline font-weight-bold" name="res_ids_count"/> visible records selected.
                                 </span>
-                                <span attrs="{'invisible': [('use_active_domain', '=', False)]}">
-                                    If you want to use only selected records please uncheck this selection box :
-                                </span>
-                                <field class="oe_inline" name="use_active_domain"/>
+                                Check <field class="oe_inline ml-2" name="use_active_domain"/> to send to all
+                                <field class="oe_inline font-weight-bold ml-2" name="active_domain_count"/> records instead. <br/>
+                                <field class="oe_inline font-weight-bold" name="recipient_count"/> recipients are valid
+                                and <field class="oe_inline font-weight-bold" name="recipient_invalid_count"/> are invalid.
                             </p>
                         </div>
-
-                        <label for="partner_ids" string="Recipients"/>
-                        <div>
-                            <span attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass'), ('use_active_domain', '=', False)]}">
-                                <strong>Mass SMS</strong> on the current search filter
-                            </span>
-                            <field name="recipient_description" readonly="1" attrs="{
-                                'invisible': [('use_active_domain', '=', True)]}"
-                            />
-                        </div>
+                        <field name="template_id" options="{'no_create': True}" attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
+                        <field name="recipient_description" string="Recipients"
+                            readonly="1"
+                            attrs="{'invisible': [('composition_mode', '!=', 'comment')]}"/>
                         <field name="body" widget="sms_widget"/>
                     </group>
                     <group>
                         <group>
-                            <field name="template_id" options="{'no_create': True}" attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
-                            <field name="mass_keep_log" attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
+                            <field name="mass_keep_log" invisible="1"/>
                         </group>
                     </group>
                 </sheet>

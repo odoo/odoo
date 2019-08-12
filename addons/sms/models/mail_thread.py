@@ -35,15 +35,25 @@ class MailThread(models.AbstractModel):
     def _search_message_has_sms_error(self, operator, operand):
         return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
+    def _sms_get_partner_fields(self):
+        """ This method returns the fields to use to find the contact to link
+        whensending an SMS. Having partner is not necessary, having only phone
+        number fields is possible. However it gives more flexibility to
+        notifications management when having partners. """
+        fields = []
+        if hasattr(self, 'partner_id'):
+            fields.append('partner_id')
+        if hasattr(self, 'partner_ids'):
+            fields.append('partner_ids')
+        return fields
+
     def _sms_get_default_partners(self):
         """ This method will likely need to be overridden by inherited models.
                :returns partners: recordset of res.partner
         """
         partners = self.env['res.partner']
-        if hasattr(self, 'partner_id'):
-            partners |= self.mapped('partner_id')
-        if hasattr(self, 'partner_ids'):
-            partners |= self.mapped('partner_ids')
+        for fname in self._sms_get_partner_fields():
+            partners |= self.mapped(fname)
         return partners
 
     def _sms_get_number_fields(self):
@@ -78,7 +88,7 @@ class MailThread(models.AbstractModel):
 
             valid_number = False
             for fname in [f for f in tocheck_fields if f in record]:
-                valid_number = phone_validation.phone_get_sanitized_record_number(record, number_fname=fname)
+                valid_number = phone_validation.phone_sanitize_numbers_w_record([record[fname]], record)[record[fname]]['sanitized']
                 if valid_number:
                     break
 
@@ -92,7 +102,7 @@ class MailThread(models.AbstractModel):
                 for partner in all_partners:
                     partner_number = partner.mobile or partner.phone
                     if partner_number:
-                        partner_number = phone_validation.phone_sanitize_numbers_string_w_record(partner_number, record)[partner_number]['sanitized']
+                        partner_number = phone_validation.phone_sanitize_numbers_w_record([partner_number], record)[partner_number]['sanitized']
                     if partner_number:
                         break
 
@@ -127,7 +137,7 @@ class MailThread(models.AbstractModel):
 
         create_vals = {
             'mass_force_send': False,
-            'mass_keep_log': False,
+            'mass_keep_log': True,
         }
         if composer_values:
             create_vals.update(composer_values)
@@ -233,7 +243,7 @@ class MailThread(models.AbstractModel):
         if partner_ids:
             for partner in self.env['res.partner'].sudo().browse(partner_ids):
                 number = sms_pid_to_number.get(partner.id) or partner.mobile or partner.phone
-                sanitize_res = phone_validation.phone_sanitize_numbers_string_w_record(number, partner)[number]
+                sanitize_res = phone_validation.phone_sanitize_numbers_w_record([number], partner)[number]
                 number = sanitize_res['sanitized'] or number
                 sms_create_vals.append(dict(
                     sms_base_vals,

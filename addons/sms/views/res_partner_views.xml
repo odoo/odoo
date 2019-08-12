@@ -8,6 +8,9 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='mobile']" position="after">
+                <field name="phone_sanitized" groups="base.group_no_one"/>
+            </xpath>
             <xpath expr="//field[@name='phone']" position="replace">
                 <label for="phone"/>
                 <div class="o_row">
@@ -45,6 +48,7 @@
         target="new"
         context="{
             'default_composition_mode': 'comment',
+            'default_res_id': active_id,
         }"
     />
 

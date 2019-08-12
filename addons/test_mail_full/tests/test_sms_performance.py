@@ -113,7 +113,7 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
                 'name': 'Partner_%s' % (x),
                 'email': '_test_partner_%s@example.com' % (x),
                 'country_id': be_country_id,
-                'mobile': '047500%s%s99' % (x, x)
+                'mobile': '047500%02d%02d' % (x, x)
             })
             records += self.env['mail.test.sms'].with_context(**self._quick_create_ctx).create({
                 'name': 'Test_%s' % (x),
@@ -136,14 +136,28 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             default_composition_mode='mass',
             default_res_model='mail.test.sms',
             default_use_active_domain=True,
-            active_domain=repr([('id', 'in', self.records.ids)]),
+            active_domain=[('id', 'in', self.records.ids)],
         ).create({
             'body': self._test_body,
+            'mass_keep_log': False,
         })
 
         with self.mockSMSGateway(), self.assertQueryCount(employee=108):
                 composer.action_send_sms()
 
-        # TDE FIXME
-        # for record in self.records:
-        #     self.assertSMSOutgoing(record.customer_id, None, self._test_body)
+    @mute_logger('odoo.addons.sms.models.sms_sms')
+    @users('employee')
+    @warmup
+    def test_composer_mass_active_domain_w_log(self):
+        composer = self.env['sms.composer'].with_context(
+            default_composition_mode='mass',
+            default_res_model='mail.test.sms',
+            default_use_active_domain=True,
+            active_domain=[('id', 'in', self.records.ids)],
+        ).create({
+            'body': self._test_body,
+            'mass_keep_log': True,
+        })
+
+        with self.mockSMSGateway(), self.assertQueryCount(employee=159):
+            composer.action_send_sms()

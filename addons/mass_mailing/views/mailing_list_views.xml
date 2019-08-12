@@ -40,8 +40,8 @@
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
-                                type="action" icon="fa-user" class="oe_stat_button">
+                        <button name="action_view_contacts"
+                                type="object" icon="fa-user" class="oe_stat_button">
                             <field name="contact_nbr" string="Recipients" widget="statinfo"/>
                         </button>
                     </div>
@@ -131,7 +131,7 @@
                                 </div>
                             </div>
                             <div class="o_mailing_list_kanban_boxes">
-                                <a class="o_project_kanban_box" name="%(action_view_mass_mailing_contacts_from_list)d" type="action">
+                                <a name="action_view_contacts" type="object">
                                     <div>
                                         <span class="badge badge-pill">
                                             <i class="fa fa-user" role="img" aria-label="Contacts" title="Contacts"/>

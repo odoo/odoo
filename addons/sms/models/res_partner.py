@@ -5,7 +5,8 @@ from odoo import models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'mail.thread.phone']
 
     def _sms_get_default_partners(self):
         """ Override of mail.thread method.

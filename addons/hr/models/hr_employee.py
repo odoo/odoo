@@ -381,8 +381,8 @@ class HrEmployeePrivate(models.Model):
     def message_post(self, *args, **kwargs):
         return super(HrEmployeePrivate, self._post_author()).message_post(*args, **kwargs)
 
-    def _sms_get_default_partners(self):
-        return self.mapped('user_partner_id')
+    def _sms_get_partner_fields(self):
+        return ['user_partner_id']
 
     def _sms_get_number_fields(self):
         return ['mobile_phone']

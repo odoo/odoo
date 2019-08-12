@@ -59,7 +59,7 @@ class TestSMSSchedule(TestEventCommon, MockSMS):
         for registration in self.event_0.registration_ids:
             reg_sanitized_number = phone_validation.phone_format(registration.phone, 'BE', '32', force_format='E164')
             sanitized_numbers.append(reg_sanitized_number)
-            self.assertSMSNotification([{'number': reg_sanitized_number, 'state': 'ready'}], '%s registration confirmation.' % self.event_0.organizer_id.name)
+            self.assertSMSOutgoing(self.env['res.partner'], reg_sanitized_number, '%s registration confirmation.' % self.event_0.organizer_id.name)
 
         # clear notification queue to avoid conflicts when checking next notifications
         self.env['mail.notification'].search([('sms_number', 'in', sanitized_numbers)]).unlink()
@@ -76,4 +76,4 @@ class TestSMSSchedule(TestEventCommon, MockSMS):
         # verify that subscription scheduler was auto-executed after each registration
         for registration in self.event_0.registration_ids:
             reg_sanitized_number = phone_validation.phone_format(registration.phone, 'BE', '32', force_format='E164')
-            self.assertSMSNotification([{'number': reg_sanitized_number, 'state': 'ready'}], '%s reminder' % self.event_0.organizer_id.name)
+            self.assertSMSOutgoing(self.env['res.partner'], reg_sanitized_number, '%s reminder' % self.event_0.organizer_id.name)
