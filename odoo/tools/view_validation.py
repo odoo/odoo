@@ -183,7 +183,7 @@ def relaxng(view_type):
     return _relaxng_cache[view_type]
 
 
-@validate('calendar', 'diagram', 'gantt', 'graph', 'pivot', 'search', 'tree', 'activity')
+@validate('calendar', 'diagram', 'graph', 'pivot', 'search', 'tree', 'activity')
 def schema_valid(arch, **kwargs):
     """ Get RNG validator and validate RNG file."""
     validator = relaxng(arch.tag)

@@ -179,6 +179,7 @@ return Promise.all([
             createFile: testUtilsFile.createFile,
             dragoverFile: testUtilsFile.dragoverFile,
             dropFile: testUtilsFile.dropFile,
+            dropFiles: testUtilsFile.dropFiles,
         },
 
         createActionManager: testUtilsCreate.createActionManager,

@@ -1150,8 +1150,9 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, str) and not value:
         return ''
 
-    lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
-    lang_obj = env['res.lang']._lang_get(lang)
+    langs = [code for code, _ in env['res.lang'].get_installed()]
+    lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
+    lang_obj = env['res.lang']._lang_get(lang_code)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 

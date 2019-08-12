@@ -14,6 +14,7 @@
         'views/stock_warehouse_views.xml',
         'views/stock_picking_views.xml',
         'views/mrp_bom_views.xml',
+        'views/res_partner_views.xml',
     ],
     'post_init_hook': '_create_subcontracting_rules',
 }
