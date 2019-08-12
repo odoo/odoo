@@ -1,0 +1,287 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+  <record model="account.group" id="account_group_activo">
+    <field name="name">Activo</field>
+    <field name="code_prefix">1</field>
+  </record>
+  <record model="account.group" id="account_group_activo_corriente">
+    <field name="name">Activo Corriente</field>
+    <field name="parent_id" ref="account_group_activo"/>
+    <field name="code_prefix">1.1</field>
+  </record>
+  <record model="account.group" id="account_group_cajas_y_bancos">
+    <field name="name">Cajas y Bancos</field>
+    <field name="parent_id" ref="account_group_activo_corriente"/>
+    <field name="code_prefix">1.1.1</field>
+  </record>
+  <record model="account.group" id="account_group_caja">
+    <field name="name">Caja</field>
+    <field name="parent_id" ref="account_group_cajas_y_bancos"/>
+    <field name="code_prefix">1.1.1.01</field>
+  </record>
+  <record model="account.group" id="account_group_bancos">
+    <field name="name">Bancos</field>
+    <field name="parent_id" ref="account_group_cajas_y_bancos"/>
+    <field name="code_prefix">1.1.1.02</field>
+  </record>
+  <record model="account.group" id="account_group_inversiones">
+    <field name="name">Inversiones</field>
+    <field name="parent_id" ref="account_group_activo_corriente"/>
+    <field name="code_prefix">1.1.2</field>
+  </record>
+  <record model="account.group" id="account_group_creditos_por_ventas">
+    <field name="name">Créditos por ventas</field>
+    <field name="parent_id" ref="account_group_activo_corriente"/>
+    <field name="code_prefix">1.1.3</field>
+  </record>
+  <record model="account.group" id="account_group_creditos_fiscales">
+    <field name="name">Créditos fiscales</field>
+    <field name="parent_id" ref="account_group_activo_corriente"/>
+    <field name="code_prefix">1.1.4</field>
+  </record>
+  <record model="account.group" id="account_group_creditos_fiscales_municipales">
+    <field name="name">Créditos Fiscales Municipales</field>
+    <field name="parent_id" ref="account_group_creditos_fiscales"/>
+    <field name="code_prefix">1.1.4.01</field>
+  </record>
+  <record model="account.group" id="account_group_creditos_fiscales_iibb">
+    <field name="name">Créditos Fiscales IIBB</field>
+    <field name="parent_id" ref="account_group_creditos_fiscales"/>
+    <field name="code_prefix">1.1.4.02</field>
+  </record>
+  <record model="account.group" id="account_group_creditos_fiscales_suss">
+    <field name="name">Créditos Fiscales SUSS</field>
+    <field name="parent_id" ref="account_group_creditos_fiscales"/>
+    <field name="code_prefix">1.1.4.03</field>
+  </record>
+  <record model="account.group" id="account_group_creditos_fiscales_iva">
+    <field name="name">Créditos Fiscales IVA</field>
+    <field name="parent_id" ref="account_group_creditos_fiscales"/>
+    <field name="code_prefix">1.1.4.04</field>
+  </record>
+  <record model="account.group" id="account_group_creditos_fiscales_ganancias">
+    <field name="name">Créditos Fiscales Ganancias</field>
+    <field name="parent_id" ref="account_group_creditos_fiscales"/>
+    <field name="code_prefix">1.1.4.05</field>
+  </record>
+  <record model="account.group" id="account_group_otros_creditos">
+    <field name="name">Otros créditos</field>
+    <field name="parent_id" ref="account_group_activo_corriente"/>
+    <field name="code_prefix">1.1.5</field>
+  </record>
+  <record model="account.group" id="account_group_bienes_de_cambio">
+    <field name="name">Bienes de Cambio</field>
+    <field name="parent_id" ref="account_group_activo_corriente"/>
+    <field name="code_prefix">1.1.4</field>
+  </record>
+  <record model="account.group" id="account_group_activo_no_corriente">
+    <field name="name">Activo no corriente</field>
+    <field name="parent_id" ref="account_group_activo"/>
+    <field name="code_prefix">1.2</field>
+  </record>
+  <record model="account.group" id="account_group_activos_fijos">
+    <field name="name">Activos Fijos</field>
+    <field name="parent_id" ref="account_group_activo_no_corriente"/>
+    <field name="code_prefix">1.2.1</field>
+  </record>
+  <record model="account.group" id="account_group_instalaciones">
+    <field name="name">Instalaciones</field>
+    <field name="parent_id" ref="account_group_activos_fijos"/>
+    <field name="code_prefix">1.2.1.01</field>
+  </record>
+  <record model="account.group" id="account_group_maquinarias_y_equipos">
+    <field name="name">Maquinarias y Equipos</field>
+    <field name="parent_id" ref="account_group_activos_fijos"/>
+    <field name="code_prefix">1.2.1.02</field>
+  </record>
+  <record model="account.group" id="account_group_muebles_y_útiles">
+    <field name="name">Muebles y Útiles</field>
+    <field name="parent_id" ref="account_group_activos_fijos"/>
+    <field name="code_prefix">1.2.1.03</field>
+  </record>
+  <record model="account.group" id="account_group_rodados">
+    <field name="name">Rodados</field>
+    <field name="parent_id" ref="account_group_activos_fijos"/>
+    <field name="code_prefix">1.2.1.04</field>
+  </record>
+  <record model="account.group" id="account_group_activos_intangibles">
+    <field name="name">Activos Intangibles</field>
+    <field name="parent_id" ref="account_group_activo_no_corriente"/>
+    <field name="code_prefix">1.2.2</field>
+  </record>
+  <record model="account.group" id="account_group_derechos_de_marcas">
+    <field name="name">Derechos de Marcas</field>
+    <field name="parent_id" ref="account_group_activos_intangibles"/>
+    <field name="code_prefix">1.2.2.01</field>
+  </record>
+  <record model="account.group" id="account_group_pasivo">
+    <field name="name">Pasivo</field>
+    <field name="code_prefix">2</field>
+  </record>
+  <record model="account.group" id="account_group_pasivo_corriente">
+    <field name="name">Pasivo Corriente</field>
+    <field name="parent_id" ref="account_group_pasivo"/>
+    <field name="code_prefix">2.1</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_comerciales">
+    <field name="name">Deudas Comerciales</field>
+    <field name="parent_id" ref="account_group_pasivo_corriente"/>
+    <field name="code_prefix">2.1.1</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_financieras">
+    <field name="name">Deudas Financieras</field>
+    <field name="parent_id" ref="account_group_pasivo_corriente"/>
+    <field name="code_prefix">2.1.2</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_fiscales">
+    <field name="name">Deudas Fiscales</field>
+    <field name="parent_id" ref="account_group_pasivo_corriente"/>
+    <field name="code_prefix">2.1.3</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_tasas_municipales">
+    <field name="name">Deudas Tasas Municipales</field>
+    <field name="parent_id" ref="account_group_deudas_fiscales"/>
+    <field name="code_prefix">2.1.3.01</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_iibb">
+    <field name="name">Deudas IIBB</field>
+    <field name="parent_id" ref="account_group_deudas_fiscales"/>
+    <field name="code_prefix">2.1.3.02</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_iva">
+    <field name="name">Deudas IVA</field>
+    <field name="parent_id" ref="account_group_deudas_fiscales"/>
+    <field name="code_prefix">2.1.3.03</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_imp_ganancias">
+    <field name="name">Deudas Imp. Ganancias</field>
+    <field name="parent_id" ref="account_group_deudas_fiscales"/>
+    <field name="code_prefix">2.1.3.04</field>
+  </record>
+  <record model="account.group" id="account_group_remueraciones_y_cargas_sociales">
+    <field name="name">Remueraciones y Cargas Sociales</field>
+    <field name="parent_id" ref="account_group_pasivo_corriente"/>
+    <field name="code_prefix">2.1.4</field>
+  </record>
+  <record model="account.group" id="account_group_cuentas_particulares">
+    <field name="name">Cuentas Particulares</field>
+    <field name="parent_id" ref="account_group_pasivo_corriente"/>
+    <field name="code_prefix">2.1.5</field>
+  </record>
+  <record model="account.group" id="account_group_pasivo_no_corriente">
+    <field name="name">Pasivo no Corriente</field>
+    <field name="parent_id" ref="account_group_pasivo"/>
+    <field name="code_prefix">2.2</field>
+  </record>
+  <record model="account.group" id="account_group_deudas_comerciales_a_largo_plazo">
+    <field name="name">Deudas Comerciales a Largo Plazo</field>
+    <field name="parent_id" ref="account_group_pasivo_no_corriente"/>
+    <field name="code_prefix">2.2.1</field>
+  </record>
+  <record model="account.group" id="account_group_previsiones">
+    <field name="name">Previsiones</field>
+    <field name="parent_id" ref="account_group_pasivo_no_corriente"/>
+    <field name="code_prefix">2.2.2</field>
+  </record>
+  <record model="account.group" id="account_group_patrimonio_neto">
+    <field name="name">Patrimonio Neto</field>
+    <field name="code_prefix">3</field>
+  </record>
+  <record model="account.group" id="account_group_capital_social">
+    <field name="name">Capital Social</field>
+    <field name="parent_id" ref="account_group_patrimonio_neto"/>
+    <field name="code_prefix">3.1</field>
+  </record>
+  <record model="account.group" id="account_group_reservas">
+    <field name="name">Reservas</field>
+    <field name="parent_id" ref="account_group_patrimonio_neto"/>
+    <field name="code_prefix">3.2</field>
+  </record>
+  <record model="account.group" id="account_group_resultados">
+    <field name="name">Resultados</field>
+    <field name="parent_id" ref="account_group_patrimonio_neto"/>
+    <field name="code_prefix">3.3</field>
+  </record>
+  <record model="account.group" id="account_group_ingresos">
+    <field name="name">Ingresos</field>
+    <field name="code_prefix">4</field>
+  </record>
+  <record model="account.group" id="account_group_ingresos_por_ventas">
+    <field name="name">Ingresos por ventas</field>
+    <field name="parent_id" ref="account_group_ingresos"/>
+    <field name="code_prefix">4.1</field>
+  </record>
+  <record model="account.group" id="account_group_ingresos_por_resultados_financieros">
+    <field name="name">Ingresos por resultados financieros</field>
+    <field name="parent_id" ref="account_group_ingresos"/>
+    <field name="code_prefix">4.2</field>
+  </record>
+  <record model="account.group" id="account_group_ingresos_extraordinarios">
+    <field name="name">Ingresos Extraordinarios</field>
+    <field name="parent_id" ref="account_group_ingresos"/>
+    <field name="code_prefix">4.3</field>
+  </record>
+  <record model="account.group" id="account_group_egresos">
+    <field name="name">Egresos</field>
+    <field name="code_prefix">5</field>
+  </record>
+  <record model="account.group" id="account_group_gastos_operativos">
+    <field name="name">Gastos Operativos</field>
+    <field name="parent_id" ref="account_group_egresos"/>
+    <field name="code_prefix">5.1</field>
+  </record>
+  <record model="account.group" id="account_group_costo_de_mercadería_vendida">
+    <field name="name">Costo de Mercadería Vendida</field>
+    <field name="parent_id" ref="account_group_gastos_operativos"/>
+    <field name="code_prefix">5.1.1</field>
+  </record>
+  <record model="account.group" id="account_group_gastos_de_producción">
+    <field name="name">Gastos de Producción</field>
+    <field name="parent_id" ref="account_group_gastos_operativos"/>
+    <field name="code_prefix">5.1.2</field>
+  </record>
+  <record model="account.group" id="account_group_gastos_comerciales">
+    <field name="name">Gastos Comerciales</field>
+    <field name="parent_id" ref="account_group_egresos"/>
+    <field name="code_prefix">5.2</field>
+  </record>
+  <record model="account.group" id="account_group_gastos_administrativos">
+    <field name="name">Gastos Administrativos</field>
+    <field name="parent_id" ref="account_group_egresos"/>
+    <field name="code_prefix">5.3</field>
+  </record>
+  <record model="account.group" id="account_group_impuestos">
+    <field name="name">Impuestos</field>
+    <field name="parent_id" ref="account_group_egresos"/>
+    <field name="code_prefix">5.4</field>
+  </record>
+  <record model="account.group" id="account_group_tasas_municipales">
+    <field name="name">Tasas Municipales</field>
+    <field name="parent_id" ref="account_group_impuestos"/>
+    <field name="code_prefix">5.4.1</field>
+  </record>
+  <record model="account.group" id="account_group_iibb">
+    <field name="name">IIBB</field>
+    <field name="parent_id" ref="account_group_impuestos"/>
+    <field name="code_prefix">5.4.2</field>
+  </record>
+  <record model="account.group" id="account_group_otros_impuestos">
+    <field name="name">Otros Impuestos</field>
+    <field name="parent_id" ref="account_group_impuestos"/>
+    <field name="code_prefix">5.4.3</field>
+  </record>
+  <record model="account.group" id="account_group_imp_a_las_ganancias">
+    <field name="name">Imp a las Ganancias</field>
+    <field name="parent_id" ref="account_group_egresos"/>
+    <field name="code_prefix">5.5</field>
+  </record>
+  <record model="account.group" id="account_group_gastos_financieros">
+    <field name="name">Gastos Financieros</field>
+    <field name="parent_id" ref="account_group_egresos"/>
+    <field name="code_prefix">5.6</field>
+  </record>
+  <record model="account.group" id="account_group_cuentas_puentes">
+    <field name="name">CUENTAS PUENTES</field>
+    <field name="code_prefix">6</field>
+  </record>
+</odoo>
