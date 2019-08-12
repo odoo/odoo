@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* calendar
+# 	* calendar
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:51+0000\n"
-"PO-Revision-Date: 2019-03-20 13:51+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2019-08-12 11:33+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,33 +26,35 @@ msgid "${object.event_id.name}: Date updated"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:743
+#: code:addons/calendar/models/calendar.py:751
 #, python-format
-msgid "%s at %s To\n"
+msgid ""
+"%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:734
+#: code:addons/calendar/models/calendar.py:742
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:229
+#: code:addons/calendar/models/calendar.py:230
 #, python-format
 msgid "%s has accepted invitation"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:237
+#: code:addons/calendar/models/calendar.py:239
 #, python-format
 msgid "%s has declined invitation"
 msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
-msgid "<div>\n"
+msgid ""
+"<div>\n"
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
@@ -124,7 +126,8 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
-msgid "<div>\n"
+msgid ""
+"<div>\n"
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
@@ -196,7 +199,8 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
-msgid "<div>\n"
+msgid ""
+"<div>\n"
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
@@ -289,6 +293,18 @@ msgid "Action Needed"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
@@ -311,14 +327,14 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 #, python-format
 msgid "All Day"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:730
+#: code:addons/calendar/models/calendar.py:738
 #, python-format
 msgid "AllDay , %s"
 msgstr ""
@@ -362,7 +378,7 @@ msgid "Availability"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1696
+#: code:addons/calendar/models/calendar.py:1709
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -413,16 +429,6 @@ msgstr ""
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
-msgid "Category"
 msgstr ""
 
 #. module: calendar
@@ -487,8 +493,7 @@ msgid "Day of month"
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0
-#: selection:calendar.event,rrule_type:0
+#: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
 msgid "Day(s)"
 msgstr ""
 
@@ -510,7 +515,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:18
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:13
 #, python-format
 msgid "Details"
 msgstr ""
@@ -631,12 +636,6 @@ msgid "Event Time"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1238
-#, python-format
-msgid "Event recurrence interval cannot be negative."
-msgstr ""
-
-#. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr ""
@@ -658,7 +657,7 @@ msgid "First"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1000
+#: code:addons/calendar/models/calendar.py:1013
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -710,7 +709,7 @@ msgid "Group By"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1639
+#: code:addons/calendar/models/calendar.py:1652
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -752,7 +751,9 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
 msgstr ""
 
 #. module: calendar
@@ -877,8 +878,8 @@ msgid "Meeting"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:944
-#: code:addons/calendar/models/calendar.py:949
+#: code:addons/calendar/models/calendar.py:957
+#: code:addons/calendar/models/calendar.py:962
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
@@ -978,6 +979,11 @@ msgid "No I'm not going."
 msgstr ""
 
 #. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "None"
+msgstr ""
+
+#. module: calendar
 #: selection:calendar.alarm,alarm_type:0
 msgid "Notification"
 msgstr ""
@@ -1039,7 +1045,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:17
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:12
 #, python-format
 msgid "OK"
 msgstr ""
@@ -1086,7 +1092,7 @@ msgid "Partner-related data of the user"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1251
+#: code:addons/calendar/models/calendar.py:1264
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr ""
@@ -1225,14 +1231,9 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:19
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:14
 #, python-format
 msgid "Snooze"
-msgstr ""
-
-#. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Standard"
 msgstr ""
 
 #. module: calendar
@@ -1317,26 +1318,42 @@ msgstr ""
 #. openerp-web
 #: code:addons/calendar/static/src/js/mail_activity.js:42
 #, python-format
-msgid "The activity is linked to a meeting. Deleting it will remove the meeting as well. Do you want to proceed ?"
+msgid ""
+"The activity is linked to a meeting. Deleting it will remove the meeting as "
+"well. Do you want to proceed ?"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
-msgid "The calendar is shared between employees and fully integrated with\n"
+msgid ""
+"The calendar is shared between employees and fully integrated with\n"
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:943
+#: code:addons/calendar/models/calendar.py:956
 #, python-format
-msgid "The ending date and time cannot be earlier than the starting date and time."
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:948
+#: code:addons/calendar/models/calendar.py:961
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1249
+#, python-format
+msgid "The interval cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1251
+#, python-format
+msgid "The number of repetitions  cannot be negative."
 msgstr ""
 
 #. module: calendar
@@ -1357,6 +1374,11 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+msgid "Timezone"
 msgstr ""
 
 #. module: calendar
@@ -1458,7 +1480,7 @@ msgid "Yes I'm going."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:159
+#: code:addons/calendar/models/calendar.py:160
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
@@ -1467,10 +1489,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr ""
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1236
-#, python-format
-msgid "interval cannot be negative."
-msgstr ""
-

@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* hr_presence
+# 	* hr_presence
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
-"PO-Revision-Date: 2019-03-20 13:49+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,8 @@ msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
-msgid "<?xml version=\"1.0\"?>\n"
+msgid ""
+"<?xml version=\"1.0\"?>\n"
 "<div>\n"
 "                    Dear ${object.name},<br/><br/>\n"
 "                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.<br/>\n"
@@ -35,23 +36,30 @@ msgid "<?xml version=\"1.0\"?>\n"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\"/>"
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban_inherit
+msgid ""
+"<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" "
+"title=\"Absent\" name=\"presence_absent\"/>"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban_inherit
+msgid ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
+"label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\"/>"
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban_inherit
+msgid ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"To define\" name=\"presence_to_define\"/>"
 msgstr ""
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
-msgid "<span class=\"o_stat_text\">\n"
+msgid ""
+"<span class=\"o_stat_text\">\n"
 "                            Last Activity\n"
 "                        </span>"
 msgstr ""
@@ -107,7 +115,7 @@ msgid "Companies"
 msgstr ""
 
 #. module: hr_presence
-#: code:addons/hr_presence/models/hr_employee.py:167
+#: code:addons/hr_presence/models/hr_employee.py:165
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -143,14 +151,15 @@ msgid "Employee Presence"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban_inherit
 msgid "Employee's Name"
 msgstr ""
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:131
 #, python-format
-msgid "Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
+msgid ""
+"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
@@ -176,6 +185,11 @@ msgid "Last Activity"
 msgstr ""
 
 #. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Mail"
+msgstr ""
+
+#. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
 msgid "Not available"
 msgstr ""
@@ -191,8 +205,13 @@ msgid "Present"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_reports
-msgid "Reports"
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "SMS"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Set as present"
 msgstr ""
 
 #. module: hr_presence
@@ -205,6 +224,11 @@ msgstr ""
 #: code:addons/hr_presence/models/hr_employee.py:130
 #, python-format
 msgid "There is no professional phone for this employee."
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Time Off"
 msgstr ""
 
 #. module: hr_presence
@@ -235,4 +259,3 @@ msgstr ""
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
-
