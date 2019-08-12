@@ -380,9 +380,6 @@ class PosConfig(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('is_posbox') and values.get('iface_customer_facing_display'):
-            if values.get('customer_facing_display_html') and not values['customer_facing_display_html'].strip():
-                values['customer_facing_display_html'] = self._compute_default_customer_html()
         IrSequence = self.env['ir.sequence'].sudo()
         val = {
             'name': _('POS Order %s') % values['name'],
@@ -407,11 +404,6 @@ class PosConfig(models.Model):
         if opened_session:
             raise UserError(_('Unable to modify this PoS Configuration because there is an open PoS Session based on it.'))
         result = super(PosConfig, self).write(vals)
-
-        config_display = self.filtered(lambda c: c.is_posbox and c.iface_customer_facing_display and not (c.customer_facing_display_html or '').strip())
-        if config_display:
-            super(PosConfig, config_display).write({'customer_facing_display_html': self._compute_default_customer_html()})
-
 
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
