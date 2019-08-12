@@ -67,6 +67,7 @@
 
 <template id="assets_frontend" inherit_id="portal.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/libs/multirange/multirange-custom.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.ui.scss"/>
     </xpath>
@@ -76,6 +77,7 @@
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/set_view_track.js"/>
         <script type="text/javascript" src="/website/static/lib/jstz.min.js"/>
+        <script type="text/javascript" src="/website/static/src/libs/multirange/multirange-custom.js"/>
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
 
         <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
