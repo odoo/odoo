@@ -5,6 +5,7 @@ import base64
 from datetime import date, datetime, time
 import io
 from PIL import Image
+import psycopg2
 
 from odoo import fields
 from odoo.exceptions import AccessError, UserError
@@ -1495,6 +1496,34 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(field.relation, 'test_new_api_multi_line2_test_new_api_multi_tag_rel')
         self.assertEqual(field.column1, 'test_new_api_multi_line2_id')
         self.assertEqual(field.column2, 'test_new_api_multi_tag_id')
+
+    def test_10_ondelete_many2many(self):
+        """Test A can't be deleted when used on the relation."""
+        record_a = self.env['test_new_api.model_a'].create({'name': 'a'})
+        record_b = self.env['test_new_api.model_b'].create({'name': 'b'})
+        record_a.write({
+            'a_restricted_b_ids': [(6, 0, record_b.ids)],
+        })
+        with self.assertRaises(psycopg2.IntegrityError):
+            with mute_logger('odoo.sql_db'), self.cr.savepoint():
+                record_a.unlink()
+        # Test B is still cascade.
+        record_b.unlink()
+        self.assertFalse(record_b.exists())
+
+    def test_11_ondelete_many2many(self):
+        """Test B can't be deleted when used on the relation."""
+        record_a = self.env['test_new_api.model_a'].create({'name': 'a'})
+        record_b = self.env['test_new_api.model_b'].create({'name': 'b'})
+        record_a.write({
+            'b_restricted_b_ids': [(6, 0, record_b.ids)],
+        })
+        with self.assertRaises(psycopg2.IntegrityError):
+            with mute_logger('odoo.sql_db'), self.cr.savepoint():
+                record_b.unlink()
+        # Test A is still cascade.
+        record_a.unlink()
+        self.assertFalse(record_a.exists())
 
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
