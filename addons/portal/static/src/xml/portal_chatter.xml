@@ -4,7 +4,7 @@
         <t t-set="count" t-value="widget.get('message_count')"/>
         <div class="o_message_counter">
             <t t-if="count">
-                <span class="fa fa-comments" />
+                <span class="fas fa-comments" />
                 <span class="o_message_count"> <t t-esc="count"/></span>
                 <t t-if="count == 1">comment</t>
                 <t t-else="">comments</t>

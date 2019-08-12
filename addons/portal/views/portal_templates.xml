@@ -84,7 +84,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
+                                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fas fa-pencil-alt"/> Edit</a></h4>
                                     <hr class="mt-1 mb-0"/>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
@@ -287,7 +287,7 @@
             <hr class="mt-1 mb0"/>
             <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
             <div class="d-flex align-items-center mb-1">
-                <div class="fa fa-envelope fa-fw mr-1"></div>
+                <div class="far fa-envelope fa-fw mr-1"></div>
                 <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
             <div class="d-flex flex-nowrap align-items-center mb-1">
@@ -295,7 +295,7 @@
                 <span t-esc="sales_user.phone"/>
             </div>
             <div class="d-flex flex-nowrap align-items-center mb-1">
-                <div class="fa fa-map-marker fa-fw mr-1"></div>
+                <div class="fas fa-map-marker-alt fa-fw mr-1"></div>
                 <span t-esc="sales_user.city"/>
             </div>
         </div>
@@ -399,7 +399,7 @@
                         <div class="clearfix">
                             <button type="submit" class="btn btn-primary float-right mb32 ">
                                 Confirm
-                                <span class="fa fa-long-arrow-right" />
+                                <span class="fas fa-long-arrow-alt-right" />
                             </button>
                         </div>
                     </div>

@@ -27,7 +27,7 @@
                         <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_id'}"/>
                     </group>
                     <searchpanel>
-                        <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                        <field name="company_id" groups="base.group_multi_company" icon="far fa-building"/>
                         <field name="department_id" icon="fa-users"/>
                     </searchpanel>
                 </search>
@@ -53,9 +53,9 @@
                                 class="oe_stat_button"
                                 disabled="1"
                                 attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}">
-                                <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
-                                <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
-                                <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
+                                <div role="img" class="fas fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
+                                <div role="img" class="fas fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
+                                <div role="img" class="fas fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
 
                                 <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}">
                                     <span class="o_stat_text">
@@ -232,13 +232,13 @@
                                    <div class="o_kanban_record_headings">
                                        <strong class="o_kanban_record_title">
                                             <div class="float-right" t-if="record.hr_presence_state.raw_value == 'present'">
-                                                <span class="fa fa-circle text-success" role="img" aria-label="Present" title="Present" name="presence_present"></span>
+                                                <span class="fas fa-circle text-success" role="img" aria-label="Present" title="Present" name="presence_present"></span>
                                             </div>
                                             <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent'">
-                                                <span class="fa fa-circle text-danger" role="img" aria-label="Absent" title="Absent" name="presence_absent"></span>
+                                                <span class="fas fa-circle text-danger" role="img" aria-label="Absent" title="Absent" name="presence_absent"></span>
                                             </div>
                                             <div class="float-right" t-if="record.hr_presence_state.raw_value == 'to_define'">
-                                                <span class="fa fa-circle text-warning" role="img" aria-label="To define" title="To define" name="presence_to_define"></span>
+                                                <span class="fas fa-circle text-warning" role="img" aria-label="To define" title="To define" name="presence_to_define"></span>
                                             </div>
                                             <field name="name" placeholder="Employee's Name"/>
                                        </strong>

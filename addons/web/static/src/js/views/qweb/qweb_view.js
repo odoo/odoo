@@ -174,7 +174,7 @@ var Controller = AbstractController.extend({
  */
 var QWebView = AbstractView.extend({
     display_name: _lt('Freedom View'),
-    icon: 'fa-file-picture-o',
+    icon: 'fa-file-image',
     viewType: 'qweb',
     // groupable?
     enableTimeRangeMenu: true,

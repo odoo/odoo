@@ -11,7 +11,7 @@
         Variables description:
             - 'submit_txt' the text displayed inside the submit button
             - 'submit_class' the css classes to style the submit button
-            - 'icon_class' font awesome class (e.g. 'fa-trash', 'fa-lock')
+            - 'icon_class' font awesome class (e.g. 'fa-trash-alt', 'fa-lock')
             - 'form_action' the URI to the page that will handle the form values given for server2server
             - 'pms' the tokens
             - 'checked_pm_id' the payment token that should be checked (for radio buttons)
@@ -133,7 +133,7 @@
                                 </t>
                             </label>
                             <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
-                                <i class="fa fa-trash"></i> Delete
+                                <i class="far fa-trash-alt"></i> Delete
                             </button>
                         </div>
                     </t>

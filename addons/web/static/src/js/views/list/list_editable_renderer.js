@@ -1167,7 +1167,7 @@ ListRenderer.include({
         if (this.addTrashIcon) {
             var $icon = this.isMany2Many ?
                 $('<button>', {'class': 'fa fa-times', 'name': 'unlink', 'aria-label': _t('Unlink row ') + (index + 1)}) :
-                $('<button>', {'class': 'fa fa-trash-o', 'name': 'delete', 'aria-label': _t('Delete row ') + (index + 1)});
+                $('<button>', {'class': 'far fa-trash-alt', 'name': 'delete', 'aria-label': _t('Delete row ') + (index + 1)});
             var $td = $('<td>', {class: 'o_list_record_remove'}).append($icon);
             $row.append($td);
         }

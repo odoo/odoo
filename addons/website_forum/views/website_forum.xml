@@ -189,7 +189,7 @@
                 <t t-if="user.karma>=forum.karma_moderate">
                     <li t-if="forum.count_posts_waiting_validation" class="nav-item">
                         <a class="nav-link" t-attf-href="/forum/#{slug(forum)}/validation_queue">
-                            <i class="fa fa-check-square-o fa-fw text-warning"/>
+                            <i class="far fa-check-square fa-fw text-warning"/>
                             <b t-esc="forum.count_posts_waiting_validation" class="text-800"/>
                         </a>
                     </li>
@@ -229,7 +229,7 @@
                 title="Solved"
                 aria-label="Solved"
                 data-toggle="tooltip"
-                class="fa fa-check-circle text-success"/>
+                class="far fa-check-circle text-success"/>
             <span t-if="question.user_favourite and not (my == 'favourites' or hide_fav_icon)"
                 title="Your favourite"
                 aria-label="Your favourite"
@@ -503,11 +503,11 @@
 
         <!-- My Questions -->
         <span t-if="my == 'mine'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="far fa-question-circle fa-fw"/> My Questions
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query('search', 'filters', 'sorting')">&#215;</a>
         </span>
         <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="far fa-question-circle fa-fw"/> My Questions
         </a>
 
         <!-- My Favourites -->
@@ -544,11 +544,11 @@
             </span>
 
             <span t-if="queue_type == 'validation'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-                <i class="fa fa-check-square-o fa-fw"/> To Validate
+                <i class="far fa-check-square fa-fw"/> To Validate
                 <a class="text-reset pull-right no-decoration" t-attf-href="/forum/#{ slug(forum) }">&#215;</a>
             </span>
             <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/validation_queue">
-                <i class="fa fa-check-square-o fa-fw"/> To Validate
+                <i class="far fa-check-square fa-fw"/> To Validate
                 <span t-attf-class="badge pull-right #{forum.count_posts_waiting_validation > 0 and 'badge-warning' or 'badge-light'}" t-esc="forum.count_posts_waiting_validation"/>
             </a>
             <span t-if="queue_type == 'offensive' or queue_type == 'flagged'" class="nav-link rounded-pill mb-2 active font-weight-bold">
@@ -1007,7 +1007,7 @@
                         <i t-if="uid" aria-label="Toggle favorite status"
                             title="Toggle favorite status"
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
-                            t-attf-class="o_wforum_favourite_toggle no-decoration small mr-1 fa #{question.user_favourite and 'fa-star o_wforum_gold' or 'fa-star-o text-muted'}"/>
+                            t-attf-class="o_wforum_favourite_toggle no-decoration small mr-1 fa #{question.user_favourite and 'fas fa-star o_wforum_gold' or 'far fa-star text-muted'}"/>
 
                         <h1 class="d-inline mb-0 h2" t-esc="question.name"/>
 
@@ -1080,7 +1080,7 @@
                         <a t-attf-class="btn btn-primary #{not question.can_answer and 'karma_required text-muted'}"
                             t-att-data-karma="question.forum_id.karma_answer"
                             href="#post_reply">
-                            <i class="fa fa-reply mr-1"/>Answer
+                            <i class="fas fa-reply mr-1"/>Answer
                         </a>
                     </div>
                     <div class="btn-group btn-group-sm">
@@ -1090,7 +1090,7 @@
                         </a>
                         <a href="javascript:void(0)" class="oe_social_share btn px-2 border"
                             t-attf-data-hashtags="#question">
-                            <i class="fa fa-share-alt text-muted mr-1"/>Share
+                            <i class="fas fa-share-alt text-muted mr-1"/>Share
                         </a>
                     </div>
                 </div>
@@ -1165,7 +1165,7 @@
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
                 <t t-set="label">Delete</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-trash-o fa-fw'"/>
+                <t t-set="icon" t-value="'far fa-trash fa-fw'"/>
                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
             </t>
             <t t-if="not question.active and question.state != 'offensive'" t-call="website_forum.link_button">
@@ -1186,7 +1186,7 @@
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
                 <t t-set="label">Flag</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="not question.can_flag and 'fa-flag-o' or 'fa-flag'"/>
+                <t t-set="icon" t-value="not question.can_flag and 'far fa-flag' or 'fas fa-flag'"/>
                 <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
                 <t t-set="classes" t-value="'flag'"/>
             </t>
@@ -1206,7 +1206,7 @@
 
                         <t t-set="helper_accept">Mark as Best Answer</t>
                         <t t-set="helper_decline">Unmark as Best Answer</t>
-                        <a t-if="question.can_answer and question.forum_id.mode == 'questions'" t-attf-class="o_wforum_validate_toggler fa-stack mt-2 #{not answer.can_accept and 'karma_required'}"
+                        <a t-if="question.can_answer and question.forum_id.mode == 'questions'" t-attf-class="o_wforum_validate_toggler mt-2 #{not answer.can_accept and 'karma_required'}"
                            t-attf-data-karma="#{answer.karma_accept}"
                            t-att-data-helper-accept="helper_accept"
                            t-att-data-helper-decline="helper_decline"
@@ -1214,8 +1214,7 @@
                            data-toggle="tooltip"
                            t-attf-data-target="#answer_#{answer.id}"
                            t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct">
-                            <i class="fa fa-circle-o fa-stack-2x"/>
-                            <i class="fa fa-check fa-stack-1x"/>
+                            <i class="fas fa-check-circle"/>
                         </a>
                     </t>
                 </div>
@@ -1252,13 +1251,13 @@
                                 t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
                                 t-att-data-toggle="answer.can_comment and 'collapse' or None"
                                 t-attf-data-target="##{_answer_comment_collapse_uid}">
-                                <i t-attf-class="fa fa-comment text-muted #{not answer.can_comment and 'karma_required'}"/>
+                                <i t-attf-class="fas fa-comment text-muted #{not answer.can_comment and 'karma_required'}"/>
                                 Comment
                             </a>
                             <a href="javascript:void(0)" class="oe_social_share btn border px-2"
                                 t-attf-data-urlshare="#{request.httprequest.url}##{_answer_comment_collapse_uid}"
                                 t-attf-data-hashtags="question">
-                                <i class="fa fa-share-alt text-muted"/>
+                                <i class="fas fa-share-alt text-muted"/>
                                 Share
                             </a>
                         </div>
@@ -1271,14 +1270,14 @@
                                     <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
                                     <t t-set="label">Edit</t>
                                     <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-pencil-square-o text-muted mr-2'"/>
+                                    <t t-set="icon" t-value="'far fa-edit text-muted mr-2'"/>
                                     <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
                                 </t>
                                 <t t-call="website_forum.link_button">
                                     <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
                                     <t t-set="label">Delete</t>
                                     <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-trash-o text-muted mr-2'"/>
+                                    <t t-set="icon" t-value="'far fa-trash-alt text-muted mr-2'"/>
                                     <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
                                 </t>
                                 <t t-if="answer.can_flag" t-call="website_forum.link_button">
@@ -1287,7 +1286,7 @@
                                     <t t-set="form_method" t-value="'GET'"/>
                                     <t t-set="inDropdown" t-value="True"/>
                                     <t t-set="karma" t-value="not answer.can_flag and answer.forum_id.karma_flag or 0"/>
-                                    <t t-set="icon" t-value="'fa-flag-o text-muted mr-2'"/>
+                                    <t t-set="icon" t-value="'far fa-flag text-muted mr-2'"/>
                                     <t t-set="form_classes" t-value="'flag'"/>
                                 </t>
                                 <t t-call="website_forum.link_button">
@@ -1404,7 +1403,7 @@
                             </div>
                             <div class="dropdown ml-2">
                                 <a class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"/>
+                                    <i class="fas fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu shadow">
                                     <t t-call="website_forum.link_button">
@@ -1412,7 +1411,7 @@
                                         <t t-set="label">Delete</t>
                                         <t t-set="title">Delete</t>
                                         <t t-set="inDropdown" t-value="True"/>
-                                        <t t-set="icon" t-value="'fa-trash-o text-muted'"/>
+                                        <t t-set="icon" t-value="'fa-trash-alt text-muted'"/>
                                         <t t-set="classes" t-value="'comment_delete'"/>
                                         <t t-set="karma" t-value="not object.can_unlink and object.karma_unlink or 0"/>
                                     </t>
@@ -1508,10 +1507,10 @@
                         <div class="text-muted mr-2">Filter by:</div>
                         <ul class="nav nav-tabs border-bottom-0" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active spam_menu" id="user-tab" data-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="fa fa-user"/> User</a>
+                                <a class="nav-link active spam_menu" id="user-tab" data-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="fas fa-user"/> User</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link spam_menu" id="country-tab" data-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="fa fa-flag"/> Country</a>
+                                <a class="nav-link spam_menu" id="country-tab" data-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="far fa-flag"/> Country</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link spam_menu" id="character-tab" data-toggle="tab" href="#spam_character" role="tab" aria-controls="spam_character" aria-selected="false">圾 Text</a>
@@ -1583,11 +1582,11 @@
                         <div t-foreach="question" t-as="answer" class="col-md-10 col-sm-8">
                             <t t-call="website_forum.moderation_display_post_answer"/>
                             <small class="text-muted">
-                                 <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
+                                 <i t-attf-class="fas fa-user" role="img" aria-label="Question" />
                                 <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-                                <i class="ml-4 mr4 fa fa-calendar"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                <i class="ml-4 mr4 far fa-calendar-alt"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                                 <span t-if="question.state == 'flagged'" class="text-black">
-                                    <i class="fa fa-flag ml-4 mr4"/>
+                                    <i class="far fa-flag ml-4 mr4"/>
                                     Flagged
                                 </span>
                             </small>

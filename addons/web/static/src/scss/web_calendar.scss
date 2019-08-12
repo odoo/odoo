@@ -421,12 +421,14 @@ $o-cw-filter-avatar-size: 20px;
                 color: transparent;
 
                 &:before {
-                    font: normal normal normal 13px/1 FontAwesome;
+                    font: normal normal normal 13px/1 'Font Awesome 5 Free';
                     content: "\f053";
                     color: gray('400');
+                    font-weight: 900;
                 }
                 &.ui-icon-circle-triangle-e:before {
-                    content: "\f054"
+                    content: "\f054";
+                    font-weight: 900;
                 }
             }
 
@@ -487,7 +489,7 @@ $o-cw-filter-avatar-size: 20px;
             input:not(:checked) + label .o_cw_filter_input_bg {
                 background: transparent!important;
 
-                i.fa {
+                i.fa, i.far, i.fas {
                     visibility: hidden;
                 }
             }
@@ -497,7 +499,7 @@ $o-cw-filter-avatar-size: 20px;
                 @include size($o-cw-filter-avatar-size);
                 border-radius: 2px;
 
-                &.fa {
+                &.fa, &.far, &.fas {
                     padding: 4px 3px;
                 }
             }
