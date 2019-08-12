@@ -278,6 +278,10 @@
                     <th class="border-top-0">Last Update</th>
                     <td class="border-top-0"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
                 </tr>
+                <tr t-if="channel.total_time">
+                    <th class="border-top-0">Completion Time</th>
+                    <td class="border-top-0"><t class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/></td>
+                </tr>
                 <tr>
                     <th>Members</th>
                     <td><t t-esc="channel.members_count"/></td>
