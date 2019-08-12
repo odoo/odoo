@@ -40,12 +40,14 @@ class AccountMove(models.Model):
 
     @api.constrains('type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
+        super()._check_invoice_type_document_type()
         for rec in self.filtered('l10n_latam_document_type_id'):
             tax_payer_type = rec.partner_id.l10n_cl_sii_taxpayer_type
             latam_document_type_code = rec.l10n_latam_document_type_id.code
-            invoice_type = rec.type
-            if (invoice_type == 'out_invoice' and tax_payer_type == '3' and
-                    latam_document_type_code not in {'35', '38', '39', '41'}):
+            if not tax_payer_type and latam_document_type_code not in {
+                '35', '38', '39', '41'
+            }:
                 raise ValidationError(
-                    _('You can not use %s with this tax payer type'
-                      ) % rec.l10n_latam_document_type_id.name)
+                    _('Tax payer type is mandatory for this type of document. '
+                      'Please set the current tax payer type of this client')
+                )
