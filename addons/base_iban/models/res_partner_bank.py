@@ -163,6 +163,7 @@ _map_iban_template = {
     'sm': 'SMkk KBBB BBSS SSSC CCCC CCCC CCC',  # San Marino
     'tn': 'TNkk BBSS SCCC CCCC CCCC CCCC',  # Tunisia
     'tr': 'TRkk BBBB BRCC CCCC CCCC CCCC CC',  # Turkey
+    'ua': 'UAkk BBBB BBCC CCCC CCCC CCCC CCCC C',  # Ukraine
     'vg': 'VGkk BBBB CCCC CCCC CCCC CCCC',  # Virgin Islands
     'xk': 'XKkk BBBB CCCC CCCC CCCC',  # Kosovo
 }
