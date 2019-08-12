@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* sales_team
+# 	* sales_team
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 07:59+0000\n"
-"PO-Revision-Date: 2019-01-16 07:59+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"PO-Revision-Date: 2019-08-12 12:27+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,12 +52,14 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
-msgid "Add members to automatically assign their documents to this sales team. You can only be member of one team."
+msgid ""
+"Add members to automatically assign their documents to this sales team. You "
+"can only be member of one team."
 msgstr ""
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.crm_team_1
-msgid "America"
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Administrator"
 msgstr ""
 
 #. module: sales_team
@@ -76,13 +78,13 @@ msgid "Avatar"
 msgstr ""
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:201
+#: code:addons/sales_team/models/crm_team.py:200
 #, python-format
 msgid "Big Pretty Button :)"
 msgstr ""
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:232
+#: code:addons/sales_team/models/crm_team.py:231
 #, python-format
 msgid "Cannot delete default team \"%s\""
 msgstr ""
@@ -141,17 +143,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Define a new Sales Team"
+msgid "Define a new sales team"
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Europe"
 msgstr ""
 
 #. module: sales_team
@@ -161,12 +158,15 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid "Favorite teams to display them in the dashboard and access them easily."
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Follow this salesteam to automatically track the events associated to users of this team."
+msgid ""
+"Follow this salesteam to automatically track the events associated to users "
+"of this team."
 msgstr ""
 
 #. module: sales_team
@@ -212,12 +212,16 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
-msgid "If set, this Sales Team will be used for sales and assignations related to this partner"
+msgid ""
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
-msgid "If the active field is set to false, it will allow you to hide the Sales Team without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
 
 #. module: sales_team
@@ -243,11 +247,6 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Manager"
 msgstr ""
 
 #. module: sales_team
@@ -296,11 +295,12 @@ msgid "Reply-To"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_crm_team
-msgid "Sales Channels"
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Sales"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
@@ -311,7 +311,9 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid "Sales Team the user is member of. Used to compute the members of a Sales Team through the inverse one2many"
+msgid ""
+"Sales Team the user is member of. Used to compute the members of a Sales "
+"Team through the inverse one2many"
 msgstr ""
 
 #. module: sales_team
@@ -363,12 +365,14 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
-msgid "The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this Sales Team"
+msgid ""
+"The email address put in the 'Reply-To' of all emails sent by Odoo about "
+"cases in this Sales Team"
 msgstr ""
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:90
-#: code:addons/sales_team/models/crm_team.py:109
+#: code:addons/sales_team/models/crm_team.py:89
+#: code:addons/sales_team/models/crm_team.py:108
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
 msgstr ""
@@ -387,8 +391,9 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Use Sales Teams to organize your sales departments.\n"
-"                    Each channel will work with a separate pipeline."
+msgid ""
+"Use Sales Teams to organize your sales departments.\n"
+"                    Each team will work with a separate pipeline."
 msgstr ""
 
 #. module: sales_team
@@ -433,7 +438,9 @@ msgstr ""
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid "the user will have access to all records of everyone in the sales application."
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
 msgstr ""
 
 #. module: sales_team
@@ -443,6 +450,7 @@ msgstr ""
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
-msgid "the user will have an access to the sales configuration as well as statistic reports."
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
 msgstr ""
-

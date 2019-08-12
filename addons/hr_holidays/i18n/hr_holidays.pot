@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* hr_holidays
+# 	* hr_holidays
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
-"PO-Revision-Date: 2019-03-20 13:49+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2019-08-12 12:26+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,7 +17,23 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_type
-msgid "	No Allocation Needed: no allocation by default, users can freely request time off;	Free Allocation Request: allocated by HR and users can request time off and allocations;	Allocated by HR only: allocated by HR and cannot be bypassed; users can request time off;"
+msgid ""
+"\tNo Allocation Needed: no allocation by default, users can freely request "
+"time off;\tFree Allocation Request: allocated by HR and users can request "
+"time off and allocations;\tAllocated by HR only: allocated by HR and cannot "
+"be bypassed; users can request time off;"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_type.py:286
+#, python-format
+msgid " days"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_type.py:286
+#, python-format
+msgid " hours"
 msgstr ""
 
 #. module: hr_holidays
@@ -46,21 +62,33 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_type.py:270
+#: code:addons/hr_holidays/models/hr_leave_type.py:283
 #, python-format
 msgid "%g remaining out of %g"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:457
+#: code:addons/hr_holidays/models/hr_leave.py:490
 #, python-format
 msgid "%s : %.2f day(s)"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:469
+#: code:addons/hr_holidays/models/hr_leave.py:488
 #, python-format
-msgid "%s on %s :%.2f day(s)"
+msgid "%s : %.2f hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:503
+#, python-format
+msgid "%s on %s : %.2f hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:509
+#, python-format
+msgid "%s on %s: %.2f day(s)"
 msgstr ""
 
 #. module: hr_holidays
@@ -75,7 +103,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
-msgid "&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
+msgid ""
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
+"color:"
 msgstr ""
 
 #. module: hr_holidays
@@ -89,290 +119,242 @@ msgid "&lt;th class=\"text-center\" colspan="
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "0:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "0:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "12:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "12:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:00 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:30 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,request_hour_from:0
-#: selection:hr.leave,request_hour_to:0
+#: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:30 PM"
 msgstr ""
 
@@ -388,7 +370,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
-msgid "<span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '=', 'hour')]}\">Days</span>\n"
+msgid ""
+"<span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '=', 'hour')]}\">Days</span>\n"
 "                                <span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '!=', 'hour')]}\">Hours</span>"
 msgstr ""
 
@@ -408,17 +391,29 @@ msgid "<span class=\"ml8\">of time off every</span>"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Time Off\n"
+"                                </span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
-msgid "<span class=\"o_stat_text\">\n"
+msgid ""
+"<span class=\"o_stat_text\">\n"
 "                            Absent Until\n"
 "                        </span>"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
-msgid "<span class=\"o_stat_text\">\n"
+msgid ""
+"<span class=\"o_stat_text\">\n"
 "                            Time Off\n"
 "                        </span>"
 msgstr ""
@@ -435,19 +430,20 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
-msgid "<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
+msgid ""
+"<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
 "                                    To\n"
 "                                </span>"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">from</span>"
+msgid "<span class=\"text-muted\">from </span>"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">to</span>"
+msgid "<span class=\"text-muted\">to </span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -461,19 +457,21 @@ msgid "<strong>Departments and Employees</strong>"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:564
+#: code:addons/hr_holidays/models/hr_leave.py:619
 #, python-format
 msgid "A leave cannot be duplicated."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:367
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:404
 #, python-format
 msgid "A time off cannot be duplicated."
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__show_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__show_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__show_leaves
 msgid "Able to see Remaining Time Off"
 msgstr ""
@@ -490,7 +488,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
-msgid "Absent Employee(s), Whose leaves request are either confirmed or validated on today"
+msgid ""
+"Absent Employee(s), Whose leaves request are either confirmed or validated "
+"on today"
 msgstr ""
 
 #. module: hr_holidays
@@ -500,12 +500,15 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__is_absent
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__is_absent
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "Absent Today"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Absent Until"
@@ -582,7 +585,14 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__validity_start
-msgid "Adding validity to types of time off so that it cannot be selected outside this time period"
+msgid ""
+"Adding validity to types of time off so that it cannot be selected outside "
+"this time period"
+msgstr ""
+
+#. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
+msgid "Administrator"
 msgstr ""
 
 #. module: hr_holidays
@@ -601,13 +611,18 @@ msgid "All Allocations"
 msgstr ""
 
 #. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_user
+msgid "All Approver"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
 msgid "All Time Off"
 msgstr ""
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-msgid "Allocated Days"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
+msgid "Allocated (Days/Hours)"
 msgstr ""
 
 #. module: hr_holidays
@@ -648,6 +663,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Allocation Requests"
 msgstr ""
@@ -658,7 +674,7 @@ msgid "Allocation Second Approve"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:304
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:340
 #, python-format
 msgid "Allocation of %s : %.2f %s to %s"
 msgstr ""
@@ -676,7 +692,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
-msgid "Allow to create requests in batchs:\n"
+msgid ""
+"Allow to create requests in batchs:\n"
 "- By Employee: for a specific employee\n"
 "- By Company: all employees of the specified company\n"
 "- By Department: all employees of the specified department\n"
@@ -694,8 +711,8 @@ msgid "Appraisal Analysis"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:858
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:581
+#: code:addons/hr_holidays/models/hr_leave.py:913
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:627
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -708,10 +725,11 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
-#: selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
 #: selection:hr.leave.report,state:0
 msgid "Approved"
 msgstr ""
@@ -745,6 +763,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual_limit
 msgid "Balance limit"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_employee_base
+msgid "Basic Employee"
 msgstr ""
 
 #. module: hr_holidays
@@ -796,7 +819,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
-msgid "By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category"
+msgid ""
+"By Employee: Allocation/Request for individual Employee, By Employee Tag: "
+"Allocation/Request for group of employees in category"
 msgstr ""
 
 #. module: hr_holidays
@@ -824,8 +849,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
 #: selection:hr.leave.report,state:0
 msgid "Cancelled"
 msgstr ""
@@ -859,6 +885,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
 msgid "Comment by Manager"
 msgstr ""
 
@@ -936,11 +963,15 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
 msgid "Current Time Off Status"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_id
 msgid "Current Time Off Type"
 msgstr ""
 
@@ -999,9 +1030,12 @@ msgid "Delete"
 msgstr ""
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:34
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__department_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__department_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__department_id
+#, python-format
 msgid "Department"
 msgstr ""
 
@@ -1032,7 +1066,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr ""
 
 #. module: hr_holidays
@@ -1044,6 +1078,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid "Display Time Off in Calendar"
 msgstr ""
 
 #. module: hr_holidays
@@ -1065,7 +1104,6 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days_display
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Duration (days)"
 msgstr ""
 
@@ -1100,7 +1138,6 @@ msgid "Edit Time Off"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__employee_id
@@ -1130,20 +1167,38 @@ msgid "End Date"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_type.py:100
+#: code:addons/hr_holidays/models/hr_leave_type.py:101
 #, python-format
 msgid "End of validity period should be greater than start of validity period"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
+msgid ""
+"Field allowing to see the allocation duration in days or hours depending on "
+"the type_request_unit"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
+msgid ""
+"Field allowing to see the leave request duration in days or hours depending "
+"on the leave_type_request_unit"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
-msgid "Filters only on allocations that belong to an time off type that is 'active' (active field is True)"
+msgid ""
+"Filters only on allocations that belong to an time off type that is 'active'"
+" (active field is True)"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
-msgid "Filters only on requests that belong to an time off type that is 'active' (active field is True)"
+msgid ""
+"Filters only on requests that belong to an time off type that is 'active' "
+"(active field is True)"
 msgstr ""
 
 #. module: hr_holidays
@@ -1191,7 +1246,14 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_from
 msgid "From Date"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "From:"
 msgstr ""
 
 #. module: hr_holidays
@@ -1202,7 +1264,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__payslip_status
-msgid "Green this button when the time off has been taken into account in the payslip."
+msgid ""
+"Green this button when the time off has been taken into account in the "
+"payslip."
 msgstr ""
 
 #. module: hr_holidays
@@ -1315,16 +1379,22 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__active
-msgid "If the active field is set to false, it will allow you to hide the time off type without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the time off "
+"type without removing it."
 msgstr ""
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave:0
-msgid "If you want to change the number of days you should use the 'period' mode"
+msgid ""
+"If you want to change the number of days you should use the 'period' mode"
 msgstr ""
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:34
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#, python-format
 msgid "In"
 msgstr ""
 
@@ -1400,6 +1470,16 @@ msgid "Leave Type"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
+msgid "Leaves Taken"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "Leaves Taken/Total Allocated"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
 msgid "Light Blue"
 msgstr ""
@@ -1455,13 +1535,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__manager_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
 msgid "Managers"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
+msgid "Max Leaves"
 msgstr ""
 
 #. module: hr_holidays
@@ -1481,7 +1565,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
-msgid "Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval"
+msgid ""
+"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
+"Approval"
 msgstr ""
 
 #. module: hr_holidays
@@ -1492,11 +1578,6 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
 msgid "Meeting"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__categ_id
-msgid "Meeting Type"
 msgstr ""
 
 #. module: hr_holidays
@@ -1577,7 +1658,15 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 msgid "New"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:869
+#, python-format
+msgid "New %s Request created by %s from %s to %s"
 msgstr ""
 
 #. module: hr_holidays
@@ -1585,6 +1674,12 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:59
 #, python-format
 msgid "New Allocation Request"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:583
+#, python-format
+msgid "New Allocation Request created by %s: %s Days of %s"
 msgstr ""
 
 #. module: hr_holidays
@@ -1623,6 +1718,14 @@ msgid "No Validation"
 msgstr ""
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:16
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:42
+#, python-format
+msgid "None"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Notification"
 msgstr ""
@@ -1637,23 +1740,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__number_of_days
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Number of Days"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leaves_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leaves_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leaves_count
 msgid "Number of Time Off"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days_display
-msgid "Number of days of the time off request according to your working schedule. Used for interface."
+msgid ""
+"Number of days of the time off request according to your working schedule. "
+"Used for interface."
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
-msgid "Number of days of the time off request. Used in the calculation. To manually correct the duration, use this field."
+msgid ""
+"Number of days of the time off request. Used in the calculation. To manually"
+" correct the duration, use this field."
 msgstr ""
 
 #. module: hr_holidays
@@ -1664,7 +1772,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours_display
-msgid "Number of hours of the time off request according to your working schedule. Used for interface."
+msgid ""
+"Number of hours of the time off request according to your working schedule. "
+"Used for interface."
 msgstr ""
 
 #. module: hr_holidays
@@ -1696,20 +1806,11 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: hr_holidays
-#: model:res.groups,name:hr_holidays.group_hr_holidays_user
-msgid "Officer"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__categ_id
-msgid "Once a time off is validated, Odoo will create a corresponding meeting of this type in the calendar."
-msgstr ""
-
-#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_payroll
-msgid "Once a time off request is posted, your manager is notified for validation."
+msgid ""
+"Once a time off request is posted, your manager is notified for validation."
 msgstr ""
 
 #. module: hr_holidays
@@ -1720,51 +1821,47 @@ msgid "Online"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:755
+#: code:addons/hr_holidays/models/hr_leave.py:827
 #, python-format
-msgid "Only a Team Leader, Time Off Officer or Manager can approve or refuse time off requests."
+msgid "Only a Leave Manager can approve its own requests."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:773
+#: code:addons/hr_holidays/models/hr_leave.py:818
 #, python-format
-msgid "Only a Time Off Manager can approve its own requests."
+msgid "Only a Leave Manager can reset other people leaves."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:765
-#, python-format
-msgid "Only a Time Off Manager can reset other people time off."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:509
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:551
 #, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:498
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:540
 #, python-format
 msgid "Only a time off Manager can reset other people time off."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:502
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:544
 #, python-format
-msgid "Only a time off Officer or Manager can approve or refuse time off requests."
+msgid ""
+"Only a time off Officer or Manager can approve or refuse time off requests."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:789
+#: code:addons/hr_holidays/models/hr_leave.py:843
 #, python-format
-msgid "Only an Time Off Manager can apply the second approval on time off requests."
+msgid "Only an Leave Manager can apply the second approval on leave requests."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:518
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:560
 #, python-format
-msgid "Only an time off Manager can apply the second approval on time off requests."
+msgid ""
+"Only an time off Manager can apply the second approval on time off requests."
 msgstr ""
 
 #. module: hr_holidays
@@ -1796,13 +1893,7 @@ msgid "Overdue"
 msgstr ""
 
 #. module: hr_holidays
-#: model:hr.leave.type,name:hr_holidays.hr_holiday_status_hl
-msgid "Overtime Compensation"
-msgstr ""
-
-#. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
-#: model:hr.leave.type,name:hr_holidays.holiday_status_cla
 msgid "Paid Time Off 2019"
 msgstr ""
 
@@ -1813,18 +1904,8 @@ msgid "Parent"
 msgstr ""
 
 #. module: hr_holidays
-#: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll
 msgid "Payroll"
-msgstr ""
-
-#. module: hr_holidays
-#: selection:hr.leave.type,validation_type:0
-msgid "Payroll Officer"
 msgstr ""
 
 #. module: hr_holidays
@@ -1856,8 +1937,8 @@ msgid "Red"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:861
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:584
+#: code:addons/hr_holidays/models/hr_leave.py:916
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:630
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -1870,8 +1951,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
 #: selection:hr.leave.report,state:0
 msgid "Refused"
 msgstr ""
@@ -1888,6 +1970,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__remaining_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid "Remaining Paid Time Off"
 msgstr ""
 
@@ -1897,6 +1981,7 @@ msgid "Remaining Time Off"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Remaining leaves"
@@ -1944,6 +2029,11 @@ msgid "Request Type"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
+msgid "Requested (Days/Hours)"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Reset to Draft"
@@ -1952,6 +2042,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
+msgid "Responsible"
 msgstr ""
 
 #. module: hr_holidays
@@ -1987,8 +2082,7 @@ msgid "Search allocations"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
 #: selection:hr.leave.report,state:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__second_approver_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -2037,7 +2131,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_state
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_state
-msgid "Status based on activities\n"
+msgid ""
+"Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
@@ -2056,20 +2151,25 @@ msgid "Take Time Off in"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave.type,validation_type:0
 #: model:res.groups,name:hr_holidays.group_hr_holidays_team_leader
+msgid "Team Approver"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.leave.type,validation_type:0
 msgid "Team Leader"
 msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.leave.type,validation_type:0
-msgid "Team Leader and Payroll Officer"
+msgid "Team Leader and Time Off Officer"
 msgstr ""
 
 #. module: hr_holidays
-#: sql_constraint:hr.leave:0
-#: sql_constraint:hr.leave.allocation:0
-msgid "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."
+#: sql_constraint:hr.leave:0 sql_constraint:hr.leave.allocation:0
+msgid ""
+"The employee, department, company or employee category of this request is "
+"missing. Please make sure that your user login is linked to an employee."
 msgstr ""
 
 #. module: hr_holidays
@@ -2083,9 +2183,10 @@ msgid "The number of days must be greater than 0."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:432
+#: code:addons/hr_holidays/models/hr_leave.py:462
 #, python-format
-msgid "The number of remaining time off is not sufficient for this time off type.\n"
+msgid ""
+"The number of remaining time off is not sufficient for this time off type.\n"
 "Please also check the time off waiting for validation."
 msgstr ""
 
@@ -2102,38 +2203,45 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
-msgid "The status is set to 'To Submit', when a time off request is created.\n"
+msgid ""
+"The status is set to 'To Submit', when a time off request is created.\n"
 "The status is 'To Approve', when time off request is confirmed by user.\n"
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:518
+#: code:addons/hr_holidays/models/hr_leave.py:569
 #, python-format
 msgid "The time off has been automatically approved"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
-msgid "The type with the smallest sequence is the default value in time off request"
+msgid ""
+"The type with the smallest sequence is the default value in time off request"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__first_approver_id
-msgid "This area is automatically filled by the user who validate the time off"
+msgid ""
+"This area is automatically filled by the user who validate the time off"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
-msgid "This area is automaticly filled by the user who validate the time off with second level (If time off type need second validation)"
+msgid ""
+"This area is automaticly filled by the user who validate the time off with "
+"second level (If time off type need second validation)"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
-msgid "This color will be used in the time off summary located in Reporting > Time off by Department."
+msgid ""
+"This color will be used in the time off summary located in Reporting > Time "
+"off by Department."
 msgstr ""
 
 #. module: hr_holidays
@@ -2142,13 +2250,24 @@ msgid "This indicates if it is still possible to use this type of leave"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
+msgid ""
+"This user will be responsible for approving this type of times offThis is "
+"only used when validation is 'hr' or 'both'"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
-msgid "This value is given by the sum of all time off requests with a negative value."
+msgid ""
+"This value is given by the sum of all time off requests with a negative "
+"value."
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
-msgid "This value is given by the sum of all time off requests with a positive value."
+msgid ""
+"This value is given by the sum of all time off requests with a positive "
+"value."
 msgstr ""
 
 #. module: hr_holidays
@@ -2187,15 +2306,22 @@ msgid "Time Off Notification Subtype"
 msgstr ""
 
 #. module: hr_holidays
+#: selection:hr.leave.type,validation_type:0
+msgid "Time Off Officer"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
-msgid "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
+msgid ""
+"Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.leave.report,leave_type:0
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2205,6 +2331,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_payroll
 #: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
@@ -2214,6 +2341,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
 msgid "Time Off Responsible"
 msgstr ""
@@ -2276,6 +2405,13 @@ msgid "Time Off of Your Team Member"
 msgstr ""
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:9
+#, python-format
+msgid "Time Off taken by"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
 msgid "Time Off to Approve"
 msgstr ""
@@ -2306,43 +2442,50 @@ msgid "Time off of people you are manager of"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:677
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:423
+#: code:addons/hr_holidays/models/hr_leave.py:734
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:463
 #, python-format
-msgid "Time off request must be confirmed (\"To Approve\") in order to approve it."
+msgid ""
+"Time off request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:690
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:437
+#: code:addons/hr_holidays/models/hr_leave.py:747
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:477
 #, python-format
 msgid "Time off request must be confirmed in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:731
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:475
+#: code:addons/hr_holidays/models/hr_leave.py:788
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:515
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:667
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:413
+#: code:addons/hr_holidays/models/hr_leave.py:724
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:453
 #, python-format
-msgid "Time off request must be in Draft state (\"To Submit\") in order to confirm it."
+msgid ""
+"Time off request must be in Draft state (\"To Submit\") in order to confirm "
+"it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:651
+#: code:addons/hr_holidays/models/hr_leave.py:708
 #, python-format
-msgid "Time off request state must be \"Refused\" or \"To Approve\" in order to be reset to draft."
+msgid ""
+"Time off request state must be \"Refused\" or \"To Approve\" in order to be "
+"reset to draft."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:397
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:437
 #, python-format
-msgid "Time off request state must be \"Refused\" or \"To Approve\" in order to reset to Draft."
+msgid ""
+"Time off request state must be \"Refused\" or \"To Approve\" in order to "
+"reset to Draft."
 msgstr ""
 
 #. module: hr_holidays
@@ -2352,8 +2495,7 @@ msgid "To"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
 #: selection:hr.leave.report,state:0
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_approve
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2364,6 +2506,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_to
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_date_to
 msgid "To Date"
 msgstr ""
@@ -2381,10 +2525,14 @@ msgid "To Report in Payslip"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
 #: selection:hr.leave.report,state:0
 msgid "To Submit"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "To:"
 msgstr ""
 
 #. module: hr_holidays
@@ -2405,30 +2553,29 @@ msgid "Total Employee"
 msgstr ""
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-msgid "Total allocated days"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_count
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_count
 msgid "Total number of days allocated."
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_used_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocation_used_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_used_count
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_used_count
 msgid "Total number of days off used"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__remaining_leaves
-msgid "Total number of paid time off allocated to this employee, change this value to create allocation/time off request. Total based on all the time off types without overriding limit."
-msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
-msgid "Total time off"
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_base__remaining_leaves
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__remaining_leaves
+msgid ""
+"Total number of paid time off allocated to this employee, change this value "
+"to create allocation/time off request. Total based on all the time off types"
+" without overriding limit."
 msgstr ""
 
 #. module: hr_holidays
@@ -2440,12 +2587,16 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
-msgid "UX field allowing to see and modify the allocation duration, computed in days."
+msgid ""
+"UX field allowing to see and modify the allocation duration, computed in "
+"days."
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
-msgid "UX field allowing to see and modify the allocation duration, computed in hours."
+msgid ""
+"UX field allowing to see and modify the allocation duration, computed in "
+"hours."
 msgstr ""
 
 #. module: hr_holidays
@@ -2490,8 +2641,12 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__leave_manager_id
 #: model:ir.model.fields,help:hr_holidays.field_res_users__leave_manager_id
-msgid "User responsible of leaves approval. Should be Team Leader or Department Manager."
+msgid ""
+"User responsible of leaves approval. Should be Team Leader or Department "
+"Manager."
 msgstr ""
 
 #. module: hr_holidays
@@ -2506,8 +2661,10 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Validate"
 msgstr ""
@@ -2543,11 +2700,15 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 msgid "Waiting Approval"
 msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 msgid "Waiting Second Approval"
 msgstr ""
 
@@ -2575,7 +2736,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
-msgid "Whether this should be computed as a holiday or as work time (eg: formation)"
+msgid ""
+"Whether this should be computed as a holiday or as work time (eg: formation)"
 msgstr ""
 
 #. module: hr_holidays
@@ -2584,32 +2746,46 @@ msgid "Year(s)"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:328
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:364
 #, python-format
 msgid "You can allocate %s only between %s and %s"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:707
+#: code:addons/hr_holidays/models/hr_leave.py:764
 #, python-format
 msgid "You can not have 2 leaves that overlaps on the same day."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:422
+#: code:addons/hr_holidays/models/hr_leave.py:452
 #, python-format
-msgid "You can not set 2 times off that overlaps on the same day for the same employee."
+msgid ""
+"You can not set 2 times off that overlaps on the same day for the same "
+"employee."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:492
+#: code:addons/hr_holidays/models/hr_leave.py:536
+#, python-format
+msgid "You can take %s from %s"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:531
 #, python-format
 msgid "You can take %s only between %s and %s"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:559
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:362
+#: code:addons/hr_holidays/models/hr_leave.py:541
+#, python-format
+msgid "You can take %s until %s"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:614
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:399
 #, python-format
 msgid "You cannot delete a time off which is in %s state."
 msgstr ""
@@ -2621,27 +2797,65 @@ msgid "You have to select at least one department."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:786
+#: code:addons/hr_holidays/models/hr_leave.py:840
 #, python-format
-msgid "You must be either %s's manager or Time Off Manager to approve this time off"
+msgid "You must be either %s's manager or Leave manager to approve this leave"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:514
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:556
 #, python-format
-msgid "You must be either %s's manager or time off manager to approve this time off"
+msgid ""
+"You must be either %s's manager or time off manager to approve this time off"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:414
+#, python-format
+msgid "day(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:234
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+#, python-format
 msgid "days"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
 msgid "e.g. Report to the next month..."
+msgstr ""
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:34
+#, python-format
+msgid "for"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:414
+#, python-format
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:234
+#, python-format
+msgid "hours"
+msgstr ""
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:9
+#, python-format
+msgid "in"
 msgstr ""
 
 #. module: hr_holidays
@@ -2653,4 +2867,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr ""
-

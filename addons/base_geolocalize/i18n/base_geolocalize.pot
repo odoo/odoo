@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* base_geolocalize
+# 	* base_geolocalize
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
-"PO-Revision-Date: 2019-03-20 13:49+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,8 @@ msgstr ""
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:104
 #, python-format
-msgid "API key for GeoCoding (Places) required.\n"
+msgid ""
+"API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
 
@@ -74,7 +75,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:146
+#: code:addons/base_geolocalize/models/base_geocoder.py:156
 #, python-format
 msgid "Error with geolocation server:"
 msgstr ""
@@ -82,18 +83,6 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
-
-#. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_latitude
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_latitude
-msgid "Geo Latitude"
-msgstr ""
-
-#. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_longitude
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_longitude
-msgid "Geo Longitude"
 msgstr ""
 
 #. module: base_geolocalize
@@ -172,7 +161,21 @@ msgid "Tech Name"
 msgstr ""
 
 #. module: base_geolocalize
-#: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+#: code:addons/base_geolocalize/models/base_geocoder.py:123
+#, python-format
+msgid ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
 
+#. module: base_geolocalize
+#: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
