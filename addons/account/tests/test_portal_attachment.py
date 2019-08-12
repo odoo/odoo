@@ -12,18 +12,20 @@ class TestUi(tests.HttpCase):
 
     @mute_logger('odoo.addons.website.models.ir_http', 'odoo.http')
     def test_01_portal_attachment(self):
+        """Test the portal chatter attachment route."""
+
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        # For this test we need a parent document with an access_token field:
-        # attachment itself has an access_token so we can use it as parent too.
-        record = self.env['ir.attachment'].create({
+        # For this test we need a parent document with an access_token field
+        # (in this case from portal.mixin) and also inheriting mail.thread.
+        invoice = self.env['account.move'].with_context(tracking_disable=True).create({
             'name': 'a record with an access_token field',
         })
 
         # Test public user can't create attachment without token of document
         create_data = {
             'name': "new attachment",
-            'res_model': record._name,
-            'res_id': record.id,
+            'res_model': invoice._name,
+            'res_id': invoice.id,
             'csrf_token': http.WebRequest.csrf_token(self),
         }
         create_url = base_url + '/portal/attachment/add'
@@ -33,7 +35,7 @@ class TestUi(tests.HttpCase):
         self.assertTrue("you do not have the rights" in res.text)
 
         # Test public user can create attachment with token
-        create_data['access_token'] = record.generate_access_token()[0]
+        create_data['access_token'] = invoice._portal_ensure_token()
         res = self.url_open(url=create_url, data=create_data, files=files)
         self.assertEqual(res.status_code, 200)
         create_res = json.loads(res.content.decode('utf-8'))
@@ -82,21 +84,23 @@ class TestUi(tests.HttpCase):
         self.assertTrue(remove_res is True)
 
         # Test attachment can't be removed if not "pending" state
+        attachment = self.env['ir.attachment'].create({
+            'name': "an attachment",
+            'access_token': self.env['ir.attachment']._generate_access_token(),
+        })
         remove_data = {
-            'attachment_id': record.id,
-            'access_token': record.access_token,
+            'attachment_id': attachment.id,
+            'access_token': attachment.access_token,
         }
         res = self.opener.post(url=remove_url, json={'params': remove_data})
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(self.env['ir.attachment'].search([('id', '=', record.id)]))
+        self.assertTrue(self.env['ir.attachment'].search([('id', '=', attachment.id)]))
         self.assertTrue("not in a pending state" in res.text)
 
         # Test attachment can't be removed if attached to a message
-        attachment = self.env['ir.attachment'].create({
-            'name': 'a record with an access_token field',
+        attachment.write({
             'res_model': 'mail.compose.message',
             'res_id': 0,
-            'access_token': self.env['ir.attachment']._generate_access_token(),
         })
         message = self.env['mail.message'].create({
             'attachment_ids': [(6, 0, attachment.ids)],
@@ -111,42 +115,60 @@ class TestUi(tests.HttpCase):
         self.assertTrue("it is linked to a message" in res.text)
         message.unlink()
 
-        # Need a `mail.thread` record for the following test
-        thread_record = self.env['mail.channel'].create({
-            'name': 'channel',
-            'public': 'public',
-        })
-        # Authenticate because public user can't create `mail.message` without
-        # token, and `mail.channel` does not have an access_token.
-        self.authenticate('portal', 'portal')
-
-        # Test attachment can't be associated if no token.
+        # Test attachment can't be associated if no attachment token.
         post_url = base_url + '/mail/chatter_post'
         post_data = {
-            'res_model': thread_record._name,
-            'res_id': thread_record.id,
-            'message': "test message",
+            'res_model': invoice._name,
+            'res_id': invoice.id,
+            'message': "test message 1",
             'attachment_ids': attachment.id,
             'attachment_tokens': 'false',
             'csrf_token': http.WebRequest.csrf_token(self),
         }
-        self.assertFalse(thread_record.message_ids)
         res = self.url_open(url=post_url, data=post_data)
-        thread_record.invalidate_cache(fnames=['message_ids'], ids=thread_record.ids)
-        message = thread_record.message_ids[0]
-        self.assertFalse(message.attachment_ids)
+        self.assertEqual(res.status_code, 400)
+        self.assertIn("The attachment %s does not exist or you do not have the rights to access it." % attachment.id, res.text)
+
+        # Test attachment can't be associated if no main document token
+        post_data['attachment_tokens'] = attachment.access_token
+        res = self.url_open(url=post_url, data=post_data)
+        self.assertEqual(res.status_code, 403)
+        self.assertIn("Sorry, you are not allowed to access documents of type 'Journal Entries' (account.move).", res.text)
 
         # Test attachment can't be associated if not "pending" state
-        post_data['attachment_tokens'] = attachment.access_token
+        post_data['token'] = invoice._portal_ensure_token()
+        self.assertFalse(invoice.message_ids)
         attachment.write({'res_model': 'model'})
         res = self.url_open(url=post_url, data=post_data)
-        thread_record.invalidate_cache(fnames=['message_ids'], ids=thread_record.ids)
-        message = thread_record.message_ids[0]
-        self.assertFalse(message.attachment_ids)
+        self.assertEqual(res.status_code, 200)
+        invoice.invalidate_cache(fnames=['message_ids'], ids=invoice.ids)
+        self.assertEqual(len(invoice.message_ids), 1)
+        self.assertEqual(invoice.message_ids.body, "<p>test message 1</p>")
+        self.assertFalse(invoice.message_ids.attachment_ids)
 
-        # Test attachment can be associated if all good
+        # Test attachment can't be associated if not correct user
         attachment.write({'res_model': 'mail.compose.message'})
+        post_data['message'] = "test message 2"
         res = self.url_open(url=post_url, data=post_data)
-        thread_record.invalidate_cache(fnames=['message_ids'], ids=thread_record.ids)
-        message = thread_record.message_ids[0]
-        self.assertEqual(len(message.attachment_ids), 1)
+        self.assertEqual(res.status_code, 200)
+        invoice.invalidate_cache(fnames=['message_ids'], ids=invoice.ids)
+        self.assertEqual(len(invoice.message_ids), 2)
+        self.assertEqual(invoice.message_ids[0].body, "<p>test message 2</p>")
+        self.assertFalse(invoice.message_ids.attachment_ids)
+
+        # Test attachment can be associated if all good (complete flow)
+        create_data['name'] = "final attachment"
+        res = self.url_open(url=create_url, data=create_data, files=files)
+        self.assertEqual(res.status_code, 200)
+        create_res = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(create_res['name'], "final attachment")
+
+        post_data['message'] = "test message 3"
+        post_data['attachment_ids'] = create_res['id']
+        post_data['attachment_tokens'] = create_res['access_token']
+        res = self.url_open(url=post_url, data=post_data)
+        self.assertEqual(res.status_code, 200)
+        invoice.invalidate_cache(fnames=['message_ids'], ids=invoice.ids)
+        self.assertEqual(len(invoice.message_ids), 3)
+        self.assertEqual(invoice.message_ids[0].body, "<p>test message 3</p>")
+        self.assertEqual(len(invoice.message_ids[0].attachment_ids), 1)
