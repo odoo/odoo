@@ -79,6 +79,25 @@ def _babelCoreParseLocale_unitag(identifier, sep='_'):
 
 babel.core.parse_locale = _babelCoreParseLocale_unitag
 
+# ----------------------------------------------------------
+# PyPDF2 hack
+# ensure that zlib does not throw error -5 when decompressing
+# because some pdf won't fit into allocated memory
+# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# ----------------------------------------------------------
+import PyPDF2
+
+try:
+    import zlib
+
+    def _decompress(data):
+        zobj = zlib.decompressobj()
+        return zobj.decompress(data)
+
+    PyPDF2.filters.decompress = _decompress
+except ImportError:
+    pass # no fix required
+
 #----------------------------------------------------------
 # Shortcuts
 #----------------------------------------------------------
