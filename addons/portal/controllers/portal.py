@@ -241,7 +241,7 @@ class CustomerPortal(Controller):
 
         # At this point the related message does not exist yet, so we assign
         # those specific res_model and res_is. They will be correctly set
-        # when the message is created: see `_post_process_portal_attachments`,
+        # when the message is created: see `portal_chatter_post`,
         # or garbage collected otherwise: see  `_garbage_collect_attachments`.
         attachment = IrAttachment.create({
             'name': name,
