@@ -77,7 +77,7 @@
                 <button name="action_view_sent"
                     type="object"
                     context="{'search_default_filter_sent': True}"
-                    icon="fa-comment-o" class="oe_stat_button"
+                    icon="fas fa-comment" class="oe_stat_button"
                     attrs="{'invisible': ['|', '&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test')), ('mailing_type', '!=', 'sms')]}" >
                     <field name="sent" string="Sent" widget="statinfo"/>
                 </button>

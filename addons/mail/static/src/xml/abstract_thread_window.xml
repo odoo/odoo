@@ -34,7 +34,7 @@
     <t t-name="mail.HiddenThreadWindowsDropdown">
         <div t-attf-class="o_thread_window o_in_home_menu o_thread_window_dropdown dropup #{open ? 'open' : ''}">
             <span role="alert" class="o_thread_window_dropdown_toggler dropdown-toggle" data-toggle="dropdown" title="Unread messages">
-                <i class="fa fa-comments-o" role="img" aria-label="Messages"/> <t t-esc="threadWindows.length"/>
+                <i class="fas fa-comments" role="img" aria-label="Messages"/> <t t-esc="threadWindows.length"/>
                 <span class="o_total_unread_counter">
                     <t t-if="unreadCounter"><t t-esc="unreadCounter"/></t>
                 </span>
@@ -75,7 +75,7 @@
             <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="mail.ThreadTypingIcon"/>
         </span>
         <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
-            <a href="#" class="o_thread_window_close fa fa-close"/>
+            <a href="#" class="o_thread_window_close fas fa-times"/>
         </span>
     </t>
 

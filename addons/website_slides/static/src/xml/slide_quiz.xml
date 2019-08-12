@@ -21,9 +21,9 @@
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
                                         class="d-none"/>
-                                    <i t-att-class="'fa fa-circle text-400' + (!(widget.slide.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
-                                    <i class="fa fa-times-circle text-danger d-none"></i>
-                                    <i t-att-class="'fa fa-check-circle text-success' + (widget.slide.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
+                                    <i t-att-class="'fas fa-circle text-400' + (!(widget.slide.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
+                                    <i class="fas fa-times-circle text-danger d-none"></i>
+                                    <i t-att-class="'fas fa-check-circle text-success' + (widget.slide.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
                                 </label>
                                 <span t-esc="answer.text_value"/>
                             </a>

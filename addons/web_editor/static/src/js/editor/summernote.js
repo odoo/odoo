@@ -2487,7 +2487,7 @@ eventHandler.detach = function (oLayoutInfo, options) {
     $('.o_table_handler').remove();
 };
 
-options.icons.image.image = "file-image-o";
+options.icons.image.image = "file-image";
 $.summernote.lang['en-US'].image.image = "File / Image";
 
 return $.summernote;

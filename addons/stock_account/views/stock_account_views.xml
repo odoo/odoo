@@ -7,8 +7,8 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='button_box']" position="inside" >
-                    <button name="action_get_account_moves" icon="fa-usd" class="oe_stat_button" string="Accounting Entries" type="object" groups="account.group_account_user"/>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_get_account_moves" icon="fa-dollar-sign" class="oe_stat_button" string="Accounting Entries" type="object" groups="account.group_account_user"/>
                 </xpath>
             </field>
         </record>
@@ -24,7 +24,7 @@
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <field name="has_account_moves" invisible="1"/>
                     <button name="action_get_account_moves" type="object"
-                            string="Accounting Entries" icon="fa-usd" class="oe_stat_button"
+                            string="Accounting Entries" icon="fa-dollar-sign" class="oe_stat_button"
                             attrs="{'invisible': [('has_account_moves', '=', False)]}"/>
                 </xpath>
             </field>

@@ -37,7 +37,7 @@
                                     </div>
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                     <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
-                                        <small> <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/> </small>
+                                        <small> <i class="far fa-envelope" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/> </small>
                                     </div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
@@ -104,7 +104,7 @@
             </xpath>
             <xpath expr="//group" position="after">
                 <searchpanel>
-                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                    <field name="company_id" groups="base.group_multi_company" icon="far fa-building"/>
                     <field name="user_id" icon="fa-users"/>
                 </searchpanel>
             </xpath>

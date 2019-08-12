@@ -59,8 +59,8 @@
                         <td class="text-right"><span t-field="quotation.date_order"/></td>
                         <td class="text-right"><span t-field="quotation.validity_date"/></td>
                         <td class="text-center">
-                            <span t-if="quotation.state == 'cancel'" class="badge badge-pill badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
-                            <span t-if="quotation.is_expired" class="badge badge-pill badge-secondary"><i class="fa fa-fw fa-clock-o"/> Expired</span>
+                            <span t-if="quotation.state == 'cancel'" class="badge badge-pill badge-secondary"><i class="fas fa-fw fa-times"/> Cancelled</span>
+                            <span t-if="quotation.is_expired" class="badge badge-pill badge-secondary"><i class="far fa-fw fa-clock"/> Expired</span>
                         </td>
                         <td class="text-right">
                             <span t-field="quotation.amount_total"/>
@@ -156,7 +156,7 @@
                                 <li t-if="sale_order.remaining_validity_days &gt; 0" class="list-group-item">
                                     <small><b class="text-muted">This offer expires in</b></small>
                                     <div class="day_counter">
-                                        <i class="fa fa-clock-o" aria-label="Dates" title="Dates"></i>
+                                        <i class="far fa-clock" aria-label="Dates" title="Dates"></i>
                                         <t t-esc="sale_order.remaining_validity_days"/>
                                         <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
@@ -189,7 +189,7 @@
                                     </div>
                                     <div class="col pl-0" style="min-width: 150px">
                                         <span t-field="sale_order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
-                                        <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send message</a>
+                                        <a href="#discussion" class="small"><i class="fas fa-comment"></i> Send message</a>
                                     </div>
                                 </div>
                             </li>
@@ -303,12 +303,12 @@
 
                     <div t-if="sale_order.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
-                        <strong>This quotation has been canceled.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                        <strong>This quotation has been canceled.</strong> <a role="button" href="#discussion"><i class="fas fa-comment"></i> Contact us to get a new quotation.</a>
                     </div>
 
                     <div t-if="sale_order.is_expired" class="alert alert-warning alert-dismissable d-print-none" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
-                        <strong>This offer expired!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                        <strong>This offer expired!</strong> <a role="button" href="#discussion"><i class="fas fa-comment"></i> Contact us to get a new quotation.</a>
                     </div>
 
                     <!-- main content -->
@@ -324,7 +324,7 @@
                                 <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t></a>
                             </div>
                             <div class="col-sm-auto mt8">
-                                <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
+                                <a role="button" class="btn btn-secondary" href="#discussion"><i class="fas fa-comment"></i> Feedback</a>
                             </div>
                             <div class="col-sm-auto mt8">
                                 <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#"> <i class="fa fa-times"/> Reject</a>
@@ -417,7 +417,7 @@
                                         <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                     </div>
                                     <span t-if="i.state == 'paid'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
-                                    <span t-else="" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
+                                    <span t-else="" class="small badge badge-info orders_label_text_align"><i class="far fa-fw fa-clock"/> <b>Waiting Payment</b></span>
                                 </div>
                             </t>
                         </ul>

@@ -79,12 +79,12 @@
                 <div class="oe_button_box" name="button_box">
                     <button name="action_applications_email"
                             class="oe_stat_button"
-                            icon="fa-pencil"
+                            icon="fa-pencil-alt"
                             type="object"
                             attrs="{'invisible': [('application_count', '=', 0)]}">
                         <field name="application_count" widget="statinfo" string="Other Applications"/>
                     </button>
-                    <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
+                    <button name="action_makeMeeting" class="oe_stat_button" icon="far fa-calendar-alt" type="object"
                          help="Schedule interview with this applicant">
                         <field name="meeting_count" widget="statinfo" string="Meetings"/>
                     </button>
@@ -304,7 +304,7 @@
                                     </div>
                                 </div>
                                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget ="phone"/><br/></t>
+                                <t t-if="record.partner_mobile.raw_value"><i class="fas fa-mobile-alt mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="float-left mr4" groups="base.group_user">
@@ -314,7 +314,7 @@
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fas fa-comments' role="img" aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
@@ -462,20 +462,20 @@
             </field>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
-                    icon="fa-pencil"
+                    icon="fa-pencil-alt"
                     name="%(action_hr_job_applications)d"
                     context="{'default_user_id': user_id}"
                     type="action">
                     <field name="application_count" widget="statinfo" string="Applications"/>
                 </button>
                 <button class="oe_stat_button"
-                    icon="fa-file-text-o"
+                    icon="fa-file-alt"
                     name="action_get_attachment_tree_view"
                     type="object">
                     <field name="documents_count" widget="statinfo" string="Documents"/>
                 </button>
                 <button class="oe_stat_button" type="action"
-                    name="%(action_hr_job_sources)d" icon="fa-bar-chart-o"
+                    name="%(action_hr_job_sources)d" icon="fa-chart-bar"
                     context="{'default_job_id': active_id}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Trackers</span>
@@ -856,7 +856,7 @@ action = act
         <field name="arch" type="xml">
             <tree string="Sources of Applicants" editable="top" class="o_recruitment_list">
                 <field name="source_id"/>
-                <button name="create_alias" string="Generate email alias" type="object" icon="fa-repeat text-success" />
+                <button name="create_alias" string="Generate email alias" type="object" icon="fa-redo text-success" />
                 <field name="email"/>
             </tree>
         </field>
