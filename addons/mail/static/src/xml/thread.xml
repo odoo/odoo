@@ -44,9 +44,9 @@
             <t t-set="model" t-value="widget.modelName"/>
             <div class="o_viewer-header">
                 <span class="o_image_caption">
-                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
-                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
-                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
+                    <i class="far fa-image mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
+                    <i class="fas fa-file-alt mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
+                    <i class="fas fa-video mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
                     <t t-esc="widget.activeAttachment.name"/>
                     <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </span>
@@ -55,7 +55,7 @@
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
                     <div t-if="widget.activeAttachment.fileType == 'image'" class="o_loading_img text-center">
-                        <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
+                        <i class="fas fa-circle-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
                     </div>
                     <img t-if="widget.activeAttachment.fileType === 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}&amp;model=#{model}" alt="Viewer"/>
                     <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
@@ -73,7 +73,7 @@
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
                 </div>
                 <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fas fa-fw fa-redo" role="img" aria-label="Rotate"/></a>
                 </div>
                 <div class="btn-group" role="group">
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
@@ -292,7 +292,7 @@
                     <t t-esc="message.getDate().format('hh:mm')"/>
                 </span>
                 <i t-if="!displayAuthorMessages[message.getID()] and options.displayStars and message.getType() !== 'notification'"
-                    t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
+                    t-att-class="'o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fas fa-star' : 'far fa-star')"
                     t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as todo"/>
                 <t t-if="!displayAuthorMessages[message.getID()] and thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
             </div>
@@ -330,12 +330,12 @@
                         <t t-if="message.getCustomerEmailStatus() === 'sent' or message.getCustomerEmailStatus() === 'ready'">
                             <t t-set="fatype" t-value="'-o'"/>
                         </t>
-                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope'" t-att-data-message-id="message.getID()"/>
+                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' far fa-envelope'" t-att-data-message-id="message.getID()"/>
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
                         <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
-                            t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
+                            t-att-class="'o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fas fa-star' : 'far fa-star')"
                             t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as Todo"/>
                        <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
                            class="fa fa-reply o_thread_icon o_thread_message_reply"
@@ -457,8 +457,8 @@
                 <i t-if="customerEmailData[2] === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
                 <i t-if="customerEmailData[2] === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
                 <i t-if="customerEmailData[2] === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
-                <i t-if="customerEmailData[2] === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
-                <i t-if="customerEmailData[2] === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+                <i t-if="customerEmailData[2] === 'ready'" class='far fa-paper-plane' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="customerEmailData[2] === 'canceled'" class='far fa-trash-alt' title="Canceled" role="img" aria-label="Canceled"/>
             </span>
             <span t-esc="customerEmailData[1]"/>
         </div>
@@ -509,7 +509,7 @@
                     <t t-esc="value.changed_field"/>:
                     <t t-if="value.old_value">
                         <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
-                        <span t-if="value.old_value !== value.new_value" class="fa fa-long-arrow-right" role="img" aria-label="Changed" title="Changed"/>
+                        <span t-if="value.old_value !== value.new_value" class="fas fa-long-arrow-alt-right" role="img" aria-label="Changed" title="Changed"/>
                     </t>
                     <span t-if="value.old_value !== value.new_value">
                         <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>

@@ -709,7 +709,7 @@ var ThemeCustomizeDialog = Dialog.extend({
     _updateStyle: function (enable, disable, reload) {
         var self = this;
 
-        var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
+        var $loading = $('<i/>', {class: 'fas fa-sync fa-spin'});
         this.$modal.find('.modal-title').append($loading);
 
         if (reload || config.isDebug('assets')) {

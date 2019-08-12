@@ -38,7 +38,7 @@ publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
                     }, Math.ceil(self._poll_nbr / 3) * 1000);
                 } else {
                     var $message = $(result.message);
-                    var $warning =  $("<i class='fa fa-warning' style='margin-right:10px;'>");
+                    var $warning =  $("<i class='fas fa-exclamation-triangle' style='margin-right:10px;'>");
                     $warning.attr("title", _t("We are waiting the confirmation of the bank or payment provider"));
                     $message.find('span:first').prepend($warning);
                     result.message = $message.html();

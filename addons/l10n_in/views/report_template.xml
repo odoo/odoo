@@ -32,7 +32,7 @@
 
     <template id="l10n_in_external_layout_background" inherit_id="web.external_layout_background">
         <xpath expr="//li[@t-if='company.vat']" position="replace">
-            <li t-if="vat or company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="vat or company.vat"/></li>
+            <li t-if="vat or company.vat" class="list-inline-item"><i class="far fa-building" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="vat or company.vat"/></li>
         </xpath>
     </template>
 </odoo>

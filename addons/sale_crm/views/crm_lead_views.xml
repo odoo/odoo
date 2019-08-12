@@ -12,11 +12,11 @@
                 </xpath>
                 <button name="action_schedule_meeting" position="after">
                     <button class="oe_stat_button" type="object"
-                        name="action_view_sale_quotation" icon="fa-pencil-square-o" attrs="{'invisible': [('type', '=', 'lead')]}">
+                        name="action_view_sale_quotation" icon="fas fa-edit" attrs="{'invisible': [('type', '=', 'lead')]}">
                         <field name="quotation_count" widget="statinfo" string="Quotations"/>
                     </button>
                     <button class="oe_stat_button" type="object" attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('type', '=', 'lead')]}"
-                        name="action_view_sale_order" icon="fa-usd">
+                        name="action_view_sale_order" icon="fa-dollar-sign">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/></span>
                             <span class="o_stat_text"> Orders</span>

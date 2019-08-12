@@ -159,7 +159,7 @@
         <th>Ticket</th>
     </xpath>
     <xpath expr="//tbody/t/tr/td[1]" position="after">
-        <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
+        <td><i class="fas fa-ticket-alt"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
     </xpath>
 </template>
 

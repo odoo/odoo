@@ -118,13 +118,13 @@ class TranslationToolsTestCase(BaseCase):
         source = """<form string="Form stuff">
                         <div>
                             <label for="stuff"/>
-                            <span class="fa fa-globe" title="Title stuff"/>
+                            <span class="fa fa-globe-americas" title="Title stuff"/>
                         </div>
                     </form>"""
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms,
-            ['Form stuff', '<span class="fa fa-globe" title="Title stuff"/>'])
+            ['Form stuff', '<span class="fa fa-globe-americas" title="Title stuff"/>'])
 
     def test_translate_xml_inline5(self):
         """ Test xml_translate() with inline elements with empty translated attrs only. """
@@ -132,7 +132,7 @@ class TranslationToolsTestCase(BaseCase):
         source = """<form string="Form stuff">
                         <div>
                             <label for="stuff"/>
-                            <span class="fa fa-globe" title=""/>
+                            <span class="fa fa-globe-americas" title=""/>
                         </div>
                     </form>"""
         result = xml_translate(terms.append, source)

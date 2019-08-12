@@ -341,7 +341,7 @@
                 <small t-if="channel.total_time" class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <t t-if="channel.is_member and channel.completed">
-                        <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fa fa-check"/> Completed</span>
+                        <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fas fa-check"/> Completed</span>
                     </t>
                     <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
                         <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;"/>
@@ -477,7 +477,7 @@
                     <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
                     <span class="text-muted" t-esc="challenge.reward_id.description"/>
                 </div>
-                <i t-if="challenge_done" class="fa fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
+                <i t-if="challenge_done" class="fas fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
             </div>
         </t>
     </div>

@@ -16,7 +16,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button string="Valuation" type="object"
                                 name="action_view_stock_valuation_layers"
-                                class="oe_stat_button" icon="fa-dollar" groups="stock.group_stock_manager"
+                                class="oe_stat_button" icon="fa-dollar-sign" groups="stock.group_stock_manager"
                                 attrs="{'invisible': [('state', 'not in', ['done'])]}" />
                         </div>
                         <div class="oe_title">
@@ -161,7 +161,7 @@
                                         </span>
                                     </div>
                                     <div class="col-6">
-                                        <i class="fa fa-clock-o" title="Date" role="img" aria-label="Date"/><span t-esc="record.date.value"/>
+                                        <i class="far fa-clock" title="Date" role="img" aria-label="Date"/><span t-esc="record.date.value"/>
                                     </div>
                                     <div class="col-6 text-right">
                                         <field name="account_journal_id"/>

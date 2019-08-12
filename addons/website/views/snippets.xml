@@ -115,12 +115,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 pt32 pb32 text-center">
-                    <i class="fa fa-3x fa-gear rounded-circle bg-gamma m-3"/>
+                    <i class="fas fa-3x fa-cog rounded-circle bg-gamma m-3"/>
                     <h3>First Feature</h3>
                     <p>Tell what's the value for the <br/>customer for this feature.</p>
                 </div>
                 <div class="col-lg-4 pt32 pb32 text-center">
-                    <i class="fa fa-3x fa-photo rounded bg-epsilon m-3"/>
+                    <i class="far fa-3x fa-image rounded bg-epsilon m-3"/>
                     <h3>Second Feature</h3>
                     <p>Write what the customer would like to know, <br/>not what you want to show.</p>
                 </div>
@@ -189,7 +189,7 @@
                 <div class="col-lg-8 offset-lg-2 pb24">
                     <figure class="figure">
                         <img src="/web/image/website.s_picture_default_image" class="figure-img img-fluid rounded img-thumbnail padding-large" alt="Odoo • A picture with a caption"/>
-                        <figcaption class="figure-caption py-3 text-center"><i class="fa fa-1x fa-picture-o mr-2"/>Add a caption to enhance the meaning of this image.</figcaption>
+                        <figcaption class="figure-caption py-3 text-center"><i class="far fa-1x fa-image mr-2"/>Add a caption to enhance the meaning of this image.</figcaption>
                     </figure>
                 </div>
             </div>
@@ -288,7 +288,7 @@
             <p class="card-text">A card is a flexible and extensible content container. It includes options for headers and footers, a wide variety of content, contextual background colors, and powerful display options.</p>
         </div>
         <div class="card-footer">
-            <i class="fa fa-1x fa-clock-o mr8"/><small>2 days ago</small>
+            <i class="far fa-1x fa-clock mr8"/><small>2 days ago</small>
         </div>
     </div>
 </template>
@@ -297,13 +297,13 @@
     <div t-attf-class="s_share #{_classes}">
         <h4 t-if="not _no_title" class="s_share_title">Share</h4>
         <a href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank">
-            <i t-attf-class="fa fa-1x fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
+            <i t-attf-class="fab fa-1x fa-facebook-f #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
         <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
-            <i t-attf-class="fa fa-1x fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
+            <i t-attf-class="fab fa-1x fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
         <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
-            <i t-attf-class="fa fa-1x fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
+            <i t-attf-class="fab fa-1x fa-linkedin-in #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
         <a href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}">
             <i t-attf-class="fa fa-1x fa-envelope #{not _link_classes and 'rounded shadow-sm'}"/>
@@ -608,21 +608,21 @@
                             <h5 class="text-primary">Add a great slogan.</h5>
                         </div>
                         <div class="col-lg-12 pt16 pb16" data-name="Box">
-                            <i class="fa fa-2x fa-font-awesome rounded-circle bg-primary s_features_grid_icon"/>
+                            <i class="fab fa-2x fa-font-awesome rounded-circle bg-primary s_features_grid_icon"/>
                             <div class="s_features_grid_content">
                                 <h4>Change Icons</h4>
                                 <p>Double click an icon to replace it with one of your choice.</p>
                             </div>
                         </div>
                         <div class="col-lg-12 pt16 pb16" data-name="Box">
-                            <i class="fa fa-2x fa-files-o rounded-circle bg-primary s_features_grid_icon"/>
+                            <i class="far fa-2x fa-copy rounded-circle bg-primary s_features_grid_icon"/>
                             <div class="s_features_grid_content">
                                 <h4>Duplicate</h4>
                                 <p>Duplicate blocks and columns to add more features.</p>
                             </div>
                         </div>
                         <div class="col-lg-12 pt16 pb16" data-name="Box">
-                            <i class="fa fa-2x fa-trash rounded-circle bg-primary s_features_grid_icon"/>
+                            <i class="fas fa-2x fa-trash-alt rounded-circle bg-primary s_features_grid_icon"/>
                             <div class="s_features_grid_content">
                                 <h4>Delete Blocks</h4>
                                 <p>Select and delete blocks to remove some features.</p>
@@ -644,14 +644,14 @@
                             </div>
                         </div>
                         <div class="col-lg-12 pt16 pb16" data-name="Box">
-                            <i class="fa fa-2x fa-eyedropper rounded bg-secondary s_features_grid_icon"/>
+                            <i class="fas fa-2x fa-eye-dropper rounded bg-secondary s_features_grid_icon"/>
                             <div class="s_features_grid_content">
                                 <h4>Edit Styles</h4>
                                 <p>You can edit colors and background to highlight features.</p>
                             </div>
                         </div>
                         <div class="col-lg-12 pt16 pb16" data-name="Box">
-                            <i class="fa fa-2x fa-picture-o rounded bg-secondary s_features_grid_icon"/>
+                            <i class="far fa-2x fa-image rounded bg-secondary s_features_grid_icon"/>
                             <div class="s_features_grid_content">
                                 <h4>Sample Icons</h4>
                                 <p>All these icons are completely free for commercial use.</p>
@@ -915,7 +915,7 @@
 
             <div id="snippet_feature" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-diamond"/> Features
+                    <i class="far fa-gem"/> Features
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_gallery.png"/>
@@ -1045,9 +1045,9 @@
     <!-- STYLES | .s_rating -->
     <div data-selector=".s_rating > div">
         <we-select string="Icon">
-            <we-button data-select-class="s_rating_stars"><i class="fa fa-fw fa-star"/> Stars</we-button>
-            <we-button data-select-class="s_rating_squares"><i class="fa fa-fw fa-square"/> Squares</we-button>
-            <we-button data-select-class="s_rating_hearts"><i class="fa fa-fw fa-heart"/> Hearts</we-button>
+            <we-button data-select-class="s_rating_stars"><i class="fas fa-fw fa-star"/> Stars</we-button>
+            <we-button data-select-class="s_rating_squares"><i class="far fa-fw fa-square"/> Squares</we-button>
+            <we-button data-select-class="s_rating_hearts"><i class="fas fa-fw fa-heart"/> Hearts</we-button>
             <we-button data-select-class="s_rating_bar"><i class="fa fa-fw fa-tasks"/> Progress Bar</we-button>
         </we-select>
         <we-select string="Value">
@@ -1201,13 +1201,13 @@
     <!-- Move snippets around -->
     <div data-js="SnippetMove"
          data-selector="section">
-        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true"/>
-        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
     </div>
     <div data-js="SnippetMove"
          data-selector=".row:not(.s_col_no_resize) > div">
-        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
-        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
     </div>
 
     <!--  V-ALIGN -->
@@ -1235,7 +1235,7 @@
                 <we-button data-background-type="cover">Cover</we-button>
                 <we-button data-background-type="repeat-pattern">Repeat pattern</we-button>
             </we-select>
-            <we-button class="fa fa-fw fa-arrows" title="Background Position"
+            <we-button class="fas fa-fw fa-expand-arrows-alt" title="Background Position"
                        data-background-position-overlay="true" data-no-preview="true"/>
         </we-row>
         <we-input string="Background width" data-set-style="background-size" data-default-value="auto"/>

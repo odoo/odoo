@@ -691,13 +691,14 @@ var KanbanActivity = BasicActivity.extend({
     _render: function () {
         // span classes need to be updated manually because the template cannot
         // be re-rendered eaasily (because of the dropdown state)
-        const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
+        const spanClasses = ['fa-fw'];
         spanClasses.push('o_activity_color_' + (this.activityState || 'default'));
         if (this.recordData.activity_exception_decoration) {
             spanClasses.push('text-' + this.recordData.activity_exception_decoration);
             spanClasses.push(this.recordData.activity_exception_icon);
         } else {
-            spanClasses.push('fa-clock-o');
+            spanClasses.push('far');
+            spanClasses.push('fa-clock');
         }
         this.$('.o_activity_btn > span').removeClass().addClass(spanClasses.join(' '));
 

@@ -23,7 +23,7 @@ var FavoriteMenu = DropdownMenu.extend({
         this.isMobile = config.device.isMobile;
         this.dropdownCategory = 'favorite';
         this.dropdownTitle = _t('Favorites');
-        this.dropdownIcon = 'fa fa-star';
+        this.dropdownIcon = 'fas fa-star';
         this.dropdownSymbol = this.isMobile ? 'fa fa-chevron-right float-right mt4' : false;
         this.dropdownStyle.mainButton.class = 'o_favorites_menu_button ' +
                                                 this.dropdownStyle.mainButton.class;

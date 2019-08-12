@@ -190,7 +190,7 @@ function getMatchedCSSRules(a) {
 function fontToImg($editable) {
     var fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
 
-    $editable.find('.fa').each(function () {
+    $editable.find('.fa, .fas, .far').each(function () {
         var $font = $(this);
         var icon, content;
         _.find(fonts.fontIcons, function (font) {
