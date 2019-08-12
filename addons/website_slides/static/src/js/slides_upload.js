@@ -130,6 +130,7 @@ var SlideUploadDialog = Dialog.extend({
             'url': this._formGetFieldValue('url'),
             'description': this._formGetFieldValue('description'),
             'index_content': this._formGetFieldValue('index_content'),
+            'duration': this._formGetFieldValue('duration'),
             'is_published': forcePublished,
         }, this._getSelect2DropdownValues()); // add tags and category
 
@@ -441,6 +442,7 @@ var SlideUploadDialog = Dialog.extend({
                  */
                 Util = PDFJS.Util;
                 PDFJS.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
+                    self._formSetFieldValue('duration', (pdf.pdfInfo.numPages || 0) * 5);
                     pdf.getPage(1).then(function getFirstPage(page) {
                         var scale = 1;
                         var viewport = page.getViewport(scale);
@@ -508,6 +510,10 @@ var SlideUploadDialog = Dialog.extend({
             if (data.error) {
                 self._alertDisplay(data.error);
             } else {
+                if (data.completion_time) {
+                    // hours to minutes conversion
+                    self._formSetFieldValue('duration', Math.round(data.completion_time * 60));
+                }
                 self.$('#slide-image').attr('src', data.url_src);
                 self._formSetFieldValue('name', data.title);
                 self._formSetFieldValue('description', data.description);
