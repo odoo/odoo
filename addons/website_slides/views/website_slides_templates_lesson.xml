@@ -255,11 +255,6 @@
                     <i class="fa fa-comments-o"></i> Comments (<span t-esc="slide.comments_count"/>)
                 </a>
             </li>
-            <li class="nav-item" t-if="slide.index_content">
-                <a href="#transcript" aria-controls="transcript" class="nav-link" role="tab" data-toggle="tab">
-                    <i class="fa fa-align-justify"></i> Transcript
-                </a>
-            </li>
             <li class="nav-item">
                 <a href="#statistic" aria-controls="statistic" class="nav-link" role="tab" data-toggle="tab">
                     <i class="fa fa-bar-chart"></i> Statistics
@@ -280,11 +275,6 @@
                     <t t-set="object" t-value="slide"/>
                     <t t-set="disable_composer" t-value="not (slide.channel_id.can_comment and slide.channel_id.allow_comment and slide.channel_id.channel_type == 'training')"/>
                     <t t-set="display_rating" t-value="False"/>
-                </t>
-            </div>
-            <div role="tabpanel" class="tab-pane fade oe_slides_transcript" id="transcript" t-if="slide.index_content">
-                <t t-foreach="slide.index_content.split('\n')" t-as="line">
-                    <p t-esc="line"></p>
                 </t>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="statistic" t-att-slide-url="slide.website_url">
