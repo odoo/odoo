@@ -62,7 +62,7 @@ tour.register('test_survey_prefill', {
             var maxAttempts = 0;
             var checkPrefillLoaded = setInterval(function () {
                 if ($('div.js_question-wrapper:contains("How many times did you order products on our website ?") input').val() === '42.0') {
-                    $('.o_survey_title').addClass('prefilled');
+                    $('.o_survey_section').addClass('prefilled');
                     clearInterval(checkPrefillLoaded);
                 } else if (maxAttempts >= 50) {
                     clearInterval(checkPrefillLoaded);
@@ -71,7 +71,7 @@ tour.register('test_survey_prefill', {
             }, 100); // check every 100ms
         }
     }, {
-        trigger: '.o_survey_title.prefilled',
+        trigger: '.o_survey_section.prefilled',
         run: function () {
             // check that all the answers are prefilled in Page 1
             var $inputQ1 = $('div.js_question-wrapper:contains("Where do you live ?") input');
@@ -94,10 +94,10 @@ tour.register('test_survey_prefill', {
                 return;
             }
 
-            $('.o_survey_title').addClass('tour_success');
+            $('.o_survey_section').addClass('tour_success');
         }
     }, {
-        trigger: '.o_survey_title.tour_success'
+        trigger: '.o_survey_section.tour_success'
     }, {
         content: 'Click on Next Page',
         trigger: 'button[value="next"]',
@@ -109,7 +109,7 @@ tour.register('test_survey_prefill', {
             var maxAttempts = 0;
             var checkPrefillLoaded = setInterval(function () {
                 if ($('div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea').val() === "Is the prefill working?") {
-                    $('.o_survey_title').addClass('prefilled2');
+                    $('.o_survey_section').addClass('prefilled2');
                     clearInterval(checkPrefillLoaded);
                 } else if (maxAttempts >= 50) {
                     clearInterval(checkPrefillLoaded);
@@ -118,7 +118,7 @@ tour.register('test_survey_prefill', {
             }, 100); // check every 100ms
         }
     }, {
-        trigger: '.o_survey_title.prefilled2',
+        trigger: '.o_survey_section.prefilled2',
         run: function () {
             // check that all the answers are prefilled in Page 2
             var $input1Q1 = $('div.js_question-wrapper:contains("Which of the following words would you use to describe our products") label:contains("High quality") input');
@@ -161,10 +161,10 @@ tour.register('test_survey_prefill', {
                 return;
             }
 
-            $('.o_survey_title').addClass('tour_success_2');
+            $('.o_survey_section').addClass('tour_success_2');
         }
     }, {
-        trigger: '.o_survey_title.tour_success_2'
+        trigger: '.o_survey_section.tour_success_2'
     }
 ]);
 
