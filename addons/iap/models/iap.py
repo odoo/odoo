@@ -168,19 +168,19 @@ class IapAccount(models.Model):
                 ('company_ids', 'in', self.env.context['allowed_company_ids']),
                 ('company_ids','=',False)],
             order='id desc')
-        if not accounts and force_create:
-            account = self.create({'service_name': service_name})
-            # Since the account did not exist yet, we will encounter a NoCreditError,
-            # which is going to rollback the database and undo the account creation,
-            # preventing the process to continue any further.
-            self.env.cr.commit()
-        else:
-            accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
-            if accounts_with_company:
-                account = accounts_with_company[0]
-            else:
-                account = accounts[0]
-        return account
+        if not accounts:
+            if force_create:
+                account = self.create({'service_name': service_name})
+                # Since the account did not exist yet, we will encounter a NoCreditError,
+                # which is going to rollback the database and undo the account creation,
+                # preventing the process to continue any further.
+                self.env.cr.commit()
+                return account
+            return accounts
+        accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
+        if accounts_with_company:
+            return accounts_with_company[0]
+        return accounts[0]
 
     @api.model
     def get_credits_url(self, service_name, base_url='', credit=0, trial=False):
