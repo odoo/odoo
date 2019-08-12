@@ -7,9 +7,20 @@ from odoo import api, fields, models, _
 class Company(models.Model):
     _inherit = "res.company"
 
+    def _default_confirmation_mail_template(self):
+        try:
+            return self.env.ref('stock.mail_template_data_delivery_confirmation').id
+        except ValueError:
+            return False
+
     internal_transit_location_id = fields.Many2one(
         'stock.location', 'Internal Transit Location', ondelete="restrict",
         help="Technical field used for resupply routes between warehouses that belong to this company")
+    stock_move_email_validation = fields.Boolean("Email Confirmation picking", default=False)
+    stock_mail_confirmation_template_id = fields.Many2one('mail.template', string="Email Template confirmation picking",
+        domain="[('model', '=', 'stock.picking')]",
+        default=_default_confirmation_mail_template,
+        help="Email sent to the customer once the order is done.")
 
     def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed

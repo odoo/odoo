@@ -167,7 +167,7 @@ class IapAccount(models.Model):
         accounts = self.search([
             ('service_name', '=', service_name), 
             '|',
-                ('company_ids', 'in', self.env.context['allowed_company_ids']),
+                ('company_ids', 'in', self.env.companies.ids),
                 ('company_ids','=',False)],
             order='id desc')
         if not accounts:
