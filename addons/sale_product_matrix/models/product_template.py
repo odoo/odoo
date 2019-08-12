@@ -10,7 +10,7 @@ class ProductTemplate(models.Model):
         ('configurator', 'Product Configurator'),
         ('matrix', 'Order Grid Entry'),
     ], string='Add product mode', default='configurator', help="Configurator: choose attribute values to add the matching \
-        product variant to the order.\n Matrix: add several variant at once from the grid of attribute values")
+        product variant to the order.\nGrid: add several variants at once from the grid of attribute values")
 
     def get_single_product_variant(self):
         res = super(ProductTemplate, self).get_single_product_variant()

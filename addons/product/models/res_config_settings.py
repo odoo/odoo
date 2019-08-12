@@ -11,7 +11,7 @@ class ResConfigSettings(models.TransientModel):
     group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
     module_sale_product_configurator = fields.Boolean("Product Configurator")
-    module_sale_product_matrix = fields.Boolean("Product Grid Configurator")
+    module_sale_product_matrix = fields.Boolean("Product Grid Entry")
     group_stock_packaging = fields.Boolean('Product Packagings',
         implied_group='product.group_stock_packaging')
     group_product_pricelist = fields.Boolean("Pricelists",

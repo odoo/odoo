@@ -75,7 +75,7 @@ class ProductTemplateAttributeValue(models.Model):
         :rtype: dict
         """
         header_cell = {
-            'name': '-'.join([attr.name for attr in self]) if self else " "
+            'name': ' • '.join([attr.name for attr in self]) if self else " "
         }  # The " " is to avoid having 'Not available' if the template has only one attribute line.
         extra_price = sum(self.mapped('price_extra')) if display_extra else 0
         if extra_price:
