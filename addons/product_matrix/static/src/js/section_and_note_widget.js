@@ -102,7 +102,7 @@ SectionAndNoteFieldOne2Many.include({
             )),
             buttons: [
                 {text: _t('Confirm'), classes: 'btn-primary', close: true, click: function (result) {
-                    var $inputs = this.$('.o_grid_input');
+                    var $inputs = this.$('.o_matrix_input');
                     var matrixChanges = [];
                     _.each($inputs, function (matrixInput) {
                         if (matrixInput.value && matrixInput.value !== matrixInput.attributes.value.nodeValue) {
@@ -125,9 +125,9 @@ SectionAndNoteFieldOne2Many.include({
         MatrixDialog.opened(function () {
             if (editedCellAttributes.length > 0) {
                 var str = editedCellAttributes.toString();
-                MatrixDialog.$content.find('.o_grid_input').filter((k, v) => v.attributes.ptav_ids.nodeValue === str)[0].focus();
+                MatrixDialog.$content.find('.o_matrix_input').filter((k, v) => v.attributes.ptav_ids.nodeValue === str)[0].focus();
             } else {
-                MatrixDialog.$content.find('.o_grid_input:first()').focus();
+                MatrixDialog.$content.find('.o_matrix_input:first()').focus();
             }
         });
     },
