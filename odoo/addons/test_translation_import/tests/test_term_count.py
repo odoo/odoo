@@ -266,6 +266,7 @@ class TestTranslationFlow(common.TransactionCase):
             'code': 'fr_FR',
             'data': export.data,
             'filename': export.name,
+            'overwrite': False,
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_fr.with_context(create_empty_translation=True).import_lang()
