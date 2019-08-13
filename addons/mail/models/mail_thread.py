@@ -1619,7 +1619,7 @@ class MailThread(models.AbstractModel):
                 lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
             if filtered_attachment_ids:
                 filtered_attachment_ids.write({'res_model': model, 'res_id': res_id})
-            m2m_attachment_ids += [(4, id) for id in attachment_ids]
+            m2m_attachment_ids += [(4, id) for id in filtered_attachment_ids.ids]
         # Handle attachments parameter, that is a dictionary of attachments
 
         if attachments: # generate 

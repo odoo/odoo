@@ -29,8 +29,16 @@
                     <field name="partner_id" string="Contact"/>
                     <field name="partner_email"/>
                     <field name="channel_id" string="Channel" invisible="context.get('default_channel_id',False)" />
+                    <button name="unlink" class="text-danger" string="Remove" 
+                            icon="fa-times-circle" type="object"/>
                 </tree>
             </field>
+        </record>
+
+        <record id="slide_channel_partner_action" model="ir.actions.act_window">
+            <field name="name">Attendees</field>
+            <field name="res_model">slide.channel.partner</field>
+            <field name="view_mode">tree,form</field>
         </record>
     </data>
 </odoo>
