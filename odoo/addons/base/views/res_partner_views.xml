@@ -271,7 +271,7 @@
                             <field name="active_lang_count" invisible="1"/>
                             <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
                             <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
-                                <field name="lang" placeholder="System (English)"/>
+                                <field name="lang"/>
                                 <button
                                     type="action"
                                     name="%(base.res_lang_act_window)d"
