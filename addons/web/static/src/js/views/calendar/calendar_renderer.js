@@ -513,6 +513,18 @@ return AbstractRenderer.extend({
         this._initCalendarMini();
     },
     /**
+     * Finalise the popover
+     *
+     * @param {jQueryElement} $popoverElement
+     * @param {web.CalendarPopover} calendarPopover
+     * @private
+     */
+    _onPopoverShown: function ($popoverElement, calendarPopover) {
+        var $popover = $($popoverElement.data('bs.popover').tip);
+        $popover.find('.o_cw_popover_close').on('click', this._unselectEvent.bind(this));
+        $popover.find('.o_cw_body').replaceWith(calendarPopover.$el);
+    },
+    /**
      * Render the calendar view, this is the main entry point.
      *
      * @override method from AbstractRenderer
@@ -700,6 +712,27 @@ return AbstractRenderer.extend({
         return context;
     },
     /**
+     * Prepare the parameters for the popover.
+     * This allow the parameters to be extensible.
+     *
+     * @private
+     * @param {Object} eventData
+     */
+    _getPopoverParams: function (eventData) {
+        return {
+            animation: false,
+            delay: {
+                show: 50,
+                hide: 100
+            },
+            trigger: 'manual',
+            html: true,
+            title: eventData.record.display_name,
+            template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.color_index)}),
+            container: eventData.allDay ? '.fc-view' : '.fc-scroller',
+        }
+    },
+    /**
      * Render event popover
      *
      * @private
@@ -712,21 +745,10 @@ return AbstractRenderer.extend({
         // Initialize popover widget
         var calendarPopover = new self.config.CalendarPopover(self, self._getPopoverContext(eventData));
         calendarPopover.appendTo($('<div>')).then(() => {
-            $eventElement.popover({
-                animation: false,
-                delay: {
-                    show: 50,
-                    hide: 100
-                },
-                trigger: 'manual',
-                html: true,
-                title: eventData.record.display_name,
-                template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.color_index)}),
-                container: eventData.allDay ? '.fc-view' : '.fc-scroller',
-            }).on('shown.bs.popover', function () {
-                var $popover = $($(this).data('bs.popover').tip);
-                $popover.find('.o_cw_popover_close').on('click', self._unselectEvent.bind(self));
-                $popover.find('.o_cw_body').replaceWith(calendarPopover.$el);
+            $eventElement.popover(
+                self._getPopoverParams(eventData)
+            ).on('shown.bs.popover', function () {
+                self._onPopoverShown($(this), calendarPopover);
             }).popover('show');
         });
     },
