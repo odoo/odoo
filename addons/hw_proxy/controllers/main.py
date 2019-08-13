@@ -209,17 +209,6 @@ class Proxy(http.Controller):
     def print_receipt(self, receipt):
         print('print_receipt %s', receipt)
 
-    @http.route('/hw_proxy/is_scanner_connected', type='json', auth='none', cors='*')
-    def is_scanner_connected(self, receipt):
-        print('is_scanner_connected?')
-        return False
-
-    @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
-    def scanner(self, receipt):
-        print('scanner')
-        time.sleep(10)
-        return ''
-
     @http.route('/hw_proxy/log', type='json', auth='none', cors='*')
     def log(self, arguments):
         _logger.info(' '.join(str(v) for v in arguments))
