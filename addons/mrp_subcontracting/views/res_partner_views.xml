@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_mrp" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.mrp</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//span[@name='address_name']" position="inside">
+                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'subcontractor')]}">Subcontractor Address</b>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

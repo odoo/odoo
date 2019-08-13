@@ -72,7 +72,7 @@ Email: <a id="url4" href="mailto:test@odoo.com">test@odoo.com</h1>
             "keep_archives": True,
         })
 
-        mass_mailing.put_in_queue()
+        mass_mailing.action_put_in_queue()
         mass_mailing._process_mass_mailing_queue()
 
         sent_mails = self.env['mail.mail'].search([('mailing_id', '=', mass_mailing.id)])

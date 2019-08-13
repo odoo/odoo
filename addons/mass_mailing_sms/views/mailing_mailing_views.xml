@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="mailing_mailing_view_form" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.inherit.sms</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <!-- Buttons / Actions -->
+            <xpath expr="//button[@name='action_put_in_queue']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_put_in_queue']" position="after">
+                <button name="action_put_in_queue" type="object"
+                    class="oe_highlight" string="Send Now"
+                    attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done'))]}"
+                    confirm="This will send SMS to all recipients. Do you still want to proceed ?"/>
+            </xpath>
+            <!-- Headers / Warnings -->
+            <xpath expr="//header" position="after">
+                <field name="sms_has_insufficient_credit" invisible="1"/>
+                <div class="alert alert-warning text-center" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}" role="alert">
+                    <p>
+                        <button class="btn-link"
+                                name="action_buy_sms_credits"
+                                type="object">
+                            <strong>
+                                It appears you don't have enough IAP credits. Click here to buy credits.
+                            </strong>
+                        </button>
+                    </p>
+                </div>
+            </xpath>
+            <xpath expr="//span[@name='ignored_text']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='ignored_text']" position="after">
+                <span name="ignored_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message have been ignored and will not be sent.</span>
+            </xpath>
+            <xpath expr="//span[@name='scheduled_text']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='scheduled_text']" position="after">
+                <span name="scheduled_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message are in queue and will be sent soon.</span>
+            </xpath>
+            <xpath expr="//span[@name='failed_text']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='failed_text']" position="after">
+                <span name="failed_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message could not be sent.</span>
+            </xpath>
+            <!-- Stat Buttons -->
+            <xpath expr="//button[@id='button_view_sent']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test')), ('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@id='button_view_sent']" position="after">
+                <button name="action_view_sent"
+                    type="object"
+                    context="{'search_default_filter_sent': True}"
+                    icon="fa-comment-o" class="oe_stat_button"
+                    attrs="{'invisible': ['|', '&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test')), ('mailing_type', '!=', 'sms')]}" >
+                    <field name="sent" string="Sent" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='action_view_opened']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_replied']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <!-- Form -->
+            <xpath expr="//field[@name='subject']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='mail_body']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='mail_body']" position="after">
+                <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
+                    <field name="body_plaintext" widget="sms_widget"/>
+                    <group>
+                        <field name="sms_template_id" domain="[('model', '=', mailing_model_real)]"/>
+                        <field name="sms_allow_unsubscribe"/>
+                    </group>
+                </page>
+            </xpath>
+            <!-- Option page tweaks -->
+            <xpath expr="//field[@name='email_from']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='reply_to']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='reply_to_details']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='attachment_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='attachment_ids_details']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mail_server_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.kanban.inherit.sms</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="sms_has_insufficient_credit"/>
+            </xpath>
+            <xpath expr="//h3" position="after">
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}">
+                    <a name="action_buy_sms_credits"
+                       type="object">Insufficient credits</a>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='stat_opened']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='stat_replied']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>            
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_tree_sms" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.tree.sms</field>
+        <field name="model">mailing.mailing</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Mass SMS">
+                <field name="name"/>
+                <field name="mailing_type" invisible="1"/>
+                <field name="sent"/>
+                <field name="clicked"/>
+                <field name="bounced"/>
+                <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_action_sms" model="ir.actions.act_window">
+        <field name="name">Mass SMS</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="domain">[('mailing_type', '=', 'sms')]</field>
+        <field name="context">{
+                'search_default_assigned_to_me': 1,
+                'default_user_id': uid,
+                'default_mailing_type': 'sms',
+        }</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new mass SMS
+          </p><p>
+            You can easily send SMS to any contact saved in other Odoo apps.
+          </p>
+        </field>
+    </record>
+    <record id="mailing_mailing_action_sms_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="mass_mailing.view_mail_mass_mailing_kanban"/>
+        <field name="act_window_id" ref="mailing_mailing_action_sms"/>
+    </record>
+    <record id="mailing_mailing_action_sms_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="mailing_mailing_view_tree_sms"/>
+        <field name="act_window_id" ref="mailing_mailing_action_sms"/>
+    </record>
+
+    <!-- Mass SMS / Mass SMS -->
+    <record id="mass_mailing_sms_menu_mass_sms" model="ir.ui.menu">
+        <field name="action" ref="mailing_mailing_action_sms"/>
+    </record>
+
+</data></odoo>

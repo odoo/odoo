@@ -23,20 +23,26 @@
                              <field name="name"/>
                              <field name="category_id"/>
                              <field name="uom_type"/>
-                             <field name="factor"
-                                 digits="[42,5]"
-                                 attrs="{'invisible':[('uom_type','!=','smaller')],
-                                         'readonly':[('uom_type','=','bigger')]}"/>
-                             <field name="factor_inv"
-                                 digits="[42,5]"
-                                 attrs="{'invisible':[('uom_type','!=','bigger')],
-                                         'readonly':[('uom_type','!=','bigger')]}"/>
-                             <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey" colspan="2">
-                                 e.g: 1 * (reference unit) = ratio * (this unit)
-                             </p>
-                             <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey" colspan="2">
-                                 e.g: 1 * (this unit) = ratio * (reference unit)
-                             </p>
+                             <label for="factor"
+                                attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                            <div attrs="{'invisible':[('uom_type','!=','smaller')]}" class="o_row">
+                                <field name="factor"
+                                    digits="[42,5]"
+                                    attrs="{'readonly':[('uom_type','=','bigger')]}"/>
+                                <span class="oe_grey">
+                                    e.g: 1*(reference unit)=ratio*(this unit)
+                                </span>
+                            </div>
+                            <label for="factor_inv" 
+                                attrs="{'invisible':[('uom_type','!=','bigger')]}"/>                           
+                            <div attrs="{'invisible':[('uom_type','!=','bigger')]}" class="o_row">
+                                <field name="factor_inv"
+                                    digits="[42,5]"
+                                    attrs="{'readonly':[('uom_type','!=','bigger')]}"/>
+                                <span class="oe_grey">
+                                    e.g: 1*(this unit)=ratio*(reference unit)
+                                </span>
+                            </div>
                          </group>
                          <group name="active_rounding">
                              <field name="active"/>
@@ -83,13 +89,13 @@
         <field name="arch" type="xml">
             <tree string="Units of Measure categories" editable="bottom">
                 <field name="name"/>
-                <field name="measure_type"/>
+                <field name="measure_type" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
 
     <record id="product_uom_categ_form_action" model="ir.actions.act_window">
-        <field name="name">Unit of Measure Categories</field>
+        <field name="name">Units of Measure Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">uom.category</field>
         <field name="view_mode">tree,form</field>
