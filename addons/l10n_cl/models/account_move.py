@@ -28,12 +28,14 @@ class AccountMove(models.Model):
         if (self.journal_id.l10n_latam_use_documents and
                 self.journal_id.company_id.country_id == self.env.ref(
                     'base.cl')):
-            sequences = self.env['ir.sequence'].search([
+
+            journal_sequence_ids =self.env['ir.sequence'].search([
                 ('id', 'in', self.journal_id.l10n_cl_sequence_ids.ids)
-            ])
+            ]).mapped('l10n_latam_document_type_id').ids
+
             domain += [
                 ('active', '=', True),
-                ('id', 'in', sequences.l10n_latam_document_type_id.ids)
+                ('id', 'in', journal_sequence_ids)
             ]
             if self.partner_id.l10n_cl_sii_taxpayer_type == '3':
                 domain += [('code', 'in', ['35', '38', '39', '41'])]
