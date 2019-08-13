@@ -259,15 +259,11 @@ class WebsitePayment(http.Controller):
         PaymentProcessing.add_payment_transaction(tx)
 
         try:
-            res = tx.s2s_do_transaction()
-            if tx.state == 'done':
-                tx.return_url = return_url or '/website_payment/confirm?tx_id=%d' % tx.id
-            valid_state = 'authorized' if tx.acquirer_id.capture_manually else 'done'
-            if not res or tx.state != valid_state:
-                tx.return_url = '/website_payment/pay?error_msg=%s' % _('Payment transaction failed.')
-            return request.redirect('/payment/process')
+            tx.s2s_do_transaction()
+            tx.return_url = return_url or '/website_payment/confirm?tx_id=%d' % tx.id
         except Exception as e:
-            return request.redirect('/payment/process')
+            _logger.exception(e)
+        return request.redirect('/payment/process')
 
     @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
     def confirm(self, **kw):
