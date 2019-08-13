@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
 
 
@@ -10,9 +7,7 @@ class AccountTax(models.Model):
     _name = 'account.tax'
     _inherit = 'account.tax'
 
-    l10n_cl_sii_code = fields.Integer(
-        'SII Code'
-    )
+    l10n_cl_sii_code = fields.Integer('SII Code')
 
 
 class AccountTaxTemplate(models.Model):
