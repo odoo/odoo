@@ -96,14 +96,11 @@ class SaleOrder(models.Model):
                     if not default_so_line_vals:
                         OrderLine = self.env['sale.order.line']
                         default_so_line_vals = OrderLine.default_get(OrderLine._fields.keys())
-                    pnvav = []  # product no variant attribute values
-                    for nvav in no_variant_attribute_values:
-                        pnvav.append((4, nvav))
                     new_lines.append((0, 0, dict(
                         default_so_line_vals,
                         product_id=product.id,
                         product_uom_qty=qty,
-                        product_no_variant_attribute_value_ids=pnvav)
+                        product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if new_lines:
                 self.update(dict(order_line=new_lines))
