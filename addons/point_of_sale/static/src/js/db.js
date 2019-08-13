@@ -395,7 +395,9 @@ var PosDB = core.Class.extend({
         if (!(category_ids instanceof Array)) {
             category_ids = [category_ids];
         }
-        var cat = this.get_product_by_id(product_id).pos_categ_id[0];
+        var product = this.get_product_by_id(product_id);
+        if (product === undefined) return false;
+        var cat = product.pos_categ_id[0];
         while (cat) {
             for (var i = 0; i < category_ids.length; i++) {
                 if (cat == category_ids[i]) {   // The == is important, ids may be strings
