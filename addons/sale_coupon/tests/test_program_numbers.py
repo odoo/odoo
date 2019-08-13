@@ -19,7 +19,6 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.littleServer = self.env.ref('product.consu_delivery_02')
         self.steve = self.env['res.partner'].create({
             'name': 'Steve Bucknor',
-            'customer': True,
             'email': 'steve.bucknor@example.com',
         })
         self.empty_order = self.env['sale.order'].create({

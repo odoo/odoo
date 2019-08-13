@@ -37,7 +37,8 @@ class StockMoveLine(models.Model):
         ondelete='restrict', required=False,
         help="If set, the operations are packed into this package")
     date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
-    owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
+    owner_id = fields.Many2one('res.partner', 'From Owner',
+        help="When validating the transfer, the products will be taken from this owner.")
     location_id = fields.Many2one('stock.location', 'From', required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
@@ -500,7 +501,7 @@ class StockMoveLine(models.Model):
         if quantity > available_quantity:
             # We now have to find the move lines that reserved our now unavailable quantity. We
             # take care to exclude ourselves and the move lines were work had already been done.
-            oudated_move_lines_domain = [
+            outdated_move_lines_domain = [
                 ('move_id.state', 'not in', ['done', 'cancel']),
                 ('product_id', '=', product_id.id),
                 ('lot_id', '=', lot_id.id if lot_id else False),
@@ -510,14 +511,15 @@ class StockMoveLine(models.Model):
                 ('product_qty', '>', 0.0),
                 ('id', 'not in', ml_to_ignore.ids),
             ]
-            oudated_candidates = self.env['stock.move.line'].search(oudated_move_lines_domain)
+            current_picking_first = lambda cand: cand.picking_id != self.move_id.picking_id
+            outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
 
             # As the move's state is not computed over the move lines, we'll have to manually
             # recompute the moves which we adapted their lines.
             move_to_recompute_state = self.env['stock.move']
 
             rounding = self.product_uom_id.rounding
-            for candidate in oudated_candidates:
+            for candidate in outdated_candidates:
                 if float_compare(candidate.product_qty, quantity, precision_rounding=rounding) <= 0:
                     quantity -= candidate.product_qty
                     move_to_recompute_state |= candidate.move_id

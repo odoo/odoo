@@ -53,7 +53,7 @@ class ResCompany(models.Model):
     l10n_it_eco_index_number = fields.Char(string="Number in register of companies", size=20,
         help="This field must contain the number under which the\
         seller/provider is listed on the register of companies.")
-    l10n_it_eco_index_share_capital = fields.Float(default="0.0", size=15, string="Share capital actually paid up",
+    l10n_it_eco_index_share_capital = fields.Float(default=0.0, string="Share capital actually paid up",
         help="Mandatory if the seller/provider is a company with share\
         capital (SpA, SApA, Srl), this field must contain the amount\
         of share capital actually paid up as resulting from the last\

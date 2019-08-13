@@ -8,6 +8,44 @@ from odoo.fields import Datetime
 from odoo.tests.common import Form, SavepointCase
 
 
+def _create_accounting_data(env):
+    """Create the accounts and journals used in stock valuation.
+
+    :param env: environment used to create the records
+    :return: an input account, an output account, a valuation account, an expense account, a stock journal
+    """
+    stock_input_account = env['account.account'].create({
+        'name': 'Stock Input',
+        'code': 'StockIn',
+        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'reconcile': True,
+    })
+    stock_output_account = env['account.account'].create({
+        'name': 'Stock Output',
+        'code': 'StockOut',
+        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'reconcile': True,
+    })
+    stock_valuation_account = env['account.account'].create({
+        'name': 'Stock Valuation',
+        'code': 'Stock Valuation',
+        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'reconcile': True,
+    })
+    expense_account = env['account.account'].create({
+        'name': 'Expense Account',
+        'code': 'Expense Account',
+        'user_type_id': env.ref('account.data_account_type_expenses').id,
+        'reconcile': True,
+    })
+    stock_journal = env['account.journal'].create({
+        'name': 'Stock Journal',
+        'code': 'STJTEST',
+        'type': 'general',
+    })
+    return stock_input_account, stock_output_account, stock_valuation_account, expense_account, stock_journal
+
+
 class TestStockValuation(SavepointCase):
     @classmethod
     def setUpClass(cls):
@@ -37,34 +75,9 @@ class TestStockValuation(SavepointCase):
             'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
         })
 
+        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
         cls.product1.categ_id.property_valuation = 'real_time'
         cls.product2.categ_id.property_valuation = 'real_time'
-        Account = cls.env['account.account']
-        cls.stock_input_account = Account.create({
-            'name': 'Stock Input',
-            'code': 'StockIn',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-        })
-        cls.stock_output_account = Account.create({
-            'name': 'Stock Output',
-            'code': 'StockOut',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-        })
-        cls.stock_valuation_account = Account.create({
-            'name': 'Stock Valuation',
-            'code': 'Stock Valuation',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-        })
-        cls.expense_account = Account.create({
-            'name': 'Expense Account',
-            'code': 'Expense Account',
-            'user_type_id': cls.env.ref('account.data_account_type_expenses').id,
-        })
-        cls.stock_journal = cls.env['account.journal'].create({
-            'name': 'Stock Journal',
-            'code': 'STJTEST',
-            'type': 'general',
-        })
         cls.product1.write({
             'property_account_expense_id': cls.expense_account.id,
         })
@@ -3467,7 +3480,7 @@ class TestStockValuation(SavepointCase):
         self.product1.standard_price = 15
         self.product1.categ_id.property_cost_method = 'fifo'
         inventory_location = self.product1.property_stock_inventory
-        inventory_location.company_id = self.env.user.company_id.id
+        inventory_location.company_id = self.env.company.id
 
         # Start Inventory: 12 units
         move1 = self.env['stock.move'].create({
@@ -3503,3 +3516,51 @@ class TestStockValuation(SavepointCase):
 
         self.assertAlmostEqual(move1.stock_valuation_layer_ids.remaining_qty, 0.0)
         self.assertAlmostEqual(self.product1.value_svl, 0.0)
+
+    def test_at_date_average_1(self):
+        """ Set a company on the inventory loss, take items from there then put items there, check
+        the values and quantities at date.
+        """
+        now = Datetime.now()
+        date1 = now - timedelta(days=8)
+        date2 = now - timedelta(days=7)
+
+        self.product1.standard_price = 10
+        self.product1.product_tmpl_id.cost_method = 'average'
+        inventory_location = self.product1.property_stock_inventory
+        inventory_location.company_id = self.env.company.id
+
+        move1 = self.env['stock.move'].create({
+            'name': 'Adjustment of 10 units',
+            'location_id': inventory_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+        move1.date = date1
+        move1.stock_valuation_layer_ids.write({'create_date': date1})
+
+        move2 = self.env['stock.move'].create({
+            'name': 'Sell 5 units',
+            'location_id': self.stock_location.id,
+            'location_dest_id': inventory_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 5.0
+        move2._action_done()
+        move2.date = date2
+        move2.stock_valuation_layer_ids.write({'create_date': date2})
+
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).quantity_svl, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).value_svl, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).quantity_svl, 5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).value_svl, 50)

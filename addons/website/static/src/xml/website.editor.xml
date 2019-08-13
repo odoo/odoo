@@ -37,16 +37,29 @@
         <div class="form-row justify-content-between o_options_container"/>
     </div>
     <t t-name="website.theme_customize_modal_option">
-        <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''} #{widget ? 'o_theme_customize_with_widget' : ''}">
+        <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''} #{widget and widget != 'auto' ? 'o_theme_customize_with_widget' : ''}">
             <img t-if="icon" t-att-src="icon"/>
 
             <t t-set="label" t-value="font ? '' : string"/>
-            <t t-if="alone and !widget" t-call="website.components.switch"/>
+            <t t-if="alone and (!widget or widget == 'auto')" t-call="website.components.switch"/>
             <label t-else="">
                 <input t-att-id="id" t-att-name="name" type="radio" t-att-checked="checked ? 'checked' : undefined"/>
                 <span><t t-esc="label"/></span>
             </label>
         </div>
+    </t>
+    <t t-name="website.theme_customize_delete_font">
+        <t t-set="delete_font_title">Delete this font</t>
+        <button type="button"
+            class="btn btn-link d-flex align-items-center text-danger fa fa-trash-o o_theme_customize_delete_google_font"
+            t-att-aria-label="delete_font_title"
+            t-att-title="delete_font_title"
+            t-att-data-font-index="index"/>
+    </t>
+    <t t-name="website.theme_customize_add_google_font_option">
+        <a class="dropdown-item p-2 o_theme_customize_add_google_font" t-att-data-variable="variable" href="#">
+            <i class="fa fa-plus"/> Add a Google Font
+        </a>
     </t>
     <t t-name="website.theme_customize_dropdown_option">
         <div t-attf-class="dropdown o_theme_customize_dropdown">
@@ -59,12 +72,17 @@
             t-att-data-color-type="colorType"/>
     </t>
     <t t-name="website.theme_customize_widget_input">
-        <div t-attf-class="o_theme_customize_input o_theme_customize_input_#{value}"
-            t-att-data-value="value"
+        <div class="o_theme_customize_input"
+            t-att-data-variable="variable"
             t-att-data-unit="unit">
             <i class="fa fa-edit"/>
             <span/>
         </div>
+    </t>
+    <t t-name="website.theme_customize_widget_auto">
+        <div class="o_theme_customize_auto"
+            t-att-data-variable="variable"
+            t-att-data-value="value"/>
     </t>
     <t t-name="website.theme_customize_active_input">
         <div class="input-group input-group-sm align-items-center o_theme_customize_active_input">
@@ -78,7 +96,7 @@
 
     <t t-extend="wysiwyg.widgets.link">
         <t t-jquery="#o_link_dialog_url_input" t-operation="after">
-            <small class="form-text text-muted">Hint: Type '/' to link to an existing page and '#' to an anchor.</small>
+            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
         </t>
         <t t-jquery="div.o_url_input" t-operation="after">
             <div class="form-group row o_link_dialog_page_anchor d-none">
@@ -100,6 +118,19 @@
                     <p class="d-none o_anchor_not_valid">The chosen name is not valid (use only a-Z A-Z 0-9 - _)</p>
                     <p class="d-none o_anchor_already_exists">The chosen name already exists</p>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add a Google Font option dialog -->
+    <div t-name="website.dialog.addGoogleFont">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="google_font_html">Google Font HTML</label>
+            <div class="col-md-9">
+                <textarea id="google_font_html" class="form-control o_input_google_font"
+                    placeholder="&lt;link href='https://fonts.googleapis.com/css?family=Bonbon&amp;display=swap' rel='stylesheet'&gt;" style="height: 100px;"/>
+                <span class="float-right text-muted">
+                    Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the embed code here.
+                </span>
             </div>
         </div>
     </div>

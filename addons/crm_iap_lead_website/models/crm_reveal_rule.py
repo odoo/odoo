@@ -7,7 +7,7 @@ import logging
 import re
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, _geoip_resolver
 from odoo.addons.iap import jsonrpc
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
@@ -74,8 +74,17 @@ class CRMRevealRule(models.Model):
             raise ValidationError(_('Enter Valid Regex.'))
 
     @api.model
+    def _assert_geoip(self):
+        if not _geoip_resolver:
+            message = _('Lead Generation requires a GeoIP resolver which could not be found on your system. Please consult https://pypi.org/project/GeoIP/.')
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                {'type': 'simple_notification', 'title': _('Missing Library'), 'message': message, 'sticky': True, 'warning': True})
+
+    @api.model
     def create(self, vals):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        self._assert_geoip()
         return super(CRMRevealRule, self).create(vals)
 
     def write(self, vals):
@@ -84,6 +93,7 @@ class CRMRevealRule(models.Model):
         }
         if set(vals.keys()) & fields_set:
             self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        self._assert_geoip()
         return super(CRMRevealRule, self).write(vals)
 
     def unlink(self):
@@ -102,11 +112,13 @@ class CRMRevealRule(models.Model):
     def action_get_lead_tree_view(self):
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
+        action['context'] = dict(self._context, create=False)
         return action
 
     def action_get_opportunity_tree_view(self):
         action = self.env.ref('crm.crm_lead_opportunities').read()[0]
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
+        action['context'] = dict(self._context, create=False)
         return action
 
     @api.model

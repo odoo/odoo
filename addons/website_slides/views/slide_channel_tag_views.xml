@@ -5,7 +5,7 @@
         <field name="name">slide.channel.tag.view.search</field>
         <field name="model">slide.channel.tag</field>
         <field name="arch" type="xml">
-            <search string="Channel Tags">
+            <search string="Course Tags">
                 <field name="name"/>
                 <field name="group_id"/>
             </search>
@@ -16,7 +16,7 @@
         <field name="name">slide.channel.tag.view.form</field>
         <field name="model">slide.channel.tag</field>
         <field name="arch" type="xml">
-            <form string="Channel Tag">
+            <form string="Course Tag">
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -31,7 +31,7 @@
         <field name="name">slide.channel.tag.view.tree</field>
         <field name="model">slide.channel.tag</field>
         <field name="arch" type="xml">
-            <tree string="Channel Tags">
+            <tree string="Course Tags" editable="top">
                 <field name="sequence" widget="handle"/>
                 <field name="group_sequence" invisible="1"/>
                 <field name="name"/>
@@ -41,7 +41,7 @@
     </record>
 
     <record id="slide_channel_tag_action" model="ir.actions.act_window">
-        <field name="name">Channel Tags</field>
+        <field name="name">Course Tags</field>
         <field name="res_model">slide.channel.tag</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -51,7 +51,7 @@
         <field name="name">slide.channel.tag.group.view.search</field>
         <field name="model">slide.channel.tag.group</field>
         <field name="arch" type="xml">
-            <search string="Channel Tag Groups">
+            <search string="Course Tag Groups">
                 <field name="name"/>
             </search>
         </field>
@@ -61,11 +61,12 @@
         <field name="name">slide.channel.tag.group.view.form</field>
         <field name="model">slide.channel.tag.group</field>
         <field name="arch" type="xml">
-            <form string="Channel Tag Group">
+            <form string="Course Tag Group">
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="website_published"/>
+                        <field name="is_published" string="Menu entry"/>
+                        <field name="tag_ids"/>
                     </group>
                 </sheet>
             </form>
@@ -76,16 +77,16 @@
         <field name="name">slide.channel.tag.group.view.tree</field>
         <field name="model">slide.channel.tag.group</field>
         <field name="arch" type="xml">
-            <tree string="Channel Tag Groups">
+            <tree string="Course Tag Groups">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="website_published"/>
+                <field name="is_published" string="Menu Entry"/>
             </tree>
         </field>
     </record>
 
     <record id="slide_channel_tag_group_action" model="ir.actions.act_window">
-        <field name="name">Channel Tag Groups</field>
+        <field name="name">Course Tags</field>
         <field name="res_model">slide.channel.tag.group</field>
         <field name="view_mode">tree,form</field>
     </record>

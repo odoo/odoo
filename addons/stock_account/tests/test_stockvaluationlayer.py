@@ -3,6 +3,7 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests import Form, tagged
 from odoo.tests.common import SavepointCase, TransactionCase
 
@@ -709,8 +710,22 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
-@tagged('post_install', '-at_install')
 class TestStockValuationChangeValuation(TestStockValuationCommon):
+    @classmethod
+    def setUpClass(cls):
+        super(TestStockValuationChangeValuation, cls).setUpClass()
+        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
+        cls.product1.categ_id.property_valuation = 'real_time'
+        cls.product1.write({
+            'property_account_expense_id': cls.expense_account.id,
+        })
+        cls.product1.categ_id.write({
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.stock_journal.id,
+        })
+
     def test_standard_manual_to_auto_1(self):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -743,9 +758,16 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
-        cat2 = self.env['product.category'].create({'name': 'fifo'})
+        cat2 = self.env['product.category'].create({'name': 'standard auto'})
         cat2.property_cost_method = 'standard'
         cat2.property_valuation = 'real_time'
+        cat2.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
+
         self.product1.categ_id = cat2
 
         self.assertEqual(self.product1.value_svl, 100)

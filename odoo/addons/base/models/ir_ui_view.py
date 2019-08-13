@@ -222,7 +222,7 @@ class View(models.Model):
                                Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""")
     arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture',
                             help="This field is the same as `arch` field without translations")
-    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch',
+    arch_db = fields.Text(string='Arch Blob', translate=xml_translate,
                           help="This field stores the view arch.")
     arch_fs = fields.Char(string='Arch Filename', help="""File from where the view originates.
                                                           Useful to (hard) reset broken views or to read arch from file in dev-xml mode.""")
@@ -390,10 +390,11 @@ actual arch.
                     view_docs = view_docs[0]
                 for view_arch in view_docs:
                     check = valid_view(view_arch, env=self.env, model=view.model)
+                    view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                     if not check:
-                        raise ValidationError(_('Invalid view %s definition in %s') % (view.name, view.arch_fs))
+                        raise ValidationError(_('Invalid view %s definition in %s') % (view_name, view.arch_fs))
                     if check == "Warning":
-                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view.name, view.arch_fs, view.arch)
+                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view_name, view.arch_fs, view.arch)
         return True
 
     @api.constrains('type', 'groups_id')
@@ -975,7 +976,7 @@ actual arch.
                         not self._context.get("create", True) and is_base_model):
                     node.set("create", 'false')
 
-        if node.tag in ('kanban', 'tree', 'form', 'gantt', 'activity'):
+        if node.tag in ('kanban', 'tree', 'form', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import logging
 import time
-from threading import Thread, Event
+from threading import Thread, Event, Lock
 from usb import core
 from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
@@ -18,7 +18,6 @@ from cups import Connection as cups_connection
 from glob import glob
 from base64 import b64decode
 from pathlib import Path
-from serial.tools.list_ports import comports
 import socket
 
 from odoo import http, _
@@ -158,7 +157,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         """
         On specific driver override this method to give connection type of device
         return string
-        possible value : direct - network - bluetooth
+        possible value : direct - network - bluetooth - serial
         """
         return self._device_connection
 
@@ -309,10 +308,9 @@ class Manager(Thread):
 
     def serial_loop(self):
         serial_devices = {}
-        for dev in comports():
-            dev.identifier = dev.location
-            iot_device = IoTDevice(dev, 'serial')
-            serial_devices[dev.identifier] = iot_device
+        for identifier in glob('/dev/serial/by-path/*'):
+            iot_device = IoTDevice({'identifier': identifier, }, 'serial')
+            serial_devices[identifier] = iot_device
         return serial_devices
 
     def usb_loop(self):
@@ -355,7 +353,8 @@ class Manager(Thread):
 
     def printer_loop(self):
         printer_devices = {}
-        devices = conn.getDevices()
+        with cups_lock:
+            devices = conn.getDevices()
         for path in [printer_lo for printer_lo in devices if devices[printer_lo]['device-make-and-model'] != 'Unknown']:
             if 'uuid=' in path:
                 serial = sub('[^a-zA-Z0-9 ]+', '', path.split('uuid=')[1])
@@ -445,6 +444,7 @@ class SocketManager(Thread):
 conn = cups_connection()
 PPDs = conn.getPPDs()
 printers = conn.getPrinters()
+cups_lock = Lock()  # We can only make one call to Cups at a time
 
 m = Manager()
 m.daemon = True

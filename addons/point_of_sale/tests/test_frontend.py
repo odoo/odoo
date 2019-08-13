@@ -7,7 +7,7 @@ from datetime import date, timedelta
 
 import odoo.tests
 
-
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):
         env = self.env(user=self.env.ref('base.user_admin'))
@@ -26,6 +26,14 @@ class TestUi(odoo.tests.HttpCase):
                                    'company_id': main_company.id,
                                    'fields_id': field.id,
                                    'value': 'account.account,' + str(account_receivable.id)})
+
+        cash_journal = journal_obj.create({
+            'name': 'Cash Test',
+            'type': 'cash',
+            'company_id': main_company.id,
+            'code': 'CSH',
+            'sequence': 10,
+        })
 
         # test an extra price on an attribute
         pear = env.ref('point_of_sale.whiteboard')
@@ -287,11 +295,11 @@ class TestUi(odoo.tests.HttpCase):
                                             })],
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
-            'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
-                                                       'code': 'TSC',
-                                                       'type': 'cash',
-                                                       'company_id': main_company.id,
-                                                       'journal_user': True})],
+            'payment_method_ids': [(0, 0, { 'name': 'Cash',
+                                            'is_cash_count': True,
+                                            'cash_journal_id': cash_journal.id,
+                                            'receivable_account_id': account_receivable.id,
+            })],
             'use_pricelist': True,
             'pricelist_id': public_pricelist.id,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],

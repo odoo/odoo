@@ -222,7 +222,7 @@ class Project(models.Model):
         ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
     ], 'Rating Frequency')
 
-    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False, oldname='website_published')
+    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False)
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -264,7 +264,7 @@ class Project(models.Model):
             defaults = self._map_tasks_default_valeus(task)
             if task.parent_id:
                 # set the parent to the duplicated task
-                defaults['parent_id'] = old_to_new_tasks[task.parent_id.id]
+                defaults['parent_id'] = old_to_new_tasks.get(task.parent_id.id, False)
             new_task = task.copy(defaults)
             old_to_new_tasks[task.id] = new_task.id
             tasks += new_task
@@ -472,7 +472,7 @@ class Task(models.Model):
     stage_id = fields.Many2one('project.task.type', string='Stage', ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False)
-    tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
+    tag_ids = fields.Many2many('project.tags', string='Tags')
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
@@ -530,7 +530,7 @@ class Task(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Circular references are not permitted between tasks and sub-tasks'))
+            raise ValidationError(_('You cannot create recursive tasks.'))
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -910,7 +910,8 @@ class Task(models.Model):
             'view_mode': 'form',
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'context': dict(self._context, create=False)
         }
 
     def action_subtask(self):

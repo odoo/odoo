@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-extend="XmlReceipt">
+    <t t-extend="OrderReceipt">
         <t t-jquery='.cashier' t-operation='append'>
             <t t-if='receipt.table'>
                 at table <t t-esc='receipt.table' />

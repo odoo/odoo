@@ -389,12 +389,8 @@ tour.register('main_flow_tour', {
     trigger: 'label:contains("Untaxed Amount")',
     // click somewhere else to exit cell focus
 }, {
-    trigger: ".o_statusbar_buttons > button.o_sale_print:enabled",
-    content: _t("<p><b>Print this quotation.</b></p>"),
-    position: "bottom"
-}, {
     trigger: ".o_statusbar_buttons > button:enabled:contains('Send by Email')",
-    extra_trigger: ".o_statusbar_status .btn-primary:contains('Quotation Sent')",
+    extra_trigger: ".o_statusbar_status .btn-primary:contains('Quotation')",
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {

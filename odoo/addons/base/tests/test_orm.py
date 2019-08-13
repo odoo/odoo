@@ -315,7 +315,7 @@ class TestInherits(TransactionCase):
         user_foo = self.env['res.users'].create({
             'name': 'Foo',
             'login': 'foo',
-            'supplier': True,
+            'employee': True,
         })
         foo_before, = user_foo.read()
         del foo_before['__last_update']
@@ -327,7 +327,7 @@ class TestInherits(TransactionCase):
 
         self.assertEqual(user_bar.name, 'Foo (copy)')
         self.assertEqual(user_bar.login, 'bar')
-        self.assertEqual(user_foo.supplier, user_bar.supplier)
+        self.assertEqual(user_foo.employee, user_bar.employee)
         self.assertNotEqual(user_foo.id, user_bar.id)
         self.assertNotEqual(user_foo.partner_id.id, user_bar.partner_id.id)
 
@@ -364,7 +364,7 @@ class TestInherits(TransactionCase):
         write_date_before = user.write_date
 
         # write base64 image
-        user.write({'image': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
+        user.write({'image_1920': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
         write_date_after = user.write_date
         self.assertNotEqual(write_date_before, write_date_after)
 

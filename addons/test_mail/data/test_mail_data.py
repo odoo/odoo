@@ -744,7 +744,7 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=test.ironsky; s=mail;
      h+BQVyBKIvr/LDFPSN2hQmfXWwWupm1lgUhJ07T4=
 Content-Type: multipart/mixed; boundary="===============7355787381227985247=="
 MIME-Version: 1.0
-Message-Id: <288877393590487.1555335624.090619087219238-openerp-32-project.task@aaa>
+Message-Id: {extra}
 references: <670034078674109.1555335454.587288856506348-openerp-32-project.task@aaa>
 Subject: Re: Test
 From: Mitchell Admin <admin@yourcompany.example.com>

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import requests
-from PIL import Image
 
 import base64
 import datetime
 import io
 import re
-import uuid
+import requests
+import PyPDF2
 
+from PIL import Image
 from werkzeug import urls
 
 from odoo import api, fields, models, _
@@ -89,25 +89,27 @@ class Slide(models.Model):
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
-        'sequence': 'category_sequence asc, sequence asc',
+        'sequence': 'sequence asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
-    _order = 'category_sequence asc, sequence asc'
+    _order = 'sequence asc, is_category asc'
 
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
-    sequence = fields.Integer('Sequence', default=10)
-    category_sequence = fields.Integer('Category sequence', related="category_id.sequence", store=True)
+    sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
-    category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
-    completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
+    completion_time = fields.Float('Completion Time', digits=(10, 4), help="The estimated completion time for this slide")
+    # Categories
+    is_category = fields.Boolean('Is a category', default=False)
+    category_id = fields.Many2one('slide.slide', string="Category", compute="_compute_category_id", store=True)
+    slide_ids = fields.One2many('slide.slide', "category_id", string="Slides")
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='website.group_website_publisher')
@@ -116,12 +118,11 @@ class Slide(models.Model):
         'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
         help="Subscriber information for the current logged in user")
     # Quiz related fields
-    question_ids = fields.One2many("slide.question","slide_id", string="Questions")
+    question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
     quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
     quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
     quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
     quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
-
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
@@ -133,7 +134,6 @@ class Slide(models.Model):
         string='Type', required=True,
         default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
-    index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
@@ -151,11 +151,51 @@ class Slide(models.Model):
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views')
-    total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+    total_views = fields.Integer("Views", default="0", compute='_compute_total', store=True)
+    # comments
+    comments_count = fields.Integer('Number of comments', compute="_compute_comments_count")
+    # channel
+    channel_type = fields.Selection(related="channel_id.channel_type", string="Channel type")
+    channel_allow_comment = fields.Boolean(related="channel_id.allow_comment", string="Allows comment")
+    # Statistics in case the slide is a category
+    nbr_presentation = fields.Integer("Number of Presentations", compute='_compute_slides_statistics', store=True)
+    nbr_document = fields.Integer("Number of Documents", compute='_compute_slides_statistics', store=True)
+    nbr_video = fields.Integer("Number of Videos", compute='_compute_slides_statistics', store=True)
+    nbr_infographic = fields.Integer("Number of Infographics", compute='_compute_slides_statistics', store=True)
+    nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_quiz = fields.Integer("Number of Quizs", compute="_compute_slides_statistics", store=True)
+    total_slides = fields.Integer(compute='_compute_slides_statistics', store=True)
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
+
+    @api.depends('channel_id.slide_ids.is_category', 'channel_id.slide_ids.sequence')
+    def _compute_category_id(self):
+        """ Will take all the slides of the channel for which the index is higher
+        than the index of this category and lower than the index of the next category.
+
+        Lists are manually sorted because when adding a new browse record order
+        will not be correct as the added slide would actually end up at the
+        first place no matter its sequence."""
+        channel_slides = dict.fromkeys(self.mapped('channel_id').ids, self.env['slide.slide'])
+        for slide in self:
+            channel_slides[slide.channel_id.id] += slide
+
+        for cid, slides in channel_slides.items():
+            current_category = self.env['slide.slide']
+            slide_list = list(slides)
+            slide_list.sort(key=lambda s: (s.sequence, not s.is_category))
+            for slide in slide_list:
+                if slide.is_category:
+                    current_category = slide
+                elif slide.category_id != current_category:
+                    slide.category_id = current_category.id
+
+    @api.depends('website_message_ids.res_id', 'website_message_ids.model', 'website_message_ids.message_type')
+    def _compute_comments_count(self):
+        for slide in self:
+            slide.comments_count = len(slide.website_message_ids)
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):
@@ -191,6 +231,34 @@ class Slide(models.Model):
         mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
         for slide in self:
             slide.slide_views = mapped_data.get(slide.id, 0)
+
+    @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.is_category')
+    def _compute_slides_statistics(self):
+        result = dict.fromkeys(self.ids, dict())
+        res = self.env['slide.slide'].read_group(
+            [('is_published', '=', True), ('category_id', 'in', self.ids), ('is_category', '=', False)],
+            ['category_id', 'slide_type'], ['category_id', 'slide_type'],
+            lazy=False)
+
+        type_stats = self._compute_slides_statistics_type(res)
+        for cid, cdata in type_stats.items():
+            result[cid].update(cdata)
+
+        for record in self:
+            record.update(result[record.id])
+
+    def _compute_slides_statistics_type(self, read_group_res):
+        """ Compute statistics based on all existing slide types """
+        slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
+        keys = ['nbr_%s' % slide_type for slide_type in slide_types]
+        result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
+        for res_group in read_group_res:
+            cid = res_group['category_id'][0]
+            result[cid]['total_slides'] = 0
+            for slide_type in slide_types:
+                result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
+                result[cid]['total_slides'] += result[cid]['nbr_%s' % slide_type]
+        return result
 
     @api.depends('slide_partner_ids.partner_id')
     def _compute_user_membership_id(self):
@@ -237,6 +305,15 @@ class Slide(models.Model):
             for key, value in values.items():
                 self[key] = value
 
+    @api.onchange('datas')
+    def _on_change_datas(self):
+        """ For PDFs, we assume that it takes 5 minutes to read a page. """
+        if self.datas:
+            data = base64.b64decode(self.datas)
+            if data.startswith(b'%PDF-'):
+                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
+                self.completion_time = (5 * len(pdf.pages)) / 60
+
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
         # TDE FIXME: clena this link.tracker strange stuff
@@ -275,11 +352,12 @@ class Slide(models.Model):
             # 'website_published' is handled by mixin
             values['date_published'] = False
 
-        if not values.get('index_content'):
-            values['index_content'] = values.get('description')
-        if values.get('slide_type') == 'infographic' and not values.get('image'):
-            values['image'] = values['datas']
-        if values.get('website_published') and not values.get('date_published'):
+        if values.get('slide_type') == 'infographic' and not values.get('image_1920'):
+            values['image_1920'] = values['datas']
+        if values.get('is_category'):
+            values['is_preview'] = True
+            values['is_published'] = True
+        if values.get('is_published') and not values.get('date_published'):
             values['date_published'] = datetime.datetime.now()
         if values.get('url') and not values.get('document_id'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
@@ -288,7 +366,7 @@ class Slide(models.Model):
 
         slide = super(Slide, self).create(values)
 
-        if slide.website_published:
+        if slide.is_published:
             slide._post_publication()
         return slide
 
@@ -297,12 +375,23 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
+        if values.get('is_category'):
+            values['is_preview'] = True
+            values['is_published'] = True
 
         res = super(Slide, self).write(values)
-        if values.get('website_published'):
+        if values.get('is_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
         return res
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        """Sets the sequence to zero so that it always lands at the beginning
+        of the newly selected course as an uncategorized slide"""
+        rec = super(Slide, self).copy(default)
+        rec.sequence = 0
+        return rec
 
     # ---------------------------------------------------------
     # Mail/Rating
@@ -529,10 +618,10 @@ class Slide(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def _fetch_data(self, base_url, data, content_type=False, extra_params=False):
+    def _fetch_data(self, base_url, params, content_type=False):
         result = {'values': dict()}
         try:
-            response = requests.get(base_url, params=data)
+            response = requests.get(base_url, params=params)
             response.raise_for_status()
             if content_type == 'json':
                 result['values'] = response.json()
@@ -573,8 +662,11 @@ class Slide(models.Model):
         return {'error': _('Unknown document')}
 
     def _parse_youtube_document(self, document_id, only_preview_fields):
+        """ If we receive a duration (YT video), we use it to determine the slide duration.
+        The received duration is under a special format (e.g: PT1M21S15, meaning 1h 21m 15s). """
+
         key = self.env['website'].get_current_website().website_slide_google_app_key
-        fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet', 'fields': 'items(id,snippet)'}, 'json')
+        fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
         if fetch_res.get('error'):
             return fetch_res
 
@@ -583,6 +675,14 @@ class Slide(models.Model):
         if not items:
             return {'error': _('Please enter valid Youtube or Google Doc URL')}
         youtube_values = items[0]
+
+        youtube_duration = youtube_values.get('contentDetails', {}).get('duration')
+        if youtube_duration:
+            parsed_duration = re.search(r'^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$', youtube_duration)
+            values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
+                                        (int(parsed_duration.group(2) or 0) / 60) + \
+                                        (int(parsed_duration.group(3) or 0) / 3600)
+
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
             if only_preview_fields:
@@ -591,10 +691,12 @@ class Slide(models.Model):
                     'title': snippet['title'],
                     'description': snippet['description']
                 })
+
                 return values
+
             values.update({
                 'name': snippet['title'],
-                'image': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
+                'image_1920': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
                 'description': snippet['description'],
                 'mime_type': False,
             })
@@ -605,8 +707,8 @@ class Slide(models.Model):
         def get_slide_type(vals):
             # TDE FIXME: WTF ??
             slide_type = 'presentation'
-            if vals.get('image'):
-                image = Image.open(io.BytesIO(base64.b64decode(vals['image'])))
+            if vals.get('image_1920'):
+                image = Image.open(io.BytesIO(base64.b64decode(vals['image_1920'])))
                 width, height = image.size
                 if height > width:
                     return 'document'
@@ -638,24 +740,19 @@ class Slide(models.Model):
 
         values = {
             'name': google_values['title'],
-            'image': self._fetch_data(google_values['thumbnailLink'].replace('=s220', ''), {}, 'image')['values'],
+            'image_1920': self._fetch_data(google_values['thumbnailLink'].replace('=s220', ''), {}, 'image')['values'],
             'mime_type': google_values['mimeType'],
             'document_id': document_id,
         }
         if google_values['mimeType'].startswith('video/'):
             values['slide_type'] = 'video'
         elif google_values['mimeType'].startswith('image/'):
-            values['datas'] = values['image']
+            values['datas'] = values['image_1920']
             values['slide_type'] = 'infographic'
         elif google_values['mimeType'].startswith('application/vnd.google-apps'):
             values['slide_type'] = get_slide_type(values)
             if 'exportLinks' in google_values:
-                values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf', extra_params=True)['values']
-                # Content indexing
-                if google_values['exportLinks'].get('text/plain'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/plain'], params, extra_params=True)['values']
-                elif google_values['exportLinks'].get('text/csv'):
-                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/csv'], params, extra_params=True)['values']
+                values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf')['values']
         elif google_values['mimeType'] == 'application/pdf':
             # TODO: Google Drive PDF document doesn't provide plain text transcript
             values['datas'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']
@@ -667,6 +764,6 @@ class Slide(models.Model):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
         res['default_meta_description'] = self.description
         return res

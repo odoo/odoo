@@ -30,6 +30,11 @@ class Forum(models.Model):
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1)
+    mode = fields.Selection([
+        ('questions', 'Questions'),
+        ('discussions', 'Discussions')],
+        string='Forum Mode', required=True, default='questions',
+        help='Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed')
     active = fields.Boolean(default=True)
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
     description = fields.Text(
@@ -64,7 +69,7 @@ class Forum(models.Model):
         ('vote_count desc', 'Most Voted'),
         ('relevancy desc', 'Relevance'),
         ('child_count desc', 'Answered')],
-        string='Default Order', required=True, default='write_date desc')
+        string='Default', required=True, default='write_date desc')
     relevancy_post_vote = fields.Float('First Relevance Parameter', default=0.8, help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
     relevancy_time_decay = fields.Float('Second Relevance Parameter', default=1.8)
     allow_bump = fields.Boolean('Allow Bump', default=True,
@@ -75,6 +80,12 @@ class Forum(models.Model):
                                  help='After posting the user will be proposed to share its question '
                                       'or answer on social networks, enabling social network propagation '
                                       'of the forum content.')
+    # posts statistics
+    post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
+    total_posts = fields.Integer('Post Count', compute='_compute_forum_statistics')
+    total_views = fields.Integer('Views Count', compute='_compute_forum_statistics')
+    total_answers = fields.Integer('Answers Count', compute='_compute_forum_statistics')
+    total_favorites = fields.Integer('Favorites Count', compute='_compute_forum_statistics')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
@@ -91,7 +102,7 @@ class Forum(models.Model):
     karma_answer = fields.Integer(string='Answer questions', default=3)
     karma_edit_own = fields.Integer(string='Edit own posts', default=1)
     karma_edit_all = fields.Integer(string='Edit all posts', default=300)
-    karma_edit_retag = fields.Integer(string='Change question tags', default=75, oldname="karma_retag")
+    karma_edit_retag = fields.Integer(string='Change question tags', default=75)
     karma_close_own = fields.Integer(string='Close own posts', default=100)
     karma_close_all = fields.Integer(string='Close all posts', default=500)
     karma_unlink_own = fields.Integer(string='Delete own posts', default=500)
@@ -110,10 +121,28 @@ class Forum(models.Model):
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
     karma_dofollow = fields.Integer(string='Nofollow links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
     karma_editor = fields.Integer(string='Editor Features: image and links',
-                                  default=30, oldname='karma_editor_link_files')
+                                  default=30)
     karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
+
+    @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
+    def _compute_forum_statistics(self):
+        result = dict((cid, dict(total_posts=0, total_views=0, total_answers=0, total_favorites=0)) for cid in self.ids)
+        read_group_res = self.env['forum.post'].read_group(
+            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close'))],
+            ['forum_id', 'views', 'child_count', 'favourite_count'],
+            groupby=['forum_id'],
+            lazy=False)
+        for res_group in read_group_res:
+            cid = res_group['forum_id'][0]
+            result[cid]['total_posts'] += res_group.get('__count', 0)
+            result[cid]['total_views'] += res_group.get('views', 0)
+            result[cid]['total_answers'] += res_group.get('child_count', 0)
+            result[cid]['total_favorites'] += res_group.get('favourite_count', 0)
+
+        for record in self:
+            record.update(result[record.id])
 
     def _compute_count_posts_waiting_validation(self):
         for forum in self:
@@ -144,7 +173,7 @@ class Forum(models.Model):
         user = self.env.user
         for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
-                # check that not arleady created meanwhile or maybe excluded by the limit on the search
+                # check that not already created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
                 if tag_ids:
                     existing_keep.append(int(tag_ids[0]))
@@ -388,7 +417,7 @@ class Post(models.Model):
         res = super(Post, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/res.users/%s/image" % (self.create_uid.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self.create_uid, 'image_1024')
         res['default_twitter']['twitter:card'] = 'summary'
         res['default_meta_description'] = self.plain_content
         return res

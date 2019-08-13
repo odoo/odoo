@@ -10,7 +10,7 @@ class IrModel(models.Model):
     _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(
-        string="Mail Thread", oldname='mail_thread', default=False,
+        string="Mail Thread", default=False,
         help="Whether this model supports messages and notifications.",
     )
     is_mail_activity = fields.Boolean(

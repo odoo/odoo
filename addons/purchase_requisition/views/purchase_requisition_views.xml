@@ -148,7 +148,7 @@
                         <field name="is_quantity_copy" invisible='1'/>
                         <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
                         <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
-                        <field name="vendor_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'required': [('is_quantity_copy', '=', 'none')], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
+                        <field name="vendor_id" context="{'res_partner_search_mode': 'supplier'}" attrs="{'required': [('is_quantity_copy', '=', 'none')], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
                     </group>
                     <group>
@@ -206,12 +206,14 @@
             <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Purchase Agreements">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
-                <field name="user_id"/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                <field name="ordering_date"/>
-                <field name="date_end"/>
-                <field name="origin"/>
-                <field name="state"/>
+                <field name="user_id" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                <field name="ordering_date" optional="show"/>
+                <field name="schedule_date" optional="hide"/>
+                <field name="date_end" optional="show"/>
+                <field name="origin" optional="show"/>
+                <field name="state" optional="show"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
       </field>
     </record>
@@ -242,7 +244,7 @@
                                     <field name="vendor_id"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                         </div>
@@ -265,14 +267,15 @@
                     <separator/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <filter string="My Agreements" name="my_agreements" domain="[('user_id','=', uid)]"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
                         <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>

@@ -58,6 +58,7 @@
                 <field name="activity_type_id"/>
                 <field name="activity_summary"/>
                 <field name="stage_id"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -79,29 +80,26 @@
                 <div class="oe_button_box" name="button_box">
                     <button name="action_applications_email"
                             class="oe_stat_button"
-                            icon="fa-file-o"
+                            icon="fa-pencil"
                             type="object"
                             attrs="{'invisible': [('application_count', '=', 0)]}">
                         <field name="application_count" widget="statinfo" string="Other Applications"/>
                     </button>
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
                          help="Schedule interview with this applicant">
-                        <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_text">Meetings</span>
-                         </div>
+                        <field name="meeting_count" widget="statinfo" string="Meetings"/>
                     </button>
                     <button name="action_get_attachment_tree_view"
                         class="oe_stat_button"
-                        icon="fa-book"
+                        icon="fa-file-text-o"
                         type="object">
                         <field name="attachment_number" widget="statinfo" string="Documents"/>
                     </button>
-                    <button name="action_get_created_employee"
-                        class="oe_stat_button"
-                        icon="fa-user"
-                        type="object"
-                        attrs="{'invisible': [('emp_id', '=', False)]}">
-                        <field name="employee_name" widget="statinfo" string="Employee"/>
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive"
+                            attrs="{'invisible': [('active', '=', True)]}">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
                     </button>
                 </div>
                 <field name="kanban_state" widget="kanban_state_selection"/>
@@ -213,17 +211,16 @@
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
                 <filter string="In progress" name="in_progress" domain="[('kanban_state', '=', 'normal')]"/>
                 <separator/>
-                <filter string="My Activities" name="activities_my"
-                    domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <field name="categ_ids"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
@@ -244,9 +241,10 @@
         <field name="model">hr.applicant</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Applicants" date_start="activity_date_deadline" color="user_id">
-                <field name="name"/>
+            <calendar string="Applicants" mode="month" date_start="activity_date_deadline" color="user_id" event_limit="5" hide_time="true">
                 <field name="partner_name"/>
+                <field name="job_id"/>
+                <field name="priority" widget="priority"/>
                 <field name="activity_summary"/>
             </calendar>
         </field>
@@ -291,7 +289,7 @@
                 <progressbar field="activity_state" colors='{"planned": "success", "overdue": "danger", "today": "warning"}'/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
@@ -342,7 +340,7 @@
                                             <field name="legend_blocked" invisible="1"/>
                                             <field name="legend_done" invisible="1"/>
                                         </div>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                     </div>
 
                                 </div>
@@ -423,23 +421,6 @@
         </field>
     </record>
 
-    <!-- Action for the stat button of the no_employee -->
-    <record model="ir.actions.act_window" id="action_hr_job_no_employee">
-        <field name="name">Employees</field>
-        <field name="res_model">hr.employee</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{'search_default_job_id': active_id}</field>
-        <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Add a new employee
-              </p><p>
-                With just a quick glance on the Odoo employee screen, you
-                can easily find all the information you need for each person;
-                contact data, job position, availability, etc.
-              </p>
-            </field>
-    </record>
-
     <record id="hr_job_simple_form" model="ir.ui.view">
         <field name="name">hr.job.simple.form</field>
         <field name="model">hr.job</field>
@@ -493,26 +474,20 @@
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
-                    icon="fa-file-o"
+                    icon="fa-pencil"
                     name="%(action_hr_job_applications)d"
                     context="{'default_user_id': user_id}"
                     type="action">
                     <field name="application_count" widget="statinfo" string="Applications"/>
                 </button>
                 <button class="oe_stat_button"
-                    icon="fa-users"
-                    name="%(action_hr_job_no_employee)d"
-                    type="action">
-                    <field name="no_of_employee" widget="statinfo" string="Employees"/>
-                </button>
-                <button class="oe_stat_button"
-                    icon="fa-paperclip"
+                    icon="fa-file-text-o"
                     name="action_get_attachment_tree_view"
                     type="object">
                     <field name="documents_count" widget="statinfo" string="Documents"/>
                 </button>
                 <button class="oe_stat_button" type="action"
-                    name="%(action_hr_job_sources)d" icon="fa-share"
+                    name="%(action_hr_job_sources)d" icon="fa-bar-chart-o"
                     context="{'default_job_id': active_id}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Trackers</span>

@@ -65,7 +65,7 @@ ProductConfiguratorWidget.include({
                 productTemplateId
             ]
         }).then(function (result) {
-            if (result && !result.has_optional_products) {
+            if (result.product_id && !result.has_optional_products) {
                 self.trigger_up('field_changed', {
                     dataPointID: dataPointId,
                     changes: {
@@ -76,15 +76,8 @@ ProductConfiguratorWidget.include({
                     },
                 });
             } else {
-                self._openProductConfigurator({
-                        configuratorMode: (result && result.has_optional_products ? 'options' : 'add'),
-                        default_pricelist_id: self._getPricelistId(),
-                        default_product_template_id: productTemplateId
-                    },
-                    dataPointId
-                );
+                return self._openConfigurator(result, productTemplateId, dataPointId);
             }
-            return Promise.resolve(true);
             // always returns true for the moment because no other configurator exists.
         });
     },
@@ -113,6 +106,20 @@ ProductConfiguratorWidget.include({
             // only through the product configurator.
             parentList.unselectRow();
         }
+    },
+
+    _openConfigurator: function (result, productTemplateId, dataPointId) {
+        if (!result.mode || result.mode === 'configurator') {
+            this._openProductConfigurator({
+                    configuratorMode: result && result.has_optional_products ? 'options' : 'add',
+                    default_pricelist_id: this._getPricelistId(),
+                    default_product_template_id: productTemplateId
+                },
+                dataPointId
+            );
+            return Promise.resolve(true);
+        }
+        return Promise.resolve(false);
     },
 
     /**

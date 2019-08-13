@@ -611,7 +611,7 @@ var VariantMixin = {
     _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId) {
         var model = productId ? 'product.product' : 'product.template';
         var modelId = productId || productTemplateId;
-        var imageUrl = '/web/image/{0}/{1}/' + (this._productImageField ? this._productImageField : 'image');
+        var imageUrl = '/web/image/{0}/{1}/' + (this._productImageField ? this._productImageField : 'image_1024');
         var imageSrc = imageUrl
             .replace("{0}", model)
             .replace("{1}", modelId);

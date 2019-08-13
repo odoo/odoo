@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Model">
                 <sheet>
-                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                    <field name="image_128" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -58,6 +58,23 @@
         </field>
     </record>
 
+    <record id='fleet_vehicle_model_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.kanban</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="arch" type="xml">
+            <kanban string="Models">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_details">
+                            <div><strong><field name="name"/></strong></div>
+                            <div><field name="brand_id"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_model_view_search' model='ir.ui.view'>
         <field name="name">fleet.vehicle.model.search</field>
         <field name="model">fleet.vehicle.model</field>
@@ -106,7 +123,7 @@
                 <sheet>
                     <group>
                         <div>
-                            <field name="image_medium" widget="image" class="oe_avatar"/>
+                            <field name="image_128" widget="image" class="oe_avatar"/>
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name"/>
@@ -125,12 +142,11 @@
             <kanban>
                 <field name="id"/>
                 <field name="name" />
-                <field name="image" />
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
                             <a type="open" href="#" class="o_kanban_image oe_kanban_action">
-                                <img alt="Open" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_small', record.id.raw_value)" class="img-fluid" style="width:100px;"/>
+                                <img alt="Open" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_128', record.id.raw_value)" class="img-fluid" style="width:100px;"/>
                             </a>
                             <div class="oe_kanban_details">
                                 <h4 class="oe_partner_heading">

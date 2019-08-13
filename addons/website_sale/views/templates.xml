@@ -132,7 +132,7 @@
     </template>
 
     <template id="products_item" name="Products item">
-        <t t-set="product_href" t-value="request.httprequest.url_root + keep('shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
+        <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
 
         <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1, pricelist=pricelist)"/>
 
@@ -145,8 +145,8 @@
                     <a href="#" role="button" class="ribbon btn btn-danger">Sale</a>
                 </div>
                 <a t-att-href="product_href" class="d-block h-100" itemprop="url">
-                    <span t-field="product.image"
-                        t-options="{'widget': 'image', 'preview_image': 'image' if product_image_big else 'image_large'}"
+                    <span t-field="product.image_1920"
+                        t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256'}"
                         class="d-flex h-100 justify-content-center align-items-center"/>
                 </a>
             </div>
@@ -403,6 +403,7 @@
             </button>
             <div class="collapse d-lg-block" id="wsale_products_attributes_collapse">
                 <form class="js_attributes mb-2" method="get">
+                    <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <ul class="nav nav-pills flex-column">
                         <t t-foreach="attributes" t-as="a">
@@ -498,7 +499,7 @@
                         </div>
                         <div class="col-md-6 col-xl-4" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="'%sshop/product/%s' % (request.httprequest.url_root, slug(product))"/>
+                            <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product js_main_product">
@@ -572,10 +573,10 @@
                             <div class="mt16 text-center" style="height: 100%;">
                                 <t t-set="combination_info" t-value="alt_product._get_combination_info()"/>
                                 <t t-set="product_variant" t-value="alt_product.env['product.product'].browse(combination_info['product_id'])"/>
-                                <div t-if="product_variant" t-field="product_variant.image_small" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
-                                <div t-else="" t-field="alt_product.image_small" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
+                                <div t-if="product_variant" t-field="product_variant.image_64" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
+                                <div t-else="" t-field="alt_product.image_64" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
                                 <h6>
-                                    <a t-attf-href="/shop/product/#{ slug(alt_product) }" style="display: block">
+                                    <a t-att-href="alt_product.website_url" style="display: block">
                                         <span t-att-title="alt_product.name" t-field="alt_product.name" class="o_text_overflow" style="display: block;" />
                                     </a>
                                 </h6>
@@ -801,7 +802,7 @@
 
     <!-- We use this template where we want to give the user a link to the product of a sale order line. -->
     <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
-        <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+        <a t-att-href="line.product_id.website_url">
             <t t-raw="0"/>
         </a>
     </template>
@@ -836,7 +837,7 @@
                     <tr t-att-class="'optional_product info' if line.linked_line_id else None">
                         <td colspan="2" t-if="not line.product_id.product_tmpl_id" class='td-img'></td>
                         <td align="center" t-if="line.product_id.product_tmpl_id" class='td-img'>
-                            <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                            <span t-field="line.product_id.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
                         </td>
                         <td t-if="line.product_id.product_tmpl_id" class='td-product_name'>
                             <div>
@@ -960,7 +961,7 @@
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <div class="row mb8 cart_line">
                     <div class="col-3 text-center">
-                        <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                        <span t-field="line.product_id.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
                     </div>
                     <div class="col-9">
                         <div>
@@ -993,13 +994,13 @@
                     <tr t-foreach="suggested_products" t-as="product">
                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                         <td class='td-img'>
-                            <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
-                                <span t-field="product.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                            <a t-att-href="product.website_url">
+                                <span t-field="product.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
                             </a>
                         </td>
                         <td class='td-product_name'>
                             <div>
-                                <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
+                                <a t-att-href="product.website_url">
                                     <strong t-esc="combination_info['display_name']" />
                                 </a>
                             </div>
@@ -1441,7 +1442,7 @@
                             <tr t-foreach="website_sale_order.website_order_line" t-as="line">
                                 <td class='' colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                                 <td class='td-img text-center' t-if="line.product_id.product_tmpl_id">
-                                    <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                                    <span t-field="line.product_id.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
                                 </td>
                                 <td class='td-product_name' t-if="line.product_id.product_tmpl_id">
                                     <div>
@@ -1643,11 +1644,13 @@
     </template>
 
     <template id="website_sale.brand_promotion" inherit_id="website.brand_promotion">
-        <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
-            <div class="o_brand_promotion">
-                Powered by <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">Odoo</a>,
-                the #1 <a target="_blank" href="http://www.odoo.com/page/e-commerce?utm_source=db&amp;utm_medium=website">Open Source eCommerce</a>.
-            </div>
+        <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message">
+                    The #1 <a target="_blank" href="http://www.odoo.com/page/e-commerce?utm_source=db&amp;utm_medium=website">Open Source eCommerce</a>
+                </t>
+                <t t-set="_utm_medium">website</t>
+            </t>
         </xpath>
     </template>
 
@@ -1723,7 +1726,7 @@
                             <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
                                 <t t-raw="product_image.embed_code"/>
                             </div>
-                            <div  t-else="" t-field="product_image.image" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_be_zoomed and "image_original"}'/>
+                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
                         </div>
                     </t>
                 </div>
@@ -1739,7 +1742,7 @@
             <div t-ignore="True" class="d-none d-md-block text-center">
                 <ol t-if="len(product_images) > 1" class="carousel-indicators d-inline-block position-static mx-auto my-0 p-1 text-left">
                     <t t-foreach="product_images" t-as="product_image"><li t-attf-class="d-inline-block m-1 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
-                        <div t-field="product_image.image_small" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "alt-field": "name"}'/>
+                        <div t-field="product_image.image_64" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "alt-field": "name"}'/>
                         <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle-o o_product_video_thumb"/>
                     </li></t>
                 </ol>

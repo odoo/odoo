@@ -570,6 +570,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
 
         candidates = stock_moves\
+            .sudo()\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
@@ -585,7 +586,7 @@ class ProductProduct(models.Model):
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
-            tmp_value += qty_taken_on_candidate * candidate.unit_cost
+            tmp_value += qty_taken_on_candidate * (candidate.value / candidate.quantity)
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=candidate.uom_id.rounding):
                 break
 
@@ -622,13 +623,13 @@ class ProductCategory(models.Model):
         help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
     property_stock_account_input_categ_id = fields.Many2one(
         'account.account', 'Stock Input Account', company_dependent=True,
-        domain=[('deprecated', '=', False)], oldname="property_stock_account_input_categ",
+        domain=[('deprecated', '=', False)],
         help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
              "can also directly be set on each product")
     property_stock_account_output_categ_id = fields.Many2one(
         'account.account', 'Stock Output Account', company_dependent=True,
-        domain=[('deprecated', '=', False)], oldname="property_stock_account_output_categ",
+        domain=[('deprecated', '=', False)],
         help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
              "can also directly be set on each product")

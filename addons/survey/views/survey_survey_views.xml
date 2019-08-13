@@ -21,12 +21,12 @@
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_survey_user_input_invite"
+                        <button name="action_survey_user_input"
                             type="object"
                             class="oe_stat_button"
                             attrs="{'invisible': [('access_mode', '=', 'public')]}"
                             icon="fa-envelope-o">
-                            <field string="Invitations" name="invite_count" widget="statinfo"/>
+                            <field string="Registered" name="answer_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_certified"
                             type="object"
@@ -54,18 +54,18 @@
                     </group>
                     <notebook>
                         <page string="Questions">
-                            <field name="question_and_page_ids" mode="tree" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}" class="o_survey_questions_and_pages">
-                                <tree decoration-bf="is_page==True">
-                                    <control>
-                                        <create string="Add a section" context="{'default_is_page': True, 'default_questions_selection': questions_selection}"/>
-                                        <create string="Add a question" context="{'default_is_page': False}"/>
-                                    </control>
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
+                                <tree decoration-bf="is_page" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
                                     <field name="question_type" attrs="{'invisible': [('is_page', '=', True)]}"/>
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
                                     <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
+                                    <control>
+                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
+                                        <create name="add_question_control" string="Add a question"/>
+                                    </control>
                                 </tree>
                             </field>
                         </page>
@@ -132,9 +132,11 @@
                 <field name="certificate" invisible="1"/>
                 <field name="title"/>
                 <field name="state"/>
-                <field name="invite_count"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
+                <field name="certified_count"/>
+                <field name="certified_ratio"/>
+                <field name="answer_score_avg"/>
                 <button name="certificate" icon="fa-trophy" title="Certificate" aria-label="Certificate" attrs="{'invisible': [('certificate', '=', False)]}"/>
                 <!-- Tweak as icons aren't directly supported in xml -->
             </tree>
@@ -144,7 +146,7 @@
         <field name="name">Kanban view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state">
+            <kanban>
                 <field name="state" />
                 <field name="title" />
                 <field name="answer_done_count" />
@@ -154,8 +156,8 @@
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <templates>
-                    <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey">
-                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+                    <div t-name="kanban-box" t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click o_kanban_card_survey">
+                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable and !selection_mode">
 
                             <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
@@ -174,7 +176,7 @@
                             </div>
                             <div class="col-2"><i t-if="record.certificate.raw_value === true" title="Certification" class="certification_icon fa fa-trophy"></i></div>
                         </div>
-                        <div class="o_kanban_record_bottom">
+                        <div class="o_kanban_record_bottom" t-if="!selection_mode">
                             <ul class="list-unstyled">
                                 <li>
                                     <a type="object" name="action_test_survey">Test</a>
@@ -188,7 +190,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="o_kanban_record_bottom">
+                        <div class="o_kanban_record_bottom" t-if="!selection_mode">
                             <div class="oe_kanban_bottom_left"/>
                             <div class="oe_kanban_bottom_right">
                                 <field name="activity_ids" widget="kanban_activity" />
@@ -207,20 +209,19 @@
                 <field string="Title" name="title"/>
                 <filter string="Is a certification?" name="certificate" domain="[('certificate','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <separator/>
-                <filter string="My Activities" name="activities_my"
-                    domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Upcoming Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Upcoming Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Category" name="groupby_category" context="{'group_by': 'category'}"/>
+                    <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
@@ -230,6 +231,7 @@
         <field name="name">Surveys</field>
         <field name="res_model">survey.survey</field>
         <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_groupby_state': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new survey

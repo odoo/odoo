@@ -332,11 +332,20 @@ Possible children elements of the list view are:
     ``width_factor`` (for ``editable``)
         the column relative width (as the layout is fixed)
     ``width`` (for ``editable``)
-        the column width (as the layout is fixed)
+        the column width (as the layout is fixed). It is a string describing the
+        width css property, such as '100px'.
 
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
+
+    .. note:: When a list view is grouped, numeric fields are aggregated and
+              displayed for each group.  Also, if there are too many records in
+              a group, a pager will appear on the right of the group row. For
+              this reason, it is not a good practice to have a numeric field in
+              the last column, when the list view is in a situation where it can
+              be grouped (it is however fine for x2manys field in a form view:
+              they cannot be grouped).
 
 ``groupby``
   defines custom headers (with buttons) for the current view when grouping
@@ -346,7 +355,7 @@ Possible children elements of the list view are:
 
   ``name``
       the name of a many2one field (on the current model). Custom header will be
-      displayed when grouping the view on this field name (only for first level).
+      displayed when grouping the view on this field name.
 
   .. code-block:: xml
 
@@ -558,6 +567,9 @@ system. Available semantic components are:
   ``password``
     indicates that a :class:`~odoo.fields.Char` field stores a password and
     that its data shouldn't be displayed
+  ``kanban_view_ref``
+    for opening specific kanban view when selecting records from m2o/m2m in mobile
+    environment
 
 .. todo:: classes for forms
 
@@ -1097,6 +1109,11 @@ Possible children of the view element are:
     self-explanatory
   ``read_only_mode``
     self-explanatory
+  ``selection_mode``
+    set to true when kanban view is opened in mobile environment from m2o/m2m field
+    for selecting records.
+
+    .. note:: clicking on m2o/m2m field in mobile environment opens kanban view
 
 
     .. rubric:: buttons and fields
@@ -1159,8 +1176,6 @@ calendar view are:
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
     Displayed the display_name/avatar of the visible record in the sidebar
-``readonly_form_view_id``
-    view to open in readonly mode
 ``form_view_id``
     view to open when the user create or edit an event. Note that if this attribute
     is not set, the calendar view will fall back to the id of the form view in the
@@ -1309,6 +1324,7 @@ take the following attributes:
     ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
 
   * Scale ``year`` always snap to full day.
+
   Example of precision attribute: ``{"day": "hour:quarter", "week": "day:half", "month": "day"}``
 ``total_row``
   boolean to control whether the row containing the total count of records should
@@ -1346,6 +1362,11 @@ take the following attributes:
   ``on_create``
   If specified when clicking the add button on the view, instead of opening a generic dialog, launch a client action.
   this should hold the xmlid of the action (eg: ``on_create="%(my_module.my_wizard)d"``
+
+``form_view_id``
+  view to open when the user create or edit a record. Note that if this attribute
+  is not set, the gantt view will fall back to the id of the form view in the
+  current action, if any.
 
 .. _reference/views/diagram:
 
@@ -1964,7 +1985,7 @@ Search defaults
 
 Search fields and filters can be configured through the action's ``context``
 using :samp:`search_default_{name}` keys. For fields, the value should be the
-value to set in the field, for filters it's a boolean value. For instance,
+value to set in the field, for filters it's a boolean value or a number. For instance,
 assuming ``foo`` is a field and ``bar`` is a filter an action context of:
 
 .. code-block:: python
@@ -1977,15 +1998,27 @@ assuming ``foo`` is a field and ``bar`` is a filter an action context of:
 will automatically enable the ``bar`` filter and search the ``foo`` field for
 *acro*.
 
+A numeric value (between 1 and 99) can be used to describe the order of default groupbys.
+For instance if ``foo`` and ``bar`` refer to two groupbys
+
+.. code-block:: python
+
+  {
+    'search_default_foo': 2,
+    'search_default_bar': 1
+  }
+
+has the effect to activate first ``bar`` then ``foo``.
+
 .. _reference/views/map:
 
 Map
 ===
 
-This view is able to display records on a map and the routes between them. The record are represented by pins. It also allows the visualization of fields from the model in a popup tied to the record's pin. 
+This view is able to display records on a map and the routes between them. The record are represented by pins. It also allows the visualization of fields from the model in a popup tied to the record's pin.
 
 .. note::
-    
+
     The model on which the view is applied should contains a res.partner many2one since the view relies on the res.partner's address and coordinates fields to localize the records.
 
 .. warning::
@@ -1998,7 +2031,7 @@ Api
 ---
 
 The view uses location data platforms' api to fetch the tiles (the map's background), do the geoforwarding (converting addresses to a set of coordinates) and fetch the routes.
-The view implements two api, the default one, openstreet map is able to fetch `tiles`_ and do `geoforwarding`_. This api does not require a token. 
+The view implements two api, the default one, openstreet map is able to fetch `tiles`_ and do `geoforwarding`_. This api does not require a token.
 As soon as a valid `MapBox`_ token is provided in the general settings the view switches to the Mapbox api. This api is faster and allows the computation of routes. The token are available by `signing up`_ to MapBox
 
 
@@ -2014,8 +2047,8 @@ The view's root element is ``<map>`` multiple attributes are allowed
     Contains the res.partner many2one. If not provided the view will resort to create an empty  map.
 ``default_order``
     If a field is provided the view will override the model's default order. The field must be apart of the model on which the view is applied not from res.partner
-``routing`` 
-    if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)   
+``routing``
+    if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)
 
 The only element allowed within the ``<map>`` element is the ``<marker-popup>``. This element is able to contain multiple ``<field>`` elements. Each of these elements will be interpreted as a line in the marker's popup. The field's attributes are the following:
 
@@ -2091,7 +2124,7 @@ The main additions of qweb-as-view to the basic qweb-as-template are:
                        should only contain xpath elements
                        <reference/views/inheritance>`
 
-.. _geoforwarding: https://nominatim.org/release-docs/develop/ 
+.. _geoforwarding: https://nominatim.org/release-docs/develop/
 .. _tiles: https://wiki.openstreetmap.org/wiki/Tile_data_server
 .. _MapBox: https://docs.mapbox.com/api/
 .. _signing up: https://account.mapbox.com/auth/signup/

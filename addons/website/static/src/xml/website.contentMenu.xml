@@ -13,8 +13,8 @@
                 <i t-if="submenu.is_homepage" class="fa fa-home ml-3" role="img" aria-label="Home" title="Home"/>
             </span>
             <span class="input-group-append">
-                <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit menu" title="Edit menu"/>
-                <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o" aria-label="Delete menu" title="Delete menu"/>
+                <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit Menu Item" title="Edit Menu Item"/>
+                <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o" aria-label="Delete Menu Item" title="Delete Menu Item"/>
             </span>
         </div>
         <t t-set="children" t-value="submenu.children"/>
@@ -45,10 +45,10 @@
     </ul>
     <div class="mt32">
         <small class="float-right text-muted">
-            Drag a menu to the right to create a sub-menu
+            Drag to the right to get a submenu
         </small>
         <a href="#" class="js_add_menu">
-            <i class="fa fa-plus-circle"/> Add Menu Entry
+            <i class="fa fa-plus-circle"/> Add Menu Item
         </a>
     </div>
 </div>

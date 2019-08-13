@@ -11,7 +11,7 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccountMoveInInvoiceOnchanges, cls).setUpClass()
-        
+
         cls.invoice = cls.init_invoice('in_invoice')
 
         cls.product_line_vals_1 = {
@@ -892,13 +892,13 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'date': move_reversal.date,
             'state': 'draft',
-            'invoice_payment_ref': move_reversal.reason,
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'not_paid',
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
-            'reason': 'no reason',
+            'reason': 'because',
             'refund_method': 'cancel',
         })
         reversal = move_reversal.reverse_moves()
@@ -934,7 +934,7 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'date': move_reversal.date,
             'state': 'posted',
-            'invoice_payment_ref': move_reversal.reason,
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'paid',
         })
 

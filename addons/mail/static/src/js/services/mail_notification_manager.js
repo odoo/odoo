@@ -319,12 +319,14 @@ MailManager.include({
      */
     _handlePartnerMarkAsReadNotification: function (data) {
         var self = this;
+        var history = this.getMailbox('history');
         _.each(data.message_ids, function (messageID) {
             var message = _.find(self._messages, function (msg) {
                 return msg.getID() === messageID;
             });
             if (message) {
                 self._removeMessageFromThread('mailbox_inbox', message);
+                history.addMessage(message);
                 self._mailBus.trigger('update_message', message, data.type);
             }
         });
@@ -417,6 +419,9 @@ MailManager.include({
             this._handlePartnerUserConnectionNotification(data);
         } else if (data.info === 'channel_seen') {
             this._handlePartnerChannnelSeenNotification(data);
+        } else if (data.type === 'simple_notification') {
+            var title = _.escape(data.title), message = _.escape(data.message);
+            data.warning ? this.do_warn(title, message, data.sticky) : this.do_notify(title, message, data.sticky);
         } else {
             this._handlePartnerChannelNotification(data);
         }

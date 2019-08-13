@@ -89,9 +89,9 @@
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->
 <template id="slide_aside_card" name="Related Slide">
     <a class="list-group-item list-group-item-action d-flex align-items-start px-2" t-att-href="'/slides/slide/%s' % (slug(aside_slide))">
-        <t t-set="slide_image" t-value="'/web/image/slide.slide/%s/image' % aside_slide.id"/>
+        <t t-set="slide_image" t-value="website.image_url(aside_slide, 'image_1024')"/>
 
-        <div t-if="aside_slide.image" class="flex-shrink-0 mr-1 border" t-attf-style="width: 20%; padding-top: 20%; background-image: url(#{slide_image}); background-size: cover; background-position:center"/>
+        <div t-if="aside_slide.image_1024" class="flex-shrink-0 mr-1 border" t-attf-style="width: 20%; padding-top: 20%; background-image: url(#{slide_image}); background-size: cover; background-position:center"/>
         <div t-else="" class="o_wslides_gradient flex-shrink-0 mr-1" t-attf-style="width: 20%; padding-top: 20%;"/>
         <div class="overflow-hidden d-flex flex-column justify-content-start">
             <h6 t-esc="aside_slide.name" class="o_wslides_desc_truncate_2 mb-1" style="line-height: 1.15"/>
@@ -113,12 +113,9 @@
         </div>
         <ul id="collapse_slide_aside" class="list-unstyled my-0 pb-3 collapse d-lg-block">
             <t t-set="i" t-value="0"/>
-            <t t-if="uncategorized_slides" t-call="website_slides.slide_aside_training_category">
-                <t t-set="category_slide_ids" t-value="uncategorized_slides"/>
-            </t>
-            <t t-foreach="slide.channel_id.category_ids" t-as="category">
+            <t t-if="category.get('slides')" t-foreach="category_data" t-as="category">
                 <t t-call="website_slides.slide_aside_training_category">
-                    <t t-set="category_slide_ids" t-value="category.slide_ids"/>
+                    <t t-set="category_slide_ids" t-value="category['slides']"/>
                 </t>
             </t>
         </ul>
@@ -126,6 +123,7 @@
 </template>
 
 <template id="slide_aside_training_category" name="Category item for the slide detailed view list">
+    <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section mt-2">
         <a t-att-href="('#collapse-%s') % (category.id if category else 0)" data-toggle="collapse" role="button" aria-expanded="true"
             class="o_wslides_lesson_aside_list_link pl-2 text-600 text-uppercase text-decoration-none py-1 small d-block"
@@ -234,7 +232,7 @@
     </div>
     <div class="o_wslides_lesson_content_type">
         <img t-if="slide.slide_type == 'infographic'"
-            t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="width:100%" t-att-alt="slide.name"/>
+            t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width:100%" t-att-alt="slide.name"/>
         <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8" style="height: 600px;">
             <t t-raw="slide.embed_code"/>
         </div>
@@ -254,12 +252,7 @@
             </li>
             <li t-if="slide.channel_id.allow_comment" class="nav-item">
                 <a href="#discuss" aria-controls="discuss" class="nav-link" role="tab" data-toggle="tab">
-                    <i class="fa fa-comments-o"></i> Comments
-                </a>
-            </li>
-            <li class="nav-item" t-if="slide.index_content">
-                <a href="#transcript" aria-controls="transcript" class="nav-link" role="tab" data-toggle="tab">
-                    <i class="fa fa-align-justify"></i> Transcript
+                    <i class="fa fa-comments-o"></i> Comments (<span t-esc="slide.comments_count"/>)
                 </a>
             </li>
             <li class="nav-item">
@@ -282,11 +275,6 @@
                     <t t-set="object" t-value="slide"/>
                     <t t-set="disable_composer" t-value="not (slide.channel_id.can_comment and slide.channel_id.allow_comment and slide.channel_id.channel_type == 'training')"/>
                     <t t-set="display_rating" t-value="False"/>
-                </t>
-            </div>
-            <div role="tabpanel" class="tab-pane fade oe_slides_transcript" id="transcript" t-if="slide.index_content">
-                <t t-foreach="slide.index_content.split('\n')" t-as="line">
-                    <p t-esc="line"></p>
                 </t>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="statistic" t-att-slide-url="slide.website_url">
@@ -474,9 +462,9 @@
         <div class="form-group">
             <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();"><t t-esc="slide.embed_code"/></textarea>
         </div>
-        <div class="form-group" t-if="slide.slide_type in ('presentation', 'document')">
-            <div class="form-text col-xl-3 col-lg-3 col-md-6 col-6">Select page to start with</div>
-            <div class="input-group col-xl-3 col-lg-3 col-md-6 col-6">
+        <div class="form-group d-flex" t-if="slide.slide_type in ('presentation', 'document')">
+            <div class="form-text p-0 col-xs-5 col-sm-5 col-md-5 col-lg-5">Select page to start with</div>
+            <div class="input-group col-xs-3 col-sm-2 col-md-2 col-lg-3">
                 <input type="number" value="1" class="form-control"/>
             </div>
         </div>

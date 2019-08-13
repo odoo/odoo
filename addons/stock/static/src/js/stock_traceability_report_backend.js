@@ -6,7 +6,6 @@ var core = require('web.core');
 var session = require('web.session');
 var ReportWidget = require('stock.ReportWidget');
 var framework = require('web.framework');
-var crash_manager = require('web.crash_manager');
 
 var QWeb = core.qweb;
 
@@ -104,7 +103,7 @@ var stock_report_generic = AbstractAction.extend({
                 url: url_data.replace('output_format', 'pdf'),
                 data: {data: JSON.stringify(dict)},
                 complete: framework.unblockUI,
-                error: crash_manager.rpc_error.bind(crash_manager),
+                error: () => this.call('crash_manager', 'rpc_error', ...arguments),
             });
         });
         return this.$buttons;

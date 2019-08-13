@@ -277,7 +277,7 @@ Odoo supports custom tags acting as syntactic sugar:
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use it if the record notation can't do what you want
 
-The 4 first tags are prefered over the *record* notation.
+The 4 first tags are preferred over the *record* notation.
 
 
 XML IDs and naming
@@ -595,12 +595,8 @@ on self to treat each record.
         for record in self:
             record.do_cool_stuff()
 
-Avoid to use ``api.one``  decorator : this will probably not do what you expected,
-and extending a such method is not as easy than a *api.multi* method, since it
-returns a list of result (ordered by recordset ids).
-
 For performance issue, when developping a 'stat button' (for instance), do not
-perform a ``search`` or a ``search_count`` in a loop in a ``api.multi`` method. It
+perform a ``search`` or a ``search_count`` in a loop. It
 is recommended to use ``read_group`` method, to compute all value in only one request.
 
 .. code-block:: python

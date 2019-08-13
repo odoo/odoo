@@ -17,7 +17,7 @@ class LeadTest(models.Model):
     active = fields.Boolean(default=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
-    customer = fields.Boolean(related='partner_id.customer', readonly=True, store=True)
+    employee = fields.Boolean(related='partner_id.employee', readonly=True, store=True)
     line_ids = fields.One2many('base.automation.line.test', 'lead_id')
 
     priority = fields.Boolean()

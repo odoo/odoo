@@ -38,7 +38,7 @@ class Inventory(models.Model):
              "If the inventory adjustment is validated, date at which the inventory adjustment has been validated.")
     line_ids = fields.One2many(
         'stock.inventory.line', 'inventory_id', string='Inventories',
-        copy=True, readonly=False,
+        copy=False, readonly=False,
         states={'done': [('readonly', True)]})
     move_ids = fields.One2many(
         'stock.move', 'inventory_id', string='Created Moves',
@@ -56,21 +56,27 @@ class Inventory(models.Model):
         states={'draft': [('readonly', False)]},
         default=lambda self: self.env.company)
     location_ids = fields.Many2many(
-        'stock.location', string='Inventoried Location(s)',
+        'stock.location', string='Locations',
         readonly=True,
         states={'draft': [('readonly', False)]},
         default=lambda self: self._default_location_ids(),
         domain=lambda self: self._domain_location_ids())
     product_ids = fields.Many2many(
-        'product.product', string='Inventoried Product(s)',
+        'product.product', string='Products',
         domain=[('type', '=', 'product')], readonly=True,
         states={'draft': [('readonly', False)]},
         help="Specify Products to focus your inventory on particular Products.")
     start_empty = fields.Boolean('Empty Inventory',
         help="Allows to start with an empty inventory.")
-    prefill_counted_quantity = fields.Boolean('Pre-fill counted quantity',
-        help='Pre-fill the counted quantity with on hand quantity for all the '
-        'products included in the inventory adjustment.', default=True)
+    prefill_counted_quantity = fields.Selection(string='Counted Quantities',
+        help="Allows to start with prefill counted quantity for each lines or "
+        "with all counted quantity set to zero.", default='counted',
+        selection=[('counted', 'Default to stock on hand'), ('zero', 'Default to zero')])
+
+    def copy_data(self, default=None):
+        name = _("%s (copy)") % (self.name)
+        default = dict(default or {}, name=name)
+        return super(Inventory, self).copy_data(default)
 
     def unlink(self):
         for inventory in self:
@@ -233,7 +239,7 @@ class Inventory(models.Model):
             for void_field in [item[0] for item in product_data.items() if item[1] is None]:
                 product_data[void_field] = False
             product_data['theoretical_qty'] = product_data['product_qty']
-            if not self.prefill_counted_quantity:
+            if self.prefill_counted_quantity == 'zero':
                 product_data['product_qty'] = 0
             if product_data['product_id']:
                 product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id
@@ -305,11 +311,11 @@ class InventoryLine(models.Model):
         digits='Product Unit of Measure', readonly=True)
     difference_qty = fields.Float('Difference', compute='_compute_difference',
         help="Indicates the gap between the product's theoretical quantity and its newest quantity.",
-        readonly=True, digits='Product Unit of Measure')
+        readonly=True, digits='Product Unit of Measure', search="_search_difference_qty")
     inventory_date = fields.Datetime('Inventory Date', readonly=True,
         default=fields.Datetime.now,
         help="Last date at which the On Hand Quantity has been computed.")
-    outdated = fields.Boolean(String='Quantity oudated',
+    outdated = fields.Boolean(string='Quantity outdated',
         compute='_compute_outdated', search='_search_outdated')
     product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
 
@@ -502,6 +508,17 @@ class InventoryLine(models.Model):
                 continue
             impacted_lines |= line
         impacted_lines.write({'product_qty': 0})
+
+    def _search_difference_qty(self, operator, value):
+        if operator == '=':
+            result = True
+        elif operator == '!=':
+            result = False
+        else:
+            raise NotImplementedError()
+        lines = self.search([('inventory_id', '=', self.env.context.get('default_inventory_id'))])
+        line_ids = lines.filtered(lambda line: float_is_zero(line.difference_qty, line.product_id.uom_id.rounding) == result).ids
+        return [('id', 'in', line_ids)]
 
     def _search_outdated(self, operator, value):
         if operator != '=':

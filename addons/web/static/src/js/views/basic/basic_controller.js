@@ -122,7 +122,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
     /**
-     * Method that will be overriden by the views with the ability to have selected ids
+     * Method that will be overridden by the views with the ability to have selected ids
      *
      * @returns {Array}
      */
@@ -298,7 +298,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 },
                 on_success: resolve,
                 on_fail: function () {
-                    self.update({}, {reload: false}).then(reject).guardedCatch(reject);
+                    self.update({}, { reload: false }).then(reject).guardedCatch(reject);
                 },
                 on_closed: reload,
             });

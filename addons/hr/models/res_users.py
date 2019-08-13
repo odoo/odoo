@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 
 
@@ -95,6 +95,7 @@ class User(models.Model):
             'identification_id',
             'is_address_home_a_company',
             'job_title',
+            'private_email',
             'km_home_work',
             'marital',
             'mobile_phone',
@@ -135,7 +136,7 @@ class User(models.Model):
         # avoid breaking `groups` mecanism on res.users form view.
         profile_view = self.env.ref("hr.res_users_view_form_profile")
         if profile_view and view_id == profile_view.id:
-            self = self.sudo()
+            self = self.with_user(SUPERUSER_ID)
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     def write(self, vals):
@@ -157,7 +158,7 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image', 'tz'] if f in vals]:
+        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
             employee_values[fname] = vals[fname]
         if employee_values:
             if 'email' in employee_values:
@@ -180,5 +181,6 @@ class User(models.Model):
         self.ensure_one()
         self.env['hr.employee'].create(dict(
             user_id=self.id,
+            name=self.name,
             **self.env['hr.employee']._sync_user(self)
         ))

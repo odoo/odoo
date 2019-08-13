@@ -54,7 +54,7 @@ class TestMassMailingShortener(common.TransactionCase):
             "mailing_model_id": self.env.ref('mass_mailing.model_mailing_list').id,
             "mailing_domain": "[('list_ids', 'in', [%d])]" % mailing_list_A.id,
             "contact_list_ids": [[6, False, [mailing_list_A.id]]],
-            "mass_mailing_campaign_id": False,
+            "campaign_id": False,
             "name": "sdf",
             "subject": "test_00_test_mass_mailing_shortener",
             "body_html": """
@@ -72,7 +72,7 @@ Email: <a id="url4" href="mailto:test@odoo.com">test@odoo.com</h1>
             "keep_archives": True,
         })
 
-        mass_mailing.put_in_queue()
+        mass_mailing.action_put_in_queue()
         mass_mailing._process_mass_mailing_queue()
 
         sent_mails = self.env['mail.mail'].search([('mailing_id', '=', mass_mailing.id)])

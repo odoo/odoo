@@ -185,7 +185,7 @@
                 <t t-set="title" t-value="default_title"></t>
             </t>
         </t>
-        <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>
+        <t t-set="x_icon" t-value="website.image_url(website, 'favicon')"/>
     </xpath>
     <xpath expr="//head/meta[last()]" position="after">
         <meta name="generator" content="Odoo"/>
@@ -291,11 +291,13 @@
 </template>
 
 <template id="brand_promotion" inherit_id="web.brand_promotion" name="Brand Promotion">
-    <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
-        <div class="o_brand_promotion">
-            Create a <a target="_blank" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">free website</a> with
-            <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">Odoo</a>
-        </div>
+    <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+        <t t-call="web.brand_promotion_message">
+            <t t-set="_message">
+                Create a <a target="_blank" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">free website</a>
+            </t>
+            <t t-set="_utm_medium">website</t>
+        </t>
     </xpath>
 </template>
 
@@ -491,7 +493,7 @@
     <div>
         <!-- Color options -->
         <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
-            <list string="Main colors">
+            <list string="Main">
                 <opt data-widget="color" data-color-type="theme" data-color="primary" string="Primary"/>
                 <opt data-widget="color" data-color-type="theme" data-color="secondary" string="Secondary"/>
                 <opt data-widget="color" data-color-type="theme" data-color="alpha" string="Primary"/>
@@ -500,13 +502,13 @@
                 <opt data-widget="color" data-color-type="theme" data-color="delta" string="Extra Color"/>
                 <opt data-widget="color" data-color-type="theme" data-color="epsilon" string="Extra Color"/>
             </list>
-            <list string="Status colors">
+            <list string="Status">
                 <opt data-widget="color" data-color-type="theme" data-color="success" string="Success"/>
                 <opt data-widget="color" data-color-type="theme" data-color="info" string="Info"/>
                 <opt data-widget="color" data-color-type="theme" data-color="warning" string="Warning"/>
                 <opt data-widget="color" data-color-type="theme" data-color="danger" string="Error"/>
             </list>
-            <list string="Text colors">
+            <list string="Text">
                 <opt data-widget="color" data-color="text" string="Text"/>
                 <opt data-widget="color" data-color="h1" string="Headings 1"/>
                 <opt data-widget="color" data-color="h2" string="Headings 2"/>
@@ -515,7 +517,7 @@
                 <opt data-widget="color" data-color="h5" string="Headings 5"/>
                 <opt data-widget="color" data-color="h6" string="Headings 6"/>
             </list>
-            <list string="Background colors">
+            <list string="Background">
                 <opt data-widget="color" data-color="body" string="Body"/>
                 <opt data-widget="color" data-color="menu" string="Menus"/>
                 <opt data-widget="color" data-color="footer" string="Footer"/>
@@ -523,15 +525,15 @@
         </content>
 
         <!-- Menu options -->
-        <content id="theme_customize_content_navbar" string="Nav Bar" title="Choose your nav bar">
+        <content id="theme_customize_content_navbar" string="Navbar" title="Choose your navbar">
             <list string="Main Layout">
                 <checkbox><opt data-xmlid="website.affix_top_menu" data-reload="/"/></checkbox>
                 <checkbox><opt data-xmlid="portal.portal_show_sign_in" data-reload="/"/></checkbox>
-                <opt data-widget="input" data-unit="rem" data-value="header-font-size" string="Font Size"/>
+                <opt data-widget="input" data-unit="rem" data-variable="header-font-size" string="Font Size"/>
             </list>
             <list string="Logo">
                 <checkbox><opt data-xmlid="website.layout_logo_show" data-reload="/"/></checkbox>
-                <opt data-widget="input" data-unit="rem" data-value="logo-height" string="Logo Height"/>
+                <opt data-widget="input" data-unit="rem" data-variable="logo-height" string="Logo Height"/>
             </list>
         </content>
 
@@ -551,44 +553,16 @@
         <!-- Font options -->
         <content id="theme_customize_content_fonts" string="Fonts" title="Choose your fonts">
             <list string="Title">
-                <selection id="theme_customize_content_fonts_title">
-                    <opt data-xmlid="" data-font="1"/>
-                    <opt data-xmlid="website.option_font_title_02_variables" data-font="2"/>
-                    <opt data-xmlid="website.option_font_title_03_variables" data-font="3"/>
-                    <opt data-xmlid="website.option_font_title_04_variables" data-font="4"/>
-                    <opt data-xmlid="website.option_font_title_05_variables" data-font="5"/>
-                    <opt data-xmlid="website.option_font_title_06_variables" data-font="6"/>
-                </selection>
+                <fontselection data-variable="headings-font-number"/>
             </list>
             <list string="Body">
-                <selection id="theme_customize_content_fonts_body">
-                    <opt data-xmlid="" data-font="1"/>
-                    <opt data-xmlid="website.option_font_body_02_variables" data-font="2"/>
-                    <opt data-xmlid="website.option_font_body_03_variables" data-font="3"/>
-                    <opt data-xmlid="website.option_font_body_04_variables" data-font="4"/>
-                    <opt data-xmlid="website.option_font_body_05_variables" data-font="5"/>
-                    <opt data-xmlid="website.option_font_body_06_variables" data-font="6"/>
-                </selection>
+                <fontselection data-variable="font-number"/>
             </list>
             <list string="Button">
-                <selection id="theme_customize_content_fonts_button">
-                    <opt data-xmlid="" data-font="1"/>
-                    <opt data-xmlid="website.option_font_button_02_variables" data-font="2"/>
-                    <opt data-xmlid="website.option_font_button_03_variables" data-font="3"/>
-                    <opt data-xmlid="website.option_font_button_04_variables" data-font="4"/>
-                    <opt data-xmlid="website.option_font_button_05_variables" data-font="5"/>
-                    <opt data-xmlid="website.option_font_button_06_variables" data-font="6"/>
-                </selection>
+                <fontselection data-variable="buttons-font-number"/>
             </list>
             <list string="Navbar">
-                <selection id="theme_customize_content_fonts_navbar">
-                    <opt data-xmlid="" data-font="1"/>
-                    <opt data-xmlid="website.option_font_navbar_02_variables" data-font="2"/>
-                    <opt data-xmlid="website.option_font_navbar_03_variables" data-font="3"/>
-                    <opt data-xmlid="website.option_font_navbar_04_variables" data-font="4"/>
-                    <opt data-xmlid="website.option_font_navbar_05_variables" data-font="5"/>
-                    <opt data-xmlid="website.option_font_navbar_06_variables" data-font="6"/>
-                </selection>
+                <fontselection data-variable="navbar-font-number"/>
             </list>
         </content>
     </div>
@@ -612,116 +586,6 @@
 <template id="option_custom_body_pattern" inherit_id="website.assets_frontend" active="False">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_custom_body_pattern.scss"/>
-    </xpath>
-</template>
-
-<!-- TODO use scss customization for fonts instead (like for user colors) -->
-
-<!-- Title font options -->
-<template id="option_font_title_02_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_02_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_title_03_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_03_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_title_04_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_04_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_title_05_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_05_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_title_06_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_06_variables.scss"/>
-    </xpath>
-</template>
-
-<!-- Body font options -->
-<template id="option_font_body_02_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_02_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_body_03_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_03_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_body_04_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_04_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_body_05_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_05_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_body_06_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_06_variables.scss"/>
-    </xpath>
-</template>
-
-<!-- Button font options -->
-<template id="option_font_button_02_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_button_02_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_button_03_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_button_03_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_button_04_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_button_04_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_button_05_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_button_05_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_button_06_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_button_06_variables.scss"/>
-    </xpath>
-</template>
-
-<!-- Navbar font options -->
-<template id="option_font_navbar_02_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_navbar_02_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_navbar_03_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_navbar_03_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_navbar_04_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_navbar_04_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_navbar_05_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_navbar_05_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_font_navbar_06_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_navbar_06_variables.scss"/>
     </xpath>
 </template>
 

@@ -14,7 +14,7 @@ class WebsiteGengo(http.Controller):
         result = {"done": 0}
         gengo_translation_ids = request.env['ir.translation'].search([('id', 'in', translated_ids), ('gengo_translation', '!=', False)])
         for trans in gengo_translation_ids:
-            result['done'] += len(trans.source.split())
+            result['done'] += len(trans.src.split())
         return result
 
     @http.route('/website/check_gengo_set', type='json', auth='user', website=True)

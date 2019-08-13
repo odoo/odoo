@@ -47,7 +47,7 @@ var AbstractFieldUpgrade = {
             });
     },
     /**
-     * This function is meant to be overriden to insert the 'Enterprise' label
+     * This function is meant to be overridden to insert the 'Enterprise' label
      * JQuery node at the right place.
      *
      * @abstract
@@ -98,7 +98,7 @@ var AbstractFieldUpgrade = {
         }));
     },
     /**
-     * This function is meant to be overriden to reset the $el to its initial
+     * This function is meant to be overridden to reset the $el to its initial
      * state.
      *
      * @abstract

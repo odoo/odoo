@@ -14,8 +14,8 @@
                             <field name="bic"/>
                         </group>
                         <group>
-                            <group name="address_details" string="Address">
-                                <label for="street" string="Address"/>
+                            <group name="address_details">
+                                <label for="street" string="Bank Address"/>
                                 <div class="o_address_format">
                                     <field name="street" placeholder="Street..." class="o_address_street"/>
                                     <field name="street2" placeholder="Street 2..." class="o_address_street"/>
@@ -25,10 +25,10 @@
                                     <field name="country" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                             </group>
-                            <group name="communication_details" string="Communication">
+                            <group name="communication_details">
                                 <field name="phone"/>
                                 <field name="email" widget="email"/>
-                                <field name="active"/>
+                                <field name="active" invisible="1"/>
                             </group>
                         </group>
                     </sheet>

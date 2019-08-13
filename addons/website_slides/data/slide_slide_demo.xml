@@ -7,11 +7,10 @@
         <field name="name">Know-How Summary</field>
         <field name="sequence">1</field>
         <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
         <field name="slide_type">presentation</field>
-        <field name="channel_id" ref="website_slides.channel_public"/>
-        <field name="category_id" eval="False"/>
-        <field name="website_published" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="True"/>
         <field name="public_views">10</field>
         <field name="completion_time">2.5</field>
@@ -21,11 +20,10 @@
     <record id="slide_slide_demo_0_1" model="slide.slide">
         <field name="name">Home Gardening</field>
         <field name="sequence">2</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_gardening_1.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_gardening_1.jpg"/>
         <field name="slide_type">infographic</field>
-        <field name="channel_id" ref="website_slides.channel_public"/>
-        <field name="category_id" eval="False"/>
-        <field name="website_published" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">5</field>
         <field name="completion_time">1</field>
@@ -35,14 +33,29 @@
 
     <!-- CHANNEL 1: Taking care of Trees -->
     <!-- ================================================== -->
+
+    <!--                    Categories                      -->
+    <record id="slide_category_demo_1_0" model="slide.slide">
+        <field name="name">Interesting Facts</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="sequence">0</field>
+    </record>
+    <record id="slide_category_demo_1_1" model="slide.slide">
+        <field name="name">Methods</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <!--                    Slides                      -->
     <record id="slide_slide_demo_1_0" model="slide.slide">
         <field name="name">Tree Infographic</field>
         <field name="sequence">1</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_1.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_1.jpg"/>
         <field name="slide_type">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_1_0"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="True"/>
         <field name="public_views">5</field>
         <field name="completion_time">0.5</field>
@@ -52,11 +65,10 @@
     <record id="slide_slide_demo_1_1" model="slide.slide">
         <field name="name">Interesting Tree Facts</field>
         <field name="sequence">2</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_2.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_2.jpg"/>
         <field name="slide_type">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_1_0"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">5</field>
         <field name="completion_time">1.5</field>
@@ -66,11 +78,10 @@
     <record id="slide_slide_demo_1_2" model="slide.slide">
         <field name="name">Energy Efficiency Facts</field>
         <field name="sequence">3</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_3.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_3.jpg"/>
         <field name="slide_type">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_1_0"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">10</field>
         <field name="completion_time">1</field>
@@ -89,14 +100,13 @@
         </record>
     <record id="slide_slide_demo_1_3" model="slide.slide">
         <field name="name">How to plant a potted tree</field>
-        <field name="sequence">4</field>
+        <field name="sequence">5</field>
         <field name="url">https://www.youtube.com/watch?v=QYmgrw0PgLU</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_thumb_QYmgrw0PgLU.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_QYmgrw0PgLU.jpg"/>
         <field name="document_id">QYmgrw0PgLU</field>
         <field name="slide_type">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_1_1"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">0</field>
         <field name="completion_time">1</field>
@@ -105,11 +115,10 @@
     </record>
     <record id="slide_slide_demo_1_4" model="slide.slide">
         <field name="name">A little chat with Harry Potted</field>
-        <field name="sequence">5</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_1.jpg"/>
+        <field name="sequence">6</field>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_1.jpg"/>
         <field name="slide_type">webpage</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_1_1"/>
         <field name="html_content" type="html">
 <section class="s_cover parallax bg-black-50 pt16 pb16" data-scroll-background-ratio="0" style="background-image: none;">
     <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/website_slides/static/src/img/slide_demo_tree_img_1.jpg'); background-position: 50% 0;"></span>
@@ -145,7 +154,7 @@
         </div>
     </div>
 </section></field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="True"/>
         <field name="public_views">5</field>
         <field name="completion_time">1</field>
@@ -199,11 +208,10 @@
         <field name="name">3 Main Methodologies</field>
         <field name="sequence">6</field>
         <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
         <field name="slide_type">presentation</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_1_1"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">10</field>
         <field name="completion_time">2.5</field>
@@ -213,15 +221,30 @@
 
     <!-- CHANNEL 2: Trees, Wood and Garden -->
     <!-- ================================================== -->
+
+    <!--                    Categories                      -->
+    <record id="slide_category_demo_2_0" model="slide.slide">
+        <field name="name">Trees</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="sequence">0</field>
+    </record>
+    <record id="slide_category_demo_2_1" model="slide.slide">
+        <field name="name">Wood</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <!--                    Slides                      -->
     <record id="slide_slide_demo_2_0" model="slide.slide">
         <field name="name">Main Trees Categories</field>
         <field name="sequence">1</field>
         <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_2.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_2.jpg"/>
         <field name="slide_type">presentation</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_2_0"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="True"/>
         <field name="public_views">0</field>
         <field name="completion_time">1</field>
@@ -278,10 +301,9 @@
     <record id="slide_slide_demo_2_1" model="slide.slide">
         <field name="name">A Mighty Forest from Ages</field>
         <field name="sequence">2</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_3.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_3.jpg"/>
         <field name="slide_type">webpage</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_2_0"/>
         <field name="html_content" type="html">
 <section class="s_cover parallax bg-black-50 pt16 pb16" data-scroll-background-ratio="0" style="background-image: none;">
     <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/website_slides/static/src/img/slide_demo_tree_img_3.jpg'); background-position: 50% 0;"></span>
@@ -317,7 +339,7 @@
         </div>
     </div>
 </section></field>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">0</field>
         <field name="completion_time">2</field>
@@ -326,13 +348,13 @@
     </record>
     <record id="slide_slide_demo_2_2" model="slide.slide">
         <field name="name">Tree planting in hanging bottles on wall</field>
+        <field name="sequence">3</field>
         <field name="url">https://www.youtube.com/watch?v=ebBez6bcSEc</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_thumb_ebBez6bcSEc.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_ebBez6bcSEc.jpg"/>
         <field name="document_id">ebBez6bcSEc</field>
         <field name="slide_type">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_2_0"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">0</field>
         <field name="completion_time">1</field>
@@ -340,17 +362,62 @@
         <field name="description">How to wall decorating by tree planting in hanging plastic bottles.</field>
     </record>
 
+    <!-- CHANNEL 3: Choose your wood !           -->
+    <!-- ======================================= -->
+
+    <!--                 Categories              -->
+    <record id="slide_category_demo_3_0" model="slide.slide">
+        <field name="name">Introduction</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_3_furn0"/>
+        <field name="sequence">0</field>
+    </record>
+
+    <!-- CHANNEL 4: Furniture Technical Specifications -->
+    <!-- ======================================= -->
+
+    <!--                 Categories              -->
+    <record id="slide_category_demo_4_0" model="slide.slide">
+        <field name="name">Introduction</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
+        <field name="sequence">0</field>
+    </record>
+
     <!-- CHANNEL 5: Basics of Furniture Creation -->
     <!-- ======================================= -->
+
+    <!--                 Categories              -->
+    <record id="slide_category_demo_5_0" model="slide.slide">
+        <field name="name">Tools and Methods</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
+        <field name="sequence">0</field>
+    </record>
+
+    <record id="slide_category_demo_5_1" model="slide.slide">
+        <field name="name">Hand on !</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="slide_category_demo_5_2" model="slide.slide">
+        <field name="name">Test Yourself</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <!--                    Slides                     -->
     <record id="slide_slide_demo_5_0" model="slide.slide">
         <field name="name">Unforgettable Tools</field>
         <field name="sequence">1</field>
         <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
         <field name="slide_type">presentation</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_5_0"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="True"/>
         <field name="public_views">10</field>
         <field name="completion_time">2.5</field>
@@ -370,30 +437,26 @@
     <record id="slide_slide_demo_5_1" model="slide.slide">
         <field name="name">How to find quality wood</field>
         <field name="sequence">2</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_thumb_5WMqwTnZ-qs.jpg"/>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_5WMqwTnZ-qs.jpg"/>
         <field name="url">https://www.youtube.com/watch?v=5WMqwTnZ-qs</field>
         <field name="document_id">5WMqwTnZ-qs</field>
         <field name="slide_type">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_5_1"/>
-        <field name="category_id" eval="False"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">0</field>
-        <field name="completion_time">1</field>
+        <field name="completion_time">3</field>
         <field name="description">Learn of to identify quality wood in order to create solid furnitures.</field>
     </record>
      <record id="slide_slide_demo_5_2" model="slide.slide">
         <field name="name">How to create your own piece of furniture</field>
-        <field name="sequence">3</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_thumb_ptjeDDoURL8.jpg"/>
+        <field name="sequence">4</field>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_ptjeDDoURL8.jpg"/>
         <field name="url">https://www.youtube.com/watch?v=ptjeDDoURL8</field>
         <field name="document_id">ptjeDDoURL8</field>
         <field name="slide_type">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_5_1"/>
-        <field name="category_id" eval="False"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="True"/>
         <field name="public_views">5</field>
         <field name="completion_time">3</field>
@@ -401,12 +464,11 @@
     </record>
     <record id="slide_slide_demo_5_3" model="slide.slide">
         <field name="name">Test your knowledge !</field>
-        <field name="sequence">4</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_owl.jpg"/>
-        <field name="slide_type">quiz</field>       
+        <field name="sequence">6</field>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_owl.jpg"/>
+        <field name="slide_type">quiz</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
-        <field name="category_id" ref="website_slides.slide_category_demo_5_0"/>
-        <field name="website_published" eval="True"/>
+        <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="public_views">0</field>
         <field name="completion_time">0.5</field>

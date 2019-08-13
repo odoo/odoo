@@ -32,18 +32,16 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <separator/>
-                    <filter string="My Activities" name="activities_my"
-                        domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <separator/>
                     <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <group expand="0" string="Group By">
@@ -97,7 +95,7 @@
                 <sheet string="Project">
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
+                        <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-file-text-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
                         <button class="oe_stat_button" type="action"
@@ -238,7 +236,7 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="oe_kanban_bottom_right">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                         </div>
                                     </div>
                                 </div>
@@ -562,7 +560,7 @@
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                     <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
@@ -575,7 +573,7 @@
                                             <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                         </small>
                                     </div>
-                                    <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                    <div class="o_dropdown_kanban dropdown" t-if="!selection_mode" groups="base.group_user">
                                         <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
@@ -595,7 +593,7 @@
                                         <field name="displayed_image_id" widget="attachment_image"/>
                                     </div>
                                 </div>
-                                <div class="o_kanban_record_bottom">
+                                <div class="o_kanban_record_bottom" t-if="!selection_mode">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                         <field name="activity_ids" widget="kanban_activity"/>
@@ -608,9 +606,9 @@
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
                                     </div>
-                                    <div class="oe_kanban_bottom_right">
+                                    <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
@@ -631,11 +629,14 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
-                    <field name="project_id" invisible="context.get('user_invisible', False)"/>
-                    <field name="user_id" invisible="context.get('user_invisible', False)"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
-                    <field name="stage_id" invisible="context.get('set_visible',False)"/>
+                    <field name="project_id" invisible="context.get('user_invisible', False)" optional="show"/>
+                    <field name="user_id" invisible="context.get('user_invisible', False)" optional="show"/>
+                    <field name="date_deadline" optional="hide"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="stage_id" invisible="context.get('set_visible',False)" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -660,8 +661,12 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id">
-                    <field name="name"/>
+                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id" event_limit="5" hide_time="true">
+                    <field name="user_id" avatar_field="image_small"/>
+                    <field name="date_deadline"/>
+                    <field name="project_id"/>
+                    <field name="priority" widget="priority"/>
+                    <field name="stage_id"/>
                 </calendar>
             </field>
         </record>
@@ -696,7 +701,7 @@
                     <field name="user_id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                            <img t-att-src="activity_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>

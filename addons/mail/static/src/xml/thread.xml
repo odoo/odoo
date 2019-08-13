@@ -128,8 +128,12 @@
             <div>New messages appear here.</div>
         </t>
         <t t-if="thread.getID() === 'mailbox_starred'">
-            <div class="o_thread_title">No starred message</div>
+            <div class="o_thread_title">No starred messages</div>
             <div>You can mark any message as 'starred', and it shows up in this mailbox.</div>
+        </t>
+        <t t-if="thread.getID() === 'mailbox_history'">
+            <div class="o_thread_title o_neutral_face_icon">No history messages</div>
+            <div>Messages marked as read will appear in the history.</div>
         </t>
         <t t-if="thread.getID() === 'mailbox_moderation'">
             <div class="o_thread_title">You have no message to moderate</div>

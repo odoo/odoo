@@ -55,14 +55,14 @@ class MrpWorkorder(models.Model):
         'Scheduled Date Start',
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
-        search='_search_date_planned_start',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        store=True)
     date_planned_finished = fields.Datetime(
         'Scheduled Date Finished',
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
-        search='_search_date_planned_finished',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        store=True)
     date_start = fields.Datetime(
         'Effective Start Date',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
@@ -88,6 +88,10 @@ class MrpWorkorder(models.Model):
         'mrp.routing.workcenter', 'Operation')  # Should be used differently as BoM can change in the meantime
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
+    worksheet_type = fields.Selection(
+        'Worksheet Type', related='operation_id.worksheet_type', readonly=True)
+    worksheet_google_slide = fields.Char(
+        'Worksheet URL', related='operation_id.worksheet_google_slide', readonly=True)
     move_raw_ids = fields.One2many(
         'stock.move', 'workorder_id', 'Raw Moves',
         domain=[('raw_material_production_id', '!=', False), ('production_id', '=', False)])
@@ -127,8 +131,7 @@ class MrpWorkorder(models.Model):
     # fields Changes. As the ORM doesn't batch the write on related fields and instead
     # makes multiple call, the constraint check_dates() is raised.
     # That's why the compute and set methods are needed. to ensure the dates are updated
-    # in the same time. The two next search method are needed as the field are non stored and
-    # not direct related fields.
+    # in the same time.
     @api.depends('leave_id')
     def _compute_dates_planned(self):
         for workorder in self:
@@ -142,12 +145,6 @@ class MrpWorkorder(models.Model):
             'date_from': date_from,
             'date_to': date_to,
         })
-
-    def _search_date_planned_start(self, operator, value):
-        return [('leave_id.date_from', operator, value)]
-
-    def _search_date_planned_finished(self, operator, value):
-        return [('leave_id.date_to', operator, value)]
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
@@ -201,6 +198,11 @@ class MrpWorkorder(models.Model):
 
     def name_get(self):
         return [(wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
+
+    def unlink(self):
+        # Removes references to workorder to avoid Validation Error
+        (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
+        return super(MrpWorkorder, self).unlink()
 
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
@@ -563,8 +565,10 @@ class MrpWorkorderLine(models.Model):
     _inherit = ["mrp.abstract.workorder.line"]
     _description = "Workorder move line"
 
-    raw_workorder_id = fields.Many2one('mrp.workorder', 'Component for Workorder')
-    finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder')
+    raw_workorder_id = fields.Many2one('mrp.workorder', 'Component for Workorder',
+        ondelete='cascade')
+    finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder',
+        ondelete='cascade')
 
     @api.model
     def _get_raw_workorder_inverse_name(self):

@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
+    group_auto_done_setting = fields.Boolean("Lock Confirmed Sales", implied_group='sale.group_auto_done_setting')
     module_sale_margin = fields.Boolean("Margins")
     quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)", readonly=False)
     use_quotation_validity_days = fields.Boolean("Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
@@ -39,9 +39,7 @@ class ResConfigSettings(models.TransientModel):
         'Deposit Product',
         domain="[('type', '=', 'service')]",
         config_parameter='sale.default_deposit_product_id',
-        oldname='default_deposit_product_id',
         help='Default product used for payment advances')
-    auto_done_setting = fields.Boolean("Lock Confirmed Sales", config_parameter='sale.auto_done_setting')
     module_website_sale_digital = fields.Boolean("Digital Content")
 
     auth_signup_uninvited = fields.Selection([
@@ -80,9 +78,6 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param('sale.automatic_invoice', False)
-        if not self.group_discount_per_so_line:
-            pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
-            pl.write({'discount_policy': 'with_discount'})
 
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):

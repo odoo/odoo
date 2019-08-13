@@ -79,7 +79,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/name_and_signature.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web.zoomodoo.scss"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overridden.scss"/>
 
         <t t-call="web._assets_common_minimal_js"/>
 
@@ -162,7 +162,7 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
-
+        <script type="text/javascript" src="/web/static/src/js/widgets/colorpicker_dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/zoomodoo.js"></script>
     </template>
 
@@ -217,6 +217,7 @@
         <link rel="stylesheet" type="text/scss" href="/base/static/src/scss/onboarding.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/attachment_preview.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_document_layout.scss"/>
 
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_settings.scss"/>
         <script type="text/javascript" src="/base/static/src/js/res_config_settings.js"></script>
@@ -249,7 +250,9 @@
         <script type="text/javascript" src="/web/static/src/js/_deprecated/data.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/context.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/data_comparison_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/math_utils.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/crash_manager_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/report_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
@@ -317,6 +320,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/control_panel/search/search_filters_registry.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search_panel.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/field_manager_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/select_create_controllers_registry.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/standalone_field_manager_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/view_registry.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/view_dialogs.js"></script>
@@ -352,6 +356,7 @@
 
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_controller.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_popover.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_quick_create.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_view.js"></script>
@@ -385,6 +390,7 @@
         <t t-call="web._assets_frontend_minimal_js"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_crash_manager.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_notification.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
@@ -473,9 +479,25 @@
         </xpath>
     </template>
 
+    <template id="brand_promotion_message" name="Brand Promotion Message">
+        <t t-set="odoo_logo">
+            <a target="_blank"
+                t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
+                class="badge badge-light">
+                <img alt="Odoo"
+                        src="/web/static/src/img/odoo_logo_tiny.png"
+                        style="height: 1em; vertical-align: baseline;"/>
+            </a>
+        </t>
+        <t t-set="final_message">Powered by %s%s</t>
+        <t t-raw="final_message % (odoo_logo, _message and ('- %s' % _message) or '')"/>
+    </template>
     <template id="brand_promotion" name="Brand Promotion">
         <div class="o_brand_promotion">
-            Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message"></t>
+                <t t-set="_utm_medium">portal</t>
+            </t>
         </div>
     </template>
 
@@ -571,27 +593,9 @@
         <script type="text/javascript" src="/web/static/lib/ace/mode-js.js"></script>
 
         <script type="text/javascript">
-            odoo.define('web.WebClientWithoutServices', function (require) {
-                var ServiceProviderMixin = require('web.ServiceProviderMixin');
-                var WebClient = require('web.WebClient');
-                var WebClientWithoutServices = WebClient.extend({
-                    /**
-                     * Patch web client so that it is no longer a service provider.
-                     *
-                     * @override
-                     */
-                    init: function () {
-                        var originalServiceProviderMixinInit = ServiceProviderMixin.init;
-                        ServiceProviderMixin.init = function () {};
-                        this._super.apply(this, arguments);
-                        ServiceProviderMixin.init = originalServiceProviderMixinInit;
-                    },
-                });
-                return WebClientWithoutServices;
-            });
             // define the 'web.web_client' module because some other modules require it
             odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.WebClientWithoutServices');
+                var WebClient = require('web.WebClient');
                 var web_client = new WebClient();
                 return web_client;
             });
@@ -679,6 +683,7 @@
                 <script type="text/javascript" src="/web/static/tests/core/rpc_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/domain_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/data_comparison_utils_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/math_utils_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/mixins_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/time_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/concurrency_tests.js"></script>

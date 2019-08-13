@@ -12,12 +12,10 @@ class ResConfigSettings(models.TransientModel):
         default=lambda self: self.env.company)
     user_default_rights = fields.Boolean(
         "Default Access Rights",
-        config_parameter='base_setup.default_user_rights',
-        oldname='default_user_rights')
+        config_parameter='base_setup.default_user_rights')
     external_email_server_default = fields.Boolean(
         "External Email Servers",
-        config_parameter='base_setup.default_external_email_server',
-        oldname='default_external_email_server')
+        config_parameter='base_setup.default_external_email_server')
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar')
@@ -89,20 +87,6 @@ class ResConfigSettings(models.TransientModel):
             return False
         return self._prepare_report_view_action(self.external_report_layout_id.key)
 
-    def change_report_template(self):
-        self.ensure_one()
-        template = self.env.ref('base.view_company_document_template_form')
-        return {
-            'name': _('Choose Your Document Layout'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_id': self.env.company.id,
-            'res_model': 'res.company',
-            'views': [(template.id, 'form')],
-            'view_id': template.id,
-            'target': 'new',
-        }
-
     # NOTE: These fields depend on the context, if we want them to be computed
     # we have to make them depend on a field. This is because we are on a TransientModel.
     @api.depends('company_id')
@@ -113,8 +97,6 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_language_count(self):
-        language_count = self.env['res.lang'].search_count([
-            ('active', '=', True),
-        ])
+        language_count = len(self.env['res.lang'].get_installed())
         for record in self:
             record.language_count = language_count

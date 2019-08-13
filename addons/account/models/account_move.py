@@ -7,7 +7,7 @@ from odoo.tools.misc import formatLang, format_date
 
 from collections import OrderedDict
 from datetime import date
-from itertools import groupby
+from itertools import groupby, chain
 from stdnum.iso7064 import mod_97_10
 from itertools import zip_longest
 
@@ -96,7 +96,7 @@ class AccountMove(models.Model):
             ('in_refund', 'Vendor Credit Note'),
             ('out_receipt', 'Sales Receipt'),
             ('in_receipt', 'Purchase Receipt'),
-        ], String='Type', required=True, store=True, index=True, readonly=True, tracking=True,
+        ], string='Type', required=True, store=True, index=True, readonly=True, tracking=True,
         default="entry")
     to_check = fields.Boolean(string='To Check', default=False,
         help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
@@ -140,7 +140,7 @@ class AccountMove(models.Model):
         compute='_compute_amount')
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
-        help="Technical field used by web_studio to allow an easy edition of the invoice report by drag/drop of the field. Return type: [(name, amount, base, formated amount, formated base)]")
+        help="technical field used in report and in invoice form view with a widget to display the detail of taxes (grouped by tax group) under the subtotal")
 
     # ==== Cash basis feature fields ====
     tax_cash_basis_rec_id = fields.Many2one(
@@ -222,8 +222,8 @@ class AccountMove(models.Model):
         string='Vendor Bill',
         help="Auto-complete from a past bill.")
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
-    invoice_vendor_display_name = fields.Char(compute='_compute_invoice_vendor_display_info', store=True)
-    invoice_vendor_icon = fields.Char(compute='_compute_invoice_vendor_display_info', store=False)
+    invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
+    invoice_partner_icon = fields.Char(compute='_compute_invoice_partner_display_info', store=False)
 
     # ==== Cash rounding fields ====
     invoice_cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
@@ -241,7 +241,7 @@ class AccountMove(models.Model):
     invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain',
         help="Technical field used to have a dynamic domain on journal / taxes in the form view.")
     bank_partner_id = fields.Many2one('res.partner', help='Technical field to get the domain on the bank', compute='_compute_bank_partner_id')
-    invoice_has_matching_supsense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
+    invoice_has_matching_suspense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
         groups='account.group_account_invoice',
         help="Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account.")
     # Technical field to hide Reconciled Entries stat button
@@ -355,9 +355,6 @@ class AccountMove(models.Model):
         if self.is_sale_document(include_receipts=True):
             if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
                 self.narration = self.company_id.invoice_terms or self.env.company.invoice_terms
-            return {'domain': {'partner_id': [('customer', '=', True)]}}
-        elif self.is_purchase_document(include_receipts=True):
-            return {'domain': {'partner_id': [('supplier', '=', True)]}}
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -810,29 +807,28 @@ class AccountMove(models.Model):
         :param recompute_all_taxes: Force the computation of taxes. If set to False, the computation will be done
                                     or not depending of the field 'recompute_tax_line' in lines.
         '''
-        self.ensure_one()
+        for invoice in self:
+            # Dispatch lines and pre-compute some aggregated values like taxes.
+            for line in invoice.line_ids:
+                if line.recompute_tax_line:
+                    recompute_all_taxes = True
+                    line.recompute_tax_line = False
 
-        # Dispatch lines and pre-compute some aggregated values like taxes.
-        for line in self.line_ids:
-            if line.recompute_tax_line:
-                recompute_all_taxes = True
-                line.recompute_tax_line = False
+            # Compute taxes.
+            if recompute_all_taxes:
+                invoice._recompute_tax_lines()
 
-        # Compute taxes.
-        if recompute_all_taxes:
-            self._recompute_tax_lines()
+            if invoice.is_invoice(include_receipts=True):
 
-        if self.is_invoice(include_receipts=True):
+                # Compute cash rounding.
+                invoice._recompute_cash_rounding_lines()
 
-            # Compute cash rounding.
-            self._recompute_cash_rounding_lines()
+                # Compute payment terms.
+                invoice._recompute_payment_terms_lines()
 
-            # Compute payment terms.
-            self._recompute_payment_terms_lines()
-
-            # Only synchronize one2many in onchange.
-            if self != self._origin:
-                self.invoice_line_ids = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
+                # Only synchronize one2many in onchange.
+                if invoice != invoice._origin:
+                    invoice.invoice_line_ids = invoice.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
 
     def onchange(self, values, field_name, field_onchange):
         # OVERRIDE
@@ -980,7 +976,7 @@ class AccountMove(models.Model):
 
             move.write({'line_ids': to_write})
 
-    def _get_domain_matching_supsense_moves(self):
+    def _get_domain_matching_suspense_moves(self):
         self.ensure_one()
         domain = self.env['account.move.line']._get_suspense_moves_domain()
         domain += ['|', ('partner_id', '=?', self.partner_id.id), ('partner_id', '=', False)]
@@ -994,32 +990,32 @@ class AccountMove(models.Model):
         for r in self:
             res = False
             if r.state == 'posted' and r.is_invoice() and r.invoice_payment_state == 'not_paid':
-                domain = r._get_domain_matching_supsense_moves()
+                domain = r._get_domain_matching_suspense_moves()
                 #there are more than one but less than 5 suspense moves matching the residual amount
                 if (0 < self.env['account.move.line'].search_count(domain) < 5):
                     domain2 = [
                         ('invoice_payment_state', '=', 'not_paid'),
-                        ('state', '=', 'open'),
+                        ('state', '=', 'posted'),
                         ('amount_residual', '=', r.amount_residual),
                         ('type', '=', r.type)]
                     #there are less than 5 other open invoices of the same type with the same residual
                     if self.env['account.move'].search_count(domain2) < 5:
                         res = True
-            r.invoice_has_matching_supsense_amount = res
+            r.invoice_has_matching_suspense_amount = res
 
     @api.depends('partner_id', 'invoice_source_email')
-    def _compute_invoice_vendor_display_info(self):
+    def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.name
             move.invoice_icon = ''
             if not vendor_display_name:
                 if move.invoice_source_email:
                     vendor_display_name = _('From: ') + move.invoice_source_email
-                    move.invoice_vendor_icon = '@'
+                    move.invoice_partner_icon = '@'
                 else:
                     vendor_display_name = _('Created by: %s') % move.sudo().create_uid.name
-                    move.invoice_vendor_icon = '#'
-            move.invoice_vendor_display_name = vendor_display_name
+                    move.invoice_partner_icon = '#'
+            move.invoice_partner_display_name = vendor_display_name
 
     @api.depends('state', 'journal_id', 'invoice_date')
     def _compute_invoice_sequence_number_next(self):
@@ -1193,7 +1189,9 @@ class AccountMove(models.Model):
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
+                group.id
             ) for group, amounts in res]
+
 
     # -------------------------------------------------------------------------
     # CONSTRAINS METHODS
@@ -1210,8 +1208,11 @@ class AccountMove(models.Model):
             return
 
         self._cr.execute('''
-            SELECT move.id
-            FROM account_move move
+            WITH current_moves (id, name, state, company_id, journal_id, type) as ( values {} )
+            SELECT move2.id
+            FROM (    SELECT id, name, state, company_id, journal_id, type from account_move
+            UNION ALL SELECT id, name, state, company_id, journal_id, type from current_moves
+            ) move
             INNER JOIN account_move move2 ON
                 move2.name = move.name
                 AND move2.company_id = move.company_id
@@ -1221,7 +1222,7 @@ class AccountMove(models.Model):
             WHERE move.id IN %s
             AND move.state = 'posted'
             AND move2.state = 'posted'
-        ''', [tuple(self.ids)])
+        '''.format(", ".join(["(%s, %s, %s, %s, %s, %s)"] * len(self))), list(chain(*self.mapped(lambda r: [r.id, r.name, r.state, r.company_id.id, r.journal_id.id, r.type]))) + [tuple(self.ids)])
         res = self._cr.fetchone()
         if res:
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
@@ -1233,18 +1234,22 @@ class AccountMove(models.Model):
             return
 
         self._cr.execute('''
-            SELECT move.id
-            FROM account_move move
+            WITH current_moves (id,  ref, company_id, commercial_partner_id, type, invoice_date) as ( values {} )
+            SELECT move2.id
+            FROM (    SELECT id, ref, company_id, commercial_partner_id, type, invoice_date from account_move
+            UNION ALL SELECT id, ref, company_id, commercial_partner_id, type, invoice_date from current_moves
+            ) move
             INNER JOIN account_move move2 ON
                 move2.ref = move.ref
                 AND move2.company_id = move.company_id
                 AND move2.commercial_partner_id = move.commercial_partner_id
                 AND move2.type = move.type
+                AND (move2.invoice_date = move.invoice_date OR move.invoice_date is NULL)
                 AND move2.id != move.id
             WHERE move.id IN %s
             AND move.type in ('in_invoice', 'in_refund')
             AND move.ref IS NOT NULL
-        ''', [tuple(self.ids)])
+        '''.format(", ".join(["(%s, %s, %s, %s, %s, CAST(%s as DATE))"] * len(self))), list(chain(*self.mapped(lambda r: [r.id, r.ref, r.company_id.id, r.commercial_partner_id.id, r.type, r.invoice_date or None]))) + [tuple(moves.ids)])
         if self._cr.fetchone():
             raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.'))
 
@@ -1793,8 +1798,8 @@ class AccountMove(models.Model):
         move_vals_list = []
         for move, default_values in zip(self, default_values_list):
             default_values.update({
-                'type': reverse_type_map[self.type],
-                'reversed_entry_id': self.id,
+                'type': reverse_type_map[move.type],
+                'reversed_entry_id': move.id,
             })
             move_vals_list.append(move._reverse_move_vals(default_values, cancel=cancel))
         reverse_moves = self.env['account.move'].create(move_vals_list)
@@ -1970,7 +1975,7 @@ class AccountMove(models.Model):
 
     def action_open_matching_suspense_moves(self):
         self.ensure_one()
-        domain = self._get_domain_matching_supsense_moves()
+        domain = self._get_domain_matching_suspense_moves()
         ids = self.env['account.move.line'].search(domain).mapped('statement_line_id').ids
         action_context = {'show_mode_selector': False, 'company_ids': self.mapped('company_id').ids}
         action_context.update({'suspense_moves_mode': True})
@@ -2124,6 +2129,9 @@ class AccountMoveLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes')
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id')
+    tax_group_id = fields.Many2one(related='tax_line_id.tax_group_id', string='Originator tax group',
+        readonly=True, store=True,
+        help='technical field for widget tax-group-custom-field')
     tax_base_amount = fields.Monetary(string="Base Amount", store=True,
         currency_field='company_currency_id')
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
@@ -2147,9 +2155,9 @@ class AccountMoveLine(models.Model):
         compute='_amount_residual',
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False, index=True)
-    matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
+    matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', string='Matched Debits',
         help='Debit journal items that are matched with this journal item.')
-    matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Matched Credits',
+    matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', string='Matched Credits',
         help='Credit journal items that are matched with this journal item.')
 
     # ==== Analytic fields ====
@@ -2972,7 +2980,7 @@ class AccountMoveLine(models.Model):
         else:
             amls = self.browse(list(amls))
 
-        # If we have multiple currency, we can only base ourselve on debit-credit to see if it is fully reconciled
+        # If we have multiple currency, we can only base ourselves on debit-credit to see if it is fully reconciled
         currency = set([a.currency_id for a in amls if a.currency_id.id != False])
         multiple_currency = False
         if len(currency) != 1:
@@ -3005,7 +3013,7 @@ class AccountMoveLine(models.Model):
                 to_balance[aml.currency_id][1] += aml.amount_residual != 0 and aml.amount_residual or aml.amount_residual_currency
 
         # Check if reconciliation is total
-        # To check if reconciliation is total we have 3 differents use case:
+        # To check if reconciliation is total we have 3 different use case:
         # 1) There are multiple currency different than company currency, in that case we check using debit-credit
         # 2) We only have one currency which is different than company currency, in that case we check using amount_currency
         # 3) We have only one currency and some entries that don't have a secundary currency, in that case we check debit-credit
@@ -3189,7 +3197,7 @@ class AccountMoveLine(models.Model):
         """ Create a writeoff move per journal for the account.move.lines in self. If debit/credit is not specified in vals,
             the writeoff amount will be computed as the sum of amount_residual of the given recordset.
             :param writeoff_vals: list of dicts containing values suitable for account_move_line.create(). The data in vals will
-                be processed to create bot writeoff acount.move.line and their enclosing account.move.
+                be processed to create bot writeoff account.move.line and their enclosing account.move.
         """
         def compute_writeoff_counterpart_vals(values):
             line_values = values.copy()

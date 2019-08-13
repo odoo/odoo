@@ -39,8 +39,7 @@ class SurveyUserInput(models.Model):
     is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
     input_type = fields.Selection([
         ('manually', 'Manual'), ('link', 'Invitation')],
-        string='Answer Type', default='manually', required=True, readonly=True,
-        oldname="type")
+        string='Answer Type', default='manually', required=True, readonly=True)
     state = fields.Selection([
         ('new', 'Not started yet'),
         ('skip', 'Partially completed'),
@@ -61,9 +60,8 @@ class SurveyUserInput(models.Model):
     # Pre-defined questions
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
-
-    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score")
     # Stored for performance reasons while displaying results page
+    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score", store=True, compute_sudo=True)
     quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')

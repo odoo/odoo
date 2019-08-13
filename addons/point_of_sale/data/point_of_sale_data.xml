@@ -39,19 +39,12 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">MISC</field>
-            <field name="image" type="base64" file="point_of_sale/static/img/product_product_49-image.jpg"/>
-        </record>
-
-        <record id="pos_sale_journal" model="account.journal">
-            <field name="name">Point of Sale</field>
-            <field name="code">POSS</field>
-            <field name="type">sale</field>
-            <!-- avoid being selected as default journal -->
-            <field name="sequence">20</field>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_product_49-image.jpg"/>
         </record>
 
         <record id="uom.product_uom_categ_unit" model="uom.category">
             <field name="is_pos_groupable">True</field>
         </record>
+        <function model="pos.config" name="post_install_pos_localisation" />
     </data>
 </odoo>

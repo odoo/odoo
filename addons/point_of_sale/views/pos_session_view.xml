@@ -27,8 +27,32 @@
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_view_order"
+                            class="oe_stat_button"
+                            icon="fa-shopping-basket"
+                            type="object">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
                         <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v" attrs="{'invisible':[('picking_count', '=', 0)]}">
                             <field name="picking_count" widget="statinfo" string="Picking Errors"/>
+                        </button>
+                        <button
+                            name="action_show_payments_list"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-dollar"
+                            >
+                            <field name="total_payments_amount" widget="statinfo" string="Payments"/>
+                        </button>
+                        <button
+                            name="show_journal_items"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            string="Journal Items"
+                            attrs="{'invisible':[('move_id', '=', False)]}"
+                            groups="account.group_account_user"
+                            >
                         </button>
                     </div>
                     <h1 class="oe_title">
@@ -40,6 +64,7 @@
                         <field name="user_id"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="config_id"/>
+                        <field name="move_id" readonly="1" groups="account.group_account_user" />
                         <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                         <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                     </group>
@@ -82,20 +107,6 @@
                                     <field name="cash_register_difference" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-danger="cash_register_difference != 0"/>
                                 </group>
                             </div>
-                        </page>
-                        <page string="Payments" attrs="{'invisible' : [('state', 'in', ('new_session', 'opening_control'))]}">
-                            <field name="statement_ids">
-                                <tree string="Statements">
-                                    <field name="name" />
-                                    <field name="journal_id" />
-                                    <field name="balance_start" />
-                                    <field name="total_entry_encoding" />
-                                    <field name="balance_end_real" />
-                                    <field name="difference" />
-                                    <field name="currency_id" groups="base.group_multi_currency" />
-                                    <field name="state" />
-                                </tree>
-                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -149,7 +160,7 @@
                                     <span><field name="start_at" /></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                         </div>

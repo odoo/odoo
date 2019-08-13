@@ -106,7 +106,9 @@
         <field name="name">resource.calendar.leaves.calendar</field>
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
-            <calendar date_start="date_from" date_stop="date_to" string="Resource" color="resource_id">
+            <calendar date_start="date_from" date_stop="date_to" mode="month" string="Resource" color="resource_id" event_limit="5">
+                <field name="resource_id" avatar_field="image_small"/>
+                <field name="company_id"/>
                 <field name="name"/>
             </calendar>
         </field>
@@ -247,7 +249,7 @@
                 <sheet string="Working Time">
                     <div class="oe_button_box" name="button_box">
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
-                                string="Time Off" icon="fa-calendar-times-o"
+                                string="Time Off" icon="fa-plane"
                                 class="oe_stat_button"
                                 groups="base.group_no_one"/>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"

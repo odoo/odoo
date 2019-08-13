@@ -64,6 +64,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         attachment = self.env['ir.attachment'].with_user(self.user_employee).create({
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'name': 'picture_of_your_dog.doc',
+            'res_model': 'mail.compose.message',
         })
         kwargs['attachment_ids'] = [attachment.id]
         last_message = self.assertNextMessage(

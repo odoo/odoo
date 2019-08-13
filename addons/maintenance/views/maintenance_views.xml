@@ -23,18 +23,16 @@
                 <filter string="Top Priorities" name="top_priority" domain="[('priority', '=', '3')]"/>
                 <separator/>
                 <filter string="Unscheduled Maintenance" domain="[('schedule_date', '=', False)]" name="unscheduled"/>
-                <separator/>
-                <filter string="My Activities" name="activities_my"
-                    domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
@@ -133,7 +131,7 @@
                        </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
 
                                 <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
@@ -166,7 +164,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -191,6 +189,7 @@
                 <field name="category_id" groups="maintenance.group_equipment_manager"/>
                 <field name="stage_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -222,9 +221,10 @@
         <field name="name">equipment.request.calendar</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <calendar date_start="schedule_date" date_delay="duration" color="user_id">
-                <field name="name"/>
+            <calendar date_start="schedule_date" date_delay="duration" color="user_id" event_limit="5">
                 <field name="user_id"/>
+                <field name="priority"/>
+                <field name="maintenance_type"/>
             </calendar>
         </field>
     </record>
@@ -338,7 +338,7 @@
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
                             class="oe_stat_button"
-                            icon="fa-ticket">
+                            icon="fa-wrench">
                             <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
                     </div>
@@ -368,7 +368,7 @@
                         <page string="Product Information">
                             <group>
                                 <group>
-                                    <field name="partner_id" context="{'default_supplier': True, 'default_customer': False}"/>
+                                    <field name="partner_id"/>
                                     <field name="partner_ref"/>
                                     <field name="model"/>
                                     <field name="serial_no"/>
@@ -432,8 +432,8 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="o_dropdown_kanban dropdown">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
 
                                 <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
@@ -455,18 +455,18 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <div class="badge badge-danger" t-if="record.maintenance_open_count.raw_value" >
+                                        <div class="badge badge-danger" t-if="!selection_mode and record.maintenance_open_count.raw_value" >
                                             <t t-raw="record.maintenance_open_count.raw_value"/> Request
                                         </div>
-                                        <div class="badge badge-secondary" t-if="record.next_action_date.raw_value" >
+                                        <div class="badge badge-secondary" t-if="!selection_mode and record.next_action_date.raw_value" >
                                             <t t-raw="moment(record.next_action_date.raw_value).format('MMMM Do')"/>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <div class="o_kanban_inline_block">
+                                        <div class="o_kanban_inline_block" t-if="!selection_mode">
                                             <field name="activity_ids" widget="kanban_activity" />
                                         </div>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" t-att-alt="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" t-att-alt="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
@@ -493,6 +493,7 @@
                 <field name="category_id"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -512,18 +513,16 @@
                 <separator/>
                 <filter string="My Equipments" name="my" domain="[('owner_user_id', '=', uid)]"/>
                 <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
-                <separator/>
-                <filter string="My Activities" name="activities_my"
-                    domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <!-- <filter string="Archived" name="inactive" domain="[('active','=',False)]"/> -->
@@ -583,14 +582,14 @@
                 <div class="oe_button_box" name="button_box">
                     <button name="%(hr_equipment_action_from_category_form)d"
                         class="oe_stat_button"
-                        icon="fa-laptop"
+                        icon="fa-cubes"
                         type="action">
-                        <field string="Equipments" name="equipment_count" widget="statinfo"/>
+                        <field string="Equipment" name="equipment_count" widget="statinfo"/>
                     </button>
                     <button name="%(hr_equipment_request_action_link)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-ticket">
+                        icon="fa-wrench">
                         <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                     </button>
                 </div>
@@ -660,7 +659,7 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="mb4">
                                 <strong><field name="name"/></strong>
-                                <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                <img t-att-src="kanban_image('res.users', 'image_64', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">
@@ -820,7 +819,7 @@
                 <field name="todo_request_count_unscheduled"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary">

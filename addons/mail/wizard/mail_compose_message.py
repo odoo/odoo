@@ -135,8 +135,7 @@ class MailComposer(models.TransientModel):
         ('notification', 'System notification')],
         'Type', required=True, default='comment',
         help="Message type: email for email message, notification for system "
-             "message, comment for other messages such as user replies",
-        oldname='type')
+             "message, comment for other messages such as user replies")
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null', index=True,
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
@@ -184,8 +183,6 @@ class MailComposer(models.TransientModel):
             if not values.get('res_id'):
                 result['res_id'] = parent.res_id
             partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
-            if self._context.get('is_private') and parent.author_id:  # check message is private then add author also in partner list.
-                partner_ids += [parent.author_id.id]
             result['partner_ids'] = partner_ids
         elif values.get('model') and values.get('res_id'):
             doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
@@ -324,6 +321,7 @@ class MailComposer(models.TransientModel):
                 'attachment_ids': [attach.id for attach in self.attachment_ids],
                 'author_id': self.author_id.id,
                 'email_from': self.email_from,
+                'reply_to': self.reply_to,
                 'record_name': self.record_name,
                 'no_auto_thread': self.no_auto_thread,
                 'mail_server_id': self.mail_server_id.id,

@@ -12,7 +12,7 @@
 
   <t t-extend="PaymentScreen-Paymentlines">
     <t t-jquery=".col-name" t-operation="inner">
-      <t t-if="line.cashregister.journal.type === 'bank'">
+      <t t-if="! line.payment_method.is_cash_count">
         <t t-if="line.mercury_swipe_pending">
           <div>WAITING FOR SWIPE</div>
         </t>
@@ -20,7 +20,7 @@
           <t t-esc='line.name' />
         </t>
       </t>
-      <t t-if="line.cashregister.journal.type !== 'bank'">
+      <t t-if="line.payment_method.is_cash_count">
         <t t-esc='line.name' />
       </t>
     </t>
@@ -53,12 +53,12 @@
     </t>
   </t>
 
-  <t t-extend="XmlReceipt">
+  <t t-extend="OrderReceipt">
     <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
       <t t-if="line.mercury_data">
-        <line line-ratio="1">
-          <left><pre>  APPROVAL CODE:</pre><t t-esc="line.mercury_auth_code"/></left>
-        </line>
+        <div class="pos-receipt-left-padding">
+          APPROVAL CODE: <t t-esc="line.mercury_auth_code"/>
+        </div>
       </t>
     </t>
     <t t-jquery="receipt" t-operation="append">
@@ -68,20 +68,4 @@
     </t>
   </t>
 
-  <t t-extend="PosTicket">
-    <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
-      <tr>
-        <td colspan="2">
-          <t t-if="line.mercury_data">
-            &amp;nbsp;&amp;nbsp;APPROVAL CODE: <t t-esc="line.mercury_auth_code"/>
-          </t>
-        </td>
-      </tr>
-    </t>
-    <t t-jquery="t[t-if*='receipt.footer']" t-operation="after">
-      <div class="pos-center-align">
-        <t t-call="PosMercurySignature"/>
-      </div>
-    </t>
-  </t>
 </templates>

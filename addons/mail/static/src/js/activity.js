@@ -382,7 +382,7 @@ var BasicActivity = AbstractField.extend({
                 container: $markDoneBtn,
                 title : _t("Feedback"),
                 html: true,
-                trigger:'click',
+                trigger: 'manual',
                 placement: 'right', // FIXME: this should work, maybe a bug in the popper lib
                 content : function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', {
@@ -399,6 +399,11 @@ var BasicActivity = AbstractField.extend({
                 $popover.find('#activity_feedback').focus();
                 self._bindPopoverFocusout($(this));
             }).popover('show');
+        } else {
+            var popover = $markDoneBtn.data('bs.popover');
+            if ($('#' + popover.tip.id).length === 0) {
+               popover.show();
+            }
         }
     },
     /**
@@ -645,6 +650,10 @@ var KanbanActivity = BasicActivity.extend({
     events:_.extend({}, BasicActivity.prototype.events, {
         'show.bs.dropdown': '_onDropdownShow',
     }),
+    fieldDependencies: _.extend({}, BasicActivity.prototype.fieldDependencies, {
+        activity_exception_decoration: {type: 'selection'},
+        activity_exception_icon: {type: 'char'}
+    }),
 
     /**
      * @override
@@ -680,13 +689,18 @@ var KanbanActivity = BasicActivity.extend({
      * @private
      */
     _render: function () {
-        var $span = this.$('.o_activity_btn > span');
-        $span.removeClass(function (index, classNames) {
-            return classNames.split(/\s+/).filter(function (className) {
-                return _.str.startsWith(className, 'o_activity_color_');
-            }).join(' ');
-        });
-        $span.addClass('o_activity_color_' + (this.activityState || 'default'));
+        // span classes need to be updated manually because the template cannot
+        // be re-rendered eaasily (because of the dropdown state)
+        const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
+        spanClasses.push('o_activity_color_' + (this.activityState || 'default'));
+        if (this.recordData.activity_exception_decoration) {
+            spanClasses.push('text-' + this.recordData.activity_exception_decoration);
+            spanClasses.push(this.recordData.activity_exception_icon);
+        } else {
+            spanClasses.push('fa-clock-o');
+        }
+        this.$('.o_activity_btn > span').removeClass().addClass(spanClasses.join(' '));
+
         if (this.$el.hasClass('show')) {
             // note: this part of the rendering might be asynchronous
             this._renderDropdown();
@@ -739,9 +753,51 @@ var KanbanActivity = BasicActivity.extend({
     },
 });
 
+// -----------------------------------------------------------------------------
+// Activity Exception Widget to display Exception icon ('activity_exception' widget)
+// -----------------------------------------------------------------------------
+
+var ActivityException = AbstractField.extend({
+    noLabel: true,
+    fieldDependencies: _.extend({}, AbstractField.prototype.fieldDependencies, {
+        activity_exception_icon: {type: 'char'}
+    }),
+
+    //------------------------------------------------------------
+    // Private
+    //------------------------------------------------------------
+
+    /**
+     * There is no edit mode for this widget, the icon is always readonly.
+     *
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        return this._renderReadonly();
+    },
+
+    /**
+     * Displays the exception icon if there is one.
+     *
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        this.$el.empty();
+        if (this.value) {
+            this.$el.attr({
+                'title': _t('This record has an exception activity.'),
+                'class': "pull-right mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
+            });
+        }
+    }
+});
+
 field_registry
     .add('mail_activity', Activity)
-    .add('kanban_activity', KanbanActivity);
+    .add('kanban_activity', KanbanActivity)
+    .add('activity_exception', ActivityException);
 
 return Activity;
 

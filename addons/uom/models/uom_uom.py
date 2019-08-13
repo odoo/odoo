@@ -11,11 +11,11 @@ class UoMCategory(models.Model):
 
     name = fields.Char('Unit of Measure Category', required=True, translate=True)
     measure_type = fields.Selection([
-        ('unit', 'Units'),
-        ('weight', 'Weight'),
-        ('working_time', 'Working Time'),
-        ('length', 'Length'),
-        ('volume', 'Volume'),
+        ('unit', 'Default Units'),
+        ('weight', 'Default Weight'),
+        ('working_time', 'Default Working Time'),
+        ('length', 'Default Length'),
+        ('volume', 'Default Volume'),
     ], string="Type of Measure")
 
     _sql_constraints = [

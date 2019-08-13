@@ -330,7 +330,7 @@ var utils = {
         // better expressed in the scientific format.
         if (numberMagnitude >= 21) {
             // we do not use number.toExponential(decimals) because we want to
-            // avoid the possible useless O decimals: 1e.+24 prefered to 1.0e+24
+            // avoid the possible useless O decimals: 1e.+24 preferred to 1.0e+24
             number = Math.round(number * Math.pow(10, decimals - numberMagnitude)) / d2;
             // formatterCallback seems useless here.
             return number + 'e' + numberMagnitude;
@@ -771,7 +771,18 @@ var utils = {
         }
         return curr;
     },
-
+    /**
+     * Returns the domain targeting assets files.
+     *
+     * @returns {Array} Domain of assets files
+     */
+    assetsDomain: function () {
+        return [
+            '&',
+            ['res_model', '=', 'ir.ui.view'],
+            ['name', 'like', 'assets_']
+        ];
+    },
 };
 
 return utils;

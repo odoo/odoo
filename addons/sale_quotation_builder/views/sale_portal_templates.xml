@@ -83,11 +83,13 @@
     </template>
 
     <template id="brand_promotion" inherit_id="website.brand_promotion">
-        <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
-            <div class="o_brand_promotion">
-                Powered by <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
-                an awesome <a target="_blank" href="http://www.odoo.com/page/crm">Open Source CRM</a>.
-            </div>
+        <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message">
+                    An awesome <a target="_blank" href="https://www.odoo.com/page/crm?utm_source=db&amp;utm_medium=portal">Open Source CRM</a>
+                </t>
+                <t t-set="_utm_medium">portal</t>
+            </t>
         </xpath>
     </template>
 

@@ -11,6 +11,7 @@ Enable management of UTM trackers: campaign, medium, source.
     'depends': ['base'],
     'data': [
         'data/utm_data.xml',
+        'views/utm_campaign_views.xml',
         'views/utm_views.xml',
         'security/ir.model.access.csv',
     ],

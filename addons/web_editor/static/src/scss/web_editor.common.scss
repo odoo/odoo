@@ -313,6 +313,10 @@ a.o_underline {
         flex: 0 0 auto;
         padding: $grid-gutter-width/4 $grid-gutter-width/2;
         background-color: lighten($o-we-ace-color, 10%);
+
+        .o_ace_editor_resource_info {
+            color: $o-we-color-text-lighter;
+        }
     }
 
     #ace-view-editor {
@@ -376,5 +380,13 @@ a.o_underline {
                 white-space: nowrap;
             }
         }
+    }
+}
+
+.o_nocontent_help {
+    @include o-nocontent-empty;
+
+    .o_empty_folder_image:before {
+        @extend %o-nocontent-empty-document;
     }
 }

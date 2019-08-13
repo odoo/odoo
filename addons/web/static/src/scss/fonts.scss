@@ -65,3 +65,27 @@ $lato-font-path: '../fonts/lato';
 @include lato-font-pair('Reg', 400);
 @include lato-font-pair('Bol', 700);
 @include lato-font-pair('Bla', 900);
+
+// ------------------------------------------------------------------
+// Google fonts
+// ------------------------------------------------------------------
+$google-font-path: '../fonts/google';
+
+@mixin google-font($family, $type, $weight, $style) {
+    @font-face {
+        font-family: $family;
+        src: url('#{$google-font-path}/#{$family}/#{$family}-#{$type}.ttf') format('truetype');
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
+
+@mixin google-font-pair($family) {
+    @include google-font('#{$family}', 'Regular', 400, normal);
+}
+
+@include google-font-pair('Montserrat');
+@include google-font-pair('Open Sans');
+@include google-font-pair('Oswald');
+@include google-font-pair('Raleway');
+@include google-font-pair('Roboto');

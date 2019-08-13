@@ -6,7 +6,9 @@ var mailTestUtils = require('mail.testUtils');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
+var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
+var concurrency = require('web.concurrency');
 
 var createView = testUtils.createView;
 
@@ -59,6 +61,15 @@ QUnit.module('Chatter', {
                         relation: 'mail.activity',
                         relation_field: 'res_id',
                     },
+                    activity_exception_decoration: {
+                        string: 'Decoration',
+                        type: 'selection',
+                        selection: [['warning', 'Alert'], ['danger', 'Error']],
+                    },
+                    activity_exception_icon: {
+                        string: 'icon',
+                        type: 'char',
+                    },
                     activity_state: {
                         string: 'State',
                         type: 'selection',
@@ -108,11 +119,14 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['default', 'Other'], ['upload_file', 'Upload File']],
                     },
+                    decoration_type: { string: "Decoration Type", type: "selection", selection: [['warning', 'Alert'], ['danger', 'Error']]},
+                    icon: {string: 'icon', type:"char"},
                 },
                 records: [
                     { id: 1, name: "Type 1" },
                     { id: 2, name: "Type 2" },
                     { id: 3, name: "Type 3", category: 'upload_file' },
+                    { id: 4, name: "Exception", decoration_type: "warning", icon: "fa-warning"}
                 ],
             },
             'mail.message': {
@@ -659,10 +673,12 @@ QUnit.test('kanban activity widget with no activity', async function (assert) {
 });
 
 QUnit.test('kanban activity widget with an activity', async function (assert) {
-    assert.expect(12);
+    assert.expect(14);
 
-    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_ids = [1, 2];
     this.data.partner.records[0].activity_state = 'today';
+    this.data.partner.records[0].activity_exception_decoration = 'warning';
+    this.data.partner.records[0].activity_exception_icon = 'fa-warning';
     this.data['mail.activity'].records = [{
         id: 1,
         display_name: "An activity",
@@ -672,6 +688,15 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
         user_id: 2,
         create_uid: 2,
         activity_type_id: 1,
+    },{
+        id: 2,
+        display_name: "An exception activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 4,
     }];
     var rpcCount = 0;
     var kanban = await createView({
@@ -690,6 +715,7 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
                 var current_ids = this.data.partner.records[0].activity_ids;
                 var done_ids = args.args[0];
                 this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
+                this.data.partner.records[0].activity_exception_decoration = false;
                 this.data.partner.records[0].activity_state = false;
                 return Promise.resolve();
             }
@@ -703,13 +729,15 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
         "activity widget should have been rendered correctly");
     assert.strictEqual(rpcCount, 1, '1 RPC (search_read) should have been done');
 
+    // Check exception activity icon fa-warning
+    assert.hasClass($record.find('.o_activity_btn span'), "fa-warning", "should display correct exception activity icon");
     // click on the activity button
     await testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 2, 'a read should have been done to fetch the activity details');
-    assert.strictEqual($record.find('.o_activity_title').length, 1, "should have an activity scheduled");
+    assert.strictEqual($record.find('.o_activity_title').length, 2, "should have two activity scheduled");
     var label = $record.find('.o_activity_log .o_activity_color_today');
     assert.strictEqual(label.find('strong').text(), "Today", "should display the correct label");
-    assert.strictEqual(label.find('.badge-warning').text(), "1", "should display the correct count");
+    assert.strictEqual(label.find('.badge-warning').text(), "2", "should display the correct count");
 
     // click on the activity button to close the dropdown
     await testUtils.dom.click($record.find('.o_activity_btn'));
@@ -719,11 +747,19 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
     await testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 3, 'should have reloaded the activities');
 
+    // mark exception activity as done
+    await testUtils.dom.click($record.find('.o_mark_as_done:eq(1)'));
+    await testUtils.dom.click($record.find('.o_activity_popover_done'));
+    $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
+
+    // check activity icon replaced with fa-clock
+    assert.hasClass($record.find('.o_activity_btn span'), "fa-clock-o", "should display correct activity icon");
+
     // mark activity as done
     await testUtils.dom.click($record.find('.o_mark_as_done'));
     await testUtils.dom.click($record.find('.o_activity_popover_done'));
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
-    assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
+    assert.strictEqual(rpcCount, 8, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
         "activity widget should have been updated correctly");
     assert.strictEqual($record.find('.o_mail_activity.show').length, 1,
@@ -789,6 +825,60 @@ QUnit.test('kanban activity widget popover test', async function (assert) {
     assert.equal(rpcCount, 1, "");
 
     kanban.destroy();
+});
+
+QUnit.test('list activity exception widget with activity', async function (assert) {
+    assert.expect(3);
+
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records.push({
+        id: 3,
+        message_attachment_count: 3,
+        display_name: "second partner",
+        foo: "Tommy",
+        message_follower_ids: [],
+        message_ids: [],
+        activity_ids: [2],
+        activity_exception_decoration: 'warning',
+        activity_exception_icon: 'fa-warning',
+    });
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 1,
+    },{
+        id: 2,
+        display_name: "An exception activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 4,
+    }];
+
+    var list = await createView({
+        View: ListView,
+        model: 'partner',
+        data: this.data,
+        arch: '<tree>' +
+                '<field name="foo"/>'+
+                '<field name="activity_exception_decoration" widget="activity_exception"/> ' +
+            '</tree>',
+    });
+
+    assert.containsN(list, '.o_data_row', 2, "should have two records");
+    assert.doesNotHaveClass(list.$('.o_data_row:eq(0) .o_activity_exception_cell div'), 'fa-warning',
+        "there is no any exception activity on record");
+    assert.hasClass(list.$('.o_data_row:eq(1) .o_activity_exception_cell div'), 'fa-warning',
+        "there is an exception on a record");
+
+    list.destroy();
 });
 
 QUnit.test('chatter: post, receive and star messages', async function (assert) {
@@ -1855,6 +1945,74 @@ QUnit.test('form activity widget: schedule next activity', async function (asser
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
     await testUtils.dom.click(form.$('.o_activity_popover_done_next'));
+    form.destroy();
+});
+
+QUnit.test('form activity widget: do not close activity popover on click', async function (assert) {
+    assert.expect(3);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `<form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>`,
+        res_id: 2,
+        mockRPC(route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
+                return Promise.resolve();
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            do_action(ev) {
+                ev.data.options.on_close();
+            },
+        },
+    });
+
+    //Schedule next activity
+    await testUtils.dom.click(form.$('.o_mail_activity .o_mark_as_done[data-activity-id=1]'));
+
+    for (let i = 0; i < 2; i++) {
+        // click twice in feedback area
+        await testUtils.dom.click(form.$('.o_mail_activity_feedback.popover textarea'));
+        const $popover = form.$('.o_mail_activity_feedback.popover');
+        const $PopoverInDom = form.$(`#${$popover.attr('id')}`);
+        assert.isVisible(
+            $PopoverInDom,
+            "the feedback popover should still be visible on click");
+    }
+    await concurrency.delay(250); // wait for popover transition
+    const $popover = form.$('.o_mail_activity_feedback.popover');
+    if (!$popover) {
+        throw new Error("popover should be in DOM");
+    }
+    const $PopoverInDom = form.$(`#${$popover.attr('id')}`);
+    assert.isVisible(
+        $PopoverInDom,
+        "the feedback popover should still be visible on click");
+
     form.destroy();
 });
 

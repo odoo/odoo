@@ -11,18 +11,20 @@
                         <div id='about'>
                             <h2>About</h2>
                             <div class="row mt16 o_settings_container">
-                                <div class='col-12 col-lg-6 o_setting_box d-flex' id='appstore'>
-                                    <div class="o_setting_right_pane">
-                                        <!-- FIXME Those links are defined directly in the template which means that we will have to
-                                        update the template code is the link ever changes -->
-                                        <a class="d-block mx-auto" href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="blank">
-                                            <img alt="On Google Play" class="d-block mx-auto img img-fluid" src="/base_setup/static/src/img/google_play.png"/>
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <a class='d-block mx-auto' href="https://itunes.apple.com/us/app/odoo/id1272543640" target="blank">
-                                            <img alt="On Apple Store" class="d-block mx-auto img img-fluid" src="/base_setup/static/src/img/app_store.png"/>
-                                        </a>
+                                <div class='col-12 col-lg-6 o_setting_box' id='appstore'>
+                                    <div class="d-flex">
+                                        <div class="o_setting_right_pane">
+                                            <!-- FIXME Those links are defined directly in the template which means that we will have to
+                                            update the template code is the link ever changes -->
+                                            <a class="d-block mx-auto" href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="blank">
+                                                <img alt="On Google Play" class="d-block mx-auto img img-fluid" src="/base_setup/static/src/img/google_play.png"/>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a class='d-block mx-auto' href="https://itunes.apple.com/us/app/odoo/id1272543640" target="blank">
+                                                <img alt="On Apple Store" class="d-block mx-auto img img-fluid" src="/base_setup/static/src/img/app_store.png"/>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                                 <widget name='res_config_edition'/>
@@ -89,18 +91,18 @@
                                 </div>
                                 <div class="col-12 col-lg-6 o_setting_box">
                                     <div class="o_setting_right_pane">
-                                        <span class="o_form_label">Document Template</span>
+                                        <span class="o_form_label">Document Layout</span>
                                         <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
-                                            Choose your document's header and footer layout
+                                            Choose the layout of your documents
                                         </div>
                                         <div class="content-group">
                                             <div class="mt16" groups="base.group_no_one">
-                                                <label for="external_report_layout_id" string="Template" class="col-3 col-lg-3 o_light_label"/>
+                                                <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
                                                 <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                             </div>
                                             <div class="mt16">
-                                                <button name="change_report_template" string="Change Document Template" type="object" class="oe_link" icon="fa-arrow-right"/>
+                                                <button name="%(base.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
                                                 <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
                                                 <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
                                             </div>

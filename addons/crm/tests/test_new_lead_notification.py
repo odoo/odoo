@@ -35,7 +35,7 @@ class NewLeadNotification(TestCrmCases):
         self.assertIn(channel_listen, lead.message_channel_ids)
 
         msg = lead.message_ids[0]
-        self.assertIn(self.crm_salesman.partner_id, msg.needaction_partner_ids)
+        self.assertIn(self.crm_salesman.partner_id, msg.notified_partner_ids)
         self.assertIn(channel_listen, msg.channel_ids)
 
         # The user should have a new unread message

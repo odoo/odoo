@@ -13,14 +13,15 @@
                 <filter string="Late" name="late" domain="[('date_planned_start','&lt;=',time.strftime('%%Y-%%m-%%d'))]"/>
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
             </search>
         </field>
     </record>
@@ -90,6 +91,7 @@
                 <field name="qty_production"/>
                 <field name="product_uom_id"/>
                 <field name="state"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -138,8 +140,10 @@
                     </group>
                 </group>
                 <notebook>
-                <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
-                    <field name="worksheet" widget="pdf_viewer"/>
+                <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False),('worksheet_google_slide', '=', False)]}">
+                    <field name="worksheet_type" invisible="1"/>
+                    <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '=', 'pdf')]}"/>
+                    <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '=', 'google_slide')]}"/>
                 </page>
                 <page string="Current Production">
                     <group>
@@ -272,14 +276,15 @@
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_planned_start','&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
                 <group expand="0" string="Group By">
@@ -296,9 +301,10 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id">
+            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5">
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
+                <field name="state"/>
             </calendar>
         </field>
     </record>
@@ -387,7 +393,7 @@
                                     <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
                                     <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
                                     <t t-if="record.last_working_user_id.raw_value">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.last_working_user_id.raw_value)" width="24" height="24" class="oe_kanban_avatar" alt="Avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.last_working_user_id.raw_value)" width="24" height="24" class="oe_kanban_avatar" alt="Avatar"/>
                                     </t>
                                 </div>
                             </div>

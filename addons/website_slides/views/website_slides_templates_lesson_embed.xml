@@ -58,7 +58,7 @@
                                         <div class="col-6 col-md-4 col-lg-3 oe_slides_suggestion_media">
                                             <div class="card mb-3">
                                                 <a t-att-href="suggest_slide.website_url" target="_new" class="card-img-top embed-responsive embed-responsive-16by9">
-                                                    <img t-attf-src="/web/image/slide.slide/#{suggest_slide.id}/image" class="card-img-top embed-responsive-item" t-att-alt="suggest_slide.name"/>
+                                                    <img t-att-src="website.image_url(suggest_slide, 'image_1024')" class="card-img-top embed-responsive-item" t-att-alt="suggest_slide.name"/>
                                                 </a>
                                                 <div class="card-body">
                                                     <h6 class="card-title">
@@ -80,14 +80,14 @@
                                             <i class="fa fa-circle-o-notch fa-spin mr-2"/><b>Loading...</b>
                                         </div>
                                         <div class="toast-body p-0">
-                                            <img class="img-fluid w-100" t-attf-src="/web/image/slide.slide/#{slide.id}/image_large"/>
+                                            <img class="img-fluid w-100" t-att-src="website.image_url(slide, 'image_256')"/>
                                         </div>
                                     </div>
                                 </div>
                                 <canvas id="PDFViewerCanvas" class="img-fluid w-100" style="display: none;"></canvas>
                             </t>
                             <t t-if="slide.slide_type == 'infographic'">
-                                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="width: 100%" alt="Slide image"/>
+                                <img t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width: 100%" alt="Slide image"/>
                             </t>
                         </div>
                         <!-- Fixed bottom navbar -->

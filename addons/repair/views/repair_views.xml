@@ -8,12 +8,16 @@
         <field name="arch" type="xml">
             <tree string="Repairs order" decoration-muted="state in ('done','cancel')" decoration-info="state=='draft'">
                 <field name="name" />
-                <field name="product_id" />
-                <field name="partner_id"/>
-                <field name="address_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="guarantee_limit"/>
-                <field name="state"/>
+                <field name="product_id" optional="show"/>
+                <field name="product_qty" optional="hide" string="Quantity"/>
+                <field name="product_uom" optional="hide" string="Unit of Measure"/>
+                <field name="partner_id" optional="show"/>
+                <field name="address_id" optional="show"/>
+                <field name="guarantee_limit" optional="show"/>
+                <field name="location_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="state" optional="show"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -41,8 +45,13 @@
                         <button name="action_created_invoice"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o" string="Invoice" attrs="{'invisible': ['|',('invoice_method','=','none'), ('state','in',('confirmed','2binvoiced','draft'))]}"
+                            icon="fa-pencil-square-o"
+                            attrs="{'invisible': ['|',('invoice_method','=','none'), ('state','in',('confirmed','2binvoiced','draft'))]}"
                             groups="account.group_account_invoice">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">1</span>
+                                <span class="o_stat_text">Invoices</span>
+                            </div>
                         </button>
                     </div>
                     <label for="name"/>
@@ -62,6 +71,7 @@
                             <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot" attrs="{'required':[('tracking', 'in', ['serial', 'lot'])], 'invisible': [('tracking', 'not in', ['serial', 'lot'])], 'readonly': [('state', '=', 'done')]}"/>
                             <field name="partner_id" widget="res_partner_many2one" attrs="{'required':[('invoice_method','!=','none')]}" context="{'show_vat': True}"/>
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
+                            <field name="user_id"/>
                         </group>
                         <group>
                             <field name="location_id" options="{'no_create': True}"/>
@@ -70,6 +80,7 @@
                             <field name="invoice_method"/>
                             <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}" attrs="{'invisible':[('invoice_method','=', 'none')]}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
                 <notebook>
@@ -214,6 +225,7 @@
                             <div class="row">
                                 <div class="col-6 text-muted">
                                     <span><t t-esc="record.product_id.value"/></span>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div class="col-6">
                                     <span class="float-right">
@@ -241,21 +253,21 @@
                   <separator/>
                   <filter string="Invoiced" name="invoiced" domain="[('invoiced','=',True)]"/>
                   <field name="product_id"/>
+                  <field name="operations"/>
                   <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
-                  <separator/>
-                  <filter string="My Activities" name="activities_my"
-                      domain="[('activity_ids.user_id', '=', uid)]"/>
-                  <separator/>
-                  <filter string="Late Activities" name="activities_overdue"
+                  <filter invisible="1" string="Late Activities" name="activities_overdue"
                       domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                       help="Show all records which has next action date is before today"/>
-                  <filter string="Today Activities" name="activities_today"
+                  <filter invisible="1" string="Today Activities" name="activities_today"
                       domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                  <filter string="Future Activities" name="activities_upcoming_all"
+                  <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                  <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                   <group expand="0" string="Group By">
                       <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                      <filter string="Create Date" name="createDate" domain="[]" context="{'group_by': 'create_date'}"/>
                       <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                       <filter string="Warranty Expiration" name="guarantee_limit" domain="[]" context="{'group_by':'guarantee_limit'}"/>
@@ -265,13 +277,33 @@
           </field>
     </record>
 
+    <record id="view_repair_graph" model="ir.ui.view">
+        <field name="name">repair.graph</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <graph string="Repair Orders">
+                <field name="create_date"/>
+                <field name="product_id"/>
+            </graph>
+        </field>
+    </record>
 
+    <record id="view_repair_pivot" model="ir.ui.view">
+        <field name="name">repair.pivot</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Repair Orders">
+                <field name="create_date" type="row"/>
+                <field name="product_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
 
          <record id="action_repair_order_tree" model="ir.actions.act_window">
             <field name="name">Repair Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">repair.order</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">tree,kanban,graph,pivot,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -288,8 +320,72 @@
             </field>
         </record>
 
+        <record id="action_repair_order_graph" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="context">{
+                'search_default_product': 1,
+                'search_default_createDate': 1,
+            }
+            </field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">tree,kanban,graph,pivot,form</field>
+            <field name="view_id" ref="view_repair_graph"/>
+        </record>
+
+        <record id="view_repair_tag_form" model="ir.ui.view">
+            <field name="name">repair.tag.form</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <form string="Repair Tags">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_repair_tag_tree" model="ir.ui.view">
+            <field name="name">repair.tag.tree</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <tree string="Tags" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_repair_tag_search" model="ir.ui.view">
+            <field name="name">repair.tag.search</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <search string="Tags">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_repair_order_tag" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">repair.tags</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Create a new tag
+              </p>
+            </field>
+        </record>
+
         <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="36"
             web_icon="repair,static/description/icon.png"/>
 
+        <menuitem id="repair_menu_reporting" name="Reporting" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+
+        <menuitem id="repair_menu" name="Repairs" parent="repair_menu_reporting" action="action_repair_order_graph"/>
+
+        <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+
+        <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config" action="action_repair_order_tag"/>
     </data>
 </odoo>

@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
+from odoo.addons.account.models.account import TYPE_TAX_USE
 
 import logging
 
@@ -63,7 +64,7 @@ class AccountAccountTemplate(models.Model):
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname='user_type',
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
     reconcile = fields.Boolean(string='Allow Invoices & payments Matching', default=False,
@@ -107,7 +108,7 @@ class AccountChartTemplate(models.Model):
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', required=True, oldname="bank_account_code_char")
+    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', required=True)
     cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts', required=True)
     transfer_account_code_prefix = fields.Char(string='Prefix of the main transfer accounts', required=True)
     income_currency_exchange_account_id = fields.Many2one('account.account.template',
@@ -116,14 +117,15 @@ class AccountChartTemplate(models.Model):
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
-    property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account', oldname="property_account_receivable")
-    property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account', oldname="property_account_payable")
-    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account', oldname="property_account_expense_categ")
-    property_account_income_categ_id = fields.Many2one('account.account.template', string='Category of Income Account', oldname="property_account_income_categ")
-    property_account_expense_id = fields.Many2one('account.account.template', string='Expense Account on Product Template', oldname="property_account_expense")
-    property_account_income_id = fields.Many2one('account.account.template', string='Income Account on Product Template', oldname="property_account_income")
-    property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
-    property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
+    default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
+    property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account')
+    property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account')
+    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account')
+    property_account_income_categ_id = fields.Many2one('account.account.template', string='Category of Income Account')
+    property_account_expense_id = fields.Many2one('account.account.template', string='Expense Account on Product Template')
+    property_account_income_id = fields.Many2one('account.account.template', string='Income Account on Product Template')
+    property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation")
+    property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
     property_tax_payable_account_id = fields.Many2one('account.account.template', string="Tax current account (payable)")
     property_tax_receivable_account_id = fields.Many2one('account.account.template', string="Tax current account (receivable)")
@@ -214,7 +216,7 @@ class AccountChartTemplate(models.Model):
             # delete account, journal, tax, fiscal position and reconciliation model
             models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal']
             for model in models_to_delete:
-                res = self.env[model].search([('company_id', '=', company.id)])
+                res = self.env[model].sudo().search([('company_id', '=', company.id)])
                 if len(res):
                     res.unlink()
             existing_accounts.unlink()
@@ -249,6 +251,12 @@ class AccountChartTemplate(models.Model):
             'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
             'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
         })
+
+        # Set default PoS receivable account in company
+        if acc_template_ref.get(self.default_pos_receivable_account_id.id):
+            company.write({
+                'account_default_pos_receivable_account_id': acc_template_ref[self.default_pos_receivable_account_id.id]
+            })
 
         # Set the transfer account on the company
         company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[0]
@@ -795,7 +803,7 @@ class AccountTaxTemplate(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
 
     name = fields.Char(string='Tax Name', required=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Scope', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
@@ -817,7 +825,6 @@ class AccountTaxTemplate(models.Model):
         [('on_invoice', 'Based on Invoice'),
          ('on_payment', 'Based on Payment'),
         ], string='Tax Due', default='on_invoice',
-        oldname='use_cash_basis',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_transition_account_id = fields.Many2one(
@@ -1066,9 +1073,9 @@ class AccountReconcileModelTemplate(models.Model):
     sequence = fields.Integer(required=True, default=10)
 
     rule_type = fields.Selection(selection=[
-        ('writeoff_button', _('Manually create a write-off on clicked button.')),
-        ('writeoff_suggestion', _('Suggest a write-off.')),
-        ('invoice_matching', _('Match existing invoices/bills.'))
+        ('writeoff_button', 'Manually create a write-off on clicked button.'),
+        ('writeoff_suggestion', 'Suggest a write-off.'),
+        ('invoice_matching', 'Match existing invoices/bills.')
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')

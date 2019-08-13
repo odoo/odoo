@@ -603,7 +603,7 @@ class TestMrpOrder(TestMrpCommon):
         produce_wizard.do_produce()
 
     def test_product_produce_7(self):
-        """ Add components in 2 differents sub location. Do not reserve the MO
+        """ Add components in 2 different sub location. Do not reserve the MO
         and checks that the move line created takes stock from location that
         contains needed raw materials.
         """

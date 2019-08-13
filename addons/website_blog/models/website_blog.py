@@ -160,7 +160,7 @@ class BlogPost(models.Model):
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
-    author_avatar = fields.Binary(related='author_id.image_small', string="Avatar", readonly=False)
+    author_avatar = fields.Binary(related='author_id.image_64', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
@@ -194,7 +194,7 @@ class BlogPost(models.Model):
                 blog_post._write(dict(post_date=blog_post.create_date)) # dont trigger inverse function
 
     def _check_for_publication(self, vals):
-        if vals.get('website_published'):
+        if vals.get('is_published'):
             for post in self:
                 post.blog_id.message_post_with_view(
                     'website_blog.blog_post_template_new_post',
@@ -214,9 +214,10 @@ class BlogPost(models.Model):
         result = True
         for post in self:
             copy_vals = dict(vals)
-            if ('website_published' in vals and 'published_date' not in vals and
+            published_in_vals = set(vals.keys()) & {'is_published', 'website_published'}
+            if (published_in_vals and 'published_date' not in vals and
                     (not post.published_date or post.published_date <= fields.Datetime.now())):
-                copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
+                copy_vals['published_date'] = vals[list(published_in_vals)[0]] and fields.Datetime.now() or False
             result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)
         return result

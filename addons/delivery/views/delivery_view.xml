@@ -323,23 +323,25 @@
                         <field name="recompute_delivery_price" invisible="1"/>
                     </xpath>
                     <xpath expr="//group[@name='note_group']" position="before">
-                        <div class="oe_left" style="margin-left: 10px">
+                        <div class="oe_right">
                             <button
-                                string="Add a shipping method"
+                                string="Add shipping"
                                 name="action_open_delivery_wizard"
                                 type="object"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
                             />
                             <button
-                                string="Recompute shipping cost"
-                                name="recompute_delivery_cost"
+                                string="Update shipping cost"
+                                name="action_open_delivery_wizard"
+                                context="{'carrier_recompute':True}"
                                 type="object"
                                 class="text-warning btn-secondary"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
                             />
                             <button
-                                string="Recompute shipping cost"
-                                name="recompute_delivery_cost"
+                                string="Update shipping cost"
+                                name="action_open_delivery_wizard"
+                                context="{'carrier_recompute':True}"
                                 type="object"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
                             />
@@ -384,5 +386,19 @@
             <field name="view_id" ref="delivery.delivery_tracking_url_warning_form"/>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+        </record>
+
+        <record id="vpicktree_view_tree" model="ir.ui.view">
+            <field name="name">stock.picking.delivery.tree.inherit.delivery</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='backorder_id']" position="after">
+                    <field name="carrier_tracking_ref" optional="hide"/>
+                    <field name="carrier_id" optional="hide"/>
+                    <field name="weight" optional="hide"/>
+                    <field name="shipping_weight" optional="hide"/>
+                </xpath>
+            </field>
         </record>
 </odoo>

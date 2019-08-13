@@ -305,8 +305,6 @@ class TestKitPicking(common.TestMrpCommon):
         # We create an 'immediate transfer' receipt for x3 kit_parent
         self.test_partner = self.env['res.partner'].create({
             'name': 'Notthat Guyagain',
-            'supplier': True,
-            'customer': True,
         })
         self.test_supplier = self.env['stock.location'].create({
             'name': 'supplier',
