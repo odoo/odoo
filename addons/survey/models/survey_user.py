@@ -198,6 +198,7 @@ class SurveyUserInput(models.Model):
 class SurveyUserInputLine(models.Model):
     _name = 'survey.user_input_line'
     _description = 'Survey User Input Line'
+    _order = 'sequence,id'
     _rec_name = 'user_input_id'
 
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
@@ -211,7 +212,7 @@ class SurveyUserInputLine(models.Model):
         ('date', 'Date'),
         ('datetime', 'Datetime'),
         ('free_text', 'Free Text'),
-        ('suggestion', 'Suggestion')], string='Answer Type')
+        ('suggestion', 'Suggestion')], string='Question Type')
     value_text = fields.Char('Text answer')
     value_number = fields.Float('Numerical answer')
     value_date = fields.Date('Date answer')
@@ -220,16 +221,21 @@ class SurveyUserInputLine(models.Model):
     value_suggested = fields.Many2one('survey.label', string="Suggested answer")
     value_suggested_row = fields.Many2one('survey.label', string="Row answer")
     answer_score = fields.Float('Score given for this choice')
+    is_correct_answer = fields.Boolean('Passed', compute='_compute_is_correct_answer')
+    # for section
+    title = fields.Char(related='question_id.title')
+    is_page = fields.Boolean(related='question_id.is_page')
+    sequence = fields.Integer('Sequence', default=10)
 
     @api.constrains('skipped', 'answer_type')
     def _answered_or_skipped(self):
-        for uil in self:
+        for uil in self.filtered(lambda answer: answer.question_id.constr_mandatory):
             if not uil.skipped != bool(uil.answer_type):
                 raise ValidationError(_('This question cannot be unanswered or skipped.'))
 
     @api.constrains('answer_type')
     def _check_answer_type(self):
-        for uil in self:
+        for uil in self.filtered(lambda answer: answer.question_id.constr_mandatory):
             fields_type = {
                 'text': bool(uil.value_text),
                 'number': (bool(uil.value_number) or uil.value_number == 0),
@@ -239,6 +245,13 @@ class SurveyUserInputLine(models.Model):
             }
             if not fields_type.get(uil.answer_type, True):
                 raise ValidationError(_('The answer must be in the right type'))
+
+    def _compute_is_correct_answer(self):
+        for uil in self:
+            if uil.value_suggested and uil.question_id.question_type in ['simple_choice', 'multiple_choice']:
+                uil.is_correct_answer = uil.value_suggested.is_correct
+            else:
+                uil.is_correct_answer = False
 
     def _get_mark(self, value_suggested):
         label = self.env['survey.label'].browse(int(value_suggested))
@@ -272,6 +285,18 @@ class SurveyUserInputLine(models.Model):
             _logger.error(question.question_type + ": This type of question has no saving function")
             return False
         else:
+            if question and user_input_id and question.page_id:
+                page = self.search([
+                    ('user_input_id', '=', user_input_id),
+                    ('survey_id', '=', question.survey_id.id),
+                    ('question_id', '=', question.page_id.id)
+                ])
+                if not page:
+                    self.create({
+                        'user_input_id': user_input_id,
+                        'question_id': question.page_id.id,
+                        'survey_id': question.survey_id.id,
+                    })
             saver(user_input_id, question, post, answer_tag)
 
     @api.model
@@ -285,7 +310,7 @@ class SurveyUserInputLine(models.Model):
         if answer_tag in post and post[answer_tag].strip():
             vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
         else:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'free_text', 'skipped': True})
         old_uil = self.search([
             ('user_input_id', '=', user_input_id),
             ('survey_id', '=', question.survey_id.id),
@@ -308,7 +333,7 @@ class SurveyUserInputLine(models.Model):
         if answer_tag in post and post[answer_tag].strip():
             vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
         else:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'text', 'skipped': True})
         old_uil = self.search([
             ('user_input_id', '=', user_input_id),
             ('survey_id', '=', question.survey_id.id),
@@ -331,7 +356,7 @@ class SurveyUserInputLine(models.Model):
         if answer_tag in post and post[answer_tag].strip():
             vals.update({'answer_type': 'number', 'value_number': float(post[answer_tag])})
         else:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'number', 'skipped': True})
         old_uil = self.search([
             ('user_input_id', '=', user_input_id),
             ('survey_id', '=', question.survey_id.id),
@@ -354,7 +379,7 @@ class SurveyUserInputLine(models.Model):
         if answer_tag in post and post[answer_tag].strip():
             vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
         else:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'date', 'skipped': True})
         old_uil = self.search([
             ('user_input_id', '=', user_input_id),
             ('survey_id', '=', question.survey_id.id),
@@ -377,7 +402,7 @@ class SurveyUserInputLine(models.Model):
         if answer_tag in post and post[answer_tag].strip():
             vals.update({'answer_type': 'datetime', 'value_datetime': post[answer_tag]})
         else:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'datetime', 'skipped': True})
         old_uil = self.search([
             ('user_input_id', '=', user_input_id),
             ('survey_id', '=', question.survey_id.id),
@@ -407,7 +432,7 @@ class SurveyUserInputLine(models.Model):
         if answer_tag in post and post[answer_tag].strip():
             vals.update({'answer_type': 'suggestion', 'value_suggested': int(post[answer_tag])})
         else:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'suggestion', 'skipped': True})
 
         # '-1' indicates 'comment count as an answer' so do not need to record it
         if post.get(answer_tag) and post.get(answer_tag) != '-1':
@@ -417,6 +442,8 @@ class SurveyUserInputLine(models.Model):
         if comment_answer:
             vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
             self.create(vals)
+        # change sequence
+        self.update_uil_sequence(user_input_id, question)
 
         return True
 
@@ -448,8 +475,10 @@ class SurveyUserInputLine(models.Model):
             vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})
             self.create(vals)
         if not ca_dict and not comment_answer:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'suggestion', 'skipped': True})
             self.create(vals)
+        # change sequence
+        self.update_uil_sequence(user_input_id, question)
         return True
 
     @api.model
@@ -493,6 +522,21 @@ class SurveyUserInputLine(models.Model):
                         vals.update({'answer_type': 'suggestion', 'value_suggested': col.id, 'value_suggested_row': row.id})
                         self.create(vals)
         if no_answers:
-            vals.update({'answer_type': None, 'skipped': True})
+            vals.update({'answer_type': 'suggestion', 'skipped': True})
             self.create(vals)
+        # change sequence
+        self.update_uil_sequence(user_input_id, question)
         return True
+
+    @api.model
+    def update_uil_sequence(self, user_input_id, question):
+        # this method called for update sequence of uil, because old uil delete and new one created
+        # when we change the answer value using next previous button on survey
+        # the question will show under correct section
+
+        user_input_lines = self.search([('user_input_id', '=', user_input_id),('survey_id', '=', question.survey_id.id)], order="id")
+        for uil in user_input_lines:
+            if uil.is_page and not uil.page_id:
+                uil.write({'sequence': uil.question_id.id})
+            elif uil.page_id:
+                uil.write({'sequence': uil.page_id.id})

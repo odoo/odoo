@@ -445,6 +445,31 @@ class Survey(http.Controller):
             'page_nr': 0,
             'quizz_correction': survey_sudo.scoring_type != 'scoring_without_answers' and answer_sudo})
 
+    def get_overall_performance(self, survey_token, answer_token, **post):
+        partially = correct_answer = incorrect_answer = unanswered =False
+
+        uil = answer_token.mapped('user_input_line_ids').filtered(lambda ans: not ans.question_id.is_page)
+        survey_questions = survey_token.question_and_page_ids.filtered(
+            lambda que: not que.is_page and que.question_type in ['simple_choice', 'multiple_choice'])
+
+        for question in survey_questions:
+            value_correct_ans = uil.filtered(lambda ans: ans.is_correct_answer and not ans.skipped and ans.question_id == question).mapped('value_suggested')
+            value_incorrect_ans = uil.filtered(lambda ans: not ans.is_correct_answer and not ans.skipped and ans.question_id == question)
+            value_suggested_ans = question.labels_ids.filtered(lambda label: label.is_correct)
+            if value_correct_ans == value_suggested_ans:
+                correct_answer += 1
+            if value_correct_ans and value_correct_ans != value_suggested_ans:
+                partially += 1
+            if not value_correct_ans and value_incorrect_ans:
+                incorrect_answer += 1
+            if not value_correct_ans and not value_incorrect_ans:
+                unanswered += 1
+
+        return json.dumps([{"text": "Correct", "count": correct_answer},
+            {"text": "Partially", "count": partially},
+            {"text": "Incorrect", "count": incorrect_answer},
+            {"text": "Unanswered", "count": unanswered}])
+
     @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
     def survey_report(self, survey, answer_token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
@@ -639,4 +664,6 @@ class Survey(http.Controller):
         values = {'survey': survey, 'answer': answer}
         if token:
             values['token'] = token
+        if survey.scoring_type != 'no_scoring' and survey.certificate:
+            values['graph_data'] = self.get_overall_performance(survey, answer)
         return values

@@ -63,13 +63,16 @@
                             <field name="quizz_passed" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                         </group>
                     </group>
-                    <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
-                        <tree>
-                            <field name="question_id"/>
-                            <field name="answer_type"/>
-                            <field name="skipped"/>
-                            <field name="create_date"/>
-                            <field name="answer_score" groups="base.group_no_one"/>
+                    <field name="user_input_line_ids" widget="question_page_one2many" context="{'default_user_input_id': active_id}" mode="tree" attrs="{'readonly': False}">
+                        <tree decoration-bf="is_page" editable="bottom">
+                            <field name="is_page" invisible="1"/>
+                            <field name="title" string="Question"/>
+                            <field name="question_id" invisible="1"/>
+                            <field name="answer_type" attrs="{'invisible': [('is_page', '=', True)]}"/>
+                            <field name="skipped" attrs="{'invisible': [('is_page', '=', True)]}"/>
+                            <field name="is_correct_answer" attrs="{'invisible': [('is_page', '=', True)]}"/>
+                            <field name="create_date" attrs="{'invisible': [('is_page', '=', True)]}"/>
+                            <field name="answer_score" groups="base.group_no_one" attrs="{'invisible': [('is_page', '=', True)]}"/>
                         </tree>
                     </field>
                 </sheet>
@@ -169,6 +172,7 @@
                 <sheet>
                     <group col="4">
                         <field name="question_id"/>
+                        <field name="title" invisible="1"/>
                         <field name="create_date"/>
                         <field name="answer_type"/>
                         <field name="skipped" />
