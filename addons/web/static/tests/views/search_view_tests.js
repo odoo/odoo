@@ -8,6 +8,7 @@ var createActionManager = testUtils.createActionManager;
 var createControlPanel = testUtils.createControlPanel;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
+var session = require('web.session');
 
 var controlPanelViewParameters = require('web.controlPanelViewParameters');
 var PERIOD_OPTIONS_IDS = controlPanelViewParameters.PERIOD_OPTIONS.map(function (option) {return option.optionId;});
@@ -119,6 +120,14 @@ QUnit.module('Search View', {
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
             search_view_id: [8, 'search'],
+        },
+        {
+            id: 12,
+            name: 'Partners Action 12',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [9, 'search'],
         }
         ];
 
@@ -195,6 +204,11 @@ QUnit.module('Search View', {
                     '<field name="birthday"/>' +
                     '<field name="bar" context="{\'bar\': self}"/>' +
                     '<field name="float_field"/>' +
+                    '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
+                    '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
+                '</search>',
+            'partner,9,search': '<search>'+
+                    '<field string="Foo" name="foo"/>' +
                     '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
                     '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
                 '</search>',
@@ -957,6 +971,159 @@ QUnit.module('Search View', {
 
         assert.containsNone(controlPanel, '.o_facet_values');
         controlPanel.destroy();
+    });
+
+    QUnit.test('toggle favorite correctly clears filter, groupbys and field "options"', async function (assert) {
+        assert.expect(8);
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                load_filters: function (event) {
+                    return Promise.resolve([{
+                        context: "{}",
+                        domain: "[]",
+                        id: 7,
+                        is_default: false,
+                        name: "My favorite",
+                        sort: "[]",
+                        user_id: [2, "Mitchell Admin"],
+                    }]).then(event.data.on_success);
+                },
+            },
+        });
+
+        await actionManager.doAction(12);
+
+        // activate Foo a
+        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 97);
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+
+        // activate Date Filter with This Month
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
+        await testUtils.dom.click($('.o_item_option[data-option_id="this_month"]'));
+
+        // activate Date Groupby with Year
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item a'));
+        await testUtils.dom.click($('.o_item_option[data-option_id="year"]'));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "a",
+            "There should be a filter Foo a");
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "Date Field Filter: This Month",
+            "There should be a filter facet with label 'Date Field Filter: This Month'");
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(2).text().trim(),
+            "Date Field Groupby: Year",
+            "There should be a groupby facet with label 'Date Field Groupby: Year'");
+
+        // activate the favorite
+        await testUtils.dom.click($('button .fa-star'));
+        await testUtils.dom.click($('.o_favorites_menu .o_menu_item a'));
+
+        assert.containsOnce(actionManager, '.o_searchview_input_container .o_facet_values',
+            "There should be a unique facet in the search bar");
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "My favorite",
+            "There should be a facet with label 'My favorite''");
+
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
+        assert.doesNotHaveClass($('.o_item_option[data-option_id="this_month"]'), 'selected',
+            "The Date Filter option 'This Month' should be deactivated");
+
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item a'));
+        assert.doesNotHaveClass($('.o_item_option[data-option_id="year"]'), 'selected',
+        "The Date Groupby option 'Year' should be deactivated");
+
+        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 98);
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "b",
+            "There should be a filter Foo b");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('favorites have unique descriptions (the submenus of the favorite menu are correctly updated)', async function (assert) {
+        assert.expect(7);
+
+        const UID = session.uid;
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                load_filters: function (event) {
+                    return Promise.resolve([{
+                        context: "{}",
+                        domain: "[]",
+                        id: 7,
+                        is_default: false,
+                        name: "My favorite",
+                        sort: "[]",
+                        user_id: [2, "Mitchell Admin"],
+                    }]).then(event.data.on_success);
+                },
+                create_filter: function (event) {
+                    assert.step('create_filter');
+                    assert.deepEqual(event.data.filter, {
+                        "action_id": 1,
+                        "context": {},
+                        "domain": "[]",
+                        "is_default": false,
+                        "model_id": "partner",
+                        "name": "My favorite 2",
+                        "sort": "[]",
+                        "user_id": UID,
+                      });
+                    return Promise.resolve(1).then(event.data.on_success);
+                }
+            },
+        });
+        testUtils.mock.intercept(actionManager, 'call_service', function (ev) {
+            if (ev.data.service === 'notification') {
+                // A notification alerting that another favorite with same name exists
+                // should be triggered
+                assert.step('notification');
+                assert.deepEqual(ev.data.args[0], {
+                    "className": undefined,
+                    "message": "Filter with same name already exists.",
+                    "sticky": undefined,
+                    "title": "Error",
+                    "type": "warning"
+                  });
+            }
+        }, true);
+
+        await actionManager.doAction(1);
+        await testUtils.dom.click($('button .fa-star'));
+        await testUtils.dom.click($('.o_favorites_menu .o_add_favorite'));
+        await testUtils.fields.editInput($('div.o_favorite_name input'), 'My favorite');
+        await testUtils.dom.click($('.o_favorites_menu div.o_save_favorite button'));
+
+        await testUtils.fields.editInput($('div.o_favorite_name input'), 'My favorite 2');
+        await testUtils.dom.click($('.o_favorites_menu div.o_save_favorite button'));
+
+        await testUtils.dom.click($('.o_favorites_menu .o_add_favorite'));
+        await testUtils.fields.editInput($('div.o_favorite_name input'), 'My favorite 2');
+        await testUtils.dom.click($('.o_favorites_menu div.o_save_favorite button'));
+
+        assert.verifySteps([
+            'notification',
+            'create_filter',
+            'notification'
+        ])
+
+        actionManager.destroy();
     });
 
     QUnit.module('Search Arch');
