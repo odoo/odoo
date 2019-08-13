@@ -183,7 +183,8 @@ class ProjectTask(models.Model):
     @api.onchange('project_id')
     def _onchange_project(self):
         result = super(ProjectTask, self)._onchange_project()
-        self.sale_line_id = self.project_id.sale_line_id
+        if self.project_id.sale_line_id:
+            self.sale_line_id = self.project_id.sale_line_id
         if not self.parent_id and not self.partner_id:
             self.partner_id = self.sale_line_id.order_partner_id
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO
