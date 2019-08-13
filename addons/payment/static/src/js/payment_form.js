@@ -68,6 +68,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             $acquirerForm.append(messageResult);
         }
     },
+    hideError: function() {
+        this.$('#payment_error').remove();
+    },
     /**
      * @private
      * @param {DOMElement} element
