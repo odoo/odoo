@@ -7,7 +7,6 @@
             <field name="arch" type="xml">
                 <form string="Warehouse" create="false">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_all_routes"
                                     string="Routes"
@@ -15,6 +14,7 @@
                                     class="oe_stat_button"
                                     type="object"/>
                         </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
                         <group>
