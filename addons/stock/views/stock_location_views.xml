@@ -15,7 +15,6 @@
         <field name="arch" type="xml">
             <form string="Stock Location" create="false">
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button string="Putaway Rules"
                                 class="oe_stat_button"
@@ -30,6 +29,7 @@
                                 context="{'location_id': active_id}"
                                 />
                     </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="location_id" class="oe_edit_only"/>
