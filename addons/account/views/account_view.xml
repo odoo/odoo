@@ -172,7 +172,7 @@
                 </kanban>
             </field>
         </record>
-        
+
         <record id="view_account_journal_search" model="ir.ui.view">
             <field name="name">account.journal.search</field>
             <field name="model">account.journal</field>
@@ -200,7 +200,7 @@
                 <tree editable="bottom">
                     <field name="sequence"  widget="handle"/>
                     <field name="name"/>
-                    <field name="account_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -214,9 +214,9 @@
                 <form string="Journal Groups">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="account_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field name="sequence"/>
+                            <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
+                            <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </sheet>
