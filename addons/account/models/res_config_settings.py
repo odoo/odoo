@@ -94,7 +94,7 @@ class ResConfigSettings(models.TransientModel):
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-            self.chart_template_id.load_for_current_company(15.0, 15.0)
+            self.chart_template_id._load(15.0, 15.0, self.env.company)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):

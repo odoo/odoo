@@ -56,7 +56,7 @@ class AccountingSavepointCase(SavepointCase):
         cls.env.user.company_id = company
 
         chart_template = cls.env['account.chart.template'].browse(chart_template.id)
-        chart_template.load_for_current_company(15.0, 15.0)
+        chart_template.try_loading()
 
         # The currency could be different after the installation of the chart template.
         company.write({'currency_id': kwargs.get('currency_id', cls.env.user.company_id.currency_id.id)})

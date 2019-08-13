@@ -48,4 +48,4 @@ class TestAllL10n(SingleTransactionCase):
             _logger.info(msg)
             with self.subTest(msg=msg):
                 with self.cr.savepoint():
-                    coa.try_loading_for_current_company()
+                    coa.try_loading()
