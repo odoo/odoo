@@ -3,6 +3,7 @@ odoo.define('point_of_sale.models', function (require) {
 
 var ajax = require('web.ajax');
 var BarcodeParser = require('barcodes.BarcodeParser');
+var BarcodeReader = require('point_of_sale.BarcodeReader');
 var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
 var concurrency = require('web.concurrency');
@@ -41,7 +42,7 @@ exports.PosModel = Backbone.Model.extend({
         this.gui    = attributes.gui;
 
         this.proxy = new devices.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
-        this.barcode_reader = new devices.BarcodeReader({'pos': this, proxy:this.proxy});
+        this.barcode_reader = new BarcodeReader({'pos': this, proxy:this.proxy});
 
         this.proxy_queue = new devices.JobQueue();           // used to prevent parallels communications to the proxy
         this.db = new PosDB();                       // a local database used to search trough products and categories & store pending orders
