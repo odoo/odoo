@@ -26,17 +26,17 @@
 # Johannes Croe <jcr@odoo.com>, 2019
 # Joerg Hueneburg <melikeymedia@gmail.com>, 2019
 # Caroline Renson <car@odoo.com>, 2019
-# Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Felix Schubert <felix.schubert@go-erp.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -280,6 +280,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4288,6 +4291,14 @@ msgstr ""
 "Sie können hier die Kommunikationsart einstellen, die auf Kundenaufträgen "
 "angezeigt wird, die dem Kunden bei der Auswahl der Zahlungsmethode "
 "mitgeteilt wird."
+
+#. module: sale
+#: code:addons/sale/models/sale.py:1115
+#, python-format
+msgid ""
+"You cannot change the type of a sale order line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action

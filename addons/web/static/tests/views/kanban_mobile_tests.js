@@ -1,10 +1,12 @@
 odoo.define('web.kanban_mobile_tests', function (require) {
 "use strict";
 
+var core = require('web.core');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
+var _t = core._t;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -104,6 +106,35 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('mobile grouped rendering in rtl direction', function (assert) {
+        assert.expect(2);
+
+        var direction = _t.database.parameters.direction;
+        _t.database.parameters.direction = 'rtl';
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test o_kanban_small_column" on_create="quick_create">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            domain: [['product_id', '!=', false]],
+            groupBy: ['product_id'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first')[0].style.right, '0%',
+            "first tab should have 50% right");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth(1)')[0].style.right, '100%',
+            "second tab should have 100% right");
+
+        kanban.destroy();
+        _t.database.parameters.direction = direction;
+    });
+
     QUnit.test('mobile grouped with undefined column', function (assert) {
         assert.expect(3);
 

@@ -9,12 +9,14 @@
 # son dang <son.dang@doda100.com>, 2018
 # Martin Trigaux, 2018
 # fanha99 <fanha99@hotmail.com>, 2018
-# Tri Bui <tribd@trobz.com>, 2018
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
 # Nguyen Quang Toan <nqtoan@dqn.vn>, 2019
 # Duy BQ <duybq86@gmail.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Tri Bui <tribd@trobz.com>, 2019
+# Christine Nguyen <dungnt@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
+"Last-Translator: Christine Nguyen <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,13 +60,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:329
 #, python-format
 msgid " (%s reserved)"
-msgstr " (%s được xí)"
+msgstr " (%s được giữ)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:332
 #, python-format
 msgid " (reserved)"
-msgstr " (đã xí)"
+msgstr "(đã giữ)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -76,17 +78,18 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
-" * Dự thảo: chưa xác nhận vừa chưa được ấn định lịch cho đến khi được xác nhận.\n"
-" * Đang đợi Hoạt động khác: đang đợi một hoạt động khác trong chuỗi dịch chuyển được thực thi trước khi dịch chuyển này chuyển sang trạng thái khả dụng (vd: trong chu trình Make-To-Order).\n"
-" * Đang đợi: nếu chuwa có hàng khả dụng bởi vì hàng hoá chưa được xí cho dịch chuyển này.\n"
-" * Sẵn sàng: các sản phẩm đã được xí và sẵn sàng dịch chuyển. Nếu chính sách giao hàng là 'Càng sớm càng tốt' thì điều này sẽ xảy ra ngay khi bất cứ số lượng nào đó được xí.\n"
-" * Hoàn thành: đã được dịch chuyển, không thể thay đổi hay huỷ được nữa.\n"
+" * Nháp: chưa xác nhận và chưa được lên lịch cho đến khi "
+"có xác nhận.\n"
+" * Chờ hoạt động khác: cần chờ tới khi một hành động điều chuyển khác được thực hiện xong trước (vd: trong chu trình Make-To-Order).\n"
+" * Đang chờ: nếu việc điều chuyển chưa sẵn sàng do hàng hoá chưa được giữ cho lần dịch chuyển này.\n"
+" * Sẵn sàng: các sản phẩm đã được giữ và sẵn sàng điều chuyển. Nếu chính sách giao hàng là 'Càng sớm càng tốt' thì trạng thái này sẽ được kích hoạt ngay khi có bất kì sản phẩm nào đó được giữ.\n"
+" * Hoàn thành: đã hoàn tất việc điều chuyển, không thể thay đổi hay huỷ được nữa.\n"
 " * Huỷ: đã bị huỷ, không thể được xác nhận nữa."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "#Products"
-msgstr "SL Sản phẩm"
+msgstr "#Sản phẩm"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:559
@@ -184,7 +187,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1671,6 +1674,9 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
+"Tùy thuộc vào phân hệ được cài đặt, cấu hình này sẽ cho phép bạn xác định "
+"phương pháp cung ứng sản phẩm: sản phẩm có thể được mua, sản xuất, MTO, "
+"v.v.. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
@@ -3444,7 +3450,7 @@ msgstr "Kiểu hành động kế tiếp"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "Điều chuyển tiếp theo bị ảnh hưởng:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -4287,7 +4293,7 @@ msgstr "Chuyển sản phẩm (Chi tiết phiếu kho)"
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
-msgstr ""
+msgstr "Gói sản phẩm"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
@@ -4405,12 +4411,12 @@ msgstr "Loan báo nhóm thu mua"
 #. module: stock
 #: selection:stock.rule,action:0
 msgid "Pull & Push"
-msgstr ""
+msgstr "Xuất & Nhập"
 
 #. module: stock
 #: selection:stock.rule,action:0
 msgid "Pull From"
-msgstr ""
+msgstr "Xuất từ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -4425,7 +4431,7 @@ msgstr "Quy tắc Push"
 #. module: stock
 #: selection:stock.rule,action:0
 msgid "Push To"
-msgstr ""
+msgstr "Nhập vào"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__putaway_id
@@ -5582,7 +5588,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Báo cáo lộ trình kho"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
@@ -5617,12 +5623,12 @@ msgstr "Dịch chuyển kho đã được xử lý"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Báo cáo lộ trình kho"
 
 #. module: stock
 #: selection:product.template,type:0
 msgid "Storable Product"
-msgstr ""
+msgstr "Sản phẩm lưu kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -7107,14 +7113,6 @@ msgid "You need to supply a Lot/Serial number for product %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/res_config_settings.py:70
-#, python-format
-msgid ""
-"You should not remove the 'lots and serial numbers' option while the following products are still tracked by lot or serial number:\n"
-" %s"
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/models/product.py:394
 #: code:addons/stock/models/product.py:538
 #, python-format
@@ -7204,7 +7202,7 @@ msgstr "của"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "đã xử lý thay vì"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
