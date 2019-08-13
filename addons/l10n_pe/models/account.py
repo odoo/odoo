@@ -8,8 +8,8 @@ class AccountGroup(models.Model):
         help="If set the name on the account will be shown using the full path in the group.")
 
     def name_get(self):
-        if not self.full_name_on_account:
-            return super().name_get()
+        # if not self.full_name_on_account:
+        #     return super().name_get()
         result = []
         for group in self:
             if not group.parent_id:
@@ -41,15 +41,16 @@ class AccountAccount(models.Model):
             if not account.group_id:
                 name = '[' + account.code + '] ' + account.name
             if account.group_id.name == account.name:
-                name = account.group_id.display_name.replace(  # TODO:
-                    account.group_id.code_prefix, account.code)
+                if not isinstance(account.group_id.display_name, bool):
+                    name = account.group_id.display_name.replace(  # TODO:
+                        account.group_id.code_prefix, account.code)
             if not name:
-                element = account.group_id.display_name.replace(
-                    account.group_id.code_prefix, account.code)
-                name = element + ': ' + account.name
+                if not isinstance(account.group_id.display_name, bool):
+                    element = account.group_id.display_name.replace(
+                        account.group_id.code_prefix, account.code)
+                    name = element + ': ' + account.name
             result.append((account.id, name))
         return result
-
 
 class AccountJournal(models.Model):
     _inherit = "account.journal"
