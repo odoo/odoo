@@ -205,7 +205,7 @@ var Followers = AbstractField.extend({
         if (missing_ids.length) {
             def = this._rpc({
                     route: '/mail/read_followers',
-                    params: { follower_ids: missing_ids, res_model: this.model }
+                    params: { follower_ids: missing_ids, res_model: this.model, context: {} }  // empty context to be overridden in session.js with 'allowed_company_ids'
                 });
         }
         return Promise.resolve(def).then(function (results) {
