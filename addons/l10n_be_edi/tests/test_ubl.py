@@ -10,7 +10,7 @@ class TestUBL(common.TransactionCase):
         # Force user Belgium country.
         self.env.user.company_id = self.env['res.company'].create({'name': 'MyCompany'})
         self.env.user.company_id.country = self.env.ref('base.be')
-        self.env.ref('l10n_be.l10nbe_chart_template').load_for_current_company(False, False)
+        self.env.ref('l10n_be.l10nbe_chart_template').try_loading()
         self.partner_id = self.env['res.partner'].create({'name': 'TestUser', 'vat': 'BE0123456789'})
 
     def test_ubl_invoice_import(self):
