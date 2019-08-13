@@ -1057,7 +1057,7 @@ class Message(models.Model):
             if message.is_thread_message(values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
 
-        return message
+        return messages
 
     def read(self, fields=None, load='_classic_read'):
         """ Override to explicitely call check_access_rule, that is not called
