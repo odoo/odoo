@@ -6,8 +6,11 @@ import time
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+
+ACCOUNT_MOVE_IN_TYPES = ('in_invoice', 'in_refund', 'in_receipt')
+ACCOUNT_MOVE_OUT_TYPES = ('out_invoice', 'out_refund', 'out_receipt')
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -424,6 +427,72 @@ class ResPartner(models.Model):
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
+    account_move_in_count = fields.Integer(compute="_compute_account_move_counts", search='_search_account_move_in_count')
+    account_move_out_count = fields.Integer(compute="_compute_account_move_counts", search='_search_account_move_out_count')
+
+    def _search_account_move_in_count(self, operator, value):
+        return self._search_account_move_count(operator, value, ACCOUNT_MOVE_IN_TYPES)
+
+    def _search_account_move_out_count(self, operator, value):
+        return self._search_account_move_count(operator, value, ACCOUNT_MOVE_OUT_TYPES)
+
+    def _search_account_move_count(self, operator, value, move_types):
+        if operator not in ('>', '<', '=', '<=', '>='):
+            raise UserError(_("Operator not supported: %s") % operator)
+        self.check_access_rights('read')
+
+        # inserting operator is safe since valid values are checked above
+        self.env.cr.execute("""
+            SELECT p.id
+            FROM res_partner p
+            LEFT JOIN (
+                SELECT m.partner_id, COUNT(*) AS move_count
+                FROM account_move AS m
+                WHERE type in %s AND state = 'posted' AND company_id IN %s
+                GROUP BY m.partner_id
+            ) AS c ON p.id = c.partner_id
+            WHERE COALESCE(c.move_count, 0) {operator} %s;
+        """.format(operator=operator), (tuple(move_types), tuple(self.env.companies.ids), value))
+        ids = [res[0] for res in self.env.cr.fetchall()]
+        return [('id', 'in', ids)]
+
+    @api.depends('invoice_ids')
+    def _compute_account_move_counts(self):
+        types_by_field = {
+            'account_move_in_count': ACCOUNT_MOVE_IN_TYPES,
+            'account_move_out_count': ACCOUNT_MOVE_OUT_TYPES,
+        }
+        for field, types in types_by_field.items():
+            groups = self.env['account.move'].read_group([
+                ('partner_id', 'in', self.ids),
+                ('state', '=', 'posted'),
+                ('type', 'in', types),
+            ], ['partner_id'], ['partner_id'])
+            for group in groups:
+                partner_id = group['partner_id'][0]
+                count = group['partner_id_count']
+                self.browse(partner_id)[field] = count
+
+    def _is_customer(self):
+        return self.account_move_out_count > 0
+
+    def _is_supplier(self):
+        return self.account_move_in_count > 0
+
+    def _get_name_search_join_clause(self):
+        res = super()._get_name_search_join_clause()
+        partner_search_mode = self.env.context.get('res_partner_search_mode')
+        if partner_search_mode in ('supplier', 'customer'):
+            if partner_search_mode == 'supplier':
+                types = ACCOUNT_MOVE_IN_TYPES
+            else:
+                types = ACCOUNT_MOVE_OUT_TYPES
+            join_clause = """
+                LEFT JOIN {table}
+                ON res_partner.id = {table}.partner_id AND {table}.type IN {types}
+            """.format(table=self.env['account.move']._table, types=types)
+            return '%s %s' % (join_clause, res) if res else join_clause
+        return res
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
