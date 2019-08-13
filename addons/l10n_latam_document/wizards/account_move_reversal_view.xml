@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_reversal" model="ir.ui.view">
+        <field name="name">account.move.reversal.form</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_latam_use_documents" invisible="1"/>
+                <field name="l10n_latam_sequence_id" invisible="1"/>
+            </form>
+            <field name="date" position="before">
+                <field name="l10n_latam_document_type_id" attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('refund_method', '=', 'refund')], 'required': [('l10n_latam_use_documents', '=', True), ('refund_method', '!=', 'refund')]}" options="{'no_open': True, 'no_create': True}"/>
+                <field name="l10n_latam_document_number" attrs="{'invisible': ['|', ('l10n_latam_sequence_id', '!=', False), ('refund_method', '=', 'refund')], 'required': [('l10n_latam_sequence_id', '=', True), ('refund_method', '!=', 'refund')]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
