@@ -1099,7 +1099,7 @@ QUnit.module('Search View', {
                     "message": "Filter with same name already exists.",
                     "sticky": undefined,
                     "title": "Error",
-                    "type": "warning"
+                    "type": "danger"
                   });
             }
         }, true);
