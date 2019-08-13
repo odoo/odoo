@@ -264,7 +264,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
 
     _parse_date: function (value) {
         console.log(value);
-        var date = moment(value, time.getLangDateFormat(), true);
+        var date = moment(value, "YYYY-MM-DD", true);
         if (date.isValid()) {
             return time.date_to_str(date.toDate());
         }
