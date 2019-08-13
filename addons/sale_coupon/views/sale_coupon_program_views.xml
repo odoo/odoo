@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <form string="Coupon Program">
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object" icon="fa-usd" name="action_view_sales_orders">
                             <field name="order_count" string="Sales" widget="statinfo"/>
                         </button>
                     </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div name="title" class="oe_left">
                         <label class="oe_edit_only" for="name" string="Program Name"/>
                     </div>

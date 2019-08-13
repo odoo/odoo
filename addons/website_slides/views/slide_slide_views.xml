@@ -40,11 +40,11 @@
             <field name="arch" type="xml">
                 <form string="Lesson">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <field name="is_published" widget="website_redirect_button"
                                    attrs="{'invisible': [('is_category', '=', True)]}"/>
                         </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options='{"preview_image": "image_256"}'
                             attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))], 'invisible': [('is_category', '=', True)]}"
                         />

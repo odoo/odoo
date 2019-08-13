@@ -12,7 +12,6 @@
                         <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
                     </header>
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_redirect_to_done_members"
                                 type="object"
@@ -41,6 +40,7 @@
                             </button>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Course Title"/>
