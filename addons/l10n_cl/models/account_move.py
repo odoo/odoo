@@ -10,8 +10,8 @@ class AccountMove(models.Model):
 
     l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
     partner_id_vat = fields.Char(related='partner_id.vat', string='VAT No')
-    l10n_latam_internal_type = fields.Selection(related='l10n_latam_document_type_id.internal_type',
-                                                string='L10n Latam Internal Type')
+    l10n_latam_internal_type = fields.Selection(
+        related='l10n_latam_document_type_id.internal_type', string='L10n Latam Internal Type')
 
     def get_document_type_sequence(self):
         """ Return the match sequences for the given journal and invoice """
@@ -30,13 +30,9 @@ class AccountMove(models.Model):
                     'base.cl')):
 
             journal_sequence_ids =self.env['ir.sequence'].search([
-                ('id', 'in', self.journal_id.l10n_cl_sequence_ids.ids)
-            ]).mapped('l10n_latam_document_type_id').ids
+                ('id', 'in', self.journal_id.l10n_cl_sequence_ids.ids)]).mapped('l10n_latam_document_type_id').ids
 
-            domain += [
-                ('active', '=', True),
-                ('id', 'in', journal_sequence_ids)
-            ]
+            domain += [('active', '=', True), ('id', 'in', journal_sequence_ids)]
             if self.partner_id.l10n_cl_sii_taxpayer_type == '3':
                 domain += [('code', 'in', ['35', '38', '39', '41'])]
         return domain
@@ -47,10 +43,6 @@ class AccountMove(models.Model):
         for rec in self.filtered('l10n_latam_document_type_id'):
             tax_payer_type = rec.partner_id.l10n_cl_sii_taxpayer_type
             latam_document_type_code = rec.l10n_latam_document_type_id.code
-            if not tax_payer_type and latam_document_type_code not in {
-                '35', '38', '39', '41'
-            }:
-                raise ValidationError(
-                    _('Tax payer type is mandatory for this type of document. '
-                      'Please set the current tax payer type of this client')
-                )
+            if not tax_payer_type and latam_document_type_code not in {'35', '38', '39', '41'}:
+                raise ValidationError(_('Tax payer type is mandatory for this type of document. '
+                                        'Please set the current tax payer type of this client'))
