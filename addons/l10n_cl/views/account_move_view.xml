@@ -45,7 +45,8 @@
     </record>
 
     <record model="ir.actions.act_window" id="sale_invoices_credit_notes">
-        <field name="name">Sale Invoices and Credit Notes</field>
+        <field name="name">(CL) Sale Invoices and Credit Notes</field>
+        <field name="sequence">3</field>
         <field name="view_id" ref="view_complete_invoice_refund_tree"/>
         <field name="res_model">account.move</field>
         <field name="domain">[('type', 'in', ['out_invoice', 'out_refund'])]</field>
@@ -55,7 +56,8 @@
     </record>
 
     <record model="ir.actions.act_window" id="vendor_bills_and_refunds">
-        <field name="name">Vendor Bills and Refunds</field>
+        <field name="name">(CL) Vendor Bills and Refunds</field>
+        <field name="sequence">3</field>
         <field name="view_id" ref="view_complete_invoice_refund_tree"/>
         <field name="res_model">account.move</field>
         <field name="domain">[('type', 'in', ['in_invoice', 'in_refund'])]</field>
