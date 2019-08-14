@@ -13,7 +13,7 @@ class PosCategory(models.Model):
         if not self._check_recursion():
             raise ValueError(_('Error ! You cannot create recursive categories.'))
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(string='Category Name', required=True, translate=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_id = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")

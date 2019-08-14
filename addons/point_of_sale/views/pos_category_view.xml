@@ -10,13 +10,13 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" placeholder="POS Category Name" required="True"/>
+                            <field name="name" placeholder="e.g. Soft Drinks" required="True"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="parent_id"/>
-                            <field name="sequence"/>
+                            <field name="sequence" groups="base.group_no_one" />
                         </group>
                     </group>
                 </sheet>

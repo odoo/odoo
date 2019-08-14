@@ -882,8 +882,8 @@ td {
     border: 1px solid #cecbcb;
     padding: 10px 20px;
     padding-left: 38px;
+    padding-right: 33px;
     margin: 6px;
-    background: url("../img/search.png") no-repeat 15px;
     background-color: white;
     border-radius: 20px;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
@@ -894,12 +894,25 @@ td {
     box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
     color: rgb(153, 153, 255);
 }
+
 .pos .search-clear {
     position: absolute;
+    top: 9px;
     width: 30px;
     height: 30px;
-    top: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear.left {
     left: 11px;
+    color: #808080;
+}
+
+.search-clear.right {
+    left: 145px;
+    color: #808080;
     cursor: pointer;
 }
 
