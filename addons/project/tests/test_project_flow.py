@@ -135,8 +135,7 @@ class TestProjectFlow(TestProjectCommon):
 
         self.assertEqual(first_task.rating_count, 0, "Task should have no rating associated with it")
 
-        Rating = self.env['rating.rating']
-        rating_good = Rating.create({
+        rating_good = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('project.task').id,
             'res_id': first_task.id,
             'parent_res_model_id': self.env['ir.model']._get('project.project').id,
@@ -147,7 +146,7 @@ class TestProjectFlow(TestProjectCommon):
             'consumed': False,
         })
 
-        rating_bad = Rating.create({
+        rating_bad = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('project.task').id,
             'res_id': first_task.id,
             'parent_res_model_id': self.env['ir.model']._get('project.project').id,

@@ -65,7 +65,7 @@ class SlidesPortalChatter(PortalChatter):
         # update rating
         if post.get('rating_value'):
             domain = [('res_model', '=', res_model), ('res_id', '=', res_id), ('website_published', '=', True), ('message_id', '=', message.id)]
-            rating = request.env['rating.rating'].search(domain, order='write_date DESC', limit=1)
+            rating = request.env['rating.rating'].sudo().search(domain, order='write_date DESC', limit=1)
             rating.write({
                 'rating': float(post['rating_value'])
             })
