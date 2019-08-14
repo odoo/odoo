@@ -642,7 +642,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
     },
     is_visible: function () {
         return _.some(this.filters, function (filter) {
-            return !filter.attrs.invisible;
+            return !filter.attrs.modifiers.invisible;
         });
     },
     complete: function (item) {
