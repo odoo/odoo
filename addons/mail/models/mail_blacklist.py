@@ -113,6 +113,8 @@ class MailBlackListMixin(models.AbstractModel):
     @api.model
     def _search_is_blacklisted(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
+        self.flush(['email_normalized'])
+        self.env['mail.blacklist'].flush(['email', 'active'])
         self._assert_primary_email()
         if operator != '=':
             if operator == '!=' and isinstance(value, bool):

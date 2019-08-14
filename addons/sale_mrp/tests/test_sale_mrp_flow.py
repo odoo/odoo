@@ -540,7 +540,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
         # deliver remaining products, check the so's invoice_status and delivered quantities
         self.assertEqual(len(so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
-        pick_2 = so.picking_ids[0]
+        pick_2 = so.picking_ids.filtered('backorder_id')
         for move in pick_2.move_lines:
             if move.product_id.id == self.env.ref('mrp.product_product_computer_desk_bolt').id:
                 move.write({'quantity_done': 19})
@@ -729,7 +729,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self._assert_quantities(move_lines, expected_quantities)
 
         # Process only x1 of the first component then create a backorder for the missing components
-        picking_original.move_lines[0].write({'quantity_done': 1})
+        picking_original.move_lines.sorted()[0].write({'quantity_done': 1})
         backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, so.picking_ids[0].id)]})
         backorder_wizard.process()
 

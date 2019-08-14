@@ -192,7 +192,10 @@ class Lead(models.Model):
     @api.depends('date_open')
     def _compute_day_open(self):
         """ Compute difference between create date and open date """
-        for lead in self.filtered(lambda l: l.date_open and l.create_date):
+        leads = self.filtered(lambda l: l.date_open and l.create_date)
+        others = self - leads
+        others.day_open = None
+        for lead in leads:
             date_create = fields.Datetime.from_string(lead.create_date)
             date_open = fields.Datetime.from_string(lead.date_open)
             lead.day_open = abs((date_open - date_create).days)
@@ -200,7 +203,10 @@ class Lead(models.Model):
     @api.depends('date_closed')
     def _compute_day_close(self):
         """ Compute difference between current date and log date """
-        for lead in self.filtered(lambda l: l.date_closed and l.create_date):
+        leads = self.filtered(lambda l: l.date_closed and l.create_date)
+        others = self - leads
+        others.day_close = None
+        for lead in leads:
             date_create = fields.Datetime.from_string(lead.create_date)
             date_close = fields.Datetime.from_string(lead.date_closed)
             lead.day_close = abs((date_close - date_create).days)
@@ -1493,6 +1499,7 @@ class Lead(models.Model):
         args = [sql.Identifier(field) for field in fields] * 2
 
         #   Build sql query in safe mode
+        self.flush(['probability', 'active'])
         query = """select probability, active, %s, count(probability) as count
                     from crm_lead l
                     where (probability = 0 or probability >= 100)
@@ -1528,6 +1535,7 @@ class Lead(models.Model):
 
     def _pls_update_frequency_table_tag(self, frequencies, team_id, pls_start_date):
         # get all tag_ids won / lost count
+        self.flush(['probability', 'active'])
         query = """select l.probability, l.active, t.id, count(l.probability) as count
                     from crm_lead_tag_rel rel
                     inner join crm_lead_tag t on rel.tag_id = t.id
@@ -1582,6 +1590,7 @@ class Lead(models.Model):
             str_fields = ", ".join(["{}"] * len(fields))
             args = [sql.Identifier(field) for field in fields]
             #   Build sql query in safe mode
+            self.flush(['probability'])
             query = """SELECT id, %s
                         FROM crm_lead l
                         WHERE probability > 0 AND probability < 100 AND active = True AND id in %%s order by team_id asc"""

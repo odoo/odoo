@@ -179,7 +179,10 @@ class IrSequence(models.Model):
                     _create_sequence(self._cr, "ir_sequence_%03d" % seq.id, i, n)
                     for sub_seq in seq.date_range_ids:
                         _create_sequence(self._cr, "ir_sequence_%03d_%03d" % (seq.id, sub_seq.id), i, n)
-        return super(IrSequence, self).write(values)
+        res = super(IrSequence, self).write(values)
+        # DLE P179
+        self.flush(values.keys())
+        return res
 
     def _next_do(self):
         if self.implementation == 'standard':
@@ -368,4 +371,14 @@ class IrSequenceDateRange(models.Model):
         if values.get('number_next'):
             seq_to_alter = self.filtered(lambda seq: seq.sequence_id.implementation == 'standard')
             seq_to_alter._alter_sequence(number_next=values.get('number_next'))
-        return super(IrSequenceDateRange, self).write(values)
+        # DLE P179: `test_in_invoice_line_onchange_sequence_number_1`
+        # _update_nogap do a select to get the next sequence number_next
+        # When changing (writing) the number next of a sequence, the number next must be flushed before doing the select.
+        # Normally in such a case, we flush just above the execute, but for the sake of performance
+        # I believe this is better to flush directly in the write:
+        #  - Changing the number next of a sequence is really really rare,
+        #  - But selecting the number next happens a lot,
+        # Therefore, if I chose to put the flush just above the select, it would check the flush most of the time for no reason.
+        res = super(IrSequenceDateRange, self).write(values)
+        self.flush(values.keys())
+        return res

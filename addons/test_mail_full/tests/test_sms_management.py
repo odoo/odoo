@@ -60,7 +60,7 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
 
         with self.sudo('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
-            wizard.write({'recipient_ids': [(1, r.id, {'resend': True, 'sms_number': self.random_numbers[idx]}) for idx, r in enumerate(wizard.recipient_ids)]})
+            wizard.write({'recipient_ids': [(1, r.id, {'resend': True, 'sms_number': self.random_numbers[idx]}) for idx, r in enumerate(wizard.recipient_ids.sorted())]})
             with self.mockSMSGateway():
                 wizard.action_resend()
 

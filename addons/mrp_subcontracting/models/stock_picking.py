@@ -16,16 +16,20 @@ class StockPicking(models.Model):
         for picking in self:
             # Hide if not encoding state
             if picking.state in ('draft', 'cancel', 'done'):
+                picking.display_action_record_components = False
                 continue
             if not picking._is_subcontract():
+                picking.display_action_record_components = False
                 continue
             # Hide if no components are track
             subcontracted_productions = picking._get_subcontracted_productions()
             subcontracted_moves = subcontracted_productions.mapped('move_raw_ids')
             if all(subcontracted_move.has_tracking == 'none' for subcontracted_move in subcontracted_moves):
+                picking.display_action_record_components = False
                 continue
             # Hide if the production is to close
             if not subcontracted_productions.filtered(lambda mo: mo.state not in ('to_close', 'done')):
+                picking.display_action_record_components = False
                 continue
             picking.display_action_record_components = True
 

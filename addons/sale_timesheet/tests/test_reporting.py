@@ -136,6 +136,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         # confirm sales orders
         self.sale_order_1.action_confirm()
         self.sale_order_2.action_confirm()
+        self.env['project.profitability.report'].flush()
 
         project_so_1 = self.so_line_deliver_project.project_id
         project_so_2 = self.so_line_order_project.project_id
@@ -184,6 +185,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         timesheet6 = self._log_timesheet_manager(project_so_2, 1, task_so_2)
         timesheet7 = self._log_timesheet_manager(self.project_global, 3, task_in_global_1)
         timesheet8 = self._log_timesheet_manager(self.project_global, 3, task_in_global_2)
+        self.env['project.profitability.report'].flush()
 
         # deliver project should now have cost and something to invoice
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
@@ -238,6 +240,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         invoice_id = action_invoice['res_id']
         invoice_1 = self.env['account.move'].browse(invoice_id)
         invoice_1.post()
+        self.env['project.profitability.report'].flush()
 
         # deliver project should now have cost and something invoiced
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
@@ -292,6 +295,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         invoice_id = action_invoice['res_id']
         invoice_2 = self.env['account.move'].browse(invoice_id)
         invoice_2.post()
+        self.env['project.profitability.report'].flush()
 
         # deliver project should not be impacted by the invoice of the other SO
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
@@ -362,6 +366,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
             'product_id': self.product_expense.id,
             'product_uom_id': self.product_expense.uom_id.id,
         })
+        self.env['project.profitability.report'].flush()
 
         # deliver project should now have expense cost, and expense to reinvoice as there is a still open sales order linked to the AA1
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]

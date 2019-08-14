@@ -74,6 +74,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             self.env['mail.blacklist'].create({
                 'email': 'rec.%s@example.com' % (x * 5)
             })
+        self.env['mass.mail.test.bl'].flush()
 
     @users('__system__', 'marketing')
     @warmup

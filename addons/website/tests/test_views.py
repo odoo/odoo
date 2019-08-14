@@ -955,6 +955,8 @@ class Crawler(HttpCase):
         event_child_view.copy({'name': 'Filter by Category', 'inherit_id': event_child_view.id, 'key': '_website_event.event_category'})
         event_child_view.copy({'name': 'Filter by Country', 'inherit_id': event_child_view.id, 'key': '_website_event.event_location'})
 
+        View.flush()
+
         # Customize
         #   | Main Frontend Layout
         #       | Show Sign In

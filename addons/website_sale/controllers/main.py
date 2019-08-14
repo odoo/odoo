@@ -622,7 +622,9 @@ class WebsiteSale(http.Controller):
         return partner_id
 
     def values_preprocess(self, order, mode, values):
-        return values
+        # Convert the values for many2one fields to integer since they are used as IDs
+        partner_fields = request.env['res.partner']._fields
+        return {k: int(v) if v and k in partner_fields and partner_fields[k].type == 'many2one' else v for k, v in values.items()}
 
     def values_postprocess(self, order, mode, values, errors, error_msg):
         new_values = {}
@@ -1063,7 +1065,7 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     @http.route(['/shop/add_product'], type='json', auth="user", methods=['POST'], website=True)
-    def add_product(self, name=None, category=0, **post):
+    def add_product(self, name=None, category=None, **post):
         product = request.env['product.product'].create({
             'name': name or _("New Product"),
             'public_categ_ids': category,

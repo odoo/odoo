@@ -39,6 +39,8 @@ class ServerAction(models.Model):
         for action in self:
             if action.state == 'code' and action.website_published:
                 action.website_url = action._compute_website_url(action.website_path, action.xml_id)
+            else:
+                action.website_url = False
 
     @api.model
     def _get_eval_context(self, action):

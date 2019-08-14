@@ -66,6 +66,8 @@ class AccountInvoiceSend(models.TransientModel):
                         )
                 else:
                     wizard.invoice_without_email = False
+            else:
+                wizard.invoice_without_email = False
 
     def _send_email(self):
         if self.is_email:

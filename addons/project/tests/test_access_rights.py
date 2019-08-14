@@ -65,7 +65,7 @@ class TestPortalProject(TestPortalProjectBase):
     def test_followers_project_access_rights(self):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
-
+        pigs.flush(['privacy_visibility'])
         # Do: Alfred reads project -> ko (employee ko followers)
         self.assertRaises(AccessError, pigs.with_user(self.user_projectuser).read, ['user_id'])
         # Test: no project task visible

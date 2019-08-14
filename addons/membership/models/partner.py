@@ -111,8 +111,7 @@ class Partner(models.Model):
     def _cron_update_membership(self):
         partners = self.search([('membership_state', 'in', ['invoiced', 'paid'])])
         # mark the field to be recomputed, and recompute it
-        partners._recompute_todo(self._fields['membership_state'])
-        self.recompute()
+        self.env.add_to_compute(self._fields['membership_state'], partners)
 
     def create_membership_invoice(self, product, amount):
         """ Create Customer Invoice of Membership for partners.

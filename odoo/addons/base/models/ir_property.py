@@ -110,6 +110,11 @@ class Property(models.Model):
             )
         r = super(Property, self).write(self._update_values(values))
         if default_set:
+            # DLE P44: test `test_27_company_dependent`
+            # Easy solution, need to flush write when changing a property.
+            # Maybe it would be better to be able to compute all impacted cache value and update those instead
+            # Then clear_caches must be removed as well.
+            self.flush()
             self.clear_caches()
         return r
 
@@ -119,6 +124,8 @@ class Property(models.Model):
         created_default = any(not v.get('res_id') for v in vals_list)
         r = super(Property, self).create(vals_list)
         if created_default:
+            # DLE P44: test `test_27_company_dependent`
+            self.flush()
             self.clear_caches()
         return r
 

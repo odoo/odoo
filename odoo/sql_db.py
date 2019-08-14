@@ -22,6 +22,8 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
 
+from odoo.api import Environment
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
@@ -367,6 +369,10 @@ class Cursor(object):
     def commit(self):
         """ Perform an SQL `COMMIT`
         """
+        for env in Environment.envs:
+            if env.cr is self:
+                env['base'].flush()
+                break
         result = self._cnx.commit()
         for func in self._pop_event_handlers()['commit']:
             func()
@@ -376,6 +382,10 @@ class Cursor(object):
     def rollback(self):
         """ Perform an SQL `ROLLBACK`
         """
+        for env in Environment.envs:
+            if env.cr is self:
+                env.clear()
+                break
         result = self._cnx.rollback()
         for func in self._pop_event_handlers()['rollback']:
             func()
@@ -463,9 +473,17 @@ class TestCursor(object):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
+        for env in Environment.envs:
+            if env.cr is self:
+                env['base'].flush()
+                break
         self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
 
     def rollback(self):
+        for env in Environment.envs:
+            if env.cr is self:
+                env.clear()
+                break
         self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
 
     def __enter__(self):

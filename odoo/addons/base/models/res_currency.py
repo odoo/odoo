@@ -46,6 +46,7 @@ class Currency(models.Model):
     ]
 
     def _get_rates(self, company, date):
+        self.env['res.currency.rate'].flush(['rate', 'currency_id', 'company_id', 'name'])
         query = """SELECT c.id,
                           COALESCE((SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s

@@ -213,7 +213,7 @@ class TestInvoiceTaxes(AccountingTestCase):
         self.assertEqual(len(inv_tax_lines), 2, "There should be two tax lines, one for each repartition line.")
         self.assertEqual(abs(inv_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 4.2, "Tax line on account 1 should amount to 4.2 (10% of 42)")
         self.assertEqual(inv_tax_lines.filtered(lambda x: x.account_id == account_1).tag_ids, inv_tax_tag_10, "Tax line on account 1 should have 10% tag")
-        self.assertEqual(abs(inv_tax_lines.filtered(lambda x: x.account_id == account_2).balance), 37.8, "Tax line on account 2 should amount to 37.8 (90% of 42)")
+        self.assertAlmostEqual(abs(inv_tax_lines.filtered(lambda x: x.account_id == account_2).balance), 37.8, 2, "Tax line on account 2 should amount to 37.8 (90% of 42)")
         self.assertEqual(inv_tax_lines.filtered(lambda x: x.account_id == account_2).tag_ids, inv_tax_tag_90, "Tax line on account 2 should have 90% tag")
 
         # Test refund repartition
@@ -228,5 +228,5 @@ class TestInvoiceTaxes(AccountingTestCase):
         ref_tax_lines = refund.line_ids.filtered(lambda x: x.tax_repartition_line_id.repartition_type == 'tax')
         self.assertEqual(len(ref_tax_lines), 2, "There should be two refund tax lines")
         self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == ref_base_line.account_id).balance), 4.2, "Refund tax line on base account should amount to 4.2 (10% of 42)")
-        self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
+        self.assertAlmostEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, 2, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
         self.assertEqual(ref_tax_lines.mapped('tag_ids'), ref_tax_tag, "Refund tax lines should have the right tag")

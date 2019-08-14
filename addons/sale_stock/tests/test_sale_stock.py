@@ -72,7 +72,7 @@ class TestSaleStock(TestSale):
         self.assertEqual(self.so.invoice_status, 'no',
                          'Sale Stock: so invoice_status should be "nothing to invoice" after partial delivery and invoicing')
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale Stock: number of pickings should be 2')
-        pick_2 = self.so.picking_ids[0]
+        pick_2 = self.so.picking_ids.filtered('backorder_id')
         pick_2.move_lines.write({'quantity_done': 1})
         self.assertIsNone(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
@@ -80,7 +80,19 @@ class TestSaleStock(TestSale):
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after complete delivery')
         # Without timesheet, we manually set the delivered qty for the product serv_del
-        self.so.order_line[1]['qty_delivered'] = 2.0
+        self.so.order_line.sorted()[1]['qty_delivered'] = 2.0
+        # There is a bug with `new` and `_origin`
+        # If you create a first new from a record, then change a value on the origin record, than create another new,
+        # this other new wont have the updated value of the origin record, but the one from the previous new
+        # Here the problem lies in the use of `new` in `move = self_ctx.new(new_vals)`,
+        # and the fact this method is called multiple times in the same transaction test case.
+        # Here, we update `qty_delivered` on the origin record, but the `new` records which are in cache with this order line
+        # as origin are not updated, nor the fields that depends on it.
+        self.so.flush()
+        for field in self.env['sale.order.line']._fields.values():
+            for res_id in list(self.env.cache._data[field]):
+                if not res_id:
+                    self.env.cache._data[field].pop(res_id)
         inv_id = self.so._create_invoices()
         self.assertEqual(self.so.invoice_status, 'invoiced',
                          'Sale Stock: so invoice_status should be "fully invoiced" after complete delivery and invoicing')
@@ -103,10 +115,10 @@ class TestSaleStock(TestSale):
             sol.product_id.invoice_policy = 'order'
         # confirm our standard so, check the picking
         self.so.order_line._compute_product_updatable()
-        self.assertTrue(self.so.order_line[0].product_updatable)
+        self.assertTrue(self.so.order_line.sorted()[0].product_updatable)
         self.so.action_confirm()
         self.so.order_line._compute_product_updatable()
-        self.assertFalse(self.so.order_line[0].product_updatable)
+        self.assertFalse(self.so.order_line.sorted()[0].product_updatable)
         self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" storable products')
         # let's do an invoice for a deposit of 5%
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
@@ -181,7 +193,7 @@ class TestSaleStock(TestSale):
 
         # Create return picking
         stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=pick.ids, active_id=pick.ids[0],
+            .with_context(active_ids=pick.ids, active_id=pick.sorted().ids[0],
             active_model='stock.picking'))
         return_wiz = stock_return_picking_form.save()
         return_wiz.product_return_moves.quantity = 2.0 # Return only 2
@@ -195,14 +207,14 @@ class TestSaleStock(TestSale):
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" instead of "%s" after picking return' % self.so.invoice_status)
-        self.assertAlmostEqual(self.so.order_line[0].qty_delivered, 3.0, msg='Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line[0].qty_delivered)
+        self.assertAlmostEqual(self.so.order_line.sorted()[0].qty_delivered, 3.0, msg='Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line.sorted()[0].qty_delivered)
         # let's do an invoice with refunds
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'delivered',
         })
         adv_wiz.with_context(open_invoices=True).create_invoices()
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
-        self.assertAlmostEqual(self.inv_2.invoice_line_ids[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids[0].quantity)
+        self.assertAlmostEqual(self.inv_2.invoice_line_ids.sorted()[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids.sorted()[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
 
     def test_03_sale_stock_delivery_partial(self):
@@ -280,7 +292,7 @@ class TestSaleStock(TestSale):
         # process all the reserved quantities and, if the user chose to process, a second wizard
         # will ask to create a backorder for the unavailable product.
         self.assertEquals(len(self.so.picking_ids), 1)
-        res_dict = self.so.picking_ids[0].button_validate()
+        res_dict = self.so.picking_ids.sorted()[0].button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         self.assertEqual(wizard._name, 'stock.immediate.transfer')
         res_dict = wizard.process()
@@ -302,8 +314,8 @@ class TestSaleStock(TestSale):
         # update the two original sale order lines
         self.so.write({
             'order_line': [
-                (1, self.so.order_line[0].id, {'product_uom_qty': 2}),
-                (1, self.so.order_line[1].id, {'product_uom_qty': 2}),
+                (1, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
+                (1, self.so.order_line.sorted()[1].id, {'product_uom_qty': 2}),
             ]
         })
         # a single picking should be created for the new delivery
@@ -336,16 +348,16 @@ class TestSaleStock(TestSale):
 
         # deliver them
         self.assertEquals(len(self.so.picking_ids), 1)
-        res_dict = self.so.picking_ids[0].button_validate()
+        res_dict = self.so.picking_ids.sorted()[0].button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
-        self.assertEquals(self.so.picking_ids[0].state, "done")
+        self.assertEquals(self.so.picking_ids.sorted()[0].state, "done")
 
         # update the two original sale order lines
         self.so.write({
             'order_line': [
-                (1, self.so.order_line[0].id, {'product_uom_qty': 2}),
-                (1, self.so.order_line[1].id, {'product_uom_qty': 2}),
+                (1, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
+                (1, self.so.order_line.sorted()[1].id, {'product_uom_qty': 2}),
             ]
         })
         # a single picking should be created for the new delivery
@@ -422,6 +434,21 @@ class TestSaleStock(TestSale):
                 (1, so1.order_line.id, {'product_uom_qty': 2}),
             ]
         })
+        # The above will create a second move, and then the two moves will be merged in _merge_moves`
+        # The picking moves are not well sorted because the new move has just been created, and this influences the resulting move,
+        # in which move the twos are merged.
+        # But, this doesn't seem really important which is the resulting move, but in this test we have to ensure
+        # we use the resulting move to compare the qty.
+        # ```
+        # for moves in moves_to_merge:
+        #     # link all move lines to record 0 (the one we will keep).
+        #     moves.mapped('move_line_ids').write({'move_id': moves[0].id})
+        #     # merge move data
+        #     moves[0].write(moves._merge_moves_fields())
+        #     # update merged moves dicts
+        #     moves_to_unlink |= moves[1:]
+        # ```
+        move1 = so1.picking_ids.move_lines[0]
         self.assertEqual(move1.product_uom_qty, 24)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)
@@ -554,7 +581,7 @@ class TestSaleStock(TestSale):
         # Return 5 units
         stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
             active_ids=picking.ids,
-            active_id=picking.ids[0],
+            active_id=picking.sorted().ids[0],
             active_model='stock.picking'
         ))
         return_wiz = stock_return_picking_form.save()
@@ -574,7 +601,7 @@ class TestSaleStock(TestSale):
         # Deliver 15 instead of 10.
         so1.write({
             'order_line': [
-                (1, so1.order_line[0].id, {'product_uom_qty': 15}),
+                (1, so1.order_line.sorted()[0].id, {'product_uom_qty': 15}),
             ]
         })
 

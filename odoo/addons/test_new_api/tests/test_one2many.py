@@ -169,37 +169,41 @@ class One2manyCase(TransactionCase):
 
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
-        record = self.env['test_new_api.attachment.host'].create({})
+        record0 = self.env['test_new_api.attachment.host'].create({})
         with self.assertQueryCount(2):
-            self.assertFalse(record.attachment_ids, "inconsistent cache")
+            self.assertFalse(record0.attachment_ids, "inconsistent cache")
 
         # creating attachment must compute name and invalidate attachment_ids
         attachment = self.env['test_new_api.attachment'].create({
-            'res_model': record._name,
-            'res_id': record.id,
+            'res_model': record0._name,
+            'res_id': record0.id,
         })
+        attachment.flush()
         with self.assertQueryCount(1):
-            self.assertEqual(attachment.name, record.display_name,
+            self.assertEqual(attachment.name, record0.display_name,
                              "field should be computed")
         with self.assertQueryCount(2):
-            self.assertEqual(record.attachment_ids, attachment, "inconsistent cache")
+            self.assertEqual(record0.attachment_ids, attachment, "inconsistent cache")
 
         # creating a host should not attempt to recompute attachment.name
         with self.assertQueryCount(1):
-            record = self.env['test_new_api.attachment.host'].create({})
+            record1 = self.env['test_new_api.attachment.host'].create({})
         with self.assertQueryCount(0):
             # field res_id should not have been invalidated
             attachment.res_id
         with self.assertQueryCount(2):
-            self.assertFalse(record.attachment_ids, "inconsistent cache")
+            self.assertFalse(record1.attachment_ids, "inconsistent cache")
 
         # writing on res_id must recompute name and invalidate attachment_ids
-        attachment.res_id = record.id
+        attachment.res_id = record1.id
+        attachment.flush()
         with self.assertQueryCount(1):
-            self.assertEqual(attachment.name, record.display_name,
+            self.assertEqual(attachment.name, record1.display_name,
                              "field should be recomputed")
         with self.assertQueryCount(2):
-            self.assertEqual(record.attachment_ids, attachment, "inconsistent cache")
+            self.assertEqual(record1.attachment_ids, attachment, "inconsistent cache")
+        with self.assertQueryCount(2):
+            self.assertFalse(record0.attachment_ids, "inconsistent cache")
 
     def test_recompute(self):
         """ test recomputation of fields that indirecly depend on one2many """
@@ -210,14 +214,15 @@ class One2manyCase(TransactionCase):
         message = discussion.messages[0]
         message.discussion = False
 
+        # DLE P54: a computed stored field should not depend on the context
         # writing on the one2many and actually modifying the relation must
         # trigger recomputation of fields that depend on its inverse many2one
-        self.assertNotIn(message, discussion.messages)
-        discussion.with_context(compute_name='X').write({'messages': [(4, message.id)]})
-        self.assertEqual(message.name, 'X')
+        # self.assertNotIn(message, discussion.messages)
+        # discussion.with_context(compute_name='X').write({'messages': [(4, message.id)]})
+        # self.assertEqual(message.name, 'X')
 
         # writing on the one2many without modifying the relation should not
         # trigger recomputation of fields that depend on its inverse many2one
-        self.assertIn(message, discussion.messages)
-        discussion.with_context(compute_name='Y').write({'messages': [(4, message.id)]})
-        self.assertEqual(message.name, 'X')
+        # self.assertIn(message, discussion.messages)
+        # discussion.with_context(compute_name='Y').write({'messages': [(4, message.id)]})
+        # self.assertEqual(message.name, 'X')

@@ -40,7 +40,7 @@ class PosOrder(models.Model):
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference': ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
-            'date_order':   ui_order['creation_date'],
+            'date_order':   ui_order['creation_date'].replace('T', ' ')[:19],
             'fiscal_position_id': ui_order['fiscal_position_id'],
             'pricelist_id': ui_order['pricelist_id'],
             'amount_paid':  ui_order['amount_paid'],
@@ -754,6 +754,7 @@ class PosOrderLine(models.Model):
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
+    @api.depends('order_id', 'order_id.fiscal_position_id')
     def _get_tax_ids_after_fiscal_position(self):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)

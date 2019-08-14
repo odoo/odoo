@@ -202,7 +202,7 @@ class ProductTemplate(models.Model):
             ]
             if no_variant_attributes_price_extra:
                 product = product.with_context(
-                    no_variant_attributes_price_extra=no_variant_attributes_price_extra
+                    no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
                 )
             list_price = product.price_compute('list_price')[product.id]
             price = product.price if pricelist else list_price

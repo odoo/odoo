@@ -226,6 +226,8 @@ class Inventory(models.Model):
             domain += ' AND product_id in %s'
             args += (tuple(self.product_ids.ids),)
 
+        self.env['stock.quant'].flush(['company_id', 'product_id', 'quantity', 'location_id', 'lot_id', 'package_id', 'owner_id'])
+        self.env['product.product'].flush(['active'])
         self.env.cr.execute("""SELECT product_id, sum(quantity) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
             FROM stock_quant
             LEFT JOIN product_product
@@ -324,7 +326,7 @@ class InventoryLine(models.Model):
         for line in self:
             line.difference_qty = line.product_qty - line.theoretical_qty
 
-    @api.depends('inventory_date', 'product_id.stock_move_ids')
+    @api.depends('inventory_date', 'product_id.stock_move_ids', 'theoretical_qty', 'product_uom_id.rounding')
     def _compute_outdated(self):
         grouped_quants = self.env['stock.quant'].read_group(
             [('product_id', 'in', self.product_id.ids), ('location_id', 'in', self.location_id.ids)],

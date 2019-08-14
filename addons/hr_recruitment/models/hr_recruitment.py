@@ -171,19 +171,26 @@ class Applicant(models.Model):
                 date_create = applicant.create_date
                 date_open = applicant.date_open
                 applicant.day_open = (date_open - date_create).total_seconds() / (24.0 * 3600)
+            else:
+                applicant.day_open = False
             if applicant.date_closed:
                 date_create = applicant.create_date
                 date_closed = applicant.date_closed
                 applicant.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
                 applicant.delay_close = applicant.day_close - applicant.day_open
+            else:
+                applicant.day_close = False
+                applicant.delay_close = False
 
     @api.depends('email_from')
     def _compute_application_count(self):
         application_data = self.env['hr.applicant'].read_group([
             ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
-        for applicant in self.filtered(lambda applicant: applicant.email_from):
+        applicants = self.filtered(lambda applicant: applicant.email_from)
+        for applicant in applicants:
             applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
+        (self - applicants).application_count = False
 
     def _compute_meeting_count(self):
         for applicant in self:
