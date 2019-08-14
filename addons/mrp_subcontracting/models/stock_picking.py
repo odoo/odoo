@@ -60,7 +60,7 @@ class StockPicking(models.Model):
                         })
                 else:
                     for move_line in move.move_line_ids:
-                        produce = self.env['mrp.product.produce'].create({
+                        produce = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create({
                             'production_id': production.id,
                             'qty_producing': move_line.qty_done,
                             'product_uom_id': move_line.product_uom_id.id,
@@ -83,16 +83,12 @@ class StockPicking(models.Model):
     def action_record_components(self):
         self.ensure_one()
         for move in self.move_lines:
+            if not move._has_tracked_subcontract_components():
+                continue
             production = move.move_orig_ids.production_id
             if not production or production.state in ('done', 'to_close'):
                 continue
-            action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
-            action['context'] = dict(
-                self.env.context,
-                active_id=production.id,
-                default_subcontract_move_id=move.id
-            )
-            return action
+            return move._action_record_components()
 
     # -------------------------------------------------------------------------
     # Subcontract helpers
