@@ -39,6 +39,7 @@ class MassMailing(models.Model):
     A mass mailing is an occurence of sending emails. """
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
+    _inherit = [ 'mail.thread.cc', 'mail.activity.mixin']
     # number of periods for tracking mail_mail statistics
     _period_number = 6
     _order = 'sent_date DESC'
@@ -64,12 +65,12 @@ class MassMailing(models.Model):
                 res['reply_to_mode'] = 'thread'
         return res
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, tracking=True)
     subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
-    email_from = fields.Char(string='From', required=True,
+    email_from = fields.Char(string='Send From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', copy=False)
-    schedule_date = fields.Datetime(string='Schedule in the Future')
+    schedule_date = fields.Datetime(string='Send on', tracking=True)
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
     body_html = fields.Html(string='Body converted to be send by mail', sanitize_attributes=False)
@@ -82,9 +83,9 @@ class MassMailing(models.Model):
     medium_id = fields.Many2one('utm.medium', string='Medium', help="Delivery method: Email")
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
-        string='Status', required=True, copy=False, default='draft', group_expand='_group_expand_states')
+        string='Status', required=True, tracking=True, copy=False, default='draft', group_expand='_group_expand_states')
     color = fields.Integer(string='Color Index')
-    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Responsible', tracking=True,  default=lambda self: self.env.user)
     # mailing options
     mailing_type = fields.Selection([('mail', 'Email')], string="Mailing Type", default="mail", required=True)
     reply_to_mode = fields.Selection(
@@ -126,6 +127,65 @@ class MassMailing(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
+
+    # Fake fields used to implement the placeholder assistant
+    model_object_field = fields.Many2one('ir.model.fields', string="Field",
+                                         help="Select target field from the related document model.\n"
+                                              "If it is a relationship field you will be able to select "
+                                              "a target field at the destination of the relationship.")
+    sub_object = fields.Many2one('ir.model', 'Sub-model', readonly=True,
+                                 help="When a relationship field is selected as first field, "
+                                      "this field shows the document model the relationship goes to.")
+    sub_model_object_field = fields.Many2one('ir.model.fields', 'Sub-field',
+                                             help="When a relationship field is selected as first field, "
+                                                  "this field lets you select the target field within the "
+                                                  "destination document model (sub-model).")
+    null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
+    copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
+
+    @api.onchange('mailing_model_id')
+    def onchange_mailing_model_id(self):
+        # TDE CLEANME: should'nt it be a stored related ?
+        if self.mailing_model_id:
+            self.mailing_model_name = self.mailing_model_id.model
+        else:
+            self.mailing_model_name = False
+
+    def build_expression(self, field_name, sub_field_name, null_value):
+        """Returns a placeholder expression for use in a template field,
+        based on the values provided in the placeholder assistant.
+
+        :param field_name: main field name
+        :param sub_field_name: sub field name (M2O)
+        :param null_value: default value if the target value is empty
+        :return: final placeholder expression """
+        expression = ''
+        if field_name:
+            expression = "${object." + field_name
+            if sub_field_name:
+                expression += "." + sub_field_name
+            if null_value:
+                expression += " or '''%s'''" % null_value
+            expression += "}"
+        return expression
+
+    @api.onchange('model_object_field', 'sub_model_object_field', 'null_value')
+    def onchange_sub_model_object_value_field(self):
+        if self.model_object_field:
+            if self.model_object_field.ttype in ['many2one', 'one2many', 'many2many']:
+                mailing_model_name = self.env['ir.model']._get(self.model_object_field.relation)
+                if mailing_model_name:
+                    self.sub_object = mailing_model_name.id
+                    self.copyvalue = self.build_expression(self.model_object_field.name, self.sub_model_object_field and self.sub_model_object_field.name or False, self.null_value or False)
+            else:
+                self.sub_object = False
+                self.sub_model_object_field = False
+                self.copyvalue = self.build_expression(self.model_object_field.name, False, self.null_value or False)
+        else:
+            self.sub_object = False
+            self.copyvalue = False
+            self.sub_model_object_field = False
+            self.null_value = False
 
     def _compute_total(self):
         for mass_mailing in self:
