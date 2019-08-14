@@ -406,7 +406,7 @@ var ListController = BasicController.extend({
                                 this._updateButtons('readonly');
                                 const state = this.model.get(this.handle);
                                 this.renderer.updateState(state, {});
-                                resolve();
+                                resolve(Object.keys(changes));
                             })
                             .guardedCatch(rejectAndDiscard);
                     },
