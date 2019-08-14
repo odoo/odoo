@@ -116,7 +116,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertEqual(len(mo.picking_ids), 1)
-        self.assertEquals(mo.state, 'to_close')
+        self.assertEquals(mo.state, 'confirmed')
         self.assertEqual(len(mo.picking_ids.move_lines), 2)
 
         picking = mo.picking_ids
@@ -180,7 +180,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
-        self.assertEquals(mo.state, 'to_close')
+        self.assertEquals(mo.state, 'confirmed')
 
         picking_delivery = mo.picking_ids
         self.assertEqual(len(picking_delivery), 1)
@@ -244,7 +244,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         # Pickings should directly be created
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
-        self.assertEquals(mo.state, 'to_close')
+        self.assertEquals(mo.state, 'confirmed')
 
         picking_delivery = mo.picking_ids
         self.assertFalse(picking_delivery)
@@ -462,24 +462,36 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(move_comp2.quantity_done, 5.0)
         self.assertEqual(move_comp2.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_id.name, 'LOT C2')
         self.assertEqual(move_finished.quantity_done, 5.0)
-        self.assertEqual(move_finished.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_id.name, 'LOT F1')
+        self.assertEqual(move_finished.move_line_ids.filtered(lambda ml: ml.product_uom_qty).lot_id.name, 'LOT F1')
 
         corrected_final_lot = self.env['stock.production.lot'].create({
             'name': 'LOT F2',
             'product_id': self.finished.id
         })
 
-        details_operation_form = Form(picking_receipt.move_lines, view=self.env.ref('mrp_subcontracting.view_stock_move_operations_inherit_mrp_subcontracting'))
+        details_operation_form = Form(picking_receipt.move_lines, view=self.env.ref('stock.view_stock_move_operations'))
         for i in range(len(details_operation_form._values['move_line_ids'])):
             with details_operation_form.move_line_ids.edit(i) as ml:
                 if ml._values['qty_done']:
                     ml.lot_id = corrected_final_lot
-        for i in range(len(details_operation_form._values['subcontract_components_ids'])):
-            with details_operation_form.subcontract_components_ids.edit(i) as sc:
+        details_operation_form.save()
+        move_raw_comp_1 = picking_receipt.move_lines.move_orig_ids.production_id.move_raw_ids.filtered(lambda m: m.product_id == self.comp1)
+        move_raw_comp_2 = picking_receipt.move_lines.move_orig_ids.production_id.move_raw_ids.filtered(lambda m: m.product_id == self.comp2)
+
+        details_subcontract_moves_form = Form(move_raw_comp_1, view=self.env.ref('mrp_subcontracting.mrp_subcontracting_move_form_view'))
+        for i in range(len(details_subcontract_moves_form._values['move_line_ids'])):
+            with details_subcontract_moves_form.move_line_ids.edit(i) as sc:
                 if sc._values['qty_done']:
                     sc.lot_produced_ids.remove(index=0)
                     sc.lot_produced_ids.add(corrected_final_lot)
-        details_operation_form.save()
+        details_subcontract_moves_form.save()
+        details_subcontract_moves_form = Form(move_raw_comp_2, view=self.env.ref('mrp_subcontracting.mrp_subcontracting_move_form_view'))
+        for i in range(len(details_subcontract_moves_form._values['move_line_ids'])):
+            with details_subcontract_moves_form.move_line_ids.edit(i) as sc:
+                if sc._values['qty_done']:
+                    sc.lot_produced_ids.remove(index=0)
+                    sc.lot_produced_ids.add(corrected_final_lot)
+        details_subcontract_moves_form.save()
 
         self.assertEqual(move_comp1.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_produced_ids.name, 'LOT F2')
         self.assertEqual(move_comp2.move_line_ids.filtered(lambda ml: not ml.product_uom_qty).lot_produced_ids.name, 'LOT F2')
@@ -590,7 +602,7 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertFalse(picking_receipt.display_action_record_components)
 
         picking_receipt.move_lines.quantity_done = 1
-        picking_receipt.move_lines.move_line_ids.lot_name = 'lot00001test'
+        picking_receipt.move_lines.move_line_ids.lot_id = lot_id.id
         picking_receipt.button_validate()
         self.assertEquals(mo.state, 'done')
 

@@ -3,59 +3,98 @@
 
 from collections import defaultdict
 
-from odoo import fields, models
+from odoo import fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    is_subcontract = fields.Boolean(copy=False)
-    subcontract_components_ids = fields.One2many('stock.move.line',
-        compute='_compute_subcontract_move_line_ids',
-        inverse='_inverse_subcontract_move_line_ids',
-        string='Subcontracted Components', readonly=False)
+    is_subcontract = fields.Boolean('The move is a subcontract receipt', copy=False)
+    show_subcontracting_details_visible = fields.Boolean(
+        compute='_compute_show_subcontracting_details_visible'
+    )
 
-    def action_show_details(self):
-        action = super(StockMove, self).action_show_details()
-        action['context'].update({
-            'show_lots_m2o': True,
-            'show_lots_text': False,
-        })
-        return action
-
-    def _compute_subcontract_move_line_ids(self):
+    def _compute_show_subcontracting_details_visible(self):
+        """ Compute if the action button in order to see moves raw is visible """
         for move in self:
-            if move.is_subcontract:
-                move.subcontract_components_ids = move.move_orig_ids.production_id.move_raw_ids.move_line_ids
+            if move.is_subcontract and move._has_tracked_subcontract_components() and\
+                    not float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+                move.show_subcontracting_details_visible = True
+            else:
+                move.show_subcontracting_details_visible = False
 
-    def _inverse_subcontract_move_line_ids(self):
+    def _compute_show_details_visible(self):
+        """ If the move is subcontract and the components are tracked. Then the
+        show details button is visible.
+        """
+        res = super(StockMove, self)._compute_show_details_visible()
         for move in self:
-            if move.is_subcontract:
-                (move.move_orig_ids.production_id.move_raw_ids.move_line_ids - move.subcontract_components_ids).unlink()
+            if not move.is_subcontract:
+                continue
+            if not move._has_tracked_subcontract_components():
+                continue
+            move.show_details_visible = True
+        return res
 
-    def _get_subcontract_bom(self):
-        self.ensure_one()
-        bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
-            product=self.product_id,
-            picking_type=self.picking_type_id,
-            company_id=self.company_id.id,
-            bom_type='subcontract',
-            subcontractor=self.picking_id.partner_id,
-        )
-        return bom
     def write(self, values):
+        """ If the initial demand is updated then also update the linked
+        subcontract order to the new quantity.
+        """
         res = super(StockMove, self).write(values)
         if 'product_uom_qty' in values:
             self.filtered(lambda m: m.is_subcontract and
             m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty()
         return res
 
+    def action_show_details(self):
+        """ Open the produce wizard in order to register tracked components for
+        subcontracted product. Otherwise use standard behavior.
+        """
+        self.ensure_one()
+        if self.is_subcontract:
+            production = self.move_orig_ids.production_id
+            rounding = self.product_uom.rounding
+            production = self.move_orig_ids.production_id
+            if self._has_tracked_subcontract_components() and\
+                    float_compare(production.qty_produced, production.product_uom_qty, precision_rounding=rounding) < 0 and\
+                    float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0:
+                action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
+                action['context'] = dict(
+                    active_id=production.id,
+                    default_subcontract_move_id=self.id
+                )
+                return action
+        action = super(StockMove, self).action_show_details()
+        if self.is_subcontract:
+            action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
+            action['context'].update({
+                'show_lots_m2o': self.has_tracking != 'none',
+                'show_lots_text': False,
+            })
+        return action
+
+    def action_show_subcontract_details(self):
+        """ Display moves raw for subcontracted product self. """
+        moves = self.move_orig_ids.production_id.move_raw_ids
+        tree_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_tree_view')
+        form_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_form_view')
+        return {
+            'name': _('Raw Materials for %s') % (self.product_id.display_name),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move',
+            'views': [(tree_view.id, 'tree'), (form_view.id, 'form')],
+            'target': 'current',
+            'domain': [('id', 'in', moves.ids)],
+        }
+
     def _action_confirm(self, merge=True, merge_into=False):
         subcontract_details_per_picking = defaultdict(list)
         for move in self:
             if move.location_id.usage != 'supplier' or move.location_dest_id.usage == 'supplier':
                 continue
-            if not move.picking_id:
+            if not move.picking_id or self.env.context.get('do_not_create_subcontract_order'):
                 continue
             bom = move._get_subcontract_bom()
             if not bom:
@@ -68,6 +107,46 @@ class StockMove(models.Model):
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
         return super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
+
+    def _check_overprocessed_subcontract_qty(self):
+        """ If a subcontracted move use tracked components. Do not allow to add
+        quantity without the produce wizard. Instead update the initial demand
+        and use the register component button. Split or correct a lot/sn is
+        possible.
+        """
+        overprocessed_moves = self.env['stock.move']
+        for move in self:
+            if not move.is_subcontract:
+                continue
+            # Extra quantity is allowed when components do not need to be register
+            if not move._has_tracked_subcontract_components():
+                continue
+            rounding = move.product_uom.rounding
+            if float_compare(move.quantity_done, move.move_orig_ids.production_id.qty_produced, precision_rounding=rounding) > 0:
+                overprocessed_moves |= move
+        if overprocessed_moves:
+            raise UserError(_("""
+You have to use 'Records Components' button in order to register quantity for a
+subcontracted product(s) with tracked component(s):
+ %s.
+If you want to process more than initially planned, you
+can use the edit + unlock buttons in order to adapt the initial demand on the
+operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name'))))
+
+    def _get_subcontract_bom(self):
+        self.ensure_one()
+        bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
+            product=self.product_id,
+            picking_type=self.picking_type_id,
+            company_id=self.company_id.id,
+            bom_type='subcontract',
+            subcontractor=self.picking_id.partner_id,
+        )
+        return bom
+
+    def _has_tracked_subcontract_components(self):
+        self.ensure_one()
+        return any(m.has_tracking != 'none' for m in self.move_orig_ids.production_id.move_raw_ids)
 
     def _update_subcontract_order_qty(self):
         for move in self:

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import api, fields, models
 
 
@@ -17,10 +19,9 @@ class StockPicking(models.Model):
                 continue
             if not picking._is_subcontract():
                 continue
-            # Hide if no move is tracked
+            # Hide if no components are track
             subcontracted_productions = picking._get_subcontracted_productions()
             subcontracted_moves = subcontracted_productions.mapped('move_raw_ids')
-            subcontracted_moves |= subcontracted_productions.mapped('move_finished_ids')
             if all(subcontracted_move.has_tracking == 'none' for subcontracted_move in subcontracted_moves):
                 continue
             # Hide if the production is to close
@@ -32,11 +33,51 @@ class StockPicking(models.Model):
     # Action methods
     # -------------------------------------------------------------------------
     def action_done(self):
-        res = super(StockPicking, self).action_done()
+        # action_done with an extra move will trigger two methods that
+        # create/modify a subcontracting order, _action_confirm and a write on
+        # product_uom_qty. This context will be used by _action_confirm and it
+        # will not create a subcontract order. Instead the existing order will
+        # be updated in the stock.move write during the merge move.
+        res = super(StockPicking, self.with_context(do_not_create_subcontract_order=True)).action_done()
+        productions = self.env['mrp.production']
         for picking in self:
-            subcontracted_productions = picking._get_subcontracted_productions()
-            for subcontracted_production in subcontracted_productions:
+            for move in picking.move_lines:
+                if not move.is_subcontract:
+                    continue
+                production = move.move_orig_ids.production_id
+                if move._has_tracked_subcontract_components():
+                    move.move_orig_ids.move_line_ids.unlink()
+                    move_finished_ids = move.move_orig_ids
+                    for ml in move.move_line_ids:
+                        ml.copy({
+                            'picking_id': False,
+                            'production_id': move_finished_ids.production_id.id,
+                            'move_id': move_finished_ids.id,
+                            'qty_done': ml.qty_done,
+                            'result_package_id': False,
+                            'location_id': move_finished_ids.location_id.id,
+                            'location_dest_id': move_finished_ids.location_dest_id.id,
+                        })
+                else:
+                    for move_line in move.move_line_ids:
+                        produce = self.env['mrp.product.produce'].create({
+                            'production_id': production.id,
+                            'qty_producing': move_line.qty_done,
+                            'product_uom_id': move_line.product_uom_id.id,
+                            'finished_lot_id': move_line.lot_id.id,
+                            'consumption': 'strict',
+                        })
+                        produce._generate_produce_lines()
+                        produce._record_production()
+                productions |= production
+            for subcontracted_production in productions:
                 subcontracted_production.button_mark_done()
+                # For concistency, set the date on production move before the date
+                # on picking. (Tracability report + Product Moves menu item)
+                minimum_date = min(picking.move_line_ids.mapped('date'))
+                production_moves = subcontracted_production.move_raw_ids | subcontracted_production.move_finished_ids
+                production_moves.write({'date': minimum_date - timedelta(seconds=1)})
+                production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
         return res
 
     def action_record_components(self):
@@ -98,10 +139,3 @@ class StockPicking(models.Model):
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
             mo.action_assign()
-
-            # Only skip the produce wizard if no moves is tracked
-            moves = mo.mapped('move_raw_ids') + mo.mapped('move_finished_ids')
-            if any(move.has_tracking != 'none' for move in moves):
-                continue
-            for m in moves:
-                m.quantity_done = m.product_uom_qty
