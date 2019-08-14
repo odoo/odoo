@@ -14,8 +14,5 @@ class AccountChartTemplate(models.Model):
         res = super().load_for_current_company(sale_tax_rate, purchase_tax_rate)
         company = self.env.company
         if company.country_id.code == 'CL':
-            company.write({
-                'tax_calculation_rounding_method': 'round_globally',
-            })
-
+            company.write({'tax_calculation_rounding_method': 'round_globally'})
         return res

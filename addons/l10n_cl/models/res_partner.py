@@ -34,15 +34,13 @@ class ResPartner(models.Model):
         compute='_compute_l10n_cl_rut',
         string="Invoicing RUT",
         help='Computed field that will convert the given rut number to often'
-             ' local used format',
-    )
+             ' local used format')
 
     l10n_cl_rut_dv = fields.Char(
         compute='_compute_l10n_cl_rut',
         string="RUT's DV",
         help='Computed field that returns RUT or nothing if this one is not'
-             ' set for the partner',
-    )
+             ' set for the partner')
 
     def _get_validation_module(self):
         self.ensure_one()

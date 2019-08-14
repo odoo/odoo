@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api, fields
+from odoo import models, fields
 
 
 class L10nLatamDocumentType(models.Model):
@@ -14,7 +14,6 @@ class L10nLatamDocumentType(models.Model):
             ('debit_note', 'Debit Notes'),
             ('credit_note', 'Credit Notes'),
             ('receipt_invoice', 'Receipt Invoice')])
-    # take a look if I put here a fiscal position (preferred fiscal position).
 
     def get_document_sequence_vals(self, journal):
         values = super(L10nLatamDocumentType, self).get_document_sequence_vals(
