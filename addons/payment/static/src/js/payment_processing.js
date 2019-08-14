@@ -110,7 +110,7 @@ odoo.define('payment.processing', function (require) {
             this.$el.find('.o_payment_processing_content').html(html);
         },
         displayLoading: function () {
-            var msg = _t("We are processing your payments, please wait ...");
+            var msg = _t("We are processing your payment, please wait ...");
             $.blockUI({
                 'message': '<h2 class="text-white"><img src="/web/static/src/img/spin.png" class="fa-pulse"/>' +
                     '    <br />' + msg +

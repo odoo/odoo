@@ -20,6 +20,12 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         self.currency_usd = self.env['res.currency'].search([('name', '=', 'USD')], limit=1)[0]
         # get the authorize account
         self.authorize = self.env.ref('payment.payment_acquirer_authorize')
+        self.authorize.write({
+            'authorize_login': 'dummy',
+            'authorize_transaction_key': 'dummy',
+            'authorize_signature_key': 'dummy',
+            'state': 'test',
+        })
         # Be sure to be in 'capture' mode
         # self.authorize.auto_confirm = 'confirm_so'
 
@@ -28,7 +34,7 @@ class AuthorizeCommon(PaymentAcquirerCommon):
 class AuthorizeForm(AuthorizeCommon):
 
     def test_10_Authorize_form_render(self):
-        self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
+        self.assertEqual(self.authorize.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -92,7 +98,7 @@ class AuthorizeForm(AuthorizeCommon):
     @mute_logger('odoo.addons.payment_authorize.models.payment', 'ValidationError')
     def test_20_authorize_form_management(self):
         # be sure not to do stupid thing
-        self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
+        self.assertEqual(self.authorize.state, 'test', 'test without test environment')
 
         # typical data posted by authorize after client has successfully paid
         authorize_post_data = {
@@ -183,7 +189,7 @@ class AuthorizeS2s(AuthorizeCommon):
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing
         authorize = self.authorize
-        self.assertEqual(authorize.environment, 'test', 'test without test environment')
+        self.assertEqual(authorize.state, 'test', 'test without test environment')
 
         # add credential
         # FIXME: put this test in master-nightly on odoo/odoo + create sandbox account
