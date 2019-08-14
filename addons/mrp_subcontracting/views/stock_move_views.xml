@@ -1,25 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_stock_move_operations_inherit_mrp_subcontracting" model="ir.ui.view">
-        <field name="name">stock.move.operations.form.inherit.mrp.subcontracting</field>
+    <record id="mrp_subcontracting_move_form_view" model="ir.ui.view">
+        <field name="name">mrp.subcontracting.move.form.view</field>
         <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+        <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='move_line_ids']" position="after">
-                <field name="is_subcontract" invisible="1"/>
-                <h2 attrs="{'invisible': [('is_subcontract', '!=', True)]}">Components</h2>
-                <field name="subcontract_components_ids" attrs="{'invisible': [('is_subcontract', '!=', True)], 'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
-                    <tree editable="bottom">
-                        <field name="tracking" invisible="1"/>
-                        <field name="product_id" readonly="1"/>
-                        <field name="lot_produced_ids" widget="many2many_tags" context="{'default_product_id': parent.product_id}"/>
-                        <field name="qty_done"/>
-                        <field name="lot_id"/>
-                    </tree>
-                </field>
-            </xpath>
-            <xpath expr="//field[@name='move_line_ids']" position="before">
-                <h2 attrs="{'invisible': [('is_subcontract', '!=', True)]}">Subcontracted Product</h2>
+            <form create="0" delete="0">
+                <sheet>
+                    <field name="product_id" invisible="1"/>
+                    <field name="finished_lots_exist" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="move_line_ids" context="{'default_product_id': product_id}" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}">
+                        <tree editable="bottom" decoration-muted="state in ('done', 'cancel')">
+                            <field name="state" invisible="1"/>
+                            <field name="tracking" invisible="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="lot_produced_ids"
+                                widget="many2many_tags"
+                                context="{'default_product_id': parent.product_id}"
+                                attrs="{'column_invisible': [('parent.finished_lots_exist', '!=', True)]}"
+                            />
+                            <field name="qty_done"/>
+                            <field name="lot_id" context="{'default_product_id': product_id}"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="mrp_subcontracting_move_tree_view" model="ir.ui.view">
+        <field name="name">mrp.subcontracting.move.tree.view</field>
+        <field name="model">stock.move</field>
+        <field name="priority">1000</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="mrp.view_stock_move_raw_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="delete">0</attribute>
             </xpath>
         </field>
     </record>
