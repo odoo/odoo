@@ -201,8 +201,8 @@
                 <field name="date_order"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
-                <field name="amount_total" sum="Amount total" widget="monetary"/>
                 <field string="Cashier" name="user_id"/>
+                <field name="amount_total" sum="Amount total" widget="monetary"/>
             </tree>
         </field>
     </record>
@@ -313,6 +313,7 @@
         <field name="arch" type="xml">
             <search string="Search Sales Order">
                 <field name="name"/>
+                <field name="pos_reference"/>
                 <field name="date_order"/>
                 <field name="user_id"/>
                 <field name="partner_id"/>

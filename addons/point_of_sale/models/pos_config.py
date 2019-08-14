@@ -202,6 +202,7 @@ class PosConfig(models.Model):
              "the closing of his session saying that he needs to contact his manager.")
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods())
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
+    current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
 
     @api.depends('company_id')
     def _compute_company_has_template(self):
@@ -262,10 +263,12 @@ class PosConfig(models.Model):
                 pos_config.pos_session_duration = (
                     datetime.now() - session[0].start_at
                 ).days if session[0].start_at else 0
+                pos_config.current_user_id = session[0].user_id
             else:
                 pos_config.pos_session_username = False
                 pos_config.pos_session_state = False
                 pos_config.pos_session_duration = 0
+                pos_config.current_user_id = False
 
     @api.constrains('cash_control')
     def _check_session_state(self):
