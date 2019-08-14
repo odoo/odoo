@@ -1273,9 +1273,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]'));
 
         values = [
-            "29", "2", "1", "32",
+            "29", "1", "2", "32",
             "12",           "12",
-            "17", "2", "1", "20",
+            "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -1284,10 +1284,10 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="other_product_id"]'));
 
         values = [
-            "29", "2", "1", "32",
+            "29", "1", "2", "32",
             "12",           "12",
-            "17", "2", "1", "20",
-            "17", "2", "1", "20",
+            "17", "1", "2", "20",
+            "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -1301,11 +1301,11 @@ QUnit.module('Views', {
         // sanity check of what the table should look like if all groups are
         // expanded, to ensure that the former asserts are pertinent
         values = [
-            "12", "17", "2", "1", "32",
+            "12", "17", "1", "2", "32",
             "12",                 "12",
             "12",                 "12",
-                  "17", "2", "1", "20",
-                  "17", "2", "1", "20",
+                  "17", "1", "2", "20",
+                  "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 

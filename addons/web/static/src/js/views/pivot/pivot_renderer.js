@@ -98,10 +98,7 @@ var PivotRenderer = AbstractRenderer.extend({
                     text: cell.title,
                     colspan: cell.width,
                     rowspan: cell.height,
-                    data: {
-                        groupId: cell.groupId,
-                        type: 'col',
-                    }
+                    data: { headerId: cell.headerId }
                 }
                 var className;
                 if (cell.measure) {
@@ -131,7 +128,7 @@ var PivotRenderer = AbstractRenderer.extend({
                     }
                 }
                 cellParams.class = className;
-            
+
                 $tr.append($('<th>', cellParams));
             });
             $thead.append($tr);
@@ -165,13 +162,8 @@ var PivotRenderer = AbstractRenderer.extend({
             $tr.append($('<th>', {
                 text: row.title,
                 title: row.indent > 0 ? groupbyLabels[row.indent - 1] : null,
-                data: {
-                    groupId: row.groupId,
-                    type: 'row',
-                },
-                css: {
-                    'padding-left': paddingLeft + 'px',
-                },
+                data: { headerId: row.headerId },
+                css: { 'padding-left': paddingLeft + 'px' },
                 class: 'o_pivot_header_cell_' + (row.isLeaf ? 'closed' : 'opened'),
             }));
 
@@ -204,7 +196,7 @@ var PivotRenderer = AbstractRenderer.extend({
                     }
                     cellParams.html = $value;
                 } else {
-                    cellParams.class += ' o_empty'
+                    cellParams.class += ' o_empty';
                 }
                 $tr.append($('<td>', cellParams));
             });
@@ -228,26 +220,21 @@ var PivotRenderer = AbstractRenderer.extend({
         ev.preventDefault();
         ev.stopPropagation();
 
-        var $target = $(ev.currentTarget);
+        const $target = $(ev.currentTarget);
         if ($target.hasClass('o_empty') || !this.enableLinking) {
             return;
         }
 
-        var context = _.omit(this.state.context, function (val, key) {
+        const context = _.omit(this.state.context, function (val, key) {
             return key === 'group_by' || _.str.startsWith(key, 'search_default_');
         });
 
-        var groupId = $target.data('groupId');
-        var originIndexes = $target.data('originIndexes');
-
-        var group = {
-            rowValues: groupId[0],
-            colValues: groupId[1],
-            originIndex: originIndexes[0]
-        };
+        const groupId = $target.data('groupId');
+        const originIndexes = $target.data('originIndexes');
 
         this.trigger_up('open_view', {
-            group: group,
+            groupId: groupId,
+            originIndex: originIndexes[0],
             context: context,
         });
     },
@@ -282,13 +269,9 @@ var PivotRenderer = AbstractRenderer.extend({
         ev.stopImmediatePropagation();
 
         var $target = $(ev.target);
-        var groupId = $target.data('groupId');
-        var type = $target.data('type');
+        var headerId = $target.data('headerId');
 
-        this.trigger_up('close_group', {
-            groupId: groupId,
-            type: type,
-        });
+        this.trigger_up('close_header', { headerId: headerId });
     },
     /**
      * If the user clicks on a measure or origin row, we perform an in-memory sort.
@@ -301,7 +284,7 @@ var PivotRenderer = AbstractRenderer.extend({
         ev.stopImmediatePropagation();
 
         var $target = $(ev.target);
-        var groupId = $target.data('groupId');
+        var headerId = $target.data('headerId');
         var measure = $target.data('measure');
         var originIndexes = $target.data('originIndexes');
         var isAscending = $target.hasClass('o_pivot_sort_order_asc');
@@ -309,7 +292,7 @@ var PivotRenderer = AbstractRenderer.extend({
 
         this.trigger_up('sort_rows', {
             sortedColumn: {
-                groupId: groupId,
+                headerId: headerId,
                 measure: measure,
                 order: order,
                 originIndexes: originIndexes,

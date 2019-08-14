@@ -155,7 +155,7 @@ odoo.define('web.PivotModel', function (require) {
  *
  * Five objects contain all the data from the read_groups
  *
- *      - rowGroupTree: contains information on row headers
+ *      - headers: contains information on row headers
  *             the nodes correspond to the groups of the form [[v1,...,vi], []]
  *             The root is [[], []].
  *             A node [[v1,...,vl], []] has as direct children the nodes of the form [[v1,...,vl,v], []],
@@ -168,46 +168,46 @@ odoo.define('web.PivotModel', function (require) {
  *                      values: [v1,...,vl],
  *                      labels: [la1,...,lal]
  *                  },
- *                  directSubTrees: {
+ *                  directSubHeaders: {
  *                      JSON.stringify(v): {
  *                              root: {
  *                                  values: [v1,...,vl,v]
  *                                  labels: [label1,...,labell,label]
  *                              },
- *                              directSubTrees: {...}
+ *                              directSubHeaders: {...}
  *                          },
  *                      JSON.stringify(v'): {...},
  *                      ...
  *                  }
  *             }
  *
- *             In the example, the rowGroupTree is:
+ *             In the example, the headers is:
  *
  *             {
  *                  root: {
  *                      values: [],
  *                      labels: []
  *                  },
- *                  directSubTrees: {
+ *                  directSubHeaders: {
  *                      1: {
  *                              root: {
  *                                  values: [1],
  *                                  labels: ['Europe'],
  *                              },
- *                              directSubTrees: {
+ *                              directSubHeaders: {
  *                                  1: {
  *                                          root: {
  *                                              values: [1, 1],
  *                                              labels: ['Europe', 'Brussels'],
  *                                          },
- *                                          directSubTrees: {},
+ *                                          directSubHeaders: {},
  *                                  },
  *                                  2: {
  *                                          root: {
  *                                              values: [1, 2],
  *                                              labels: ['Europe', 'Paris'],
  *                                          },
- *                                          directSubTrees: {},
+ *                                          directSubHeaders: {},
  *                                  },
  *                              },
  *                          },
@@ -216,13 +216,13 @@ odoo.define('web.PivotModel', function (require) {
  *                                  values: [2],
  *                                  labels: ['America'],
  *                              },
- *                              directSubTrees: {
+ *                              directSubHeaders: {
  *                                  3: {
  *                                          root: {
  *                                              values: [2, 3],
  *                                              labels: ['America', 'Washington'],
  *                                          }
- *                                          directSubTrees: {},
+ *                                          directSubHeaders: {},
  *                                  },
  *                              },
  *                      },
@@ -302,7 +302,7 @@ var PivotModel = AbstractModel.extend({
      * Add a groupBy to rowGroupBys or colGroupBys according to provided type.
      *
      * @param {string} groupBy
-     * @param {'row'|'col'} type
+     * @param {string} type
      */
     addGroupBy: function (groupBy, type) {
         if (type === 'row') {
@@ -312,32 +312,24 @@ var PivotModel = AbstractModel.extend({
         }
     },
     /**
-     * Close the group with id given by groupId. A type must be specified
-     * in case groupId is [[], []] (the id of the group 'Total') because this
-     * group is present in both colGroupTree and rowGroupTree.
+     * Close the header with id given by headerId.
      *
-     * @param {Array[]} groupId
-     * @param {'row'|'col'} type
+     * @param {integer} headerId
      */
-    closeGroup: function (groupId, type) {
-        var groupBys;
-        var expandedGroupBys;
-        var group;
-        var tree;
-        if (type === 'row') {
+    closeHeader: function (headerId) {
+        const header = this.headers[headerId];
+        let groupBys;
+        let expandedGroupBys;
+        if (this.getHeaderType(headerId) === 'row') {
             groupBys = this.data.rowGroupBys;
             expandedGroupBys = this.data.expandedRowGroupBys;
-            tree = this.rowGroupTree;
-            group = this._findGroup(this.rowGroupTree, groupId[0]);
         } else {
             groupBys = this.data.colGroupBys;
             expandedGroupBys = this.data.expandedColGroupBys;
-            tree = this.colGroupTree;
-            group = this._findGroup(this.colGroupTree, groupId[1]);
         }
-        group.directSubTrees = {};
-        delete group.sortedKeys;
-        var newGroupBysLength = this._getTreeHeight(tree) - 1;
+        header.directSubHeaders.clear();
+        delete header.sortedIds;
+        const newGroupBysLength = this._getTreeHeight(header.rootId) - 1;
         if (newGroupBysLength <= groupBys.length) {
             expandedGroupBys.splice(0);
             groupBys.splice(newGroupBysLength);
@@ -357,25 +349,27 @@ var PivotModel = AbstractModel.extend({
     /**
      * Expand a group by using groupBy to split it.
      *
-     * @param {Object} group
+     * @param {Object} header
      * @param {string} groupBy
      * @returns {Promise}
      */
-    expandGroup: function (group, groupBy) {
-        var leftDivisors;
-        var rightDivisors;
+    expandHeader: function (header, groupBy) {
+        let groupId;
+        let leftDivisors;
+        let rightDivisors;
 
-        if (group.type === 'row') {
+        if (this.getHeaderType(header.id) === 'row') {
+            groupId = this._getGroupId(header.id, this.colRootId);
             leftDivisors = [[groupBy]];
             rightDivisors = sections(this._getGroupBys().colGroupBys);
         } else {
+            groupId = this._getGroupId(header.id, this.rowRootId);
             leftDivisors = sections(this._getGroupBys().rowGroupBys);
             rightDivisors = [[groupBy]];
         }
-        var divisors = cartesian(leftDivisors, rightDivisors);
+        const divisors = cartesian(leftDivisors, rightDivisors);
 
-        delete group.type;
-        return this._subdivideGroup(group, divisors);
+        return this._subdivideGroup(groupId, divisors);
     },
     /**
      * Export model data in a form suitable for an easy encoding of the pivot
@@ -384,19 +378,19 @@ var PivotModel = AbstractModel.extend({
      * @returns {Object}
      */
     exportData: function () {
-        var measureCount = this.data.measures.length;
-        var originCount = this.data.origins.length;
+        const measureCount = this.data.measures.length;
+        const originCount = this.data.origins.length;
 
-        var table = this._getTable();
+        const table = this._getTable();
 
         // process headers
-        var headers = table.headers;
-        var colGroupHeaderRows;
-        var measureRow = [];
-        var originRow = [];
+        const headers = table.headers;
+        let colGroupHeaderRows;
+        let measureRow = [];
+        let originRow = [];
 
         function processHeader(header) {
-            var inTotalColumn = header.groupId[1].length === 0;
+            const inTotalColumn = header.id === header.rootId;
             return {
                 title: header.title,
                 width: header.width,
@@ -424,7 +418,7 @@ var PivotModel = AbstractModel.extend({
         });
 
         // process rows
-        var tableRows = table.rows.map(function (row) {
+        const tableRows = table.rows.map(function (row) {
             return {
                 title: row.title,
                 indent: row.indent,
@@ -458,10 +452,10 @@ var PivotModel = AbstractModel.extend({
      * Swap the pivot columns and the rows. It is a synchronous operation.
      */
     flip: function () {
-        // swap the data: the main column and the main row
-        var temp = this.rowGroupTree;
-        this.rowGroupTree = this.colGroupTree;
-        this.colGroupTree = temp;
+
+        let temp = this.rowRootId;
+        this.rowRootId = this.colRootId;
+        this.colRootId = temp;
 
         // we need to update the record metadata: (expanded) row and col groupBys
         temp = this.data.rowGroupBys;
@@ -471,21 +465,6 @@ var PivotModel = AbstractModel.extend({
         temp = this.data.expandedColGroupBys;
         this.data.expandedColGroupBys = this.data.expandedRowGroupBys;
         this.data.expandedRowGroupBys = temp;
-
-        function twistKey(key) {
-            return JSON.stringify(JSON.parse(key).reverse());
-        }
-        function twist(object) {
-            var newObject = {};
-            Object.keys(object).forEach(function (key) {
-                var value = object[key];
-                newObject[twistKey(key)] = value;
-            });
-            return newObject;
-        }
-        this.measurements = twist(this.measurements);
-        this.counts = twist(this.counts);
-        this.groupDomains = twist(this.groupDomains);
     },
     /**
      * @override
@@ -514,13 +493,32 @@ var PivotModel = AbstractModel.extend({
         return state;
     },
     /**
+     * Returns the header with id giben by headerId
+     *
+     * @param {integer} headerId
+     * @returns {Object}
+     */
+    getHeader: function (headerId) {
+        return this.headers[headerId];
+    },
+    /**
+     * Returns the type of the header with id given by headerId.
+     *
+     * @param  {integer} headerId
+     * @return {string}
+     */
+    getHeaderType: function (headerId) {
+        const header = this.headers[headerId];
+        return header.rootId === this.rowRootId ? 'row' : 'col';
+    },
+    /**
      * Returns the total number of columns of the pivot table.
      *
      * @returns {integer}
      */
     getTableWidth: function () {
-        var leafCounts = this._getLeafCounts(this.colGroupTree);
-        return leafCounts[JSON.stringify(this.colGroupTree.root.values)] + 2;
+        const leafCounts = this._getLeafCounts(this.headers[this.colRootId]);
+        return leafCounts[this.colRootId] + 2;
     },
     /**
      * @override
@@ -571,7 +569,6 @@ var PivotModel = AbstractModel.extend({
         var defaultOrder = params.default_order && params.default_order.split(' ');
         if (defaultOrder) {
             this.data.sortedColumn = {
-                groupId: [[], []],
                 measure: defaultOrder[0],
                 order: defaultOrder[1] ? defaultOrder [1] : 'asc',
             };
@@ -644,15 +641,15 @@ var PivotModel = AbstractModel.extend({
         if (!this._hasData()) {
             return this._loadData();
         }
-
-        var oldRowGroupTree = this.rowGroupTree;
-        var oldColGroupTree = this.colGroupTree;
+        const oldHeaders = this.headers;
+        const oldRowRootId = this.rowRootId;
+        const oldColRootId = this.colRootId;
         return this._loadData().then(function () {
             if (_.isEqual(oldRowGroupBys, self.data.rowGroupBys)) {
-                self._pruneTree(self.rowGroupTree, oldRowGroupTree);
+                self._pruneSubHeaderTree(self.headers[self.rowRootId], oldHeaders[oldRowRootId], oldHeaders);
             }
             if (_.isEqual(oldColGroupBys, self.data.colGroupBys)) {
-                self._pruneTree(self.colGroupTree, oldColGroupTree);
+                self._pruneSubHeaderTree(self.headers[self.colRootId], oldHeaders[oldColRootId], oldHeaders);
             }
         });
     },
@@ -663,25 +660,31 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} sortedColumn
      */
     sortRows: function (sortedColumn) {
-        var self = this;
-        var colGroupValues = sortedColumn.groupId[1];
+        const self = this;
+        const colHeaderId = sortedColumn.headerId || this.colRootId;
+        sortedColumn.headerId = colHeaderId;
         sortedColumn.originIndexes = sortedColumn.originIndexes || [0];
         this.data.sortedColumn = sortedColumn;
 
-        var sortFunction = function (tree) {
-            return function (subTreeKey) {
-                var subTree = tree.directSubTrees[subTreeKey];
-                var groupIntersectionId = [subTree.root.values, colGroupValues];
-                var value = self._getCellValue(
-                    groupIntersectionId,
-                    sortedColumn.measure,
-                    sortedColumn.originIndexes
-                ) || 0;
-                return sortedColumn.order === 'asc' ? value : -value;
-            };
-        };
+        function _sortFunction (subHeaderId) {
+            const subHeader = self.headers[subHeaderId];
+            const groupId = self._getGroupId(subHeader.id, colHeaderId);
+            const value = self._getCellValue(
+                groupId,
+                sortedColumn.measure,
+                sortedColumn.originIndexes
+            ) || 0;
+            return sortedColumn.order === 'asc' ? value : -value;
+        }
 
-        this._sortTree(sortFunction, this.rowGroupTree);
+        function _sortSubHeaders (header) {
+            header.sortedIds = _.sortBy([...header.directSubHeaders.values()], _sortFunction);
+            header.directSubHeaders.forEach(function (headerId) {
+                _sortSubHeaders(self.headers[headerId]);
+            });
+        }
+
+        _sortSubHeaders(this.headers[this.rowRootId]);
     },
     /**
      * Toggle the active state for a given measure, then reload the data
@@ -708,29 +711,37 @@ var PivotModel = AbstractModel.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Add labels/values in the provided groupTree. A new leaf is created in
-     * the groupTree with a root object corresponding to the group with given
-     * labels/values.
+     * Add a header corresponding to values/labels (if it does not
+     * already exists).
      *
      * @private
-     * @param {Object} groupTree, either this.rowGroupTree or this.colGroupTree
-     * @param {string[]} labels
+     * @param {integer} rootId, either this.rowRootId or this.colRootId;
      * @param {Array} values
+     * @param {string[]} labels
      */
-    _addGroup: function (groupTree, labels, values) {
-        var tree = groupTree;
-        // we assume here that the group with value value.slice(value.length - 2) has already been added.
-        values.slice(0, values.length - 1).forEach(function (value) {
-            var key = JSON.stringify(value);
-            tree = tree.directSubTrees[key];
+    _addHeader: function (rootId, values, labels) {
+        const parentHeaderId = this._findHeaderId(rootId, values.slice(0, values.length - 1));
+        const parentHeader = this.headers[parentHeaderId];
+        let headerId = parentHeader.directSubHeaders.get(values[values.length - 1]);
+        if (headerId) {
+            // TO DO: remove this part
+            console.log('already there!');
+        } else {
+            headerId = this._makeHeader({ rootId, values, labels });
+            parentHeader.directSubHeaders.set(values[values.length - 1], headerId);
+        }
+        return headerId;
+    },
+    /**
+     * Remove from this.headers all sub headers of a header with id headerId.
+     * @param  {integer} headerId
+     */
+    _deleteSubHeaders: function (headerId) {
+        const header = this.headers[headerId];
+        header.directSubHeaders.forEach(subHeaderId => {
+            this._deleteSubHeaders(subHeaderId);
         });
-        tree.directSubTrees[JSON.stringify(values[values.length - 1])] = {
-            root: {
-                labels: labels,
-                values: values,
-            },
-            directSubTrees: {},
-        };
+        delete this.headers[headerId];
     },
     /**
      * Compute what should be used as rowGroupBys by the pivot view
@@ -742,21 +753,28 @@ var PivotModel = AbstractModel.extend({
         return !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
     },
     /**
-     * Find a group with given values in the provided groupTree, either
-     * this.rowGrouptree or this.colGroupTree.
+     * Returns the id of a header with given values and root given by rootId
+     * (this.rowRootId or this.colRootId). If it does not exists returns 0.
      *
      * @private
-     * @param  {Object} groupTree
+     * @param  {integer} rootId
      * @param  {Array} values
-     * @returns {Object}
+     * @returns {integer}
      */
-    _findGroup: function (groupTree, values) {
-        var tree = groupTree;
-        values.slice(0, values.length).forEach(function (value) {
-            var key = JSON.stringify(value);
-            tree = tree.directSubTrees[key];
-        });
-        return tree;
+    _findHeaderId: function (rootId, values) {
+        if (!values.length) {
+            return rootId;
+        }
+        const parentHeaderId = this._findHeaderId(rootId, values.slice(0, values.length -1));
+        if (!parentHeaderId) {
+            return 0;
+        }
+        const parentHeader = this.headers[parentHeaderId];
+        const headerId = parentHeader.directSubHeaders.get(values[values.length -1]);
+        if (!headerId) {
+            return 0;
+        }
+        return headerId;
     },
     /**
      * In case originIndex is an array of length 1, thus a single origin
@@ -767,19 +785,18 @@ var PivotModel = AbstractModel.extend({
      * different origin indexes.
      *
      * @private
-     * @param  {Array[]} groupId
+     * @param  {integer} groupId
      * @param  {string} measure
-     * @param  {number[]} originIndexes
+     * @param  {integer[]} originIndexes
      * @returns {number}
      */
     _getCellValue: function (groupId, measure, originIndexes) {
-        var self = this;
-        var key = JSON.stringify(groupId);
-        if (!self.measurements[key]) {
+        const group = this.groups[groupId];
+        if (!group) {
             return;
         }
-        var values = originIndexes.map(function (originIndex) {
-            return self.measurements[key][originIndex][measure];
+        var values = originIndexes.map(originIndex => {
+            return group.measurements[originIndex][measure];
         });
         if (originIndexes.length > 1) {
             return computeVariation(values[0], values[1]);
@@ -819,15 +836,13 @@ var PivotModel = AbstractModel.extend({
      * Returns a domain representation of a group
      *
      * @private
-     * @param  {Object} group
-     * @param  {Array} group.colValues
-     * @param  {Array} group.rowValues
-     * @param  {number} group.originIndex
+     * @param  {integer} groupId
+     * @param  {interger} originIndex
      * @returns {Array[]}
      */
-    _getGroupDomain: function (group) {
-        var key = JSON.stringify([group.rowValues, group.colValues]);
-        return this.groupDomains[key][group.originIndex];
+    _getGroupDomain: function (groupId, originIndex) {
+        const group = this.groups[groupId];
+        return group.domains[originIndex];
     },
     /**
      * Returns the group sanitized labels.
@@ -844,18 +859,36 @@ var PivotModel = AbstractModel.extend({
         });
     },
     /**
+     * Returns a groupId for a given pair or header ids.
+     * @param  {...[integer]} ids
+     * @return {integer}
+     */
+    _getGroupId: function (...ids) {
+        const [id1, id2] = ids.sort();
+        const groupId = this._mapToGroupId[id1] && this._mapToGroupId[id1][id2];
+        if (groupId) {
+            return groupId;
+        }
+        this._lastGroupId++;
+        this._mapToGroupId[id1] = this._mapToGroupId[id1] || {};
+        this._mapToGroupId[id1][id2] = this._lastGroupId;
+        this._mapFromGroupId[this._lastGroupId] = new Set([id1, id2]);
+        return this._lastGroupId;
+    },
+    /**
      * Returns a promise that returns the annotated read_group results
      * corresponding to a partition of the given group obtained using the given
      * rowGroupBy and colGroupBy.
      *
      * @private
-     * @param  {Object} group
+     * @param  {integer} groupId
+     * @param {integer} originIndex
      * @param  {string[]} rowGroupBy
      * @param  {string[]} colGroupBy
      * @returns {Promise}
      */
-    _getGroupSubdivision: function (group, rowGroupBy, colGroupBy) {
-        var groupDomain = this._getGroupDomain(group);
+    _getGroupSubdivision: function (groupId, originIndex, rowGroupBy, colGroupBy) {
+        var groupDomain = this._getGroupDomain(groupId, originIndex);
         var measureSpecs = this._getMeasureSpecs();
         var groupBy = rowGroupBy.concat(colGroupBy);
         return this._rpc({
@@ -868,7 +901,8 @@ var PivotModel = AbstractModel.extend({
             lazy: false,
         }).then(function (subGroups) {
             return {
-                group: group,
+                groupId: groupId,
+                originIndex: originIndex,
                 subGroups: subGroups,
                 rowGroupBy: rowGroupBy,
                 colGroupBy: colGroupBy
@@ -890,30 +924,51 @@ var PivotModel = AbstractModel.extend({
         });
     },
     /**
-     * Returns the leaf counts of each group inside the given tree.
+     * Returns the headers corresponding to a group with id groupId
+     * @param  {integer} groupId
+     * @return {Object}
+     */
+    _getGroupHeaders: function (groupId) {
+        const headerIds = this._mapFromGroupId[groupId];
+        const headers = {};
+        headerIds.forEach(headerId => {
+            const header = this.headers[headerId];
+            if (header.rootId === this.rowRootId) {
+                headers.rowHeader = header;
+            } else {
+                headers.colHeader = header;
+            }
+        });
+        return headers;
+    },
+    /**
+     * Each header determines a tree by taking its sub headers.
+     * Returns the leaf counts of each sub header tree inside the tree determined
+     * by the given header.
      *
      * @private
-     * @param {Object} tree
-     * @returns {Object} keys are group ids
+     * @param {Object} header
+     * @returns {Object} keys are header ids
      */
-    _getLeafCounts: function (tree) {
-        var self = this;
-        var leafCounts = {};
-        var leafCount;
-        if (_.isEmpty(tree.directSubTrees)) {
+    _getLeafCounts: function (header) {
+        const self = this;
+        const leafCounts = {};
+        let leafCount;
+        if (!header.directSubHeaders.size) {
             leafCount = 1;
         } else {
-            leafCount = _.values(tree.directSubTrees).reduce(
-                function (acc, subTree) {
-                    var subLeafCounts = self._getLeafCounts(subTree);
+            leafCount = [...header.directSubHeaders.values()].reduce(
+                function (acc, subHeaderId) {
+                    const subHeader = self.headers[subHeaderId];
+                    var subLeafCounts = self._getLeafCounts(subHeader);
                     _.extend(leafCounts, subLeafCounts);
-                    return acc + leafCounts[JSON.stringify(subTree.root.values)];
+                    return acc + leafCounts[subHeaderId];
                 },
                 0
             );
         }
 
-        leafCounts[JSON.stringify(tree.root.values)] = leafCount;
+        leafCounts[header.id] = leafCount;
         return leafCounts;
     },
     /**
@@ -953,21 +1008,21 @@ var PivotModel = AbstractModel.extend({
      * @returns {Object[]}
      */
     _getMeasuresRow: function (columns) {
-        var self = this;
-        var sortedColumn = this.data.sortedColumn || {};
-        var measureRow = [];
+        const self = this;
+        const sortedColumn = this.data.sortedColumn || {};
+        const measureRow = [];
 
         columns.forEach(function (column) {
             self.data.measures.forEach(function (measure) {
-                var measureCell = {
-                    groupId: column.groupId,
+                const measureCell = {
+                    headerId: column.headerId,
                     height: 1,
                     measure: measure,
                     title: self.fields[measure].string,
                     width: 2 * self.data.origins.length - 1,
                 };
                 if (sortedColumn.measure === measure &&
-                    _.isEqual(sortedColumn.groupId, column.groupId)) {
+                    _.isEqual(sortedColumn.headerId, column.headerId)) {
                     measureCell.order = sortedColumn.order;
                 }
                 measureRow.push(measureCell);
@@ -1008,6 +1063,14 @@ var PivotModel = AbstractModel.extend({
         );
     },
     /**
+     * Returns a new Id used to identify a (row or col) header.
+     * @return {integer}
+     */
+    _getNewHeaderId: function () {
+        this._lastHeaderId++;
+        return this._lastHeaderId;
+    },
+    /**
      * Make sure that the labels of different many2one values are distinguished
      * by numbering them if necessary.
      *
@@ -1033,21 +1096,21 @@ var PivotModel = AbstractModel.extend({
      * @returns {Object[]}
      */
     _getOriginsRow: function (columns) {
-        var self = this;
-        var sortedColumn = this.data.sortedColumn || {};
-        var originRow = [];
+        const self = this;
+        const sortedColumn = this.data.sortedColumn || {};
+        const originRow = [];
 
         columns.forEach(function (column) {
-            var groupId = column.groupId;
-            var measure = column.measure;
-            var isSorted = sortedColumn.measure === measure &&
-                           _.isEqual(sortedColumn.groupId, groupId);
-            var isSortedByOrigin = isSorted && !sortedColumn.originIndexes[1];
-            var isSortedByVariation = isSorted && sortedColumn.originIndexes[1];
+            const headerId = column.headerId;
+            const measure = column.measure;
+            const isSorted = sortedColumn.measure === measure &&
+                           _.isEqual(sortedColumn.headerId, headerId);
+            const isSortedByOrigin = isSorted && !sortedColumn.originIndexes[1];
+            const isSortedByVariation = isSorted && sortedColumn.originIndexes[1];
 
             self.data.origins.forEach(function (origin, originIndex) {
-                var originCell = {
-                    groupId: groupId,
+                const originCell = {
+                    headerId: headerId,
                     height: 1,
                     measure: measure,
                     originIndexes: [originIndex],
@@ -1060,8 +1123,8 @@ var PivotModel = AbstractModel.extend({
                 originRow.push(originCell);
 
                 if (originIndex > 0) {
-                    var variationCell = {
-                        groupId: groupId,
+                    const variationCell = {
+                        headerId: headerId,
                         height: 1,
                         measure: measure,
                         originIndexes: [originIndex - 1, originIndex],
@@ -1099,10 +1162,10 @@ var PivotModel = AbstractModel.extend({
      * @returns {Object}
      */
     _getTable: function () {
-        var headers = this._getTableHeaders();
+        const headers = this._getTableHeaders();
         return {
             headers: headers,
-            rows: this._getTableRows(this.rowGroupTree, headers[headers.length - 1]),
+            rows: this._getTableRows(this.headers[this.rowRootId], headers[headers.length - 1]),
         };
     },
     /**
@@ -1114,16 +1177,17 @@ var PivotModel = AbstractModel.extend({
      * @returns {Object[]}
      */
     _getTableHeaders: function () {
-        var colGroupBys = this._getGroupBys().colGroupBys;
-        var height = colGroupBys.length + 1;
-        var measureCount = this.data.measures.length;
-        var originCount = this.data.origins.length;
-        var leafCounts = this._getLeafCounts(this.colGroupTree);
-        var headers = [];
-        var measureColumns = []; // used to generate the measure cells
+        const self = this;
+        const colGroupBys = this._getGroupBys().colGroupBys;
+        const height = colGroupBys.length + 1;
+        const measureCount = this.data.measures.length;
+        const originCount = this.data.origins.length;
+        const leafCounts = this._getLeafCounts(this.headers[this.colRootId]);
+        let headers = [];
+        const measureColumns = []; // used to generate the measure cells
 
         // 1) generate col group rows (total row + one row for each col groupby)
-        var colGroupRows = (new Array(height)).fill(0).map(function () {
+        const colGroupRows = (new Array(height)).fill(0).map(function () {
             return [];
         });
         // blank top left cell
@@ -1137,37 +1201,34 @@ var PivotModel = AbstractModel.extend({
          * Recursive function that generates the header cells corresponding to
          * the groups of a given tree.
          *
-         * @param {Object} tree
+         * @param {Object} headerId
          */
-        function generateTreeHeaders(tree) {
-            var group = tree.root;
-            var rowIndex = group.values.length;
-            var row = colGroupRows[rowIndex];
-            var groupId = [[], group.values];
-            var isLeaf = _.isEmpty(tree.directSubTrees);
-            var leafCount = leafCounts[JSON.stringify(tree.root.values)];
-            var cell = {
-                groupId: groupId,
+        function generateTreeHeaders(headerId) {
+            const header = self.headers[headerId];
+            const rowIndex = header.values.length;
+            const row = colGroupRows[rowIndex];
+            const isLeaf = !header.directSubHeaders.size;
+            const leafCount = leafCounts[header.id];
+            const cell = {
+                headerId: headerId,
                 height: isLeaf ? (colGroupBys.length + 1 - rowIndex) : 1,
                 isLeaf: isLeaf,
-                title: group.labels[group.labels.length - 1] || _t('Total'),
+                title: header.labels[header.labels.length - 1] || _t('Total'),
                 width: leafCount * measureCount * (2 * originCount - 1),
             };
             row.push(cell);
             if (isLeaf) {
                 measureColumns.push(cell);
             }
-
-            _.values(tree.directSubTrees).forEach(function (subTree) {
-                generateTreeHeaders(subTree);
+            header.directSubHeaders.forEach(function (headerId) {
+                generateTreeHeaders(headerId);
             });
         }
-        generateTreeHeaders(this.colGroupTree);
+        generateTreeHeaders(this.colRootId);
         // blank top right cell for 'Total' group (if there is more that one leaf)
-        if (leafCounts[JSON.stringify(this.colGroupTree.root.values)] > 1) {
-            var groupId = [[], []];
-            var totalTopRightCell = {
-                groupId: groupId,
+        if (leafCounts[this.colRootId] > 1) {
+            const totalTopRightCell = {
+                headerId: this.colRootId,
                 height: height,
                 title: "",
                 width: measureCount * (2 * originCount - 1),
@@ -1178,7 +1239,7 @@ var PivotModel = AbstractModel.extend({
         headers = headers.concat(colGroupRows);
 
         // 2) generate measures row
-        var measuresRow = this._getMeasuresRow(measureColumns);
+        const measuresRow = this._getMeasuresRow(measureColumns)
         headers.push(measuresRow);
 
         // 3) generate origins row if more than one origin
@@ -1189,66 +1250,66 @@ var PivotModel = AbstractModel.extend({
         return headers;
     },
     /**
-     * Returns the list of body rows of the pivot table for a given tree.
+     * Returns the list of body rows of the pivot table for a given header tree.
      *
      * @private
-     * @param {Object} tree
+     * @param {Object} header
      * @param {Object[]} columns
      * @returns {Object[]}
      */
-    _getTableRows: function (tree, columns) {
-        var self = this;
+    _getTableRows: function (header, columns) {
+        const self = this;
 
-        var rows = [];
-        var group = tree.root;
-        var rowGroupId = [group.values, []];
-        var title = group.labels[group.labels.length - 1] || _t('Total');
-        var indent = group.labels.length;
-        var isLeaf = _.isEmpty(tree.directSubTrees);
+        let rows = [];
+        const rowHeaderId = header.id;
+        const title = header.labels[header.labels.length - 1] || _t('Total');
+        const indent = header.labels.length;
+        const isLeaf = !header.directSubHeaders.size;
 
-        var subGroupMeasurements = columns.map(function (column) {
-            var colGroupId = column.groupId;
-            var groupIntersectionId = [rowGroupId[0], colGroupId[1]];
-            var measure = column.measure;
-            var originIndexes = column.originIndexes || [0];
+        const subGroupMeasurements = columns.map(function (column) {
+            const colHeaderId = column.headerId;
+            const groupId = self._getGroupId(rowHeaderId, colHeaderId);
+            const measure = column.measure;
+            const originIndexes = column.originIndexes || [0];
 
-            var value = self._getCellValue(groupIntersectionId, measure, originIndexes);
+            const value = self._getCellValue(groupId, measure, originIndexes);
 
-            var measurement = {
-                groupId: groupIntersectionId,
+            const measurement = {
+                groupId: groupId,
                 originIndexes: originIndexes,
                 measure: measure,
                 value: value,
-                isBold: !groupIntersectionId[0].length || !groupIntersectionId[1].length,
+                isBold: rowHeaderId !== self.rowRootId || colHeaderId !== self.colRootId,
             };
             return measurement;
         });
 
         rows.push({
             title: title,
-            groupId: rowGroupId,
+            headerId: rowHeaderId,
             indent: indent,
             isLeaf: isLeaf,
             subGroupMeasurements: subGroupMeasurements
         });
 
-        var subTreeKeys = tree.sortedKeys || Object.keys(tree.directSubTrees);
-        subTreeKeys.forEach(function (subTreeKey) {
-            var subTree = tree.directSubTrees[subTreeKey];
-            rows = rows.concat(self._getTableRows(subTree, columns));
+        const subHeaderIds = header.sortedIds || [...header.directSubHeaders.values()];
+        subHeaderIds.forEach(function (subHeaderId) {
+            const subHeader = self.headers[subHeaderId];
+            rows = rows.concat(self._getTableRows(subHeader, columns));
         });
 
         return rows;
     },
     /**
-     * returns the height of a given groupTree
+     * Returns the height of a given header tree
      *
      * @private
-     * @param  {Object} tree, a groupTree
-     * @returns {number}
+     * @param  {integer} headerId
+     * @returns {integer}
      */
-    _getTreeHeight: function (tree) {
-        var subTreeHeights = _.values(tree.directSubTrees).map(this._getTreeHeight.bind(this));
+    _getTreeHeight: function (headerId) {
+        const header = this.headers[headerId];
+        var subTreeHeights = [...header.directSubHeaders.values()].map(this._getTreeHeight.bind(this));
         return Math.max(0, Math.max.apply(null, subTreeHeights)) + 1;
     },
     /**
@@ -1256,128 +1317,164 @@ var PivotModel = AbstractModel.extend({
      * @returns {boolean}
      */
     _hasData: function () {
-        return (this.counts[JSON.stringify([[], []])] || []).some(function (count) {
-            return count > 0;
-        });
+        const totalGroup = this.groups[this._getGroupId(this.rowRootId, this.colRootId)];
+        return totalGroup.counts.some(count =>  count > 0);
     },
     /**
-     * Initilize/Reinitialize this.rowGroupTree, colGroupTree, measurements,
-     * counts and subdivide the group 'Total' as many times it is necessary.
+     * Initilize/Reinitialize this.headers, this.groups,
+     * this.rowRootId, this.colRootId and other private variables.
+     *
+     * Subdivide the group 'Total' as many times it is necessary.
+     *
      * A first subdivision with no groupBy (divisors.slice(0, 1)) is made in
      * order to see if there is data in the intersection of the group 'Total'
      * and the various origins. In case there is none, nonsupplementary rpc
      * will be done (see the code of subdivideGroup).
-     * Once the promise resolves, this.rowGroupTree, colGroupTree,
-     * measurements, counts are correctly set.
+     * Once the promise resolves, this.headers, this.groups are correctly set.
      *
      * @private
      * @return {Promise}
      */
     _loadData: function () {
-        var self = this;
+        const self = this;
+        // initialize id machinery
+        this._lastHeaderId = 0;
+        this._lastGroupId = 0;
+        this._mapToGroupId = {};
+        this._mapFromGroupId = {};
 
-        this.rowGroupTree = {root: {labels: [], values: []}, directSubTrees: {}};
-        this.colGroupTree = {root: {labels: [], values: []}, directSubTrees: {}};
-        this.measurements = {};
-        this.counts = {};
+        this.headers = {};
+        this.rowRootId = this._makeHeader();
+        this.colRootId = this._makeHeader();
 
-        var key = JSON.stringify([[],[]]);
-        this.groupDomains = {};
-        this.groupDomains[key] = this.data.domains.slice(0);
+        this.groups = {};
+        const groupId = this._getGroupId(this.rowRootId, this.colRootId);
+        const domains = this.data.domains.slice(0);
+        // We do not have information on the total count of records.
+        // So we set counts to Infinity at start (starting value needs to be
+        // greater than 0).
+        const counts = this.data.origins.map(() => Infinity);
+        this._makeGroup(groupId, { domains, counts });
 
+        const groupBys = this._getGroupBys();
+        const leftDivisors = sections(groupBys.rowGroupBys);
+        const rightDivisors = sections(groupBys.colGroupBys);
+        const divisors = cartesian(leftDivisors, rightDivisors);
 
-        var group = {rowValues: [], colValues: []};
-        var groupBys = this._getGroupBys();
-        var leftDivisors = sections(groupBys.rowGroupBys);
-        var rightDivisors = sections(groupBys.colGroupBys);
-        var divisors = cartesian(leftDivisors, rightDivisors);
-
-        return this._subdivideGroup(group, divisors.slice(0, 1)).then(function () {
-            return self._subdivideGroup(group, divisors.slice(1));
+        return this._subdivideGroup(groupId, divisors.slice(0, 1)).then(function () {
+            return self._subdivideGroup(groupId, divisors.slice(1));
         });
     },
     /**
+     * Create a group and add it to this.groups. Returns the newly
+     * created group.
+     *
+     * @param  {integer} groupId
+     * @param  {Object[]} [options.measurements]
+     * @param  {integer[]} [options.counts]
+     * @param  {Array[]} [options.domains]
+     * @return {Object}
+     */
+    _makeGroup: function (groupId, { measurements, counts, domains } = {}) {
+        const group = {
+            id: groupId,
+            measurements: measurements || this.data.origins.map(() => this._getMeasurements({})),
+            counts: counts || this.data.origins.map(() => 0),
+            domains: domains || this.data.origins.map(() => [[0, '=', 1]]),
+        };
+        this.groups[groupId] = group;
+        return group;
+    },
+    /**
+     * Create a header and add it to this.headers. Returns the id
+     * of the newly created header.
+     *
+     * @param  {integer} options.rootId
+     * @param  {Array} options.values
+     * @param  {string[]} options.labels
+     * @return {integer}
+     */
+    _makeHeader: function ({rootId, values, labels} = {}) {
+        const headerId = this._getNewHeaderId();
+        this.headers[headerId] = {
+            id: headerId,
+            rootId: rootId || headerId,
+            labels: labels || [],
+            values: values || [],
+            directSubHeaders: new Map(),
+        };
+        return headerId;
+    },
+    /**
      * Extract the information in the read_group results (groupSubdivisions)
-     * and develop this.rowGroupTree, colGroupTree, measurements, counts, and
+     * and develop this.headers, colGroupTree, measurements, counts, and
      * groupDomains.
-     * If a column needs to be sorted, the rowGroupTree corresponding to the
+     * If a column needs to be sorted, the headers corresponding to the
      * group is sorted.
      *
      * @private
-     * @param  {Object} group
-        TO DO
+     * @param  {number} groupId
      * @param  {Object[]} groupSubdivisions
      */
-    _prepareData: function (group, groupSubdivisions) {
-        var self = this;
-
-        var groupRowValues = group.rowValues;
-        var groupRowLabels = [];
-        var rowSubTree = this.rowGroupTree;
-        var root;
-        if (groupRowValues.length) {
-            // we should have labels information on hand! regretful!
-            rowSubTree = this._findGroup(this.rowGroupTree, groupRowValues);
-            root = rowSubTree.root;
-            groupRowLabels = root.labels;
-        }
-
-        var groupColValues = group.colValues;
-        var groupColLabels = [];
-        if (groupColValues.length) {
-            root = this._findGroup(this.colGroupTree, groupColValues).root;
-            groupColLabels = root.labels;
-        }
+    _prepareData: function (groupId, groupSubdivisions) {
+        const self = this;
+        const headers = this._getGroupHeaders(groupId);
+        const groupRowValues = headers.rowHeader.values;
+        const groupRowLabels = headers.rowHeader.labels;
+        const groupColValues = headers.colHeader.values
+        const groupColLabels = headers.colHeader.labels;
 
         groupSubdivisions.forEach(function (groupSubdivision) {
             groupSubdivision.subGroups.forEach(function (subGroup) {
 
-                var rowValues = groupRowValues.concat(self._getGroupValues(subGroup, groupSubdivision.rowGroupBy));
-                var rowLabels = groupRowLabels.concat(self._getGroupLabels(subGroup, groupSubdivision.rowGroupBy));
+                const rowValues = groupRowValues.concat(self._getGroupValues(subGroup, groupSubdivision.rowGroupBy));
+                const rowLabels = groupRowLabels.concat(self._getGroupLabels(subGroup, groupSubdivision.rowGroupBy));
 
-                var colValues = groupColValues.concat(self._getGroupValues(subGroup, groupSubdivision.colGroupBy));
-                var colLabels = groupColLabels.concat(self._getGroupLabels(subGroup, groupSubdivision.colGroupBy));
+                const colValues = groupColValues.concat(self._getGroupValues(subGroup, groupSubdivision.colGroupBy));
+                const colLabels = groupColLabels.concat(self._getGroupLabels(subGroup, groupSubdivision.colGroupBy));
+
+                let rowHeaderId;
+                let colHeaderId;
 
                 if (!colValues.length && rowValues.length) {
-                    self._addGroup(self.rowGroupTree, rowLabels, rowValues);
+                    // here the subgroup corresponds to a row header
+                    rowHeaderId = self._addHeader(self.rowRootId, rowValues, rowLabels);
+                    colHeaderId = self.colRootId;
+                } else if (colValues.length && !rowValues.length) {
+                    // here the subgroup corresponds to a col header
+                    rowHeaderId = self.rowRootId;
+                    colHeaderId = self._addHeader(self.colRootId, colValues, colLabels);
+                } else {
+                    rowHeaderId = self._findHeaderId(self.rowRootId, rowValues);
+                    colHeaderId = self._findHeaderId(self.colRootId, colValues);
                 }
-                if (colValues.length && !rowValues.length) {
-                    self._addGroup(self.colGroupTree, colLabels, colValues);
+                if (rowHeaderId * colHeaderId === 0) {
+                    // the subgroup must not be present in the table since its supposed headers are
+                    // not expanded
+                    return;
                 }
 
-                var key = JSON.stringify([rowValues, colValues]);
-                var originIndex = groupSubdivision.group.originIndex;
-
-                if (!(key in self.measurements)) {
-                    self.measurements[key] = self.data.origins.map(function () {
-                        return self._getMeasurements({});
-                    });
+                const subGroupId = self._getGroupId(rowHeaderId, colHeaderId);
+                let g = self.groups[subGroupId];
+                if (!g) {
+                    g = self._makeGroup(subGroupId);
                 }
-                self.measurements[key][originIndex] = self._getMeasurements(subGroup);
 
-                if (!(key in self.counts)) {
-                    self.counts[key] = self.data.origins.map(function () {
-                        return 0;
-                    });
-                }
-                self.counts[key][originIndex] = subGroup.__count;
+                const originIndex = groupSubdivision.originIndex;
 
-                if (!(key in self.groupDomains)) {
-                    self.groupDomains[key] = self.data.origins.map(function () {
-                        return [[0, '=', 1]];
-                    });
-                }
+                g.measurements[originIndex] = self._getMeasurements(subGroup);
+                g.counts[originIndex] = subGroup.__count;
                 // if __domain is not defined this means that we are in the
                 // case where
                 // groupSubdivision.rowGroupBy = groupSubdivision.rowGroupBy = []
                 if (subGroup.__domain) {
-                    self.groupDomains[key][originIndex] = subGroup.__domain;
+                    g.domains[originIndex] = subGroup.__domain;
                 }
             });
         });
 
         if (this.data.sortedColumn) {
-            this.sortRows(this.data.sortedColumn, rowSubTree);
+            this.sortRows(this.data.sortedColumn);
         }
     },
     /**
@@ -1408,25 +1505,28 @@ var PivotModel = AbstractModel.extend({
      * Make any group in tree a leaf if it was a leaf in oldTree.
      *
      * @private
-     * @param {Object} tree
-     * @param {Object} oldTree
+     * @param {Object} header
+     * @param {Object} oldHeaders
      */
-    _pruneTree: function (tree, oldTree) {
-        if (_.isEmpty(oldTree.directSubTrees)) {
-            tree.directSubTrees = {};
-            delete tree.sortedKeys;
+    _pruneSubHeaderTree: function (header, oldHeader, oldHeaders) {
+        if (!oldHeader.directSubHeaders.size) {
+            header.directSubHeaders.forEach(subHeaderId => {
+                this._deleteSubHeaders(subHeaderId);
+            })
+            header.directSubHeaders.clear();
+            delete header.sortedIds;
             return;
         }
         var self = this;
-        Object.keys(tree.directSubTrees).forEach(function (subTreeKey) {
-            var index = Object.keys(oldTree.directSubTrees).indexOf(subTreeKey);
-            var subTree = tree.directSubTrees[subTreeKey];
-            if (index === -1) {
-                subTree.directSubTrees = {};
-                delete subTreeKey.sortedKeys;
+        header.directSubHeaders.forEach(function (subHeaderId, key) {
+            const oldId = oldHeader.directSubHeaders.get(key);
+            if (!oldId) {
+                self._deleteSubHeaders(subHeaderId);
+                header.directSubHeaders.delete(key);
             } else {
-                var oldSubTree = oldTree.directSubTrees[subTreeKey];
-                self._pruneTree(subTree, oldSubTree);
+                const subHeader = self.headers[subHeaderId];
+                const oldSubHeader = oldHeaders[oldId];
+                self._pruneSubHeaderTree(subHeader, oldSubHeader, oldHeaders);
             }
         });
     },
@@ -1468,28 +1568,26 @@ var PivotModel = AbstractModel.extend({
     },
     /**
      * Get all partitions of a given group using the provided list of divisors
-     * and enrich the objects of this.rowGroupTree, colGroupTree,
+     * and enrich the objects of this.headers, colGroupTree,
      * measurements, counts.
      *
      * @private
-     * @param {Object} group
+     * @param {number} groupId
      * @param {Array[]} divisors
      * @returns
      */
-    _subdivideGroup: function (group, divisors) {
+    _subdivideGroup: function (groupId, divisors) {
         var self = this;
-
-        var key = JSON.stringify([group.rowValues, group.colValues]);
+        const group = this.groups[groupId]
 
         var proms = this.data.origins.reduce(
             function (acc, origin, originIndex) {
                 // if no information on group content is available, we fetch data.
                 // if group is known to be empty for the given origin,
                 // we don't need to fetch data fot that origin.
-                if (!self.counts[key] || self.counts[key][originIndex] > 0) {
-                    var subGroup = {rowValues: group.rowValues, colValues: group.colValues, originIndex: originIndex};
+                if (group.counts[originIndex] > 0) {
                     divisors.forEach(function (divisor) {
-                        acc.push(self._getGroupSubdivision(subGroup, divisor[0], divisor[1]));
+                        acc.push(self._getGroupSubdivision(groupId, originIndex, divisor[0], divisor[1]));
                     });
                 }
                 return acc;
@@ -1498,24 +1596,8 @@ var PivotModel = AbstractModel.extend({
         );
         return this._loadDataDropPrevious.add(Promise.all(proms)).then(function (groupSubdivisions) {
             if (groupSubdivisions.length) {
-                self._prepareData(group, groupSubdivisions);
+                self._prepareData(groupId, groupSubdivisions);
             }
-        });
-    },
-    /**
-     * Sort recursively the subTrees of tree using sortFunction.
-     * In the end each node of the tree has its direct children sorted
-     * according to the criterion reprensented by sortFunction.
-     *
-     * @private
-     * @param  {Function} sortFunction
-     * @param  {Object} tree
-     */
-    _sortTree: function (sortFunction, tree) {
-        var self = this;
-        tree.sortedKeys = _.sortBy(Object.keys(tree.directSubTrees), sortFunction(tree));
-        _.values(tree.directSubTrees).forEach(function (subTree) {
-            self._sortTree(sortFunction, subTree);
         });
     },
 });

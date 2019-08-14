@@ -28,7 +28,7 @@ var PivotController = AbstractController.extend({
         'click .o_pivot_header_cell_closed': '_onClosedHeaderClick',
     },
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
-        close_group: '_onCloseGroup',
+        close_header: '_onCloseHeader',
         open_view: '_onOpenView',
         sort_rows: '_onSortRows',
     }),
@@ -264,8 +264,8 @@ var PivotController = AbstractController.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onCloseGroup: function (ev) {
-        this.model.closeGroup(ev.data.groupId, ev.data.type);
+    _onCloseHeader: function (ev) {
+        this.model.closeHeader(ev.data.headerId);
         this.update({}, {reload: false});
     },
     /**
@@ -281,33 +281,26 @@ var PivotController = AbstractController.extend({
         ev.preventDefault();
         ev.stopPropagation();
 
-        var $target = $(ev.target);
-        var groupId = $target.data('groupId');
-        var type = $target.data('type');
+        const $target = $(ev.target);
+        const headerId = $target.data('headerId');
+        this.selectedHeader = this.model.getHeader(headerId);
 
-        var group = {
-            rowValues: groupId[0],
-            colValues: groupId[1],
-            type: type
-        };
-
-        var state = this.model.get({raw: true});
-
-        var groupValues = type === 'row' ? groupId[0] : groupId[1];
-        var groupBys = type === 'row' ?
+        const state = this.model.get({raw: true});
+        const values = this.selectedHeader.values;
+        const headerType = this.model.getHeaderType(headerId);
+        const groupBys = headerType === 'row' ?
                         state.rowGroupBys :
                         state.colGroupBys;
 
-        this.selectedGroup = group;
-        if (groupValues.length < groupBys.length) {
-            var groupBy = groupBys[groupValues.length];
+        if (values.length < groupBys.length) {
+            const groupBy = groupBys[values.length];
             this.model
-                .expandGroup(this.selectedGroup, groupBy)
+                .expandHeader(this.selectedHeader, groupBy)
                 .then(this.update.bind(this, {}, {reload: false}));
         } else {
-            var position = $target.position();
-            var top = position.top + $target.height();
-            var left = position.left + ev.offsetX;
+            const position = $target.position();
+            const top = position.top + $target.height();
+            const left = position.left + ev.offsetX;
             this._renderGroupBySelection(top, left);
         }
     },
@@ -330,9 +323,10 @@ var PivotController = AbstractController.extend({
         if (interval) {
             groupBy = groupBy + ':' + interval;
         }
-        this.model.addGroupBy(groupBy, this.selectedGroup.type);
+        const headerType = this.model.getHeaderType(this.selectedHeader.id);
+        this.model.addGroupBy(groupBy, headerType);
         this.model
-            .expandGroup(this.selectedGroup, groupBy)
+            .expandHeader(this.selectedHeader, groupBy)
             .then(this.update.bind(this, {}, {reload: false}));
     },
     /**
@@ -340,9 +334,10 @@ var PivotController = AbstractController.extend({
      * @param {OdooEvent} ev
      */
     _onOpenView: function (ev) {
-        var context = ev.data.context;
-        var group = ev.data.group;
-        var domain = this.model._getGroupDomain(group);
+        const context = ev.data.context;
+        const groupId = ev.data.groupId;
+        const originIndex = ev.data.originIndex;
+        const domain = this.model._getGroupDomain(groupId, originIndex);
 
         this.do_action({
             type: 'ir.actions.act_window',
