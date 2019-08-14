@@ -27,5 +27,5 @@ class StockReturnPicking(models.TransientModel):
 class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
-    to_refund = fields.Boolean(string="Update quantities on SO/PO", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
-
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", default=True,
+        help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
