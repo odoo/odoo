@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type_tax_use']" position="before">
+                <field name="l10n_pe_edi_tax_code"/>
+                <field name="l10n_pe_edi_unece_category"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
