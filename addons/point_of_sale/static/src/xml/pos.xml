@@ -229,7 +229,12 @@
             </div>
             <div class="searchbox">
                 <input placeholder="Search Products" />
-                <span class="search-clear"></span>
+                <span class="search-clear left">
+                    <i class="fa fa-search" />
+                </span>
+                <span class="search-clear right">
+                    <i class="fa fa-remove" />
+                </span>
             </div>
         </header>
         <t t-if="widget.subcategories.length > 0">
@@ -246,8 +251,20 @@
     <t t-name="ProductListWidget">
         <div class='product-list-container'>
             <div class="product-list-scroller touch-scrollable">
-                <div class="product-list">
-                </div>
+                <t t-if="widget.product_list.length != 0">
+                    <div class="product-list">
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="product-list-empty">
+                        <t t-if="widget.product_list.length == 0 &amp;&amp; !!widget.search_word">
+                            <p>No results found for "<b t-esc="widget.search_word"></b>".</p>
+                        </t>
+                        <t t-else="">
+                            <p>There are no products in this category.</p>
+                        </t>
+                    </div>
+                </t>
             </div>
             <span class="placeholder-ScrollbarWidget" />
         </div>

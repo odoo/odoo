@@ -11,12 +11,14 @@ tour.register('point_of_sale_tour', {
     rainbowMan: false,
 }, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
     trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
-    content: _t("Ready to launch your <b>point of sale</b>? <i>Click here</i>."),
+    content: _t("Ready to launch your <b>point of sale</b>?"),
+    width: 215,
     position: 'right',
     edition: 'community'
 }, {
     trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
-    content: _t("Ready to launch your <b>point of sale</b>? <i>Click here</i>."),
+    content: _t("Ready to launch your <b>point of sale</b>?"),
+    width: 215,
     position: 'bottom',
     edition: 'enterprise'
 }, {

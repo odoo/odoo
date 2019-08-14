@@ -43,6 +43,7 @@
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
             <kanban create="false" class="o_kanban_dashboard o_pos_kanban">
+                <field name="current_user_id" invisible="1" />
                 <field name="name"/>
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
@@ -111,6 +112,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div style="text-align:right;" t-if="record.current_user_id.value">
+                                    <img
+                                        class="oe_kanban_avatar"
+                                        t-att-src="kanban_image('res.users', 'image_64', record.current_user_id.raw_value)"
+                                        t-att-title="record.current_user_id.value"
+                                        t-att-alt="record.current_user_id.value"
+                                        width="24"
+                                        height="24"
+                                    />
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">

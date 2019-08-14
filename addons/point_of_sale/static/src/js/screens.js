@@ -811,7 +811,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
 
         this.el.querySelector('.searchbox input').addEventListener('keydown',this.search_handler);
 
-        this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
+        this.el.querySelector('.search-clear.right').addEventListener('click',this.clear_search_handler);
 
         if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
             this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
@@ -840,11 +840,11 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
                     this.pos.get_order().add_product(products[0]);
                     this.clear_search();
             }else{
-                this.product_list_widget.set_product_list(products);
+                this.product_list_widget.set_product_list(products, query);
             }
         }else{
             products = this.pos.db.get_product_by_category(this.category.id);
-            this.product_list_widget.set_product_list(products);
+            this.product_list_widget.set_product_list(products, query);
         }
     },
 
@@ -867,6 +867,7 @@ var ProductListWidget = PosBaseWidget.extend({
         this.weight = options.weight || 0;
         this.show_scale = options.show_scale || false;
         this.next_screen = options.next_screen || false;
+        this.search_word = false;
 
         this.click_product_handler = function(){
             var product = self.pos.db.get_product_by_id(this.dataset.productId);
@@ -894,8 +895,9 @@ var ProductListWidget = PosBaseWidget.extend({
             this.renderElement();
         }, this);
     },
-    set_product_list: function(product_list){
+    set_product_list: function(product_list, search_word){
         this.product_list = product_list;
+        this.search_word = !!search_word ? search_word : false;
         this.renderElement();
     },
     get_product_image_url: function(product){
