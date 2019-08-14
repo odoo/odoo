@@ -51,6 +51,7 @@ var ListController = BasicController.extend({
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
         this.selectedRecords = params.selectedRecords || [];
+        this.multipleRecordsSavingPromise = null;
     },
 
     //--------------------------------------------------------------------------
@@ -343,15 +344,6 @@ var ListController = BasicController.extend({
         return _.extend(env, {domain: record.getDomain()});
     },
     /**
-     * @private
-     * @returns {boolean}
-     */
-    _inMultipleRecordEdition: function (recordId) {
-        var record = this.model.get(recordId, { raw: true });
-        var recordIds = _.union([recordId], this.selectedRecords);
-        return recordIds.length > 1 && record.res_id;
-    },
-    /**
      * Only display the pager when there are data to display.
      *
      * @override
@@ -362,10 +354,16 @@ var ListController = BasicController.extend({
         return !!state.count;
     },
     /**
+     * Saves multiple records at once. This method is called by the _onFieldChanged method
+     * since the record must be confirmed as soon as the focus leaves a dirty cell.
+     * Pseudo-validation is performed with registered modifiers.
+     * Returns a promise that is resolved when confirming and rejected in any other case.
+     *
      * @private
      * @param {string} recordId
      * @param {Object} node
      * @param {Object} changes
+     * @returns {Promise}
      */
     _saveMultipleRecords: function (recordId, node, changes) {
         var self = this;
@@ -379,22 +377,42 @@ var ListController = BasicController.extend({
             }
             return result;
         }, []);
-        var message = _.str.sprintf(
-            _t('Do you want to set the value on the %d valid selected records?'),
-            validRecordIds.length);
-        if (recordIds.length !== validRecordIds.length) {
-            var nbInvalid = recordIds.length - validRecordIds.length;
-            message += ' ' + _.str.sprintf(_t('(%d invalid)'), nbInvalid);
-        }
-        Dialog.confirm(this, message, {
-            confirm_callback: function () {
-                self.model.saveRecords(recordId, validRecordIds)
-                    .then(function () {
-                        self._updateButtons('readonly');
-                        var state = self.model.get(self.handle);
-                        self.renderer.updateState(state, {});
-                    });
-            },
+        var nbInvalid = recordIds.length - validRecordIds.length;
+
+        return new Promise(function (resolve, reject) {
+            var rejectAndDiscard = function () {
+                self.model.discardChanges(recordId);
+                return self._confirmSave(recordId).then(reject);
+            };
+            if (validRecordIds.length > 0) {
+                var message;
+                if (nbInvalid === 0) {
+                    message = _.str.sprintf(
+                        _t("Do you want to set the value on the %d selected records?"),
+                        validRecordIds.length);
+                } else {
+                    message = _.str.sprintf(
+                        _t("Do you want to set the value on the %d valid selected records? (%d invalid)"),
+                        validRecordIds.length, nbInvalid);
+                }
+                Dialog.confirm(self, message, {
+                    confirm_callback: function () {
+                        self.model.saveRecords(recordId, validRecordIds)
+                            .then(function () {
+                                self._updateButtons('readonly');
+                                var state = self.model.get(self.handle);
+                                self.renderer.updateState(state, {});
+                                resolve();
+                            })
+                            .guardedCatch(rejectAndDiscard);
+                    },
+                    cancel_callback: rejectAndDiscard,
+                });
+            } else {
+                Dialog.alert(self, _t("No valid record to save"), {
+                    confirm_callback: rejectAndDiscard,
+                });
+            }
         });
     },
     /**
@@ -405,10 +423,11 @@ var ListController = BasicController.extend({
      */
     _saveRecord: function (recordId) {
         var record = this.model.get(recordId, { raw: true });
-        if (record.isDirty() && this._inMultipleRecordEdition(recordId)) {
+        if (record.isDirty() && this.renderer.inMultipleRecordEdition(recordId)) {
             // do not save the record (see _saveMultipleRecords)
-            return Promise.resolve();
-
+            var prom = this.multipleRecordsSavingPromise || Promise.reject();
+            this.multipleRecordsSavingPromise = null;
+            return prom;
         }
         return this._super.apply(this, arguments);
     },
@@ -619,13 +638,15 @@ var ListController = BasicController.extend({
     _onFieldChanged: function (ev) {
         ev.stopPropagation();
         var self = this;
+        var recordId = ev.data.dataPointID;
 
-        if (this._inMultipleRecordEdition(ev.data.dataPointID)) {
+        if (this.renderer.inMultipleRecordEdition(recordId)) {
             // deal with edition of multiple lines
             var _onSuccess = ev.data.onSuccess;
             ev.data.onSuccess = function () {
                 Promise.resolve(_onSuccess()).then(function () {
-                    self._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
+                    var savedRecordsPromise = self._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
+                    self.multipleRecordsSavingPromise = savedRecordsPromise;
                 });
             };
         }
