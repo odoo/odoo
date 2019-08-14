@@ -614,9 +614,7 @@ class PurchaseOrderLine(models.Model):
             partner_id=self.partner_id.id,
             company_id=self.company_id.id,
         )
-        self.name = product_lang.display_name
-        if product_lang.description_purchase:
-            self.name += '\n' + product_lang.description_purchase
+        self.name = self._get_product_purchase_description(product_lang)
 
         self._compute_tax_id()
 
@@ -692,6 +690,14 @@ class PurchaseOrderLine(models.Model):
             self.product_uom = seller_min_qty[0].product_uom
         else:
             self.product_qty = 1.0
+
+    def _get_product_purchase_description(self, product_lang):
+        self.ensure_one()
+        name = product_lang.display_name
+        if product_lang.description_purchase:
+            name += '\n' + product_lang.description_purchase
+
+        return name
 
     def _prepare_account_move_line(self, move):
         self.ensure_one()
