@@ -238,8 +238,8 @@ class AccountAccount(models.Model):
         # If user change the reconcile flag, all aml should be recomputed for that account and this is very costly.
         # So to prevent some bugs we add a constraint saying that you cannot change the reconcile field if there is any aml existing
         # for that account.
-        if vals.get('reconcile'):
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
+        if vals.get('reconcile', None) != None:
+            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids), ('account_id.reconcile', '!=', vals.get('reconcile'))], limit=1)
             if len(move_lines):
                 raise UserError(_('You cannot change the value of the reconciliation on this account as it already has some moves'))
 
