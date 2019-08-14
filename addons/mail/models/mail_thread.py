@@ -5,6 +5,7 @@ import base64
 import datetime
 import dateutil
 import email
+import email.policy
 import hashlib
 import hmac
 import lxml
@@ -20,7 +21,7 @@ except ImportError:
     import xmlrpclib
 
 from collections import namedtuple
-from email.message import Message
+from email.message import EmailMessage
 from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
@@ -876,8 +877,8 @@ class MailThread(models.AbstractModel):
 
         :raises: ValueError, TypeError
         """
-        if not isinstance(message, Message):
-            raise TypeError('message must be an email.message.Message at this point')
+        if not isinstance(message, EmailMessage):
+            raise TypeError('message must be an email.message.EmailMessage at this point')
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         fallback_model = model
@@ -1093,7 +1094,7 @@ class MailThread(models.AbstractModel):
             message = bytes(message.data)
         if isinstance(message, str):
             message = message.encode('utf-8')
-        message = email.message_from_bytes(message)
+        message = email.message_from_bytes(message, policy=email.policy.SMTP)
 
         # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg_dict = self.message_parse(message, save_original=save_original)
@@ -1301,8 +1302,8 @@ class MailThread(models.AbstractModel):
         :param message_dict: dictionary holding already-parsed values and in
             which bounce-related values will be added;
         """
-        if not isinstance(email_message, Message):
-            raise TypeError('message must be an email.message.Message at this point')
+        if not isinstance(email_message, EmailMessage):
+            raise TypeError('message must be an email.message.EmailMessage at this point')
 
         email_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/rfc822'), None)
         dsn_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/delivery-status'), None)
@@ -1361,8 +1362,8 @@ class MailThread(models.AbstractModel):
                               ('file2', 'bytes')}
             }
         """
-        if not isinstance(message, Message):
-            raise ValueError(_('Message should be a valid Message instance'))
+        if not isinstance(message, EmailMessage):
+            raise ValueError(_('Message should be a valid EmailMessage instance'))
         msg_dict = {'message_type': 'email'}
 
         message_id = message.get('Message-Id')
