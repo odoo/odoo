@@ -32,6 +32,12 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     # Action methods
     # -------------------------------------------------------------------------
+
+    def action_cancel(self):
+        for picking in self:
+            picking._get_subcontracted_productions()._action_cancel()
+        return super(StockPicking, self).action_cancel()
+
     def action_done(self):
         # action_done with an extra move will trigger two methods that
         # create/modify a subcontracting order, _action_confirm and a write on
