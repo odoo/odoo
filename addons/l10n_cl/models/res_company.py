@@ -14,6 +14,3 @@ class ResCompany(models.Model):
         self.ensure_one()
         return True if self.country_id == self.env.ref(
             'base.cl') else super()._localization_use_documents()
-
-    def validate_rut(self):
-        return self.partner_id.validate_rut()
