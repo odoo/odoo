@@ -4,12 +4,17 @@
             <t t-call="web.external_layout">
                 <t t-set="show_task" t-value="bool(docs.mapped('task_id'))"/>
                 <t t-set="show_project" t-value="len(docs.mapped('project_id')) > 1"/>
+                <t t-set="same_project" t-value="len(docs.mapped('project_id')) == 1"/>
+                <t t-if="same_project" t-set="project_name" t-value="docs.mapped('project_id')[0].name"/>
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row">
                         <div class="col-md-12">
                             <h2>
-                                <span>Timesheet Entries</span>
+                                <span>Timesheet Entries<t t-if="same_project">
+                                    for the <t t-esc="project_name"/> Project
+                                    </t>
+                                </span>
                             </h2>
                         </div>
                     </div>
@@ -22,7 +27,8 @@
                                         <th>Date</th>
                                         <th>Responsible</th>
                                         <th>Description</th>
-                                        <th t-if="show_task"><t t-if="show_project">Project - </t>Task</th>
+                                        <th><span>Project</span></th>
+                                        <th t-if="show_task">Task</th>
                                         <th class="text-right">Time</th>
                                     </tr>
                                </thead>
@@ -38,9 +44,10 @@
                                             <td >
                                                 <span t-field="l.name" t-options="{'widget': 'text'}"/>
                                             </td>
-                                            <td t-if="show_task or show_project">
-                                                <t t-if="show_project"><span t-field="l.project_id.name"/></t>
-                                                <t t-if="show_project and l.task_id"> - </t>
+                                            <td>
+                                                <span t-field="l.project_id.name"/>
+                                            </td>
+                                            <td t-if="show_task">
                                                 <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
                                             </td>
                                             <td class="text-right">
@@ -49,6 +56,7 @@
                                         </tr>
                                     </t>
                                     <tr>
+                                        <td />
                                         <td />
                                         <td />
                                         <td t-if="show_task"/>
