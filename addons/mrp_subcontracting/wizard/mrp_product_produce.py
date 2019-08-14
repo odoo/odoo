@@ -14,6 +14,21 @@ class MrpProductProduce(models.TransientModel):
         action['context'] = dict(action['context'], default_subcontract_move_id=self.subcontract_move_id.id)
         return action
 
+    def _generate_produce_lines(self):
+        """ When the wizard is called in backend, the onchange that create the
+        produce lines is not trigger. This method generate them and is used with
+        _record_production to appropriately set the lot_produced_id and
+        appropriately create raw stock move lines.
+        """
+        self.ensure_one()
+        moves = (self.move_raw_ids | self.move_finished_ids).filtered(
+            lambda move: move.state not in ('done', 'cancel')
+        )
+        for move in moves:
+            qty_to_consume = self._prepare_component_quantity(move, self.qty_producing)
+            line_values = self._generate_lines_values(move, qty_to_consume)
+            self.env['mrp.product.produce.line'].create(line_values)
+
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
         res = super(MrpProductProduce, self)._update_finished_move()
