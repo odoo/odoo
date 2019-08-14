@@ -26,8 +26,8 @@ class Followers(models.Model):
     # (see 'ir.model' inheritance).
     res_model = fields.Char(
         'Related Document Model Name', required=True, index=True)
-    res_id = fields.Integer(
-        'Related Document ID', index=True, help='Id of the followed resource')
+    res_id = fields.Many2oneReference(
+        'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
     partner_id = fields.Many2one(
         'res.partner', string='Related Partner', ondelete='cascade', index=True)
     channel_id = fields.Many2one(
@@ -46,9 +46,6 @@ class Followers(models.Model):
         for record in (vals_list or [{'res_model': rec.res_model, 'res_id': rec.res_id} for rec in self]):
             if record.get('res_id'):
                 to_invalidate[record.get('res_model')].append(record.get('res_id'))
-        # invalidate in batch for performance
-        for res_model, res_ids in to_invalidate.items():
-            self.env[res_model].invalidate_cache(ids=res_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -102,6 +99,12 @@ class Followers(models.Model):
           notification status of partner or channel (email or inbox),
           user groups of partner (void as irrelevant if channel ID),
         """
+        self.env['mail.followers'].flush(['partner_id', 'channel_id', 'subtype_ids'])
+        self.env['mail.message.subtype'].flush(['internal'])
+        self.env['res.users'].flush(['notification_type', 'active', 'partner_id', 'groups_id'])
+        self.env['res.partner'].flush(['active', 'partner_share'])
+        self.env['res.groups'].flush(['users'])
+        self.env['mail.channel'].flush(['email_send', 'channel_type'])
         if records and subtype_id:
             query = """
 WITH sub_followers AS (

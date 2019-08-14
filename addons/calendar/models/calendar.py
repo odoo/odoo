@@ -761,6 +761,8 @@ class Meeting(models.Model):
             for event in self:
                 if event.partner_ids.filtered(lambda s: s.id == partner_id):
                     event.is_highlighted = True
+                else:
+                    event.is_highlighted = False
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, tracking=True, default='draft')
@@ -1609,6 +1611,27 @@ class Meeting(models.Model):
         records = self.browse(set(get_real_ids(self.ids)))
         return super(Meeting, records).export_data(fields_to_export)
 
+    def _read(self, fields):
+        select = [(x, calendar_id2real_id(x)) for x in self.ids]
+        result = super(Meeting, self.browse(real_id for calendar_id, real_id in select))._read(fields)
+        for calendar_id, real_id in select:
+            if real_id != calendar_id:
+                calendar = self.browse(calendar_id)
+                real = self.browse(real_id)
+                ls = calendar_id2real_id(calendar_id, with_date=True)
+                for field in fields:
+                    f = self._fields[field]
+                    if field in ('start', 'start_date', 'start_datetime'):
+                        value = ls[1]
+                    elif field in ('stop', 'stop_date', 'stop_datetime'):
+                        value = ls[2]
+                    elif field == 'display_time':
+                        value = self._get_display_time(ls[1], ls[2], real.duration, real.allday)
+                    else:
+                        value = self.env.cache.get(real, f)
+                    self.env.cache.set(calendar, f, value)
+        return result
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'date' in groupby:
@@ -1633,22 +1656,7 @@ class Meeting(models.Model):
         for calendar_id, real_id in select:
             if not real_data.get(real_id):
                 continue
-            res = real_data[real_id].copy()
-            ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (str, int)) and len(ls) >= 2:
-                res['start'] = ls[1]
-                res['stop'] = ls[2]
-
-                if res['allday']:
-                    res['start_date'] = ls[1]
-                    res['stop_date'] = ls[2]
-                else:
-                    res['start_datetime'] = ls[1]
-                    res['stop_datetime'] = ls[2]
-
-                if 'display_time' in fields:
-                    res['display_time'] = self._get_display_time(ls[1], ls[2], res['duration'], res['allday'])
-
+            res = real_data[real_id]
             res['id'] = calendar_id
             result.append(res)
 

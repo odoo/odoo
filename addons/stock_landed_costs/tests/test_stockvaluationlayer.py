@@ -133,8 +133,8 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
         lc = self._make_lc(move1, 100)
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
 
-        out_svl = self.product1.stock_valuation_layer_ids[-2]
-        in_svl = self.product1.stock_valuation_layer_ids[-1]
+        out_svl = self.product1.stock_valuation_layer_ids.sorted()[-2]
+        in_svl = self.product1.stock_valuation_layer_ids.sorted()[-1]
 
         self.assertEqual(out_svl.value, -250)
         self.assertEqual(in_svl.value, 225)

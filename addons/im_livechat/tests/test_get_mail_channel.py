@@ -32,7 +32,7 @@ class TestGetMailChannel(TransactionCase):
 
         self.livechat_channel = self.env['im_livechat.channel'].create({
             'name': 'The channel',
-            'user_ids': (6, 0, self.operators.ids)
+            'user_ids': [(6, 0, self.operators.ids)]
         })
 
         operators = self.operators

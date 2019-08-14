@@ -575,7 +575,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 else:
                     groups.write({'implied_ids': [(3, implied_group.id)]})
                     implied_group.write({'users': [(3, user.id) for user in groups.users]})
-        self.recompute()
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
@@ -619,6 +618,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             else:
                 if module and module.state in ('installed', 'to upgrade'):
                     to_uninstall_modules += module
+
+        if to_install or to_uninstall_modules:
+            self.flush()
 
         if to_uninstall_modules:
             to_uninstall_modules.button_immediate_uninstall()

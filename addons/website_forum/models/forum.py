@@ -250,28 +250,28 @@ class Post(models.Model):
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access
-    karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights')
-    karma_edit = fields.Integer('Karma to edit', compute='_get_post_karma_rights')
-    karma_close = fields.Integer('Karma to close', compute='_get_post_karma_rights')
-    karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights')
-    karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights')
-    karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights')
-    karma_flag = fields.Integer('Flag a post as offensive', compute='_get_post_karma_rights')
-    can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights')
-    can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights')
-    can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights')
-    can_edit = fields.Boolean('Can Edit', compute='_get_post_karma_rights')
-    can_close = fields.Boolean('Can Close', compute='_get_post_karma_rights')
-    can_unlink = fields.Boolean('Can Unlink', compute='_get_post_karma_rights')
-    can_upvote = fields.Boolean('Can Upvote', compute='_get_post_karma_rights')
-    can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights')
-    can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
-    can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
-    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights', search='_search_can_view')
-    can_display_biography = fields.Boolean("Is the author's biography visible from his post", compute='_get_post_karma_rights')
-    can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
-    can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
-    can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
+    karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_edit = fields.Integer('Karma to edit', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_close = fields.Integer('Karma to close', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_flag = fields.Integer('Flag a post as offensive', compute='_get_post_karma_rights', compute_sudo=False)
+    can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights', compute_sudo=False)
+    can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights', compute_sudo=False)
+    can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights', compute_sudo=False)
+    can_edit = fields.Boolean('Can Edit', compute='_get_post_karma_rights', compute_sudo=False)
+    can_close = fields.Boolean('Can Close', compute='_get_post_karma_rights', compute_sudo=False)
+    can_unlink = fields.Boolean('Can Unlink', compute='_get_post_karma_rights', compute_sudo=False)
+    can_upvote = fields.Boolean('Can Upvote', compute='_get_post_karma_rights', compute_sudo=False)
+    can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights', compute_sudo=False)
+    can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights', compute_sudo=False)
+    can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights', compute_sudo=False)
+    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights', search='_search_can_view', compute_sudo=False)
+    can_display_biography = fields.Boolean("Is the author's biography visible from his post", compute='_get_post_karma_rights', compute_sudo=False)
+    can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights', compute_sudo=False)
+    can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights', compute_sudo=False)
+    can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights', compute_sudo=False)
 
     def _search_can_view(self, operator, value):
         if operator not in ('=', '!=', '<>'):
@@ -368,6 +368,7 @@ class Post(models.Model):
         for post in self:
             post.has_validated_answer = any(answer.is_correct for answer in post.child_ids)
 
+    @api.depends_context('uid')
     def _get_post_karma_rights(self):
         user = self.env.user
         is_admin = self.env.is_admin()

@@ -106,6 +106,9 @@ class ProductProduct(models.Model):
                 company_id = self.env.company.id
 
             #Cost price is calculated afterwards as it is a property
+            self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
+            self.env['account.move'].flush(['state', 'invoice_payment_state', 'type', 'invoice_date', 'company_id'])
+            self.env['product.template'].flush(['list_price'])
             sqlstr = """
                 WITH currency_rate AS ({})
                 SELECT

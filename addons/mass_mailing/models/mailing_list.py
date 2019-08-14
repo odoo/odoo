@@ -79,6 +79,8 @@ class MassMailingList(models.Model):
         self.ensure_one()
         # Put destination is sources lists if not already the case
         src_lists |= self
+        self.env['mailing.contact'].flush(['email', 'email_normalized'])
+        self.env['mailing.contact.subscription'].flush(['contact_id', 'opt_out', 'list_id'])
         self.env.cr.execute("""
             INSERT INTO mailing_contact_list_rel (contact_id, list_id)
             SELECT st.contact_id AS contact_id, %s AS list_id
@@ -110,6 +112,7 @@ class MassMailingList(models.Model):
                     )
                 ) st
             WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
+        self.flush()
         self.invalidate_cache()
         if archive:
             (src_lists - self).write({'active': False})

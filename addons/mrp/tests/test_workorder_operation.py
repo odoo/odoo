@@ -734,7 +734,7 @@ class TestWorkOrderProcess(TestMrpCommon):
 
         mo_laptop.action_confirm()
         mo_laptop.button_plan()
-        workorders = mo_laptop.workorder_ids
+        workorders = mo_laptop.workorder_ids.sorted()
         self.assertEqual(len(workorders), 3)
 
         workorders[0].button_start()

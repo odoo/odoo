@@ -64,6 +64,7 @@ class ProductAttribute(models.Model):
         if invalidate_cache:
             # prefetched o2m have to be resequenced
             # (eg. product.template: attribute_line_ids)
+            self.flush()
             self.invalidate_cache()
         return res
 
@@ -132,6 +133,7 @@ class ProductAttributeValue(models.Model):
         if invalidate_cache:
             # prefetched o2m have to be resequenced
             # (eg. product.template.attribute.line: value_ids)
+            self.flush()
             self.invalidate_cache()
         return res
 

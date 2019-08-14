@@ -46,5 +46,6 @@ class IrModelField(models.Model):
                     WHERE f.id IN %s
                 );
             """
+            self.flush()
             self.env.cr.execute(query, (tuple(self.ids),))
         return super(IrModelField, self).unlink()

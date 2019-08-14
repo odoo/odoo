@@ -61,6 +61,7 @@ class TestPurchaseOrderReport(common.TransactionCase):
         f.purchase_id = po
         invoice = f.save()
         invoice.post()
+        po.flush()
 
         res_product1 = self.PurchaseReport.search([
             ('order_id', '=', po.id), ('product_id', '=', self.product1.id)])

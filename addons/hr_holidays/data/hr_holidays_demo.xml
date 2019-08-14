@@ -194,10 +194,10 @@
     <record id="hr_holidays_cl_mit_2" model="hr.leave">
         <field name="name">Trip</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
-        <field eval="time.strftime('%Y-%m-5')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-7')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-5')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-7')" name="request_date_to"/>
+        <field eval="time.strftime('%Y-%m-05')" name="date_from"/>
+        <field eval="time.strftime('%Y-%m-07')" name="date_to"/>
+        <field eval="time.strftime('%Y-%m-05')" name="request_date_from"/>
+        <field eval="time.strftime('%Y-%m-07')" name="request_date_to"/>
         <field name="number_of_days">3</field>
         <field name="employee_id" ref="hr.employee_mit"/>
     </record>
@@ -239,10 +239,10 @@
     <record id="hr_holidays_cl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-3 1:0:0')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-5 23:0:0')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-3 1:0:0')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-5 23:0:0')" name="request_date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-03 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-05 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-03 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-05 23:00:00')" name="request_date_to"/>
         <field name="number_of_days">3</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
@@ -251,10 +251,10 @@
     <record id="hr_holidays_sl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="time.strftime('%Y-%m-1 1:0:0')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-3 23:0:0')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-1 1:0:0')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-3 23:0:0')" name="request_date_to"/>
+        <field eval="time.strftime('%Y-%m-01 01:00:00')" name="date_from"/>
+        <field eval="time.strftime('%Y-%m-03 23:00:00')" name="date_to"/>
+        <field eval="time.strftime('%Y-%m-01 01:00:00')" name="request_date_from"/>
+        <field eval="time.strftime('%Y-%m-03 23:00:00')" name="request_date_to"/>
         <field name="number_of_days">1</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
@@ -332,10 +332,10 @@
     <record id="hr_holidays_sl_vad" model="hr.leave">
         <field name="name">Doctor Appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="time.strftime('%Y-%m-25 1:0:0')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-26 23:0:0')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-25 1:0:0')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-26 23:0:0')" name="request_date_to"/>
+        <field eval="time.strftime('%Y-%m-25 01:00:00')" name="date_from"/>
+        <field eval="time.strftime('%Y-%m-26 23:00:00')" name="date_to"/>
+        <field eval="time.strftime('%Y-%m-25 01:00:00')" name="request_date_from"/>
+        <field eval="time.strftime('%Y-%m-26 23:00:00')" name="request_date_to"/>
         <field name="number_of_days">2</field>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
@@ -371,10 +371,10 @@
     <record id="hr_holidays_sl_kim" model="hr.leave">
         <field name="name">Dentist appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-1 1:0:0')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-1 23:0:0')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-1 1:0:0')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-1 23:0:0')" name="request_date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 23:00:00')" name="request_date_to"/>
         <field name="number_of_days">1</field>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
@@ -383,10 +383,10 @@
     <record id="hr_holidays_sl_kim_2" model="hr.leave">
         <field name="name">Second dentist appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-3 1:0:0')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-3 23:0:0')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-3 1:0:0')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-3 23:0:0')" name="request_date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 23:00:00')" name="request_date_to"/>
         <field name="number_of_days">1</field>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>

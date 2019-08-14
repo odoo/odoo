@@ -112,6 +112,7 @@ class ResPartnerBank(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         pos = 0
         while pos < len(args):
+            # DLE P14
             if args[pos][0] == 'acc_number':
                 op = args[pos][1]
                 value = args[pos][2]

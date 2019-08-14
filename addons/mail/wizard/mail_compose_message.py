@@ -230,6 +230,7 @@ class MailComposer(models.TransientModel):
                         new_attachment_ids.append(attachment.copy({'res_model': 'mail.compose.message', 'res_id': wizard.id}).id)
                     else:
                         new_attachment_ids.append(attachment.id)
+                new_attachment_ids.reverse()
                 wizard.write({'attachment_ids': [(6, 0, new_attachment_ids)]})
 
             # Mass Mailing
@@ -359,6 +360,7 @@ class MailComposer(models.TransientModel):
                 for attach_id in mail_values.pop('attachment_ids'):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
+                attachment_ids.reverse()
                 mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
                     mail_values.pop('attachments', []),
                     attachment_ids,
@@ -416,7 +418,7 @@ class MailComposer(models.TransientModel):
                 }
                 attachment_ids.append(Attachment.create(data_attach).id)
             if values.get('attachment_ids', []) or attachment_ids:
-                values['attachment_ids'] = [(5,)] + values.get('attachment_ids', []) + attachment_ids
+                values['attachment_ids'] = [(6, 0, values.get('attachment_ids', []) + attachment_ids)]
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)

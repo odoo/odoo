@@ -605,16 +605,16 @@ class HolidaysRequest(models.Model):
                 holiday_sudo.activity_update()
         return holiday
 
-    def _read_from_database(self, field_names, inherited_field_names=[]):
-        if 'name' in field_names and 'employee_id' not in field_names:
-            field_names.append('employee_id')
-        super(HolidaysRequest, self)._read_from_database(field_names, inherited_field_names)
-        if 'name' in field_names:
+    def _read(self, fields):
+        if 'name' in fields and 'employee_id' not in fields:
+            fields.add('employee_id')
+        super(HolidaysRequest, self)._read(fields)
+        if 'name' in fields:
             if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
                 return
             current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
             for record in self:
-                emp_id = record._cache.get('employee_id', False) and record._cache.get('employee_id')[0]
+                emp_id = record._cache.get('employee_id') or False
                 if emp_id != current_employee.id:
                     try:
                         record._cache['name']

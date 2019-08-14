@@ -1040,6 +1040,7 @@ class TestReconciliationExec(TestReconciliation):
         self.env.cr.execute('UPDATE account_partial_reconcile SET create_date = %(date)s WHERE id = %(partial_id)s',
             {'date': invoice.invoice_date,
              'partial_id': statement_partial_id.id})
+        statement.flush()
 
         # Case 1: report date is invoice date
         # There should be an entry for the partner
@@ -1249,6 +1250,7 @@ class TestReconciliationExec(TestReconciliation):
         })
         payment_move.post()
 
+        (purchase_move + payment_move).invalidate_cache(['line_ids'])
         to_reconcile = (purchase_move + payment_move).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable')
         to_reconcile.reconcile()
 
@@ -1258,15 +1260,17 @@ class TestReconciliationExec(TestReconciliation):
         self.assertTrue(cash_basis_moves.exists())
 
         # check reconciliation in Payable account
-        self.assertTrue(purchase_move.line_ids[0].full_reconcile_id.exists())
-        self.assertEqual(purchase_move.line_ids[0].full_reconcile_id.reconciled_line_ids,
-             purchase_move.line_ids[0] + purchase_move.line_ids[1] + payment_move.line_ids[0])
+        purchase_move_line_ids = purchase_move.line_ids.sorted()
+        payment_move_line_ids = payment_move.line_ids.sorted()
+        self.assertTrue(purchase_move_line_ids[0].full_reconcile_id.exists())
+        self.assertEqual(purchase_move_line_ids[0].full_reconcile_id.reconciled_line_ids,
+             purchase_move_line_ids[0] + purchase_move_line_ids[1] + payment_move_line_ids[0])
 
         cash_basis_aml_ids = cash_basis_moves.mapped('line_ids')
         # check reconciliation in the tax waiting account
-        self.assertTrue(purchase_move.line_ids[4].full_reconcile_id.exists())
-        self.assertEqual(purchase_move.line_ids[4].full_reconcile_id.reconciled_line_ids,
-            cash_basis_aml_ids.filtered(lambda l: l.account_id == self.tax_waiting_account) + purchase_move.line_ids[4])
+        self.assertTrue(purchase_move_line_ids[4].full_reconcile_id.exists())
+        self.assertEqual(purchase_move_line_ids[4].full_reconcile_id.reconciled_line_ids,
+            cash_basis_aml_ids.filtered(lambda l: l.account_id == self.tax_waiting_account) + purchase_move_line_ids[4])
 
         self.assertEqual(len(cash_basis_aml_ids), 8)
 
@@ -1362,8 +1366,8 @@ class TestReconciliationExec(TestReconciliation):
         })
         payment_move1.post()
 
-        (purchase_move + payment_move0).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
-        (purchase_move + payment_move1).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
+        (purchase_move + payment_move0).mapped('line_ids').sorted().filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
+        (purchase_move + payment_move1).mapped('line_ids').sorted().filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
 
         cash_basis_moves = self.env['account.move'].search([('journal_id', '=', self.cash_basis_journal.id)])
 
@@ -1371,20 +1375,21 @@ class TestReconciliationExec(TestReconciliation):
         self.assertTrue(cash_basis_moves.exists())
 
         # check reconciliation in Payable account
-        self.assertTrue(purchase_move.line_ids[0].full_reconcile_id.exists())
-        self.assertEqual(purchase_move.line_ids[0].full_reconcile_id.reconciled_line_ids,
+        purchase_move_line_ids = purchase_move.line_ids.sorted()
+        self.assertTrue(purchase_move_line_ids[0].full_reconcile_id.exists())
+        self.assertEqual(purchase_move_line_ids[0].full_reconcile_id.reconciled_line_ids,
             (purchase_move + payment_move0 + payment_move1).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable'))
 
         cash_basis_aml_ids = cash_basis_moves.mapped('line_ids')
 
         # check reconciliation in the tax waiting account
-        self.assertTrue(purchase_move.line_ids[3].full_reconcile_id.exists())
-        self.assertEqual(purchase_move.line_ids[3].full_reconcile_id.reconciled_line_ids,
-            cash_basis_aml_ids.filtered(lambda l: l.account_id == tax_waiting_account10) + purchase_move.line_ids[3])
+        self.assertTrue(purchase_move_line_ids[3].full_reconcile_id.exists())
+        self.assertEqual(purchase_move_line_ids[3].full_reconcile_id.reconciled_line_ids,
+            cash_basis_aml_ids.filtered(lambda l: l.account_id == tax_waiting_account10) + purchase_move_line_ids[3])
 
-        self.assertTrue(purchase_move.line_ids[5].full_reconcile_id.exists())
-        self.assertEqual(purchase_move.line_ids[5].full_reconcile_id.reconciled_line_ids,
-            cash_basis_aml_ids.filtered(lambda l: l.account_id == self.tax_waiting_account) + purchase_move.line_ids[5])
+        self.assertTrue(purchase_move_line_ids[5].full_reconcile_id.exists())
+        self.assertEqual(purchase_move_line_ids[5].full_reconcile_id.reconciled_line_ids,
+            cash_basis_aml_ids.filtered(lambda l: l.account_id == self.tax_waiting_account) + purchase_move_line_ids[5])
 
         self.assertEqual(len(cash_basis_aml_ids), 24)
 
@@ -1582,10 +1587,13 @@ class TestReconciliationExec(TestReconciliation):
         to_reconcile.reconcile()
 
         # check reconciliation in Payable account
-        self.assertTrue(purchase_move.line_ids[2].full_reconcile_id.exists())
+        purchase_line_ids = purchase_move.line_ids.sorted()
+        fx_move_01_line_ids = fx_move_01.line_ids.sorted()
+        payment_move_line_ids = payment_move.line_ids.sorted()
+        self.assertTrue(purchase_line_ids[2].full_reconcile_id.exists())
         self.assertEqual(
-            purchase_move.line_ids[2].full_reconcile_id.reconciled_line_ids,
-            purchase_move.line_ids[2] + fx_move_01.line_ids[0] + payment_move.line_ids[0])
+            purchase_line_ids[2].full_reconcile_id.reconciled_line_ids,
+            purchase_line_ids[2] + fx_move_01_line_ids[0] + payment_move_line_ids[0])
 
         # check cash basis
         cash_basis_moves = self.env['account.move'].search(
@@ -1761,11 +1769,15 @@ class TestReconciliationExec(TestReconciliation):
         to_reconcile.reconcile()
 
         # check reconciliation in Payable account
-        self.assertTrue(purchase_move.line_ids[2].full_reconcile_id.exists())
+        purchase_move_line_ids = purchase_move.line_ids.sorted()
+        fx_move_01_line_ids = fx_move_01.line_ids.sorted()
+        fx_move_02_line_ids = fx_move_02.line_ids.sorted()
+        payment_move_line_ids = payment_move.line_ids.sorted()
+        self.assertTrue(purchase_move_line_ids[2].full_reconcile_id.exists())
         self.assertEqual(
-            purchase_move.line_ids[2].full_reconcile_id.reconciled_line_ids,
-            purchase_move.line_ids[2] + fx_move_01.line_ids[0] + fx_move_02.line_ids[0] +
-            payment_move.line_ids[0])
+            purchase_move_line_ids[2].full_reconcile_id.reconciled_line_ids,
+            purchase_move_line_ids[2] + fx_move_01_line_ids[0] + fx_move_02_line_ids[0] +
+            payment_move_line_ids[0])
 
         # check cash basis
         cash_basis_moves = self.env['account.move'].search(
@@ -2059,7 +2071,7 @@ class TestReconciliationExec(TestReconciliation):
             'mv_line_ids': [move_payment_lines[1].id, move_product_lines[1].id],
             'new_mv_line_dicts': [{
                 'account_id': liquidity_account.id,
-                'analytic_tag_ids': [6, None, []],
+                'analytic_tag_ids': [(6, None, [])],
                 'credit': 0,
                 'date': time.strftime('%Y') + '-01-01',
                 'debit': 15.0,

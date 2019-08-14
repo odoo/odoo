@@ -54,6 +54,7 @@ class TestCertificationBadge(common.SurveyCase, HttpCase):
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
                 self.certification_survey.write({'certification_give_badge': True})
+                self.certification_survey.flush(['certification_give_badge'])
 
     def test_remove_badge_with_give_badge(self):
         self.certification_survey.write({
@@ -63,6 +64,7 @@ class TestCertificationBadge(common.SurveyCase, HttpCase):
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
                 self.certification_survey.write({'certification_badge_id': None})
+                self.certification_survey.flush(['certification_badge_id'])
 
     def test_remove_badge_with_give_badge_multi(self):
         self.certification_survey.write({
@@ -80,6 +82,7 @@ class TestCertificationBadge(common.SurveyCase, HttpCase):
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
                 surveys.write({'certification_badge_id': None})
+                surveys.flush(['certification_badge_id'])
 
     def test_set_same_badge_on_multiple_survey(self):
         self.certification_survey.write({
@@ -93,6 +96,7 @@ class TestCertificationBadge(common.SurveyCase, HttpCase):
                     'certification_give_badge': True,
                     'certification_badge_id': self.certification_badge.id
                 })
+                self.certification_survey.flush()
 
     def test_badge_configuration(self):
         # add a certification badge on a new survey
