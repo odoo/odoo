@@ -21,7 +21,7 @@ class RatingParentMixin(models.AbstractModel):
         domain = [('parent_res_model', '=', self._name), ('parent_res_id', 'in', self.ids), ('rating', '>=', 1), ('consumed', '=', True)]
         if self._rating_satisfaction_days:
             domain += [('write_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=self._rating_satisfaction_days)))]
-        data = self.env['rating.rating'].read_group(domain, ['parent_res_id', 'rating'], ['parent_res_id', 'rating'], lazy=False)
+        data = self.env['rating.rating'].sudo().read_group(domain, ['parent_res_id', 'rating'], ['parent_res_id', 'rating'], lazy=False)
 
         # get repartition of grades per parent id
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
@@ -46,10 +46,10 @@ class RatingMixin(models.AbstractModel):
     _name = 'rating.mixin'
     _description = "Rating Mixin"
 
-    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
-    rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
-    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback', readonly=False)
-    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image', readonly=False)
+    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', groups="base.group_user", domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
+    rating_last_value = fields.Float('Rating Last Value', groups="base.group_user", compute='_compute_rating_last_value', compute_sudo=True, store=True)
+    rating_last_feedback = fields.Text('Rating Last Feedback', groups="base.group_user", related='rating_ids.feedback', readonly=False)
+    rating_last_image = fields.Binary('Rating Last Image', groups="base.group_user", related='rating_ids.rating_image', readonly=False)
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats")
     rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats')
 
@@ -64,7 +64,7 @@ class RatingMixin(models.AbstractModel):
     def _compute_rating_stats(self):
         """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
         domain = self._rating_domain()
-        read_group_res = self.env['rating.rating'].read_group(domain, ['rating:avg'], groupby=['res_id'], lazy=False)  # force average on rating column
+        read_group_res = self.env['rating.rating'].sudo().read_group(domain, ['rating:avg'], groupby=['res_id'], lazy=False)  # force average on rating column
         mapping = {item['res_id']: {'rating_count': item['__count'], 'rating_avg': item['rating']} for item in read_group_res}
         for record in self:
             record.rating_count = mapping.get(record.id, {}).get('rating_count', 0)
@@ -77,10 +77,10 @@ class RatingMixin(models.AbstractModel):
             result = super(RatingMixin, self).write(values)
             for record in self:
                 if record._rec_name in values:  # set the res_name of ratings to be recomputed
-                    res_name_field = self.env['rating.rating']._fields['res_name']
-                    record.rating_ids._recompute_todo(res_name_field)
+                    res_name_field = self.env['rating.rating'].sudo()._fields['res_name']
+                    record.rating_ids.sudo()._recompute_todo(res_name_field)
                 if record._rating_get_parent_field_name() in values:
-                    record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
+                    record.rating_ids.sudo().write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         if self.env.recompute and self._context.get('recompute', True):  # trigger the recomputation of all field marked as "to recompute"
             self.recompute()
@@ -119,7 +119,7 @@ class RatingMixin(models.AbstractModel):
         if not partner:
             partner = self.rating_get_partner_id()
         rated_partner = self.rating_get_rated_partner_id()
-        ratings = self.rating_ids.filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
+        ratings = self.rating_ids.sudo().filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
             record_model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1).id
             rating = self.env['rating.rating'].create({
@@ -174,7 +174,7 @@ class RatingMixin(models.AbstractModel):
         """
         Rating, rating = self.env['rating.rating'], None
         if token:
-            rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
+            rating = Rating.search([('access_token', '=', token)], limit=1)
         else:
             rating = Rating.search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
         if rating:
@@ -209,7 +209,7 @@ class RatingMixin(models.AbstractModel):
         base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
         if domain:
             base_domain += domain
-        data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
+        data = self.env['rating.rating'].sudo().read_group(base_domain, ['rating'], ['rating', 'res_id'])
         # init dict with all posible rate value, except 0 (no value for the rating)
         values = dict.fromkeys(range(1, 11), 0)
         values.update((d['rating'], d['rating_count']) for d in data)

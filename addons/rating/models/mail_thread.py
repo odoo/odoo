@@ -13,7 +13,7 @@ class MailThread(models.AbstractModel):
         message = super(MailThread, self).message_post(**kwargs)
         if rating_value:
             ir_model = self.env['ir.model'].sudo().search([('model', '=', self._name)])
-            self.env['rating.rating'].create({
+            self.env['rating.rating'].sudo().create({
                 'rating': float(rating_value) if rating_value is not None else False,
                 'res_model_id': ir_model.id,
                 'res_id': self.id,

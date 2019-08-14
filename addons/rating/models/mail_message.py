@@ -12,7 +12,7 @@ class MailMessage(models.Model):
 
     @api.depends('rating_ids', 'rating_ids.rating')
     def _compute_rating_value(self):
-        ratings = self.env['rating.rating'].search([('message_id', 'in', self.ids), ('consumed', '=', True)], order='create_date DESC')
+        ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', self.ids), ('consumed', '=', True)], order='create_date DESC')
         mapping = dict((r.message_id.id, r.rating) for r in ratings)
         for message in self:
             message.rating_value = mapping.get(message.id, 0.0)
