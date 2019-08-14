@@ -27,9 +27,14 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
-                            <div t-attf-class="o_kanban_card_header">
+                            <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
-                                    <div class="o_primary col-12"><t t-esc="record.name.value"/></div>
+                                    <div class="o_primary col-12">
+                                        <span><t t-esc="record.name.value"/></span>
+                                    </div>
+                                    <div class="o_kanban_record_subtitle col-12 text-muted">
+                                        <field name="user_id" />
+                                    </div>
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                     <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
                                         <small> <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/> </small>
@@ -43,14 +48,14 @@
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
                                         <div class="col-6">
-                                            <button class="btn btn-secondary" name="%(action_hr_job_applications)d" type="action">Applications</button>
+                                            <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
+                                                <field name="application_count"/> Applications
+                                            </button>
                                         </div>
                                         <div class="col-6">
                                             <field name="new_application_count"/> New Applications <br/>
-                                            <field name="no_of_hired_employee"/> Hired Employees
+                                            <field name="no_of_recruitment"/> To Recruit
                                         </div>
-                                    </div>
-                                    <div name="kanban_boxes" class="row o_recruitment_kanban_boxes">
                                     </div>
                                 </t>
                                 <t t-if="record.state.raw_value == 'open'">
@@ -60,6 +65,14 @@
                                         </div>
                                     </div>
                                 </t>
+                                <div name="kanban_boxes" class="row o_recruitment_kanban_boxes">
+                                    <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block" style="padding-left:8px;">
+                                        <div class="col-6"></div>
+                                        <div class="col-6">
+                                            <a type="action" name="%(action_hr_job_sources)d">Share Trackers</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="o_kanban_card_manage_section">
@@ -88,6 +101,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
+            </xpath>
+            <xpath expr="//group" position="after">
+                <searchpanel>
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                    <field name="user_id" icon="fa-users"/>
+                </searchpanel>
             </xpath>
         </field>
     </record>

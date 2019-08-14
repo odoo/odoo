@@ -59,7 +59,6 @@ var Chatter = Widget.extend({
 
         this.attachments = {};
         this.fields = {};
-
         this._areAttachmentsLoaded = false;
         this._disableAttachmentBox = !!options.disable_attachment_box;
         this._dp = new concurrency.DropPrevious();
@@ -84,6 +83,7 @@ var Chatter = Widget.extend({
             this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
             this.reloadOnUploadAttachment = this.postRefresh === 'always';
+            this.openAttachments = nodeOptions.open_attachments || false;
         }
     },
     /**
@@ -390,6 +390,9 @@ var Chatter = Widget.extend({
             // disable widgets in create mode, otherwise enable
             self._isCreateMode ? self._disableChatter() : self._enableChatter();
             $spinner.remove();
+            if (self.openAttachments) {
+                self._onClickAttachmentButton();
+            }
         };
 
         return def.then(function () {
