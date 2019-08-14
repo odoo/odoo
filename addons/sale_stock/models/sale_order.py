@@ -264,7 +264,7 @@ class SaleOrderLine(models.Model):
         remaining.free_qty_today = False
         remaining.qty_available_today = False
 
-    @api.depends('product_id', 'route_id', 'order_id.warehouse_id')
+    @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
         """ Verify the route of the product based on the warehouse
             set 'is_available' at True if the product availibility in stock does
@@ -278,18 +278,18 @@ class SaleOrderLine(models.Model):
             product_routes = line.route_id or (product.route_ids + product.categ_id.total_route_ids)
 
             # Check MTO
-            wh_mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
-            if wh_mto_route and wh_mto_route.mapped('sequence') <= product_routes.mapped('sequence'):
-                line.is_mto = True
-            else:
-                mto_route = False
+            mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
+            if not mto_route:
                 try:
                     mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
                 except UserError:
                     # if route MTO not found in ir_model_data, we treat the product as in MTS
                     pass
-                if mto_route and mto_route in product_routes:
-                    line.is_mto = True
+
+            if mto_route and mto_route in product.route_ids:
+                line.is_mto = True
+            else:
+                line.is_mto = False
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
