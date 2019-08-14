@@ -135,17 +135,25 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
          * @param {MouseEvent} ev
          */
         _onClickMore: function (ev) {
+            var self = this;
             ev.preventDefault();
-            this.do_action({
-                name: _t('Users'),
-                type: 'ir.actions.act_window',
-                view_mode: 'tree,form',
-                res_model: 'res.users',
-                domain: [['log_ids', '=', false]],
-                context: {
-                    search_default_no_share: true,
-                },
-                views: [[false, 'list'], [false, 'form']],
+            this._rpc({
+                model: 'ir.model.data',
+                method: 'xmlid_to_res_model_res_id',
+                args: ["base.view_users_form"],
+            })
+            .then(function (data) {
+                self.do_action({
+                    name: _t('Users'),
+                    type: 'ir.actions.act_window',
+                    view_mode: 'tree,form',
+                    res_model: 'res.users',
+                    domain: [['log_ids', '=', false]],
+                    context: {
+                        search_default_no_share: true,
+                    },
+                    views: [[false, 'list'], [data[1], 'form']],
+                });
             });
         },
         /**
@@ -153,14 +161,22 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
          * @param {MouseEvent} ev
          */
         _onClickUser: function (ev) {
+            var self = this;
             ev.preventDefault();
             var user_id = $(ev.currentTarget).data('user-id');
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: 'res.users',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                res_id: user_id,
+            this._rpc({
+                model: 'ir.model.data',
+                method: 'xmlid_to_res_model_res_id',
+                args: ["base.view_users_form"],
+            })
+            .then(function (data) {
+                self.do_action({
+                    type: 'ir.actions.act_window',
+                    res_model: 'res.users',
+                    view_mode: 'form',
+                    res_id: user_id,
+                    views: [[data[1], 'form']],
+                });
             });
         },
         /**
