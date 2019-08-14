@@ -43,6 +43,12 @@ class StockMove(models.Model):
             subcontractor=self.picking_id.partner_id,
         )
         return bom
+    def write(self, values):
+        res = super(StockMove, self).write(values)
+        if 'product_uom_qty' in values:
+            self.filtered(lambda m: m.is_subcontract and
+            m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty()
+        return res
 
     def _action_confirm(self, merge=True, merge_into=False):
         subcontract_details_per_picking = defaultdict(list)
@@ -62,3 +68,12 @@ class StockMove(models.Model):
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
         return super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
+
+    def _update_subcontract_order_qty(self):
+        for move in self:
+            production = move.move_orig_ids.production_id
+            if production:
+                self.env['change.production.qty'].with_context(skip_activity=True).create({
+                    'mo_id': production.id,
+                    'product_qty': move.product_uom_qty
+                }).change_prod_qty()
