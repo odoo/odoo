@@ -3,18 +3,24 @@
         <table class="o_view_grid o_product_variant_grid table table-sm table-striped table-bordered">
             <thead>
                 <tr>
-                    <th t-foreach="header" t-as="column_header" class="o_grid_title_header text-center">
-                        <span t-esc="column_header.name"/>
-                        <t t-call="product_matrix.extra_price">
-                            <t t-set="price" t-value="column_header.price"/>
-                        </t>
-                    </th>
+                    <t t-foreach="header" t-as="column_header">
+                        <th t-if="column_header_first" class="o_grid_title_header text-left">
+                            <!-- First column is aligned left (product name and row names) -->
+                            <span t-esc="column_header.name"/>
+                        </th>
+                        <th t-else="" class="o_grid_title_header text-center">
+                            <span t-esc="column_header.name"/>
+                            <t t-call="product_matrix.extra_price">
+                                <t t-set="price" t-value="column_header.price"/>
+                            </t>
+                        </th>
+                    </t>
                 </tr>
             </thead>
             <tbody>
                 <tr t-foreach="rows" t-as="row">
                     <t t-foreach="row" t-as="cell">
-                        <td t-if="cell.name" class="text-center">
+                        <td t-if="cell.name" class="text-left">
                             <strong t-esc="cell.name"/>
                             <t t-call="product_matrix.extra_price">
                                 <t t-set="price" t-value="cell.price"/>
