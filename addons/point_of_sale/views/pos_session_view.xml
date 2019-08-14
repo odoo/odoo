@@ -13,13 +13,13 @@
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
                     <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
                         class="oe_highlight"/>
-                    <button name="action_pos_session_closing_control" type="object" string="End of Session"
+                    <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
+                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
                         attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
+                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
                         class="oe_highlight"/>
 
                     <field name="state" widget="statusbar" statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1" />

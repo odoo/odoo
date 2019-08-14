@@ -19,6 +19,7 @@ from glob import glob
 from base64 import b64decode
 from pathlib import Path
 import socket
+import ctypes
 
 from odoo import http, _
 from odoo.modules.module import get_resource_path
@@ -379,6 +380,7 @@ class Manager(Thread):
         while 1:
             updated_devices = self.usb_loop()
             updated_devices.update(self.video_loop())
+            updated_devices.update(mpdm.devices)
             updated_devices.update(bt_devices)
             updated_devices.update(socket_devices)
             updated_devices.update(self.serial_loop())
@@ -441,10 +443,45 @@ class SocketManager(Thread):
                 iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
                 socket_devices[addr[0]] = iot_device
 
+class MPDManager(Thread):
+    def __init__(self):
+        super(MPDManager, self).__init__()
+        self.devices = {}
+        self.mpd_session = ctypes.c_void_p()
+
+    def run(self):
+        eftapi.EFT_CreateSession(ctypes.byref(self.mpd_session))
+        eftapi.EFT_PutDeviceId(self.mpd_session, terminal_id.encode())
+        while True:
+            if self.terminal_connected(terminal_id):
+                self.devices[terminal_id] = IoTDevice(terminal_id, 'mpd')
+            elif terminal_id in self.devices:
+                self.devices = {}
+            time.sleep(20)
+
+    def terminal_connected(self, terminal_id):
+        eftapi.EFT_QueryStatus(self.mpd_session)
+        eftapi.EFT_Complete(self.mpd_session, 1)  # Needed to read messages from driver
+        device_status = ctypes.c_long()
+        eftapi.EFT_GetDeviceStatusCode(self.mpd_session, ctypes.byref(device_status))
+        return device_status.value in [0, 1]
+
+
 conn = cups_connection()
 PPDs = conn.getPPDs()
 printers = conn.getPrinters()
 cups_lock = Lock()  # We can only make one call to Cups at a time
+
+mpdm = MPDManager()
+terminal_id = read_file_first_line('odoo-six-payment-terminal.conf')
+if terminal_id:
+    try:
+        subprocess.check_output(["pidof", "eftdvs"])  # Check if MPD server is running
+    except subprocess.CalledProcessError:
+        subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/"])  # Start MPD server
+    eftapi = ctypes.CDLL("eftapi.so")  # Library given by Six
+    mpdm.daemon = True
+    mpdm.start()
 
 m = Manager()
 m.daemon = True
