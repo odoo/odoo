@@ -9,6 +9,28 @@ from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestSaleStock(TestSale):
+    def _get_new_sale_order(self, amount=10.0):
+        """ Creates and returns a sale order with one default order line.
+
+        :param float amount: quantity of product for the order line (10 by default)
+        """
+        partner = self.env.ref('base.res_partner_1')
+        product = self.env.ref('product.product_delivery_01')
+        sale_order_vals = {
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': partner.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': amount,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price})],
+            'pricelist_id': self.env.ref('product.list0').id,
+        }
+        sale_order = self.env['sale.order'].create(sale_order_vals)
+        return sale_order
+
     def test_00_sale_stock_invoice(self):
         """
         Test SO's changes when playing around with stock moves, quants, pack operations, pickings
@@ -606,3 +628,71 @@ class TestSaleStock(TestSale):
             ],
         })
         self.assertEqual(so.order_line.mapped('free_qty_today'), [10, 5, 0])
+
+    def test_11_return_with_refund(self):
+        """ Creates a sale order, valids it and its delivery, then creates a
+        return. The return must refund by default and the sale order delivered
+        quantity must be updated.
+        """
+        # Creates a sale order for 10 products.
+        sale_order = self._get_new_sale_order()
+        # Valids the sale order, then valids the delivery.
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.picking_ids)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        picking = sale_order.picking_ids
+        picking.move_lines.write({'quantity_done': 10})
+        picking.button_validate()
+
+        # Checks the delivery amount (must be 10).
+        self.assertEqual(sale_order.order_line.qty_delivered, 10)
+        # Creates a return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Checks the field `to_refund` is checked (must be checked by default).
+        self.assertEqual(return_wizard.product_return_moves.to_refund, True)
+        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+
+        # Valids the return picking.
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_lines.write({'quantity_done': 10})
+        return_picking.button_validate()
+        # Checks the delivery amount (must be 0).
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+
+    def test_12_return_without_refund(self):
+        """ Do the exact thing than in `test_11_return_with_refund` except we
+        set on False the refund and checks the sale order delivered quantity
+        isn't changed.
+        """
+        # Creates a sale order for 10 products.
+        sale_order = self._get_new_sale_order()
+        # Valids the sale order, then valids the delivery.
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.picking_ids)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        picking = sale_order.picking_ids
+        picking.move_lines.write({'quantity_done': 10})
+        picking.button_validate()
+
+        # Checks the delivery amount (must be 10).
+        self.assertEqual(sale_order.order_line.qty_delivered, 10)
+        # Creates a return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Checks the field `to_refund` is checked, then unchecks it.
+        self.assertEqual(return_wizard.product_return_moves.to_refund, True)
+        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        return_wizard.product_return_moves.to_refund = False
+        # Valids the return picking.
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_lines.write({'quantity_done': 10})
+        return_picking.button_validate()
+        # Checks the delivery amount (must still be 10).
+        self.assertEqual(sale_order.order_line.qty_delivered, 10)
