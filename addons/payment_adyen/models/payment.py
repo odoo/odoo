@@ -73,7 +73,7 @@ class AcquirerAdyen(models.Model):
         """ Generate the shasign for incoming or outgoing communications., when using the SHA-256
         signature.
 
-        :param string inout: 'in' (odoo contacting ogone) or 'out' (adyen
+        :param string inout: 'in' (odoo contacting adyen) or 'out' (adyen
                              contacting odoo). In this last case only some
                              fields should be contained (see e-Commerce basic)
         :param dict values: transaction values
@@ -122,7 +122,7 @@ class AcquirerAdyen(models.Model):
         """ Generate the shasign for incoming or outgoing communications, when using the SHA-1
         signature (deprecated by Adyen).
 
-        :param string inout: 'in' (odoo contacting ogone) or 'out' (adyen
+        :param string inout: 'in' (odoo contacting adyen) or 'out' (adyen
                              contacting odoo). In this last case only some
                              fields should be contained (see e-Commerce basic)
         :param dict values: transaction values
@@ -191,7 +191,9 @@ class AcquirerAdyen(models.Model):
         return values
 
     def adyen_get_form_action_url(self):
-        return self._get_adyen_urls(self.environment)['adyen_form_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_adyen_urls(environment)['adyen_form_url']
 
 
 class TxAdyen(models.Model):

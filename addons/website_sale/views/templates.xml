@@ -1599,8 +1599,8 @@
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <div t-attf-class="card #{
                 (payment_tx_id.state == 'pending' and 'bg-info') or
-                (payment_tx_id.state == 'done' and 'bg-success') or
-                (payment_tx_id.state == 'authorized' and 'bg-success') or
+                (payment_tx_id.state == 'done' and 'alert-success') or
+                (payment_tx_id.state == 'authorized' and 'alert-success') or
                 'bg-danger'}">
                 <div class="card-header">
                     <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-right" target="_blank" aria-label="Edit" title="Edit"
@@ -1611,24 +1611,17 @@
                         <t t-raw="payment_tx_id.acquirer_id.pending_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'done'">
-                        <t t-raw="payment_tx_id.acquirer_id.done_msg"/>
+                        <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'cancel'">
                         <t t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
-                    </t>
-                    <t t-if="payment_tx_id.state == 'error'">
-                        <span t-if="payment_tx_id.acquirer_id.error_msg" t-raw="payment_tx_id.acquirer_id.error_msg"/>
-                        <span t-else="">An error occured while processing your payment. Please try again or contact your administrator.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
                         <span>Your payment has been authorized.</span>
                     </t>
                 </div>
-                <div t-if="payment_tx_id.acquirer_id.post_msg" class="card-body">
-                    <t t-raw="payment_tx_id.acquirer_id.post_msg" />
-                    <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference">
-                        <b>Communication: </b><span t-esc='order.reference'/>
-                    </div>
+                <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
+                    <b>Communication: </b><span t-esc='order.reference'/>
                 </div>
                 <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.partner_id.country_id.code in ['BE', 'AT', 'DE', 'FI', 'NL']) and (payment_tx_id.currency_id.name == 'EUR')">
                     <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">

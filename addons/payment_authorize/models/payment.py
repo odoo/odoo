@@ -125,7 +125,8 @@ class PaymentAcquirerAuthorize(models.Model):
 
     def authorize_get_form_action_url(self):
         self.ensure_one()
-        return self._get_authorize_urls(self.environment)['authorize_form_url']
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_authorize_urls(environment)['authorize_form_url']
 
     @api.model
     def authorize_s2s_form_process(self, data):

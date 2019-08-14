@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class TransferPaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('transfer', 'Wire Transfer')], default='transfer')
+    provider = fields.Selection(selection_add=[('transfer', 'Manual Payment')], default='transfer')
 
     @api.model
     def _create_missing_journal_for_acquirers(self, company=None):
@@ -52,17 +52,17 @@ class TransferPaymentAcquirer(models.Model):
 
     @api.model
     def create(self, values):
-        """ Hook in create to create a default post_msg. This is done in create
-        to have access to the name and other creation values. If no post_msg
-        or a void post_msg is given at creation, generate a default one. """
-        if values.get('provider') == 'transfer' and not values.get('post_msg'):
-            values['post_msg'] = self._format_transfer_data()
+        """ Hook in create to create a default pending_msg. This is done in create
+        to have access to the name and other creation values. If no pending_msg
+        or a void pending_msg is given at creation, generate a default one. """
+        if values.get('provider') == 'transfer' and not values.get('pending_msg'):
+            values['pending_msg'] = self._format_transfer_data()
         return super(TransferPaymentAcquirer, self).create(values)
 
     def write(self, values):
-        """ Hook in write to create a default post_msg. See create(). """
-        if all(not acquirer.post_msg and acquirer.provider != 'transfer' for acquirer in self) and values.get('provider') == 'transfer':
-            values['post_msg'] = self._format_transfer_data()
+        """ Hook in write to create a default pending_msg. See create(). """
+        if not values.get('pending_msg', False) and all(not acquirer.pending_msg and acquirer.provider != 'transfer' for acquirer in self) and values.get('provider') == 'transfer':
+            values['pending_msg'] = self._format_transfer_data()
         return super(TransferPaymentAcquirer, self).write(values)
 
 

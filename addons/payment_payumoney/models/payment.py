@@ -75,7 +75,8 @@ class PaymentAcquirerPayumoney(models.Model):
 
     def payumoney_get_form_action_url(self):
         self.ensure_one()
-        return self._get_payumoney_urls(self.environment)['payumoney_form_url']
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_payumoney_urls(environment)['payumoney_form_url']
 
 
 class PaymentTransactionPayumoney(models.Model):

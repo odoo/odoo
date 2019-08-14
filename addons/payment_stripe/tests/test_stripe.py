@@ -10,13 +10,18 @@ class StripeCommon(PaymentAcquirerCommon):
     def setUp(self):
         super(StripeCommon, self).setUp()
         self.stripe = self.env.ref('payment.payment_acquirer_stripe')
+        self.stripe.write({
+            'stripe_secret_key': 'dummy',
+            'stripe_publishable_key': 'dummy',
+            'state': 'test',
+        })
 
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
 class StripeTest(StripeCommon):
 
     def test_10_stripe_s2s(self):
-        self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
+        self.assertEqual(self.stripe.state, 'test', 'test without test environment')
 
         # Add Stripe credentials
         self.stripe.write({
@@ -51,7 +56,7 @@ class StripeTest(StripeCommon):
         self.assertEqual(tx.state, 'done', 'Stripe: Transcation has been discarded.')
 
     def test_20_stripe_form_render(self):
-        self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
+        self.assertEqual(self.stripe.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -63,7 +68,7 @@ class StripeTest(StripeCommon):
         self.assertIn(self.buyer_values.get('partner_email'), res, 'Stripe: email input not found in rendered template')
 
     def test_30_stripe_form_management(self):
-        self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
+        self.assertEqual(self.stripe.state, 'test', 'test without test environment')
 
         # typical data posted by Stripe after client has successfully paid
         stripe_post_data = {

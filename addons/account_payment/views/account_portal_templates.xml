@@ -132,8 +132,7 @@
             <t t-if="success == 'pay_invoice'">
                 <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
-                <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-                <div t-if="payment_tx_id.acquirer_id.post_msg and payment_tx_id.acquirer_id.provider == 'transfer' and invoice.ref">
+                <div t-if="payment_tx_id.acquirer_id.pending_msg and payment_tx_id.acquirer_id.provider == 'transfer' and invoice.ref">
                     <b>Communication: </b><span t-esc='invoice.ref'/>
                 </div>
             </t>
