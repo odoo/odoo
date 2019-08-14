@@ -439,17 +439,20 @@ ListRenderer.include({
         var recordWidgets = this.allFieldWidgets[recordID];
         toggleWidgets(true);
 
-        var prom = new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             self.trigger_up('save_line', {
                 recordID: recordID,
                 onSuccess: resolve,
                 onFailure: reject,
             });
-        });
-        prom.guardedCatch(function() {
+        }).then(function (changedFields) {
+            // If any field has changed and if the list is in multiple edition,
+            // we send a truthy boolean to _selectRow to tell it not to select
+            // the following record.
+            return changedFields && changedFields.length && self.inMultipleRecordEdition(recordID);
+        }).guardedCatch(function () {
             toggleWidgets(false);
         });
-        return prom;
 
         function toggleWidgets(disabled) {
             _.each(recordWidgets, function (widget) {
@@ -1058,7 +1061,10 @@ ListRenderer.include({
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
-        return this.unselectRow().then(function () {
+        return this.unselectRow().then(function (noSelectNext) {
+            if (noSelectNext) {
+                return Promise.resolve();
+            }
             if (!recordId) {
                 // The row to selected doesn't exist anymore (probably because
                 // an onchange triggered when unselecting the previous one
