@@ -140,7 +140,7 @@ QUnit.module('GroupByMenu', {
                         assert.strictEqual(ev.data.hasOptions, true);
                         assert.deepEqual(ev.data.options, controlPanelViewParameters.INTERVAL_OPTIONS);
                         assert.strictEqual(ev.data.defaultOptionId, controlPanelViewParameters.DEFAULT_INTERVAL);
-                        assert.strictEqual(ev.data.currentOptionId, false);
+                        assert.strictEqual(ev.data.currentOptionIds.size, 0);
                         groupByMenu.update([{
                             description: 'Super Date',
                             fieldName: 'fieldName',
@@ -148,7 +148,7 @@ QUnit.module('GroupByMenu', {
                             isActive: true,
                             hasOptions: true,
                             options: controlPanelViewParameters.INTERVAL_OPTIONS,
-                            currentOptionId: controlPanelViewParameters.DEFAULT_INTERVAL,
+                            currentOptionIds: new Set([controlPanelViewParameters.DEFAULT_INTERVAL]),
                         }]);
                     },
                 },

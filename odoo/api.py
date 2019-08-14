@@ -170,8 +170,10 @@ def onchange(*args):
 
             return {
                 'domain': {'other_id': [('partner_id', '=', partner_id)]},
-                'warning': {'title': "Warning", 'message': "What is this?"},
+                'warning': {'title': "Warning", 'message': "What is this?", 'type': 'notification'},
             }
+            If the type is set to notification, the warning will be displayed in a notification.
+            Otherwise it will be displayed in a dialog as default.
 
 
         .. warning::

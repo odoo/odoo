@@ -143,7 +143,7 @@ QUnit.module('Views', {
             controlPanelFactory.loadParams.groups,
             [[
                 {
-                    currentOptionId: false,
+                    currentOptionIds: new Set(),
                     defaultOptionId: "day",
                     description: "Hi",
                     fieldName: "date_field",
@@ -153,19 +153,9 @@ QUnit.module('Views', {
                     isDefault: false,
                     options: [
                         {
-                          description: "Day",
+                          description: "Year",
                           groupId: 1,
-                          optionId: "day"
-                        },
-                        {
-                          description: "Week",
-                          groupId: 1,
-                          optionId: "week"
-                        },
-                        {
-                          description: "Month",
-                          groupId: 1,
-                          optionId: "month"
+                          optionId: "year"
                         },
                         {
                           description: "Quarter",
@@ -173,9 +163,19 @@ QUnit.module('Views', {
                           optionId: "quarter"
                         },
                         {
-                          description: "Year",
+                          description: "Month",
                           groupId: 1,
-                          optionId: "year"
+                          optionId: "month"
+                        },
+                        {
+                          description: "Week",
+                          groupId: 1,
+                          optionId: "week"
+                        },
+                        {
+                          description: "Day",
+                          groupId: 1,
+                          optionId: "day"
                         }
                       ],
                     type: "groupBy"

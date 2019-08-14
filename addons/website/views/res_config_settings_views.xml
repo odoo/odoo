@@ -38,7 +38,7 @@
                         </div>
                         <!-- !! Every fields inside this container should be website specific (related to website record) !! -->
                         <div class="row mt16 o_settings_container" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
-                            <div class="col-12 o_setting_box" id="website_action_setting">
+                            <div class="col-12 o_setting_box" id="website_action_setting" style="margin-left: 30px; margin-bottom: 16px;">
                                 <button name="website_go_to" type="object" string="Go to Website" class="btn btn-primary" icon="fa-globe"/>
                                 <button name="%(website.action_website_add_features)d" type="action" string="Add features" class="ml-2 btn btn-secondary" icon="fa-plus"/>
                             </div>
@@ -83,8 +83,8 @@
                                             <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"
                                                 attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
-                                        <field name="language_count" invisible="1"/>
-                                        <div class="mt8" attrs="{'invisible':[('language_count', '&lt;', 2)]}">
+                                        <field name="website_language_count" invisible="1"/>
+                                        <div class="mt8" attrs="{'invisible':[('website_language_count', '&lt;', 2)]}">
                                             <label class="o_light_label mr8" string="Default" for="website_default_lang_id"/>
                                             <field name="website_default_lang_id" widget="selection" attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>

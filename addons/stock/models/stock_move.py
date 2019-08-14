@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
-from re import search as regex_search, split as regex_split
+from re import findall as regex_findall, split as regex_split
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -135,6 +135,7 @@ class StockMove(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
+    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move')
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
@@ -166,7 +167,8 @@ class StockMove(models.Model):
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
-    next_serial = fields.Char('Next Serial Number')
+    next_serial = fields.Char('First SN')
+    next_serial_count = fields.Integer('Number of SN')
 
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
@@ -179,6 +181,7 @@ class StockMove(models.Model):
             move.display_assign_serial = (
                 move.has_tracking == 'serial' and
                 move.picking_type_id.use_create_lots and
+                not move.picking_type_id.show_reserved and
                 not move.picking_type_id.use_existing_lots
             )
 
@@ -258,7 +261,13 @@ class StockMove(models.Model):
             move.product_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id')
+    def _get_move_lines(self):
+        """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
+        In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
+        self.ensure_one()
+        return self.move_line_ids or self.move_line_nosuggest_ids
+
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.
@@ -270,14 +279,14 @@ class StockMove(models.Model):
         """
         for move in self:
             quantity_done = 0
-            for move_line in move.move_line_ids:
+            for move_line in move._get_move_lines():
                 quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
             move.quantity_done = quantity_done
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
         for move in self:
-            move_lines = move.move_line_ids
+            move_lines = move._get_move_lines()
             if not move_lines:
                 if quantity_done:
                     # do not impact reservation here
@@ -504,7 +513,14 @@ class StockMove(models.Model):
         """
         self.ensure_one()
 
-        view = self.env.ref('stock.view_stock_move_operations')
+        # If "show suggestions" is not checked on the picking type, we have to filter out the
+        # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
+        # different views to display one field or another so that the webclient doesn't have to
+        # fetch both.
+        if self.picking_id.picking_type_id.show_reserved:
+            view = self.env.ref('stock.view_stock_move_operations')
+        else:
+            view = self.env.ref('stock.view_stock_move_nosuggest_operations')
 
         picking_type_id = self.picking_type_id or self.picking_id.picking_type_id
         return {
@@ -565,16 +581,20 @@ class StockMove(models.Model):
         moves_to_unreserve.mapped('move_line_ids').unlink()
         return True
 
-    def _generate_serial_numbers(self):
+    def _generate_serial_numbers(self, next_serial_count=False):
         """ This method will generate `lot_name` from a string (field
-        `next_serial`) and assign each `lot_name` to a move line.
+        `next_serial`) and create a move line for each generated `lot_name`.
         """
         self.ensure_one()
+
+        if not next_serial_count:
+            next_serial_count = self.next_serial_count
         # We look if the serial number contains at least one digit.
-        caught_initial_number = regex_search("\d+", self.next_serial)
+        caught_initial_number = regex_findall("\d+", self.next_serial)
         if not caught_initial_number:
             raise UserError(_('The serial number must contain at least one digit.'))
-        initial_number = caught_initial_number.group()
+        # We base the serie on the last number find in the base serial number.
+        initial_number = caught_initial_number[-1]
         padding = len(initial_number)
         # We split the serial number to get the prefix and suffix.
         splitted = regex_split(initial_number, self.next_serial)
@@ -582,21 +602,23 @@ class StockMove(models.Model):
         suffix = splitted[1]
         initial_number = int(initial_number)
 
-        # Then, for each move line without `lot_id` and `lot_name`, we compute
-        # and assign the `lot_name` and set the `qty_done` to one.
         move_lines_commands = []
-        for move_line in self.move_line_ids:
-            if not move_line.lot_id and not move_line.lot_name:
-                lot_name = '%s%s%s' % (
-                    prefix,
-                    str(initial_number).zfill(padding),
-                    suffix
-                )
-                initial_number += 1
-                move_lines_commands.append((1, move_line.id, {
-                    'lot_name': lot_name,
-                    'qty_done': 1
-                }))
+        location_dest = self.location_dest_id._get_putaway_strategy(self.product_id) or self.location_dest_id
+        for i in range(0, next_serial_count):
+            lot_name = '%s%s%s' % (
+                prefix,
+                str(initial_number + i).zfill(padding),
+                suffix
+            )
+            move_lines_commands.append((0, 0, {
+                'lot_name': lot_name,
+                'qty_done': 1,
+                'product_id': self.product_id.id,
+                'product_uom_id': self.product_id.uom_id.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': location_dest.id,
+                'picking_id': self.picking_id.id,
+            }))
         self.write({'move_line_ids': move_lines_commands})
         return True
 
@@ -757,6 +779,32 @@ class StockMove(models.Model):
     def onchange_date(self):
         if self.date_expected:
             self.date = self.date_expected
+
+    @api.onchange('move_line_nosuggest_ids')
+    def onchange_move_line_nosuggest_ids(self):
+        breaking_char = '\n'
+        move_lines_to_create = []
+        for move_line in self.move_line_nosuggest_ids:
+            # Look if the `lot_name` contains multiple values.
+            if breaking_char in (move_line.lot_name or ''):
+                splitted_lines = move_line.lot_name.split(breaking_char)
+                splitted_lines = list(filter(lambda line: line, splitted_lines))
+                move_line.lot_name = splitted_lines[0]
+                # For each SN line, set move ine data...
+                for line in splitted_lines[1:]:
+                    move_line_data = {
+                        'lot_name': line,
+                        'qty_done': 1,
+                        'product_id': move_line.product_id.id,
+                        'product_uom_id': move_line.product_id.uom_id.id,
+                        'location_id': move_line.location_id.id,
+                        'location_dest_id': move_line.location_dest_id.id,
+                        'owner_id': move_line.owner_id or False,
+                        'package_id': move_line.package_id or False,
+                    }
+                    move_lines_to_create += [(0, 0, move_line_data)]
+                # ... then create these move lines.
+                self.update({'move_line_nosuggest_ids': move_lines_to_create})
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):
@@ -941,6 +989,10 @@ class StockMove(models.Model):
             )
         return vals
 
+    def _update_next_serial_count(self):
+        self.next_serial = None
+        self.next_serial_count = len(self.move_line_ids)
+
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         """ Create or update move lines.
         """
@@ -1120,6 +1172,8 @@ class StockMove(models.Model):
                             assigned_moves |= move
                             break
                         partially_available_moves |= move
+            if move.product_id.tracking == 'serial':
+                move._update_next_serial_count()
         partially_available_moves.write({'state': 'partially_available'})
         assigned_moves.write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()

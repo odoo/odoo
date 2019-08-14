@@ -17,17 +17,25 @@
         <field name="model">product.attribute</field>
         <field name="arch" type="xml">
             <form string="Product Attribute">
+            <field name="is_used_on_products" invisible="1"/>
             <sheet>
                 <group name="main_fields">
                     <label for="name" string="Attribute Name"/>
                     <field name="name" nolabel="1"/>
-                    <field name="create_variant" widget="radio"/>
+                    <field name="create_variant" widget="radio" attrs="{'readonly': [('is_used_on_products', '=', True)]}"/>
                 </group>
                 <group name="values_ids">
                     <label for="value_ids" string="Attribute Values"/>
                     <field name="value_ids" widget="one2many" nolabel="1">
                         <tree string="Values" editable="bottom">
                             <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </group>
+                <group name="product_tmpl_ids" attrs="{'invisible': [('is_used_on_products', '=', False)]}">
+                    <field name="product_tmpl_ids">
+                        <tree>
                             <field name="name"/>
                         </tree>
                     </field>
@@ -49,8 +57,9 @@
         <field name="model">product.attribute.value</field>
         <field name="arch" type="xml">
             <tree string="Variant Values" editable="bottom">
+                <field name="is_used_on_products" invisible="1"/>
                 <field name="sequence" widget="handle"/>
-                <field name="attribute_id"/>
+                <field name="attribute_id" attrs="{'readonly': [('is_used_on_products', '=', True)]}"/>
                 <field name="name"/>
             </tree>
         </field>

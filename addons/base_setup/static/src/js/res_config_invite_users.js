@@ -4,9 +4,7 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
     var Widget = require('web.Widget');
     var widget_registry = require('web.widget_registry');
     var core = require('web.core');
-    var framework = require('web.framework');
 
-    var QWeb = core.qweb;
     var _t = core._t;
 
     var ResConfigInviteUsers = Widget.extend({
@@ -14,10 +12,8 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
 
         events: {
             'click .o_web_settings_invite': '_onClickInvite',
-            'click .o_web_settings_access_rights': '_onClickAccessRights',
             'click .o_web_settings_user': '_onClickUser',
             'click .o_web_settings_more': '_onClickMore',
-            'click .o_badge_remove': '_onClickBadgeRemove',
             'keydown .o_user_emails': '_onKeydownUserEmails',
         },
 
@@ -55,12 +51,26 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * Creates and appends badges for valid and unique email addresses
+         * @private
+         * @param {string} email
+         * @returns {boolean} true if the given email address is valid
+         */
+        _validateEmail: function (email) {
+            var re = /^([a-z0-9][-a-z0-9_\+\.]*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
+            return re.test(email);
+        },
+
+        /**
+         * Send invitation for valid and unique email addresses
          *
          * @private
          */
-        _createBadges: function () {
+        _invite: function () {
+            var self = this;
+
             var $userEmails = this.$('.o_user_emails');
+            $userEmails.prop('disabled', true);
+            this.$('.o_web_settings_invite').prop('disabled', true);
             var value = $userEmails.val().trim();
             if (value) {
                 // filter out duplicates
@@ -85,33 +95,24 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
                     emails = _.difference(emails, existingEmails);
                 }
 
-                // add valid email addresses, if any
                 if (emails.length) {
-                    this.emails = this.emails.concat(emails);
-                    this.$('.o_web_settings_invitation_form').append(QWeb.render('EmailBadge', {emails: emails}));
                     $userEmails.val('');
+                    this._rpc({
+                        model: 'res.users',
+                        method: 'web_create_users',
+                        args: [emails],
+                    }).then(function () {
+                        return self.load().then(function () {
+                            self.renderElement();
+                            self.$('.o_user_emails').focus();
+                        });
+                    });
+                } else {
+                    $userEmails.prop('disabled', false);
+                    this.$('.o_web_settings_invite').prop('disabled', false);
+                    self.$('.o_user_emails').focus();
                 }
             }
-        },
-        /**
-         * Removes a given badge from the DOM, and its associated email address
-         *
-         * @private
-         * @param {jQueryElement} $badge
-         */
-        _removeBadge: function ($badge) {
-            var email = $badge.text().trim();
-            this.emails = _.without(this.emails, email);
-            $badge.remove();
-        },
-        /**
-         * @private
-         * @param {string} email
-         * @returns {boolean} true if the given email address is valid
-         */
-        _validateEmail: function (email) {
-            var re = /^([a-z0-9][-a-z0-9_\+\.]*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
-            return re.test(email);
         },
 
         //--------------------------------------------------------------------------
@@ -122,47 +123,18 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
          * @private
          * @param {MouseEvent} ev
          */
-        _onClickAccessRights: function (e) {
-            e.preventDefault();
-            this.do_action('base.action_res_users');
-        },
-        /**
-         * @private
-         * @param {MouseEvent} ev
-         */
-        _onClickBadgeRemove: function (ev) {
-            var $badge = $(ev.target).closest('.badge');
-            this._removeBadge($badge);
-        },
-        /**
-         * @private
-         * @param {MouseEvent} ev
-         */
         _onClickInvite: function (ev) {
-            var self = this;
-            this._createBadges();
-            if (this.emails.length) {
+            if (this.$('.o_user_emails').val().length) {
                 var $button = $(ev.target);
                 $button.button('loading');
-                this._rpc({
-                    model: 'res.users',
-                    method: 'web_create_users',
-                    args: [this.emails],
-                }).then(function () {
-                    return self.load().then(function () {
-                        self.renderElement();
-                    });
-                }).guardedCatch(function () {
-                    // NOTE Not sure that this is needed
-                    $button.button('reset');
-                });
+                return this._invite();
             }
         },
         /**
          * @private
          * @param {MouseEvent} ev
          */
-        _onClickMore: function(ev) {
+        _onClickMore: function (ev) {
             ev.preventDefault();
             this.do_action({
                 name: _t('Users'),
@@ -182,7 +154,7 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
          */
         _onClickUser: function (ev) {
             ev.preventDefault();
-            var user_id = $(e.currentTarget).data('user-id');
+            var user_id = $(ev.currentTarget).data('user-id');
             this.do_action({
                 type: 'ir.actions.act_window',
                 res_model: 'res.users',
@@ -196,15 +168,10 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
          * @param {KeyboardEvent} ev
          */
         _onKeydownUserEmails: function (ev) {
-            var $userEmails = this.$('.o_user_emails');
-            var keyCodes = [$.ui.keyCode.TAB, $.ui.keyCode.COMMA, $.ui.keyCode.ENTER, $.ui.keyCode.SPACE];
+            var keyCodes = [$.ui.keyCode.TAB, $.ui.keyCode.COMMA, $.ui.keyCode.ENTER];
             if (_.contains(keyCodes, ev.which)) {
                 ev.preventDefault();
-                this._createBadges();
-            }
-            // remove last badge on backspace
-            if (ev.which === $.ui.keyCode.BACKSPACE && this.emails.length && !$userEmails.val()) {
-                this._removeBadge(this.$('.o_web_settings_invitation_form .badge:last'));
+                this._invite();
             }
         },
     });

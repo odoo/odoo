@@ -44,21 +44,18 @@
         id="menu_hr_holidays_approvals"
         name="Managers"
         parent="menu_hr_holidays_root"
-        sequence="3"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_user"/>
+        sequence="3"/>
 
     <menuitem
         id="hr_holidays_menu_manager_approve"
         name="To Approve"
         parent="menu_hr_holidays_approvals"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_user"
         sequence="1"/>
 
     <menuitem
         id="menu_open_department_leave_approve"
         name="Time Off"
         parent="hr_holidays_menu_manager_approve"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_user"
         action="hr_leave_action_action_approve_department"
         sequence="1"/>
 
@@ -66,7 +63,6 @@
         id="hr_holidays_menu_manager_approve_allocations"
         name="Allocations"
         parent="hr_holidays_menu_manager_approve"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
         action="hr_leave_allocation_action_approve_department"
         sequence="2"/>
 
@@ -74,14 +70,14 @@
         id="hr_holidays_menu_manager_all"
         name="All"
         parent="menu_hr_holidays_approvals"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
         sequence="2"/>
 
     <menuitem
         id="menu_open_employee_leave"
         name="Time Off"
         parent="hr_holidays_menu_manager_all"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
         action="hr_leave_action_all"
         sequence="1"/>
 
@@ -128,6 +124,13 @@
         parent="menu_hr_holidays_report"
         action="action_hr_holidays_summary_dept"
         sequence="2"/>
+
+    <menuitem
+        id="menu_hr_holidays_summary_all"
+        name="Time Off Summary"
+        parent="menu_hr_holidays_report"
+        action="act_hr_employee_holiday_request"
+        sequence="3"/>
 
     <menuitem
         id="menu_hr_holidays_configuration"

@@ -51,6 +51,10 @@ class PickingType(models.Model):
     show_operations = fields.Boolean(
         'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
+    show_reserved = fields.Boolean(
+        'Pre-fill Detailed Operations', default=True,
+        help="If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
+        "operations with the corresponding products, locations and lot/serial numbers.")
 
     # Statistics for the kanban view
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
@@ -121,6 +125,11 @@ class PickingType(models.Model):
             'stock.group_stock_multi_locations,'
             'stock.group_tracking_lot'
         )
+
+    @api.onchange('show_operations')
+    def onchange_show_operations(self):
+        if self.show_operations and self.code != 'incoming':
+            self.show_reserved = True
 
     def _get_action(self, action_xmlid):
         action = self.env.ref(action_xmlid).read()[0]
@@ -267,6 +276,7 @@ class Picking(models.Model):
 
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
+    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'picking_id', domain=[('product_qty', '=', 0.0)])
 
     move_line_exist = fields.Boolean(
         'Has Pack Operations', compute='_compute_move_line_exist',
@@ -298,6 +308,7 @@ class Picking(models.Model):
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)
     show_operations = fields.Boolean(compute='_compute_show_operations')
+    show_reserved = fields.Boolean(related='picking_type_id.show_reserved')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
     immediate_transfer = fields.Boolean(default=False)

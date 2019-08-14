@@ -189,7 +189,7 @@
                 <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
-                    <field name="confirmation_date" string="Confirmation Date" optional="show"/>
+                    <field name="date_order" string="Order Date"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
@@ -213,7 +213,7 @@
                 <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
-                    <field name="date_order" string="Quotation Date" optional="show"/>
+                    <field name="create_date" string="Create Date"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
@@ -300,7 +300,14 @@
                         </group>
                         <group>
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
-                            <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])], 'required': [('state', 'in', ['sale', 'done'])]}"/>
+                            <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"> 
+                                <label for="date_order" string="Quotation Date"/> 
+                            </div>
+                            <field name="date_order" nolabel="1" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                            <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}"> 
+                                <label for="date_order" string="Order Date"/> 
+                            </div>
+                            <field name="date_order" attrs="{'required': [('state', 'in', ['sale', 'done'])], 'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_open':True,'no_create': True}"/>
@@ -606,7 +613,6 @@
                         <page string="Other Info" name="other_information">
                             <group>
                                 <group name="sales_person" string="Sales">
-                                    <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" string="Quotation Date" groups="base.group_no_one"/>
                                     <field name="user_id"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -720,7 +726,7 @@
                     <filter string="Quotations" name="draft" domain="[('state','in',('draft', 'sent'))]"/>
                     <filter string="Sales Orders" name="sales" domain="[('state','in',('sale','done'))]"/>
                     <separator/>
-                    <filter string="Order Date" name="filter_order_date" date="date_order"/>
+                    <filter string="Create Date" name="filter_create_date" date="create_date"/>
                 </xpath>
             </field>
         </record>
@@ -1253,7 +1259,7 @@
             <field name="res_model">sale.report</field>
             <field name="view_mode">graph</field>
             <field name="domain">[('state','not in',('draft','cancel'))]</field>
-            <field name="context">{'search_default_Sales': 1, 'time_ranges': {'field':'confirmation_date', 'range':'last_30_days'}, 'search_default_team_id': [active_id]}</field>
+            <field name="context">{'search_default_Sales': 1, 'time_ranges': {'field':'date_order', 'range':'last_30_days'}, 'search_default_team_id': [active_id]}</field>
             <field name="help">This report performs analysis on your sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
         </record>
 

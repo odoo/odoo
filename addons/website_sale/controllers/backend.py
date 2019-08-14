@@ -46,8 +46,8 @@ class WebsiteSaleBackend(WebsiteBackend):
             domain=[
                 ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
-                ('confirmation_date', '>=', date_from),
-                ('confirmation_date', '<=', fields.Datetime.now())],
+                ('date_order', '>=', date_from),
+                ('date_order', '<=', fields.Datetime.now())],
             fields=['product_tmpl_id', 'product_uom_qty', 'price_subtotal'],
             groupby='product_tmpl_id', orderby='product_uom_qty desc', limit=5)
         for product_line in report_product_lines:
@@ -117,8 +117,8 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_domain = [
             ('website_id', '=', current_website.id),
             ('state', 'in', ['sale', 'done']),
-            ('confirmation_date', '>=', date_from),
-            ('confirmation_date', '<=', fields.Datetime.now())
+            ('date_order', '>=', date_from),
+            ('date_order', '<=', fields.Datetime.now())
         ]
         sales_values['graph'] += [{
             'values': self._compute_sale_graph(date_date_from, date_date_to, sales_domain),
@@ -134,8 +134,8 @@ class WebsiteSaleBackend(WebsiteBackend):
         sale_utm_domain = [
             ('website_id', '!=', False),
             ('state', 'in', ['sale', 'done']),
-            ('confirmation_date', '>=', date_from),
-            ('confirmation_date', '<=', date_to)
+            ('date_order', '>=', date_from),
+            ('date_order', '<=', date_to)
         ]
 
         orders_data_groupby_campaign_id = request.env['sale.order'].read_group(
@@ -171,10 +171,10 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         daily_sales = request.env['sale.report'].read_group(
             domain=sales_domain,
-            fields=['confirmation_date', 'price_subtotal'],
-            groupby='confirmation_date:day')
+            fields=['date_order', 'price_subtotal'],
+            groupby='date_order:day')
 
-        daily_sales_dict = {p['confirmation_date:day']: p['price_subtotal'] for p in daily_sales}
+        daily_sales_dict = {p['date_order:day']: p['price_subtotal'] for p in daily_sales}
 
         sales_graph = [{
             '0': fields.Date.to_string(d) if not previous else fields.Date.to_string(d + timedelta(days=days_between)),

@@ -164,21 +164,24 @@ class AccountChartTemplate(models.Model):
             'chart_template_id': self.id,
         }
 
-    def try_loading_for_current_company(self):
+    def try_loading(self, company=False):
         """ Installs this chart of accounts for the current company if not chart
         of accounts had been created for it yet.
         """
         # do not use `request.env` here, it can cause deadlocks
-        if request and hasattr(request, 'allowed_company_ids'):
-            company = self.env['res.company'].browse(request.allowed_company_ids[0])
-        else:
-            company = self.env.company
+        if not company:
+            if request and hasattr(request, 'allowed_company_ids'):
+                company = self.env['res.company'].browse(request.allowed_company_ids[0])
+            else:
+                company = self.env.company
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id and not self.existing_accounting(company):
             for template in self:
-                template.load_for_current_company(15.0, 15.0)
+                template.with_context(default_company_id=company.id)._load(15.0, 15.0, company)
 
-    def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
+    try_loading_for_current_company = try_loading
+
+    def _load(self, sale_tax_rate, purchase_tax_rate, company):
         """ Installs this chart of accounts on the current company, replacing
         the existing one if it had already one defined. If some accounting entries
         had already been made, this function fails instead, triggering a UserError.
@@ -188,12 +191,8 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
-        if request and hasattr(request, 'allowed_company_ids'):
-            company = self.env['res.company'].browse(request.allowed_company_ids[0])
-        else:
-            company = self.env.company
         # Ensure everything is translated to the company's language, not the user's one.
-        self = self.with_context(lang=company.partner_id.lang)
+        self = self.with_context(lang=company.partner_id.lang, company=company)
         if not self.env.is_admin():
             raise AccessError(_("Only administrators can load a charf of accounts"))
 
@@ -712,6 +711,10 @@ class AccountChartTemplate(models.Model):
                 'match_amount_max': account_reconcile_model.match_amount_max,
                 'match_label': account_reconcile_model.match_label,
                 'match_label_param': account_reconcile_model.match_label_param,
+                'match_note': account_reconcile_model.match_note,
+                'match_note_param': account_reconcile_model.match_note_param,
+                'match_transaction_type': account_reconcile_model.match_transaction_type,
+                'match_transaction_type_param': account_reconcile_model.match_transaction_type_param,
                 'match_same_currency': account_reconcile_model.match_same_currency,
                 'match_total_amount': account_reconcile_model.match_total_amount,
                 'match_total_amount_param': account_reconcile_model.match_total_amount_param,
@@ -1111,6 +1114,24 @@ class AccountReconcileModelTemplate(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter')
+    match_note = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Note', help='''The reconciliation model will only be applied when the note:
+        * Contains: The proposition note must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_note_param = fields.Char(string='Note Parameter')
+    match_transaction_type = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Transaction Type', help='''The reconciliation model will only be applied when the transaction type:
+        * Contains: The proposition transaction type must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_transaction_type_param = fields.Char(string='Transaction Type Parameter')
     match_same_currency = fields.Boolean(string='Same Currency Matching', default=True,
         help='Restrict to propositions having the same currency as the statement line.')
     match_total_amount = fields.Boolean(string='Amount Matching', default=True,

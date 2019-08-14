@@ -232,7 +232,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
 
         # CASE: display variant fallback after variant o2m, correct fallback
         # write on the variant field, otherwise it will write on the fallback
-        product_green.image_variant_max = False
+        product_green.image_variant_1920 = False
         images = product_green._get_images()
         # images on fields are resized to max 1920
         image = Image.open(io.BytesIO(base64.b64decode(images[0].image_1920)))

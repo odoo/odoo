@@ -17,7 +17,11 @@ class BuckarooCommon(PaymentAcquirerCommon):
         super(BuckarooCommon, self).setUp()
         # get the buckaroo account
         self.buckaroo = self.env.ref('payment.payment_acquirer_buckaroo')
-
+        self.buckaroo.write({
+            'brq_websitekey': 'dummy',
+            'brq_secretkey': 'dummy',
+            'state': 'test',
+        })
 
 @odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
 class BuckarooForm(BuckarooCommon):
@@ -25,7 +29,7 @@ class BuckarooForm(BuckarooCommon):
     def test_10_Buckaroo_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         # be sure not to do stupid things
-        self.assertEqual(self.buckaroo.environment, 'test', 'test without test environment')
+        self.assertEqual(self.buckaroo.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -101,7 +105,7 @@ class BuckarooForm(BuckarooCommon):
     @mute_logger('odoo.addons.payment_buckaroo.models.payment', 'ValidationError')
     def test_20_buckaroo_form_management(self):
         # be sure not to do stupid thing
-        self.assertEqual(self.buckaroo.environment, 'test', 'test without test environment')
+        self.assertEqual(self.buckaroo.state, 'test', 'test without test environment')
 
         # typical data posted by buckaroo after client has successfully paid
         buckaroo_post_data = {

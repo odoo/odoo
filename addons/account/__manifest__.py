@@ -29,6 +29,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_move_views.xml',
         'wizard/setup_wizards_view.xml',
         'views/account_view.xml',
+        'views/report_statement.xml',
         'views/account_report.xml',
         'data/mail_template_data.xml',
         'wizard/account_validate_move_view.xml',
@@ -59,6 +60,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/digest_views.xml',
         'wizard/account_invoice_send_views.xml',
         'views/account_tax_report_views.xml',
+        'views/report_statement.xml'
     ],
     'demo': [
         'demo/account_demo.xml',

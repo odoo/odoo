@@ -64,6 +64,17 @@ class ProductProduct(models.Model):
         for product in self:
             product.used_in_bom_count = self.env['mrp.bom'].search_count([('bom_line_ids.product_id', '=', product.id)])
 
+    def get_components(self):
+        """ Return the components list ids in case of kit product.
+        Return the product itself otherwise"""
+        self.ensure_one()
+        bom_kit = self.env['mrp.bom']._bom_find(product=self, bom_type='phantom')
+        if bom_kit:
+            boms, bom_sub_lines = bom_kit.explode(self, 1)
+            return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.type == 'product']
+        else:
+            return super(ProductProduct, self).get_components()
+
     def action_used_in_bom(self):
         self.ensure_one()
         action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
@@ -88,6 +99,7 @@ class ProductProduct(models.Model):
          - 'qty_available'
          - 'incoming_qty'
          - 'outgoing_qty'
+         - 'free_qty'
          """
         for product in self:
             bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
@@ -97,19 +109,25 @@ class ProductProduct(models.Model):
                 ratios_qty_available = []
                 ratios_incoming_qty = []
                 ratios_outgoing_qty = []
+                ratios_free_qty = []
                 for bom_line, bom_line_data in bom_sub_lines:
                     component = bom_line.product_id
+                    if component.type != 'product':
+                        # Consumable product have 0 qty_available so we exclude them
+                        continue
                     uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
                     qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
                     ratios_virtual_available.append(component.virtual_available / qty_per_kit)
                     ratios_qty_available.append(component.qty_available / qty_per_kit)
                     ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
                     ratios_outgoing_qty.append(component.outgoing_qty / qty_per_kit)
-                if bom_sub_lines:
+                    ratios_free_qty.append(component.free_qty / qty_per_kit)
+                if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                     product.virtual_available = min(ratios_virtual_available) // 1
                     product.qty_available = min(ratios_qty_available) // 1
                     product.incoming_qty = min(ratios_incoming_qty) // 1
                     product.outgoing_qty = min(ratios_incoming_qty) // 1
+                    product.free_qty = min(ratios_free_qty) // 1
             else:
                 super(ProductProduct, self)._compute_quantities()
 
@@ -125,10 +143,6 @@ class ProductProduct(models.Model):
         return action
 
     def action_view_mos(self):
-        action = self.env.ref('mrp.mrp_production_report').read()[0]
+        action = self.product_tmpl_id.action_view_mos()
         action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
-        action['context'] = {
-            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'},
-            'graph_measure': 'product_uom_qty',
-        }
         return action

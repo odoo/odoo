@@ -37,7 +37,7 @@ PaymentForm.include({
             console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
         }
         var AcceptJs = false;
-        if (formData.acquirer_environment === 'prod') {
+        if (formData.acquirer_state === 'enabled') {
             AcceptJs = 'https://js.authorize.net/v3/AcceptUI.js';
         } else {
             AcceptJs = 'https://jstest.authorize.net/v3/AcceptUI.js';

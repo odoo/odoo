@@ -446,7 +446,13 @@ function patchDate(year, month, day, hours, minutes, seconds) {
         }
 
         // Copy "native" methods explicitly; they may be non-enumerable
-        Date.now = NativeDate.now;
+        // exception: 'now' uses fake date as reference
+        Date.now = function () {
+            var date = new NativeDate();
+            var time = date.getTime();
+            time -= timeInterval;
+            return time;
+        };
         Date.UTC = NativeDate.UTC;
         Date.prototype = NativeDate.prototype;
         Date.prototype.constructor = Date;

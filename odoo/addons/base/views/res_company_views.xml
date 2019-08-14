@@ -18,7 +18,7 @@
                         <page string="General Information">
                             <group>
                                 <group>
-                                    <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
+                                    <field name="partner_id" string="Contact" readonly="1" required="0" groups="base.group_no_one"/>
                                     <label for="street" string="Address"/>
                                     <div class="o_address_format">
                                         <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -28,11 +28,11 @@
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
                                     </div>
-                                </group>
-                                <group>
-                                    <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                                     <field name="phone"/>
                                     <field name="email"/>
+                                    <field name="website" string="Website" widget="url" placeholder="e.g. www.odoo.com"/>
+                                </group>
+                                <group>
                                     <field name="vat"/>
                                     <field name="company_registry"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>

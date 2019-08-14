@@ -1010,15 +1010,38 @@ QUnit.module('Views', {
 
             // groupby menu is assumed to be closed
             this.selectDateIntervalOption = async function (intervalOption) {
+                const self = this;
                 intervalOption = intervalOption || 'month';
+
                 // open group by menu
                 await testUtils.dom.click($('.o_control_panel .o_dropdown span.fa-bars'));
+
+                let wasSelected = false;
+                if (this.keepFirst) {
+                    if ($('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product) a').hasClass('selected')) {
+                        wasSelected = true;
+                        await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product)'));
+                    }
+                }
+
                 // open option submenu
                 await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_menu_item:contains("Date")'));
                 // check interval option if not already selected
                 if (!$('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + intervalOption + '"] a').hasClass('selected')) {
                     await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + intervalOption + '"]'));
                 }
+                await INTERVAL_OPTIONS.filter(oId => oId !== intervalOption).forEach(async function(oId) {
+                    if ($('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + oId + '"] a').hasClass('selected')) {
+                        await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + oId + '"]'));
+                    }
+                });
+
+                if (this.keepFirst) {
+                    if (wasSelected && !$('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product) a').hasClass('selected')) {
+                        await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product)'));
+                    }
+                }
+
                 // close group by menu
                 await testUtils.dom.click($('.o_control_panel .o_dropdown span.fa-bars'));
             };
@@ -1033,6 +1056,11 @@ QUnit.module('Views', {
                 }
                 // close group by menu
                 await testUtils.dom.click($('.o_control_panel .o_dropdown span.fa-bars'));
+            };
+            // groupby menu is assumed to be closed
+            this.unselectGroupBy = async function (groupByName) {
+                // check groupBy if already selected
+
             };
 
             this.setConfig = async function (combination) {
@@ -1254,6 +1282,7 @@ QUnit.module('Views', {
         QUnit.test('comparison with two groupby with first groupby equal to comparison date field', async function (assert) {
             assert.expect(10);
 
+            this.keepFirst = true;
             this.combinationsToCheck = {
                 'last_7_days,previous_period,day': {
                     labels: [...Array(3).keys()].map(x => [x]),
@@ -1280,7 +1309,6 @@ QUnit.module('Views', {
             };
 
             var combinations = COMBINATIONS_WITH_DATE;
-            await this.selectDateIntervalOption();
             await this.selectGroupBy('Product');
             await this.testCombinations(combinations, assert);
             await this.setMode('line');
@@ -1311,6 +1339,8 @@ QUnit.module('Views', {
             await this.testCombinations(combinations, assert);
 
             assert.ok(true, "No combination causes a crash");
+
+            this.keepFirst = false;
         });
 
         QUnit.test('comparison with two groupby with second groupby equal to comparison date field', async function (assert) {

@@ -2,21 +2,19 @@
 <odoo>
 
         <record id="account_bank_statement_import_view" model="ir.ui.view">
-            <field name="name">Import Bank Statements</field>
+            <field name="name">Upload Bank Statements</field>
             <field name="model">account.bank.statement.import</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Import Bank Statements">
-                    <h2>Select a bank statement file to import</h2>
-                    <p>Download a bank statement from your bank and import it here. Supported formats:</p>
+                <form string="Upload Bank Statements">
+                    <h2>You can upload your bank statement using:</h2>
                     <ul id="statement_format">
 
                     </ul>
-                    <p>You can install more file formats by <a style="cursor: pointer" type="action" name="account_bank_statement_import.install_more_import_formats_action">installing the related modules</a></p>
-                    <field name="data_file" filename="filename" placeholder="Choose a file to import..."/>
+                    <field name="attachment_ids"  widget="many2many_binary" colspan="2" string="Select Files" nolabel="1"/>
                     <field name="filename" invisible="1"/>
                     <footer>
-                        <button name="import_file" string="_Import" type="object" class="btn-primary" />
+                        <button name="import_file" string="Upload" type="object" class="btn-primary" />
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
@@ -32,7 +30,7 @@
         </record>
 
         <record id="action_account_bank_statement_import" model="ir.actions.act_window">
-            <field name="name">Import</field>
+            <field name="name">Upload</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement.import</field>
             <field name="view_mode">form</field>
