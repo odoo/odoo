@@ -88,14 +88,11 @@ class PurchaseOrder(models.Model):
                     if not default_po_line_vals:
                         OrderLine = self.env['purchase.order.line']
                         default_po_line_vals = OrderLine.default_get(OrderLine._fields.keys())
-                    pnvav = []  # product no variant attribute values
-                    for nvav in no_variant_attribute_values:
-                        pnvav.append((4, nvav))
                     new_lines.append((0, 0, dict(
                         default_po_line_vals,
                         product_id=product.id,
                         product_qty=qty,
-                        product_no_variant_attribute_value_ids=pnvav)
+                        product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if new_lines:
                 self.update(dict(order_line=new_lines))
@@ -146,3 +143,10 @@ class PurchaseOrderLine(models.Model):
     is_configurable_product = fields.Boolean('Is the product configurable?', related="product_template_id.has_configurable_attributes")
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants')
+
+    def _get_product_purchase_description(self, product):
+        name = super(PurchaseOrderLine, self)._get_product_purchase_description(product)
+        for no_variant_attribute_value in self.product_no_variant_attribute_value_ids:
+            name += "\n" + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
+
+        return name
