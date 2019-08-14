@@ -544,6 +544,8 @@ class AccountReconcileModel(models.Model):
         '''
         if not self.match_total_amount:
             return True
+        if not candidates:
+            return False
 
         # Match total residual amount.
         total_residual = 0.0
