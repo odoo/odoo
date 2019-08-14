@@ -21,7 +21,7 @@ class MailMessage(models.Model):
 
         if self._context.get('rating_include'):
             infos = ["id", "publisher_comment", "publisher_id", "publisher_datetime", "message_id"]
-            related_rating = self.env['rating.rating'].search([('message_id', 'in', self.ids)]).read(infos)
+            related_rating = self.env['rating.rating'].sudo().search([('message_id', 'in', self.ids)]).read(infos)
             mid_rating_tree = dict((rating['message_id'][0], rating) for rating in related_rating)
             for values in message_values:
                 values["rating"] = mid_rating_tree.get(values['id'], {})

@@ -87,6 +87,10 @@ class RatingProject(http.Controller):
 
         return request.render('project.rating_project_rating_page', {
             'project': project,
-            'ratings': request.env['rating.rating'].sudo().search([('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', project_id)], order='write_date DESC', limit=50),
+            'ratings': request.env['rating.rating'].sudo().search([
+                ('consumed', '=', True),
+                ('parent_res_model', '=', 'project.project'),
+                ('parent_res_id', '=', project_id)
+            ], order='write_date DESC', limit=50),
             'statistics': self._calculate_period_partner_stats(project_id),
         })

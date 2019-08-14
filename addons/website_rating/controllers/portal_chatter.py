@@ -27,7 +27,7 @@ class PortalChatter(PortalChatter):
         if kwargs.get('rating_include'):
             record = request.env[res_model].browse(res_id)
             if hasattr(record, 'rating_get_stats'):
-                result['rating_stats'] = record.rating_get_stats()
+                result['rating_stats'] = record.sudo().rating_get_stats()
         return result
 
     @http.route()
