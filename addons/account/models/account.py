@@ -156,6 +156,13 @@ class AccountTaxReportLine(models.Model):
         if self.tag_ids and (len(neg_tags) !=1 or len(pos_tags) != 1):
             raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and a negative one."))
 
+    @api.constrains('tag_name', 'country_id')
+    def _validate_tag_name_unicity(self):
+        if self.tag_name:
+            other_lines_with_same_tag = self.env['account.tax.report.line'].search_count([('tag_name', '=', self.tag_name), ('id', '!=', self.id), ('country_id', '=', self.country_id.id)])
+            if other_lines_with_same_tag:
+                raise ValidationError(_("Tag name %(tag)s is used by more than one tax report line in %(country)s. Each tag name should only be used once per country.") % {'tag': self.tag_name, 'country': self.country_id.name})
+
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
         """ If the parent of a report line is changed, the sequence of this line
@@ -1435,17 +1442,22 @@ class AccountTax(models.Model):
                 subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
 
             # Compute the tax lines
-            tax_repartition_lines = is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids
+            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
+            sum_factor = sum(tax_repartition_lines.mapped('factor'))
             repartition_lines_to_treat = len(tax_repartition_lines)
             total_amount = 0
-            for repartition_line in tax_repartition_lines.filtered(lambda x: x.repartition_type == 'tax'):
-                # In case some rounding error occurs, we compensate for it on the last line
-                line_amount = round(sign * tax_amount * repartition_line.factor if repartition_lines_to_treat != 1 else tax_amount - total_amount, prec)
+            for repartition_line in tax_repartition_lines:
+                if repartition_lines_to_treat != 1 or sum_factor != 1.0:
+                    line_amount = round(tax_amount * repartition_line.factor, prec)
+                else:
+                    # When the sum of the repartition lines factor is 100%, we need to ensure the whole tax amount has
+                    # been spread into the repartition lines.
+                    line_amount = round(tax_amount - total_amount, prec)
 
                 taxes_vals.append({
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
-                    'amount': line_amount,
+                    'amount': sign * line_amount,
                     'base': round(sign * base, prec),
                     'sequence': tax.sequence,
                     'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,

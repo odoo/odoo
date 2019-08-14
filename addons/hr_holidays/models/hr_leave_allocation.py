@@ -368,7 +368,8 @@ class HolidaysAllocation(models.Model):
             holiday.message_subscribe(partner_ids=(holiday.employee_id.parent_id.user_id.partner_id | holiday.employee_id.leave_manager_id.partner_id).ids)
         if 'employee_id' in values:
             holiday._onchange_employee()
-        holiday.activity_update()
+        if not self._context.get('import_file'):
+            holiday.activity_update()
         return holiday
 
     def write(self, values):

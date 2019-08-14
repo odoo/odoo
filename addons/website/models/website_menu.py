@@ -154,7 +154,12 @@ class Menu(models.Model):
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
-                page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
+                domain = self.env["website"].website_domain(website_id) + [
+                    "|",
+                    ("url", "=", menu["url"]),
+                    ("url", "=", "/" + menu["url"]),
+                ]
+                page = self.env["website.page"].search(domain, limit=1)
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url

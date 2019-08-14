@@ -272,7 +272,7 @@
                                     </tr>
                                     <tr>
                                         <th><small class="font-weight-bold">Badges</small></th>
-                                        <td t-if="user.badge_ids" t-esc="len(user.badge_ids)"/>
+                                        <td t-if="user.badge_ids" t-esc="len(user.badge_ids.filtered(lambda b: b.badge_id.website_published))"/>
                                         <td t-else="">0</td>
                                     </tr>
                                 </tbody>
@@ -362,20 +362,22 @@
 
     <template id="user_badges" name="User Bagdes">
         <div t-if="user.badge_ids" class="row mx-n1">
-            <div class="col px-1 mb-2 col-xl-4" t-foreach="user.badge_ids" t-as="badge">
+            <t t-foreach="user.badge_ids" t-as="badge">
                 <t t-if="badge.badge_id.website_published">
-                    <div class="card">
-                        <div class="card-body p-2 pr-3">
-                            <div class="media align-items-center">
-                                <img height="38" t-att-src="website.image_url(badge.badge_id, 'image_64')" class="mr-0"/>
-                                <div class="media-body col-md-10 p-0">
+                    <div class="col px-1 mb-2 col-xl-4">
+                        <div class="card">
+                            <div class="card-body p-2 pr-3">
+                                <div class="media align-items-center">
+                                  <img height="38" t-att-src="website.image_url(badge.badge_id, 'image_64')" class="mr-0"/>
+                                  <div class="media-body col-md-10 p-0">
                                     <h6 class="my-0 text-truncate" t-field="badge.badge_id.name"/>
+                                  </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </t>
-            </div>
+            </t>
         </div>
         <div class="mb-3" t-if="not user.badge_ids">
             <p class="text-muted">No badge yet</p>

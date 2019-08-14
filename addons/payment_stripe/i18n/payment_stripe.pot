@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* payment_stripe
+# 	* payment_stripe
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:50+0000\n"
-"PO-Revision-Date: 2019-03-20 13:50+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +24,20 @@ msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
-msgid "A relative or absolute URL pointing to a square image of your brand or product. As defined in your Stripe profile. See: https://stripe.com/docs/checkout"
+msgid ""
+"A relative or absolute URL pointing to a square image of your brand or "
+"product. As defined in your Stripe profile. See: "
+"https://stripe.com/docs/checkout"
 msgstr ""
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Alipay"
 msgstr ""
 
 #. module: payment_stripe
@@ -83,7 +91,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:33
+#: code:addons/payment_stripe/static/src/js/stripe.js:37
 #, python-format
 msgid "Just one more second, confirming your payment..."
 msgstr ""
@@ -100,7 +108,7 @@ msgstr ""
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
-msgid "PayUlatam"
+msgid "PayU Latam"
 msgstr ""
 
 #. module: payment_stripe
@@ -125,7 +133,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:59
+#: code:addons/payment_stripe/static/src/js/stripe.js:62
 #, python-format
 msgid "Payment error"
 msgstr ""
@@ -138,7 +146,9 @@ msgstr ""
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:174
 #, python-format
-msgid "Perhaps the problem can be solved by double-checking your credit card details, or contacting your bank?"
+msgid ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
 msgstr ""
 
 #. module: payment_stripe
@@ -200,4 +210,3 @@ msgstr ""
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
 msgstr ""
-

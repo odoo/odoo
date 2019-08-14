@@ -1803,8 +1803,8 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         }
         this.$('> img').remove();
         this.$el.prepend($img);
+
         $img.one('error', function () {
-            self._clearFile();
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });

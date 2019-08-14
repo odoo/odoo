@@ -20,6 +20,7 @@ German accounting chart and localization.
     'data': [
         'data/account_account_tags_data.xml',
         'data/menuitem_data.xml',
+        'views/account_view.xml',
         'report/din5008_report.xml',
         'data/report_layout.xml',
     ],

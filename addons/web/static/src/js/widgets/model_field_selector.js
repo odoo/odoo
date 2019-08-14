@@ -301,11 +301,16 @@ var ModelFieldSelector = Widget.extend({
         }).bind(this));
 
         function processChain(chain) {
-            var field = this._getLastPageField(chain.pop());
+            var fieldName = chain.pop();
+            var field = this._getLastPageField(fieldName);
             if (field && field.relation && chain.length > 0) { // Fetch next chain node if any and possible
                 return this._pushPageData(field.relation).then(processChain.bind(this, chain));
             } else if (field && chain.length === 0) { // Last node fetched
                 return Promise.resolve();
+            } else if (!field && fieldName === "1") { // TRUE_LEAF
+                this._validate(true);
+            } else if (!field && fieldName === "0") { // FALSE_LEAF
+                this._validate(true);
             } else { // Wrong node chain
                 this._validate(false);
             }

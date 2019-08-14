@@ -12,6 +12,6 @@ class ResCompany(models.Model):
         ('prefix', 'Add international prefix'),
     ], string="Local Numbers", default="prefix",
         help="Always encode phone numbers using international format. Otherwise "
-             "numbers coming from the company's country are nationaly formatted. "
+             "numbers coming from the company's country are nationally formatted. "
              "International numbers are always using international format."
     )

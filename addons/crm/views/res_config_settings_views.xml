@@ -101,17 +101,13 @@
                     <h2>Contacts</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_crm_phone_validation"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_crm_phone_validation"/>
-                                <div class="text-muted" id="module_crm_phone_validation">
+                            <div class="o_setting_right_pane" title="Always encode phone numbers using international format. Otherwise numbers coming from the company's country are nationally formatted. International numbers are always using international format.">
+                                <b>Phone Formatting</b>
+                                <div class="text-muted">
                                     Format phone numbers based on national conventions
                                 </div>
                                 <div class="content-group">
-                                    <div class="mt16" attrs="{'invisible': [('module_crm_phone_validation','=',False)]}">
-                                        <label for="crm_phone_valid_method" class="o_light_label"/>
+                                    <div class="mt16">
                                         <field name="crm_phone_valid_method" widget="radio" class="o_light_label"/>
                                     </div>
                                 </div>

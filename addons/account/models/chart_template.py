@@ -23,27 +23,6 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     if xml_record_ids:
         cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
-def migrate_tags_on_taxes(cr, registry):
-    ''' This is a utility function to help migrate the tags of taxes when the localization has been modified on stable version. If
-    called accordingly in a post_init_hooked function, it will reset the tags set on taxes as per their equivalent template.
-
-    Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
-    and working out of the box when people are creating/using new taxes.
-    '''
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    xml_records = env['ir.model.data'].search([
-        ('model', '=', 'account.tax.template'),
-        ('module', 'like', 'l10n_%')
-    ])
-    tax_template_ids = [x['res_id'] for x in xml_records.sudo().read(['res_id'])]
-    for tax_template in env['account.tax.template'].browse(tax_template_ids):
-        tax_id = env['account.tax'].search([
-            ('name', '=', tax_template.name),
-            ('type_tax_use', '=', tax_template.type_tax_use),
-            ('description', '=', tax_template.description)
-        ])
-        tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
-
 def preserve_existing_tags_on_taxes(cr, registry, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
     env = api.Environment(cr, SUPERUSER_ID, {})
@@ -740,6 +719,19 @@ class AccountChartTemplate(models.Model):
         for account_reconcile_model in account_reconcile_models:
             vals = self._prepare_reconcile_model_vals(company, account_reconcile_model, acc_template_ref, tax_template_ref)
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
+        # Create a default rule for the reconciliation widget matching invoices automatically.
+        self.env['account.reconcile.model'].sudo().create({
+            "name": _('Invoices Matching Rule'),
+            "sequence": '1',
+            "rule_type": 'invoice_matching',
+            "auto_reconcile": False,
+            "match_nature": 'both',
+            "match_same_currency": True,
+            "match_total_amount": True,
+            "match_total_amount_param": 100,
+            "match_partner": True,
+            "company_id": company.id,
+        })
         return True
 
     def _get_fp_vals(self, company, position):

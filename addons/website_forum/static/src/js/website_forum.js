@@ -24,6 +24,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
         'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .accept_answer:not(.karma_required)': '_onAcceptAnswerClick',
+        'click .validate_answer [data-href]': '_onAcceptAnswerClick',
+        'mouseenter .validate_answer [data-href]': '_onRemoveValidAnswerMouse',
+        'mouseleave .validate_answer [data-href]': '_onRemoveValidAnswerMouse',
         'click .favourite_question': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
@@ -337,6 +340,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onAcceptAnswerClick: function (ev) {
         var self = this;
         ev.preventDefault();
+        var self = this;
+        var $acceptAnswerLinks = this.$('.accept_answer');
         var $link = $(ev.currentTarget);
         this._rpc({
             route: $link.data('href'),
@@ -352,19 +357,41 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     sticky: false,
                 });
             } else {
+                $acceptAnswerLinks.removeClass('oe_answer_true')
+                                  .addClass('oe_answer_false');
                 $link.toggleClass('oe_answer_true', !!data)
                      .toggleClass('oe_answer_false', !data);
+
+                // TODO in master, review the utility of this function...
+                self._onCheckAnswerStatus(ev);
+
+                // If we are removing an accepted answer, reload the page as the
+                // design is quite different with or without an accepted answer.
+                if ($link.closest('.validate_answer').length) {
+                    window.location.reload();
+                }
             }
         });
-        this._onCheckAnswerStatus(ev);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onRemoveValidAnswerMouse: function (ev) {
+        var hover = (ev.type === 'mouseenter');
+        $(ev.currentTarget).find('.fa')
+            .toggleClass('fa-times-circle text-danger', hover)
+            .toggleClass('fa-check-circle text-success', !hover);
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onCheckAnswerStatus: function (ev) {
-        var $link = $(ev.currentTarget);
-        $link.toggleClass('text-success', !$link.hasClass('oe_answer_true'));
+        _.each(this.$('.accept_answer'), function (link) {
+            var $link = $(link);
+            $link.toggleClass('text-success', $link.hasClass('oe_answer_true'));
+        });
     },
     /**
      * @private

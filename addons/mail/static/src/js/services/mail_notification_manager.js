@@ -508,7 +508,7 @@ MailManager.include({
             }
             this._removeChannel(channel);
             this._mailBus.trigger('unsubscribe_from_channel', data.id);
-            this.do_notify(_("Unsubscribed"), message);
+            this.do_notify(_t("Unsubscribed"), message);
         }
     },
      /**

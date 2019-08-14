@@ -585,6 +585,8 @@ class HolidaysRequest(models.Model):
                 self._check_double_validation_rules(employee_id, values.get('state', False))
 
         holiday = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(values)
+        if self._context.get('import_file'):
+            holiday._onchange_leave_dates()
         if not self._context.get('leave_fast_create'):
             # FIXME remove these, as they should not be needed
             if employee_id:

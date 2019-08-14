@@ -565,11 +565,11 @@ class HomeStaticTemplateHelpers(object):
             key: addon name
             value: list of files for an addon
         :returns: (concatenation_result, checksum)
-        :rtype: (str, str)
+        :rtype: (bytes, str)
         """
         checksum = hashlib.new('sha1')
         if not file_dict:
-            return '', checksum.hexdigest()
+            return b'', checksum.hexdigest()
 
         root = None
         for addon, fnames in file_dict.items():
@@ -586,7 +586,7 @@ class HomeStaticTemplateHelpers(object):
             for template in addon.values():
                 root.append(template)
 
-        return etree.tostring(root, encoding='utf-8') if root is not None else '', checksum.hexdigest()
+        return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()
 
     def _get_qweb_templates(self):
         """One and only entry point that gets and evaluates static qweb templates
