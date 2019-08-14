@@ -289,6 +289,18 @@ ListRenderer.include({
         return null;
     },
     /**
+     * Returns whether the list is in multiple record edition from a given record.
+     *
+     * @private
+     * @param {string} recordId
+     * @returns {boolean}
+     */
+    inMultipleRecordEdition: function (recordId) {
+        var record = this._getRecord(recordId) || {};
+        var recordIds = _.union([recordId], this.selection);
+        return this.editable && recordIds.length > 1 && record.res_id;
+    },
+    /**
      * Removes the line associated to the given recordID (the index of the row
      * is found thanks to the old state), then updates the state.
      *
