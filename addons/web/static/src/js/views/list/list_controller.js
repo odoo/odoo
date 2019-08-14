@@ -32,7 +32,6 @@ var ListController = BasicController.extend({
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
-        navigation_move: '_onNavigationMove',
     }),
     /**
      * @constructor
@@ -376,11 +375,11 @@ var ListController = BasicController.extend({
         var self = this;
         var value = Object.values(changes)[0];
         var recordIds = _.union([recordId], this.selectedRecords);
-        var validRecordIds = recordIds.reduce(function (result, recordId) {
-            var record = self.model.get(recordId);
+        var validRecordIds = recordIds.reduce(function (result, nextRecordId) {
+            var record = self.model.get(nextRecordId);
             var modifiers = self.renderer._registerModifiers(node, record);
             if (!modifiers.readonly && (!modifiers.required || value)) {
-                result.push(recordId);
+                result.push(nextRecordId);
             }
             return result;
         }, []);
