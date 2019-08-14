@@ -1035,7 +1035,10 @@ ListRenderer.include({
         ev.stopPropagation();
 
         var self = this;
-        var groupId = $(ev.target).data('group-id');
+        // This method can be called when selecting the parent of the link.
+        // We need to ensure that the link is the actual target
+        const target = ev.target.tagName !== 'A' ? ev.target.getElementsByTagName('A')[0] : ev.target;
+        const groupId = target.dataset.groupId;
         this.currentGroupId = groupId;
         this.unselectRow().then(function () {
             self.trigger_up('add_record', {
@@ -1195,7 +1198,7 @@ ListRenderer.include({
                             var correspondingRow = self._getRow(recordId);
                             correspondingRow.children().eq(cellIndex).focus();
                         } else if (self.currentGroupId) {
-                                self.$('a[data-group-id=' + self.currentGroupId + ']').focus();
+                            self.$('a[data-group-id="' + self.currentGroupId + '"]').focus();
                         } else {
                             self.$('.o_field_x2many_list_row_add a:first').focus(); // FIXME
                         }
