@@ -508,6 +508,11 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': 'join_done'}
         return success
 
+    @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
+    def slide_channel_leave(self, channel_id):
+        request.env['slide.channel'].browse(channel_id)._remove_membership(request.env.user.partner_id)
+        return True
+
     @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_search_read(self, fields, domain):
         can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
@@ -515,6 +520,15 @@ class WebsiteSlides(WebsiteProfile):
             'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
             'can_create': can_create,
         }
+
+    @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
+    def slide_channel_subscribe(self, channel_id):
+        return request.env['slide.channel'].browse(channel_id).message_subscribe(partner_ids=[request.env.user.partner_id.id])
+
+    @http.route(['/slides/channel/unsubscribe'], type='json', auth='user', website=True)
+    def slide_channel_unsubscribe(self, channel_id):
+        request.env['slide.channel'].browse(channel_id).message_unsubscribe(partner_ids=[request.env.user.partner_id.id])
+        return True
 
     # --------------------------------------------------
     # SLIDE.SLIDE MAIN / SEARCH

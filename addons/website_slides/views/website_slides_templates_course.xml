@@ -260,14 +260,18 @@
                     <div t-if="channel.enroll_msg" t-field="channel.enroll_msg"/>
                     <small t-if="not channel.enroll_msg">Contact website administrator.</small>
                 </div>
-                <div t-if="channel.is_member" class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100">
+                <button t-if="channel.is_member"
+                        class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
+                        t-att-data-channel-id="channel.id"
+                        t-att-data-is-follower="channel.message_is_follower"
+                        t-att-data-enroll="channel.enroll">
                     <t t-call="website_slides.slides_misc_user_image">
                         <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
                         <t t-set="img_style" t-value="'height: 1.4em'"/>
                     </t>
                     <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
                     <i class="fa fa-check"/>
-                </div>
+                </button>
             </div>
             <button class="btn btn-sm d-md-none bg-white ml-1 border" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
         </div>
