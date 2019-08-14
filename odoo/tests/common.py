@@ -620,22 +620,29 @@ class ChromeBrowser():
             version : get chrome and dev tools version
             protocol : get the full protocol
         """
-        self._logger.info("Issuing json command %s", command)
         command = os.path.join('json', command).strip('/')
-        while timeout > 0:
+        url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
+        self._logger.info("Issuing json command %s", url)
+        delay = 0.1
+        tries = 0
+        failure_info = None
+        while tries * delay < timeout:
             try:
-                url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
-                self._logger.info('Url : %s', url)
                 r = requests.get(url, timeout=3)
                 if r.ok:
+                    self._logger.info("Json command result in %s", tries * delay)
                     return r.json()
                 return {'status_code': r.status_code}
-            except requests.ConnectionError:
-                time.sleep(0.1)
-                timeout -= 0.1
-            except requests.exceptions.ReadTimeout:
+            except requests.ConnectionError as e:
+                failure_info = str(e)
+                time.sleep(delay)
+                tries+=1
+            except requests.exceptions.ReadTimeout as e:
+                failure_info = str(e)
                 break
-        self._logger.error('Could not connect to chrome debugger')
+        self._logger.error('Could not connect to chrome debugger after %s tries, %ss' % (tries, delay))
+        if failure_info:
+            self._logger.info(failure_info)
         raise unittest.SkipTest("Cannot connect to chrome headless")
 
     def _open_websocket(self):
