@@ -8,16 +8,16 @@
             <search string="Search allocations">
                 <field name="employee_id"/>
                 <field name="name"/>
-                <field name="accrual"/>
+                <field name="allocation_type"/>
                 <filter domain="[('state','in',('confirm', 'validate1'))]" string="To Approve" name="approve"/>
                 <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
-                <filter string="Accrual Allocations" domain="[('accrual', '=', True)]" name="accrual_allocation"/>
+                <filter string="Accrual Allocations" domain="[('allocation_type', '=', 'accrual')]" name="accrual_allocation"/>
                 <separator/>
                 <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an time off type that is 'active' (active field is True)"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
-                <filter string="My Department Time Off" name="department" domain="[('department_id.member_ids.user_id', '=', uid)]" help="My Department Time Off"/>
+                <filter string="People I Manage" name="managed_people" domain="[('employee_id.leave_manager_id', '=', uid)]" help="Time off of people you are manager of"/>
                 <filter string="My Team Time Off" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
                 <filter name="year" string="Current Year"
@@ -35,8 +35,6 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
-                <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
@@ -87,12 +85,14 @@
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
-                            <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
+                            <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
 
+                            <field name="allocation_type" invisible="1" widget="radio"/>
+                            
                             <field name="number_of_days" invisible="1"/>
-                            <label for="number_of_days" string="Duration"/>
-                            <div>
+                            <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+                            <div attrs="{'invisible': [('allocation_type', '=', 'accrual')]}">
                                 <field name="number_of_days_display" class="oe_inline" nolabel="1"
                                     attrs="{'readonly': ['|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
                                 <field name="number_of_hours_display" class="oe_inline" nolabel="1"
@@ -100,8 +100,6 @@
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
                             </div>
-
-                            <field name="accrual" invisible="1"/>
                         </group>
                         <group name="alloc_right_col">
                             <field name="employee_id" invisible="1" groups="hr_holidays.group_hr_holidays_user"/>
@@ -148,33 +146,33 @@
             </xpath>
             <xpath expr="//field[@name='department_id']" position="replace">
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_user"
-                    attrs="{'required': [('holiday_type', '=', 'department')], 'invisible': [('holiday_type', 'not in', ('department', 'category'))]}"/>
+                    attrs="{'required': [('holiday_type', '=', 'department')], 'invisible': [('holiday_type', '!=', 'department')]}"/>
             </xpath>
             <xpath expr="//field[@name='department_id']" position="after">
                 <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user"
                     attrs="{'required': [('holiday_type', '=', 'company')], 'invisible': [('holiday_type', '!=', 'company')]}"/>
             </xpath>
-            <xpath expr="//field[@name='accrual']" position="attributes">
+            <xpath expr="//field[@name='allocation_type']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//field[@name='accrual']" position="after">
+            <xpath expr="//field[@name='allocation_type']" position="after">
                 <label for="date_to" string=""
-                    attrs="{'invisible': [('accrual', '=', False)]}"/>
-                <div attrs="{'invisible': [('accrual', '=', False)]}">
+                    attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
+                <div attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
                     <div class="o_row">
-                        Run until <field name="date_to" string="Run Until" help="If no value set, runs indefinitely"/>
+                        Run until <field name="date_to" string="Run Until" help="If no value set, runs indefinitely" class="ml-2" widget="date"/>
                     </div>
                     <div class="o_row">
                         <span>Add</span>
                         <field name="number_per_interval" class="ml8"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
                         <field name="unit_per_interval"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
                         <span class="ml8">of time off every</span>
                         <field name="interval_number" class="ml8"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
                         <field name="interval_unit"
-                            attrs="{'required': [('accrual', '=', True)]}"/>
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
                     </div>
                 </div>
             </xpath>
@@ -189,7 +187,7 @@
             <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
                    decoration-bf="message_needaction == True">
                 <field name="employee_id"/>
-                <field name="department_id"/>
+                <field name="department_id" optional="hide"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
                 <field name="duration_display"/>
@@ -370,7 +368,7 @@
         <field name="name">Department Allocation to Approve</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_mode">tree,form,kanban,activity</field>
-        <field name="context">{'search_default_department':1, 'search_default_approve':1}</field>
+        <field name="context">{'search_default_managed_people':1, 'search_default_approve':1}</field>
         <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -379,6 +377,31 @@
                 Time Off Officers allocate time off days to employees (e.g. paid time off).<br/>
                 Employees request allocations to Time Off Officers (e.g. recuperation days).
             </p>
+        </field>
+    </record>
+
+    <record id="ir_actions_server_approve_allocations" model="ir.actions.server">
+        <field name="name">Approve Allocations</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+        <field name="binding_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_approve()</field>
+    </record>
+
+    <record id="hr_leave_allocation_view_form_dashboard" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.dashboard</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <div name="button_box" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </div>
         </field>
     </record>
 
