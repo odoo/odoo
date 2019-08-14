@@ -187,6 +187,15 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
+    <record id="account_110421" model="account.account.template">
+        <field name="code">110421</field>
+        <field name="name">Deudores por Ventas (Pos)</field>
+        <field ref="account.data_account_type_receivable" name="user_type_id"/>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+    </record>
+
+
     <record id="account_110430" model="account.account.template">
         <field name="code">110430</field>
         <field name="name">Boletas en Garantía</field>
@@ -1706,6 +1715,7 @@
         <field name="property_account_income_categ_id" ref="account_310115"/>
         <field name="income_currency_exchange_account_id" ref="account_410195"/>
         <field name="expense_currency_exchange_account_id" ref="account_410195"/>
+        <field name="default_pos_receivable_account_id" ref="account_110421"/>
         <!--<field name="transfer_account_id" ref="transfer_account_id"/>-->
     </record>
 
