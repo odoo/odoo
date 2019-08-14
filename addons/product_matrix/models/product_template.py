@@ -79,7 +79,7 @@ class ProductTemplateAttributeValue(models.Model):
         }  # The " " is to avoid having 'Not available' if the template has only one attribute line.
         extra_price = sum(self.mapped('price_extra')) if display_extra else 0
         if extra_price:
-            sign = '+ ' if self.price_extra > 0 else '- '
+            sign = '+ ' if extra_price > 0 else '- '
             header_cell.update({
                 "price": sign + self.env['ir.qweb.field.monetary'].value_to_html(
                     extra_price, {
