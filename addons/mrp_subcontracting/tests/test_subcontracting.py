@@ -530,6 +530,7 @@ class TestSubcontractingTracking(TransactionCase):
         })
         bom_form = Form(self.env['mrp.bom'])
         bom_form.type = 'subcontract'
+        bom_form.subcontractor_ids.add(self.subcontractor_partner1)
         bom_form.product_tmpl_id = self.finished_lot.product_tmpl_id
         with bom_form.bom_line_ids.new() as bom_line:
             bom_line.product_id = self.comp1_sn
