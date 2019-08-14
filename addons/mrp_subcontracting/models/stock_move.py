@@ -54,18 +54,12 @@ class StockMove(models.Model):
         """
         self.ensure_one()
         if self.is_subcontract:
-            production = self.move_orig_ids.production_id
             rounding = self.product_uom.rounding
             production = self.move_orig_ids.production_id
             if self._has_tracked_subcontract_components() and\
                     float_compare(production.qty_produced, production.product_uom_qty, precision_rounding=rounding) < 0 and\
                     float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0:
-                action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
-                action['context'] = dict(
-                    active_id=production.id,
-                    default_subcontract_move_id=self.id
-                )
-                return action
+                return self._action_record_components()
         action = super(StockMove, self).action_show_details()
         if self.is_subcontract:
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
@@ -107,6 +101,14 @@ class StockMove(models.Model):
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
         return super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
+
+    def _action_record_components(self):
+        action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
+        action['context'] = dict(
+            default_production_id=self.move_orig_ids.production_id.id,
+            default_subcontract_move_id=self.id
+        )
+        return action
 
     def _check_overprocessed_subcontract_qty(self):
         """ If a subcontracted move use tracked components. Do not allow to add

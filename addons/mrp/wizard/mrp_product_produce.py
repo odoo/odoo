@@ -16,8 +16,11 @@ class MrpProductProduce(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(MrpProductProduce, self).default_get(fields)
-        if self._context and self._context.get('active_id'):
-            production = self.env['mrp.production'].browse(self._context['active_id'])
+        production = self.env['mrp.production']
+        production_id = self.env.context.get('default_production_id') or self.env.context.get('active_id')
+        if production_id:
+            production = self.env['mrp.production'].browse(production_id)
+        if production.exists():
             serial_finished = (production.product_id.tracking == 'serial')
             todo_uom = production.product_uom_id.id
             todo_quantity = self._get_todo(production)
@@ -68,7 +71,7 @@ class MrpProductProduce(models.TransientModel):
         self.ensure_one()
         self._record_production()
         action = self.production_id.open_produce_product()
-        action['context'] = {'active_id': self.production_id.id}
+        action['context'] = {'default_production_id': self.production_id.id}
         return action
 
     def action_generate_serial(self):
