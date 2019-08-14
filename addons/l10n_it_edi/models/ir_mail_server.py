@@ -6,6 +6,7 @@ import io
 import re
 import logging
 import email
+import email.policy
 import dateutil
 import pytz
 import base64
@@ -74,7 +75,7 @@ class FetchmailServer(models.Model):
                         message = bytes(message.data)
                     if isinstance(message, str):
                         message = message.encode('utf-8')
-                    msg_txt = email.message_from_bytes(message)
+                    msg_txt = email.message_from_bytes(message, policy=email.policy.SMTP)
 
                     try:
                         self._attachment_invoice(msg_txt)

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import email
+import email.policy
 import socket
 
 from email.utils import formataddr
@@ -17,6 +18,9 @@ from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
 from odoo.tools import email_split_and_format, mute_logger, pycompat
 
+def from_string(text):
+    return email.message_from_string(pycompat.to_text(text), policy=email.policy.SMTP)
+
 
 @tagged('mail_gateway')
 class TestEmailParsing(BaseFunctionalTest, MockEmails):
@@ -24,16 +28,16 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
     def test_message_parse_body(self):
         # test pure plaintext
         plaintext = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>')
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(plaintext)))
+        res = self.env['mail.thread'].message_parse(from_string(plaintext))
         self.assertIn('Please call me as soon as possible this afternoon!', res['body'])
 
         # test multipart / text and html -> html has priority
         multipart = self.format(MAIL_TEMPLATE, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>')
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(multipart)))
+        res = self.env['mail.thread'].message_parse(from_string(multipart))
         self.assertIn('<p>Please call me as soon as possible this afternoon!</p>', res['body'])
 
         # test multipart / mixed
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_MULTIPART_MIXED)))
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_MULTIPART_MIXED))
         self.assertNotIn(
             'Should create a multipart/mixed: from gmail, *bold*, with attachment', res['body'],
             'message_parse: text version should not be in body after parsing multipart/mixed')
@@ -41,7 +45,7 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
             '<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>', res['body'],
             'message_parse: html version should be in body after parsing multipart/mixed')
 
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_MULTIPART_MIXED_TWO)))
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_MULTIPART_MIXED_TWO))
         self.assertNotIn('First and second part', res['body'],
                          'message_parse: text version should not be in body after parsing multipart/mixed')
         self.assertIn('First part', res['body'],
@@ -49,24 +53,24 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
         self.assertIn('Second part', res['body'],
                       'message_parse: second part of the html version should be in body after parsing multipart/mixed')
 
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_SINGLE_BINARY)))
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_SINGLE_BINARY))
         self.assertEqual(res['body'], '')
         self.assertEqual(res['attachments'][0][0], 'thetruth.pdf')
 
     def test_message_parse_eml(self):
         # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
-        self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
+        self.env['mail.thread'].message_parse(from_string(mail))
 
     def test_message_parse_plaintext(self):
         """ Incoming email in plaintext should be stored as html """
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
+        res = self.env['mail.thread'].message_parse(from_string(mail))
         self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', res['body'])
 
     def test_message_parse_xhtml(self):
         # Test that the parsing of XHTML mails does not fail
-        self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_XHTML)))
+        self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_XHTML))
 
 
 @tagged('mail_gateway')
