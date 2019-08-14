@@ -3,7 +3,7 @@
 
 import ast
 import collections
-import imp
+import collections.abc
 import importlib
 import inspect
 import itertools
@@ -18,6 +18,7 @@ import unittest
 import threading
 from operator import itemgetter
 from os.path import join as opj
+from importlib.machinery import FileFinder
 
 import odoo
 import odoo.tools as tools
@@ -30,8 +31,28 @@ README = ['README.rst', 'README.md', 'README.txt']
 
 _logger = logging.getLogger(__name__)
 
+_ad_finders = []
+class AdFinderPathProxy(collections.abc.MutableSequence):
+    def __getitem__(self, index):
+        return _ad_finders[index].path
+
+    def __setitem__(self, index, path):
+        _ad_finders[index] = FileFinder(path)
+
+    def __delitem__(self, index):
+        del _ad_finders[index]
+
+    def __len__(self):
+        return len(_ad_finders)
+
+    def __add__(self, path_list):
+        return [finder.path for finder in _ad_finders] + path_list
+
+    def insert(self, index, path):
+        _ad_finders.insert(index, FileFinder(path))
+
 # addons path as a list
-ad_paths = []
+ad_paths = AdFinderPathProxy()
 hooked = False
 
 # Modules already loaded
@@ -57,9 +78,13 @@ class AddonsHook(object):
 
         # get module name in addons paths
         _1, _2, addon_name = name.split('.')
-        # load module
-        f, path, (_suffix, _mode, type_) = imp.find_module(addon_name, ad_paths)
-        if f: f.close()
+        for finder in _ad_finders:
+            spec = finder.find_spec(addon_name)
+            if spec:
+                path = spec.submodule_search_locations[0]
+                break
+        else:
+            raise ImportError("Module %s not found !" % addon_name)
 
         # TODO: fetch existing module from sys.modules if reloads permitted
         # create empty odoo.addons.* module, set name
@@ -67,7 +92,6 @@ class AddonsHook(object):
         new_mod.__loader__ = self
 
         # module top-level can only be a package
-        assert type_ == imp.PKG_DIRECTORY, "Odoo addon top-level must be a package"
         modfile = opj(path, '__init__.py')
         new_mod.__file__ = modfile
         new_mod.__path__ = [path]
