@@ -605,16 +605,16 @@ ListRenderer.include({
         var self = this;
         if (!this.allRecordsIds) {
             // compute the flat array of all records ids only once
-            this.allRecordIds = [];
+            this.allRecordsIds = [];
             utils.traverse_records(this.state, function (data) {
-                self.allRecordIds.push(data.id);
+                self.allRecordsIds.push(data.id);
             });
         }
         var curRecordId = this._getRecordID(this.currentRow);
-        var curRecordIndex = this.allRecordIds.indexOf(curRecordId);
-        var prevRecordIndex = curRecordIndex === 0 ? this.allRecordIds.length - 1 : curRecordIndex - 1;
+        var curRecordIndex = this.allRecordsIds.indexOf(curRecordId);
+        var prevRecordIndex = curRecordIndex === 0 ? this.allRecordsIds.length - 1 : curRecordIndex - 1;
         this.commitChanges(curRecordId).then(function () {
-            var $prevRow = self._getRow(self.allRecordIds[prevRecordIndex]);
+            var $prevRow = self._getRow(self.allRecordsIds[prevRecordIndex]);
             var prevRowIndex = $prevRow.prop('rowIndex') - 1;
             self._selectCell(prevRowIndex, self.columns.length - 1, {inc: -1});
         });
