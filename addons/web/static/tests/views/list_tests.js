@@ -4446,7 +4446,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition', async function (assert) {
-        assert.expect(21);
+        assert.expect(22);
 
         var list = await createView({
             View: ListView,
@@ -4509,6 +4509,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
         assert.ok($('.modal').text().includes('2 selected records'), "the number of records should be correctly displayed");
         await testUtils.dom.click($('.modal .btn-primary'));
+        assert.containsNone(list, '.o_data_cell input.o_field_widget', "no field should be editable anymore");
         assert.verifySteps(['write', 'read']);
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop666",
             "the first row should be updated");

@@ -402,7 +402,7 @@ var ListController = BasicController.extend({
                                 self._updateButtons('readonly');
                                 var state = self.model.get(self.handle);
                                 self.renderer.updateState(state, {});
-                                resolve();
+                                resolve(Object.keys(changes));
                             })
                             .guardedCatch(rejectAndDiscard);
                     },
