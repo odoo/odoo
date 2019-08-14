@@ -12,15 +12,6 @@
         <field name="responsible_id" ref="base.user_admin"/>
     </record>
 
-    <!-- Home working -->
-   <record id="holiday_status_hw" model="hr.leave.type">
-       <field name="name">Home Workings</field>
-       <field name="color_name">lightgreen</field>
-       <field name="leave_notif_subtype_id" eval="ref('mt_leave_home_working')"/>
-       <field name="responsible_id" ref="base.user_admin"/>
-       <field name="validity_start" eval="False"/>
-   </record>
-
     <!-- ++++++++++++++++++++++  Mitchell Admin  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl" model="hr.leave.allocation">
@@ -293,48 +284,12 @@
         <field name="state">validate</field>
     </record>
 
-    <record id="hr_holidays_int_tour_fpi" model="hr.leave.allocation">
-        <field name="name">International Tour</field>
-        <field name="holiday_status_id" ref="holiday_status_hw"/>
-        <field name="number_of_days">8</field>
-        <field name="employee_id" ref="hr.employee_fpi"/>
-        <field name="state">confirm</field>
-    </record>
-
     <record id="hr_holidays_vc_fpi" model="hr.leave.allocation">
         <field name="name">Summer Vacation</field>
         <field name="holiday_status_id" ref="holiday_status_unpaid"/>
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_fpi"/>
     </record>
-
-    <!-- approve leave allocations -->
-    <function model="hr.leave.allocation" name="action_approve">
-        <value model="hr.leave.allocation" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_int_tour_fpi')])
-        ]"/>
-    </function>
-
-    <!-- leave request -->
-    <record id="hr_holidays_sl_fpi" model="hr.leave">
-        <field name="name">Home working</field>
-        <field name="holiday_status_id" ref="holiday_status_hw"/>
-        <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 1:0:0')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-17 23:0:0')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 1:0:0')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-17 23:0:0')" name="request_date_to"/>
-        <field name="number_of_days">8</field>
-        <field name="employee_id" ref="hr.employee_fpi"/>
-    </record>
-
-    <!-- approve the leave request -->
-    <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl_fpi')])
-        ]"/>
-    </function>
 
     <!-- ++++++++++++++++++++++   Olivia  ++++++++++++++++++++++ -->
 
