@@ -126,7 +126,6 @@ class HolidaysRequest(models.Model):
         'hr.department', string='Department', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    out_of_office_message = fields.Char(string='Chat Status')
     # duration
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False, required=True,
@@ -262,11 +261,6 @@ class HolidaysRequest(models.Model):
         self.request_unit_hours = False
         self.request_unit_custom = False
         self.state = 'confirm' if self.validation_type != 'no_validation' else 'draft'
-
-    @api.onchange('user_id')
-    def _onchange_user_id(self):
-        if not self.out_of_office_message:
-            self.out_of_office_message = self.user_id.out_of_office_message
 
     @api.onchange('request_date_from_period', 'request_hour_from', 'request_hour_to',
                   'request_date_from', 'request_date_to',
@@ -630,9 +624,6 @@ class HolidaysRequest(models.Model):
                         pass
 
     def write(self, values):
-        # Allow an employee to always write his own out of office message
-        if len(self) == 1 and values.keys() == {'out_of_office_message'} and self.employee_id.user_id == self.env.user:
-            return super(HolidaysRequest, self.sudo()).write(values)
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         if not is_officer:

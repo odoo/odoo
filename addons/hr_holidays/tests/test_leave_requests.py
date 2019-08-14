@@ -174,6 +174,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
         # employee should be set to current user
         allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee))
         allocation_form.holiday_status_id = self.holidays_type_1
+        allocation_form.name = 'New Allocation Request'
         allocation = allocation_form.save()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

@@ -111,8 +111,11 @@ class HolidaysAllocation(models.Model):
         'hr.employee.category', string='Employee Tag', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # accrual configuration
-    accrual = fields.Boolean(
-        "Accrual", readonly=True,
+    allocation_type = fields.Selection(
+        [
+            ('regular', 'Regular Allocation'),
+            ('accrual', 'Accrual Allocation')
+        ], string="Allocation Type", default="regular", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     accrual_limit = fields.Integer('Balance limit', default=0, help="Maximum of allocation for accrual; 0 means no maximum.")
     number_per_interval = fields.Float("Number of unit per interval", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
@@ -150,7 +153,7 @@ class HolidaysAllocation(models.Model):
         """
         today = fields.Date.from_string(fields.Date.today())
 
-        holidays = self.search([('accrual', '=', True), ('state', '=', 'validate'), ('holiday_type', '=', 'employee'),
+        holidays = self.search([('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('holiday_type', '=', 'employee'),
                                 '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
                                 '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
 
@@ -298,7 +301,7 @@ class HolidaysAllocation(models.Model):
             if new_date_to < self.date_to:
                 self.date_to = new_date_to
 
-        if self.accrual:
+        if self.allocation_type == 'accrual':
             self.number_of_days = 0
 
             if self.holiday_status_id.request_unit == 'hour':
@@ -357,7 +360,7 @@ class HolidaysAllocation(models.Model):
     @api.model
     def create(self, values):
         """ Override to avoid automatic logging of creation """
-        if values.get('accrual', False):
+        if values.get('allocation_type', 'regular') == 'accrual':
             values['date_from'] = fields.Datetime.now()
         employee_id = values.get('employee_id', False)
         if not values.get('department_id'):
@@ -407,7 +410,7 @@ class HolidaysAllocation(models.Model):
             'number_of_days': self.number_of_days,
             'parent_id': self.id,
             'employee_id': employee.id,
-            'accrual': self.accrual,
+            'allocation_type': self.allocation_type,
             'date_to': self.date_to,
             'interval_unit': self.interval_unit,
             'interval_number': self.interval_number,
@@ -450,7 +453,6 @@ class HolidaysAllocation(models.Model):
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         self.activity_update()
-        return True
 
     def action_validate(self):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
