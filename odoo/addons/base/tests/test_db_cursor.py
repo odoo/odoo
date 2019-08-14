@@ -50,10 +50,13 @@ class TestTestCursor(common.TransactionCase):
         self.record = self.env['res.partner'].create({'name': 'Foo'})
 
     def write(self, record, value):
-            record.ref = value
+        record.ref = value
+
+    def flush(self, record):
+        record.flush(['ref'])
 
     def check(self, record, value):
-            self.assertEqual(record.read(['ref'])[0]['ref'], value)
+        self.assertEqual(record.read(['ref'])[0]['ref'], value)
 
     def test_single_cursor(self):
         """ Check the behavior of a single test cursor. """
@@ -76,6 +79,7 @@ class TestTestCursor(common.TransactionCase):
         self.cr.commit()
 
         self.write(self.record, 'B')
+        self.flush(self.record)
 
         # check behavior of a "sub-cursor" that commits
         with self.registry.cursor() as cr:
@@ -96,6 +100,7 @@ class TestTestCursor(common.TransactionCase):
         self.cr.commit()
 
         self.write(self.record, 'B')
+        self.flush(self.record)
 
         # check behavior of a "sub-cursor" that rollbacks
         with self.assertRaises(ValueError):

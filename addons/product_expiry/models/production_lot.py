@@ -21,8 +21,10 @@ class StockProductionLot(models.Model):
     @api.depends('alert_date')
     def _compute_product_expiry_alert(self):
         current_date = fields.Datetime.now()
-        for lot in self.filtered(lambda l: l.alert_date):
+        lots = self.filtered(lambda l: l.alert_date)
+        for lot in lots:
             lot.product_expiry_alert = lot.alert_date <= current_date
+        (self - lots).product_expiry_alert = False
 
     def _get_dates(self, product_id=None):
         """Returns dates based on number of days configured in current lot's product."""

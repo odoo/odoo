@@ -90,6 +90,7 @@ class base_automation_test(common.TransactionCase):
         self.assertEqual(lead.user_id, self.user_root, "Responsible should not change on creation of Lead with state from 'draft' to 'open'.")
         # change partner, recompute on lead should trigger the rule
         partner.write({'employee': True})
+        lead.flush()
         self.assertTrue(lead.employee, "Customer field should updated to True")
         self.assertEqual(lead.user_id, self.user_demo, "Responsible should be change on write of Lead when Customer becomes True.")
 

@@ -215,7 +215,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 75)
         self.assertEqual(self.product1.quantity_svl, 5)
-        self.assertEqual(self.product1.stock_valuation_layer_ids[-1].description, 'Product value manually modified (from 10.0 to 15.0)')
+        self.assertEqual(self.product1.stock_valuation_layer_ids.sorted()[-1].description, 'Product value manually modified (from 10.0 to 15.0)')
 
     def test_negative_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -614,7 +614,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 19)
 
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 5)
-        for svl in self.product1.stock_valuation_layer_ids[-2:]:
+        for svl in self.product1.stock_valuation_layer_ids.sorted()[-2:]:
             self.assertEqual(svl.description, 'Costing method change for product category All: from standard to fifo.')
 
     def test_standard_to_fifo_2(self):
@@ -744,7 +744,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         # An accounting entry should only be created for the replenish now that the category is perpetual.
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
-        for svl in self.product1.stock_valuation_layer_ids[-2:]:
+        for svl in self.product1.stock_valuation_layer_ids.sorted()[-2:]:
             self.assertEqual(svl.description, 'Valuation method change for product category All: from manual_periodic to real_time.')
 
     def test_standard_manual_to_auto_2(self):

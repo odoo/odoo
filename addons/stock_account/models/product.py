@@ -97,6 +97,7 @@ class ProductProduct(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
     @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date')
     def _compute_value_svl(self):
         """Compute `value_svl` and `quantity_svl`."""
         domain = [
@@ -107,10 +108,15 @@ class ProductProduct(models.Model):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
         groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
             product.value_svl = group['value']
             product.quantity_svl = group['quantity']
+            products |= product
+        remaining = (self - products)
+        remaining.value_svl = 0
+        remaining.quantity_svl = 0
 
     # -------------------------------------------------------------------------
     # SVL creation helpers

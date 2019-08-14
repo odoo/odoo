@@ -92,7 +92,7 @@ class TestHrAttendance(TransactionCase):
 
         def tz_datetime(year, month, day, hour, minute):
             tz = pytz.timezone('Europe/Brussels')
-            return tz.localize(datetime(year, month, day, hour, minute)).astimezone(pytz.utc)
+            return tz.localize(datetime(year, month, day, hour, minute)).astimezone(pytz.utc).replace(tzinfo=None)
 
         employee = self.env['hr.employee'].create({'name': 'Cunégonde', 'tz': 'Europe/Brussels'})
         self.env['hr.attendance'].create({

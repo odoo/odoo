@@ -636,6 +636,9 @@ class AccountReconcileModel(models.Model):
         # Type == 'invoice_matching'.
         # Map each (st_line.id, model_id) with matching amls.
         invoices_models = ordered_models.filtered(lambda m: m.rule_type == 'invoice_matching')
+        self.env['account.move'].flush(['state'])
+        self.env['account.move.line'].flush(['balance', 'reconciled'])
+        self.env['account.bank.statement.line'].flush(['company_id'])
         if invoices_models:
             query, params = invoices_models._get_invoice_matching_query(st_lines, excluded_ids=excluded_ids, partner_map=partner_map)
             self._cr.execute(query, params)

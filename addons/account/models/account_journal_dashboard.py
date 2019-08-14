@@ -25,6 +25,8 @@ class account_journal(models.Model):
                 journal.kanban_dashboard_graph = json.dumps(journal.get_bar_graph_datas())
             elif (journal.type in ['cash', 'bank']):
                 journal.kanban_dashboard_graph = json.dumps(journal.get_line_graph_datas())
+            else:
+                journal.kanban_dashboard_graph = False
 
     def _get_json_activity_data(self):
         for journal in self:
@@ -243,6 +245,7 @@ class account_journal(models.Model):
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
+            self.env['account.move'].flush(['amount_residual', 'currency_id', 'type', 'invoice_date', 'company_id', 'journal_id', 'date', 'state', 'invoice_payment_state'])
 
             (query, query_args) = self._get_open_bills_to_pay_query()
             self.env.cr.execute(query, query_args)

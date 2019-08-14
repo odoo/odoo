@@ -518,12 +518,16 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.product_id.type in ['consu', 'service']:
                 line.qty_received_method = 'manual'
+            else:
+                line.qty_received_method = False
 
     @api.depends('qty_received_method', 'qty_received_manual')
     def _compute_qty_received(self):
         for line in self:
             if line.qty_received_method == 'manual':
                 line.qty_received = line.qty_received_manual or 0.0
+            else:
+                line.qty_received = 0.0
 
     @api.onchange('qty_received')
     def _inverse_qty_received(self):

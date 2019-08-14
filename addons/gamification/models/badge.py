@@ -43,7 +43,12 @@ class BadgeUser(models.Model):
                 model=badge_user._name,
                 res_id=badge_user.id,
                 composition_mode='mass_mail',
-                partner_ids=badge_user.user_id.partner_id.ids,
+                # `website_forum` triggers `_cron_update` which triggers this method for template `Received Badge`
+                # for which `badge_user.user_id.partner_id.ids` equals `[8]`, which is then passed to  `self.env['mail.compose.message'].create(...)`
+                # which expects a command list and not a list of ids. In master, this wasn't doing anything, at the end composer.partner_ids was [] and not [8]
+                # I believe this line is useless, it will take the partners to which the template must be send from the template itself (`partner_to`)
+                # The below line was therefore pointless.
+                # partner_ids=badge_user.user_id.partner_id.ids,
             )
 
         return True

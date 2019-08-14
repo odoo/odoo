@@ -241,6 +241,8 @@ class SaleOrder(models.Model):
                 dates_list.append(dt)
             if dates_list:
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
+            else:
+                order.expected_date = False
 
     def _compute_remaining_validity_days(self):
         for record in self:
@@ -1357,7 +1359,7 @@ class SaleOrderLine(models.Model):
         ]
         if no_variant_attributes_price_extra:
             product = product.with_context(
-                no_variant_attributes_price_extra=no_variant_attributes_price_extra
+                no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
             )
 
         if self.order_id.pricelist_id.discount_policy == 'with_discount':

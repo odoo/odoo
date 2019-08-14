@@ -47,6 +47,3 @@ class Partner(models.Model):
         self2 = self.with_context(display_website=False)
         super(Partner, self2)._compute_display_name()
 
-        # onchange uses the cache to retrieve value, we need to copy computed_value into the initial env
-        for record, record2 in zip(self, self2):
-            record.display_name = record2.display_name

@@ -156,6 +156,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: refuse should lead to refuse state')
         # Check left days: 2 days left again
+
+        hol_status_2_employee_group.invalidate_cache(['max_leaves'])
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
 
         self.assertEqual(hol2.state, 'refuse',

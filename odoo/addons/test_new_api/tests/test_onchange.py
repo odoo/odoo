@@ -292,7 +292,6 @@ class TestOnChange(common.TransactionCase):
                               'tags': [(5,), (0, 0, {'name': 'Tag'})]})],
         }
         self.env.cache.invalidate()
-
         result = multi.onchange(values, 'partner', field_onchange)
         expected_value = {
             'name': partner2.name,

@@ -53,7 +53,7 @@ class TestImage(HttpCase):
             'public': True,
             'mimetype': 'image/gif',
         })
-        response = self.url_open('/web/image/%s' % attachment.id)
+        response = self.url_open('/web/image/%s' % attachment.id, timeout=None)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(base64.b64encode(response.content), attachment.datas)
 

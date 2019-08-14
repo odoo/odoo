@@ -201,8 +201,9 @@ class TestPickShip(TestStockCommon):
         picking_client.move_lines[0].move_line_ids[0].qty_done = 15.0
         picking_client.move_lines._action_done()
         self.assertEqual(len(picking_client.move_lines), 2)
-        self.assertEqual(picking_client.move_lines.mapped('procure_method'), ['make_to_order', 'make_to_stock'])
-        self.assertEqual(picking_client.move_lines.mapped('product_uom_qty'), [10.0, 5.0])
+        move_lines = picking_client.move_lines.sorted()
+        self.assertEqual(move_lines.mapped('procure_method'), ['make_to_order', 'make_to_stock'])
+        self.assertEqual(move_lines.mapped('product_uom_qty'), [10.0, 5.0])
 
     def test_mto_moves_return_extra(self):
         picking_pick, picking_client = self.create_pick_ship()
@@ -1268,8 +1269,9 @@ class TestSinglePicking(TestStockCommon):
         # Check reserved quantity
         self.assertEqual(move1.reserved_availability, 2.0)
         self.assertEqual(len(move1.move_line_ids), 2)
-        self.assertEqual(move1.move_line_ids[0].lot_id.id, lot1.id)
-        self.assertEqual(move1.move_line_ids[1].lot_id.id, lot2.id)
+        move_lines = move1.move_line_ids.sorted()
+        self.assertEqual(move_lines[0].lot_id.id, lot1.id)
+        self.assertEqual(move_lines[1].lot_id.id, lot2.id)
 
     def test_recheck_availability_4(self):
         """ Same check than test_recheck_availability_2 but with serial number this time.
@@ -1332,8 +1334,9 @@ class TestSinglePicking(TestStockCommon):
         # Check reserved quantity
         self.assertEqual(move1.reserved_availability, 2.0)
         self.assertEqual(len(move1.move_line_ids), 2)
-        self.assertEqual(move1.move_line_ids[0].lot_id.id, serial1.id)
-        self.assertEqual(move1.move_line_ids[1].lot_id.id, serial2.id)
+        move_lines = move1.move_line_ids.sorted()
+        self.assertEqual(move_lines[0].lot_id.id, serial1.id)
+        self.assertEqual(move_lines[1].lot_id.id, serial2.id)
 
     def test_add_move_when_picking_is_available_1(self):
         """ Check that any move added in a picking once it's assigned is directly considered as

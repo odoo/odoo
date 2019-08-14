@@ -60,10 +60,13 @@ class Category(models.Model):
             # assign name of last category, and reassign display_name (to normalize it)
             cat.name = names[-1].strip()
 
-    def read(self, fields=None, load='_classic_read'):
+    def _read(self, fields):
+        # DLE P45: `test_31_prefetch`,
+        # with self.assertRaises(AccessError):
+        #     cat1.name
         if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
             raise AccessError('Sorry')
-        return super(Category, self).read(fields=fields, load=load)
+        return super(Category, self)._read(fields)
 
 
 class Discussion(models.Model):
@@ -338,7 +341,7 @@ class Bar(models.Model):
     _description = 'Test New API Bar'
 
     name = fields.Char()
-    foo = fields.Many2one('test_new_api.foo', compute='_compute_foo')
+    foo = fields.Many2one('test_new_api.foo', compute='_compute_foo', search='_search_foo')
     value1 = fields.Integer(related='foo.value1', readonly=False)
     value2 = fields.Integer(related='foo.value2', readonly=False)
 
@@ -346,6 +349,11 @@ class Bar(models.Model):
     def _compute_foo(self):
         for bar in self:
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
+
+    def _search_foo(self, operator, value):
+        assert operator == 'in'
+        records = self.env['test_new_api.foo'].browse(value)
+        return [('name', 'in', records.mapped('name'))]
 
 
 class Related(models.Model):
@@ -570,6 +578,22 @@ class Attachment(models.Model):
     def _compute_name(self):
         for rec in self:
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
+
+    # DLE P55: `test_cache_invalidation`
+    def modified(self, fnames, modified=None, create=False):
+        if not self:
+            return
+        comodel = self.env[self.res_model]
+        if 'res_id' in fnames and 'attachment_ids' in comodel:
+            field = comodel._fields['attachment_ids']
+            record = comodel.browse(self.res_id)
+            self.env.cache.invalidate([(field, record._ids)])
+            record.modified(['attachment_ids'])
+            if modified is None:
+                modified = {field: record}
+            else:
+                modified[field] = modified.get(field, record) | record
+        return super(Attachment, self).modified(fnames, modified=modified)
 
 
 class AttachmentHost(models.Model):

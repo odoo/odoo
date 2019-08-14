@@ -49,11 +49,10 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(record), 1)
         record.body = 'OK'
 
-        # field assignment fails on multiple records
+        # field assignment on multiple records should assign value to all records
         records = self.env['test_new_api.message'].search([])
-        assert len(records) > 1
-        with self.assertRaises(ValueError):
-            records.body = 'Faulty'
+        records.body = 'Updated'
+        self.assertTrue(all(map(lambda record:record.body=='Updated', records)))
 
         # field assigmenent does not cache the wrong value when write overridden
         record.priority = 4
@@ -100,6 +99,16 @@ class TestFields(common.TransactionCase):
             size = message.size
             message.write({'body': (message.body or '') + "!!!"})
             self.assertEqual(message.size, size + 3)
+
+        # create a message, assign body, and check size in several environments
+        message1 = self.env['test_new_api.message'].create({})
+        message2 = message1.with_user(self.env.ref('base.user_demo'))
+        self.assertEqual(message1.size, 0)
+        self.assertEqual(message2.size, 0)
+
+        message1.write({'body': "XXX"})
+        self.assertEqual(message1.size, 3)
+        self.assertEqual(message2.size, 3)
 
         # special case: computed field without dependency must be computed
         record = self.env['test_new_api.mixed'].create({})
@@ -203,6 +212,12 @@ class TestFields(common.TransactionCase):
             'model_id': self.env['ir.model'].search([('model', '=', 'res.users')]).id,
             'domain_force': "[('id', '!=', %d)]" % user2.id,
         })
+        # DLE P72: Since we decided that we do not raise security access errors for data to which we had the occassion
+        # to put the value in the cache, we need to invalidate the cache for user1, user2 and user3 in order
+        # to test the below access error. Otherwise the above create calls set in the cache the information needed
+        # to compute `company_type` ('is_company'), and doesn't need to trigger a read.
+        # We need to force the read in order to test the security access
+        User.invalidate_cache()
         # group users as a recordset, and read them as user demo
         users = (user1 + user2 + user3).with_user(self.env.ref('base.user_demo'))
         user1, user2, user3 = users
@@ -427,7 +442,7 @@ class TestFields(common.TransactionCase):
             self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
         # make sure that assertRaises() does not leave fields to recompute
-        self.assertFalse(self.env.has_todo())
+        self.assertFalse(self.env.fields_to_compute())
 
         # put back oneself into discussion participants: now we can create
         # messages in discussion
@@ -435,16 +450,23 @@ class TestFields(common.TransactionCase):
         self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
     def test_20_float(self):
-        """ test float fields """
+        """ test rounding of float fields """
         record = self.env['test_new_api.mixed'].create({})
+        query = "SELECT 1 FROM test_new_api_mixed WHERE id=%s AND number=%s"
 
-        # assign value, and expect rounding
-        record.write({'number': 2.4999999999999996})
-        self.assertEqual(record.number, 2.50)
+        # 2.49609375 (exact float) must be rounded to 2.5
+        record.write({'number': 2.49609375})
+        record.flush()
+        self.cr.execute(query, [record.id, '2.5'])
+        self.assertTrue(self.cr.rowcount)
+        self.assertEqual(record.number, 2.5)
 
-        # same with field setter
-        record.number = 2.4999999999999996
-        self.assertEqual(record.number, 2.50)
+        # 1.1 (1.1000000000000000888178420 in float) must be 1.1 in database
+        record.write({'number': 1.1})
+        record.flush()
+        self.cr.execute(query, [record.id, '1.1'])
+        self.assertTrue(self.cr.rowcount)
+        self.assertEqual(record.number, 1.1)
 
     def test_21_float_digits(self):
         """ test field description """
@@ -467,6 +489,7 @@ class TestFields(common.TransactionCase):
         self.assertIn(record.amount, [ramount, samount], msg)
 
         # check the value in the database
+        record.flush()
         self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', [record.id])
         value = self.cr.fetchone()[0]
         self.assertEqual(value, samount, msg)
@@ -524,8 +547,9 @@ class TestFields(common.TransactionCase):
         record.date = date(2012, 5, 1)
         self.assertEqual(record.date, date(2012, 5, 1))
 
-        with self.assertRaises(TypeError):
-            record.date = datetime(2012, 5, 1, 10, 45, 0)
+        # DLE P41: We now support to assign datetime to date. Not sure this is the good practice though.
+        # with self.assertRaises(TypeError):
+        #     record.date = datetime(2012, 5, 1, 10, 45, 0)
 
         # one may assign dates and datetime in the default format, and it must be checked
         record.date = '2012-05-01'
@@ -816,7 +840,6 @@ class TestFields(common.TransactionCase):
             'moment': '1932-11-09 00:00:00',
             'tag_id': tag1.id,
         })
-        record.invalidate_cache()
         self.assertEqual(record.with_user(user0).foo, 'main')
         self.assertEqual(record.with_user(user1).foo, 'default')
         self.assertEqual(record.with_user(user2).foo, 'default')
@@ -836,7 +859,6 @@ class TestFields(common.TransactionCase):
             'moment': '1932-12-10 23:59:59',
             'tag_id': tag2.id,
         })
-        record.invalidate_cache()
         self.assertEqual(record.with_user(user0).foo, 'main')
         self.assertEqual(record.with_user(user1).foo, 'alpha')
         self.assertEqual(record.with_user(user2).foo, 'default')
@@ -857,7 +879,6 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.with_user(user2).tag_id, tag0)
 
         record.with_user(user1).foo = False
-        record.invalidate_cache()
         self.assertEqual(record.with_user(user0).foo, 'main')
         self.assertEqual(record.with_user(user1).foo, False)
         self.assertEqual(record.with_user(user2).foo, 'default')
@@ -869,30 +890,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.with_user(user1).foo, 'beta')
         self.assertEqual(record.with_user(user2).foo, 'default')
 
-        # create company record and attribute
-        company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
-        attribute_record = self.env['test_new_api.company.attr'].create({
-            'company': company_record.id,
-            'quantity': 1,
-        })
-        self.assertEqual(attribute_record.bar, 'ABC')
-
-        # change quantity, 'bar' should recompute to 'ABCABC'
-        attribute_record.quantity = 2
-        self.assertEqual(attribute_record.bar, 'ABCABC')
-        self.assertFalse(self.env.has_todo())
-
-        # change company field 'foo', 'bar' should recompute to 'DEFDEF'
-        company_record.foo = 'DEF'
-        self.assertEqual(attribute_record.company.foo, 'DEF')
-        self.assertEqual(attribute_record.bar, 'DEFDEF')
-        self.assertFalse(self.env.has_todo())
-
         # add group on company-dependent field
         self.assertFalse(user0.has_group('base.group_system'))
         self.patch(type(record).foo, 'groups', 'base.group_system')
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
+            record.flush()
 
         user0.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
@@ -906,6 +909,24 @@ class TestFields(common.TransactionCase):
         })
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
+            record.flush()
+
+        # create company record and attribute
+        company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
+        attribute_record = self.env['test_new_api.company.attr'].create({
+            'company': company_record.id,
+            'quantity': 1,
+        })
+        self.assertEqual(attribute_record.bar, 'ABC')
+
+        # change quantity, 'bar' should recompute to 'ABCABC'
+        attribute_record.quantity = 2
+        self.assertEqual(attribute_record.bar, 'ABCABC')
+
+        # change company field 'foo', 'bar' should recompute to 'DEFDEF'
+        company_record.foo = 'DEF'
+        self.assertEqual(attribute_record.company.foo, 'DEF')
+        self.assertEqual(attribute_record.bar, 'DEFDEF')
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -1137,8 +1158,11 @@ class TestFields(common.TransactionCase):
         # read the related field discussion_name
         self.assertEqual(message.discussion.env, env)
         self.assertEqual(message.discussion_name, discussion.name)
-        with self.assertRaises(AccessError):
-            message.discussion.name
+        # DLE P75: message.discussion.name is put in the cache as sudo thanks to the computation of message.discussion_name
+        # As we decided that now if we had the chance to access the value at some point in the code, and that it was stored in the cache
+        # it's not a big deal to no longer raise the accesserror, as we had the chance to get the value at some point
+        # with self.assertRaises(AccessError):
+        #     message.discussion.name
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_42_new_related(self):
@@ -1223,6 +1247,26 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.messages), 5)
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
+
+    def test_70_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        demo_discussion = discussion.with_user(self.env.ref('base.user_demo'))
+
+        # check that the demo user sees the same messages
+        self.assertEqual(demo_discussion.messages, discussion.messages)
+
+        # add a message as user demo
+        messages = demo_discussion.messages
+        message = messages.create({'discussion': discussion.id})
+        self.assertEqual(demo_discussion.messages, messages + message)
+        self.assertEqual(demo_discussion.messages, discussion.messages)
+
+        # add a message as superuser
+        messages = discussion.messages
+        message = messages.create({'discussion': discussion.id})
+        self.assertEqual(discussion.messages, messages + message)
+        self.assertEqual(demo_discussion.messages, discussion.messages)
 
     def test_80_copy(self):
         Translations = self.env['ir.translation']
@@ -1433,6 +1477,7 @@ class TestFields(common.TransactionCase):
         record.write({
             'image_256': image_h,
         })
+        record.invalidate_cache(fnames=['image_256'], ids=record.ids)
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))

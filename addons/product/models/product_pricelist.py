@@ -92,6 +92,7 @@ class Pricelist(models.Model):
     def _compute_price_rule_get_items(self, products_qty_partner, date, uom_id, prod_tmpl_ids, prod_ids, categ_ids):
         self.ensure_one()
         # Load all rules
+        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id'])
         self.env.cr.execute(
             """
             SELECT

@@ -100,6 +100,9 @@ class IrActions(models.Model):
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
+        # DLE P19: Need to flush before doing the SELECT, which act as a search.
+        # Test `test_bindings`
+        self.flush()
         cr = self.env.cr
         query = """ SELECT a.id, a.type, a.binding_type
                     FROM ir_actions a, ir_model m
@@ -238,14 +241,6 @@ class IrActionsActWindow(models.Model):
     def exists(self):
         ids = self._existing()
         existing = self.filtered(lambda rec: rec.id in ids)
-        if len(existing) < len(self):
-            # mark missing records in cache with a failed value
-            exc = MissingError(
-                _("Record does not exist or has been deleted.")
-                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
-            )
-            for record in (self - existing):
-                record._cache.set_failed(self._fields, exc)
         return existing
 
     @api.model
@@ -440,7 +435,7 @@ class IrActionsServer(models.Model):
     @api.model
     def run_action_multi(self, action, eval_context=None):
         res = False
-        for act in action.child_ids:
+        for act in action.child_ids.sorted():
             result = act.run()
             if result:
                 res = result

@@ -57,8 +57,7 @@ class RatingMixin(models.AbstractModel):
     def _compute_rating_last_value(self):
         for record in self:
             ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id)], limit=1)
-            if ratings:
-                record.rating_last_value = ratings.rating
+            record.rating_last_value = ratings and ratings.rating or 0
 
     @api.depends('rating_ids')
     def _compute_rating_stats(self):
@@ -78,12 +77,9 @@ class RatingMixin(models.AbstractModel):
             for record in self:
                 if record._rec_name in values:  # set the res_name of ratings to be recomputed
                     res_name_field = self.env['rating.rating']._fields['res_name']
-                    record.rating_ids._recompute_todo(res_name_field)
+                    self.env.add_to_compute(res_name_field, record.rating_ids)
                 if record._rating_get_parent_field_name() in values:
                     record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
-
-        if self.env.recompute and self._context.get('recompute', True):  # trigger the recomputation of all field marked as "to recompute"
-            self.recompute()
 
         return result
 

@@ -82,8 +82,7 @@ class MailThread(models.AbstractModel):
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
     message_follower_ids = fields.One2many(
-        'mail.followers', 'res_id', string='Followers',
-        domain=lambda self: [('res_model', '=', self._name)])
+        'mail.followers', 'res_id', string='Followers')
     message_partner_ids = fields.Many2many(
         comodel_name='res.partner', string='Followers (Partners)',
         compute='_get_followers', search='_search_follower_partners')
@@ -92,7 +91,7 @@ class MailThread(models.AbstractModel):
         compute='_get_followers', search='_search_follower_channels')
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
-        domain=lambda self: [('model', '=', self._name), ('message_type', '!=', 'user_notification')], auto_join=True)
+        domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
     message_unread = fields.Boolean(
         'Unread Messages', compute='_get_message_unread',
         help="If checked new messages require your attention.")
@@ -1741,6 +1740,9 @@ class MailThread(models.AbstractModel):
 
         self = self.with_lang() # add lang to context imediatly since it will be usefull in various flows latter.
 
+        # Explicit access rights check, because display_name is computed as sudo.
+        self.check_access_rights('read')
+        self.check_access_rule('read')
         record_name = record_name or self.display_name
 
         partner_ids = set(partner_ids or [])

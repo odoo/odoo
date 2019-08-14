@@ -167,7 +167,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         #        large cabinet |
         # --------------------------------------------------------------------------------
         # TOTAL                                              |  256.00 |  294.40 |   38.40
-        self.assertEqual(order.amount_total, 294.4, "Check discount has been applied correctly (eg: on taxes aswell)")
+        self.assertAlmostEqual(order.amount_total, 294.4, 2, "Check discount has been applied correctly (eg: on taxes aswell)")
 
         # test coupon with code works the same as auto applied_programs
         p_specific_product.write({'promo_code_usage': 'code_needed', 'promo_code': '20pc'})
@@ -208,7 +208,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         #        large cabinet |
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 2298.00 | 2605.20 |  305.20
-        self.assertEqual(order.amount_total, 2605.20, "Changing cabinet quantity should change discount amount correctly")
+        self.assertAlmostEqual(order.amount_total, 2605.20, 2, "Changing cabinet quantity should change discount amount correctly")
 
         p_specific_product.discount_max_amount = 200
         order.recompute_coupon_lines()
@@ -337,7 +337,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # --------------------------------------------------------------------------------
         # TOTAL AFTER APPLYING FREE PRODUCT PROGRAMS         | 1594.95 | 1901.11 |  306.16
 
-        self.assertEqual(order.amount_total, 1901.11, "The order total with programs should be 1901.11")
+        self.assertAlmostEqual(order.amount_total, 1901.11, 2, "The order total with programs should be 1901.11")
         self.assertEqual(order.amount_untaxed, 1594.95, "The order untaxed total with programs should be 1594.95")
         self.assertEqual(len(order.order_line.ids), 8, "Order should contains 5 regular product lines and 3 free product lines")
 
@@ -438,7 +438,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # 20% on Large Cabinet |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 1242.22 | 1509.11 |  266.89
-        self.assertEqual(order.amount_total, 1509.11, "The order total with programs should be 1509.11")
+        self.assertAlmostEqual(order.amount_total, 1509.11, 2, "The order total with programs should be 1509.11")
         self.assertEqual(order.amount_untaxed, 1242.22, "The order untaxed total with programs should be 1242.22")
         self.assertEqual(len(order.order_line.ids), 7, "Order should contains 7 lines: 4 products lines, 2 free products lines and a 20% discount line")
 

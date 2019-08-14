@@ -30,6 +30,7 @@ class TestChannelStatistics(common.SlidesCase):
         channel_publisher.action_add_member()
         self.assertEqual(channel_publisher.members_count, 1)
         channel_publisher._action_add_members(self.user_emp.partner_id)
+        channel_publisher.invalidate_cache(['partner_ids'])
         self.assertEqual(channel_publisher.members_count, 2)
         self.assertEqual(channel_publisher.partner_ids, self.user_publisher.partner_id | self.user_emp.partner_id)
 
@@ -68,16 +69,20 @@ class TestChannelStatistics(common.SlidesCase):
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics_complete_check_member(self):
-        (self.slide | self.slide_2).write({'is_preview': True})
-        slides_emp = (self.slide | self.slide_2).with_user(self.user_emp)
+        slides = (self.slide | self.slide_2)
+        slides.write({'is_preview': True})
+        slides.flush(['is_preview'])
+        slides_emp = slides.with_user(self.user_emp)
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
             slides_emp.action_set_completed()
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics_view_check_member(self):
-        (self.slide | self.slide_2).write({'is_preview': True})
-        slides_emp = (self.slide | self.slide_2).with_user(self.user_emp)
+        slides = (self.slide | self.slide_2)
+        slides.write({'is_preview': True})
+        slides.flush(['is_preview'])
+        slides_emp = slides.with_user(self.user_emp)
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
             slides_emp.action_set_viewed()
@@ -89,6 +94,7 @@ class TestSlideStatistics(common.SlidesCase):
     def test_slide_user_statistics(self):
         channel_publisher = self.channel.with_user(self.user_publisher)
         channel_publisher._action_add_members(self.user_emp.partner_id)
+        channel_publisher.invalidate_cache(['partner_ids'])
 
         slide_emp = self.slide.with_user(self.user_emp)
         self.assertEqual(slide_emp.likes, 0)

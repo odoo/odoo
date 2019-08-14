@@ -30,7 +30,7 @@
     <record id="event_0" model="event.event">
         <field name="name">Design Fair Los Angeles</field>
         <field name="user_id" ref="base.user_admin"/>
-        <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 8:00:00')" name="date_begin"/>
+        <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 08:00:00')" name="date_begin"/>
         <field eval="(DateTime.now() + timedelta(days=5)).strftime('%Y-%m-%d 18:00:00')" name="date_end"/>
         <field name="seats_availability">limited</field>
         <field name="seats_max">500</field>
@@ -76,7 +76,7 @@
     <record id="event_2" model="event.event">
         <field name="name">Conference for Architects</field>
         <field name="user_id" ref="base.user_admin"/>
-        <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
+        <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 07:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_2"/>
         <field name="address_id" ref="base.res_partner_4"/>

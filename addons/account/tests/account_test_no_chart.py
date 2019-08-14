@@ -90,6 +90,12 @@ class TestAccountNoChartCommon(SavepointCase):
             'type': 'sale',
             'company_id': cls.env.user.company_id.id,
         })
+        cls.journal_general = cls.env['account.journal'].create({
+            'name': 'General Journal - Test',
+            'code': 'AJ-GENERAL',
+            'type': 'general',
+            'company_id': cls.env.user.company_id.id,
+        })
 
     @classmethod
     def setUpUsers(cls):

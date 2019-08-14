@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from pytz import timezone, UTC
 from odoo.tools import format_time
 
@@ -33,6 +33,7 @@ class HrEmployeeBase(models.AbstractModel):
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
 
+    @api.depends('user_id.im_status')
     def _compute_presence_state(self):
         """
         This method is overritten in several other modules which add additional
@@ -49,16 +50,22 @@ class HrEmployeeBase(models.AbstractModel):
                     state = 'absent'
             employee.hr_presence_state = state
 
+    @api.depends('user_id')
     def _compute_last_activity(self):
-        employees = self.filtered(lambda e: e.user_id)
-        presences = self.env['bus.presence'].search([('user_id', 'in', employees.mapped('user_id.id'))])
+        presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
+        # transform the result to a dict with this format {user.id: last_presence}
+        presences = {p['user_id']: p['last_presence'] for p in presences}
 
-        for presence in presences:
-            for employee in presence.user_id.employee_ids.filtered(lambda e: e in self):
-                tz = employee.tz
-                last_activity_datetime = presence.last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
+        for employee in self:
+            tz = employee.tz
+            last_presence = presences.get(employee.user_id.id, False)
+            if last_presence:
+                last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
                 if employee.last_activity == fields.Date.today():
                     employee.last_activity_time = format_time(self.env, last_activity_datetime, time_format='short')
                 else:
-                    employee.last_activity_date = False
+                    employee.last_activity_time = False
+            else:
+                employee.last_activity = False
+                employee.last_activity_time = False

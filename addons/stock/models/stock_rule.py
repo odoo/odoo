@@ -135,12 +135,14 @@ class StockRule(models.Model):
         """ Generate dynamicaly a message that describe the rule purpose to the
         end user.
         """
-        for rule in self.filtered(lambda rule: rule.action):
+        action_rules = self.filtered(lambda rule: rule.action)
+        for rule in action_rules:
             message_dict = rule._get_message_dict()
             message = message_dict.get(rule.action) and message_dict[rule.action] or ""
             if rule.action == 'pull_push':
                 message = message_dict['pull'] + "<br/><br/>" + message_dict['push']
             rule.rule_message = message
+        (self - action_rules).rule_message = None
 
     def _run_push(self, move):
         """ Apply a push rule on a move.

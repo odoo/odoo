@@ -89,6 +89,10 @@ class Product(models.Model):
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'product_id', 'Putaway Rules')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
+    @api.depends_context(
+        'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
+        'company_owned', 'location', 'warehouse', 'force_company',
+    )
     def _compute_quantities(self):
         res = self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in self:
@@ -594,6 +598,7 @@ class ProductTemplate(models.Model):
         'product_variant_ids.stock_move_ids.product_qty',
         'product_variant_ids.stock_move_ids.state',
     )
+    @api.depends_context('company_owned', 'location', 'warehouse', 'force_company')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:

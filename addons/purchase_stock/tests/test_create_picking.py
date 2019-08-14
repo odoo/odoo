@@ -197,13 +197,14 @@ class TestCreatePicking(common.TestProductCommon):
         # the move should be 12 units
         # note: move.product_qty = computed field, always in the uom of the quant
         #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
-        move1 = po.picking_ids.move_lines[0]
+        move1 = po.picking_ids.move_lines.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12)
 
         # edit the so line, sell 2 dozen, the move should now be 24 units
         po.order_line.product_qty = 2
+        move1 = po.picking_ids.move_lines.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 24)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)

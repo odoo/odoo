@@ -55,7 +55,7 @@ class Message(models.Model):
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
     # related document
     model = fields.Char('Related Document Model', index=True)
-    res_id = fields.Integer('Related Document ID', index=True)
+    res_id = fields.Many2oneReference('Related Document ID', index=True, model_field='model')
     record_name = fields.Char('Message Record Name', help="Name get of the related document.")
     # characteristics
     message_type = fields.Selection([
@@ -87,7 +87,7 @@ class Message(models.Model):
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action',
-        context={'active_test': False})
+        context={'active_test': False}, depends=['notification_ids'])
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
         help='Need Action')
@@ -99,12 +99,12 @@ class Message(models.Model):
     # notifications
     notification_ids = fields.One2many(
         'mail.notification', 'mail_message_id', 'Notifications',
-        auto_join=True, copy=False)
+        auto_join=True, copy=False, depends=['notified_partner_ids'])
     # user interface
     starred_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
     starred = fields.Boolean(
-        'Starred', compute='_get_starred', search='_search_starred',
+        'Starred', compute='_get_starred', search='_search_starred', compute_sudo=False,
         help='Current user has a starred notification linked to this message')
     # tracking
     tracking_value_ids = fields.One2many(
@@ -130,6 +130,14 @@ class Message(models.Model):
     #keep notification layout informations to be able to generate mail again
     email_layout_xmlid = fields.Char('Layout', copy=False)  # xml id of layout
     add_sign = fields.Boolean(default=True)
+    # `test_adv_activity`, `test_adv_activity_full`, `test_message_assignation_inbox`,...
+    # By setting an inverse for mail.mail_message_id, the number of SQL queries done by `modified` is reduced.
+    # 'mail.mail' inherits from `mail.message`: `_inherits = {'mail.message': 'mail_message_id'}`
+    # Therefore, when changing a field on `mail.message`, this triggers the modification of the same field on `mail.mail`
+    # By setting up the inverse one2many, we avoid to have to do a search to find the mails linked to the `mail.message`
+    # as the cache value for this inverse one2many is up-to-date.
+    # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
+    mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails')
 
     def _get_needaction(self):
         """ Need action on a mail.message = notified on my channel """
@@ -159,6 +167,7 @@ class Message(models.Model):
         return ['!', ('notification_ids.notification_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
+    @api.depends_context('uid')
     def _get_starred(self):
         """ Compute if the message is starred by the current user. """
         # TDE FIXME: use SQL
@@ -637,6 +646,10 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
+        self.flush(['model', 'res_id', 'author_id', 'message_type', 'partner_ids', 'channel_ids'])
+        self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
+        self.env['mail.channel'].flush(['channel_message_ids'])
+        self.env['mail.channel.partner'].flush(['channel_id', 'partner_id'])
         self._cr.execute("""
             SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
                             COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
@@ -732,6 +745,12 @@ class Message(models.Model):
 
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
+
+        self.flush(['model', 'res_id', 'author_id', 'parent_id', 'moderation_status', 'message_type', 'partner_ids', 'channel_ids'])
+        self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
+        self.env['mail.channel'].flush(['channel_message_ids', 'moderator_ids'])
+        self.env['mail.channel.partner'].flush(['channel_id', 'partner_id'])
+        self.env['res.users'].flush(['moderation_channel_ids'])
 
         if operation == 'read':
             self._cr.execute("""

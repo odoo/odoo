@@ -150,6 +150,7 @@ class ir_cron(models.Model):
                     fields.Datetime.to_string(now.astimezone(pytz.UTC)),
                     job['id']
                 ))
+                cron.flush()
                 cron.invalidate_cache()
 
         finally:

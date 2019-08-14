@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import IntegrityError
+from psycopg2 import IntegrityError, ProgrammingError
 
 import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError

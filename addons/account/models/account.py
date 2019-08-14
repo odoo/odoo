@@ -1148,16 +1148,18 @@ class AccountTax(models.Model):
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
-            record._check_repartition_lines(record.invoice_repartition_line_ids)
-            record._check_repartition_lines(record.refund_repartition_line_ids)
+            invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted()
+            refund_repartition_line_ids = record.refund_repartition_line_ids.sorted()
+            record._check_repartition_lines(invoice_repartition_line_ids)
+            record._check_repartition_lines(refund_repartition_line_ids)
 
-            if len(record.invoice_repartition_line_ids) != len(record.refund_repartition_line_ids):
+            if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
                 raise ValidationError(_("Invoice and credit note repartition should have the same number of lines."))
 
             index = 0
-            while index < len(record.invoice_repartition_line_ids):
-                inv_rep_ln = record.invoice_repartition_line_ids[index]
-                ref_rep_ln = record.refund_repartition_line_ids[index]
+            while index < len(invoice_repartition_line_ids):
+                inv_rep_ln = invoice_repartition_line_ids[index]
+                ref_rep_ln = refund_repartition_line_ids[index]
                 if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
                     raise ValidationError(_("Invoice and credit note repartitions should match (same percentages, in the same order)."))
                 index += 1

@@ -23,7 +23,7 @@ class TestFifoPrice(TestPurchase):
             'standard_price': 70.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
-            'supplier_taxes_id': '[]',
+            'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
         })
         product_cable_management_box.categ_id.property_cost_method = 'fifo'
@@ -217,7 +217,7 @@ class TestFifoPrice(TestPurchase):
             'standard_price': 70.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
-            'supplier_taxes_id': '[]',
+            'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
         })
         product_fifo_negative.categ_id.property_cost_method = 'fifo'

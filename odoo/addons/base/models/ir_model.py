@@ -606,9 +606,9 @@ class IrModelFields(models.Model):
                 else:
                     # field hasn't been loaded (yet?)
                     continue
-                for dependant, path in model._field_triggers.get(field, ()):
-                    if dependant.manual:
-                        failed_dependencies.append((field, dependant))
+                for dep in model._dependent_fields(field):
+                    if dep.manual:
+                        failed_dependencies.append((field, dep))
                 for inverse in model._field_inverses.get(field, ()):
                     if inverse.manual and inverse.type == 'one2many':
                         failed_dependencies.append((field, inverse))
@@ -625,6 +625,12 @@ class IrModelFields(models.Model):
         if not self:
             return
 
+        # remove pending write of this field
+        # DLE P16: if there are pending towrite of the field we currently try to unlink, pop them out from the towrite queue
+        # test `test_unlink_with_dependant`
+        for record in self:
+            for record_values in self.env.all.towrite[record.model].values():
+                record_values.pop(record.name, None)
         # remove fields from registry, and check that views are not broken
         fields = [self.env[record.model]._pop_field(record.name) for record in self]
         domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
@@ -749,6 +755,7 @@ class IrModelFields(models.Model):
 
         res = super(IrModelFields, self).write(vals)
 
+        self.flush()
         self.clear_caches()                         # for _existing_field_data()
 
         if column_rename:
@@ -970,6 +977,7 @@ class IrModelSelection(models.Model):
 
     def _get_selection(self, field_id):
         """ Return the given field's selection as a list of pairs (value, string). """
+        self.flush(['value', 'name', 'field_id', 'sequence'])
         self._cr.execute("""
             SELECT value, name
             FROM ir_model_fields_selection

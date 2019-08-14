@@ -98,6 +98,9 @@ class TestACLFeedback(Feedback):
             'perm_create': True,
         })
         self.record = self.env['test_access_right.some_obj'].create({'val': 5})
+        # values are in cache, clear them up for the test
+        ACL.flush()
+        ACL.invalidate_cache()
 
     def test_no_groups(self):
         """ Operation is never allowed
@@ -141,7 +144,7 @@ class TestIRRuleFeedback(Feedback):
         }).with_user(self.user)
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
-        return self.env['ir.rule'].create({
+        res = self.env['ir.rule'].create({
             'name': name,
             'model_id': self.model.id,
             'groups': [] if global_ else [(4, self.group2.id)],
@@ -152,6 +155,7 @@ class TestIRRuleFeedback(Feedback):
             'perm_unlink': False,
             'perm_' + attr: True,
         })
+        return res
 
     def test_local(self):
         self._make_rule('rule 0', '[("val", "=", 42)]')
@@ -294,7 +298,8 @@ Note: this might be a multi-company issue.
         )
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        # p.with_user(self.user).val
+        p.flush()
+        p.invalidate_cache()
         self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",

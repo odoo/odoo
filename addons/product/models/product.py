@@ -214,6 +214,7 @@ class ProductProduct(models.Model):
         for product in self:
             product.is_product_variant = True
 
+    @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
     def _compute_product_price(self):
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
@@ -256,12 +257,12 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({'list_price': value})
 
-    @api.depends('product_template_attribute_value_ids.price_extra')
     def _compute_product_price_extra(self):
         for product in self:
             product.price_extra = sum(product.mapped('product_template_attribute_value_ids.price_extra'))
 
     @api.depends('list_price', 'price_extra')
+    @api.depends_context('uom')
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:
@@ -274,6 +275,7 @@ class ProductProduct(models.Model):
                 list_price = product.list_price
             product.lst_price = list_price + product.price_extra
 
+    @api.depends_context('partner_id')
     def _compute_product_code(self):
         for product in self:
             for supplier_info in product.seller_ids:
@@ -283,6 +285,7 @@ class ProductProduct(models.Model):
             else:
                 product.code = product.default_code
 
+    @api.depends_context('partner_id')
     def _compute_partner_ref(self):
         for product in self:
             for supplier_info in product.seller_ids:

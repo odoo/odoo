@@ -75,6 +75,7 @@ class StockQuant(models.Model):
     @api.depends('quantity')
     def _compute_inventory_quantity(self):
         if not self._is_inventory_mode():
+            self.inventory_quantity = 0
             return
         for quant in self:
             quant.inventory_quantity = quant.quantity
@@ -94,10 +95,10 @@ class StockQuant(models.Model):
             if diff_float_compared == 0:
                 continue
             elif diff_float_compared > 0:
-                move_vals = self._get_inventory_move_values(diff, self.product_id.property_stock_inventory, self.location_id)
+                move_vals = quant._get_inventory_move_values(diff, quant.product_id.property_stock_inventory, quant.location_id)
             else:
-                move_vals = self._get_inventory_move_values(-diff, self.location_id, self.product_id.property_stock_inventory, out=True)
-            move = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
+                move_vals = quant._get_inventory_move_values(-diff, quant.location_id, quant.product_id.property_stock_inventory, out=True)
+            move = quant.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
             move._action_done()
 
     @api.model
@@ -232,6 +233,8 @@ class StockQuant(models.Model):
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
+        self.env['stock.quant'].flush(['location_id', 'owner_id', 'package_id', 'lot_id', 'product_id'])
+        self.env['product.product'].flush(['virtual_available'])
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
         domain = [

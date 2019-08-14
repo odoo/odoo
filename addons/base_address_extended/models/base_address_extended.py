@@ -138,6 +138,8 @@ class Partner(models.Model):
             # assign the values to the fields
             for k, v in vals.items():
                 partner[k] = v
+            for k in set(street_fields) - set(vals):
+                partner[k] = None
 
     def write(self, vals):
         res = super(Partner, self).write(vals)

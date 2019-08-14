@@ -922,7 +922,11 @@ class AccountTaxTemplate(models.Model):
                 }
 
                 # We also have to delay the assignation of accounts to repartition lines
-                all_tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
+                # The below code assigns the account_id to the repartition lines according
+                # to the corresponding repartition line in the template, based on the order.
+                # As we just created the repartition lines, tax.invoice_repartition_line_ids is not well sorted.
+                # But we can force the sort by calling sort()
+                all_tax_rep_lines = tax.invoice_repartition_line_ids.sorted() + tax.refund_repartition_line_ids.sorted()
                 all_template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
                 for i in range(0, len(all_template_rep_lines)):
                     # We assume template and tax repartition lines are in the same order

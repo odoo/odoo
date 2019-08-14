@@ -29,6 +29,7 @@ class SaleOrder(models.Model):
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
 
+    @api.depends('order_line')
     def _compute_website_order_line(self):
         for order in self:
             order.website_order_line = order.order_line
@@ -251,7 +252,7 @@ class SaleOrder(models.Model):
         else:
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
-            values = self.with_context(no_variant_attributes_price_extra=no_variant_attributes_price_extra)._website_product_id_change(self.id, product_id, qty=quantity)
+            values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 order = self.sudo().browse(self.id)
                 product_context.update({

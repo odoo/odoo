@@ -10,6 +10,12 @@ from odoo.osv import expression
 
 
 class TestExpression(TransactionCase):
+    def _search(self, obj, domain, init_domain=[]):
+        sql = obj.search(domain)
+        allobj = obj.search(init_domain)
+        fil = allobj.filtered_domain(domain)
+        self.assertEqual(sql, fil, "filtered_domain do not match SQL search for domain: "+str(domain))
+        return sql
 
     def test_00_in_not_in_m2m(self):
         # Create 4 partners with no category, or one or two categories (out of two categories).
@@ -27,43 +33,42 @@ class TestExpression(TransactionCase):
 
         # On a one2many or many2many field, `in` should be read `contains` (and
         # `not in` should be read `doesn't contain`.
-
-        with_a = partners.search([('category_id', 'in', [cat_a.id])])
+        with_a = self._search(partners, [('category_id', 'in', [cat_a.id])])
         self.assertEqual(a + ab, with_a, "Search for category_id in cat_a failed.")
 
-        with_b = partners.search([('category_id', 'in', [cat_b.id])])
+        with_b = self._search(partners, [('category_id', 'in', [cat_b.id])])
         self.assertEqual(b + ab, with_b, "Search for category_id in cat_b failed.")
 
         # Partners with the category A or the category B.
-        with_a_or_b = partners.search([('category_id', 'in', [cat_a.id, cat_b.id])])
+        with_a_or_b = self._search(partners, [('category_id', 'in', [cat_a.id, cat_b.id])])
         self.assertEqual(a + b + ab, with_a_or_b, "Search for category_id contains cat_a or cat_b failed.")
 
         # Show that `contains list` is really `contains element or contains element`.
-        with_a_or_with_b = partners.search(['|', ('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
+        with_a_or_with_b = self._search(partners, ['|', ('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
         self.assertEqual(a + b + ab, with_a_or_with_b, "Search for category_id contains cat_a or contains cat_b failed.")
 
         # If we change the OR in AND...
-        with_a_and_b = partners.search([('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
+        with_a_and_b = self._search(partners, [('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
         self.assertEqual(ab, with_a_and_b, "Search for category_id contains cat_a and cat_b failed.")
 
         # Partners without category A and without category B.
-        without_a_or_b = partners.search([('category_id', 'not in', [cat_a.id, cat_b.id])])
+        without_a_or_b = self._search(partners, [('category_id', 'not in', [cat_a.id, cat_b.id])])
         self.assertFalse(without_a_or_b & (a + b + ab), "Search for category_id doesn't contain cat_a or cat_b failed (1).")
         self.assertTrue(c in without_a_or_b, "Search for category_id doesn't contain cat_a or cat_b failed (2).")
 
         # Show that `doesn't contain list` is really `doesn't contain element and doesn't contain element`.
-        without_a_and_without_b = partners.search([('category_id', 'not in', [cat_a.id]), ('category_id', 'not in', [cat_b.id])])
+        without_a_and_without_b = self._search(partners, [('category_id', 'not in', [cat_a.id]), ('category_id', 'not in', [cat_b.id])])
         self.assertFalse(without_a_and_without_b & (a + b + ab), "Search for category_id doesn't contain cat_a and cat_b failed (1).")
         self.assertTrue(c in without_a_and_without_b, "Search for category_id doesn't contain cat_a and cat_b failed (2).")
 
         # We can exclude any partner containing the category A.
-        without_a = partners.search([('category_id', 'not in', [cat_a.id])])
+        without_a = self._search(partners, [('category_id', 'not in', [cat_a.id])])
         self.assertTrue(a not in without_a, "Search for category_id doesn't contain cat_a failed (1).")
         self.assertTrue(ab not in without_a, "Search for category_id doesn't contain cat_a failed (2).")
         self.assertLessEqual(b + c, without_a, "Search for category_id doesn't contain cat_a failed (3).")
 
         # (Obviously we can do the same for cateory B.)
-        without_b = partners.search([('category_id', 'not in', [cat_b.id])])
+        without_b = self._search(partners, [('category_id', 'not in', [cat_b.id])])
         self.assertTrue(b not in without_b, "Search for category_id doesn't contain cat_b failed (1).")
         self.assertTrue(ab not in without_b, "Search for category_id doesn't contain cat_b failed (2).")
         self.assertLessEqual(a + c, without_b, "Search for category_id doesn't contain cat_b failed (3).")
@@ -91,7 +96,7 @@ class TestExpression(TransactionCase):
         base_domain = [('id', 'in', list(pids.values()))]
 
         def test(op, value, expected):
-            found_ids = partners.search(base_domain + [('category_id', op, value)]).ids
+            found_ids = self._search(partners, base_domain + [('category_id', op, value)]).ids
             expected_ids = [pids[name] for name in expected]
             self.assertItemsEqual(found_ids, expected_ids, '%s %r should return %r' % (op, value, expected))
 
@@ -106,7 +111,7 @@ class TestExpression(TransactionCase):
         Category = self.env['res.partner.category']
 
         # search through m2m relation
-        partners = Partner.search([('category_id', 'child_of', self.ref('base.res_partner_category_0'))])
+        partners = self._search(Partner, [('category_id', 'child_of', self.ref('base.res_partner_category_0'))])
         self.assertTrue(partners)
 
         # setup test partner categories
@@ -115,119 +120,141 @@ class TestExpression(TransactionCase):
         categ_1 = Category.create({'name': 'Child1', 'parent_id': categ_0.id})
 
         # test hierarchical search in m2m with child id (list of ids)
-        cats = Category.search([('id', 'child_of', categ_root.ids)])
+        cats = self._search(Category, [('id', 'child_of', categ_root.ids)])
         self.assertEqual(len(cats), 3)
 
         # test hierarchical search in m2m with child id (single id)
-        cats = Category.search([('id', 'child_of', categ_root.id)])
+        cats = self._search(Category, [('id', 'child_of', categ_root.id)])
         self.assertEqual(len(cats), 3)
 
         # test hierarchical search in m2m with child ids
-        cats = Category.search([('id', 'child_of', (categ_0 + categ_1).ids)])
+        cats = self._search(Category, [('id', 'child_of', (categ_0 + categ_1).ids)])
         self.assertEqual(len(cats), 2)
 
         # test hierarchical search in m2m with child ids
-        cats = Category.search([('id', 'child_of', categ_0.ids)])
+        cats = self._search(Category, [('id', 'child_of', categ_0.ids)])
         self.assertEqual(len(cats), 2)
 
         # test hierarchical search in m2m with child ids
-        cats = Category.search([('id', 'child_of', categ_1.ids)])
+        cats = self._search(Category, [('id', 'child_of', categ_1.ids)])
         self.assertEqual(len(cats), 1)
 
         # test hierarchical search in m2m with an empty list
-        cats = Category.search([('id', 'child_of', [])])
+        cats = self._search(Category, [('id', 'child_of', [])])
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with 'False' value
         with self.assertLogs('odoo.osv.expression'):
-            cats = Category.search([('id', 'child_of', False)])
+            cats = self._search(Category, [('id', 'child_of', False)])
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with parent id (list of ids)
-        cats = Category.search([('id', 'parent_of', categ_1.ids)])
+        cats = self._search(Category, [('id', 'parent_of', categ_1.ids)])
         self.assertEqual(len(cats), 3)
 
         # test hierarchical search in m2m with parent id (single id)
-        cats = Category.search([('id', 'parent_of', categ_1.id)])
+        cats = self._search(Category, [('id', 'parent_of', categ_1.id)])
         self.assertEqual(len(cats), 3)
 
         # test hierarchical search in m2m with parent ids
-        cats = Category.search([('id', 'parent_of', (categ_root + categ_0).ids)])
+        cats = self._search(Category, [('id', 'parent_of', (categ_root + categ_0).ids)])
         self.assertEqual(len(cats), 2)
 
         # test hierarchical search in m2m with parent ids
-        cats = Category.search([('id', 'parent_of', categ_0.ids)])
+        cats = self._search(Category, [('id', 'parent_of', categ_0.ids)])
         self.assertEqual(len(cats), 2)
 
         # test hierarchical search in m2m with parent ids
-        cats = Category.search([('id', 'parent_of', categ_root.ids)])
+        cats = self._search(Category, [('id', 'parent_of', categ_root.ids)])
         self.assertEqual(len(cats), 1)
 
         # test hierarchical search in m2m with an empty list
-        cats = Category.search([('id', 'parent_of', [])])
+        cats = self._search(Category, [('id', 'parent_of', [])])
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with 'False' value
         with self.assertLogs('odoo.osv.expression'):
-            cats = Category.search([('id', 'parent_of', False)])
+            cats = self._search(Category, [('id', 'parent_of', False)])
         self.assertEqual(len(cats), 0)
+
+    def test_10_eq_lt_gt_lte_gte(self):
+        # test if less/greater than or equal operators work
+        currency = self.env['res.currency'].search([], limit=1)
+        # test equal
+        res = self._search(currency, [('rounding', '=', currency.rounding)])
+        self.assertTrue(currency in res)
+        # test not equal
+        res = self._search(currency, [('rounding', '!=', currency.rounding)])
+        self.assertTrue(currency not in res)
+        # test greater than
+        res = self._search(currency, [('rounding', '>', currency.rounding)])
+        self.assertTrue(currency not in res)
+        # test greater than or equal
+        res = self._search(currency, [('rounding', '>=', currency.rounding)])
+        self.assertTrue(currency in res)
+        # test less than
+        res = self._search(currency, [('rounding', '<', currency.rounding)])
+        self.assertTrue(currency not in res)
+        # test less than or equal
+        res = self._search(currency, [('rounding', '<=', currency.rounding)])
+        self.assertTrue(currency in res)
 
     def test_10_equivalent_id(self):
         # equivalent queries
         Currency = self.env['res.currency']
         non_currency_id = max(Currency.search([]).ids) + 1003
-        res_0 = Currency.search([])
-        res_1 = Currency.search([('name', 'not like', 'probably_unexisting_name')])
+        res_0 = self._search(Currency, [])
+        res_1 = self._search(Currency, [('name', 'not like', 'probably_unexisting_name')])
         self.assertEqual(res_0, res_1)
-        res_2 = Currency.search([('id', 'not in', [non_currency_id])])
+        res_2 = self._search(Currency, [('id', 'not in', [non_currency_id])])
         self.assertEqual(res_0, res_2)
-        res_3 = Currency.search([('id', 'not in', [])])
+        res_3 = self._search(Currency, [('id', 'not in', [])])
         self.assertEqual(res_0, res_3)
-        res_4 = Currency.search([('id', '!=', False)])
+        res_4 = self._search(Currency, [('id', '!=', False)])
         self.assertEqual(res_0, res_4)
 
         # equivalent queries, integer and string
         Partner = self.env['res.partner']
-        all_partners = Partner.search([])
+        all_partners = self._search(Partner, [])
         self.assertTrue(len(all_partners) > 1)
         one = all_partners[0]
         others = all_partners[1:]
 
-        res_1 = Partner.search([('id', '=', one.id)])
+        res_1 = self._search(Partner, [('id', '=', one.id)])
         self.assertEqual(one, res_1)
         # Partner.search([('id', '!=', others)]) # not permitted
-        res_2 = Partner.search([('id', 'not in', others.ids)])
+        res_2 = self._search(Partner, [('id', 'not in', others.ids)])
         self.assertEqual(one, res_2)
-        res_3 = Partner.search(['!', ('id', '!=', one.id)])
+        res_3 = self._search(Partner, ['!', ('id', '!=', one.id)])
         self.assertEqual(one, res_3)
-        res_4 = Partner.search(['!', ('id', 'in', others.ids)])
+        res_4 = self._search(Partner, ['!', ('id', 'in', others.ids)])
         self.assertEqual(one, res_4)
         # res_5 = Partner.search([('id', 'in', one)]) # TODO make it permitted, just like for child_of
         # self.assertEqual(one, res_5)
-        res_6 = Partner.search([('id', 'in', [one.id])])
+        res_6 = self._search(Partner, [('id', 'in', [one.id])])
         self.assertEqual(one, res_6)
-        res_7 = Partner.search([('name', '=', one.name)])
+        res_7 = self._search(Partner, [('name', '=', one.name)])
         self.assertEqual(one, res_7)
-        res_8 = Partner.search([('name', 'in', [one.name])])
+        res_8 = self._search(Partner, [('name', 'in', [one.name])])
         # res_9 = Partner.search([('name', 'in', one.name)]) # TODO
 
     def test_15_m2o(self):
         Partner = self.env['res.partner']
 
         # testing equality with name
-        partners = Partner.search([('parent_id', '=', 'Deco Addict')])
+        partners = self._search(Partner, [('parent_id', '=', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with name
-        partners = Partner.search([('parent_id', 'in', 'Deco Addict')])
+        partners = self._search(Partner, [('parent_id', 'in', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with a list of names
-        partners = Partner.search([('parent_id', 'in', ['Deco Addict', 'Wood Corner'])])
+        partners = self._search(Partner, [('parent_id', 'in', ['Deco Addict', 'Wood Corner'])])
         self.assertTrue(partners)
 
         # check if many2one works with empty search list
-        partners = Partner.search([('company_id', 'in', [])])
+        partners = self._search(Partner, [('company_id', 'in', [])])
         self.assertFalse(partners)
 
         # create new company with partners, and partners with no company
@@ -238,31 +265,33 @@ class TestExpression(TransactionCase):
 
         # check if many2one works with negative empty list
         all_partners = Partner.search([])
-        res_partners = Partner.search(['|', ('company_id', 'not in', []), ('company_id', '=', False)])
+        res_partners = self._search(Partner, ['|', ('company_id', 'not in', []), ('company_id', '=', False)])
         self.assertEqual(all_partners, res_partners, "not in [] fails")
 
         # check that many2one will pick the correct records with a list
-        partners = Partner.search([('company_id', 'in', [False])])
+        partners = self._search(Partner, [('company_id', 'in', [False])])
         self.assertTrue(len(partners) >= 4, "We should have at least 4 partners with no company")
 
         # check that many2one will exclude the correct records with a list
-        partners = Partner.search([('company_id', 'not in', [1])])
+        partners = self._search(Partner, [('company_id', 'not in', [1])])
         self.assertTrue(len(partners) >= 4, "We should have at least 4 partners not related to company #1")
 
         # check that many2one will exclude the correct records with a list and False
-        partners = Partner.search(['|', ('company_id', 'not in', [1]),
+        partners = self._search(Partner, ['|', ('company_id', 'not in', [1]),
                                         ('company_id', '=', False)])
         self.assertTrue(len(partners) >= 8, "We should have at least 8 partners not related to company #1")
 
         # check that multi-level expressions also work
-        partners = Partner.search([('company_id.partner_id', 'in', [])])
+        partners = self._search(Partner, [('company_id.partner_id', 'in', [])])
         self.assertFalse(partners)
 
         # check multi-level expressions with magic columns
-        partners = Partner.search([('create_uid.active', '=', True)])
+        partners = self._search(Partner, [('create_uid.active', '=', True)])
 
         # check that multi-level expressions with negative op work
-        all_partners = Partner.search([('company_id', '!=', False)])
+        all_partners = self._search(Partner, [('company_id', '!=', False)])
+
+        # FP Note: filtered_domain differs
         res_partners = Partner.search([('company_id.partner_id', 'not in', [])])
         self.assertEqual(all_partners, res_partners, "not in [] fails")
 
@@ -270,7 +299,7 @@ class TestExpression(TransactionCase):
         # column are used because parent_id is a many2one, allowing to test the
         # Null value, and there are actually some null and non-null values in
         # the demo data.
-        all_partners = Partner.search([])
+        all_partners = self._search(Partner, [])
         non_partner_id = max(all_partners.ids) + 1
 
         with_parent = all_partners.filtered(lambda p: p.parent_id)
@@ -295,97 +324,98 @@ class TestExpression(TransactionCase):
 
         # existing values be treated similarly if we simply check that some
         # existing value belongs to them.
-        res_0 = Partner.search([('parent_id', 'not like', 'probably_unexisting_name')]) # get all rows, included null parent_id
+        res_0 = self._search(Partner, [('parent_id', 'not like', 'probably_unexisting_name')]) # get all rows, included null parent_id
         self.assertEqual(res_0, all_partners)
-        res_1 = Partner.search([('parent_id', 'not in', [non_partner_id])]) # get all rows, included null parent_id
+        res_1 = self._search(Partner, [('parent_id', 'not in', [non_partner_id])]) # get all rows, included null parent_id
         self.assertEqual(res_1, all_partners)
-        res_2 = Partner.search([('parent_id', '!=', False)]) # get rows with not null parent_id, deprecated syntax
+        res_2 = self._search(Partner, [('parent_id', '!=', False)]) # get rows with not null parent_id, deprecated syntax
         self.assertEqual(res_2, with_parent)
-        res_3 = Partner.search([('parent_id', 'not in', [])]) # get all rows, included null parent_id
+        res_3 = self._search(Partner, [('parent_id', 'not in', [])]) # get all rows, included null parent_id
         self.assertEqual(res_3, all_partners)
-        res_4 = Partner.search([('parent_id', 'not in', [False])]) # get rows with not null parent_id
+        res_4 = self._search(Partner, [('parent_id', 'not in', [False])]) # get rows with not null parent_id
         self.assertEqual(res_4, with_parent)
-        res_4b = Partner.search([('parent_id', 'not ilike', '')]) # get only rows without parent
+        res_4b = self._search(Partner, [('parent_id', 'not ilike', '')]) # get only rows without parent
         self.assertEqual(res_4b, without_parent)
 
         # The results of these queries, when combined with queries 0..4 must
         # give the whole set of ids.
-        res_5 = Partner.search([('parent_id', 'like', 'probably_unexisting_name')])
+        res_5 = self._search(Partner, [('parent_id', 'like', 'probably_unexisting_name')])
         self.assertFalse(res_5)
-        res_6 = Partner.search([('parent_id', 'in', [non_partner_id])])
+        res_6 = self._search(Partner, [('parent_id', 'in', [non_partner_id])])
         self.assertFalse(res_6)
-        res_7 = Partner.search([('parent_id', '=', False)])
+        res_7 = self._search(Partner, [('parent_id', '=', False)])
         self.assertEqual(res_7, without_parent)
-        res_8 = Partner.search([('parent_id', 'in', [])])
+        res_8 = self._search(Partner, [('parent_id', 'in', [])])
         self.assertFalse(res_8)
-        res_9 = Partner.search([('parent_id', 'in', [False])])
+        res_9 = self._search(Partner, [('parent_id', 'in', [False])])
         self.assertEqual(res_9, without_parent)
-        res_9b = Partner.search([('parent_id', 'ilike', '')]) # get those with a parent
+        res_9b = self._search(Partner, [('parent_id', 'ilike', '')]) # get those with a parent
         self.assertEqual(res_9b, with_parent)
 
         # These queries must return exactly the results than the queries 0..4,
         # i.e. not ... in ... must be the same as ... not in ... .
-        res_10 = Partner.search(['!', ('parent_id', 'like', 'probably_unexisting_name')])
+        res_10 = self._search(Partner, ['!', ('parent_id', 'like', 'probably_unexisting_name')])
         self.assertEqual(res_0, res_10)
-        res_11 = Partner.search(['!', ('parent_id', 'in', [non_partner_id])])
+        res_11 = self._search(Partner, ['!', ('parent_id', 'in', [non_partner_id])])
         self.assertEqual(res_1, res_11)
-        res_12 = Partner.search(['!', ('parent_id', '=', False)])
+        res_12 = self._search(Partner, ['!', ('parent_id', '=', False)])
         self.assertEqual(res_2, res_12)
-        res_13 = Partner.search(['!', ('parent_id', 'in', [])])
+        res_13 = self._search(Partner, ['!', ('parent_id', 'in', [])])
         self.assertEqual(res_3, res_13)
-        res_14 = Partner.search(['!', ('parent_id', 'in', [False])])
+        res_14 = self._search(Partner, ['!', ('parent_id', 'in', [False])])
         self.assertEqual(res_4, res_14)
 
         # Testing many2one field is not enough, a regular char field is tested
-        res_15 = Partner.search([('website', 'in', [])])
+        res_15 = self._search(Partner, [('website', 'in', [])])
         self.assertFalse(res_15)
-        res_16 = Partner.search([('website', 'not in', [])])
+        res_16 = self._search(Partner, [('website', 'not in', [])])
         self.assertEqual(res_16, all_partners)
-        res_17 = Partner.search([('website', '!=', False)])
+        res_17 = self._search(Partner, [('website', '!=', False)])
         self.assertEqual(res_17, with_website)
 
         # check behavior for required many2one fields: currency_id is required
         companies = self.env['res.company'].search([])
-        res_101 = companies.search([('currency_id', 'not ilike', '')]) # get no companies
+        res_101 = self._search(companies, [('currency_id', 'not ilike', '')]) # get no companies
         self.assertFalse(res_101)
-        res_102 = companies.search([('currency_id', 'ilike', '')]) # get all companies
+        res_102 = self._search(companies, [('currency_id', 'ilike', '')]) # get all companies
         self.assertEqual(res_102, companies)
 
     def test_in_operator(self):
         """ check that we can use the 'in' operator for plain fields """
-        menus = self.env['ir.ui.menu'].search([('sequence', 'in', [1, 2, 10, 20])])
+        menu = self.env['ir.ui.menu']
+        menus = self._search(menu, [('sequence', 'in', [1, 2, 10, 20])])
         self.assertTrue(menus)
 
     def test_15_o2m(self):
         Partner = self.env['res.partner']
 
         # test one2many operator with empty search list
-        partners = Partner.search([('child_ids', 'in', [])])
+        partners = self._search(Partner, [('child_ids', 'in', [])])
         self.assertFalse(partners)
 
         # test one2many operator with False
-        partners = Partner.search([('child_ids', '=', False)])
+        partners = self._search(Partner, [('child_ids', '=', False)])
         for partner in partners:
             self.assertFalse(partner.child_ids)
 
         # verify domain evaluation for one2many != False and one2many == False
         categories = self.env['res.partner.category'].search([])
-        parents = categories.search([('child_ids', '!=', False)])
+        parents = self._search(categories, [('child_ids', '!=', False)])
         self.assertEqual(parents, categories.filtered(lambda c: c.child_ids))
-        leafs = categories.search([('child_ids', '=', False)])
+        leafs = self._search(categories, [('child_ids', '=', False)])
         self.assertEqual(leafs, categories.filtered(lambda c: not c.child_ids))
 
         # test many2many operator with empty search list
-        partners = Partner.search([('category_id', 'in', [])])
+        partners = self._search(Partner, [('category_id', 'in', [])])
         self.assertFalse(partners)
 
         # test many2many operator with False
-        partners = Partner.search([('category_id', '=', False)])
+        partners = self._search(Partner, [('category_id', '=', False)])
         for partner in partners:
             self.assertFalse(partner.category_id)
 
         # filtering on nonexistent value across x2many should return nothing
-        partners = Partner.search([('child_ids.city', '=', 'foo')])
+        partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
         self.assertFalse(partners)
 
     def test_15_equivalent_one2many_1(self):
@@ -394,31 +424,31 @@ class TestExpression(TransactionCase):
         company4 = Company.create({'name': 'Acme 4', 'parent_id': company3.id})
 
         # one2many towards same model
-        res_1 = Company.search([('child_ids', 'in', company3.child_ids.ids)]) # any company having a child of company3 as child
+        res_1 = self._search(Company, [('child_ids', 'in', company3.child_ids.ids)]) # any company having a child of company3 as child
         self.assertEqual(res_1, company3)
-        res_2 = Company.search([('child_ids', 'in', company3.child_ids[0].ids)]) # any company having the first child of company3 as child
+        res_2 = self._search(Company, [('child_ids', 'in', company3.child_ids[0].ids)]) # any company having the first child of company3 as child
         self.assertEqual(res_2, company3)
 
         # child_of x returns x and its children (direct or not).
         expected = company3 + company4
-        res_1 = Company.search([('id', 'child_of', [company3.id])])
+        res_1 = self._search(Company, [('id', 'child_of', [company3.id])])
         self.assertEqual(res_1, expected)
-        res_2 = Company.search([('id', 'child_of', company3.id)])
+        res_2 = self._search(Company, [('id', 'child_of', company3.id)])
         self.assertEqual(res_2, expected)
-        res_3 = Company.search([('id', 'child_of', [company3.name])])
+        res_3 = self._search(Company, [('id', 'child_of', [company3.name])])
         self.assertEqual(res_3, expected)
-        res_4 = Company.search([('id', 'child_of', company3.name)])
+        res_4 = self._search(Company, [('id', 'child_of', company3.name)])
         self.assertEqual(res_4, expected)
 
         # parent_of x returns x and its parents (direct or not).
         expected = company3 + company4
-        res_1 = Company.search([('id', 'parent_of', [company4.id])])
+        res_1 = self._search(Company, [('id', 'parent_of', [company4.id])])
         self.assertEqual(res_1, expected)
-        res_2 = Company.search([('id', 'parent_of', company4.id)])
+        res_2 = self._search(Company, [('id', 'parent_of', company4.id)])
         self.assertEqual(res_2, expected)
-        res_3 = Company.search([('id', 'parent_of', [company4.name])])
+        res_3 = self._search(Company, [('id', 'parent_of', [company4.name])])
         self.assertEqual(res_3, expected)
-        res_4 = Company.search([('id', 'parent_of', company4.name)])
+        res_4 = self._search(Company, [('id', 'parent_of', company4.name)])
         self.assertEqual(res_4, expected)
 
         # try testing real subsets with IN/NOT IN
@@ -429,14 +459,22 @@ class TestExpression(TransactionCase):
         u1a = Users.create({'login': 'dbo', 'partner_id': p1}).id
         u1b = Users.create({'login': 'dbo2', 'partner_id': p1}).id
         u2 = Users.create({'login': 'rpo', 'partner_id': p2}).id
-        self.assertEqual([p1], Partner.search([('user_ids', 'in', u1a)]).ids, "o2m IN accept single int on right side")
-        self.assertEqual([p1], Partner.search([('user_ids', '=', 'Dédé Boitaclou')]).ids, "o2m NOT IN matches none on the right side")
-        self.assertEqual([], Partner.search([('user_ids', 'in', [10000])]).ids, "o2m NOT IN matches none on the right side")
-        self.assertEqual([p1,p2], Partner.search([('user_ids', 'in', [u1a,u2])]).ids, "o2m IN matches any on the right side")
-        all_ids = Partner.search([]).ids
-        self.assertEqual(set(all_ids) - set([p1]), set(Partner.search([('user_ids', 'not in', u1a)]).ids), "o2m NOT IN matches none on the right side")
-        self.assertEqual(set(all_ids) - set([p1]), set(Partner.search([('user_ids', '!=', 'Dédé Boitaclou')]).ids), "o2m NOT IN matches none on the right side")
-        self.assertEqual(set(all_ids) - set([p1,p2]), set(Partner.search([('user_ids', 'not in', [u1b, u2])]).ids), "o2m NOT IN matches none on the right side")
+
+        res = self._search(Partner, [('user_ids', 'in', u1a)])
+        self.assertEqual([p1], res.ids, "o2m IN accept single int on right side")
+        res = self._search(Partner, [('user_ids', '=', 'Dédé Boitaclou')])
+        self.assertEqual([p1], res.ids, "o2m NOT IN matches none on the right side")
+        res = self._search(Partner, [('user_ids', 'in', [10000])])
+        self.assertEqual([], res.ids, "o2m NOT IN matches none on the right side")
+        res = self._search(Partner, [('user_ids', 'in', [u1a,u2])])
+        self.assertEqual([p1,p2], res.ids, "o2m IN matches any on the right side")
+        all_ids = self._search(Partner, []).ids
+        res = self._search(Partner, [('user_ids', 'not in', u1a)])
+        self.assertEqual(set(all_ids) - set([p1]), set(res.ids), "o2m NOT IN matches none on the right side")
+        res = self._search(Partner, [('user_ids', '!=', 'Dédé Boitaclou')])
+        self.assertEqual(set(all_ids) - set([p1]), set(res.ids), "o2m NOT IN matches none on the right side")
+        res = self._search(Partner, [('user_ids', 'not in', [u1b, u2])])
+        self.assertEqual(set(all_ids) - set([p1,p2]), set(res.ids), "o2m NOT IN matches none on the right side")
 
     def test_15_equivalent_one2many_2(self):
         Currency = self.env['res.currency']
@@ -449,34 +487,34 @@ class TestExpression(TransactionCase):
         default_currency = Currency.browse(1)
 
         # search the currency via its rates one2many (the one2many must point back at the currency)
-        currency_rate1 = CurrencyRate.search([('name', 'not like', 'probably_unexisting_name')])
-        currency_rate2 = CurrencyRate.search([('id', 'not in', [non_currency_id])])
+        currency_rate1 = self._search(CurrencyRate, [('name', 'not like', 'probably_unexisting_name')])
+        currency_rate2 = self._search(CurrencyRate, [('id', 'not in', [non_currency_id])])
         self.assertEqual(currency_rate1, currency_rate2)
-        currency_rate3 = CurrencyRate.search([('id', 'not in', [])])
+        currency_rate3 = self._search(CurrencyRate, [('id', 'not in', [])])
         self.assertEqual(currency_rate1, currency_rate3)
 
         # one2many towards another model
-        res_3 = Currency.search([('rate_ids', 'in', default_currency.rate_ids.ids)]) # currencies having a rate of main currency
+        res_3 = self._search(Currency, [('rate_ids', 'in', default_currency.rate_ids.ids)]) # currencies having a rate of main currency
         self.assertEqual(res_3, default_currency)
-        res_4 = Currency.search([('rate_ids', 'in', default_currency.rate_ids[0].ids)]) # currencies having first rate of main currency
+        res_4 = self._search(Currency, [('rate_ids', 'in', default_currency.rate_ids[0].ids)]) # currencies having first rate of main currency
         self.assertEqual(res_4, default_currency)
-        res_5 = Currency.search([('rate_ids', 'in', default_currency.rate_ids[0].id)]) # currencies having first rate of main currency
+        res_5 = self._search(Currency, [('rate_ids', 'in', default_currency.rate_ids[0].id)]) # currencies having first rate of main currency
         self.assertEqual(res_5, default_currency)
         # res_6 = Currency.search([('rate_ids', 'in', [default_currency.rate_ids[0].name])])
         # res_7 = Currency.search([('rate_ids', '=', default_currency.rate_ids[0].name)])
         # res_8 = Currency.search([('rate_ids', 'like', default_currency.rate_ids[0].name)])
 
-        res_9 = Currency.search([('rate_ids', 'like', 'probably_unexisting_name')])
+        res_9 = self._search(Currency, [('rate_ids', 'like', 'probably_unexisting_name')])
         self.assertFalse(res_9)
         # Currency.search([('rate_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
 
         # get the currencies referenced by some currency rates using a weird negative domain
-        res_10 = Currency.search([('rate_ids', 'not like', 'probably_unexisting_name')])
-        res_11 = Currency.search([('rate_ids', 'not in', [non_currency_id])])
+        res_10 = self._search(Currency, [('rate_ids', 'not like', 'probably_unexisting_name')])
+        res_11 = self._search(Currency, [('rate_ids', 'not in', [non_currency_id])])
         self.assertEqual(res_10, res_11)
-        res_12 = Currency.search([('rate_ids', '!=', False)])
+        res_12 = self._search(Currency, [('rate_ids', '!=', False)])
         self.assertEqual(res_10, res_12)
-        res_13 = Currency.search([('rate_ids', 'not in', [])])
+        res_13 = self._search(Currency, [('rate_ids', 'not in', [])])
         self.assertEqual(res_10, res_13)
 
     def test_20_expression_parse(self):
@@ -491,19 +529,19 @@ class TestExpression(TransactionCase):
         b2 = Users.create({'name': 'test_B2', 'login': 'test_B2', 'parent_id': b1.partner_id.id})
 
         # Test1: simple inheritance
-        users = Users.search([('name', 'like', 'test')])
+        users = self._search(Users, [('name', 'like', 'test')])
         self.assertEqual(users, a + b1 + b2, 'searching through inheritance failed')
-        users = Users.search([('name', '=', 'test_B')])
+        users = self._search(Users, [('name', '=', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
 
         # Test2: inheritance + relational fields
-        users = Users.search([('child_ids.name', 'like', 'test_B')])
+        users = self._search(Users, [('child_ids.name', 'like', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
         
         # Special =? operator mean "is equal if right is set, otherwise always True"
-        users = Users.search([('name', 'like', 'test'), ('parent_id', '=?', False)])
+        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
-        users = Users.search([('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)])
+        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)])
         self.assertEqual(users, b2, '(x =? id) failed')
 
     def test_30_normalize_domain(self):
@@ -545,16 +583,16 @@ class TestExpression(TransactionCase):
     def test_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field
         Partner = self.env['res.partner']
-        partners = Partner.search([('name', '=like', 'W_od_C_rn_r')])
+        partners = self._search(Partner, [('name', '=like', 'W_od_C_rn_r')])
         self.assertTrue(len(partners) == 1, "Must match one partner (Wood Corner)")
-        partners = Partner.search([('name', '=ilike', 'G%')])
+        partners = self._search(Partner, [('name', '=ilike', 'G%')])
         self.assertTrue(len(partners) >= 1, "Must match one partner (Gemini Furniture)")
 
         # check that =like/=ilike expressions are working on translated field
         Country = self.env['res.country']
-        countries = Country.search([('name', '=like', 'Ind__')])
+        countries = self._search(Country, [('name', '=like', 'Ind__')])
         self.assertTrue(len(countries) == 1, "Must match India only")
-        countries = Country.search([('name', '=ilike', 'z%')])
+        countries = self._search(Country, [('name', '=ilike', 'z%')])
         self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
 
     def test_translate_search(self):
@@ -567,7 +605,7 @@ class TestExpression(TransactionCase):
         ]
 
         for domain in domains:
-            countries = Country.search(domain)
+            countries = self._search(Country, domain)
             self.assertEqual(countries, belgium)
 
     def test_long_table_alias(self):
@@ -584,8 +622,14 @@ class TestExpression(TransactionCase):
         with self.assertRaises(ValueError):
             Country.search([('does_not_exist', '=', 'foo')])
 
+        with self.assertRaises(KeyError):
+            Country.search([]).filtered_domain([('does_not_exist', '=', 'foo')])
+
         with self.assertRaises(ValueError):
             Country.search([('create_date', '>>', 'foo')])
+
+        with self.assertRaises(ValueError):
+            Country.search([]).filtered_domain([('create_date', '>>', 'foo')])
 
         with self.assertRaises(psycopg2.DataError):
             Country.search([('create_date', '=', "1970-01-01'); --")])
@@ -600,11 +644,11 @@ class TestExpression(TransactionCase):
             'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
         }
         Partner.create(vals)
-        partner = Partner.search([('category_id', 'ilike', 'vendor'), ('active', '=', False)])
+        partner = self._search(Partner, [('category_id', 'ilike', 'vendor'), ('active', '=', False)], [('active', '=', False)])
         self.assertTrue(partner, "Record not Found with category vendor and active False.")
 
         # testing for one2many field with country Belgium and active=False
-        partner = Partner.search([('child_ids.country_id','=','Belgium'),('active','=',False)])
+        partner = self._search(Partner, [('child_ids.country_id','=','Belgium'),('active','=',False)], [('active', '=', False)])
         self.assertTrue(partner, "Record not Found with country Belgium and active False.")
 
     def test_lp1071710(self):
@@ -613,19 +657,20 @@ class TestExpression(TransactionCase):
         self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
         self.env.ref('base.res_partner_2').country_id = self.env.ref('base.be')
         # actual test
-        Country = self.env['res.country']
+        Country = self.env['res.country'].with_context(lang='fr_FR')
         be = self.env.ref('base.be')
-        not_be = Country.with_context(lang='fr_FR').search([('name', '!=', 'Belgique')])
+        not_be = self._search(Country, [('name', '!=', 'Belgique')])
         self.assertNotIn(be, not_be)
 
         # indirect search via m2o
         Partner = self.env['res.partner']
-        deco_addict = Partner.search([('name', '=', 'Deco Addict')])
+        deco_addict = self._search(Partner, [('name', '=', 'Deco Addict')])
 
-        not_be = Partner.search([('country_id', '!=', 'Belgium')])
+        not_be = self._search(Partner, [('country_id', '!=', 'Belgium')])
         self.assertNotIn(deco_addict, not_be)
 
-        not_be = Partner.with_context(lang='fr_FR').search([('country_id', '!=', 'Belgique')])
+        Partner = Partner.with_context(lang='fr_FR')
+        not_be = self._search(Partner, [('country_id', '!=', 'Belgique')])
         self.assertNotIn(deco_addict, not_be)
 
     def test_or_with_implicit_and(self):
@@ -706,8 +751,10 @@ class TestAutoJoin(TransactionCase):
             self.patch(model._fields[fname], 'domain', value)
 
         # Get country/state data
-        country_us = self.env['res.country'].search([('code', 'like', 'US')], limit=1)
-        states = self.env['res.country.state'].search([('country_id', '=', country_us.id)], limit=2)
+        Country = self.env['res.country']
+        country_us = Country.search([('code', 'like', 'US')], limit=1)
+        State = self.env['res.country.state']
+        states = State.search([('country_id', '=', country_us.id)], limit=2)
 
         # Create demo data: partners and bank object
         p_a = partner_obj.create({'name': 'test__A', 'state_id': states[0].id})

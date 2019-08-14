@@ -29,17 +29,17 @@ class EventType(models.Model):
         return [(0, 0, {
             'interval_unit': 'now',
             'interval_type': 'after_sub',
-            'template_id': self.env.ref('event.event_subscription')
+            'template_id': self.env.ref('event.event_subscription').id,
         }), (0, 0, {
             'interval_nbr': 1,
             'interval_unit': 'days',
             'interval_type': 'before_event',
-            'template_id': self.env.ref('event.event_reminder')
+            'template_id': self.env.ref('event.event_reminder').id,
         }), (0, 0, {
             'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
-            'template_id': self.env.ref('event.event_reminder')
+            'template_id': self.env.ref('event.event_reminder').id,
         })]
 
     name = fields.Char('Event Category', required=True, translate=True)
@@ -201,6 +201,7 @@ class EventEvent(models.Model):
                         WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY event_id, state
                     """
+            self.env['event.registration'].flush(['event_id', 'state'])
             self._cr.execute(query, (tuple(self.ids),))
             for event_id, state, num in self._cr.fetchall():
                 event = self.browse(event_id)

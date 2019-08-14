@@ -226,6 +226,16 @@ class IrTranslation(models.Model):
 
     def _modified(self):
         """ Invalidate the ormcache if necessary, depending on the translations ``self``. """
+        # DLE P63: test_views.py
+        for trans in self:
+            if trans.type == 'model_terms' and trans.res_id:
+                model, field = trans.name.split(',')
+                if model in self.env:
+                    model = self.env[model]
+                    if field in model._fields:
+                        field = model._fields[field]
+                        record = model.browse(trans.res_id)
+                        record.modified([field.name])
         for trans in self:
             if trans.type != 'model' or trans.name.split(',')[0] in self.CACHED_MODELS:
                 self.clear_caches()
@@ -530,6 +540,8 @@ class IrTranslation(models.Model):
         records = super(IrTranslation, self.sudo()).create(vals_list).with_env(self.env)
         records.check('create')
         records._modified()
+        # DLE P62: `test_translate.py`, `test_sync`
+        self.flush()
         return records
 
     def write(self, vals):
@@ -541,12 +553,28 @@ class IrTranslation(models.Model):
         result = super(IrTranslation, self.sudo()).write(vals)
         self.check('write')
         self._modified()
+        # DLE P62: `test_translate.py`, `test_sync`
+        # when calling `flush` with a field list, if there is no value for one of these fields,
+        # the flush to database is not done.
+        # this causes issues when changing the src/value of a translation, as when we read, we ask the flush,
+        # but its not really the field which is in the towrite values, but its translation
+        self.flush()
         return result
 
     def unlink(self):
         self.check('unlink')
         self._modified()
         return super(IrTranslation, self.sudo()).unlink()
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        # DLE P67, `test_new_fields.py`, `test_80_copy`
+        # When assigning a translation to a field
+        # e.g. email.with_context(lang='fr_FR').label = "bonjour"
+        # and then search on translations for this translation, must flush as the translation has not yet been written in database
+        if any(self.env[model]._fields[field].translate for model, ids in self.env.all.towrite.items() for record_id, fields in ids.items() for field in fields):
+            self.flush()
+        return super(IrTranslation, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     @api.model
     def insert_missing(self, field, records):

@@ -15,6 +15,7 @@ class Partner(models.Model):
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
     @api.depends('country_id')
+    @api.depends_context('force_company')
     def _compute_product_pricelist(self):
         company = self.env.context.get('force_company', False)
         res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids, company_id=company)

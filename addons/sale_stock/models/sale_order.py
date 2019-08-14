@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
         for order in self:
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
             dates_list = [date for date in pickings.mapped('date_done') if date]
-            order.effective_date = dates_list and min(dates_list).date()
+            order.effective_date = min(dates_list).date() if dates_list else False
 
     @api.depends('picking_policy')
     def _compute_expected_date(self):
@@ -235,6 +235,7 @@ class SaleOrderLine(models.Model):
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
             grouped_lines[(warehouse.id, date)] |= line
 
+        treated = self.browse()
         for (warehouse, scheduled_date), lines in grouped_lines.items():
             product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse=warehouse).read([
                 'qty_available',
@@ -252,6 +253,12 @@ class SaleOrderLine(models.Model):
                 line.free_qty_today = free_qty_today - qty_processed_per_product[line.product_id.id]
                 line.virtual_available_at_date = virtual_available_at_date - qty_processed_per_product[line.product_id.id]
                 qty_processed_per_product[line.product_id.id] += line.product_uom_qty
+            treated |= lines
+        remaining = (self - treated)
+        remaining.virtual_available_at_date = False
+        remaining.scheduled_date = False
+        remaining.free_qty_today = False
+        remaining.qty_available_today = False
 
     @api.depends('product_id', 'route_id', 'order_id.warehouse_id')
     def _compute_is_mto(self):
@@ -259,11 +266,11 @@ class SaleOrderLine(models.Model):
             set 'is_available' at True if the product availibility in stock does
             not need to be verified, which is the case in MTO, Cross-Dock or Drop-Shipping
         """
+        self.is_mto = False
         for line in self:
             if not line.display_qty_widget:
                 continue
             product = line.product_id
-            line.is_mto = False
             product_routes = line.route_id or (product.route_ids + product.categ_id.total_route_ids)
 
             # Check MTO

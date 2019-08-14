@@ -99,7 +99,7 @@ class ServerActions(models.Model):
                 # Pick an arbitrary field; if it is marked to be recomputed,
                 # it means we are in an extraneous write triggered by the recompute.
                 # In this case, we should not create a new activity.
-                if records._recompute_check(field):
+                if records & self.env.records_to_compute(field):
                     return True
         return False
 

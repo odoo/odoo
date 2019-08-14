@@ -67,23 +67,32 @@ class TestAccess(common.SlidesCase):
     def test_access_channel_publish(self):
         """ Unpublished channels and their content are visible only to website people """
         self.channel.write({'is_published': False, 'enroll': 'public'})
+        self.channel.flush(['is_published', 'website_published', 'enroll'])
 
         # channel available only to website
+        self.channel.invalidate_cache(['name'])
         self.channel.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_public).read(['name'])
 
         # slide available only to website
+        self.channel.invalidate_cache(['name'])
         self.slide.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_public).read(['name'])
 
         # even members cannot see unpublished content
@@ -92,8 +101,10 @@ class TestAccess(common.SlidesCase):
             'partner_id': self.user_emp.partner_id.id,
         })
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
 
         # publish channel but content unpublished (even if can be previewed) still unavailable
@@ -102,13 +113,19 @@ class TestAccess(common.SlidesCase):
             'is_preview': True,
             'is_published': False,
         })
+        self.channel.flush(['website_published'])
+        self.slide.flush(['is_preview', 'website_published'])
 
+        self.slide.invalidate_cache(['name'])
         self.slide.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_public).read(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
@@ -116,6 +133,7 @@ class TestAccess(common.SlidesCase):
         """ Slides with preview flag are always visible even to non members if published """
         self.channel.write({'enroll': 'invite'})
         self.slide.write({'is_preview': True})
+        self.slide.flush(['is_preview'])
 
         self.slide.with_user(self.user_publisher).read(['name'])
         self.slide.with_user(self.user_emp).read(['name'])
@@ -170,7 +188,7 @@ class TestAccessFeatures(common.SlidesCase):
             'is_published': True,
             'enroll_group_ids': [(4, self.ref('base.group_user'))]
         })
-
+        channel.invalidate_cache(['partner_ids'])
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id'))
 
         new_user = self.env['res.users'].create({
@@ -239,5 +257,6 @@ class TestAccessFeatures(common.SlidesCase):
 
         # superuser should always be able to publish even if he's not the responsible
         channel_superuser = self.channel.sudo()
+        channel_superuser.invalidate_cache(['can_upload', 'can_publish'])
         self.assertTrue(channel_superuser.can_upload)
         self.assertTrue(channel_superuser.can_publish)

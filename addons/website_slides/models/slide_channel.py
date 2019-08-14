@@ -18,13 +18,10 @@ class ChannelUsersRelation(models.Model):
     channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
-    completion = fields.Integer('# Completed Slides', compute='_compute_completion', store=True)
+    completion = fields.Integer('# Completed Slides')
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed',
-                 'partner_id', 'channel_id.slide_partner_ids.slide_id.is_published',
-                 'channel_id.slide_partner_ids.slide_id.active')
     def _compute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
@@ -39,39 +36,24 @@ class ChannelUsersRelation(models.Model):
             mapped_data.setdefault(item['channel_id'][0], dict())
             mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
 
+        partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
         for record in self:
             slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
             record.completion = slide_done
+            if not record.completed and record.completion >= record.channel_id.total_slides:
+                record.completed = True
+                partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
 
-    def _write(self, values):
-        partner_karma = False
-        to_complete = self.env['slide.channel.partner']
-        if values.get('completion'):
-            incomplete_self = self.filtered(lambda cp: not cp.completed)
-            channels_data = {result['id']: result['total_slides'] for result in incomplete_self.mapped('channel_id').read(['total_slides'])}
-            for cp in incomplete_self:
-                if values.get('completion') >= channels_data[cp.channel_id.id]:
-                    to_complete |= cp
+        partner_karma = {partner_id: karma_to_add
+                         for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
 
-            partner_karma = dict.fromkeys(to_complete.mapped('partner_id').ids, 0)
-            for channel_partner in to_complete:
-                partner_karma[channel_partner.partner_id.id] += channel_partner.channel_id.karma_gen_channel_finish
-            partner_karma = {partner_id: karma_to_add
-                             for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
-
-        if to_complete:
-            result = super(ChannelUsersRelation, (self - to_complete))._write(values)
-            completion_values = dict(values, completed=True)
-            super(ChannelUsersRelation, to_complete)._write(completion_values)
-            to_complete._post_completion_hook()
-        else:
-            result = super(ChannelUsersRelation, self)._write(values)
+        self._post_completion_hook()
 
         if partner_karma:
             users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
             for user in users:
                 users.add_karma(partner_karma[user.partner_id.id])
-        return result
+
 
     def _post_completion_hook(self):
         pass
@@ -172,18 +154,18 @@ class Channel(models.Model):
         help='Applied directly as ACLs. Allow to hide channels and their content for non members.')
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
-        string='Members', help="All members of the channel.", context={'active_test': False})
+        string='Members', help="All members of the channel.", context={'active_test': False}, depends=['channel_partner_ids'])
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     members_done_count = fields.Integer('Attendees Done Count', compute='_compute_members_done_count')
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
-    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
+    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher', depends=['partner_ids'])
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
         help="Who can publish: responsible, members of upload_group_ids if defined or website publisher group members.")
     # not stored access fields, depending on each user
-    completed = fields.Boolean('Done', compute='_compute_user_statistics')
-    completion = fields.Integer('Completion', compute='_compute_user_statistics')
-    can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload')
+    completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
+    completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
+    can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload', compute_sudo=False)
     # karma generation
     karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
@@ -275,6 +257,7 @@ class Channel(models.Model):
             record.rating_avg_stars = record.rating_avg / 2
 
     @api.depends('slide_partner_ids', 'total_slides')
+    @api.depends_context('uid')
     def _compute_user_statistics(self):
         current_user_info = self.env['slide.channel.partner'].sudo().search(
             [('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]
@@ -286,6 +269,7 @@ class Channel(models.Model):
             record.completion = round(100.0 * completion / (record.total_slides or 1))
 
     @api.depends('upload_group_ids', 'user_id')
+    @api.depends_context('uid')
     def _compute_can_upload(self):
         for record in self:
             if record.user_id == self.env.user:

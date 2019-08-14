@@ -230,8 +230,9 @@ class Partner(models.Model):
             self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
+    @api.depends_context('show_address', 'show_address_only', 'show_email', 'html_format', 'show_vat')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=False)
+        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=None)
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
@@ -535,6 +536,15 @@ class Partner(models.Model):
 
     def write(self, vals):
         if vals.get('active') is False:
+            # DLE: It should not be necessary to modify this to make work the ORM. The problem was just the recompute
+            # of partner.user_ids when you create a new user for this partner, see test test_70_archive_internal_partners
+            # You modified it in a previous commit, see original commit of this:
+            # https://github.com/odoo/odoo/commit/9d7226371730e73c296bcc68eb1f856f82b0b4ed
+            #
+            # RCO: when creating a user for partner, the user is automatically added in partner.user_ids.
+            # This is wrong if the user is not active, as partner.user_ids only returns active users.
+            # Hence this temporary hack until the ORM updates inverse fields correctly.
+            self.invalidate_cache(['user_ids'], self._ids)
             for partner in self:
                 if partner.active and partner.user_ids:
                     raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
@@ -742,6 +752,9 @@ class Partner(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         self = self.with_user(name_get_uid or self.env.uid)
+        # as the implementation is in SQL, we force the recompute of fields if necessary
+        self.recompute(['display_name'])
+        self.flush()
         if args is None:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):

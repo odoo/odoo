@@ -188,6 +188,11 @@ class TestActivityMixin(TestActivityCommon):
                 'test_mail.mail_act_test_meeting',
                 today_user + relativedelta(days=-1))
             self.assertEqual(self.test_record.activity_state, 'overdue')
+            # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
+            # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
+            # As we just created the activity, its not yet in the right order.
+            # We force it by invalidating it so it gets fetched from database, in the right order.
+            self.test_record.invalidate_cache(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             act3 = self.test_record.activity_schedule(
@@ -195,6 +200,11 @@ class TestActivityMixin(TestActivityCommon):
                 today_user + relativedelta(days=3),
                 user_id=self.user_employee.id)
             self.assertEqual(self.test_record.activity_state, 'overdue')
+            # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
+            # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
+            # As we just created the activity, its not yet in the right order.
+            # We force it by invalidating it so it gets fetched from database, in the right order.
+            self.test_record.invalidate_cache(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             self.test_record.invalidate_cache(ids=self.test_record.ids)

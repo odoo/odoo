@@ -175,6 +175,7 @@ class MrpWorkorder(models.Model):
         to the lot/sn used in other workorders.
         """
         productions = self.mapped('production_id')
+        treated = self.browse()
         for production in productions:
             if production.product_id.tracking == 'none':
                 continue
@@ -203,6 +204,8 @@ class MrpWorkorder(models.Model):
                     workorder.allowed_lots_domain = allowed_lot_ids - workorder.finished_workorder_line_ids.filtered(lambda wl: wl.product_id == production.product_id).mapped('lot_id')
                 else:
                     workorder.allowed_lots_domain = allowed_lot_ids
+                treated |= workorder
+        (self - treated).allowed_lots_domain = False
 
     def name_get(self):
         return [(wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]

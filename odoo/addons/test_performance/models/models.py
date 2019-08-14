@@ -9,7 +9,7 @@ class BaseModel(models.Model):
     _description = 'Test Performance Base'
 
     name = fields.Char()
-    value = fields.Integer()
+    value = fields.Integer(default=0)
     value_pc = fields.Float(compute="_value_pc", store=True)
     partner_id = fields.Many2one('res.partner', string='Customer')
 

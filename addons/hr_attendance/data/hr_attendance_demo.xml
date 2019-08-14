@@ -12,14 +12,14 @@
         </record>
 
         <record id="attendance_root1" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 08:00')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 12:00')" name="check_out"/>
+            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 08:00:00')" name="check_in"/>
+            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 12:00:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_admin"/>
         </record>
 
         <record id="attendance_root2" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 13:00')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 18:00')" name="check_out"/>
+            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 13:00:00')" name="check_in"/>
+            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 18:00:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_admin"/>
         </record>
 

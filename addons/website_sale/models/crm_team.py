@@ -23,17 +23,20 @@ class CrmTeam(models.Model):
         # abandoned carts to recover are draft sales orders that have no order lines,
         # a partner other than the public user, and created over an hour ago
         # and the recovery mail was not yet sent
+        counts = {}
+        amounts = {}
         website_teams = self.filtered(lambda team: team.website_ids)
         if website_teams:
             abandoned_carts_data = self.env['sale.order'].read_group([
                 ('is_abandoned_cart', '=', True),
-                ('cart_recovery_email_sent', '=', False)
+                ('cart_recovery_email_sent', '=', False),
+                ('team_id', 'in', website_teams.ids),
             ], ['amount_total', 'team_id'], ['team_id'])
             counts = {data['team_id'][0]: data['team_id_count'] for data in abandoned_carts_data}
             amounts = {data['team_id'][0]: data['amount_total'] for data in abandoned_carts_data}
-            for team in website_teams:
-                team.abandoned_carts_count = counts.get(team.id, 0)
-                team.abandoned_carts_amount = amounts.get(team.id, 0)
+        for team in self:
+            team.abandoned_carts_count = counts.get(team.id, 0)
+            team.abandoned_carts_amount = amounts.get(team.id, 0)
 
     def get_abandoned_carts(self):
         self.ensure_one()
