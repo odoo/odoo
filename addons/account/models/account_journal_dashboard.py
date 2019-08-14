@@ -192,16 +192,20 @@ class account_journal(models.Model):
         for it as its second.
         """
         return ('''
-            SELECT 
-                SUM((CASE WHEN move.type IN ('out_refund', 'in_refund') THEN -1 else 1 END) * line.amount_residual) AS total,
+            SELECT
+                SUM((CASE WHEN move.type IN %(purchase_types)s THEN -1 else 1 END) * line.amount_residual) AS total,
                 MIN(invoice_date_due) AS aggr_date
             FROM account_move_line line
             JOIN account_move move ON move.id = line.move_id
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
             AND move.invoice_payment_state = 'not_paid'
-            AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-        ''', {'journal_id': self.id})
+            AND move.type IN %(invoice_types)s
+        ''', {
+            'purchase_types': tuple(self.env['account.move'].get_purchase_types(True)),
+            'invoice_types': tuple(self.env['account.move'].get_invoice_types(True)),
+            'journal_id': self.id
+        })
 
     def get_journal_dashboard_datas(self):
         currency = self.currency_id or self.company_id.currency_id
@@ -250,15 +254,15 @@ class account_journal(models.Model):
 
             today = fields.Date.today()
             query = '''
-                SELECT 
-                    (CASE WHEN type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total, 
+                SELECT
+                    (CASE WHEN type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
                     currency_id AS currency,
-                    type, 
-                    invoice_date, 
+                    type,
+                    invoice_date,
                     company_id
                 FROM account_move move
-                WHERE journal_id = %s 
-                AND date <= %s 
+                WHERE journal_id = %s
+                AND date <= %s
                 AND state = 'posted'
                 AND invoice_payment_state = 'not_paid'
                 AND type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
@@ -304,14 +308,14 @@ class account_journal(models.Model):
         it as its second.
         """
         return ('''
-            SELECT 
-                (CASE WHEN move.type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total, 
-                move.currency_id AS currency, 
-                move.type, 
-                move.invoice_date, 
+            SELECT
+                (CASE WHEN move.type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total,
+                move.currency_id AS currency,
+                move.type,
+                move.invoice_date,
                 move.company_id
             FROM account_move move
-            WHERE move.journal_id = %(journal_id)s 
+            WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
             AND move.invoice_payment_state = 'not_paid'
             AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
@@ -324,14 +328,14 @@ class account_journal(models.Model):
         dictionary to use to run it as its second.
         """
         return ('''
-            SELECT 
-                (CASE WHEN move.type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total, 
-                move.currency_id AS currency, 
-                move.type, 
-                move.invoice_date, 
+            SELECT
+                (CASE WHEN move.type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total,
+                move.currency_id AS currency,
+                move.type,
+                move.invoice_date,
                 move.company_id
             FROM account_move move
-            WHERE move.journal_id = %(journal_id)s 
+            WHERE move.journal_id = %(journal_id)s
             AND move.state = 'draft'
             AND move.invoice_payment_state = 'not_paid'
             AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');

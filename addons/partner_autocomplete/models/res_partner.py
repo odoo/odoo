@@ -95,7 +95,7 @@ class ResPartner(models.Model):
         })
         try:
             return jsonrpc(url=url, params=params, timeout=timeout), False
-        except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
+        except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
             _logger.error('Autocomplete API error: %s' % str(exception))
             return False, str(exception)
         except InsufficientCreditError as exception:

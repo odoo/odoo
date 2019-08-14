@@ -857,6 +857,8 @@ var FieldX2Many = AbstractField.extend({
         toggle_column_order: '_onToggleColumnOrder',
         activate_next_widget: '_onActiveNextWidget',
         navigation_move: '_onNavigationMove',
+        save_optional_fields: '_onSaveOrLoadOptionalFields',
+        load_optional_fields: '_onSaveOrLoadOptionalFields',
     }),
 
     // We need to trigger the reset on every changes to be aware of the parent changes
@@ -1387,6 +1389,18 @@ var FieldX2Many = AbstractField.extend({
                 },
             });
         });
+    },
+    /**
+     * Add necessary key parts for the basic controller to compute the local
+     * storage key. The event will be properly handled by the basic controller.
+     *
+     * @param {OdooEvent} ev
+     * @private
+     */
+    _onSaveOrLoadOptionalFields: function (ev) {
+        ev.data.keyParts.relationalField = this.name;
+        ev.data.keyParts.subViewId = this.view.view_id;
+        ev.data.keyParts.subViewType = this.view.type;
     },
     /**
      * Forces a resequencing of the records.

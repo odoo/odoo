@@ -23,7 +23,7 @@ class L10nInExemptedReport(models.Model):
     def _select(self):
         select_str = """SELECT aml.id AS id,
             aml.partner_id AS partner_id,
-            aml.date_maturity AS date,
+            am.date,
             aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END) AS price_total,
             am.journal_id,
             aj.company_id,

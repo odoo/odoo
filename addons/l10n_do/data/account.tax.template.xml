@@ -798,7 +798,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030203'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -811,7 +811,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030203'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
         </record>
@@ -836,7 +836,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030202'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -849,7 +849,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030202'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
                 }),
             ]"/>
         </record>
@@ -1215,36 +1215,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_100_tax_person'), ref('ret_2_income_person')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
-        </record>
-
-        <record id="tax_group_moral_construction" model="account.tax.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">62</field>
-            <field name="name">Retención a Jurídica (Servicios Construcción con Materiales)</field>
-            <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
-            <field name="type_tax_use">none</field>
-            <field name="tax_group_id" ref="group_ret"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
         </record>
 
         <record id="tax_group_person_services" model="account.tax.template">

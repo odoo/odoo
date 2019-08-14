@@ -11,8 +11,10 @@
         'stock',
     ],
     'data': [
-        'data/product_demo.xml',
         'views/report_stockpicking_operations.xml',
+    ],
+    'demo': [
+        'data/product_demo.xml',
     ],
     'installable': True,
     'application': False,

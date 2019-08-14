@@ -9,21 +9,39 @@
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.product_product_8'),
                 'quantity': 2,
                 'price_unit': 40000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 28),
+                    ('tax_group_id', '=', ref('l10n_in.gst_group'))], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_9'),
                 'quantity': 3,
                 'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', ref('l10n_in.gst_group'))], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_10'),
                 'quantity': 4,
                 'price_unit': 300.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                        ('type_tax_use', '=', 'sale'),
+                    '|',
+                        '&amp;',
+                        ('amount', '=', 18),
+                        ('tax_group_id', '=', ref('l10n_in.gst_group')),
+                        '&amp;',
+                        ('tax_group_id', '=', ref('l10n_in.cess_group')),
+                        ('children_tax_ids.amount','=', 5)
+                    ], limit=2).ids)]
             }),
         ]"/>
     </record>
@@ -35,42 +53,62 @@
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.product_product_16'),
                 'quantity': 1,
                 'price_unit': 1500.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_20'),
                 'quantity': 1,
                 'price_unit': 2300.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_22'),
                 'quantity': 1,
                 'price_unit': 2600.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 5),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_24'),
                 'quantity': 2,
                 'price_unit': 1655.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 5),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
         ]"/>
     </record>
 
-    <!-- Demo of B2CL (business to consumer small) Taxable supplies made to other unregistered Person and below INR 2.5 lakhs invoice value.-->
+    <!-- Demo of B2CL (business to consumer - Large) Taxable supplies made to other unregistered Person and invoice value is more than INR 2.5 lakhs.-->
     <record id="demo_invoice_b2cl" model="account.move">
         <field name="type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer_out_state"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.consu_delivery_01'),
                 'quantity': 3,
                 'price_unit': 90000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id)], limit=1).ids)]
             }),
         ]"/>
     </record>
@@ -92,11 +130,15 @@
         <field name="l10n_in_shipping_bill_number">999704</field>
         <field name="l10n_in_shipping_bill_date" eval="time.strftime('%Y-%m')+'-02'"/>
         <field name="l10n_in_shipping_port_code_id" ref="l10n_in.port_code_inixy1"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.product_product_4'),
                 'quantity': 30,
                 'price_unit': 8000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id)], limit=1).ids)]
             }),
         ]"/>
     </record>
@@ -108,16 +150,22 @@
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.product_product_1'),
                 'quantity': 2,
                 'price_unit': 25000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.exempt_group').id)], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_5'),
                 'quantity': 1,
                 'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.nil_rated_group').id)], limit=1).ids)]
             }),
         ]"/>
     </record>
@@ -131,21 +179,39 @@
         <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-02'"/>
         <field name="reversed_entry_id" ref="l10n_in.demo_invoice_b2b"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.product_product_8'),
                 'quantity': 2,
                 'price_unit': 40000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 28),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_9'),
                 'quantity': 3,
                 'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
             (0, 0, {
                 'product_id': ref('product.product_product_10'),
                 'quantity': 3,
                 'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                        ('type_tax_use', '=', 'sale'),
+                    '|',
+                        '&amp;',
+                        ('amount', '=', 18),
+                        ('tax_group_id', '=', ref('l10n_in.gst_group')),
+                        '&amp;',
+                        ('tax_group_id', '=', ref('l10n_in.cess_group')),
+                        ('children_tax_ids.amount','=', 5)
+                    ], limit=2).ids)]
             }),
         ]"/>
     </record>
@@ -158,11 +224,15 @@
         <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-02'"/>
         <field name="reversed_entry_id" ref="l10n_in.demo_invoice_b2cl"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.consu_delivery_01'),
                 'quantity': 3,
                 'price_unit': 90000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
         ]"/>
     </record>
@@ -175,11 +245,15 @@
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
         <field name="invoice_date" eval="(datetime.now() + relativedelta(months=1)).strftime('%Y-%m-01')"/>
-        <field name="invoice_line_ids" eval="[
+        <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
                 'product_id': ref('product.consu_delivery_01'),
                 'quantity': 3,
                 'price_unit': 2000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
             }),
         ]"/>
     </record>

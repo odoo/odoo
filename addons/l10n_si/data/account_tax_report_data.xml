@@ -23,7 +23,7 @@
 
     <record id="tax_report_zo_dvd_neo_sdtopni_osno" model="account.tax.report.line">
         <field name="name">Nabave po osnovni stopnji DDV</field>
-        <field name="tag_name">Nabave po osnovni stopnji DDV</field>
+        <field name="tag_name">Nabave po osnovni stopnji DDV (Neodbitni)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="tax_report_zo_dvd_neo_sdtopni"/>
         <field name="country_id" ref="base.si"/>
@@ -31,7 +31,7 @@
 
     <record id="tax_report_zo_dvd_neo_sdtopni_zni" model="account.tax.report.line">
         <field name="name">Nabave po znižani stopnji DDV</field>
-        <field name="tag_name">Nabave po znižani stopnji DDV</field>
+        <field name="tag_name">Nabave po znižani stopnji DDV (Neodbitni)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_zo_dvd_neo_sdtopni"/>
         <field name="country_id" ref="base.si"/>
@@ -92,7 +92,7 @@
 
     <record id="tax_report_zo_dvd_odb_vstopni_osn" model="account.tax.report.line">
         <field name="name">Nabave po osnovni stopnji DDV</field>
-        <field name="tag_name">Nabave po osnovni stopnji DDV</field>
+        <field name="tag_name">Nabave po osnovni stopnji DDV (Vstopni)</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="tax_report_zo_dvd_odb_vstopni"/>
         <field name="country_id" ref="base.si"/>
@@ -100,7 +100,7 @@
 
     <record id="tax_report_zo_dvd_odb_vstopni_zni" model="account.tax.report.line">
         <field name="name">Nabave po znižani stopnji DDV</field>
-        <field name="tag_name">Nabave po znižani stopnji DDV</field>
+        <field name="tag_name">Nabave po znižani stopnji DDV (Vstopni)</field>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="tax_report_zo_dvd_odb_vstopni"/>
         <field name="country_id" ref="base.si"/>

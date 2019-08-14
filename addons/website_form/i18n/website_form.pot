@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* website_form
+# 	* website_form
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 08:00+0000\n"
-"PO-Revision-Date: 2019-01-16 08:00+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,28 +16,53 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "&amp;times;"
+msgstr ""
+
+#. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:230
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:12
+#, python-format
+msgid "&times;"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:238
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:225
+#: code:addons/website_form/static/src/js/website_form.js:233
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr ""
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:229
+#: code:addons/website_form/controllers/main.py:232
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr ""
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add a custom field"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add an existing field"
 msgstr ""
 
 #. module: website_form
@@ -63,14 +88,53 @@ msgid "Blacklisted in web forms"
 msgstr ""
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Change Form Parameters"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Checkbox"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:21
+#, python-format
+msgid "Close"
+msgstr ""
+
+#. module: website_form
 #: model:ir.model,name:website_form.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:54
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Date"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Date &amp; Time"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Decimal Number"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:44
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
-msgid "Custom infos"
+msgid "Email"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "Email To"
 msgstr ""
 
 #. module: website_form
@@ -97,8 +161,20 @@ msgid "Fields"
 msgstr ""
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "File Upload"
+msgstr ""
+
+#. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
-msgid "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue could be 'Create an Issue'."
+msgid ""
+"Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
+"could be 'Create an Issue'."
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Hidden"
 msgstr ""
 
 #. module: website_form
@@ -107,7 +183,12 @@ msgid "Label for form action"
 msgstr ""
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:55
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Long Text"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Metadata"
 msgstr ""
@@ -118,6 +199,37 @@ msgid "Models"
 msgstr ""
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Multiple Checkboxes"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:216
+#, python-format
+msgid "No matching record !"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Number"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:180
+#, python-format
+msgid "Other Information:"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:36
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Phone Number"
+msgstr ""
+
+#. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:14
 #, python-format
@@ -125,8 +237,52 @@ msgid "Please fill in the form correctly."
 msgstr ""
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Radio Buttons"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:25
+#, python-format
+msgid "Recipient Email"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Required"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:22
+#, python-format
+msgid "Save"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Selection"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
+msgid "Send"
+msgstr ""
+
+#. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
-msgid "Specify the field which will contain meta and custom form fields datas."
+msgid ""
+"Specify the field which will contain meta and custom form fields datas."
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:60
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Subject"
 msgstr ""
 
 #. module: website_form
@@ -143,10 +299,27 @@ msgid "Technical data on contact form"
 msgstr ""
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Text"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "Thanks!"
+msgstr ""
+
+#. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "The form has been sent successfully."
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:182
+#, python-format
+msgid "This message has been posted on your website!"
 msgstr ""
 
 #. module: website_form
@@ -155,8 +328,29 @@ msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
 msgstr ""
 
 #. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
+msgid "Used in FormBuilder Registry"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "We will get back to you shortly."
+msgstr ""
+
+#. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
+msgid "Website Form Key"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
+msgid "Website Forms"
 msgstr ""
 
 #. module: website_form
@@ -165,3 +359,32 @@ msgstr ""
 msgid "You can choose to log technical data like IP, User Agent ,..."
 msgstr ""
 
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:52
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Company"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:28
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Name"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:68
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Question"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "Your message has been sent successfully."
+msgstr ""

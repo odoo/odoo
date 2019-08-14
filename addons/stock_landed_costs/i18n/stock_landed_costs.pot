@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* stock_landed_costs
+# 	* stock_landed_costs
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 07:59+0000\n"
-"PO-Revision-Date: 2019-01-16 07:59+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-12 11:31+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,10 +16,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:346
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:350
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:367
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:371
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:358
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:362
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:379
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:383
 #, python-format
 msgid " already out"
 msgstr ""
@@ -130,9 +130,11 @@ msgid "Cost Lines"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:93
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:88
 #, python-format
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -199,7 +201,8 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method
-msgid "Equal : Cost will be equally divided.\n"
+msgid ""
+"Equal : Cost will be equally divided.\n"
 "By Quantity : Cost will be divided according to product's quantity.\n"
 "By Current cost : Cost will be divided according to product's current cost.\n"
 "By Weight : Cost will be divided depending on its weight.\n"
@@ -307,8 +310,8 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
 msgid "Landed Cost"
 msgstr ""
 
@@ -397,8 +400,8 @@ msgid "Name"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:24
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:64
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:18
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:59
 #, python-format
 msgid "New"
 msgstr ""
@@ -419,9 +422,10 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:91
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
-msgid "No valuation adjustments lines. You should maybe recompute the landed costs."
+msgid ""
+"No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -450,7 +454,7 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:89
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:84
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -466,7 +470,7 @@ msgid "Planned"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:314
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:326
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -531,7 +535,8 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
-msgid "Status based on activities\n"
+msgid ""
+"Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
@@ -548,9 +553,14 @@ msgid "Stock Landed Cost Line"
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -589,9 +599,16 @@ msgid "Validate"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:83
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:78
 #, python-format
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -626,13 +643,15 @@ msgid "Weight"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:163
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:166
 #, python-format
-msgid "You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO costing method."
+msgid ""
+"You cannot apply landed costs on the chosen transfer(s). Landed costs can "
+"only be applied for products with automated inventory valuation and FIFO "
+"costing method."
 msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr ""
-

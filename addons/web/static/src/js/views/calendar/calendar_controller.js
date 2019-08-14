@@ -55,6 +55,7 @@ var CalendarController = AbstractController.extend({
         this.readonlyFormViewId = params.readonlyFormViewId;
         this.mapping = params.mapping;
         this.context = params.context;
+        this.previousOpen = null;
         // The quickCreating attribute ensures that we don't do several create
         this.quickCreating = false;
     },
@@ -285,7 +286,8 @@ var CalendarController = AbstractController.extend({
             title += ': ' + this.renderer.arch.attrs.string;
         }
         if (this.eventOpenPopup) {
-            new dialogs.FormViewDialog(self, {
+            if (this.previousOpen) { this.previousOpen.close(); }
+            this.previousOpen = new dialogs.FormViewDialog(self, {
                 res_model: this.modelName,
                 context: context,
                 title: title,
@@ -297,7 +299,8 @@ var CalendarController = AbstractController.extend({
                     }
                     self.reload();
                 },
-            }).open();
+            });
+            this.previousOpen.open();
         } else {
             this.do_action({
                 type: 'ir.actions.act_window',

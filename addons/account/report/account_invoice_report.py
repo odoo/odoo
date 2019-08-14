@@ -181,10 +181,9 @@ class ReportInvoiceWithPayment(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        report = self.env['ir.actions.report']._get_report_from_name('account.report_invoice_with_payments')
         return {
             'doc_ids': docids,
-            'doc_model': report.model,
-            'docs': self.env[report.model].browse(docids),
+            'doc_model': 'account.move',
+            'docs': self.env['account.move'].browse(docids),
             'report_type': data.get('report_type') if data else '',
         }

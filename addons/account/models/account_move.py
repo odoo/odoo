@@ -254,12 +254,10 @@ class AccountMove(models.Model):
     @api.onchange('invoice_date')
     def _onchange_invoice_date(self):
         if self.invoice_date:
-            self.invoice_date_due = self.date = self.invoice_date
+            if not self.invoice_date_due and not self.invoice_payment_term_id:
+                self.invoice_date_due = self.invoice_date
+            self.date = self.invoice_date
             self._onchange_currency()
-
-    @api.onchange('invoice_date_due')
-    def _onchange_invoice_date_due(self):
-        self._recompute_dynamic_lines()
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
@@ -1346,7 +1344,9 @@ class AccountMove(models.Model):
             line.currency_id = line_currency
 
             # Shortcut to load the demo data.
-            if not line.account_id:
+            # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
+            # A section / note must not have an account_id set.
+            if 'account_id' not in line._cache and not line.display_type:
                 line.account_id = line._get_computed_account()
                 if not line.account_id:
                     if self.is_sale_document(include_receipts=True):
@@ -1822,6 +1822,8 @@ class AccountMove(models.Model):
 
     def post(self):
         for move in self:
+            if not move.line_ids.filtered(lambda line: not line.display_type):
+                raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
                 date_msg = move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s" % date_msg))

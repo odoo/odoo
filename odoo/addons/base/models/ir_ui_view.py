@@ -626,10 +626,10 @@ actual arch.
         # Queue of specification nodes (i.e. nodes describing where and
         # changes to apply to some parent architecture).
         try:
-            source = apply_inheritance_specs(source, specs_tree)
+            source = apply_inheritance_specs(source, specs_tree,
+                                             inherit_branding=self._context.get('inherit_branding'))
         except ValueError as e:
             self.raise_view_error(str(e), inherit_id)
-
         return source
 
     @api.model
@@ -1096,6 +1096,11 @@ actual arch.
                     if child.get('data-oe-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
+                        # Also, if a node is known to have been replaced during applying xpath
+                        # increment its index to compute an accurate xpath for susequent nodes
+                        replaced_node_tag = child.attrib.pop('meta-oe-xpath-replacing', None)
+                        if replaced_node_tag:
+                            indexes[replaced_node_tag] += 1
                         self.distribute_branding(child)
                     else:
                         indexes[child.tag] += 1

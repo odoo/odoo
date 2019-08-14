@@ -445,6 +445,7 @@
         <field name="description">P_IVA21_SP_IN</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="amount_type">percent</field>
         <field name="amount" eval="21"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
@@ -550,6 +551,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount" eval="21"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -716,6 +718,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="name">IVA 4% Adquisición de servicios extracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -767,6 +770,7 @@
         <field name="description">P_IVA10_SP_EX</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición de servicios extracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
@@ -820,6 +824,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount" eval="21"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -869,6 +874,7 @@
         <field name="amount" eval="4"/>
         <field name="description">P_IVA4_IC_BC</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición Intracomunitario. Bienes corrientes</field>
@@ -924,6 +930,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición Intracomunitario. Bienes de inversión</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -972,6 +979,7 @@
         <field name="amount" eval="10"/>
         <field name="description">P_IVA10_IC_BC</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición Intracomunitario. Bienes corrientes</field>
@@ -1026,6 +1034,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición Intracomunitario. Bienes de inversión</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -3068,6 +3077,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición de servicios intracomunitarios</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -3119,6 +3129,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición de servicios intracomunitarios</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -3392,6 +3403,7 @@
         <field name="description">P_IVA4_ISP</field>
         <field name="name">IVA 4% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="amount_type">percent</field>
         <field name="amount" eval="4"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3443,6 +3455,7 @@
         <field name="description">P_IVA10_ISP</field>
         <field name="name">IVA 10% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="amount_type">percent</field>
         <field name="amount" eval="10"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3496,6 +3509,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount" eval="21"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),

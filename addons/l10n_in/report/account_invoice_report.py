@@ -11,7 +11,6 @@ class L10nInAccountInvoiceReport(models.Model):
     _order = 'date desc'
 
     account_move_id = fields.Many2one('account.move', string="Account Move")
-    invoice_id = fields.Many2one('account.move', string="Invoice")
     company_id = fields.Many2one('res.company', string="Company")
     date = fields.Date(string="Accounting Date")
     name = fields.Char(string="Invoice Number")
@@ -36,12 +35,14 @@ class L10nInAccountInvoiceReport(models.Model):
     shipping_bill_date = fields.Date(string="Shipping Bill Date")
     shipping_port_code_id = fields.Many2one('l10n_in.port.code', string='Shipping port code')
     ecommerce_partner_id = fields.Many2one('res.partner', string="E-commerce")
-    invoice_type = fields.Selection([
+    move_type = fields.Selection(selection=[
+        ('entry', 'Journal Entry'),
         ('out_invoice', 'Customer Invoice'),
-        ('in_invoice', 'Vendor Bill'),
         ('out_refund', 'Customer Credit Note'),
+        ('in_invoice', 'Vendor Bill'),
         ('in_refund', 'Vendor Credit Note'),
-        ])
+        ('out_receipt', 'Sales Receipt'),
+        ('in_receipt', 'Purchase Receipt')])
     partner_vat = fields.Char(string="Customer GSTIN")
     ecommerce_vat = fields.Char(string="E-commerce GSTIN")
     tax_rate = fields.Float(string="Rate")
@@ -77,7 +78,7 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.total,
             sub.journal_id,
             sub.company_id,
-            sub.invoice_type,
+            sub.move_type,
             sub.reversed_entry_id,
             sub.partner_vat,
             sub.ecommerce_vat,
@@ -117,16 +118,16 @@ class L10nInAccountInvoiceReport(models.Model):
                 am.name,
                 am.state,
                 am.date,
-                ai.l10n_in_export_type AS l10n_in_export_type,
-                ai.l10n_in_reseller_partner_id AS ecommerce_partner_id,
-                ai.l10n_in_shipping_bill_number AS shipping_bill_number,
-                ai.l10n_in_shipping_bill_date AS shipping_bill_date,
-                ai.l10n_in_shipping_port_code_id AS shipping_port_code_id,
+                am.l10n_in_export_type AS l10n_in_export_type,
+                am.l10n_in_reseller_partner_id AS ecommerce_partner_id,
+                am.l10n_in_shipping_bill_number AS shipping_bill_number,
+                am.l10n_in_shipping_bill_date AS shipping_bill_date,
+                am.l10n_in_shipping_port_code_id AS shipping_port_code_id,
                 am.amount_total AS total,
                 am.journal_id,
                 aj.company_id,
-                ai.type AS invoice_type,
-                ai.reversed_entry_id AS reversed_entry_id,
+                am.type AS move_type,
+                am.reversed_entry_id AS reversed_entry_id,
                 p.vat AS partner_vat,
                 CASE WHEN rp.vat IS NULL THEN '' ELSE rp.vat END AS ecommerce_vat,
                 (CASE WHEN at.l10n_in_reverse_charge = True
@@ -139,20 +140,20 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN concat(cps.l10n_in_tin,'-',cps.name)
                     ELSE ''
                     END) AS place_of_supply,
-                (CASE WHEN ai.type in ('out_refund', 'in_refund') and refund_ai.date <= to_date('2017-07-01', 'YYYY-MM-DD')
+                (CASE WHEN am.type in ('out_refund', 'in_refund') and refund_am.date <= to_date('2017-07-01', 'YYYY-MM-DD')
                     THEN 'Y'
                     ELSE 'N'
                     END) as is_pre_gst,
 
-                (CASE WHEN ai.l10n_in_reseller_partner_id IS NOT NULL
+                (CASE WHEN am.l10n_in_reseller_partner_id IS NOT NULL
                     THEN 'Y'
                     ELSE 'N'
                     END) as is_ecommerce,
-                (CASE WHEN ai.l10n_in_reseller_partner_id IS NOT NULL
+                (CASE WHEN am.l10n_in_reseller_partner_id IS NOT NULL
                     THEN 'Y'
                     ELSE 'N'
                     END) as b2cl_is_ecommerce,
-                (CASE WHEN ai.l10n_in_reseller_partner_id IS NOT NULL
+                (CASE WHEN am.l10n_in_reseller_partner_id IS NOT NULL
                     THEN 'E'
                     ELSE 'OE'
                     END) as b2cs_is_ecommerce,
@@ -161,34 +162,34 @@ class L10nInAccountInvoiceReport(models.Model):
                     WHEN ps.id != cp.state_id and p.id IS NOT NULL
                     THEN 'Inter State'
                     END) AS supply_type,
-                (CASE WHEN ai.l10n_in_export_type in ('deemed', 'export_with_igst', 'sez_with_igst')
+                (CASE WHEN am.l10n_in_export_type in ('deemed', 'export_with_igst', 'sez_with_igst')
                     THEN 'EXPWP'
-                    WHEN ai.l10n_in_export_type in ('sale_from_bonded_wh', 'sez_without_igst')
+                    WHEN am.l10n_in_export_type in ('sale_from_bonded_wh', 'sez_without_igst')
                     THEN 'EXPWOP'
                     ELSE ''
                     END) AS export_type,
-                (CASE WHEN refund_ai.l10n_in_export_type in ('deemed', 'export_with_igst', 'sez_with_igst')
+                (CASE WHEN refund_am.l10n_in_export_type in ('deemed', 'export_with_igst', 'sez_with_igst')
                     THEN 'EXPWP'
-                    WHEN refund_ai.l10n_in_export_type in ('sale_from_bonded_wh', 'sez_without_igst')
+                    WHEN refund_am.l10n_in_export_type in ('sale_from_bonded_wh', 'sez_without_igst')
                     THEN 'EXPWOP'
                     ELSE 'B2CL'
                     END) AS refund_export_type,
-                (CASE WHEN ai.l10n_in_export_type = 'regular'
+                (CASE WHEN am.l10n_in_export_type = 'regular'
                     THEN 'Regular'
-                    WHEN ai.l10n_in_export_type = 'deemed'
+                    WHEN am.l10n_in_export_type = 'deemed'
                     THEN 'Deemed'
-                    WHEN ai.l10n_in_export_type = 'sale_from_bonded_wh'
+                    WHEN am.l10n_in_export_type = 'sale_from_bonded_wh'
                     THEN 'Sale from Bonded WH'
-                    WHEN ai.l10n_in_export_type = 'export_with_igst'
+                    WHEN am.l10n_in_export_type = 'export_with_igst'
                     THEN 'Export with IGST'
-                    WHEN ai.l10n_in_export_type = 'sez_with_igst'
+                    WHEN am.l10n_in_export_type = 'sez_with_igst'
                     THEN 'SEZ with IGST payment'
-                    WHEN ai.l10n_in_export_type = 'sez_without_igst'
+                    WHEN am.l10n_in_export_type = 'sez_without_igst'
                     THEN 'SEZ without IGST payment'
                     END) AS b2b_type,
-                (CASE WHEN ai.type = 'out_refund'
+                (CASE WHEN am.type = 'out_refund'
                     THEN 'C'
-                    WHEN ai.type = 'in_refund'
+                    WHEN am.type = 'in_refund'
                     THEN 'D'
                     ELSE ''
                     END) as refund_invoice_type,
@@ -196,12 +197,12 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN TO_CHAR(am.date, 'DD-MON-YYYY')
                     ELSE ''
                     END) as gst_format_date,
-                (CASE WHEN refund_ai.date IS NOT NULL
-                    THEN TO_CHAR(refund_ai.date, 'DD-MON-YYYY')
+                (CASE WHEN refund_am.date IS NOT NULL
+                    THEN TO_CHAR(refund_am.date, 'DD-MON-YYYY')
                     ELSE ''
                     END) as gst_format_refund_date,
-                (CASE WHEN ai.l10n_in_shipping_bill_date IS NOT NULL
-                    THEN TO_CHAR(ai.l10n_in_shipping_bill_date, 'DD-MON-YYYY')
+                (CASE WHEN am.l10n_in_shipping_bill_date IS NOT NULL
+                    THEN TO_CHAR(am.l10n_in_shipping_bill_date, 'DD-MON-YYYY')
                     ELSE ''
                     END) as gst_format_shipping_bill_date,
                 CASE WHEN tag_rep_ln.account_tax_report_line_id IN
@@ -231,7 +232,7 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN NULL
                     ELSE (CASE WHEN aml.tax_base_amount <> 0 THEN aml.tax_base_amount ELSE NULL END)
                     END AS price_total,
-                (CASE WHEN aj.type = 'sale' AND (ai.type IS NULL OR ai.type != 'out_refund') THEN -1 ELSE 1 END) AS amount_sign,
+                (CASE WHEN aj.type = 'sale' AND (am.type IS NULL OR am.type != 'out_refund') THEN -1 ELSE 1 END) AS amount_sign,
                 at.id AS tax_id,
                 at.amount AS tax_rate
         """
@@ -249,11 +250,10 @@ class L10nInAccountInvoiceReport(models.Model):
                 JOIN account_tax_report_line_tags_rel tag_rep_ln ON aat.id = tag_rep_ln.account_account_tag_id
                 LEFT JOIN res_partner cp ON cp.id = c.partner_id
                 LEFT JOIN res_country_state cps ON cps.id = cp.state_id
-                LEFT JOIN account_move ai ON ai.id = aml.move_id
-                LEFT JOIN account_move refund_ai ON refund_ai.id = ai.reversed_entry_id
+                LEFT JOIN account_move refund_am ON refund_am.id = am.reversed_entry_id
                 LEFT JOIN res_partner p ON p.id = aml.partner_id
                 LEFT JOIN res_country_state ps ON ps.id = p.state_id
-                LEFT JOIN res_partner rp ON rp.id = ai.l10n_in_reseller_partner_id
+                LEFT JOIN res_partner rp ON rp.id = am.l10n_in_reseller_partner_id
                 """
         return from_str
 
@@ -279,7 +279,7 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.total,
             sub.journal_id,
             sub.company_id,
-            sub.invoice_type,
+            sub.move_type,
             sub.reversed_entry_id,
             sub.partner_vat,
             sub.ecommerce_vat,

@@ -85,13 +85,10 @@ class Job(models.Model):
             ('job_ids', '=', self.id)], order='sequence asc', limit=1)
 
     def _compute_new_application_count(self):
-        first_stages = {job.id: job._get_first_stage().id for job in self}
-        mapped_data = dict.fromkeys(self.ids, 0)
-        for applicant in self.mapped('application_ids'):
-            if applicant.stage_id.id == first_stages.get(applicant.job_id.id): 
-                mapped_data[applicant.job_id.id] += 1
         for job in self:
-            job.new_application_count = mapped_data.get(job.id)
+            job.new_application_count = self.env["hr.applicant"].search_count(
+                [("job_id", "=", job.id), ("stage_id", "=", job._get_first_stage().id)]
+            )
 
     def get_alias_model_name(self, vals):
         return 'hr.applicant'

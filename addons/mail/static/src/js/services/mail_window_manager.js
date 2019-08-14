@@ -114,9 +114,9 @@ MailManager.include({
             thread.isCreatingWindow = true;
             prom = thread.fetchMessages().then(function () {
                 threadWindow = self._makeNewThreadWindow(thread, options);
-                self._placeNewThreadWindow(threadWindow, options.passively);
                 return threadWindow.appendTo($(self.THREAD_WINDOW_APPENDTO));
             }).then(function () {
+                self._placeNewThreadWindow(threadWindow, options.passively);
                 self._repositionThreadWindows();
                 threadWindow.render();
                 threadWindow.scrollToBottom();

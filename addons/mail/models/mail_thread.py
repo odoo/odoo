@@ -424,7 +424,7 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def with_lang(self):
-        if 'lang' not in self._context:
+        if not self._context.get("lang"):
             return self.with_context(lang=self.env.user.lang)
         return self
 
@@ -1900,7 +1900,7 @@ class MailThread(models.AbstractModel):
 
         if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
-            return self.env['mail_message']
+            return self.env['mail.message']
 
         if not (model and res_id):  # both value should be set or none should be set (record)
             model = False

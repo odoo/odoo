@@ -121,7 +121,7 @@ QUnit.module('Search View', {
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
             search_view_id: [8, 'search'],
-        },{
+        }, {
             id: 12,
             name: 'Partners Action 12',
             res_model: 'partner',
@@ -1299,6 +1299,19 @@ QUnit.module('Search View', {
         await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
         assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
             "The item 'Day' should be selected in the groupby menu");
+
+        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
+        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
+
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
+        assert.containsNone($('.o_filters_menu .o_item_option a.selected'),
+            "The item 'This Month' should have unselected in the filters menu");
+
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
+        assert.containsNone($('.o_group_by_menu .o_item_option a.selected'),
+            "The item 'Day' should have been unselected in the groupby menu");
 
         await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
         await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
