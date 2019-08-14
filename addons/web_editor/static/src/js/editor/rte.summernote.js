@@ -1171,7 +1171,6 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         data.__alreadyDone = true;
         var altDialog = new weWidgets.AltDialog(this,
             data.options || {},
-            data.$editable,
             data.media
         );
         if (data.onSave) {
@@ -1219,7 +1218,6 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
                 res_model: data.$editable.data('oe-model'),
                 res_id: data.$editable.data('oe-id'),
             }, data.options || {}),
-            data.$editable,
             data.media
         );
         if (data.onSave) {
@@ -1243,7 +1241,6 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         data.__alreadyDone = true;
         var linkDialog = new weWidgets.LinkDialog(this,
             data.options || {},
-            data.$editable,
             data.linkInfo
         );
         if (data.onSave) {
@@ -1272,7 +1269,6 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
                 res_id: data.$editable.data('oe-id'),
                 domain: data.$editable.data('oe-media-domain'),
             }, data.options),
-            data.$editable,
             data.media
         );
         if (data.onSave) {

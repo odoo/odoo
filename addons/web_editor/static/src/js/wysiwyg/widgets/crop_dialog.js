@@ -27,7 +27,7 @@ var CropImageDialog = Dialog.extend({
     /**
      * @constructor
      */
-    init: function (parent, options, $editable, media) {
+    init: function (parent, options, media) {
         var self = this;
         this.media = media;
         this.$media = $(this.media);

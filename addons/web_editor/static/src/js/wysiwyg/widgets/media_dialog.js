@@ -36,7 +36,7 @@ var MediaDialog = Dialog.extend({
      * @constructor
      * @param {Element} media
      */
-    init: function (parent, options, editable, media) {
+    init: function (parent, options, media) {
         var $media = $(media);
         media = $media[0];
 
