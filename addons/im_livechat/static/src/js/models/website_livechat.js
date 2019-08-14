@@ -136,7 +136,30 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         return session.rpc('/im_livechat/notify_typing', {
             uuid: this.getUUID(),
             is_typing: params.typing,
+            typing_text: params.typingText,
         }, { shadow: true });
+    },
+    /**
+     * @override {mail.model.ThreadTypingMixin}
+     * @param {Object} params
+     * @param {boolean} params.typingText typing text of website user
+     */
+    setMyselfTyping(params) {
+        this._throttleNotifyMyselfTyping(params);
+        if (params.typing) {
+            this.typingText = params.typingText;
+            this._myselfTypingInactivityTimer.reset();
+        } else {
+            this._myselfTypingInactivityTimer.clear();
+        }
+    },
+    /**
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     */
+    _onMyselfTypingInactivityTimeout() {
+        this._throttleNotifyMyselfTyping.clear();
+        this._throttleNotifyMyselfTyping({ typing: false, typingText: this.typingText });
     },
     /**
      * Warn views that the list of users that are currently typing on this

@@ -6,6 +6,7 @@
             <div class="o_mail_thread_content o_sub_w_visitor_info">
                 <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
                 <t t-call="mail.widget.Thread.Messages"/>
+                <t t-call="mail.widget.Thread.TypingData"/>
                 <t t-if="options.displayBottomThreadFreeSpace">
                     <div class="o_thread_bottom_free_space"/>
                 </t>

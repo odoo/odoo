@@ -164,6 +164,8 @@ var LivechatButton = Widget.extend({
      */
     _closeChat: function () {
         this._chatWindow.destroy();
+        this._livechat._myselfTypingInactivityTimer.clear();
+        this._livechat._throttleNotifyMyselfTyping({ typing: false, typingText: false });
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
     /**

@@ -94,8 +94,9 @@ var LivechatWindow = AbstractThreadWindow.extend({
      */
     _onInput: function () {
         if (this.hasThread() && this._thread.hasTypingNotification()) {
-            var isTyping = this.$input.val().length > 0;
-            this._thread.setMyselfTyping({ typing: isTyping });
+            const typingText = this.$input.val().trim();
+            const isTyping = typingText.length > 0;
+            this._thread.setMyselfTyping({ typing: isTyping, typingText: typingText });
         }
     },
 });

@@ -162,6 +162,7 @@ MailManager.include({
         var typingID = {
             isWebsiteUser: typingData.is_website_user,
             partnerID: typingData.partner_id,
+            inputData: typingData.typing_text,
         };
         if (typingData.is_typing) {
             channel.registerTyping(typingID);
