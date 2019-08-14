@@ -88,12 +88,6 @@
                          help="Schedule interview with this applicant">
                         <field name="meeting_count" widget="statinfo" string="Meetings"/>
                     </button>
-                    <button name="action_get_attachment_tree_view"
-                        class="oe_stat_button"
-                        icon="fa-file-text-o"
-                        type="object">
-                        <field name="attachment_number" widget="statinfo" string="Documents"/>
-                    </button>
                     <button name="toggle_active" type="object"
                             class="oe_stat_button" icon="fa-archive"
                             attrs="{'invisible': [('active', '=', True)]}">
@@ -164,7 +158,7 @@
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
                 <field name="activity_ids" widget="mail_activity"/>
-                <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients', 'open_attachments': True}"/>
             </div>
           </form>
         </field>
@@ -471,8 +465,10 @@
                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                     </div>
                 </div>
-                <field name="user_id"/>
             </xpath>
+            <field name="no_of_recruitment" position="after">
+                <field name="user_id"/>
+            </field>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
                     icon="fa-pencil"
@@ -820,10 +816,10 @@ action = act
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <tree string="Sources of Applicants" editable="top">
+            <tree string="Sources of Applicants" editable="top" class="o_recruitment_list">
                 <field name="source_id"/>
+                <button name="create_alias" string="Generate email alias" type="object" icon="fa-repeat text-success" />
                 <field name="email"/>
-                <button name="create_alias" string="Create alias" type="object" icon="fa-repeat text-success" />
             </tree>
         </field>
     </record>
@@ -928,7 +924,7 @@ action = act
                    <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
                    <filter string="Stage" name="stage" context="{'group_by':'stage_id'}" />
                    <separator/>
-                   <filter string="Creation Date" name="creation_week" context="{'group_by':'create_date:week'}" help="Creation Date"/>
+                   <filter string="Creation Date" name="creation_month" context="{'group_by':'create_date:month'}" help="Creation Date"/>
                 </group>
             </search>
         </field>
@@ -941,9 +937,9 @@ action = act
         <field name="search_view_id" ref="hr_applicant_view_search"/>
         <field name="view_ids" eval="[
             (5, 0, 0),
-            (0, 0, {'view_mode': 'pivot', 'view_id': ref('hr_applicant_view_pivot')}),
-            (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')})]"/>
-        <field name="context">{}</field>  <!-- force empty -->
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')}),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('hr_applicant_view_pivot')})]"/>
+        <field name="context">{'search_default_creation_month': 1, 'search_default_job': 2}</field>
     </record>
     <menuitem name="Reporting" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
     sequence="99"/>

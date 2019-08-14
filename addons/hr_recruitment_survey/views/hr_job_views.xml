@@ -5,7 +5,7 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='address_id']" position="before">
+            <xpath expr="//field[@name='user_id']" position="before">
                 <label for="survey_id" groups="survey.group_survey_user"/>
                 <div groups="survey.group_survey_user" class="o_row">
                     <field name="survey_id"
