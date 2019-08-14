@@ -523,6 +523,12 @@ var AbstractField = Widget.extend({
                 }
                 break;
             case $.ui.keyCode.ENTER:
+                // We preventDefault the ENTER key because of two coexisting behaviours:
+                // - In HTML5, pressing ENTER on a <button> triggers two events: a 'keydown' AND a 'click'
+                // - When creating and opening a dialog, the focus is automatically given to the primary button
+                // The end result caused some issues where a modal opened by an ENTER keypress (e.g. saving
+                // changes in multiple edition) confirmed the modal without any intentionnal user input.
+                ev.preventDefault();
                 ev.stopPropagation();
                 this.trigger_up('navigation_move', {direction: 'next_line'});
                 break;
