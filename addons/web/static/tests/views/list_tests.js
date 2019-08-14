@@ -6270,6 +6270,28 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('add and discard a line through keyboard navigation without crashing', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo" required="1"/></tree>',
+            groupBy: ['bar'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:first')); // open group
+        // Triggers ENTER on "Add a line" wrapper cell
+        await testUtils.fields.triggerKeydown(list.$('.o_group_field_row_add'), 'enter');
+        assert.containsN(list, 'tbody:nth(1) .o_data_row', 4, "new data row should be created");
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
+        // At this point, a crash manager should appear if no proper link targetting
+        assert.containsN(list, 'tbody:nth(1) .o_data_row', 3,"new data row should be discarded.");
+
+        list.destroy();
+    });
+
     QUnit.test('editable grouped list with create="0"', async function (assert) {
         assert.expect(1);
 
