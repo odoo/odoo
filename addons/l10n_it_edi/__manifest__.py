@@ -4,7 +4,10 @@
 {
     'name': 'Italy - E-invoicing',
     'version': '0.3',
-    'depends': ['l10n_it'],
+    'depends': [
+        'l10n_it',
+        'fetchmail',
+    ],
     'author': 'Odoo',
     'description': """
 E-invoice implementation
