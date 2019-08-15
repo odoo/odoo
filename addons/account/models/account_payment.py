@@ -213,13 +213,6 @@ class account_payment(models.Model):
                 self.partner_bank_account_id = False
         return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
 
-    @api.onchange('partner_type')
-    def _onchange_partner_type(self):
-        self.ensure_one()
-        # Set partner_id domain
-        if self.partner_type:
-            return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
-
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
         if not self.invoice_ids and not self.partner_type:
