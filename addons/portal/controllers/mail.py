@@ -98,8 +98,8 @@ class PortalChatter(http.Controller):
 
         res_id = int(res_id)
 
-        attachment_ids = [int(res_id) for res_id in attachment_ids.split(',')]
-        attachment_tokens = attachment_tokens.split(',')
+        attachment_ids = [int(attachment_id) for attachment_id in attachment_ids.split(',') if attachment_id]
+        attachment_tokens = [attachment_token for attachment_token in attachment_tokens.split(',') if attachment_token]
         if len(attachment_tokens) != len(attachment_ids):
             raise UserError(_("An access token must be provided for each attachment."))
         for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
