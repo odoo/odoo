@@ -327,21 +327,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
 
-    def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.company.id)]
-        if only_unblocked:
-            domain += [('blocked', '=', False)]
-        if self.ids:
-            if 'exclude_given_ids' in self._context:
-                domain += [('partner_id', 'not in', self.ids)]
-            else:
-                domain += [('partner_id', 'in', self.ids)]
-        #adding the overdue lines
-        overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<', date), '&', ('date_maturity', '=', False), ('date', '<', date)]
-        if overdue_only:
-            domain += overdue_domain
-        return domain
-
     def _compute_has_unreconciled_entries(self):
         for partner in self:
             # Avoid useless work if has_unreconciled_entries is not relevant for this partner
