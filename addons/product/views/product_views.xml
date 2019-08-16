@@ -47,7 +47,8 @@
                                 <group name="group_standard_price">
                                     <label for="list_price"/>
                                     <div name="pricing">
-                                      <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                      <field name="list_price" string="Sales Price" class="oe_inline" widget='monetary'
+                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                       <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
                                         groups="product.group_product_pricelist" class="oe_inline">
                                         <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}"/>
