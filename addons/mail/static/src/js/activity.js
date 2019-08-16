@@ -92,13 +92,13 @@ var setDelayLabel = function (activities){
                 if (diff === -1){
                     toDisplay = _t("Yesterday");
                 } else {
-                    toDisplay = _.str.sprintf(_t("%d days overdue"), Math.abs(diff));
+                    toDisplay = sprintf(_t("%d days overdue"), Math.abs(diff));
                 }
             } else { // due
                 if (diff === 1){
                     toDisplay = _t("Tomorrow");
                 } else {
-                    toDisplay = _.str.sprintf(_t("Due in %d days"), Math.abs(diff));
+                    toDisplay = sprintf(_t("Due in %d days"), Math.abs(diff));
                 }
             }
         }

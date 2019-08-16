@@ -158,8 +158,8 @@ var MentionManager = Widget.extend({
                     var matchName = match[0].substring(1)
                                             .replace(new RegExp(NON_BREAKING_SPACE, 'g'), ' ');
                     var href = baseHREF +
-                                _.str.sprintf("#model=%s&id=%s", listener.model, selectionID);
-                    var processedText = _.str.sprintf(mentionLink,
+                                sprintf("#model=%s&id=%s", listener.model, selectionID);
+                    var processedText = sprintf(mentionLink,
                                                       href,
                                                       listener.redirectClassname,
                                                       selectionID,
@@ -257,7 +257,7 @@ var MentionManager = Widget.extend({
         // create the regex of all mention's names
         var names = _.pluck(listener.selection, 'name');
         var escapedNames = _.map(names, function (str) {
-            return "("+_.str.escapeRegExp(listener.delimiter+str)+")(?= |&nbsp;|$)";
+            return "("+s.escapeRegExp(listener.delimiter+str)+")(?= |&nbsp;|$)";
         });
         var regexStr = escapedNames.join('|');
         // extract matches

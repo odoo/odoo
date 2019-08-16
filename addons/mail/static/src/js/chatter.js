@@ -519,7 +519,7 @@ var Chatter = Widget.extend({
                 });
             }
         };
-        var promptText = _.str.sprintf(_t("Do you really want to delete %s?"), _.escape(ev.data.attachmentName));
+        var promptText = sprintf(_t("Do you really want to delete %s?"), _.escape(ev.data.attachmentName));
         Dialog.confirm(this, promptText, options);
     },
     /**

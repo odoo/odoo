@@ -97,7 +97,7 @@
 
     <span t-name="currency_field" class="o_field_monetary o_field_number o_field_widget">
         <t t-js="ctx">
-            ctx.value = _.str.sprintf('%.2f', parseFloat(ctx.value));
+            ctx.value = sprintf('%.2f', parseFloat(ctx.value));
         </t>
         <t t-if="currency">
             <t t-if="currency.position == 'after'">

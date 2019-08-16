@@ -39,7 +39,7 @@ var FilterInterface = Class.extend(mixins.EventDispatcherMixin, {
         value = value.toLowerCase();
         if (fuzzy.test(value, this.filter.description)) {
             result = [{
-                label: _.str.sprintf(this.completion_label.toString(),
+                label: sprintf(this.completion_label.toString(),
                                          _.escape(this.filter.description)),
                 facet: {
                     filter: this.filter,
@@ -141,7 +141,7 @@ var Field = FilterInterface.extend(ServicesMixin, {
      * @returns {string}
      */
     _getAutocompletionLabel: function (value) {
-        return _.str.sprintf(_.str.escapeHTML(
+        return sprintf(s.escapeHTML(
             _t("Search %(field)s for: %(value)s")), {
                 field: '<em>' + _.escape(this.attrs.string) + '</em>',
                 value: '<strong>' + _.escape(value) + '</strong>'});
@@ -332,7 +332,7 @@ var DateField = Field.extend({
      * @override
      */
     _getAutocompletionLabel: function (value) {
-        return _.str.sprintf(_.str.escapeHTML(
+        return sprintf(s.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + _.escape(this.attrs.string) + '</em>',
                 value: '<strong>' + value + '</strong>'});

@@ -86,7 +86,7 @@ QUnit.module('core', function () {
         });
 
         check("time.strftime('%Y-%m-%d %H:%M:%S')", function(d) {
-            return _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
+            return sprintf('%04d-%02d-%02d %02d:%02d:%02d',
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
                 d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
         });
@@ -98,7 +98,7 @@ QUnit.module('core', function () {
         var check = makeTimeCheck(assert, pyUtils);
 
         check("context_today().strftime('%Y-%m-%d')", function(d) {
-            return String(_.str.sprintf('%04d-%02d-%02d',
+            return String(sprintf('%04d-%02d-%02d',
                 d.getFullYear(), d.getMonth() + 1, d.getDate()));
         });
     });
@@ -667,7 +667,7 @@ QUnit.module('core', function () {
         });
 
         var d = new Date();
-        var today = _.str.sprintf("%04d-%02d-%02d",
+        var today = sprintf("%04d-%02d-%02d",
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
         assert.deepEqual(result.domain, [
             ["type", "=", "contract"],
@@ -735,7 +735,7 @@ QUnit.module('core', function () {
         });
 
         var date = new Date();
-        var today = _.str.sprintf("%04d-%02d-%02d",
+        var today = sprintf("%04d-%02d-%02d",
             date.getFullYear(), date.getMonth() + 1, date.getDate());
         assert.deepEqual(result.domain, [
             ['state', '!=', 'cancel'],
@@ -752,10 +752,10 @@ QUnit.module('core', function () {
             contexts: [],
         });
         var date = new Date();
-        var today = _.str.sprintf("%04d-%02d-%02d",
+        var today = sprintf("%04d-%02d-%02d",
             date.getFullYear(), date.getMonth() + 1, date.getDate());
         date.setDate(date.getDate() - 15);
-        var ago_15_d = _.str.sprintf("%04d-%02d-%02d",
+        var ago_15_d = sprintf("%04d-%02d-%02d",
             date.getFullYear(), date.getMonth() + 1, date.getDate());
         assert.deepEqual(result.domain, [
             ['type', '=', 'in'],

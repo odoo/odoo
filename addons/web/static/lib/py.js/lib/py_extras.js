@@ -326,15 +326,15 @@ datetime.timedelta = py.type('timedelta', null, {
                 ss = s;
             });
         });
-        var s = _.str.sprintf("%d:%02d:%02d", hh, mm, ss);
+        var s = sprintf("%d:%02d:%02d", hh, mm, ss);
         if (this.days) {
-            s = _.str.sprintf("%d day%s, %s",
+            s = sprintf("%d day%s, %s",
                 this.days,
                 (this.days != 1 && this.days != -1) ? 's' : '',
                 s);
         }
         if (this.microseconds) {
-            s = _.str.sprintf("%s.%06d", s, this.microseconds);
+            s = sprintf("%s.%06d", s, this.microseconds);
         }
         return py.str.fromJSON(s);
     },
@@ -545,12 +545,12 @@ datetime.datetime = py.type('datetime', null, {
         return py.str.fromJSON(args.format.toJSON()
             .replace(/%([A-Za-z])/g, function (m, c) {
                 switch (c) {
-                case 'Y': return _.str.sprintf('%04d', self.year);
-                case 'm': return _.str.sprintf('%02d', self.month);
-                case 'd': return _.str.sprintf('%02d', self.day);
-                case 'H': return _.str.sprintf('%02d', self.hour);
-                case 'M': return _.str.sprintf('%02d', self.minute);
-                case 'S': return _.str.sprintf('%02d', self.second);
+                case 'Y': return sprintf('%04d', self.year);
+                case 'm': return sprintf('%02d', self.month);
+                case 'd': return sprintf('%02d', self.day);
+                case 'H': return sprintf('%02d', self.hour);
+                case 'M': return sprintf('%02d', self.minute);
+                case 'S': return sprintf('%02d', self.second);
                 }
                 throw new Error('ValueError: No known conversion for ' + m);
             }));
@@ -635,8 +635,8 @@ datetime.date = py.type('date', null, {
             .replace(/%([A-Za-z])/g, function (m, c) {
                 switch (c) {
                 case 'Y': return self.year;
-                case 'm': return _.str.sprintf('%02d', self.month);
-                case 'd': return _.str.sprintf('%02d', self.day);
+                case 'm': return sprintf('%02d', self.month);
+                case 'd': return sprintf('%02d', self.day);
                 }
                 throw new Error('ValueError: No known conversion for ' + m);
             }));

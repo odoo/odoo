@@ -114,7 +114,7 @@ var Followers = AbstractField.extend({
         var $follower_li;
         _.each(this.followers, function (record) {
             if(!record.active) {
-                record.title = _.str.sprintf(_t('%s \n(inactive)'), record.name);
+                record.title = sprintf(_t('%s \n(inactive)'), record.name);
             } else {
                 record.title = record.name;
             }
@@ -267,7 +267,7 @@ var Followers = AbstractField.extend({
         }
         return new Promise(function (resolve, reject) {
             var follower = _.find(self.followers, { res_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
-            var text = _.str.sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
+            var text = sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
             Dialog.confirm(this, text, {
                 title: _t("Warning"),
                 confirm_callback: function () {

@@ -21,7 +21,7 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
         ev.preventDefault();
 
         var text = $(ev.currentTarget).val();
-        var filter = _.str.sprintf(':containsLike(%s)', text);
+        var filter = sprintf(':containsLike(%s)', text);
 
         $('#search_summary').removeClass('invisible');
         var $tracks = $('.event_track');

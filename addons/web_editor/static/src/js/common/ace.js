@@ -235,7 +235,7 @@ var ViewEditor = Widget.extend({
         if (this.options.initialResID) {
             initResID = this.options.initialResID;
             if (_.isString(initResID) && initResID[0] === '/') {
-                if (_.str.endsWith(initResID, '.scss')) {
+                if (s.endsWith(initResID, '.scss')) {
                     initType = 'scss';
                 } else {
                     initType = 'js';
@@ -380,13 +380,13 @@ var ViewEditor = Widget.extend({
 
         var isCustomized = false;
         if (this.currentType === 'xml') {
-            this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].key));
+            this.$viewID.text(sprintf(_t("Template ID: %s"), this.views[resID].key));
         } else if (this.currentType === 'scss') {
             isCustomized = this.scss[resID].customized;
-            this.$viewID.text(_.str.sprintf(_t("SCSS file: %s"), resID));
+            this.$viewID.text(sprintf(_t("SCSS file: %s"), resID));
         } else {
             isCustomized = this.js[resID].customized;
-            this.$viewID.text(_.str.sprintf(_t("JS file: %s"), resID));
+            this.$viewID.text(sprintf(_t("JS file: %s"), resID));
         }
         this.$lists[this.currentType].select2('val', resID);
 
@@ -553,7 +553,7 @@ var ViewEditor = Widget.extend({
      */
     _saveSCSSorJS: function (session) {
         var self = this;
-        var sessionIdEndsWithJS = _.string.endsWith(session.id, '.js');
+        var sessionIdEndsWithJS = s.endsWith(session.id, '.js');
         var bundleXmlID = sessionIdEndsWithJS ? this.js[session.id].bundle_xmlid : this.scss[session.id].bundle_xmlid;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
         return self._rpc({

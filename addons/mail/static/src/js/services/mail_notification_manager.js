@@ -514,12 +514,12 @@ MailManager.include({
         if (channel) {
             var message;
             if (_.contains(['public', 'private'], channel.getType())) {
-                message = _.str.sprintf(
+                message = sprintf(
                     _t("You unsubscribed from <b>%s</b>."),
                     channel.getName()
                 );
             } else {
-                message = _.str.sprintf(
+                message = sprintf(
                     _t("You unpinned your conversation with <b>%s</b>."),
                     channel.getName()
                 );

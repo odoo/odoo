@@ -321,7 +321,7 @@ var StatementAction = AbstractAction.extend({
         var self = this;
         var handle = event.target.handle;
         var current_line = this.model.getLine(handle);
-        this.model[_.str.camelize(event.name)](handle, event.data.data).then(function () {
+        this.model[s.camelize(event.name)](handle, event.data.data).then(function () {
             var widget = self._getWidget(handle);
             if (widget) {
                 widget.update(current_line);

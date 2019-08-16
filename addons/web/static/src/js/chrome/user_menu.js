@@ -41,7 +41,7 @@ var UserMenu = Widget.extend({
             }
             var topbar_name = session.name;
             if (config.isDebug()) {
-                topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
+                topbar_name = sprintf("%s (%s)", topbar_name, session.db);
             }
             self.$('.oe_topbar_name').text(topbar_name);
             var avatar_src = session.url('/web/image', {

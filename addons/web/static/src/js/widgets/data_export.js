@@ -100,7 +100,7 @@ var DataExport = Dialog.extend({
 
                 if (format.error) {
                     $radio.prop('disabled', true);
-                    $label.html(_.str.sprintf("%s — %s", format.label, format.error));
+                    $label.html(sprintf("%s — %s", format.label, format.error));
                 }
 
                 $fmts.append($("<div class='radio form-check form-check-inline pl-4'></div>").append($radio, $label));

@@ -41,7 +41,7 @@ var M2ODialog = Dialog.extend({
         this.name = name;
         this.value = value;
         this._super(parent, {
-            title: _.str.sprintf(_t("Create a %s"), this.name),
+            title: sprintf(_t("Create a %s"), this.name),
             size: 'medium',
             buttons: [{
                 text: _t('Create'),
@@ -71,7 +71,7 @@ var M2ODialog = Dialog.extend({
         });
     },
     start: function () {
-        this.$("p").text(_.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name));
+        this.$("p").text(sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name));
         this.$("input").val(this.value);
     },
     /**
@@ -438,7 +438,7 @@ var FieldMany2One = AbstractField.extend({
                             return x[0];
                         });
                         dynamicFilters = [{
-                            description: _.str.sprintf(_t('Quick search: %s'), search_val),
+                            description: sprintf(_t('Quick search: %s'), search_val),
                             domain: [['id', 'in', ids]],
                         }];
                     }
@@ -544,7 +544,7 @@ var FieldMany2One = AbstractField.extend({
         }).join('<br/>');
         this.$el.html(value);
         if (!this.noOpen && this.value) {
-            this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
+            this.$el.attr('href', sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
             this.$el.addClass('o_form_uri');
         }
     },
@@ -591,7 +591,7 @@ var FieldMany2One = AbstractField.extend({
                 var values = _.map(result, function (x) {
                     x[1] = self._getDisplayName(x[1]);
                     return {
-                        label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
+                        label: s.escapeHTML(x[1].trim()) || data.noDisplayContent,
                         value: x[1],
                         name: x[1],
                         id: x[0],
@@ -608,7 +608,7 @@ var FieldMany2One = AbstractField.extend({
                 if (create_enabled && !self.nodeOptions.no_quick_create &&
                     search_val.length > 0 && !_.contains(raw_result, search_val)) {
                     values.push({
-                        label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                        label: sprintf(_t('Create "<strong>%s</strong>"'),
                             $('<span />').text(search_val).html()),
                         action: self._quickCreate.bind(self, search_val),
                         classname: 'o_m2o_dropdown_option'
@@ -2001,7 +2001,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
 
         if (this.field.type !== 'many2many' || this.field.relation !== 'ir.attachment') {
             var msg = _t("The type of the field '%s' must be a many2many field with a relation to 'ir.attachment' model.");
-            throw _.str.sprintf(msg, this.field.string);
+            throw sprintf(msg, this.field.string);
         }
 
         this.uploadedFiles = {};

@@ -534,7 +534,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             );
         } else {
             this.do_action({
-                name: $target.attr('title') || _.str.strip($target.text()),
+                name: $target.attr('title') || s.strip($target.text()),
                 type: 'ir.actions.act_window',
                 res_model: data.model || this.modelName,
                 res_id: data.resId,

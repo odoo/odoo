@@ -144,7 +144,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 args: ['website.theme_customize'],
             }).then(function (data) {
                 if (!/^<templates>/.test(data)) {
-                    data = _.str.sprintf('<templates>%s</templates>', data);
+                    data = sprintf('<templates>%s</templates>', data);
                 }
                 return core.qweb.add_template(data);
             });
@@ -420,7 +420,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                 if ($container.hasClass('form-row')) {
                     var $col = $('<div/>', {
-                        class: _.str.sprintf('col-%s', $item.data('col') || 6),
+                        class: sprintf('col-%s', $item.data('col') || 6),
                     });
 
                     if (item.tagName === 'LIST') {
@@ -526,7 +526,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 }
 
                 var baseURL = '/website/static/src/scss/options/colors/';
-                var url = _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
+                var url = sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
 
                 var colors = {};
                 colors[colorName] = chosenColor;
@@ -780,7 +780,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             var value = self.style.getPropertyValue('--' + $el.data('variable')).trim();
 
             // Convert rem values to px values
-            if (_.str.endsWith(value, 'rem')) {
+            if (s.endsWith(value, 'rem')) {
                 value = parseFloat(value) * self.PX_BY_REM + 'px';
             }
 
@@ -806,7 +806,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
             var classes = 'btn btn-light dropdown-toggle w-100 o_text_overflow o_theme_customize_dropdown_btn';
             if ($checked.data('font-id')) {
-                classes += _.str.sprintf(' o_theme_customize_option_font_%s', $checked.data('font-id'));
+                classes += sprintf(' o_theme_customize_option_font_%s', $checked.data('font-id'));
             }
             var $btn = $('<button/>', {
                 type: 'button',

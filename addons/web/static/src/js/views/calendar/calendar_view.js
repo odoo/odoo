@@ -59,7 +59,7 @@ var CalendarView = AbstractView.extend({
 
         var filters = {};
 
-        var eventLimit = attrs.event_limit !== null && (isNaN(+attrs.event_limit) ? _.str.toBool(attrs.event_limit) : +attrs.event_limit);
+        var eventLimit = attrs.event_limit !== null && (isNaN(+attrs.event_limit) ? s.toBool(attrs.event_limit) : +attrs.event_limit);
 
         var modelFilters = [];
         _.each(arch.children, function (child) {

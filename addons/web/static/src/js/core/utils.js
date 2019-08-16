@@ -468,7 +468,7 @@ var utils = {
             return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
             throw new Error(
-                _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),
+                sprintf(_t("Node [%s] is not a JSONified XML node"),
                             JSON.stringify(node)));
         }
         for (var attr in node.attrs) {
@@ -627,7 +627,7 @@ var utils = {
      * @returns
      */
     toBoolElse: function (str, elseValues, trueValues, falseValues) {
-        var ret = _.str.toBool(str, trueValues, falseValues);
+        var ret = s.toBool(str, trueValues, falseValues);
         if (_.isUndefined(ret)) {
             return elseValues;
         }

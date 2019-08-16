@@ -92,7 +92,7 @@ if(!the_form.length) {
                         input.val(value);
 
                         // special case for comments under multiple suggestions questions
-                        if (_.string.endsWith(key, "_comment") &&
+                        if (s.endsWith(key, "_comment") &&
                             (input.parent().hasClass("js_comments") || input.parent().hasClass("js_ck_comments"))) {
                             input.siblings().find('>input').attr("checked","checked");
                         }

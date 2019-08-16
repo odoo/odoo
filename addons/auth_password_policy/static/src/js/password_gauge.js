@@ -19,13 +19,13 @@ var Policy = core.Class.extend({
     toString: function () {
         var msgs = [];
         if (this._minlength > 1) {
-            msgs.push(_.str.sprintf(_t("at least %d characters"), this._minlength));
+            msgs.push(sprintf(_t("at least %d characters"), this._minlength));
         }
         if (this._minwords > 1) {
-            msgs.push(_.str.sprintf(_t("at least %d words"), this._minwords));
+            msgs.push(sprintf(_t("at least %d words"), this._minwords));
         }
         if (this._minclasses > 1) {
-            msgs.push(_.str.sprintf(_t("at least %d character classes"), this._minclasses));
+            msgs.push(sprintf(_t("at least %d character classes"), this._minclasses));
         }
         return msgs.join(', ')
     },
@@ -122,7 +122,7 @@ var PasswordPolicyMeter = Widget.extend({
     start: function () {
         var helpMessage = _t("Required: %s.\n\nHint: increase length, use multiple words and use non-letter characters to increase your password's strength.");
         this.el.setAttribute(
-            'title', _.str.sprintf(helpMessage, String(this._required) || _t("no requirements")));
+            'title', sprintf(helpMessage, String(this._required) || _t("no requirements")));
         return this._super().then(function () {
         });
     },

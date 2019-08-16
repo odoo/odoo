@@ -65,7 +65,7 @@ var Domain = collections.Tree.extend({
                     fieldName in values.parent;
             }
             if (!(this._data[0] in values) && !(isParentField)) {
-                throw new Error(_.str.sprintf(
+                throw new Error(sprintf(
                     "Unknown field %s in domain",
                     this._data[0]
                 ));
@@ -112,7 +112,7 @@ var Domain = collections.Tree.extend({
                 case "=ilike":
                     return new RegExp(this._data[2].replace(/%/g, '.*'), 'i').test(fieldValue);
                 default:
-                    throw new Error(_.str.sprintf(
+                    throw new Error(sprintf(
                         "Domain %s uses an unsupported operator",
                         this._data
                     ));

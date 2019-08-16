@@ -1238,7 +1238,7 @@ QUnit.module('fields', {}, function () {
                     } else if (args.method === 'name_get') {
                         // This should not be called at all and thus is not accounted for
                         // in the assert.expect. If this is called, you broke this test.
-                        assert.notOk(_.str.startsWith(args.args[0][0], 'virtual_'),
+                        assert.notOk(s.startsWith(args.args[0][0], 'virtual_'),
                             "should not call name_get for the m2o inside o2m which has no value");
                     }
                     return this._super.apply(this, arguments);
@@ -1277,7 +1277,7 @@ QUnit.module('fields', {}, function () {
                     } else if (args.method === 'name_get') {
                         // This should not be called at all and thus is not accounted for
                         // in the assert.expect. If this is called, you broke this test.
-                        assert.notOk(_.str.startsWith(args.args[0][0], 'virtual_'),
+                        assert.notOk(s.startsWith(args.args[0][0], 'virtual_'),
                             "should not call name_get for the m2o inside o2m which has no value");
                     }
                     return this._super.apply(this, arguments);

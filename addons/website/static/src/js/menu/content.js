@@ -81,7 +81,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             method: 'get_page_info',
             args: [this.page_id],
         }).then(function (page) {
-            page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
+            page[0].url = s.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
             self.page = page[0];
         }));
 

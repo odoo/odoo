@@ -335,7 +335,6 @@ class ModuleExtractor(Visitor):
                 'type': 'MemberExpression',
                 'object': lambda n: (
                     n['type']  in ('Identifier', 'MemberExpression')
-                    # _.str.include
                     and not utils._name(n).startswith('_')
                 ),
                 'property': {'name': 'include'},

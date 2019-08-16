@@ -54,7 +54,7 @@ QUnit.test('clicking on Support channel: channel not available', async function 
     addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            if (!s.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -103,7 +103,7 @@ QUnit.test('clicking on Support channel: channel available', async function (ass
     addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            if (!s.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -148,7 +148,7 @@ QUnit.test('post messages in Support channel', async function (assert) {
     addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            if (!s.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -193,7 +193,7 @@ QUnit.test('fold Support channel', async function (assert) {
     addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            if (!s.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -249,7 +249,7 @@ QUnit.test('restore Support channel if necessary', async function (assert) {
         data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            if (!s.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -288,7 +288,7 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
         data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            if (!_.string.endsWith(route, '.png')) { // ignore images
+            if (!s.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);

@@ -62,7 +62,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
     },
     /**
      * Display the timezone alert
-     * 
+     *
      * Note: timezone alert is a span that is added after $el, and $el is now a
      * set of two elements
      *
@@ -84,8 +84,8 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         if (userOffset && value !== "" && value !== "false") {
             var offset = -(new Date().getTimezoneOffset());
             var browserOffset = (offset < 0) ? "-" : "+";
-            browserOffset += _.str.sprintf("%02d", Math.abs(offset / 60));
-            browserOffset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            browserOffset += sprintf("%02d", Math.abs(offset / 60));
+            browserOffset += sprintf("%02d", Math.abs(offset % 60));
             this.mismatch = (browserOffset !== userOffset);
         }
 

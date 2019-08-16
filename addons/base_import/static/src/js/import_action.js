@@ -590,7 +590,7 @@ var DataImport = AbstractAction.extend({
         var msg = kwargs.dryrun ? _t("%d records tested...")
                                 : _t("%d records successfully imported...");
         opts.callback = function (count) {
-            $el.text(_.str.sprintf(msg, count));
+            $el.text(sprintf(msg, count));
         };
 
         return this._batchedImport(opts, [this.id, fields, columns], kwargs, {done: 0, prev: 0})
@@ -663,7 +663,7 @@ var DataImport = AbstractAction.extend({
                     results.messages.push({
                         type: 'info',
                         priority: true,
-                        message: _.str.sprintf(_t("This file has been successfully imported up to line %d."), opts.skip)
+                        message: sprintf(_t("This file has been successfully imported up to line %d."), opts.skip)
                     });
                 }
                 return results;
@@ -714,7 +714,7 @@ var DataImport = AbstractAction.extend({
         return prom;
     },
     onimported: function (event, from, to, results) {
-        this.do_notify(_t("Import completed"), _.str.sprintf(_t("%d records were successfully imported"), results.ids.length));
+        this.do_notify(_t("Import completed"), sprintf(_t("%d records were successfully imported"), results.ids.length));
         this.exit();
     },
     exit: function () {
@@ -768,12 +768,12 @@ var DataImport = AbstractAction.extend({
                     var to = rows.to + offset;
                     var rowName = '';
                     if (results.name.length > rows.from && results.name[rows.from] !== '') {
-                        rowName = _.str.sprintf(' (%s)', results.name[rows.from]);
+                        rowName = sprintf(' (%s)', results.name[rows.from]);
                     }
                     if (from === to) {
-                        return _.str.sprintf(_t("at row %d%s"), from, rowName);
+                        return sprintf(_t("at row %d%s"), from, rowName);
                     }
-                    return _.str.sprintf(_t("between rows %d and %d"),
+                    return sprintf(_t("between rows %d and %d"),
                                          from, to);
                 },
                 at_multi: function (rows) {
@@ -781,43 +781,43 @@ var DataImport = AbstractAction.extend({
                     var to = rows.to + offset;
                     var rowName = '';
                     if (results.name.length > rows.from && results.name[rows.from] !== '') {
-                        rowName = _.str.sprintf(' (%s)', results.name[rows.from]);
+                        rowName = sprintf(' (%s)', results.name[rows.from]);
                     }
                     if (from === to) {
-                        return _.str.sprintf(_t("Row %d%s"), from, rowName);
+                        return sprintf(_t("Row %d%s"), from, rowName);
                     }
-                    return _.str.sprintf(_t("Between rows %d and %d"),
+                    return sprintf(_t("Between rows %d and %d"),
                                          from, to);
                 },
                 at_multi_header: function (numberLines) {
-                    return _.str.sprintf(_t("at %d different rows:"),
+                    return sprintf(_t("at %d different rows:"),
                                          numberLines);
                 },
                 more: function (n) {
-                    return _.str.sprintf(_t("(%d more)"), n);
+                    return sprintf(_t("(%d more)"), n);
                 },
                 info: function (msg) {
                     if (typeof msg === 'string') {
-                        return _.str.sprintf(
+                        return sprintf(
                             '<div class="oe_import_moreinfo oe_import_moreinfo_message">%s</div>',
-                            _.str.escapeHTML(msg));
+                            s.escapeHTML(msg));
                     }
                     if (msg instanceof Array) {
-                        return _.str.sprintf(
+                        return sprintf(
                             '<div class="oe_import_moreinfo oe_import_moreinfo_choices"><a href="#" class="oe_import_report_see_possible_value oe_import_see_all"><i class="fa fa-arrow-right"/> %s </a><ul class="oe_import_report_more">%s</ul></div>',
-                            _.str.escapeHTML(_t("See possible values")),
+                            s.escapeHTML(_t("See possible values")),
                             _(msg).map(function (msg) {
                                 return '<li>'
-                                    + _.str.escapeHTML(msg)
+                                    + s.escapeHTML(msg)
                                 + '</li>';
                             }).join(''));
                     }
                     // Final should be object, action descriptor
                     return [
                         '<div class="oe_import_moreinfo oe_import_moreinfo_action">',
-                            _.str.sprintf('<a href="#" data-action="%s" class="oe_import_see_all"><i class="fa fa-arrow-right"/> ',
-                                    _.str.escapeHTML(JSON.stringify(msg))),
-                                _.str.escapeHTML(
+                            sprintf('<a href="#" data-action="%s" class="oe_import_see_all"><i class="fa fa-arrow-right"/> ',
+                                    s.escapeHTML(JSON.stringify(msg))),
+                                s.escapeHTML(
                                     _t("See possible values")),
                             '</a>',
                         '</div>'

@@ -465,7 +465,7 @@ var FileWidget = SearchableMediaWidget.extend({
             if (img.image_src) {
                 var src = img.image_src;
                 if (!img.public && img.access_token) {
-                    src += _.str.sprintf('?access_token=%s', img.access_token);
+                    src += sprintf('?access_token=%s', img.access_token);
                 }
                 if (!self.$media.is('img')) {
 
@@ -484,7 +484,7 @@ var FileWidget = SearchableMediaWidget.extend({
                 }
                 var href = '/web/content/' + img.id + '?';
                 if (!img.public && img.access_token) {
-                    href += _.str.sprintf('access_token=%s&', img.access_token);
+                    href += sprintf('access_token=%s&', img.access_token);
                 }
                 href += 'unique=' + img.checksum + '&download=true';
                 self.$media.attr('href', href);
@@ -1157,8 +1157,8 @@ var VideoWidget = MediaWidget.extend({
             $video.attr('src', $video.attr('src') + '&rel=0');
         }
         if (options.loop && (ytMatch || vimMatch)) {
-            var videoSrc = _.str.sprintf('%s&loop=1', $video.attr('src'));
-            $video.attr('src', ytMatch ? _.str.sprintf('%s&playlist=%s', videoSrc, ytMatch[2]) : videoSrc);
+            var videoSrc = sprintf('%s&loop=1', $video.attr('src'));
+            $video.attr('src', ytMatch ? sprintf('%s&playlist=%s', videoSrc, ytMatch[2]) : videoSrc);
         }
         if (options.hide_controls && (ytMatch || dmMatch)) {
             $video.attr('src', $video.attr('src') + '&controls=0');

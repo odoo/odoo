@@ -125,7 +125,7 @@ Blocks
 
     # good, allow to change position of the number in the translation
     _("You have %s invoices wainting") % len(invoices)
-    _.str.sprintf(_t("You have %s invoices wainting"), invoices.length);
+    sprintf(_t("You have %s invoices wainting"), invoices.length);
 
     # good, full sentence is understandable
     _("Reference of the document that generated " + \

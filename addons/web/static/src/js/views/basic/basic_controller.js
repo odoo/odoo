@@ -546,7 +546,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var fields = record.fields;
         var warnings = invalidFields.map(function (fieldName) {
             var fieldStr = fields[fieldName].string;
-            return _.str.sprintf('<li>%s</li>', _.escape(fieldStr));
+            return sprintf('<li>%s</li>', _.escape(fieldStr));
         });
         warnings.unshift('<ul>');
         warnings.push('</ul>');

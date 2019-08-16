@@ -264,7 +264,7 @@ var CalendarController = AbstractController.extend({
 
         var options = _.extend({}, this.options, event.options, {
             context: context,
-            title: _.str.sprintf(_t('Create: %s'), (this.displayName || this.renderer.arch.attrs.string))
+            title: sprintf(_t('Create: %s'), (this.displayName || this.renderer.arch.attrs.string))
         });
 
         if (this.quick != null) {

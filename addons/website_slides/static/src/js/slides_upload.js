@@ -283,7 +283,7 @@ var SlideUploadDialog = Dialog.extend({
                             id: _.uniqueId('tag_'),
                             create: true,
                             tag: term,
-                            text: _.str.sprintf(_t("Create new %s '%s'"), tag, term),
+                            text: sprintf(_t("Create new %s '%s'"), tag, term),
                         };
                     } else {
                         return undefined;
@@ -535,23 +535,23 @@ var SlideUploadDialog = Dialog.extend({
             this.set('state', '_import');
             if (this.modulesToInstallStatus.installing) {
                 this.$('#o_wslides_install_module_text')
-                    .text(_.str.sprintf(_t('Already installing "%s".'), this.modulesToInstallStatus.name));
+                    .text(sprintf(_t('Already installing "%s".'), this.modulesToInstallStatus.name));
             } else if (this.modulesToInstallStatus.failed) {
                 this.$('#o_wslides_install_module_text')
-                    .text(_.str.sprintf(_t('Failed to install "%s".'), this.modulesToInstallStatus.name));
+                    .text(sprintf(_t('Failed to install "%s".'), this.modulesToInstallStatus.name));
             }
         } else {
             this.modulesToInstallStatus = _.extend({}, _.find(this.modulesToInstall, function (item) { return item.id == moduleId; }));
             this.set('state', '_import');
             this.$('#o_wslides_install_module_text')
-                .text(_.str.sprintf(_t('Do you want to install the "%s" app?'), this.modulesToInstallStatus.name));
+                .text(sprintf(_t('Do you want to install the "%s" app?'), this.modulesToInstallStatus.name));
         }
     },
 
     _onClickInstallModuleConfirm: function () {
         var self = this;
         var $el = this.$('#o_wslides_install_module_text');
-        $el.text(_.str.sprintf(_t('Installing "%s".'), this.modulesToInstallStatus.name));
+        $el.text(sprintf(_t('Installing "%s".'), this.modulesToInstallStatus.name));
         this.modulesToInstallStatus.installing = true;
         this._resetModalButton();
         this._rpc({
@@ -561,7 +561,7 @@ var SlideUploadDialog = Dialog.extend({
         }).then(function () {
             window.location.href = window.location.origin + window.location.pathname + '?enable_slide_upload';
         }, function () {
-            $el.text(_.str.sprintf(_t('Failed to install "%s".'), self.modulesToInstallStatus.name));
+            $el.text(sprintf(_t('Failed to install "%s".'), self.modulesToInstallStatus.name));
             self.modulesToInstallStatus.installing = false;
             self.modulesToInstallStatus.failed = true;
             self._resetModalButton();

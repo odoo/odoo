@@ -724,7 +724,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {input event} event
      */
     _onFilterChange: function (event) {
-        this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
+        this.trigger_up('change_filter', {'data': s.strip($(event.target).val())});
     },
     /**
      * @private

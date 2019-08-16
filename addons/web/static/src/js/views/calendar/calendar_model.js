@@ -523,7 +523,7 @@ return AbstractModel.extend({
                     };
                 });
                 records.sort(function (f1,f2) {
-                    return _.string.naturalCmp(f2.label, f1.label);
+                    return s.naturalCmp(f2.label, f1.label);
                 });
 
                 // add my profile

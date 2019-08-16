@@ -43,7 +43,7 @@ var ActivityController = BasicController.extend({
         new ViewDialogs.SelectCreateDialog(this, {
             res_model: state.model,
             domain: this.model.originalDomain,
-            title: _.str.sprintf(_t("Search: %s"), this.renderer.arch.attrs.string),
+            title: sprintf(_t("Search: %s"), this.renderer.arch.attrs.string),
             no_create: !this.activeActions.create,
             disable_multiple_selection: true,
             context: state.context,

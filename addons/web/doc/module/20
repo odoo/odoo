@@ -34,8 +34,8 @@ Index: web_example/static/src/js/first_module.js
              h = Math.floor(m / 60);
              m -= 60*h;
 -            this.$('.oe_web_example_timer').text(
--                _.str.sprintf("%02d:%02d:%02d", h, m, s));
-+            return _.str.sprintf("%02d:%02d:%02d", h, m, s);
+-                sprintf("%02d:%02d:%02d", h, m, s));
++            return sprintf("%02d:%02d:%02d", h, m, s);
 +        },
 +        update_counter: function (time) {
 +            this.$('.oe_web_example_timer').text(this.format_time(time));

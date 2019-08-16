@@ -497,7 +497,7 @@ var AbstractThreadWindow = Widget.extend({
         ev.stopPropagation(); // to prevent jquery's blockUI to cancel event
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (ev.which === 13) {
-            var content = _.str.trim(this.$input.val());
+            var content = s.trim(this.$input.val());
             var messageData = {
                 content: content,
                 attachment_ids: [],

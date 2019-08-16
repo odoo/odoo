@@ -12,13 +12,13 @@
     </div>
 
     <t t-name="calendar-box">
-        <div t-att-style="typeof color === 'string' ? ('background-color:' + color) + ';' : ''" t-attf-class="#{!event.color_index ? 'text-white' : ''} #{record.is_highlighted and record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}">
+        <div t-att-style="typeof color === 'string' ? ('background-color:' + color) + ';' : ''" t-attf-class="#{!event.color_index ? 'text-white' : ''} #{record.is_highlighted and record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? sprintf('o_calendar_color_%s', color) : ''}">
             <div class="o_event_title" t-esc="record.display_name"/>
         </div>
     </t>
 
     <t t-name="CalendarView.event.popover.placeholder">
-        <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
+        <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
             <div class="arrow"/>
             <div class="card-header d-flex justify-content-between py-2 pr-2">
                 <h4 class="popover-header border-0 p-0 pt-1"/>
@@ -34,11 +34,11 @@
             <ul class="list-group list-group-flush">
                 <li t-if="!widget.hideDate and widget.eventDate.date" class="list-group-item">
                     <i class="fa fa-fw fa-calendar-o"/>
-                    <b class="text-capitalize" t-esc="widget.eventDate.date"/> <small t-if="widget.eventDate.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventDate.duration)"/></small>
+                    <b class="text-capitalize" t-esc="widget.eventDate.date"/> <small t-if="widget.eventDate.duration"><b t-esc="sprintf('(%s)', widget.eventDate.duration)"/></small>
                 </li>
                 <li t-if="!widget.hideTime and widget.eventTime.time" class="list-group-item">
                     <i class="fa fa-fw fa-clock-o"/>
-                    <b t-esc="widget.eventTime.time"/> <small t-if="widget.eventTime.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventTime.duration)"/></small>
+                    <b t-esc="widget.eventTime.time"/> <small t-if="widget.eventTime.duration"><b t-esc="sprintf('(%s)', widget.eventTime.duration)"/></small>
                 </li>
             </ul>
             <ul class="list-group list-group-flush o_cw_popover_fields_secondary"/>
@@ -64,14 +64,14 @@
                     <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
                     <t t-set="isColorNumber" t-value="typeof color === 'number'"/>
 
-                    <div t-attf-class="o_calendar_filter_item w-100 position-relative mb-2 #{isColorNumber ? _.str.sprintf('o_cw_filter_color_%s', color) : ''}"
+                    <div t-attf-class="o_calendar_filter_item w-100 position-relative mb-2 #{isColorNumber ? sprintf('o_cw_filter_color_%s', color) : ''}"
                          t-att-data-value="filter.value" t-att-data-id="filter.id">
 
                         <input type="checkbox" t-att-id="idForLabel" name="selection" class="position-absolute" t-att-checked="filter.active ? true : undefined"/>
 
                         <label t-att-for="idForLabel" class="d-flex align-items-center m-0">
                             <span t-attf-class="o_cw_filter_input_bg align-items-center d-flex flex-shrink-0 justify-content-center position-relative mr-1 #{widget.avatar_field ? 'o_beside_avatar' : ''}"
-                                t-att-style="color and !isColorNumber ? _.str.sprintf('border-color:%s;background-color:%s', color, color) : ''">
+                                t-att-style="color and !isColorNumber ? sprintf('border-color:%s;background-color:%s', color, color) : ''">
                                 <i class="fa fa-check position-relative"/>
                             </span>
                             <i t-if="filter.value == 'all'" class="o_cw_filter_avatar fa fa-users fa-fw  flex-shrink-0 mr-1" role="img" aria-label="Avatar" title="Avatar"/>

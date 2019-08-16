@@ -340,7 +340,7 @@ var BoardRenderer = FormRenderer.extend({
         _.each(this.actionsDescr, function (action) {
             self.defs.push(self._createController({
                 $node: $html.find('.oe_action[data-id=' + action.id + '] .oe_content'),
-                actionID: _.str.toNumber(action.name),
+                actionID: s.toNumber(action.name),
                 context: action.context,
                 domain: Domain.prototype.stringToArray(action.domain, {}),
                 viewType: action.view_mode,

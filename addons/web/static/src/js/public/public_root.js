@@ -111,7 +111,7 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
     _call_service: function (ev) {
         if (ev.data.service === 'ajax' && ev.data.method === 'rpc') {
             var route = ev.data.args[0];
-            if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
+            if (s.startsWith(route, '/web/dataset/call_kw/')) {
                 var params = ev.data.args[1];
                 var options = ev.data.args[2];
                 params.kwargs.context = _.extend({}, this._getContext(), params.kwargs.context || {});

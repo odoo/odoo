@@ -64,7 +64,7 @@ CalendarController.include({
                 var confirmText1 = _t("The account you are trying to synchronize (%s) is not the same as the last one used (%s)!");
                 var confirmText2 = _t("In order to do this, you first need to disconnect all existing events from the old account.");
                 var confirmText3 = _t("Do you want to do this now?");
-                var text = _.str.sprintf(confirmText1 + "\n" + confirmText2 + "\n\n" + confirmText3, o.info.new_name, o.info.old_name);
+                var text = sprintf(confirmText1 + "\n" + confirmText2 + "\n\n" + confirmText3, o.info.new_name, o.info.old_name);
                 Dialog.confirm(self, text, {
                     confirm_callback: function() {
                         self._rpc({

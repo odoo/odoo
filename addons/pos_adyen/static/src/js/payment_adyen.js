@@ -59,7 +59,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
     _adyen_get_sale_id: function () {
         var config = this.pos.config;
-        return _.str.sprintf('%s (ID: %s)', config.display_name, config.id);
+        return sprintf('%s (ID: %s)', config.display_name, config.id);
     },
 
     _adyen_common_message_header: function () {
@@ -154,9 +154,9 @@ var PaymentAdyen = PaymentInterface.extend({
             var params = new URLSearchParams(entry.Text);
 
             if (params.get('name') && !params.get('value')) {
-                return acc + _.str.sprintf('<br/>%s', params.get('name'));
+                return acc + sprintf('<br/>%s', params.get('name'));
             } else if (params.get('name') && params.get('value')) {
-                return acc + _.str.sprintf('<br/>%s: %s', params.get('name'), params.get('value'));
+                return acc + sprintf('<br/>%s: %s', params.get('name'), params.get('value'));
             }
 
             return acc;
@@ -225,7 +225,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     resolve(true);
                 } else {
                     var message = additional_response.get('message');
-                    self._show_error(_.str.sprintf(_t('Message from Adyen: %s'), message));
+                    self._show_error(sprintf(_t('Message from Adyen: %s'), message));
 
                     // this means the transaction was cancelled by pressing the cancel button on the device
                     if (message.startsWith('108 ')) {
@@ -262,7 +262,7 @@ var PaymentAdyen = PaymentInterface.extend({
                 msg = params.get('message');
             }
 
-            this._show_error(_.str.sprintf(_t('An unexpected error occured. Message from Adyen: %s'), msg));
+            this._show_error(sprintf(_t('An unexpected error occured. Message from Adyen: %s'), msg));
             if (line) {
                 line.set_payment_status('force_done');
             }

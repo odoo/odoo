@@ -100,7 +100,7 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
         var defs = [this._super.apply(this, arguments)];
         this.websiteID = this._getContext().website_id;
         this.listID = parseInt(this.$target.attr('data-list-id'));
-        if (!this.listID || (utils.get_cookie(_.str.sprintf("newsletter-popup-%s-%s", this.listID, this.websiteID)) && !self.editableMode)) {
+        if (!this.listID || (utils.get_cookie(sprintf("newsletter-popup-%s-%s", this.listID, this.websiteID)) && !self.editableMode)) {
             return Promise.all(defs);
         }
         if (this.$target.data('content') && this.editableMode) {
@@ -190,7 +190,7 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
      */
     _showBanner: function () {
         this.massMailingPopup.open();
-        utils.set_cookie(_.str.sprintf("newsletter-popup-%s-%s", this.listID, this.websiteID), true);
+        utils.set_cookie(sprintf("newsletter-popup-%s-%s", this.listID, this.websiteID), true);
         $(document).off('mouseleave.open_popup_event');
     },
 });

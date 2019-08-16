@@ -1750,8 +1750,8 @@ QUnit.test('chatter: Attachment viewer', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (_.str.contains(route, '/mail/attachment/preview/') ||
-                _.str.contains(route, '/web/static/lib/pdfjs/web/viewer.html')){
+            if (s.contains(route, '/mail/attachment/preview/') ||
+                s.contains(route, '/web/static/lib/pdfjs/web/viewer.html')){
                 var canvas = document.createElement('canvas');
                 return Promise.resolve(canvas.toDataURL());
             }

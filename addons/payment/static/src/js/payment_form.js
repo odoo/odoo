@@ -52,9 +52,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
         if ($checkedRadio.length === 0) {
             return new Dialog(null, {
-                title: _t('Error: ') + _.str.escapeHTML(title),
+                title: _t('Error: ') + s.escapeHTML(title),
                 size: 'medium',
-                $content: "<p>" + (_.str.escapeHTML(message) || "") + "</p>" ,
+                $content: "<p>" + (s.escapeHTML(message) || "") + "</p>" ,
                 buttons: [
                 {text: _t('Ok'), close: true}]}).open();
         } else {
@@ -62,9 +62,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             this.$('#payment_error').remove();
             var messageResult = '<div class="alert alert-danger mb4" id="payment_error">';
             if (title != '') {
-                messageResult = messageResult + '<b>' + _.str.escapeHTML(title) + ':</b></br>';
+                messageResult = messageResult + '<b>' + s.escapeHTML(title) + ':</b></br>';
             }
-            messageResult = messageResult + _.str.escapeHTML(message) + '</div>';
+            messageResult = messageResult + s.escapeHTML(message) + '</div>';
             $acquirerForm.append(messageResult);
         }
     },
@@ -199,12 +199,12 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     $(element).trigger("focusout");
                     if (element.dataset.isRequired && element.value.length === 0) {
                             $(element).closest('div.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-                            $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>');
+                            $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field" aria-invalid="true">' + s.escapeHTML("The value is invalid.") + '</div>');
                             wrong_input = true;
                     }
                     else if ($(element).closest('div.form-group').hasClass('o_has_error')) {
                         wrong_input = true;
-                        $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>');
+                        $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field" aria-invalid="true">' + s.escapeHTML("The value is invalid.") + '</div>');
                     }
                 });
 
@@ -367,13 +367,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 $(element).trigger("focusout");
                 if (element.dataset.isRequired && element.value.length === 0) {
                         $(element).closest('div.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-                        var message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
+                        var message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + s.escapeHTML("The value is invalid.") + '</div>';
                         $(element).closest('div.form-group').append(message);
                         wrong_input = true;
                 }
                 else if ($(element).closest('div.form-group').hasClass('o_has_error')) {
                     wrong_input = true;
-                    var message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
+                    var message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + s.escapeHTML("The value is invalid.") + '</div>';
                     $(element).closest('div.form-group').append(message);
                 }
             });

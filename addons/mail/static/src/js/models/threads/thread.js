@@ -341,7 +341,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         // linkification a bit everywhere. Ideally we want to keep the content
         // as text internally and only make html enrichment at display time but
         // the current design makes this quite hard to do.
-        var body = mailUtils.parseAndTransform(_.str.trim(data.content), mailUtils.addLink);
+        var body = mailUtils.parseAndTransform(s.trim(data.content), mailUtils.addLink);
         body = this._generateEmojis(body);
         var messageData = {
             partner_ids: data.partner_ids,

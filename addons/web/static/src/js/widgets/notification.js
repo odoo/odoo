@@ -80,7 +80,7 @@ var Notification = Widget.extend({
         });
         void this.$el[0].offsetWidth; // Force a paint refresh before showing the toast
         if (!this.sticky) {
-            this.autohide = _.cancellableThrottleRemoveMeSoon(this.close, this._autoCloseDelay, {leading: false});
+            this.autohide = _.throttle(this.close, this._autoCloseDelay, {leading: false});
             this.$el.on('shown.bs.toast', () => {
                 this.autohide();
             });

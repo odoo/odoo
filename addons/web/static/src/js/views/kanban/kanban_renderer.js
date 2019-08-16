@@ -31,7 +31,7 @@ function findInNode(node, predicate) {
 
 function qwebAddIf(node, condition) {
     if (node.attrs[qweb.prefix + '-if']) {
-        condition = _.str.sprintf("(%s) and (%s)", node.attrs[qweb.prefix + '-if'], condition);
+        condition = sprintf("(%s) and (%s)", node.attrs[qweb.prefix + '-if'], condition);
     }
     node.attrs[qweb.prefix + '-if'] = condition;
 }
@@ -41,7 +41,7 @@ function transformQwebTemplate(node, fields) {
     if (node.tag && node.attrs.modifiers) {
         var modifiers = node.attrs.modifiers || {};
         if (modifiers.invisible) {
-            qwebAddIf(node, _.str.sprintf("!kanban_compute_domain(%s)", JSON.stringify(modifiers.invisible)));
+            qwebAddIf(node, sprintf("!kanban_compute_domain(%s)", JSON.stringify(modifiers.invisible)));
         }
     }
     switch (node.tag) {
@@ -286,7 +286,7 @@ var KanbanRenderer = BasicRenderer.extend({
             return this.examples.ghostColumns;
         }
         return _.map(_.range(1, 5), function (num) {
-            return _.str.sprintf(_t("Column %s"), num);
+            return sprintf(_t("Column %s"), num);
         });
     },
     /**

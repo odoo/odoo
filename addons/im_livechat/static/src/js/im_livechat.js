@@ -458,7 +458,7 @@ var Feedback = Widget.extend({
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function () {
             var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
-            var content = _.str.sprintf(_t("Rating: %s"), emoji);
+            var content = sprintf(_t("Rating: %s"), emoji);
             if (reason) {
                 content += " \n" + reason;
             }

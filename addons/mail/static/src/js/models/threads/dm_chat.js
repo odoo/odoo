@@ -75,7 +75,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
             options.year = 'numeric';
         }
         var formattedDate = date.toLocaleDateString(window.navigator.language, options);
-        return _.str.sprintf(_t("Out of office until %s"), formattedDate);
+        return sprintf(_t("Out of office until %s"), formattedDate);
     },
     /**
     * Get the out of office message of the thread

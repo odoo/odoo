@@ -59,7 +59,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var last_arg = args[args.length - 1];
         var name = args[0];
         if (this.tours[name]) {
-            console.warn(_.str.sprintf("Tour %s is already defined", name));
+            console.warn(sprintf("Tour %s is already defined", name));
             return;
         }
         var options = args.length === 2 ? {} : args[1];
@@ -133,18 +133,18 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }).bind(this));
     },
     run: function (tour_name, step_delay) {
-        console.log(_.str.sprintf("Preparing tour %s", tour_name));
+        console.log(sprintf("Preparing tour %s", tour_name));
         if (this.running_tour) {
             this._deactivate_tip(this.active_tooltips[this.running_tour]);
-            this._consume_tour(this.running_tour, _.str.sprintf("Killing tour %s", this.running_tour));
+            this._consume_tour(this.running_tour, sprintf("Killing tour %s", this.running_tour));
             return;
         }
         var tour = this.tours[tour_name];
         if (!tour) {
-            console.warn(_.str.sprintf("Unknown Tour %s", name));
+            console.warn(sprintf("Unknown Tour %s", name));
             return;
         }
-        console.log(_.str.sprintf("Running tour %s", tour_name));
+        console.log(sprintf("Running tour %s", tour_name));
         this.running_tour = tour_name;
         this.running_step_delay = step_delay || this.running_step_delay;
         local_storage.setItem(get_running_key(), this.running_tour);
@@ -311,7 +311,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var is_running = (this.running_tour === tour_name);
         if (is_running) {
             var stepDescription = this._describeTip(tip);
-            console.log(_.str.sprintf("Tour %s: step '%s' succeeded", tour_name, stepDescription));
+            console.log(sprintf("Tour %s: step '%s' succeeded", tour_name, stepDescription));
         }
 
         if (this.active_tooltips[tour_name]) {
@@ -367,7 +367,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 console.error(error); // will be displayed as error info
                 console.error("test failed"); // browser_js wait for error message "test failed"
             } else {
-                console.log(_.str.sprintf("Tour %s succeeded", tour_name));
+                console.log(sprintf("Tour %s succeeded", tour_name));
                 console.log("test successful"); // browser_js wait for message "test successful"
             }
             this._log = [];
@@ -387,7 +387,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
             var descr = this._describeTip(step);
-            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, descr));
+            this._consume_tour(tour_name, sprintf("Tour %s failed at step %s", tour_name, descr));
         }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {

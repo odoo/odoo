@@ -290,7 +290,7 @@ var PublicWidget = Widget.extend({
             }
 
             method = self.proxy(methodOptions[methodOptions.length - 1]);
-            if (_.str.startsWith(event, 'click')) {
+            if (s.startsWith(event, 'click')) {
                 // Protect click handler to be called multiple times by
                 // mistake by the user and add a visual disabling effect
                 // for buttons.

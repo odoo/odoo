@@ -230,12 +230,12 @@ odoo.define('website_form.animation', function (require) {
                     var datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero], true);
                     if (datetime.isValid())
                         return time.datetime_to_str(datetime.toDate());
-                    throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
+                    throw new Error(sprintf(_t("'%s' is not a correct datetime"), value));
                 case 'date':
                     var date = moment(value, [date_pattern, date_pattern_wo_zero], true);
                     if (date.isValid())
                         return time.date_to_str(date.toDate());
-                    throw new Error(_.str.sprintf(_t("'%s' is not a correct date"), value));
+                    throw new Error(sprintf(_t("'%s' is not a correct date"), value));
             }
             return value;
         },

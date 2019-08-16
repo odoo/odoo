@@ -182,7 +182,7 @@ if(!$('.js_surveyresult').length) {
             options: {
                 title: {
                     display: true,
-                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(quizz_score), '%'),
+                    text: sprintf(_t("Overall Performance %.2f%s"), parseFloat(quizz_score), '%'),
                 },
             }
         };

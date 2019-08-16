@@ -21,7 +21,7 @@ var star = '<a style="color: gold;" class="fa fa-star"/>';
  */
 function escFormat() {
     arguments[0] = _.escape(arguments[0]);
-    return _.str.sprintf.apply(_.str, arguments);
+    return vsprintf(arguments);
 }
 
 kanbanExamplesRegistry.add('project', {

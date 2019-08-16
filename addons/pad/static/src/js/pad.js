@@ -40,7 +40,7 @@ var FieldPad = AbstractField.extend({
             return Promise.resolve();
         }
         var defs = [];
-        if (this.mode === 'edit' && _.str.startsWith(this.value, 'http')) {
+        if (this.mode === 'edit' && s.startsWith(this.value, 'http')) {
             this.url = this.value;
             // please close your eyes and look elsewhere...
             // Since the pad value (the url) will not change during the edition
@@ -142,7 +142,7 @@ var FieldPad = AbstractField.extend({
      * @private
      */
     _renderReadonly: function () {
-        if (_.str.startsWith(this.value, 'http')) {
+        if (s.startsWith(this.value, 'http')) {
             var self = this;
             this.$('.oe_pad_content')
                 .addClass('oe_pad_loading')

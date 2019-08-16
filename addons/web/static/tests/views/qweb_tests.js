@@ -23,7 +23,7 @@ QUnit.module("Views", {
             },
             mockRPC: function (route, args) {
                 if (/^\/web\/dataset\/call_kw/.test(route)) {
-                    switch (_.str.sprintf('%(model)s.%(method)s', args)) {
+                    switch (sprintf('%(model)s.%(method)s', args)) {
                     case 'test.qweb_render_view':
                         assert.step('fetch');
                         assert.equal(args.kwargs.view_id, 5);

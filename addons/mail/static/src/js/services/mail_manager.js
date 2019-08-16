@@ -988,7 +988,7 @@ var MailManager =  AbstractService.extend({
 
         if (!this.call('bus_service', 'isOdooFocused')) {
             this._outOfFocusUnreadMessageCounter++;
-            var tabTitle = _.str.sprintf(
+            var tabTitle = sprintf(
                 _t("%d Messages"),
                 this._outOfFocusUnreadMessageCounter
             );
@@ -1135,7 +1135,7 @@ var MailManager =  AbstractService.extend({
      */
     _searchPartnerPrefetch: function (searchVal, limit) {
         var values = [];
-        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(searchVal)), 'i');
+        var searchRegexp = new RegExp(s.escapeRegExp(utils.unaccent(searchVal)), 'i');
         _.each(this._mentionPartnerSuggestions, function (partners) {
             if (values.length < limit) {
                 values = values.concat(_.filter(partners, function (partner) {

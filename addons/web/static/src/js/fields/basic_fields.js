@@ -1662,7 +1662,7 @@ var AbstractFieldBinary = AbstractField.extend({
                 var file = file_node.files[0];
                 if (file.size > this.max_upload_size) {
                     var msg = _t("The selected file exceed the maximum file size of %s.");
-                    this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
+                    this.do_warn(_t("File upload"), sprintf(msg, utils.human_size(this.max_upload_size)));
                     return false;
                 }
                 utils.getDataURLFromFile(file).then(function (data) {
@@ -2354,7 +2354,7 @@ var FavoriteWidget = AbstractField.extend({
     _render: function () {
         var tip = this.value ? _t('Remove from Favorites') : _t('Add to Favorites');
         var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"></i> %s</a>';
-        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
+        this.$el.empty().append(sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
     },
 
     //--------------------------------------------------------------------------

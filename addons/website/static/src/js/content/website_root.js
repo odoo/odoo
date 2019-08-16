@@ -109,7 +109,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             url: encodeURIComponent($target.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
             hash: encodeURIComponent(window.location.hash)
         };
-        window.location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+        window.location.href = sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
     },
     /**
     /**
@@ -168,7 +168,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
                 $content: $('<div/>', {
                     html: (data.data ? data.data.arguments[1] : data.statusText)
                         + '<br/>'
-                        + _.str.sprintf(
+                        + sprintf(
                             _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
                             '/web#model=' + $data.data('object') + '&id=' + $data.data('id')
                         ),

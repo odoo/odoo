@@ -299,11 +299,11 @@ var FormController = BasicController.extend({
         if (archive) {
             return  this.model
             .actionArchive(ids, this.handle)
-            .then(this.update.bind(this, {}, {reload: false}));   
+            .then(this.update.bind(this, {}, {reload: false}));
         } else {
             return this.model
             .actionUnarchive(ids, this.handle)
-            .then(this.update.bind(this, {}, {reload: false}));   
+            .then(this.update.bind(this, {}, {reload: false}));
         }
     },
 
@@ -672,7 +672,7 @@ var FormController = BasicController.extend({
         ev.stopPropagation();
         var isFocused = this.renderer.focusLastActivatedWidget();
         if (ev.data.callback) {
-            ev.data.callback(_.str.toBool(isFocused));
+            ev.data.callback(s.toBool(isFocused));
         }
     },
     /**

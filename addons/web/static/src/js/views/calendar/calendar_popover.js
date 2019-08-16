@@ -100,7 +100,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 self._registerWidget(recordID, field.name, fieldWidget);
 
                 var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
-                var $fieldLabel = $('<strong>', {class: 'mr-2', text: _.str.sprintf('%s : ', field.string)});
+                var $fieldLabel = $('<strong>', {class: 'mr-2', text: sprintf('%s : ', field.string)});
                 $fieldLabel.appendTo($field);
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
                 $fieldContainer.appendTo($field);

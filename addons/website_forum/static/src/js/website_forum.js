@@ -41,7 +41,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-left').removeClass('float-left');
 
         // welcome message action button
-        var forumLogin = _.string.sprintf('%s/web?redirect=%s',
+        var forumLogin = sprintf('%s/web?redirect=%s',
             window.location.origin,
             escape(window.location.href)
         );

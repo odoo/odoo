@@ -54,10 +54,10 @@ var ImageOptimizeDialog = Dialog.extend({
         this._addSuggestedWidth(512, '512');
         this._addSuggestedWidth(1024, '1024');
         this._addSuggestedWidth(this.optimizedWidth,
-            _.str.sprintf(_t("%d (Suggested)"), this.optimizedWidth));
+            sprintf(_t("%d (Suggested)"), this.optimizedWidth));
         this.suggestedWidths.push({
             'width': this.attachment.image_width,
-            'text': _.str.sprintf(_t("%d (Original)"), this.attachment.image_width),
+            'text': sprintf(_t("%d (Original)"), this.attachment.image_width),
         });
         this.suggestedWidths = _.sortBy(this.suggestedWidths, 'width');
         this._updatePreview = _.debounce(this._updatePreview.bind(this), 300);
@@ -153,7 +153,7 @@ var ImageOptimizeDialog = Dialog.extend({
         }
         var width = parseInt(this.$widthInput.val() || 0);
         var height = parseInt(this.$heightInput.val() || 0);
-        this.$previewImage.attr('src', _.str.sprintf('/web/image/%d/%dx%d?quality=%d',
+        this.$previewImage.attr('src', sprintf('/web/image/%d/%dx%d?quality=%d',
             this.attachment.id, width, height, this._getAdaptedQuality()));
         this.$widthPresets.removeClass('active');
         _.each(this.$widthPresets, function (button) {
@@ -248,7 +248,7 @@ var ImageOptimizeDialog = Dialog.extend({
             params['copy'] = true;
         }
         return this._rpc({
-            route: _.str.sprintf('/web_editor/attachment/%d/update', this.attachment.id),
+            route: sprintf('/web_editor/attachment/%d/update', this.attachment.id),
             params: params,
         }).then(function (attachment) {
             self.trigger_up('attachment_updated', attachment);

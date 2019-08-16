@@ -36,7 +36,7 @@ var CropImageDialog = Dialog.extend({
         this.imageData = {
             imageSrc: src,
             originalSrc: this.$media.data('crop:originalSrc') || src, // the original src for cropped DB images will be fetched later
-            mimetype: this.$media.data('crop:mimetype') || (_.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg'), // the mimetype for DB images will be fetched later
+            mimetype: this.$media.data('crop:mimetype') || (s.endsWith(src, '.png') ? 'image/png' : 'image/jpeg'), // the mimetype for DB images will be fetched later
             aspectRatio: this.$media.data('aspectRatio') || this.aspectRatioList[0][1],
             isExternalImage: src.substr(0, 5) !== 'data:' && src[0] !== '/' && src.indexOf(window.location.host) < 0,
         };
@@ -155,7 +155,7 @@ var CropImageDialog = Dialog.extend({
             .attr('data-aspect-ratio', this.imageData.aspectRatio)
             .data('aspectRatio', this.imageData.aspectRatio);
         _.each(cropperData, function (value, key) {
-            key = _.str.dasherize(key);
+            key = s.dasherize(key);
             self.$media.attr('data-' + key, value);
             self.$media.data(key, value);
         });

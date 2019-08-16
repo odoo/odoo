@@ -128,7 +128,7 @@ var PivotRenderer = AbstractRenderer.extend({
                     className = 'o_pivot_header_cell' + (cell.isLeaf ? '_closed' : '_opened');
                 }
                 cellParams.class = className;
-            
+
                 $tr.append($('<th>', cellParams));
             });
             $thead.append($tr);
@@ -231,7 +231,7 @@ var PivotRenderer = AbstractRenderer.extend({
         }
 
         var context = _.omit(this.state.context, function (val, key) {
-            return key === 'group_by' || _.str.startsWith(key, 'search_default_');
+            return key === 'group_by' || s.startsWith(key, 'search_default_');
         });
 
         var groupId = $target.data('groupId');

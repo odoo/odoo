@@ -46,8 +46,8 @@ ThreadWidget.include({
 
     /**
      * @private
-     * @param {integer} messageID 
-     * @param {string} content 
+     * @param {integer} messageID
+     * @param {string} content
      */
     _openCreditErrorDialog: function (messageID, content) {
         var message = _.find(this._messages, function (message) {
@@ -66,8 +66,8 @@ ThreadWidget.include({
     },
     /**
      * @private
-     * @param {integer} messageID 
-     * @param {string} content 
+     * @param {integer} messageID
+     * @param {string} content
      */
     _openGenericErrorDialog: function (messageID, content) {
         var message = _.find(this._messages, function (message) {
@@ -134,7 +134,7 @@ ThreadWidget.include({
             method: 'get_credits_url',
             args: ['snailmail'],
         }).then(function (link) {
-            var content = _.str.sprintf(_t(
+            var content = sprintf(_t(
                 '<p>The letter could not be sent due to insufficient credits on your IAP account.</p>' +
                 '<div class= "text-right">' +
                 '<a class="btn btn-link buy_credits" href=%s target="_blank">' +
@@ -202,7 +202,7 @@ ThreadWidget.include({
             method: 'get_credits_url',
             args: ['snailmail', '', 0, true],
         }).then(function (link) {
-            var content = _.str.sprintf(_t(
+            var content = sprintf(_t(
                 '<p>You need credits on your IAP account to send a letter.</p>' +
                 '<div class= "text-right">' +
                 '<a class="btn btn-link buy_credits" href=%s>' +

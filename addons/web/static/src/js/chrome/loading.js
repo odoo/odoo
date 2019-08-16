@@ -55,7 +55,7 @@ var Loading = Widget.extend({
         this.count += increment;
         if (this.count > 0) {
             if (config.isDebug()) {
-                this.$el.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+                this.$el.text(sprintf( _t("Loading (%d)"), this.count));
             } else {
                 this.$el.text(_t("Loading"));
             }

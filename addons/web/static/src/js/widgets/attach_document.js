@@ -58,7 +58,7 @@ var AttachDocument = Widget.extend({
         var fields = this.state.fields;
         var warnings = invalidFields.map(function (fieldName) {
             var fieldStr = fields[fieldName].string;
-            return _.str.sprintf('<li>%s</li>', _.escape(fieldStr));
+            return sprintf('<li>%s</li>', _.escape(fieldStr));
         });
         warnings.unshift('<ul>');
         warnings.push('</ul>');

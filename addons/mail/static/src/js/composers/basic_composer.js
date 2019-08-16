@@ -322,7 +322,7 @@ var BasicComposer = Widget.extend({
      * @returns {Array}
      */
     _mentionGetCommands: function (search) {
-        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
+        var searchRegexp = new RegExp(s.escapeRegExp(utils.unaccent(search)), 'i');
         return _.filter(this._mentionCommands, function (command) {
             return searchRegexp.test(command.name);
         }).slice(0, this.options.mentionFetchLimit);
@@ -351,7 +351,7 @@ var BasicComposer = Widget.extend({
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mentionFetchLimit;
-            var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
+            var searchRegexp = new RegExp(s.escapeRegExp(utils.unaccent(search)), 'i');
             _.each(prefetchedPartners, function (partners) {
                 if (limit > 0) {
                     var filteredPartners = _.filter(partners, function (partner) {

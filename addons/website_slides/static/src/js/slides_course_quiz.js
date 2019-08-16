@@ -314,7 +314,7 @@ odoo.define('website_slides.quiz', function (require) {
             this.$('#o_wslides_lesson_aside_slide_check_' + slide.id).addClass('text-success fa-check').removeClass('text-600 fa-circle-o');
             // need to use global selector as progress bar is ouside this animation widget scope
             $('.o_wslides_lesson_header .progress-bar').css('width', completion + "%");
-            $('.o_wslides_lesson_header .progress span').text(_.str.sprintf("%s %%", completion));
+            $('.o_wslides_lesson_header .progress span').text(sprintf("%s %%", completion));
         },
         _onQuizNextSlide: function () {
             var url = this.$('.o_wslides_js_lesson_quiz').data('next-slide-url');

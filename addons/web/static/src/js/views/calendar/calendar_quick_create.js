@@ -79,7 +79,7 @@ var QuickCreate = Dialog.extend({
         var val = this.$('input').val().trim();
         if (!val) {
             this.$('label, input').addClass('o_field_invalid');
-            var warnings = _.str.sprintf('<ul><li>%s</li></ul>', _t("Summary"));
+            var warnings = sprintf('<ul><li>%s</li></ul>', _t("Summary"));
             this.do_warn(_t("The following field is invalid:"), warnings);
         }
         dataCalendar.title = val;

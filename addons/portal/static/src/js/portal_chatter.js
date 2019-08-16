@@ -33,7 +33,7 @@ var PortalChatter = publicWidget.Widget.extend({
 
         // underscorize the camelcased option keys
         _.each(options, function (val, key) {
-            self.options[_.str.underscored(key)] = val;
+            self.options[s.underscored(key)] = val;
         });
         // set default options
         this.options = _.defaults(this.options, {
@@ -124,8 +124,8 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     preprocessMessages: function (messages) {
         _.each(messages, function (m) {
-            m['author_avatar_url'] = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
-            m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
+            m['author_avatar_url'] = sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
+            m['published_date_str'] = sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
         });
         return messages;
     },

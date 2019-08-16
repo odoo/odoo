@@ -1262,7 +1262,7 @@ var SnippetsMenu = Widget.extend({
                 if ($snippet.find('.oe_snippet_thumbnail').length) {
                     return; // Compatibility with elements which do not use 't-snippet'
                 }
-                var $thumbnail = $(_.str.sprintf(
+                var $thumbnail = $(sprintf(
                     '<div class="oe_snippet_thumbnail">' +
                         '<div class="oe_snippet_thumbnail_img" style="background-image: url(%s);"/>' +
                         '<span class="oe_snippet_thumbnail_title">%s</span>' +

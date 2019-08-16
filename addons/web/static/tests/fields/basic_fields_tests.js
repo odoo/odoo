@@ -2208,11 +2208,11 @@ QUnit.module('basic_fields', {
             _getURI: function (fileURI) {
                 this._super.apply(this, arguments);
                 assert.step('_getURI');
-                assert.ok(_.str.startsWith(fileURI, 'blob:'));
+                assert.ok(s.startsWith(fileURI, 'blob:'));
                 this.PDFViewerApplication = {
                     open: function (URI) {
                         assert.step('open');
-                        assert.ok(_.str.startsWith(URI, 'blob:'));
+                        assert.ok(s.startsWith(URI, 'blob:'));
                     },
                 };
                 return 'about:blank';
@@ -4091,11 +4091,11 @@ QUnit.module('basic_fields', {
             },
         });
 
-        var dollarValues = list.$('td').filter(function () {return _.str.include($(this).text(), '$');});
+        var dollarValues = list.$('td').filter(function () {return s.include($(this).text(), '$');});
         assert.strictEqual(dollarValues.length, 1,
             'Only one line has dollar as a currency.');
 
-        var euroValues = list.$('td').filter(function () {return _.str.include($(this).text(), '€');});
+        var euroValues = list.$('td').filter(function () {return s.include($(this).text(), '€');});
         assert.strictEqual(euroValues.length, 1,
             'One one line has euro as a currency.');
 
@@ -5656,9 +5656,9 @@ QUnit.module('basic_fields', {
             "should have a pie chart");
         assert.strictEqual(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_pie_value').text(),
             '10%', "should have 10% as pie value since int_field=10");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
             'transform: rotate(180deg);'), "left mask should be covering the whole left side of the pie");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last().attr('style'),
             'transform: rotate(36deg);'), "right mask should be rotated from 360*(10/100) = 36 degrees");
 
         // switch to edit mode and check the result
@@ -5667,9 +5667,9 @@ QUnit.module('basic_fields', {
             "should have a pie chart");
         assert.strictEqual(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_pie_value').text(),
             '10%', "should have 10% as pie value since int_field=10");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
             'transform: rotate(180deg);'), "left mask should be covering the whole left side of the pie");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last().attr('style'),
             'transform: rotate(36deg);'), "right mask should be rotated from 360*(10/100) = 36 degrees");
 
         // save
@@ -5678,9 +5678,9 @@ QUnit.module('basic_fields', {
             "should have a pie chart");
         assert.strictEqual(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_pie_value').text(),
             '10%', "should have 10% as pie value since int_field=10");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
             'transform: rotate(180deg);'), "left mask should be covering the whole left side of the pie");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last().attr('style'),
             'transform: rotate(36deg);'), "right mask should be rotated from 360*(10/100) = 36 degrees");
 
         form.destroy();
@@ -5707,7 +5707,7 @@ QUnit.module('basic_fields', {
             "should have a pie chart");
         assert.strictEqual(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_pie_value').text(),
             '80%', "should have 80% as pie value since int_field=80");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
             'transform: rotate(288deg);'), "left mask should be rotated from 360*(80/100) = 288 degrees");
         assert.hasClass(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last(),'o_full',
             "right mask should be hidden since the value > 50%");
@@ -5718,7 +5718,7 @@ QUnit.module('basic_fields', {
             "should have a pie chart");
         assert.strictEqual(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_pie_value').text(),
             '80%', "should have 80% as pie value since int_field=80");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
             'transform: rotate(288deg);'), "left mask should be rotated from 360*(80/100) = 288 degrees");
         assert.hasClass(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last(),'o_full',
             "right mask should be hidden since the value > 50%");
@@ -5729,7 +5729,7 @@ QUnit.module('basic_fields', {
             "should have a pie chart");
         assert.strictEqual(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_pie_value').text(),
             '80%', "should have 80% as pie value since int_field=80");
-        assert.ok(_.str.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
+        assert.ok(s.include(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').first().attr('style'),
             'transform: rotate(288deg);'), "left mask should be rotated from 360*(80/100) = 288 degrees");
         assert.hasClass(form.$('.o_field_percent_pie.o_field_widget .o_pie .o_mask').last(),'o_full',
             "right mask should be hidden since the value > 50%");

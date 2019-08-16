@@ -254,7 +254,7 @@ DebugManager.include({
             var modificationDate = field_utils.parse.datetime(metadata.write_date);
             metadata.write_date = field_utils.format.datetime(modificationDate);
             var dialog = new Dialog(this, {
-                title: _.str.sprintf(_t("Metadata (%s)"), self._action.res_model),
+                title: sprintf(_t("Metadata (%s)"), self._action.res_model),
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
                     perm : metadata,

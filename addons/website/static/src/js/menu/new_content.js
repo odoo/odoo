@@ -253,7 +253,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this.pendingInstall) {
             content = this.newContentText.installInProgress;
         } else {
-            content = _.str.sprintf(this.newContentText.installNeeded, name);
+            content = sprintf(this.newContentText.installNeeded, name);
             buttons = [{
                 text: _t("Install"),
                 classes: 'btn-primary',
@@ -272,7 +272,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                             $i.removeClass()
                                 .addClass('fa fa-spin fa-spinner fa-pulse');
                             $p.removeClass('text-muted')
-                                .text(_.str.sprintf(self.newContentText.installPleaseWait, name));
+                                .text(sprintf(self.newContentText.installPleaseWait, name));
                             $el.fadeTo(1000, 1);
                         });
                     }
@@ -282,7 +282,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     }, function () {
                         $i.removeClass()
                             .addClass('fa fa-exclamation-triangle');
-                        $p.text(_.str.sprintf(self.newContentText.failed, name));
+                        $p.text(sprintf(self.newContentText.failed, name));
                     });
                 }
             },{

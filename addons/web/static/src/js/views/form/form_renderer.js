@@ -636,7 +636,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement | string}
      */
     _renderNode: function (node) {
-        var renderer = this['_renderTag' + _.str.capitalize(node.tag)];
+        var renderer = this['_renderTag' + s.capitalize(node.tag)];
         if (renderer) {
             return renderer.call(this, node);
         }

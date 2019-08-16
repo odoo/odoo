@@ -78,7 +78,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                     {
                         mode: 'edit',
                         attrs: {
-                            placeholder: "+ " + _.str.sprintf(_t("Add %s"), self.title),
+                            placeholder: "+ " + sprintf(_t("Add %s"), self.title),
                             can_create: false
                         },
                     });
@@ -393,7 +393,7 @@ return AbstractRenderer.extend({
             },
             eventClick: function (eventData, ev) {
                 self._unselectEvent();
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
+                self.$calendar.find(sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
                 self._renderEventPopover(eventData, $(ev.currentTarget));
             },
             select: function (startDate, endDate) {
@@ -454,10 +454,10 @@ return AbstractRenderer.extend({
             // The css ":hover" selector can't be used because these events
             // are rendered using multiple elements.
             eventMouseover: function (eventData) {
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
+                self.$calendar.find(sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
             },
             eventMouseout: function (eventData) {
-                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).removeClass('o_cw_custom_hover');
+                self.$calendar.find(sprintf('[data-event-id=%s]', eventData.id)).removeClass('o_cw_custom_hover');
             },
             eventDragStart: function (eventData) {
                 self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
@@ -637,7 +637,7 @@ return AbstractRenderer.extend({
                 if (options.avatar_field) {
                     _.each(options.filters, function (filter) {
                         if (filter.value !== 'all') {
-                            var selector = _.str.sprintf('.o_calendar_filter_item[data-value=%s]', filter.value);
+                            var selector = sprintf('.o_calendar_filter_item[data-value=%s]', filter.value);
                             self.$sidebar.find(selector).popover({
                                 animation: false,
                                 trigger: 'hover',
@@ -647,7 +647,7 @@ return AbstractRenderer.extend({
                                 delay: {show: 300, hide: 0},
                                 content: function () {
                                     return $('<img>', {
-                                        src: _.str.sprintf('/web/image/%s/%s/%s', options.avatar_model, filter.value, options.avatar_field),
+                                        src: sprintf('/web/image/%s/%s/%s', options.avatar_model, filter.value, options.avatar_field),
                                         class: 'mx-auto',
                                     });
                                 },

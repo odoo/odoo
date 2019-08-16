@@ -1248,11 +1248,11 @@ translation is defined for that text, it will return the original text as-is.
 .. note::
 
     To inject user-provided values in translatable strings, it is recommended
-    to use `_.str.sprintf
+    to use `sprintf
     <http://gabceb.github.io/underscore.string.site/#sprintf>`_ with named
     arguments *after* the translation::
 
-        this.$el.text(_.str.sprintf(
+        this.$el.text(sprintf(
             _t("Hello, %(user)s!"), {
             user: "Ed"
         }));

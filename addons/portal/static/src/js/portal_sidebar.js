@@ -37,9 +37,9 @@ var PortalSidebar = publicWidget.Widget.extend({
             if (diff === 0) {
                 displayStr = _t('Due today');
             } else if (diff > 0) {
-                displayStr = _.str.sprintf(_t('Due in %d days'), Math.abs(diff));
+                displayStr = sprintf(_t('Due in %d days'), Math.abs(diff));
             } else {
-                displayStr = _.str.sprintf(_t('%d days overdue'), Math.abs(diff));
+                displayStr = sprintf(_t('%d days overdue'), Math.abs(diff));
             }
              $(el).text(displayStr);
         });

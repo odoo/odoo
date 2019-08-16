@@ -288,7 +288,7 @@ var ControlPanelModel = mvc.Model.extend({
             eval_context: session.user_context,
         });
         if (results.error) {
-            throw new Error(_.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+            throw new Error(sprintf(_t("Failed to evaluate search criterions")+": \n%s",
                             JSON.stringify(results.error)));
         }
 
@@ -417,7 +417,7 @@ var ControlPanelModel = mvc.Model.extend({
                         }
                         if (filter.currentOptionIds) {
                             filter.currentOptionIds.clear();
-                        }   
+                        }
                     })
                     group.activeFilterIds = [];
                 });
@@ -456,7 +456,7 @@ var ControlPanelModel = mvc.Model.extend({
                     acc.push(y.optionId);
                 }
                 return acc;
-            }, 
+            },
             []
         );
 
@@ -723,8 +723,8 @@ var ControlPanelModel = mvc.Model.extend({
         return pyUtils.assembleDomains(domains, 'AND');
     },
     /**
-     * Return an array containing 'facets' used to create the content of the search bar. 
-     * 
+     * Return an array containing 'facets' used to create the content of the search bar.
+     *
      * @returns {Object}
      */
     _getFacets: function () {

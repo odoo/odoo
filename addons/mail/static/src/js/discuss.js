@@ -95,7 +95,7 @@ var PartnerInviteDialog = Dialog.extend({
                 }).then(function () {
                     var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification =
-                        _.str.sprintf(
+                        sprintf(
                             _t("You added <b>%s</b> to the conversation."),
                             names
                         );
@@ -388,7 +388,7 @@ var Discuss = AbstractAction.extend({
         var emailList = _.map(messageIDs, function (messageID) {
             return self.call('mail_service', 'getMessage', messageID).getEmailFrom();
         }).join(", ");
-        var text = _.str.sprintf(
+        var text = sprintf(
             _t("You are going to ban: %s. Do you confirm the action?"),
             emailList
         );
@@ -411,7 +411,7 @@ var Discuss = AbstractAction.extend({
         var num = messageIDs.length;
         var text;
         if (num > 1) {
-            text = _.str.sprintf(
+            text = sprintf(
                 _t("You are going to discard %s messages. Do you confirm the action?"),
                 num
             );
@@ -657,14 +657,14 @@ var Discuss = AbstractAction.extend({
                     self._lastSearchVal = _.escape(request.term);
                     self._searchChannel(self._lastSearchVal).then(function (result){
                         result.push({
-                            label:  _.str.sprintf(
+                            label:  sprintf(
                                         '<strong>' + _t("Create %s (Public)") + '</strong>',
                                         '<em>"#' + self._lastSearchVal + '"</em>'
                             ),
                             value: self._lastSearchVal,
                             special: 'public',
                         }, {
-                            label:  _.str.sprintf(
+                            label:  sprintf(
                                         '<strong>' + _t("Create %s (Private)") + '</strong>',
                                         '<em>"#' + self._lastSearchVal + '"</em>'
                             ),
@@ -1337,7 +1337,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _onInviteButtonClicked: function () {
-        var title = _.str.sprintf(_t("Invite people to #%s"), this._thread.getName());
+        var title = sprintf(_t("Invite people to #%s"), this._thread.getName());
         new PartnerInviteDialog(this, title, this._thread.getID()).open();
     },
     /**

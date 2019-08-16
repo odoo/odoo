@@ -106,14 +106,14 @@ var ColorpickerDialog = Dialog.extend({
 
         // Update inputs
         _.each(this.colorComponents, function (value, color) {
-            self.$(_.str.sprintf('.o_%s_input', color)).val(value);
+            self.$(sprintf('.o_%s_input', color)).val(value);
         });
 
         // Update preview
         this.$('.o_color_preview').css('background-color', this.colorComponents.cssColor);
 
         // Update picker area and picker pointer position
-        this.$colorpickerArea.css('background-color', _.str.sprintf('hsl(%s, 100%%, 50%%)', this.colorComponents.hue));
+        this.$colorpickerArea.css('background-color', sprintf('hsl(%s, 100%%, 50%%)', this.colorComponents.hue));
         var top = (100 - this.colorComponents.lightness) * this.$colorpickerArea.height() / 100;
         var left = this.colorComponents.saturation * this.$colorpickerArea.width() / 100;
         this.$colorpickerPointer.css({
@@ -375,7 +375,7 @@ ColorpickerDialog.formatColor = function (color) {
     if (color.opacity === 100) {
         return ColorpickerDialog.convertRgbToHex(color.red, color.green, color.blue).hex;
     }
-    return _.str.sprintf('rgba(%s, %s, %s, %s)',
+    return sprintf('rgba(%s, %s, %s, %s)',
         color.red,
         color.green,
         color.blue,
@@ -557,7 +557,7 @@ ColorpickerDialog.convertRgbToHex = function (r, g, b) {
     var green = g < 16 ? '0' + g.toString(16) : g.toString(16);
     var blue = b < 16 ? '0' + b.toString(16) : b.toString(16);
     return {
-        hex: _.str.sprintf('#%s%s%s', red, green, blue)
+        hex: sprintf('#%s%s%s', red, green, blue)
     };
 };
 

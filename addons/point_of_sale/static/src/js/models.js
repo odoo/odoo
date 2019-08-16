@@ -145,7 +145,7 @@ exports.PosModel = Backbone.Model.extend({
                     if (show_loading_error && statusText == 'error' && window.location.protocol == 'https:') {
                         self.gui.show_popup('alert', {
                             title: _t('HTTPS connection to IoT Box failed'),
-                            body: _.str.sprintf(
+                            body: sprintf(
                               _t('Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'),
                               url
                             ),
@@ -2055,7 +2055,7 @@ exports.Packlotline = Backbone.Model.extend({
     },
 
     set_lot_name: function(name){
-        this.set({lot_name : _.str.trim(name) || null});
+        this.set({lot_name : s.trim(name) || null});
     },
 
     get_lot_name: function(){

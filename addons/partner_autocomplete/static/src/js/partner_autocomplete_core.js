@@ -257,7 +257,7 @@ var PartnerAutocompleteMixin = {
                 else if (suggestion.website) suggestion.description = suggestion.website;
 
                 if (suggestion.country_id && suggestion.country_id.display_name) {
-                    if (suggestion.description) suggestion.description += _.str.sprintf(' (%s)', suggestion.country_id.display_name);
+                    if (suggestion.description) suggestion.description += sprintf(' (%s)', suggestion.country_id.display_name);
                     else suggestion.description += suggestion.country_id.display_name;
                 }
 

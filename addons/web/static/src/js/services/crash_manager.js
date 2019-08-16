@@ -241,7 +241,7 @@ var CrashManager = AbstractService.extend({
             return;
         }
         var message = error.data ? error.data.message : error.message;
-        var title = _.str.capitalize(error.type) || _t("Something went wrong !");
+        var title = s.capitalize(error.type) || _t("Something went wrong !");
         return this._displayWarning(message, title, options);
     },
     show_error: function (error) {
@@ -249,7 +249,7 @@ var CrashManager = AbstractService.extend({
             return;
         }
         var dialog = new ErrorDialog(this, {
-            title: _.str.capitalize(error.type) || _t("Odoo Error"),
+            title: s.capitalize(error.type) || _t("Odoo Error"),
         }, {
             message: error.message,
             traceback: error.data.debug,
@@ -351,7 +351,7 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
         var error = this.error;
 
         new WarningDialog(this, {
-            title: _.str.capitalize(error.type) || _t("Odoo Warning"),
+            title: s.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
                     $.bbq.pushState({

@@ -116,7 +116,7 @@ var Field = Widget.extend({
         return this.format_label(format, field, operator);
     },
     format_label: function (format, field, operator) {
-        return _.str.sprintf(format, {
+        return sprintf(format, {
             field: field.string,
             // According to spec, HTMLOptionElement#label should return
             // HTMLOptionElement#text when not defined/empty, but it does

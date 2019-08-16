@@ -147,7 +147,7 @@ var FormViewDialog = ViewDialog.extend({
                                         return button.classes.split(' ').indexOf(oBtnRemove) < 0;
                                     });
                                     self.set_buttons(self.buttons);
-                                    self.set_title(_t("Create ") + _.str.strRight(self.title, _t("Open: ")));
+                                    self.set_title(_t("Create ") + s.strRight(self.title, _t("Open: ")));
                                 });
                         },
                     });
@@ -376,7 +376,7 @@ var SelectCreateDialog = ViewDialog.extend({
         var view = new ViewClass(fieldsViews[this.viewType], _.extend(viewOptions, {
             action: {
                 controlPanelFieldsView: fieldsViews.search,
-                help: _.str.sprintf("<p>%s</p>", _t("No records found!")),
+                help: sprintf("<p>%s</p>", _t("No records found!")),
             },
             action_buttons: false,
             dynamicFilters: this.options.dynamicFilters,

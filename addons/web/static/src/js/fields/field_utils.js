@@ -85,7 +85,7 @@ function formatBoolean(value, field, options) {
 function formatChar(value, field, options) {
     value = typeof value === 'string' ? value : '';
     if (options && options.isPassword) {
-        return _.str.repeat('*', value ? value.length : 0);
+        return s.repeat('*', value ? value.length : 0);
     }
     if (options && options.escape) {
         value = _.escape(value);
@@ -174,7 +174,7 @@ function formatFloat(value, field, options) {
     } else {
         precision = 2;
     }
-    var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
+    var formatted = sprintf('%.' + precision + 'f', value || 0).split('.');
     formatted[0] = utils.insert_thousand_seps(formatted[0]);
     return formatted.join(l10n.decimal_point);
 }
@@ -214,7 +214,7 @@ function formatFloatTime(value) {
         min = 0;
         hour = hour + 1;
     }
-    return _.str.sprintf(pattern, hour, min);
+    return sprintf(pattern, hour, min);
 }
 
 /**
@@ -233,7 +233,7 @@ function formatFloatTime(value) {
 function formatInteger(value, field, options) {
     options = options || {};
     if (options.isPassword) {
-        return _.str.repeat('*', String(value).length);
+        return s.repeat('*', String(value).length);
     }
     if (!value && value !== 0) {
         // previously, it returned 'false'. I don't know why.  But for the Pivot
@@ -244,7 +244,7 @@ function formatInteger(value, field, options) {
     if (options.humanReadable && options.humanReadable(value)) {
         return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
     }
-    return utils.insert_thousand_seps(_.str.sprintf('%d', value));
+    return utils.insert_thousand_seps(sprintf('%d', value));
 }
 
 /**
@@ -428,7 +428,7 @@ function parseDate(value, field, options) {
             return date;
         }
     }
-    throw new Error(_.str.sprintf(core._t("'%s' is not a correct date"), value));
+    throw new Error(sprintf(core._t("'%s' is not a correct date"), value));
 }
 
 /**
@@ -475,7 +475,7 @@ function parseDateTime(value, field, options) {
             return datetime;
         }
     }
-    throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
+    throw new Error(sprintf(core._t("'%s' is not a correct datetime"), value));
 }
 
 /**
@@ -488,7 +488,7 @@ function parseDateTime(value, field, options) {
  */
 function parseNumber(value) {
     if (core._t.database.parameters.thousands_sep) {
-        var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
+        var escapedSep = s.escapeRegExp(core._t.database.parameters.thousands_sep);
         value = value.replace(new RegExp(escapedSep, 'g'), '');
     }
     if (core._t.database.parameters.decimal_point) {
@@ -509,7 +509,7 @@ function parseNumber(value) {
 function parseFloat(value) {
     var parsed = parseNumber(value);
     if (isNaN(parsed)) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct float"), value));
+        throw new Error(sprintf(core._t("'%s' is not a correct float"), value));
     }
     return parsed;
 }
@@ -545,7 +545,7 @@ function parseMonetary(value, field, options) {
         return parseFloat(value);
     }
     else if (values.length !== 2) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+        throw new Error(sprintf(core._t("'%s' is not a correct monetary field"), value));
     }
     options = options || {};
     var currency = options.currency;
@@ -615,7 +615,7 @@ function parseInteger(value) {
     var parsed = parseNumber(value);
     // do not accept not numbers or float values
     if (isNaN(parsed) || parsed % 1 || parsed < -2147483648 || parsed > 2147483647) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct integer"), value));
+        throw new Error(sprintf(core._t("'%s' is not a correct integer"), value));
     }
     return parsed;
 }

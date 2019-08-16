@@ -74,11 +74,11 @@ function parseEmail(text) {
     if (text){
         var result = text.match(/(.*)<(.*@.*)>/);
         if (result) {
-            return [_.str.trim(result[1]), _.str.trim(result[2])];
+            return [s.trim(result[1]), s.trim(result[2])];
         }
         result = text.match(/(.*@.*)/);
         if (result) {
-            return [_.str.trim(result[1]), _.str.trim(result[1])];
+            return [s.trim(result[1]), s.trim(result[1])];
         }
         return [text, false];
     }

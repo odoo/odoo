@@ -251,7 +251,7 @@ var KanbanRecord = Widget.extend({
                     } else if (config.isDebug()) {
                         // the widget is not implemented
                         $field.replaceWith($('<span>', {
-                            text: _.str.sprintf(_t('[No widget %s]'), field_widget),
+                            text: sprintf(_t('[No widget %s]'), field_widget),
                         }));
                     }
                 } else {
@@ -310,7 +310,7 @@ var KanbanRecord = Widget.extend({
         var self = this;
         var attrs = Object.create(null);
         _.each(this.fieldsInfo[field_name], function (value, key) {
-            if (_.str.startsWith(key, 't-att-')) {
+            if (s.startsWith(key, 't-att-')) {
                 key = key.slice(6);
                 value = $field.attr(key);
             }
@@ -531,7 +531,7 @@ var KanbanRecord = Widget.extend({
     _setupColor: function () {
         var color_field = this.$el.attr('color');
         if (color_field && color_field in this.fields) {
-            var colorHelp = _.str.sprintf(_t("Card color: %s"), this._getColorname(this.recordData[color_field]));
+            var colorHelp = sprintf(_t("Card color: %s"), this._getColorname(this.recordData[color_field]));
             var colorClass = this._getColorClassname(this.recordData[color_field]);
             this.$el.addClass(colorClass);
             this.$el.prepend('<span title="' + colorHelp + '" aria-label="' + colorHelp + '" role="img" class="oe_kanban_color_help"/>');
@@ -693,7 +693,7 @@ var KanbanRecord = Widget.extend({
                     this.fieldsInfo[fieldName].widget === 'attachment_image') {
                     this._setCoverImage(fieldName);
                 } else {
-                    var warning = _.str.sprintf(_t('Could not set the cover image: incorrect field ("%s") is provided in the view.'), fieldName);
+                    var warning = sprintf(_t('Could not set the cover image: incorrect field ("%s") is provided in the view.'), fieldName);
                     this.do_warn(warning);
                 }
                 break;

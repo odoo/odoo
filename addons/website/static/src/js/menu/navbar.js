@@ -103,7 +103,7 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
                 // Handle the case where all action-capable components are not
                 // instantiated yet (rare) -> retry some times to eventually abort
                 if (_i > 50) {
-                    console.warn(_.str.sprintf("Action '%s' was not able to be handled.", actionName));
+                    console.warn(sprintf("Action '%s' was not able to be handled.", actionName));
                     return Promise.reject();
                 }
                 return concurrency.delay(100).then(function () {

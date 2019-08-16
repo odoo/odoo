@@ -462,7 +462,7 @@ var NumpadWidget = PosBaseWidget.extend({
     changedMode: function() {
         var mode = this.state.get('mode');
         $('.selected-mode').removeClass('selected-mode');
-        $(_.str.sprintf('.mode-button[data-mode="%s"]', mode), this.$el).addClass('selected-mode');
+        $(sprintf('.mode-button[data-mode="%s"]', mode), this.$el).addClass('selected-mode');
     },
 });
 
@@ -595,7 +595,7 @@ var OrderWidget = PosBaseWidget.extend({
     render_orderline: function(orderline){
         var el_str  = QWeb.render('Orderline',{widget:this, line:orderline}); 
         var el_node = document.createElement('div');
-            el_node.innerHTML = _.str.trim(el_str);
+            el_node.innerHTML = s.trim(el_str);
             el_node = el_node.childNodes[0];
             el_node.orderline = orderline;
             el_node.addEventListener('click',this.line_click_handler);
@@ -637,7 +637,7 @@ var OrderWidget = PosBaseWidget.extend({
         var el_str  = QWeb.render('OrderWidget',{widget:this, order:order, orderlines:orderlines});
 
         var el_node = document.createElement('div');
-            el_node.innerHTML = _.str.trim(el_str);
+            el_node.innerHTML = s.trim(el_str);
             el_node = el_node.childNodes[0];
 
 
@@ -755,7 +755,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
                         category: category, 
                         image_url: this.get_image_url(category),
                     });
-                    category_html = _.str.trim(category_html);
+                    category_html = s.trim(category_html);
                 var category_node = document.createElement('div');
                     category_node.innerHTML = category_html;
                     category_node = category_node.childNodes[0];
@@ -764,7 +764,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
                         widget:  this, 
                         category: category, 
                     });
-                    category_html = _.str.trim(category_html);
+                    category_html = s.trim(category_html);
                 var category_node = document.createElement('div');
                     category_node.innerHTML = category_html;
                     category_node = category_node.childNodes[0];

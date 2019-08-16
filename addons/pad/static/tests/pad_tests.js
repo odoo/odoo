@@ -129,7 +129,7 @@ QUnit.module('pad widget', {
                 '</form>',
             res_id: 2,
             mockRPC: function (route, args) {
-                if (_.str.startsWith(route, 'http')) {
+                if (s.startsWith(route, 'http')) {
                     return Promise.resolve(true);
                 }
                 var result = this._super.apply(this, arguments);

@@ -427,7 +427,7 @@ var VariantMixin = {
             }
             excludedByData.push(excludedByName);
 
-            $target.attr('title', _.str.sprintf(_t('Not available with %s'), excludedByData.join(', ')));
+            $target.attr('title', sprintf(_t('Not available with %s'), excludedByData.join(', ')));
             $target.data('excluded-by', JSON.stringify(excludedByData));
         }
     },
@@ -527,7 +527,7 @@ var VariantMixin = {
         if ($('.decimal_precision').length) {
             precision = parseInt($('.decimal_precision').last().data('precision'));
         }
-        var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
+        var formatted = sprintf('%.' + precision + 'f', price).split('.');
         formatted[0] = utils.insert_thousand_seps(formatted[0]);
         return formatted.join(l10n.decimal_point);
     },

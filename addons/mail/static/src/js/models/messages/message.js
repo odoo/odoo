@@ -612,7 +612,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             // to memory overflow errors on some browsers (e.g. Chrome). Set an
             // arbitrary limit to 200 from which we simply don't replace them
             // (anyway, they are already replaced by the unicode counterpart).
-            if (_.str.count(self._body, 'o_mail_emoji') > 200) {
+            if (s.count(self._body, 'o_mail_emoji') > 200) {
                 self._body = originalBody;
             }
         });

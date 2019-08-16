@@ -36,7 +36,7 @@ var Apps = AbstractAction.extend({
                 };
             });
             var ts = new Date().getTime();
-            i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif?%s', client.origin, ts);
+            i.src = sprintf('%s/web/static/src/img/sep-a.gif?%s', client.origin, ts);
             return def;
         };
         if (apps_client) {
@@ -44,8 +44,8 @@ var Apps = AbstractAction.extend({
         } else {
             return this._rpc({model: 'ir.module.module', method: 'get_apps_server'})
                 .then(function(u) {
-                    var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
-                    var host = _.str.sprintf('%s//%s', link.protocol, link.host);
+                    var link = $(sprintf('<a href="%s"></a>', u))[0];
+                    var host = sprintf('%s//%s', link.protocol, link.host);
                     var dbname = link.pathname;
                     if (dbname[0] === '/') {
                         dbname = dbname.substr(1);

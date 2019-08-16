@@ -25,7 +25,7 @@ QUnit.test('simple set im_status', function (assert) {
             if (route === '/mail/init_messaging') {
                 return this._super.apply(this, arguments);
             }
-            throw new Error(_.str.sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
+            throw new Error(sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
         },
     });
     parent.call('mail_service', 'updateImStatus', [{
@@ -56,7 +56,7 @@ QUnit.test('multi get_im_status', async function (assert) {
                     {id: 3, im_status: 'im_partner'}
                 ]);
             }
-            throw new Error(_.str.sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
+            throw new Error(sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
         },
     });
     parent.call('mail_service', 'updateImStatus', [{
@@ -100,7 +100,7 @@ QUnit.test('update loop', async function (assert) {
                     {"id": 2, "im_status": "away"}
                 ]);
             }
-            throw new Error(_.str.sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
+            throw new Error(sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
         },
     });
     // set initial status
@@ -168,7 +168,7 @@ QUnit.test('update status', async function (assert) {
             if (route === '/mail/init_messaging') {
                 return this._super.apply(this, arguments);
             }
-            throw new Error(_.str.sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
+            throw new Error(sprintf('No rpc call should be performed: %s, %s \n %s', args.model, args.method, route));
         },
     });
     await statusWidget.appendTo($('#qunit-fixture'));
