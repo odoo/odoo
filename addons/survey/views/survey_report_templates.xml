@@ -15,12 +15,15 @@
                             <h2>
                                 <span t-esc="user_input.partner_id.name or user_input.email"/>
                             </h2>
-                            <p>Successfully achieved</p>
+                            <!-- You should not print a certificate if failed :) -->
+                            <p t-if="user_input.quizz_passed">Successfully achieved</p>
+                            <p t-if="not user_input.quizz_passed">Successfully failed</p>
                             <h3>
                                 <span t-field="user_input.survey_id.display_name"/>
                             </h3>
                             <p>
-                                <strong>Date of Certification:</strong>
+                                <strong t-if="user_input.quizz_passed">Date of Certification:</strong>
+                                <strong t-if="not user_input.quizz_passed">Date of Failure:</strong>
                                 <span t-field="user_input.create_date"/>
                             </p>
                         </div>
