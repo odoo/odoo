@@ -67,6 +67,7 @@ class SaleOrder(models.Model):
         action = {'type': 'ir.actions.act_window_close'}
 
         task_projects = self.tasks_ids.mapped('project_id')
+        self = self.with_context(active_id=task_projects.id)
         if len(task_projects) == 1 and len(self.tasks_ids) > 1:  # redirect to task of the project (with kanban stage, ...)
             action = self.env.ref('project.act_project_project_2_project_task_all').read()[0]
             if action.get('context'):
