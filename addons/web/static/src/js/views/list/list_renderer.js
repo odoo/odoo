@@ -77,7 +77,7 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @override
      */
-    willStart: function() {
+    willStart: function () {
         this._processColumns(this.columnInvisibleFields || {});
         return this._super.apply(this, arguments);
     },
@@ -158,7 +158,12 @@ var ListRenderer = BasicRenderer.extend({
             (attrs.max && 'max') || (attrs.min && 'min');
         if (func) {
             var count = 0;
-            var aggregateValue = (func === 'max') ? -Infinity : (func === 'min') ? Infinity : 0;
+            var aggregateValue = 0;
+            if (func === 'max') {
+                aggregateValue = -Infinity;
+            } else if (func === 'min') {
+                aggregateValue = Infinity;
+            }
             _.each(data, function (d) {
                 count += 1;
                 var value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
@@ -256,7 +261,7 @@ var ListRenderer = BasicRenderer.extend({
             fields: _.map(this.state.fieldsInfo[this.viewType], function (_, fieldName) {
                 return {name: fieldName, type: self.state.fields[fieldName].type};
             }),
-        }
+        };
     },
     /**
      * Removes the columns which should be invisible.
@@ -272,7 +277,7 @@ var ListRenderer = BasicRenderer.extend({
         var storedOptionalColumns;
         this.trigger_up('load_optional_fields', {
             keyParts: this._getOptionalColumnsStorageKeyParts(),
-            callback: function(res) {
+            callback: function (res) {
                 storedOptionalColumns = res;
             },
         });
@@ -296,7 +301,7 @@ var ListRenderer = BasicRenderer.extend({
                     self.optionalColumns.push(c);
                     var enabled;
                     if (storedOptionalColumns === undefined) {
-                        enabled = c.attrs.optional === 'show'
+                        enabled = c.attrs.optional === 'show';
                     } else {
                         enabled = _.contains(storedOptionalColumns, c.attrs.name);
                     }
@@ -591,7 +596,7 @@ var ListRenderer = BasicRenderer.extend({
         var $th = $('<th>')
             .addClass('o_group_name')
             .attr('tabindex', -1)
-            .text(name + ' (' + group.count + ')')
+            .text(name + ' (' + group.count + ')');
         var $arrow = $('<span>')
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
@@ -813,20 +818,20 @@ var ListRenderer = BasicRenderer.extend({
         return this.state.data.map(this._renderRow.bind(this));
     },
     /**
-    * Render a single <th> with dropdown menu to display optional columns of view.
-    *
-    * @private
-    * @returns {jQueryElement} a <th> element
-    */
+     * Render a single <th> with dropdown menu to display optional columns of view.
+     *
+     * @private
+     * @returns {jQueryElement} a <th> element
+     */
     _renderOptionalColumnsDropdown: function () {
         var self = this;
         var $optionalColumnsDropdown = $('<div>', {
             class: 'o_optional_columns text-center dropdown',
         });
         var $a = $("<a>", {
-            class: "dropdown-toggle text-dark o-no-caret",
-            href: "#",
-            role: "button",
+            'class': "dropdown-toggle text-dark o-no-caret",
+            'href': "#",
+            'role': "button",
             'data-toggle': "dropdown",
             'aria-expanded': false,
         });
@@ -844,7 +849,7 @@ var ListRenderer = BasicRenderer.extend({
                     name: col.attrs.name,
                     checked: _.contains(self.optionalColumnsEnabled, col.attrs.name),
                 }
-            })
+            });
             $dropdown.append($("<div>", {
                 class: "dropdown-item",
             }).append($checkbox));
@@ -930,7 +935,7 @@ var ListRenderer = BasicRenderer.extend({
             }));
 
             if (self.optionalColumns.length) {
-                self.$el.addClass('o_list_optional_columns')
+                self.$el.addClass('o_list_optional_columns');
                 self.$('table').append($('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>'));
                 self.$el.append(self._renderOptionalColumnsDropdown());
             }
@@ -1049,10 +1054,10 @@ var ListRenderer = BasicRenderer.extend({
             keyParts: this._getOptionalColumnsStorageKeyParts(),
             optionalColumnsEnabled: this.optionalColumnsEnabled,
         });
-        this._processColumns(this.columnInvisibleFields || {});
-        this._renderView().then(function() {
+        this._processColumns(this.columnInvisibleFields || {});
+        this._renderView().then(function () {
             self._onToggleOptionalColumnDropdown(ev);
-        })
+        });
     },
     /**
      * When the user clicks on the three dots (ellipsis), toggle the optional
@@ -1145,10 +1150,9 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
-     *
-     * @param {MouseEvent} ev
+     * @private
      */
-    _onMouseDown: function(ev) {
+    _onMouseDown: function () {
         $('.o_keyboard_navigation').removeClass('o_keyboard_navigation');
     },
     /**
@@ -1195,7 +1199,7 @@ var ListRenderer = BasicRenderer.extend({
         if (group.count) {
             this.trigger_up('toggle_group', {
                 group: group,
-                onSuccess: function() {
+                onSuccess: function () {
                     // Refocus the header after re-render unless the user
                     // already focused something else by now
                     if (document.activeElement.tagName === 'BODY') {

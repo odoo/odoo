@@ -217,7 +217,10 @@ ListRenderer.include({
 
                 // store the selection range to restore it once the table will
                 // be re-rendered, and the current cell re-selected
-                var currentRowID, currentWidget, focusedElement, selectionRange;
+                var currentRowID;
+                var currentWidget;
+                var focusedElement;
+                var selectionRange;
                 if (self.currentRow !== null) {
                     currentRowID = self._getRecordID(self.currentRow);
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
@@ -436,8 +439,14 @@ ListRenderer.include({
         }
         var recordID = this._getRecordID(this.currentRow);
         var recordWidgets = this.allFieldWidgets[recordID];
-        toggleWidgets(true);
+        function toggleWidgets(disabled) {
+            _.each(recordWidgets, function (widget) {
+                var $el = widget.getFocusableElement();
+                $el.prop('disabled', disabled);
+            });
+        }
 
+        toggleWidgets(true);
         return new Promise((resolve, reject) => {
             this.trigger_up('save_line', {
                 recordID: recordID,
@@ -452,13 +461,6 @@ ListRenderer.include({
         }).guardedCatch(() => {
             toggleWidgets(false);
         });
-
-        function toggleWidgets(disabled) {
-            _.each(recordWidgets, function (widget) {
-                var $el = widget.getFocusableElement();
-                $el.prop('disabled', disabled);
-            });
-        }
     },
     /**
      * @override
@@ -876,8 +878,8 @@ ListRenderer.include({
         var $row = this._super.apply(this, arguments);
         if (this.addTrashIcon) {
             var $icon = this.isMany2Many ?
-                            $('<button>', {class: 'fa fa-times', name: 'unlink', 'aria-label': _t('Unlink row ') + (index+1)}) :
-                            $('<button>', {class: 'fa fa-trash-o', name: 'delete', 'aria-label': _t('Delete row ') + (index+1)});
+                $('<button>', {'class': 'fa fa-times', 'name': 'unlink', 'aria-label': _t('Unlink row ') + (index + 1)}) :
+                $('<button>', {'class': 'fa fa-trash-o', 'name': 'delete', 'aria-label': _t('Delete row ') + (index + 1)});
             var $td = $('<td>', {class: 'o_list_record_remove'}).append($icon);
             $row.append($td);
         }
@@ -1031,15 +1033,6 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Unselect the row before adding the optional column to the listview
-     *
-     * @override
-     * @private
-     */
-    _onToggleOptionalColumnDropdown: function (ev) {
-        this.unselectRow().then(this._super.bind(this, ev));
-    },
-    /**
      * This method is called when we click on the 'Add a line' button in a groupby
      * list view.
      *
@@ -1150,7 +1143,7 @@ ListRenderer.include({
      * @param {KeyDownEvent} e
      */
     _onKeyDownAddRecord: function (e) {
-        switch(e.keyCode) {
+        switch (e.keyCode) {
             case $.ui.keyCode.ENTER:
                 e.stopPropagation();
                 e.preventDefault();
@@ -1265,6 +1258,15 @@ ListRenderer.include({
         if (this.currentRow === null) {
             this._super.apply(this, arguments);
         }
+    },
+    /**
+     * Unselect the row before adding the optional column to the listview
+     *
+     * @override
+     * @private
+     */
+    _onToggleOptionalColumnDropdown: function (ev) {
+        this.unselectRow().then(this._super.bind(this, ev));
     },
     /**
      * When a click happens outside the list view, or outside a currently
