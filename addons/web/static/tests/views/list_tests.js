@@ -1517,6 +1517,94 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('column widths are kept when adding first record', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = []; // in this scenario, we start with no records
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="datetime"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        var width = list.$('th[data-name="datetime"]')[0].offsetWidth;
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+
+        assert.containsOnce(list, '.o_data_row');
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, width);
+
+        list.destroy();
+    });
+
+    QUnit.test('column widths are kept when editing a record', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="datetime"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        var width = list.$('th[data-name="datetime"]')[0].offsetWidth;
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        assert.containsOnce(list, '.o_selected_row');
+
+        var longVal = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, ' +
+            'justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus ' +
+            'bibendum est.';
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=text]'), longVal);
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+
+        assert.containsNone(list, '.o_selected_row');
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, width);
+
+        list.destroy();
+    });
+
+    QUnit.test('column widths are kept when editing multiple records', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="datetime"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        var width = list.$('th[data-name="datetime"]')[0].offsetWidth;
+
+        // select two records and edit
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+
+        assert.containsOnce(list, '.o_selected_row');
+        var longVal = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, ' +
+            'justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus ' +
+            'bibendum est.';
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=text]'), longVal);
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.containsNone(list, '.o_selected_row');
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, width);
+
+        list.destroy();
+    });
+
     QUnit.test('row height should not change when switching mode', async function (assert) {
         // Warning: this test is css dependant
         assert.expect(3);

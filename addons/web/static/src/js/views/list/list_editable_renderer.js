@@ -44,6 +44,7 @@ ListRenderer.include({
         this._super.apply(this, arguments);
 
         this.editable = params.editable;
+        this.columnWidths = false;
 
         // if addCreateLine (resp. addCreateLineInGroups) is true, the renderer
         // will add a 'Add a line' link at the bottom of the list view (resp.
@@ -491,6 +492,13 @@ ListRenderer.include({
      * @override
      */
     updateState: function (state, params) {
+        this.oldColumns = this.columns;
+        this.columnWidths = false;
+        if (params.keepWidths) {
+            this.columnWidths = this.$('thead th').toArray().map(function (th) {
+                return $(th).outerWidth();
+            });
+        }
         if (params.noRender) {
             // the state changed, but we won't do a re-rendering right now, so
             // remove computed modifiers data (as they are obsolete) to force
@@ -537,10 +545,21 @@ ListRenderer.include({
             // there is no record -> don't force column's widths w.r.t. their label
             return;
         }
+        let restoreWidths = false;
+        if (this.columnWidths) {
+            if (this.oldColumns && this.oldColumns.length === this.columns.length) {
+                for (let i = 0; i < this.oldColumns.length; i++) {
+                    if (this.oldColumns[i] !== this.columns[i]) {
+                        break;
+                    }
+                    restoreWidths = (i === this.oldColumns.length - 1); // columns are as before
+                }
+            }
+        }
         var $thead = this.$('thead');
-        $thead.find('th').each(function () {
-            var $th = $(this);
-            $th.css('width', $th.outerWidth() + 'px');
+        $thead.find('th').each((index, th) => {
+            var $th = $(th);
+            $th.css('width', restoreWidths ? this.columnWidths[index] : $th.outerWidth() + 'px');
         });
         this.$('table').css('table-layout', 'fixed');
     },

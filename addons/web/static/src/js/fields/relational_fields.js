@@ -1071,6 +1071,7 @@ var FieldX2Many = AbstractField.extend({
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
             return this.renderer.updateState(this.value, {
                 columnInvisibleFields: this.currentColInvisibleFields,
+                keepWidths: true,
             }).then(function () {
                 self.pager.updateState({ size: self.value.count });
             });
