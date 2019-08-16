@@ -49,6 +49,16 @@ class ProductTemplate(models.Model):
         }
         return action
 
+    def action_view_bom(self):
+        action = self.env.ref('mrp.template_open_bom').read()[0]
+        # bom specific to this variant or global to template
+        action['context'] = {
+            'default_product_tmpl_id': self[0].id,
+            'default_product_id': self[0].product_variant_id.id,
+        }
+        action['domain'] = ['|', ('product_id', 'in', self.product_variant_ids.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.ids)]
+        return action
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
