@@ -1497,6 +1497,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
+        const assertions = [
+            { field: 'bar', expected: 40, type: 'Boolean' },
+            { field: 'int_field', expected: 74, type: 'Integer' },
+            { field: 'qux', expected: 92, type: 'Float' },
+            { field: 'date', expected: 92, type: 'Date' },
+            { field: 'datetime', expected: 146, type: 'Datetime' },
+        ];
+        assert.expect(assertions.length + 1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
+                    '</tree>',
+            groupBy: ['int_field'],
+        });
+
+        assertions.forEach(a => {
+            assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
+                `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
+        });
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%');
+
+        list.destroy();
+    });
+
     QUnit.test('column width should depend on the widget', async function (assert) {
         assert.expect(1);
 

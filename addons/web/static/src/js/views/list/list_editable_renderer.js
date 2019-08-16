@@ -541,7 +541,7 @@ ListRenderer.include({
      * @private
      */
     _freezeColumnWidths: function () {
-        if (!this.state.data.length && !this.columnWidths) {
+        if (!this._hasVisibleRecords(this.state) && !this.columnWidths) {
             // there is no record -> don't force column's widths w.r.t. their label
             return;
         }
@@ -688,6 +688,26 @@ ListRenderer.include({
      */
     _getRow: function (recordId) {
         return this.$('.o_data_row[data-id="' + recordId + '"]');
+    },
+    /**
+     * This function returns true iff records are visible in the list, i.e.
+     *   if the list is ungrouped: true iff the list isn't empty;
+     *   if the list is grouped: true iff there is at least one unfolded group
+     *     containing records.
+     *
+     * @param {Object} list a datapoint
+     * @returns {boolean}
+     */
+    _hasVisibleRecords: function (list) {
+        if (!list.groupedBy.length) {
+            return !!list.data.length;
+        } else {
+            var hasVisibleRecords = false;
+            for (var i = 0; i < list.data.length; i++) {
+                hasVisibleRecords = hasVisibleRecords || this._hasVisibleRecords(list.data[i]);
+            }
+            return hasVisibleRecords;
+        }
     },
     /**
      * Move the cursor on the end of the previous line (or of the last line if
@@ -913,7 +933,7 @@ ListRenderer.include({
     _renderHeader: function () {
         var $thead = this._super.apply(this, arguments);
 
-        if (this.editable && !this.state.data.length && !this.columnWidths) {
+        if (this.editable && !this._hasVisibleRecords(this.state) && !this.columnWidths) {
             // we compute the sum of the weights for each columns, excluding
             // those with an absolute width.
             var totalWidth = this.columns.reduce(function (acc, column) {
@@ -1009,7 +1029,7 @@ ListRenderer.include({
         return this._super.apply(this, arguments).then(function () {
             var table = self.el.getElementsByTagName('table')[0];
             if (table) { // no table if no content helper displayed
-                if (!self.state.data.length) { // FIXME: only handles ungrouped case
+                if (!self._hasVisibleRecords(self.state)) {
                     table.classList.add('o_empty_list');
                 }
                 if (self.editable) {
