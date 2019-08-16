@@ -784,6 +784,22 @@ ListRenderer.include({
         return $thead;
     },
     /**
+     * Overriden to add a resize handle in editable list column headers
+     * 
+     * @override
+     * @private
+     */
+    _renderHeaderCell: function () {
+        const $th = this._super(...arguments);
+        if (this.editable) {
+            const $resizeHandle = $('<span class="o_resize"/>')
+                .on('click', this._onClickResize.bind(this))
+                .on('mousedown', this._onStartResize.bind(this));
+            $th.append($resizeHandle);
+        }
+        return $th;
+    },
+    /**
      * Editable rows are possibly extended with a trash icon on their right, to
      * allow deleting the corresponding record.
      * For many2many editable lists, the trash bin is replaced by X.
@@ -1009,6 +1025,16 @@ ListRenderer.include({
         this._selectCell(rowIndex, fieldIndex, {event: event});
     },
     /**
+     * We want to override any default mouse behaviour when clicking on the resize handles
+     * 
+     * @private
+     * @param {MouseEvent} ev 
+     */
+    _onClickResize: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+    },
+    /**
      * We need to manually unselect row, because no one else would do it
      */
     _onEmptyRowClick: function () {
@@ -1167,6 +1193,44 @@ ListRenderer.include({
         if (this.currentRow === null) {
             this._super.apply(this, arguments);
         }
+    },
+    /**
+     * Handles the resize feature on the column headers
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onStartResize: function (ev) {
+        this._isResizing = true;
+        this._setFixedLayout();
+        const $table = this.$('table');
+        const $th = $(ev.target).closest('th');
+        $table.addClass('o_resizing');
+        const initialX = ev.clientX;
+        const initialWidth = $th.width();
+        const initialTableWidth = $table.width();
+        function resizeHeader(ev) {
+            const delta = ev.clientX - initialX;
+            const newWidth = Math.max(10, initialWidth + delta);
+            const tableDelta = newWidth - initialWidth;
+            $th.width(newWidth);
+            $table.width(initialTableWidth + tableDelta);
+        }
+        window.addEventListener('mousemove', resizeHeader);
+        const stopResize = () => {
+            setTimeout(() => {
+                this._isResizing = false;
+            }, 100);
+            window.removeEventListener('mousemove', resizeHeader);
+            $table.removeClass('o_resizing');
+            window.removeEventListener('mouseup', stopResize);
+
+            // we remove the focus to make sure that the there is no focus inside
+            // the tr.  If that is the case, there is some css to darken the whole
+            // thead, and it looks quite weird with the small css hover effect.
+            document.activeElement.blur();
+        };
+        window.addEventListener('mouseup', stopResize);
     },
     /**
      * Unselect the row before adding the optional column to the listview
