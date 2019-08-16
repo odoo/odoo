@@ -240,7 +240,6 @@ class account_abstract_payment(models.AbstractModel):
         # Get the payment invoices
         if not invoices:
             invoices = self.invoice_ids
-
         # Get the payment currency
         if not currency:
             currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
@@ -248,16 +247,27 @@ class account_abstract_payment(models.AbstractModel):
         # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
         invoice_datas = invoices.read_group(
             [('id', 'in', invoices.ids)],
-            ['currency_id', 'type', 'residual_signed'],
-            ['currency_id', 'type'], lazy=False)
+            ['currency_id', 'type', 'residual_signed', 'residual_company_signed', 'company_id'],
+            ['currency_id', 'type', 'company_id'], lazy=False)
         total = 0.0
+
         for invoice_data in invoice_datas:
-            amount_total = MAP_INVOICE_TYPE_PAYMENT_SIGN[invoice_data['type']] * invoice_data['residual_signed']
-            payment_currency = self.env['res.currency'].browse(invoice_data['currency_id'][0])
-            if payment_currency == currency:
+            inv_company = self.env['res.company'].browse(invoice_data['company_id'][0])
+            company_currency_id = inv_company.currency_id
+            invoice_currency = self.env['res.currency'].browse(invoice_data['currency_id'][0])
+            if currency == company_currency_id:
+                residual_field = 'residual_company_signed'
+                currency_from = company_currency_id
+            else:
+                residual_field = 'residual_signed'
+                currency_from = invoice_currency
+
+            amount_total = MAP_INVOICE_TYPE_PAYMENT_SIGN[invoice_data['type']] * invoice_data[residual_field]
+
+            if currency_from == currency:
                 total += amount_total
             else:
-                total += payment_currency._convert(amount_total, currency, self.env.user.company_id, self.payment_date or fields.Date.today())
+                total += currency_from._convert(amount_total, currency, self.env.user.company_id, self.payment_date or fields.Date.today())
         return total
 
 

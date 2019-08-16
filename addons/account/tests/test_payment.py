@@ -1,5 +1,5 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 import time
 
 
@@ -41,7 +41,7 @@ class TestPayment(AccountingTestCase):
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
-    def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
+    def create_invoice_draft(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
         """ Returns an open invoice """
         invoice = self.invoice_model.create({
             'partner_id': partner or self.partner_agrolait.id,
@@ -59,6 +59,10 @@ class TestPayment(AccountingTestCase):
             'name': 'something',
             'account_id': self.account_revenue.id,
         })
+        return invoice
+
+    def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
+        invoice = self.create_invoice_draft(amount, type, currency_id, partner, account_id)
         invoice.action_invoice_open()
         return invoice
 
@@ -629,3 +633,51 @@ class TestPayment(AccountingTestCase):
         )
         write_off_line = payment_id.move_line_ids.filtered(lambda l: l.account_id == payment_id.writeoff_account_id)
         self.assertEqual(write_off_line.debit, 10)
+
+    def test_payment_currency_inv_foreign_payment_domestic(self):
+        company = self.env.ref('base.main_company')
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-06-26',
+            'currency_id': self.currency_eur_id,
+            'rate': 1.0,
+            'company_id': company.id,
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-06-26',
+            'currency_id': self.currency_usd_id,
+            'rate': 19.0,
+            'company_id': company.id,
+        })
+        tax = self.env['account.tax'].create({
+            'name': '5 percent',
+            'company_id': company.id,
+            'amount': 5.0,
+        })
+
+        # Invoice in Foreign currency
+        invoice = self.create_invoice_draft(amount=500, currency_id=self.currency_usd_id)
+
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+        invoice.invoice_line_ids.write({
+            'invoice_line_tax_ids': [(6, False, tax.ids)],
+        })
+        invoice.compute_taxes()
+        self.assertEqual(invoice.amount_total, 525)
+
+        invoice.action_invoice_open()
+        self.assertEqual(invoice.residual_signed, 525)
+        self.assertEqual(invoice.residual_company_signed, 27.64)
+
+        # payment in Domestic currency
+        _payment_model = self.payment_model.with_context(
+            active_ids=invoice.ids,
+            active_model='account.invoice'
+        )
+
+        with Form(_payment_model, view='account.view_account_payment_invoice_form') as p:
+            self.assertEqual(p.amount, 525)
+            self.assertEqual(p.payment_difference, 0.0)
+            p.currency_id = self.env['res.currency'].browse(self.currency_eur_id)
+            self.assertEqual(p.amount, 27.64)
+            self.assertEqual(p.payment_difference, 0.0)
