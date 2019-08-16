@@ -3,24 +3,25 @@
 # * mrp_repair
 # 
 # Translators:
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# hoxhe aits <hoxhe0@gmail.com>, 2016
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
-# Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
+# Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # amrnegm <amrnegm.01@gmail.com>, 2016
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
+# Martin Trigaux, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:23+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +49,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* تستخدم الحالة 'مسودة' عندما ينشئ المستخدم أمر تصليح جديد غير مؤكد.\n"
+"* تستخدم الحالة 'مؤكد' عندما يقوم المستخدم بتأكيد أمر التصليح.\n"
+"* تستخدم الحالة 'جاهز للتصليح' لبدء التصليح، لا يمكن للمستخدم بدء التصليح سوى بعد تأكيد أمر التصليح.\n"
+"* تستخدم الحالة 'ينتظر الفوترة' لإنشاء الفاتورة قبل أو بعد انتهاء عملية التصليح.\n"
+"* ينتقل أمر التصليح للحالة 'منتهي' عند إكتمال عملية التصليح.\n"
+"* تستخدم الحالة 'ملغي' عندما يقوم المستخدم بإلغاء أمر التصليح."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -87,7 +94,7 @@ msgstr "strong>منتج للتعديل:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>عنوان الشحن:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -157,7 +164,7 @@ msgstr "ملغى "
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "لا يمكن إلغاء عملية تصليح مكتملة."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -649,25 +656,25 @@ msgstr "مرجع التصليح"
 #: code:addons/mrp_repair/models/mrp_repair.py:194
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
+msgstr "يجب أن يكون أمر التصليح ملغيًا لكي يُعين كمسودة."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:343
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "يجب تأكيد أمر التصليح قبل بدء عملية التصليح."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "يجب تنفيذ أمر التصليح لتتمكن من إنشاء تحركات المنتج."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:354
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "يجب أن يكون أمر التصليح قيد العمل لتتمكن من إنهاءه."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:223
@@ -706,7 +713,7 @@ msgstr "امر التصليحات"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "البحث في أوامر التصليح"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -798,6 +805,7 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"تحدد حالة بند أمر التصليح تلقائيًا تبعًا لحالة أمر التصليح المرتبط به."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -895,3 +903,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"يجب اختيار قائمة أسعار فى نموذج التصليح!\n"
+"برجاء تعيين واحدة قبل اختيار المنتج."

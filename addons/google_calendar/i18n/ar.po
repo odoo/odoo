@@ -4,21 +4,22 @@
 # 
 # Translators:
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
-# hoxhe aits <hoxhe0@gmail.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# SaFi J. <safi2266@gmail.com>, 2016
+# Martin Trigaux, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:20+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +66,7 @@ msgstr "الحسابات"
 msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
-msgstr ""
+msgstr "تم فصل كافة الفعاليات عن حسابك السابق. يمكنك الآن إعادة بدء المزامنة"
 
 #. module: google_calendar
 #. openerp-web
@@ -75,6 +76,7 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
+"يجب أن يقوم أحد المشرفين بإعداد مزامنة جوجل قبل أن تتمكن من استخدامها!"
 
 #. module: google_calendar
 #. openerp-web
@@ -84,6 +86,8 @@ msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
 msgstr ""
+"حدث خطأ أثناء فصل الفعاليات عن حسابك السابق. برجاء إعادة المحاولة أو التواصل"
+" مع المشرف."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -123,7 +127,7 @@ msgstr "رقم العميل"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_secret
 msgid "Client_key"
-msgstr ""
+msgstr "Client_key"
 
 #. module: google_calendar
 #. openerp-web
@@ -160,19 +164,19 @@ msgstr "الحدث"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:74
 #, python-format
 msgid "Event disconnection error"
-msgstr ""
+msgstr "خطأ في فصل الفعالية"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:70
 #, python-format
 msgid "Event disconnection success"
-msgstr ""
+msgstr "نجاح فصل الفعالية"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "معرف فعالية تقويم جوجل"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -182,12 +186,12 @@ msgstr "معرف عميل جوجل"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client Secret"
-msgstr ""
+msgstr "سر عميل جوجل"
 
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr ""
+msgstr "يجب أن يكون معرف جوجل فريدًا!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:673
@@ -197,6 +201,9 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
+"فقدت الاتصال بجوجل... المزامنة القادمة ستكون مزامنة كاملة. \n"
+"\n"
+" %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
@@ -211,6 +218,7 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
+"لتتمكن من فعل هذا، عليك أولًا فصل كافة الفعاليات الموجودة من حسابك القديم."
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -234,6 +242,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"معرف آخر تقويم تمت مزامنته. إذا تغير، نزيل كافة الروابط بين GoogleID والمعرف"
+" الداخلي ما بين جوجل وأودو"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -243,7 +253,7 @@ msgstr "آخر تعديل في"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
 msgid "Last synchro date"
-msgstr ""
+msgstr "تاريخ آخر مزامنة"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
@@ -289,7 +299,7 @@ msgstr ""
 #: code:addons/google_calendar/static/src/js/google_calendar.js:90
 #, python-format
 msgid "Sync with <b>Google</b>"
-msgstr ""
+msgstr "المزامنة مع <b>جوجل</b>"
 
 #. module: google_calendar
 #. openerp-web
@@ -299,6 +309,7 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
+"يجب إعداد مزامنة جوجل قبل أن تتمكن من استخدامها، هل تريد فعل هذا الآن؟"
 
 #. module: google_calendar
 #. openerp-web
@@ -307,7 +318,7 @@ msgstr ""
 msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
-msgstr ""
+msgstr "الحساب الذي تحاول مزامنته (%s) مختلف عن آخر حساب استخدمته (%s)!"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -319,12 +330,12 @@ msgstr "لضبط تسجيل الدخول عبر جوجل، يتوجب عليك �
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
 msgid "Token Validity"
-msgstr ""
+msgstr "صلاحية كلمة السر"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_server_uri
 msgid "URI for tuto"
-msgstr ""
+msgstr "رابط الدرس التدريبي"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
@@ -341,13 +352,13 @@ msgstr "المستخدمون"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:36
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr ""
+msgstr "سيتم إعادة توجيهك لجوجل للحصول على إذن الوصول لتقويمك!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr ""
+msgstr "كلمة السر غير صالحة أو تم إلغاءها!"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings
