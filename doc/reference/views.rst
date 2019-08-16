@@ -329,11 +329,13 @@ Possible children elements of the list view are:
         dynamic attributes based on record values. Only effects the current
         field, so e.g. ``invisible`` will hide the field but leave the same
         field of other records visible, it will not hide the column itself
-    ``width_factor`` (for ``editable``)
-        the column relative width (as the layout is fixed)
     ``width`` (for ``editable``)
-        the column width (as the layout is fixed). It is a string describing the
-        width css property, such as '100px'.
+        when there is no data in the list, the width of a column can be forced
+        by setting this attribute. The value can be an absolute width (e.g.
+        '100px'), or a relative weight (e.g. '3', meaning that this column will
+        be 3 times larger than the others). Note that when there are records in
+        the list, we let the browser automatically adapt the column's widths
+        according to their content, and this attribute is thus ignored.
 
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will

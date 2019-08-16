@@ -179,8 +179,8 @@
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
-                    <field name="tax_ids" widget="many2many_tags" width_factor="0.5" optional="hide" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="tag_ids" widget="many2many_tags" width_factor="0.5" optional="hide"/>
+                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                    <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>

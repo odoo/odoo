@@ -1540,7 +1540,7 @@ QUnit.module('Views', {
                         '<field name="int_field" readonly="1"/>' +
                         '<field name="boolean"/>' +
                         '<field name="date"/>' +
-                        '<field name="text" width_factor="1"/>' +
+                        '<field name="text"/>' +
                         '<field name="amount"/>' +
                         '<field name="currency_id" invisible="1"/>' +
                         '<field name="m2o"/>' +
