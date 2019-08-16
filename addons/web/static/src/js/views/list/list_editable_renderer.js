@@ -545,32 +545,41 @@ ListRenderer.include({
         this.$('table').css('table-layout', 'fixed');
     },
     /**
-     * Returns the relative width according to the widget or the field type.
+     * Returns the width of a column according the 'width' attribute set in the
+     * arch, the widget or the field type. A fixed width is harcoded for some
+     * field types (e.g. date and numeric fields). By default, the remaining
+     * space is evenly distributed between the other fields (with a factor '1').
+     *
      * This is only used when there is no record in the list (i.e. when we can't
      * let the browser compute the optimal width of each column).
      *
      * @see _renderHeader
      * @private
      * @param {Object} column an arch node
-     * @returns {integer | string} either a weight factor (number) or a css
-     *   width description (string)
+     * @returns {string} either a weight factor (e.g. '1.5') or a css width
+     *   description (e.g. '120px')
      */
-    _getColumnWidthFactor: function (column) {
-        if (!this.state.fieldsInfo.list[column.attrs.name]) {
-            // Unnamed columns get default value
-            return 1;
+    _getColumnWidth: function (column) {
+        if (column.attrs.width) {
+            return column.attrs.width;
         }
-        var field = this.state.fields[column.attrs.name];
+        const fieldsInfo = this.state.fieldsInfo.list;
+        const name = column.attrs.name;
+        if (!fieldsInfo[name]) {
+            // Unnamed columns get default value
+            return '1';
+        }
+        const widget = fieldsInfo[name].Widget.prototype;
+        if ('widthInList' in widget) {
+            return widget.widthInList;
+        }
+        const field = this.state.fields[name];
         if (!field) {
             // this is not a field. Probably a button or something of unknown
             // width.
-            return 1;
+            return '1';
         }
-        var widgetProto = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
-        if ('widthFactor' in widgetProto) {
-            return widgetProto.widthFactor;
-        }
-        var fixedWidthTypes = {
+        const fixedWidths = {
             boolean: '40px',
             date: '92px',
             datetime: '146px',
@@ -578,9 +587,11 @@ ListRenderer.include({
             integer: '74px',
             monetary: '104px',
         };
-        var widget = this.state.fieldsInfo.list[column.attrs.name].widget;
-        var type = widget in fixedWidthTypes ? widget : field.type;
-        return fixedWidthTypes[type] || 1;
+        let type = field.type;
+        if (fieldsInfo[name].widget in fixedWidths) {
+            type = fieldsInfo[name].widget;
+        }
+        return fixedWidths[type] || '1';
     },
     /**
      *
@@ -799,19 +810,12 @@ ListRenderer.include({
     _processColumns: function () {
         this._super.apply(this, arguments);
         if (this.editable) {
-            var self = this;
-            this.columns.forEach(function (column) {
-                if (column.attrs.width) {
-                    // nothing to do
-                } else if (column.attrs.width_factor) {
-                    column.attrs.widthFactor = parseFloat(column.attrs.width_factor, 10);
-                } else {
-                    var factor = self._getColumnWidthFactor(column);
-                    if (typeof factor === 'string') {
-                        column.attrs.width = factor;
-                    } else {
-                        column.attrs.widthFactor = factor;
-                    }
+            this.columns.forEach((column) => {
+                const width = this._getColumnWidth(column);
+                if (width.match(/[a-zA-Z]/)) { // absolute width with measure unit (e.g. 100px)
+                    column.attrs.absoluteWidth = width;
+                } else { // relative width expressed as a weight (e.g. 1.5)
+                    column.attrs.relativeWidth = parseFloat(width, 10);
                 }
             });
         }
@@ -892,17 +896,19 @@ ListRenderer.include({
 
         if (this.editable && !this.state.data.length) {
             // we compute the sum of the weights for each columns, excluding
-            // those with a fixed width.
+            // those with an absolute width.
             var totalWidth = this.columns.reduce(function (acc, column) {
-                return acc + (column.attrs.widthFactor || 0);
+                return acc + (column.attrs.relativeWidth || 0);
             }, 0);
             this.columns.forEach(function (column) {
-                if (column.attrs.width || column.attrs.widthFactor) {
-                    var width = column.attrs.width || ((column.attrs.widthFactor / totalWidth * 100) + '%');
-                    var $th = $thead.find('th[data-name=' + column.attrs.name + ']');
-                    if ($th.data('name')) {
-                        $th.css('width', width);
-                    }
+                let width;
+                if (column.attrs.absoluteWidth) {
+                    width = column.attrs.absoluteWidth;
+                } else if (column.attrs.relativeWidth) {
+                    width = ((column.attrs.relativeWidth / totalWidth * 100) + '%');
+                }
+                if (width) {
+                    $thead.find('th[data-name=' + column.attrs.name + ']').css('width', width);
                 }
             });
         }

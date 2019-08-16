@@ -25,46 +25,46 @@
                 <field name="product_tracking" invisible="1"/>
                 <field name="is_editable" invisible="1"/>
                 <field name="outdated" invisible="1"/>
-                <field name="product_id" options="{'no_create': True}" width_factor="1.6"
+                <field name="product_id" options="{'no_create': True}" width="1.6"
                        readonly="context.get('default_product_id', False)"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"
-                       options="{'no_create': True}" width_factor="1"
+                       options="{'no_create': True}"
                        invisible="context.get('readonly_location_id', False)"
                        readonly="context.get('readonly_location_id', False)"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"/>
-                <field name="inventory_date" optional="hide" width_factor="0.8"/>
-                <field name="prod_lot_id" groups="stock.group_production_lot" width_factor="0.8"
+                <field name="inventory_date" optional="hide" width="0.8"/>
+                <field name="prod_lot_id" groups="stock.group_production_lot" width="0.8"
                        attrs="{'readonly': ['|', '|',
                             ('product_tracking', '=', 'none'),
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"
                        context="{'default_product_id': product_id}" optional="show"
                        domain="[('product_id', '=', product_id)]"/>
-                <field name="package_id" groups="stock.group_tracking_lot" width_factor="0.8"
+                <field name="package_id" groups="stock.group_tracking_lot" width="0.8"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"
                        string="Package" optional="show"
                        domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]"/>
-                <field name="partner_id" groups="stock.group_tracking_owner" width_factor="1"
+                <field name="partner_id" groups="stock.group_tracking_owner"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"/>
-                <field name="theoretical_qty" string="On Hand" width_factor="0.5"
+                <field name="theoretical_qty" string="On Hand" width="0.5"
                        force_save="1" readonly="1" optional="show"/>
                 <button name="action_refresh_quantity" string="Refresh quantity" title="Refresh quantity"
                         icon="fa-refresh" type="object"
                         attrs="{'invisible': [('outdated', '=', False)]}"/>
                 <field name="product_qty" attrs="{'readonly': [('state', '!=', 'confirm')]}"
-                       width_factor="0.5" string="Counted"/>
-                <field name="difference_qty" optional="show" width_factor="0.5"/>
+                       width="0.5" string="Counted"/>
+                <field name="difference_qty" optional="show" width="0.5"/>
                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"
-                       width_factor="0.3" force_save="1"/>
+                       width="0.3" force_save="1"/>
                 <field name="inventory_id" invisible="1"/>
                 <field name="state" invisible="1"/>
             </tree>
