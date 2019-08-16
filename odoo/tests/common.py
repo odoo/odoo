@@ -1012,26 +1012,26 @@ class HttpCase(TransactionCase):
             return self.opener.post(url, data=data, timeout=timeout)
         return self.opener.get(url, timeout=timeout)
 
-    def _wait_remaining_requests(self):
-        t0 = int(time.time())
-        for thread in threading.enumerate():
-            if thread.name.startswith('odoo.service.http.request.'):
-                join_retry_count = 10
-                while thread.isAlive():
-                    # Need a busyloop here as thread.join() masks signals
-                    # and would prevent the forced shutdown.
-                    thread.join(0.05)
-                    join_retry_count -= 1
-                    if join_retry_count < 0:
-                        self._logger.warning("Stop waiting for thread %s handling request for url %s",
-                                        thread.name, getattr(thread, 'url', '<UNKNOWN>'))
-                        break
-                    time.sleep(0.5)
-                    t1 = int(time.time())
-                    if t0 != t1:
-                        self._logger.info('remaining requests')
-                        odoo.tools.misc.dumpstacks()
-                        t0 = t1
+    def _wait_remaining_requests(self, timeout=10):
+
+        def get_http_request_threads():
+            return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
+
+        start_time = time.time()
+        request_threads = get_http_request_threads()
+        self._logger.info('waiting for threads: %s', request_threads)
+
+        for thread in request_threads:
+            thread.join(timeout - (time.time() - start_time))
+
+        request_threads = get_http_request_threads()
+        for thread in request_threads:
+            self._logger.warning("Stop waiting for thread %s handling request for url %s",
+                                    thread.name, getattr(thread, 'url', '<UNKNOWN>'))
+
+        if request_threads:
+            self._logger.info('remaining requests')
+            odoo.tools.misc.dumpstacks()
 
     def authenticate(self, user, password):
         # stay non-authenticated
