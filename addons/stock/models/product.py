@@ -494,6 +494,15 @@ class Product(models.Model):
         ]
         return action
 
+    def action_view_orderpoints(self):
+        action = self.env.ref('stock.product_open_orderpoint').read()[0]
+        if len(self) == 1:
+            action['context'] = {'default_product_id': self.id, 'search_default_product_id': self.id}
+        else:
+            action['domain'] = [('product_id', 'in', self.ids)]
+            action['context'] = {}
+        return action
+
     @api.model
     def get_theoretical_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, to_uom=None):
         product_id = self.env['product.product'].browse(product_id)
@@ -673,6 +682,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('tracking')
     def onchange_tracking(self):
+        # Does this have any impact ? are the product_variant_ids in the view?
         return self.mapped('product_variant_ids').onchange_tracking()
 
     @api.onchange('type')
@@ -762,11 +772,12 @@ class ProductTemplate(models.Model):
             })
         return action
 
-    def action_product_tmpl_forecast_report(self):
+    def action_product_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
         action['domain'] = [
             ('product_id', 'in', self.product_variant_ids.ids),
         ]
+        action['context'] = {'default_product_tmpl_id': self.id}
         return action
 
 class ProductCategory(models.Model):

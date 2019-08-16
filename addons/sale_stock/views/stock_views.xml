@@ -69,35 +69,5 @@
                 </xpath>
             </field>
         </record>
-
-        <record id="product_template_view_form_inherit_sale" model="ir.ui.view">
-            <field name="name">product.template.inherit.form</field>
-            <field name="inherit_id" ref="sale.product_template_form_view_sale_order_button"/>
-            <field name="model">product.template</field>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_view_sales']" position="replace" />
-            </field>
-        </record>
-
-        <record id="product_template_view_form_inherit_stock" model="ir.ui.view">
-            <field name="name">product.template.inherit.form</field>
-            <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
-            <field name="model">product.template</field>
-            <field name="arch" type="xml">
-                <button name="action_view_orderpoints" position="after">
-                    <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-signal" attrs="{'invisible': [('sale_ok', '=', False)]}"
-                        groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
-                        <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_value">
-                                <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
-                                <field name="uom_name"/>
-                            </span>
-                            <span class="o_stat_text">Sold</span>
-                        </div>
-                    </button>
-                </button>
-            </field>
-        </record>
     </data>
 </odoo>

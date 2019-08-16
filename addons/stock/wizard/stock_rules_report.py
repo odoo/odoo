@@ -17,21 +17,26 @@ class StockRulesReport(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(StockRulesReport, self).default_get(fields)
-        product_tmpl_id = self.env['product.template']
-        if 'product_id' in fields:
-            if self.env.context.get('default_product_id'):
-                product_id = self.env['product.product'].browse(self.env.context['default_product_id'])
-                product_tmpl_id = product_id.product_tmpl_id
-                res['product_tmpl_id'] = product_id.product_tmpl_id.id
-                res['product_id'] = product_id.id
-            elif self.env.context.get('default_product_tmpl_id'):
-                product_tmpl_id = self.env['product.template'].browse(self.env.context['default_product_tmpl_id'])
-                res['product_tmpl_id'] = product_tmpl_id.id
-                res['product_id'] = product_tmpl_id.product_variant_id.id
-                if len(product_tmpl_id.product_variant_ids) > 1:
-                    res['product_has_variants'] = True
+        if self.context.get('active_model', '') == 'product.product':
+            product_id = self.context.get('active_id')
+            product = self.env['product.product'].browse(product_id)
+            product_tmpl = product.product_tmpl_id
+            res['product_tmpl_id'] = product_tmpl.id
+            res['product_id'] = product.id
+            if len(product_tmpl.product_variant_ids) > 1:
+                res['product_has_variants'] = True
+        elif self.context.get('active_model', '') == 'product.template':
+            product_tmpl_id = self.context.get('active_id')
+            product_tmpl = self.env['product.template'].browse(product_tmpl_id)
+            res['product_id'] = product_tmpl.product_variant_id.id
+            res['product_tmpl_id'] = product_tmpl_id
+            if len(product_tmpl.product_variant_ids) > 1:
+                res['product_has_variants'] = True
+        else:
+            return res
+
         if 'warehouse_ids' in fields:
-            company = product_tmpl_id.company_id or self.env.company
+            company = product_tmpl.company_id or self.env.company
             warehouse_id = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1).id
             res['warehouse_ids'] = [(6, 0, [warehouse_id])]
         return res
@@ -47,4 +52,3 @@ class StockRulesReport(models.TransientModel):
         self.ensure_one()
         data = self._prepare_report_data()
         return self.env.ref('stock.action_report_stock_rule').report_action(None, data=data)
-
