@@ -143,7 +143,7 @@ class WebsiteSlides(WebsiteProfile):
             'channel_id': channel.id,
             'is_category': True,
             'is_published': True,
-            'sequence': channel.slide_ids[-1]['sequence'] + 1 if channel.slide_id else 1,
+            'sequence': channel.slide_ids[-1]['sequence'] + 1 if channel.slide_ids else 1,
         }
 
     # CHANNEL UTILITIES
