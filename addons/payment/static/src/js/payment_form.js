@@ -139,6 +139,12 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         $(button).children('.fa').addClass('fa-lock');
         $(button).find('span.o_loader').remove();
     },
+    _parseError: function(e) { 
+        if (e.message.data.arguments[1]) {
+            return e.message.data.arguments[0] + e.message.data.arguments[1];
+        }
+        return e.message.data.arguments[0];
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -246,7 +252,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     self.displayError(
                         _t('Server Error'),
                         _t("We are not able to add your payment method at the moment.") +
-                            error.message.data.message
+                            this._parseError(error)
                     );
                 });
             }
@@ -296,7 +302,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to redirect you to the payment form. ") +
-                                error.message.data.message
+                                this._parseError(error)
                         );
                     });
                 }
@@ -428,7 +434,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 self.displayError(
                     _t('Server error'),
                     _t("We are not able to add your payment method at the moment.</p>") +
-                        error.message.data.message
+                        this._parseError(error)
                 );
             });
         }
