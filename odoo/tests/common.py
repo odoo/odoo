@@ -638,6 +638,9 @@ class ChromeBrowser():
         tries = 0
         failure_info = None
         while tries * delay < timeout:
+            if self.chrome_process.poll() is not None:
+                self._logger.error('Chrome crashed at startup with return code', self.chrome_process.returncode)
+                break
             try:
                 r = requests.get(url, timeout=3)
                 if r.ok:
