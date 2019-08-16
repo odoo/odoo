@@ -8606,6 +8606,38 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('column widths are kept when remove last record in o2m', async function (assert) {
+            assert.expect(1);
+
+            this.data.partner.records[0].p = [2];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                            '<field name="p">' +
+                                '<tree editable="top">' +
+                                    '<field name="date"/>' +
+                                    '<field name="foo"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</form>',
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            var width = form.$('th[data-name="date"]')[0].offsetWidth;
+
+            await testUtils.dom.click(form.$('.o_data_row .o_list_record_remove'));
+
+            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+
+            form.destroy();
+        });
     });
 });
 });
