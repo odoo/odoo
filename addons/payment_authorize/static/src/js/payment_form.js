@@ -78,7 +78,7 @@ PaymentForm.include({
                 self.displayError(
                     _t('Server Error'),
                     _t("We are not able to add your payment method at the moment.") +
-                        error.message.data.message
+                        this._parseError(error)
                 );
             });
         };
