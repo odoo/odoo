@@ -7,7 +7,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 
 
-
 class Pricelist(models.Model):
     _name = "product.pricelist"
     _description = "Pricelist"
@@ -16,17 +15,11 @@ class Pricelist(models.Model):
     def _get_default_currency_id(self):
         return self.env.company.currency_id.id
 
-    def _get_default_item_ids(self):
-        ProductPricelistItem = self.env['product.pricelist.item']
-        vals = ProductPricelistItem.default_get(list(ProductPricelistItem._fields))
-        vals.update(compute_price='formula')
-        return [[0, False, vals]]
-
     name = fields.Char('Pricelist Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
     item_ids = fields.One2many(
         'product.pricelist.item', 'pricelist_id', 'Pricelist Items',
-        copy=True, default=_get_default_item_ids)
+        copy=True)
     currency_id = fields.Many2one('res.currency', 'Currency', default=_get_default_currency_id, required=True)
     company_id = fields.Many2one('res.company', 'Company')
 
@@ -52,7 +45,7 @@ class Pricelist(models.Model):
                        FROM ((
                                 SELECT pr.id, pr.name
                                 FROM product_pricelist pr JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE pr.name || ' (' || cur.name || ')' = %(name)s
                             )
@@ -65,7 +58,7 @@ class Pricelist(models.Model):
                                         tr.name = 'product.pricelist,name' AND
                                         tr.lang = %(lang)s
                                      ) JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE tr.value || ' (' || cur.name || ')' = %(name)s
                             )
@@ -259,6 +252,10 @@ class Pricelist(models.Model):
                     cur = product.currency_id
                 price = cur._convert(price, self.currency_id, self.env.company, date, round=False)
 
+            if not suitable_rule:
+                cur = product.currency_id
+                price = cur._convert(price, self.currency_id, self.env.company, date, round=False)
+
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
 
         return results
@@ -376,20 +373,22 @@ class ResCountryGroup(models.Model):
 
 class PricelistItem(models.Model):
     _name = "product.pricelist.item"
-    _description = "Pricelist Item"
+    _description = "Pricelist Rule"
     _order = "applied_on, min_quantity desc, categ_id desc, id desc"
     # NOTE: if you change _order on this model, make sure it matches the SQL
     # query built in _compute_price_rule() above in this file to avoid
     # inconstencies and undeterministic issues.
 
-    def _get_default_applied_on(self):
-        return self.env.user.has_group('product.group_product_pricelist') and '1_product' or '3_global'
+    def _default_pricelist_id(self):
+        return self.env['product.pricelist'].search([
+            '|', ('company_id', '=', False),
+            ('company_id', '=', self.env.company.id)], limit=1)
 
     product_tmpl_id = fields.Many2one(
-        'product.template', 'Product Template', ondelete='cascade',
+        'product.template', 'Product', ondelete='cascade',
         help="Specify a template if this rule only applies to one product template. Keep empty otherwise.")
     product_id = fields.Many2one(
-        'product.product', 'Product', ondelete='cascade',
+        'product.product', 'Product Variant', ondelete='cascade',
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
     categ_id = fields.Many2one(
         'product.category', 'Product Category', ondelete='cascade',
@@ -400,11 +399,11 @@ class PricelistItem(models.Model):
              "than or equal to the minimum quantity specified in this field.\n"
              "Expressed in the default unit of measure of the product.")
     applied_on = fields.Selection([
-        ('3_global', 'Global'),
+        ('3_global', 'All Products'),
         ('2_product_category', ' Product Category'),
         ('1_product', 'Product'),
         ('0_product_variant', 'Product Variant')], "Apply On",
-        default=_get_default_applied_on, required=True,
+        default='3_global', required=True,
         help='Pricelist Item applicable on selected option')
     base = fields.Selection([
         ('list_price', 'Sales Price'),
@@ -416,7 +415,7 @@ class PricelistItem(models.Model):
              'Cost Price : The base price will be the cost price.\n'
              'Other Pricelist : Computation of the base price based on another Pricelist.')
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
-    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade')
+    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade', required=True, default=_default_pricelist_id)
     price_surcharge = fields.Float(
         'Price Surcharge', digits='Product Price',
         help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')
@@ -438,13 +437,15 @@ class PricelistItem(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 'Currency',
         readonly=True, related='pricelist_id.currency_id', store=True)
+    active = fields.Boolean(
+        readonly=True, related="pricelist_id.active", store=True)
     date_start = fields.Date('Start Date', help="Starting date for the pricelist item validation")
     date_end = fields.Date('End Date', help="Ending valid for the pricelist item validation")
     compute_price = fields.Selection([
-        ('fixed', 'Fix Price'),
+        ('fixed', 'Fixed Price'),
         ('percentage', 'Percentage (discount)'),
-        ('formula', 'Formula')], index=True, default='fixed')
-    fixed_price = fields.Float('Fixed Price', digits='Product Price')
+        ('formula', 'Formula')], index=True, default='fixed', required=True)
+    fixed_price = fields.Monetary('Fixed Price')
     percent_price = fields.Float('Percentage Price')
     # functional fields used for usability purposes
     name = fields.Char(
@@ -466,34 +467,38 @@ class PricelistItem(models.Model):
             raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
         return True
 
-    @api.depends('categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
+    @api.constrains('product_id', 'product_tmpl_id', 'categ_id')
+    def _check_product_consistency(self):
+        for item in self:
+            if item.applied_on == "2_product_category" and not item.categ_id:
+                raise ValidationError(_("Please specify the category for which this rule should be applied"))
+            elif item.applied_on == "1_product" and not item.product_tmpl_id:
+                raise ValidationError(_("Please specify the product for which this rule should be applied"))
+            elif item.applied_on == "0_product_variant" and not item.product_id:
+                raise ValidationError(_("Please specify the product variant for which this rule should be applied"))
+
+    @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
         'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
     def _get_pricelist_item_name_price(self):
         for item in self:
-            if item.categ_id:
-                item.name = _("Category: %s") % (item.categ_id.name)
-            elif item.product_tmpl_id:
-                item.name = item.product_tmpl_id.name
-            elif item.product_id:
-                item.name = item.product_id.display_name.replace('[%s]' % item.product_id.code, '')
+            if item.categ_id and item.applied_on == '2_product_category':
+                item.name = _("Category: %s") % (item.categ_id.display_name)
+            elif item.product_tmpl_id and item.applied_on == '1_product':
+                item.name = _("Product: %s") % (item.product_tmpl_id.display_name)
+            elif item.product_id and item.applied_on == '0_product_variant':
+                item.name = _("Variant: %s") % (item.product_id.with_context(display_default_code=False).display_name)
             else:
                 item.name = _("All Products")
 
             if item.compute_price == 'fixed':
-                item.price = ("%s %s") % (item.fixed_price, item.pricelist_id.currency_id.name)
+                if item.currency_id.position == 'after':
+                    item.price = "%s %s" % (item.fixed_price, item.currency_id.symbol)
+                else:
+                    item.price = "%s %s" % (item.currency_id.symbol, item.fixed_price)
             elif item.compute_price == 'percentage':
                 item.price = _("%s %% discount") % (item.percent_price)
             else:
                 item.price = _("%s %% discount and %s surcharge") % (item.price_discount, item.price_surcharge)
-
-    @api.onchange('applied_on')
-    def _onchange_applied_on(self):
-        if self.applied_on != '0_product_variant':
-            self.product_id = False
-        if self.applied_on != '1_product':
-            self.product_tmpl_id = False
-        if self.applied_on != '2_product_category':
-            self.categ_id = False
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):
@@ -510,14 +515,65 @@ class PricelistItem(models.Model):
                 'price_max_margin': 0.0,
             })
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        has_product_id = self.filtered('product_id')
+        for item in has_product_id:
+            item.product_tmpl_id = item.product_id.product_tmpl_id
+        if self.env.context.get('default_applied_on', False) == '1_product':
+            # If a product variant is specified, apply on variants instead
+            # Reset if product variant is removed
+            has_product_id.update({'applied_on': '0_product_variant'})
+            (self - has_product_id).update({'applied_on': '1_product'})
+
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_id(self):
+        has_tmpl_id = self.filtered('product_tmpl_id')
+        for item in has_tmpl_id:
+            if item.product_id and item.product_id.product_tmpl_id != item.product_tmpl_id:
+                item.product_id = None
+
+    @api.onchange('product_id', 'product_tmpl_id', 'categ_id')
+    def _onchane_rule_content(self):
+        if not self.user_has_groups('product.group_sale_pricelist') and not self.env.context.get('default_applied_on', False):
+            # If advanced pricelists are disabled (applied_on field is not visible)
+            # AND we aren't coming from a specific product template/variant.
+            variants_rules = self.filtered('product_id')
+            template_rules = (self-variants_rules).filtered('product_tmpl_id')
+            variants_rules.update({'applied_on': '0_product_variant'})
+            template_rules.update({'applied_on': '1_product'})
+            (self-variants_rules-template_rules).update({'applied_on': '3_global'})
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if values.get('applied_on', False):
+                # Ensure item consistency for later searches.
+                applied_on = values['applied_on']
+                if applied_on == '3_global':
+                    values.update(dict(product_id=None, product_tmpl_id=None, categ_id=None))
+                elif applied_on == '2_product_category':
+                    values.update(dict(product_id=None, product_tmpl_id=None))
+                elif applied_on == '1_product':
+                    values.update(dict(product_id=None, categ_id=None))
+                elif applied_on == '0_product_variant':
+                    values.update(dict(categ_id=None))
+        return super(PricelistItem, self).create(vals_list)
+
     def write(self, values):
+        if values.get('applied_on', False):
+            # Ensure item consistency for later searches.
+            applied_on = values['applied_on']
+            if applied_on == '3_global':
+                values.update(dict(product_id=None, product_tmpl_id=None, categ_id=None))
+            elif applied_on == '2_product_category':
+                values.update(dict(product_id=None, product_tmpl_id=None))
+            elif applied_on == '1_product':
+                values.update(dict(product_id=None, categ_id=None))
+            elif applied_on == '0_product_variant':
+                values.update(dict(categ_id=None))
         res = super(PricelistItem, self).write(values)
         # When the pricelist changes we need the product.template price
         # to be invalided and recomputed.
         self.invalidate_cache()
         return res
-
-    @api.onchange('product_tmpl_id')
-    def _onchange_product_tmpl_id(self):
-        if self.user_has_groups('product.group_product_variant'):
-            self.product_id = False

@@ -71,10 +71,9 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         pricelist_item = self.env['product.pricelist.item'].create({
             'min_quantity': 2,
             'compute_price': 'percentage',
-            'percent_price': discount
+            'percent_price': discount,
+            'pricelist_id': pricelist.id,
         })
-
-        pricelist.item_ids += pricelist_item
 
         return (pricelist, pricelist_item, currency_ratio, 1 - discount / 100)
 
