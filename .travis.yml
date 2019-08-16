@@ -9,6 +9,7 @@ python:
   - "3.5"
 
 addons:
+  postgresql: "9.6"
   apt:
     packages:
       - expect-dev  # provides unbuffer utility
@@ -17,15 +18,11 @@ env:
   global:
   - VERSION="11.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
   - EXCLUDE="hw_escpos,hw_scanner,theme_bootswatch"
-  - WKHTMLTOPDF_VERSION="0.12.4"
+  - WKHTMLTOPDF_VERSION="0.12.5"
   matrix:
   - INCLUDE="applications"
   - INCLUDE="no_applications" TESTS="1"
   - INCLUDE="localization"
-
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
 
 install:
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
