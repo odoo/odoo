@@ -566,19 +566,21 @@ ListRenderer.include({
             // width.
             return 1;
         }
-        var widget = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
-        if ('widthFactor' in widget) {
-            return widget.widthFactor;
+        var widgetProto = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
+        if ('widthFactor' in widgetProto) {
+            return widgetProto.widthFactor;
         }
-        switch (field.type) {
-            case 'boolean': return '40px';
-            case 'date': return '92px';
-            case 'datetime': return '146px';
-            case 'float': return '92px';
-            case 'integer': return '74px';
-            case 'monetary': return '104px';
-            default: return 1; // evenly distribute the remaining space
-        }
+        var fixedWidthTypes = {
+            boolean: '40px',
+            date: '92px',
+            datetime: '146px',
+            float: '92px',
+            integer: '74px',
+            monetary: '104px',
+        };
+        var widget = this.state.fieldsInfo.list[column.attrs.name].widget;
+        var type = widget in fixedWidthTypes ? widget : field.type;
+        return fixedWidthTypes[type] || 1;
     },
     /**
      *
