@@ -541,7 +541,7 @@ ListRenderer.include({
      * @private
      */
     _freezeColumnWidths: function () {
-        if (!this.state.data.length) {
+        if (!this.state.data.length && !this.columnWidths) {
             // there is no record -> don't force column's widths w.r.t. their label
             return;
         }
@@ -913,7 +913,7 @@ ListRenderer.include({
     _renderHeader: function () {
         var $thead = this._super.apply(this, arguments);
 
-        if (this.editable && !this.state.data.length) {
+        if (this.editable && !this.state.data.length && !this.columnWidths) {
             // we compute the sum of the weights for each columns, excluding
             // those with an absolute width.
             var totalWidth = this.columns.reduce(function (acc, column) {
