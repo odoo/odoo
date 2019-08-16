@@ -8,17 +8,64 @@ except ImportError:
     from ConfigParser import ConfigParser
 from os.path import join as opj
 import os
+import re
 import werkzeug
 
-from odoo import models, fields
+from odoo import api, models, fields, _
 from odoo.modules.module import ad_paths
 
+# detect placeholders %s, %d, %(foo)s,...
+REGEX_PLACEHOLDERS = re.compile("%(\(\w+\)|)([0+-]|)(\d+|\*|)[diouxXcrsa]|%(\(\w+\)|)([0+-]|)(\d+|\*|)(\.(\d+|\*|)|)[eEfFgG]|%%")
+REGEX_XML_TAGS = re.compile("</?(\w+)")
 
 class IrTranslation(models.Model):
 
     _inherit = 'ir.translation'
 
     transifex_url = fields.Char("Transifex URL", compute='_get_transifex_url')
+    is_valid = fields.Boolean(compute='_compute_validity')
+
+    @api.depends('src', 'value')
+    def _compute_validity(self):
+        bad = self._get_validity()
+        bad.update({'is_valid': False})
+        good = self - bad
+        good.update({'is_valid': True})
+
+    def _get_validity(self):
+        bad = self.browse()
+        for translation in self:
+            if not translation.value:
+                continue
+
+            # detect placeholders mismatches
+            placeholders_src = sorted([m.group(0) for m in REGEX_PLACEHOLDERS.finditer(translation.src)])
+            placeholders_trans = sorted([m.group(0) for m in REGEX_PLACEHOLDERS.finditer(translation.value)])
+            if placeholders_src != placeholders_trans:
+                bad |= translation
+                continue
+
+            # detect tags mismatches
+            placeholders_src = sorted([m.group(0) for m in REGEX_XML_TAGS.finditer(translation.src)])
+            placeholders_trans = sorted([m.group(0) for m in REGEX_XML_TAGS.finditer(translation.value)])
+            if placeholders_src != placeholders_trans:
+                bad |= translation
+                continue
+
+        return bad
+
+    def action_compute_validity(self):
+        if not self.env.user._is_admin():
+            return {}
+        bad_translations = self.search([])._get_validity()
+        return {
+            'name': _('Bad Translations'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.translation',
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', bad_translations.ids)],
+        }
 
     def _get_transifex_url(self):
         """ Construct transifex URL based on the module on configuration """

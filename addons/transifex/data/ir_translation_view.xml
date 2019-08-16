@@ -9,7 +9,12 @@
                 <field name="transifex_url"
                        widget="link_button"
                        string="Transifex" />
+                <field name="is_valid"
+                       invisible="True" />
             </field>
+            <tree position="attributes">
+                <attribute name="decoration-warning">not is_valid</attribute>
+            </tree>
         </field>
     </record>
 
@@ -25,4 +30,14 @@
             </field>
         </field>
     </record>
+
+    <record id="action_check_translations" model="ir.actions.server">
+        <field name="name">Find Bad Translations</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="base.model_ir_translation"/>
+        <field name="binding_model_id" ref="base.model_ir_translation"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_compute_validity()</field>
+    </record>
+
 </odoo>
