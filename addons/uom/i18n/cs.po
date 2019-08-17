@@ -40,7 +40,7 @@ msgstr "Přidat novou kategorii měrné jednotky"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "Větší poměr"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
@@ -100,6 +100,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Kolikrát je tato měrná jednotka větší než referenční měrná jednotka v této "
+"kategorii: 1 * (tato jednotka) = poměr * (referenční jednotka)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -107,6 +109,9 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"O kolik větší nebo menší je tato jednotka ve srovnání s referenční měrnou "
+"jednotkou pro tuto kategorii: 1 * (referenční jednotka) = poměr * (tato "
+"jednotka)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -160,7 +165,7 @@ msgstr "Měrná jednotka výrobku"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Kategorie měrné jednotky produktu"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -215,6 +220,10 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"Měrná jednotka %s definovaná na řádku objednávky nepatří do stejné kategorie"
+" než měrná jednotka %s definovaná na produktu. Opravte měrnou jednotku "
+"definovanou na objednávkové řádce nebo na produktu, která by měla patřit do "
+"stejné kategorie."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -294,6 +303,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Měrné jednotky patřící do stejné kategorie mohou být\n"
+"převedeny mezi sebou. Například v kategorii\n"
+"<i>„Čas“</i>, budete mít následující měrné jednotky:\n"
+"Hodiny, dny."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:93
@@ -302,12 +315,17 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"Kategorie měrných jednotek %s by měla mít referenční měrnou jednotku. Pokud "
+"jste právě vytvořili novou kategorii, nejprve si poznamenejte „referenční“ "
+"jednotku."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
+"Kategorie měrných jednotek %s by měla mít pouze jednu referenční měrnou "
+"jednotku."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -329,7 +347,7 @@ msgstr "Pracovní čas"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr ""
+msgstr "Pro každý typ měření můžete mít pouze jednu kategorii."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
@@ -415,7 +433,7 @@ msgstr "míle(e)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz(s)"
-msgstr ""
+msgstr "oz(s)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt

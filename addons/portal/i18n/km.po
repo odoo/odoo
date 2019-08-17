@@ -26,23 +26,23 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:43
 #, python-format
 msgid "%d days overdue"
-msgstr ""
+msgstr "%dថ្ងៃហួសកំណត់។"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:277
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr ""
+msgstr "%sមិនមែនជាឯកសារយោងនៃរបាយការណ៍ទេ។"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
-msgstr ""
+msgstr "<b>ចូល</b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/>ត្រលប់ទៅរបៀបកែសម្រួល"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -50,36 +50,38 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/>កែសម្រួល"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">ត្រងតាម៖</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">ដាក់ជាក្រុម៖</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">តម្រៀបតាម៖</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "<strong>Open </strong>"
-msgstr ""
+msgstr "<strong>បើក </strong>"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -167,13 +169,95 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- ក្បាលទំព័រ -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">គណនី​របស់​អ្នក</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.user_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- មាតិការ -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        ជូនចំពោះ ${object.user_id.name or ''},<br/> <br/>\n"
+"                        អ្នកត្រូវបានផ្តល់សិទ្ធិចូលដំណើរការ។ ${object.user_id.company_id.name}'s portal.<br/>\n"
+"                        ទិន្នន័យគណនីចូលរបស់អ្នកគឺ\n"
+"                        <ul>\n"
+"                            <li>ឈ្មោះ​អ្នកប្រើប្រាស់: ${object.user_id.login or ''}</li>\n"
+"                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>មូលដ្ឋានទិន្នន័យ៖ ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                        </ul>\n"
+"                        អ្នកអាចកំណត់ឬប្តូរលេខសំងាត់របស់អ្នកតាមរយៈ url ខាងក្រោម៖\n"
+"                        <ul>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                        </ul>\n"
+"                        ${object.wizard_id.welcome_message or ''}\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- បាតកថា -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!--ទាញយកដោយ -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"       ទាញយកដោយ <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:19
 #, python-format
 msgid "Accept & Sign"
-msgstr ""
+msgstr "ព្រមទទួលនិងចុះហត្ថលេខា"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
@@ -189,12 +273,12 @@ msgstr "បន្ថែមចំណាំ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr ""
+msgstr "បន្ថែមទំនាក់ទំនងដើម្បីចែករំលែកឯកសារ ..."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr ""
+msgstr "បន្ថែមមាតិកាបន្ថែមដើម្បីបង្ហាញនៅក្នុងអ៊ីម៉ែល។"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -226,6 +310,8 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"ការផ្លាស់ប្តូរលេខពន្ធមិនត្រូវបានអនុញ្ញាតនៅពេលឯកសារ()ត្រូវបានចេញសម្រាប់គណនីរបស់អ្នក។"
+" សូមទាក់ទងមកយើងដោយផ្ទាល់សម្រាប់ប្រតិបត្តិការនេះ។"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -233,6 +319,8 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"ការផ្លាស់ប្តូរឈ្មោះក្រុមហ៊ុនមិនត្រូវបានអនុញ្ញាតទេនៅពេលឯកសារ()ត្រូវបានចេញសម្រាប់គណនីរបស់អ្នក។"
+" សូមទាក់ទងមកយើងដោយផ្ទាល់សម្រាប់ប្រតិបត្តិការនេះ។"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -244,14 +332,14 @@ msgstr "ក្រុង"
 #: code:addons/portal/static/src/xml/portal_signature.xml:12
 #, python-format
 msgid "Clear"
-msgstr ""
+msgstr "ច្បាស់"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "ចុចត្រង់នេះដើម្បីមើលឯកសាររបស់អ្នក"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -270,6 +358,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"បញ្ជាក់\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -314,7 +404,7 @@ msgstr "អាសយដ្ឋានវិបផតថលរបស់អតិថ
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr ""
+msgstr "ជូនចំពោះ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
@@ -329,21 +419,21 @@ msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "គូរហត្ថលេខារបស់អ្នក"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:41
 #, python-format
 msgid "Due in %d days"
-msgstr ""
+msgstr "ដោយ​សារ​តែ​នៅ​ក្នុង%dថ្ងៃ"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:39
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "ដល់ថ្ងៃនេះ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -354,14 +444,14 @@ msgstr "អុីម៉ែល"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "អ៊ីម៉ែលខ្សែស្រឡាយ"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
-msgstr ""
+msgstr "ផ្តល់សិទ្ធិចូលផតថល"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -371,7 +461,7 @@ msgstr "HTTP ជុំវិញ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
-msgstr ""
+msgstr "ផ្ទះ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__id
@@ -396,7 +486,7 @@ msgstr "អុីម៉ែលមិនត្រឹមត្រូវ! សូម�
 #: code:addons/portal/controllers/portal.py:272
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "ប្រភេទរបាយការណ៍មិនត្រឹមត្រូវ៖%s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -430,12 +520,12 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "ទុកឱ្យសេចក្តីអធិប្បាយ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
-msgstr ""
+msgstr "តំណ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -463,7 +553,7 @@ msgstr "គណនីរបស់ខ្ញុំ"
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr ""
+msgstr "បន្ទាប់"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -473,7 +563,7 @@ msgstr "កំណត់សំគាល់"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -485,7 +575,7 @@ msgstr "Odoo និមិត្តសញ្ញា"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:39
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "អូ! មាន​អ្វីមួយ​មិន​ប្រក្រតី។ ព្យាយាមផ្ទុកទំព័រឡើងវិញហើយចូល។"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -500,12 +590,12 @@ msgstr "URL ចូលដំណើរការវិបផតថល"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr ""
+msgstr "ផតថល Mixin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "ការចែកចាយវិបផតថល"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -516,26 +606,26 @@ msgstr "កំណត់អ្នកប្រើវេបសាយ"
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
-msgstr ""
+msgstr "ឧបត្ថម្ភដោយ"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "Prev"
-msgstr ""
+msgstr "មុន"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:84
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "មុន"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_chatter.js:109
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "បោះពុម្ភផ្សាយ %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -591,7 +681,7 @@ msgstr "ទំនាក់ទំនងជាច្រើនមានអុីម
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
-msgstr ""
+msgstr "ចែករំលែកឯកសារ"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:97
@@ -626,25 +716,25 @@ msgstr "ផ្លូវ"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr ""
+msgstr "សូមអរគុណ!"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:12
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "មិនមានមតិយោបល់សម្រាប់ពេលនេះទេ។"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:237
 #, python-format
 msgid "This document does not exist."
-msgstr ""
+msgstr "ឯកសារនេះមិនមានទេ"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr ""
+msgstr "នេះគឺជាការមើលជាមុននៃវិបផតថលរបស់អតិថិជន។"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -671,7 +761,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "បិទ / បើកតម្រង"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -687,7 +777,7 @@ msgstr "លេខសំគាល់ VAT"
 #: code:addons/portal/models/portal_mixin.py:83
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "មើល%s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
@@ -747,26 +837,26 @@ msgstr "ទំរង់ណែនាំ"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:31
 #, python-format
 msgid "Write a message..."
-msgstr ""
+msgstr "សរសេរសារ ..."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_share.py:59
 #: code:addons/portal/wizard/portal_share.py:71
 #, python-format
 msgid "You are invited to access %s"
-msgstr ""
+msgstr "អ្នកត្រូវបានអញ្ជើញឱ្យចូលប្រើ%s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr ""
+msgstr "អ្នកត្រូវបានអញ្ជើញឱ្យចូលមើលឯកសារដូចខាងក្រោមៈ"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "អ្នក​ត្រូវតែ​ជា"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:175
@@ -779,7 +869,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "ព័ត៌មានលំអិតទំនាក់ទំនងរបស់អ្នក"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -791,7 +881,7 @@ msgstr "ព័ត៌មានពិស្តារ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "ឯកសាររបស់អ្នក"
 
 #. module: portal
 #. openerp-web
@@ -804,12 +894,12 @@ msgstr "ឈ្មោះ​របស់​អ្នក​"
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${object.user_id.company_id.name}"
-msgstr ""
+msgstr "គណនី Odoo របស់អ្នកនៅ $ {object.user_id.company_id.name}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr ""
+msgstr "ទំនាក់ទំនងរបស់អ្នក"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -821,33 +911,33 @@ msgstr "លេខប៉ុស្តិ៍"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "រូបតំណាង"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:9
 #, python-format
 msgid "comment"
-msgstr ""
+msgstr "មតិយោបល់"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:10
 #, python-format
 msgid "comments"
-msgstr ""
+msgstr "មតិយោបល់"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "បានចូល"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -859,4 +949,4 @@ msgstr "ជ្រើសរើស ..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "ដើម្បី​ប្រកាស​មតិយោបល់"

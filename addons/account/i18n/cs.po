@@ -39,6 +39,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Stav 'Koncept' se používá, když uživatel rozepíše novou a nepotvrzenou fakturu.\n"
+"* Stav 'Otevřená' se používá, když uživatel vytvoří fakturu, vygeneruje se číslo faktury. Zůstane v otevřeném stavu, dokud uživatel neuhradí fakturu.\n"
+"* Stav „K platbě“ se používá, pokud byly platby zaregistrovány pro celou fakturu v deníku nakonfigurovaném tak, aby zaúčtovaly záznamy pouze při bankovním odsouhlasení a některé z nich ještě nebyly sladěny s řádkem bankovního výpisu.\n"
+"* Stav „Placená“ je nastaven automaticky při uhrazení faktury. Související záznamy v deníku mohou nebo nemusí být sladěny.\n"
+"* Stav „Zrušena“ se používá, když uživatel zruší fakturu."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -2805,7 +2810,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr ""
+msgstr "Kontroly"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__child_ids
@@ -7875,7 +7880,7 @@ msgstr "Procento z ceny"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr ""
+msgstr "Procentní sazba daně z ceny zahrnuta"
 
 #. module: account
 #: selection:account.reconcile.model,second_amount_type:0
@@ -8604,7 +8609,7 @@ msgstr "Příjem"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_deferred_revenue
 msgid "Revenue Recognition"
-msgstr ""
+msgstr "Uznání výnosů"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_line_id
