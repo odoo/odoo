@@ -708,7 +708,8 @@ class ChromeBrowser():
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
-        self._websocket_send('Network.setCookie', params=params)
+        _id = self._websocket_send('Network.setCookie', params=params)
+        return self._websocket_wait_id(_id)
 
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
