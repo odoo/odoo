@@ -47,12 +47,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr ""
+msgstr "3cestné porovnávání"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr ""
+msgstr "3cestné porovnávání: nákupy, recepce a účty"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -123,6 +123,8 @@ msgid ""
 "<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-file-text\"/> "
 "Waiting for Bill</span>"
 msgstr ""
+"<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-file-text\"/> Čekání"
+" na účtenku</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -152,17 +154,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "<span class=\"o_stat_text\">Purchased</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Zakoupeno</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
-msgstr ""
+msgstr "<strong>Množství</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr ""
+msgstr "<strong>Datum požadavku</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -178,17 +180,17 @@ msgstr "<strong>Popis</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr ""
+msgstr "<strong>Očekávané datum</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr ""
+msgstr "<strong>Datum objednávky:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Our Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>Referenční číslo naší objednávky:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -247,7 +249,7 @@ msgstr "<strong>Jednotková cena</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>Referenční číslo vaší objednávky:</strong>"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -263,7 +265,7 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr ""
+msgstr "Varování lze nastavit na produkt nebo na zákazníka (nákup)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -288,7 +290,7 @@ msgstr "Stav činností"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__purchase_id
 msgid "Add Purchase Order"
-msgstr ""
+msgstr "Přidat objednávku"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:50
@@ -320,12 +322,12 @@ msgstr "Analytické značky"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
 msgid "Approval Date"
-msgstr ""
+msgstr "Datum schválení"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr ""
+msgstr "Schválit objednávku"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_line__purchase_id
@@ -333,6 +335,8 @@ msgid ""
 "Associated Purchase Order. Filled in automatically when a PO is chosen on "
 "the vendor bill."
 msgstr ""
+"Přidružená objednávka. Vyplní se automaticky, když je na účtu dodavatele "
+"vybrána položka Objednávka."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -347,7 +351,7 @@ msgstr "Automatické dokončování"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "Průměrná doba dodání"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -377,7 +381,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr ""
+msgstr "Účtované množství:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
@@ -446,13 +450,13 @@ msgstr "Zrušeno"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Cancelled Purchase Order #"
-msgstr ""
+msgstr "Zrušená objednávka č."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:509
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Nelze odstranit řádek objednávky, který je ve stavu '%s'."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
@@ -502,7 +506,7 @@ msgstr "Potvrdit objednávku"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Confirm purchase orders in one step"
-msgstr ""
+msgstr "Potvrdit objednávky v jednom kroku"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
@@ -608,7 +612,7 @@ msgstr "Dnů k ověření"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr ""
+msgstr "Definujte své smluvní podmínky ..."
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
