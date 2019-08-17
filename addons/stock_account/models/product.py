@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, float_compare
 from odoo.exceptions import ValidationError
 
 
@@ -134,7 +134,7 @@ class ProductProduct(models.Model):
             vals['remaining_qty'] = quantity
         return vals
 
-    def _prepare_out_svl_vals(self, quantity, company):
+    def _prepare_out_svl_vals(self, quantity, company, lots=None):
         """Prepare the values for a stock valuation layer created by a delivery.
 
         :param quantity: the quantity to value, expressed in `self.uom_id`
@@ -151,7 +151,7 @@ class ProductProduct(models.Model):
             'quantity': quantity,
         }
         if self.cost_method in ('average', 'fifo'):
-            fifo_vals = self._run_fifo(abs(quantity), company)
+            fifo_vals = self._run_fifo(abs(quantity), company, lots)
             vals['remaining_qty'] = fifo_vals.get('remaining_qty')
             if self.cost_method == 'fifo':
                 vals.update(fifo_vals)
@@ -235,17 +235,48 @@ class ProductProduct(models.Model):
 
         # Actually update the standard price.
         self.with_context(force_company=company_id.id).sudo().write({'standard_price': new_price})
+        
+    def _get_fifo_svl_candidates(self, quantity, company, lots=None):
+        """
+        Find back incoming stock valuation layers (called candidates here). If lots are given, this will find
+        the first incomming stock valuation layers associatted with the lots before finding further.
 
-    def _run_fifo(self, quantity, company):
+        :param quantity: the quantity of the first incoming stock valuation layers
+        :param company: the corresponding company of the operation
+        :param lots: if passed, force finding back the the first incoming stock valuation layers corresponding the the given lots/serials recordset
+        :return recordset of stock.valuation.layer of the product that are associated with the given lots (if lots is given) and have positive remaining quantity
+        """
+        self.ensure_one()
+        SVL = self.env['stock.valuation.layer']
+
+        # in order to support the Specific Identification Method, we must respect the lots.
+        # so, we find cadidates that have a lot associated first
+        candidates = self.env['stock.valuation.layer']
+        if lots:
+            candidates += SVL.search([
+                ('product_id', '=', self.id),
+                ('remaining_qty', '>', 0),
+                ('company_id', '=', company.id),
+                ('lot_id', 'in', lots.ids)
+            ])
+        # if the sum of the candidates' remaining quantity is still less than the given quantity, continue to find further
+        qty_with_lots = candidates and sum([candidate.remaining_qty for candidate in candidates]) or 0.0
+        if float_compare(quantity, qty_with_lots, precision_rounding=self.uom_id.rounding) == 1:
+            candidates += SVL.search([
+                ('product_id', '=', self.id),
+                ('remaining_qty', '>', 0),
+                ('company_id', '=', company.id),
+                ('id', 'not in', candidates.ids)
+            ])
+        return candidates
+
+    def _run_fifo(self, quantity, company, lots=None):
         self.ensure_one()
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].search([
-            ('product_id', '=', self.id),
-            ('remaining_qty', '>', 0),
-            ('company_id', '=', company.id),
-        ])
+        candidates = self._get_fifo_svl_candidates(quantity, company, lots)
+        
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:

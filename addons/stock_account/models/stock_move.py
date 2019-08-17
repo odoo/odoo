@@ -125,109 +125,6 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.location_id.usage == 'customer' and self.location_dest_id.usage == 'supplier'
 
-    def _prepare_common_svl_vals(self):
-        """When a `stock.valuation.layer` is created from a `stock.move`, we can prepare a dict of
-        common vals.
-
-        :returns: the common values when creating a `stock.valuation.layer` from a `stock.move`
-        :rtype: dict
-        """
-        self.ensure_one()
-        return {
-            'stock_move_id': self.id,
-            'company_id': self.company_id.id,
-            'product_id': self.product_id.id,
-            'description': self.name,
-        }
-
-    def _create_in_svl(self, forced_quantity=None):
-        """Create a `stock.valuation.layer` from `self`.
-
-        :param forced_quantity: under some circunstances, the quantity to value is different than
-            the initial demand of the move (Default value = None)
-        """
-        svl_vals_list = []
-        for move in self:
-            valued_move_lines = move._get_in_move_lines()
-            valued_quantity = 0
-            for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
-            unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
-            if move.product_id.cost_method == 'standard':
-                unit_cost = move.product_id.standard_price
-            svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
-            svl_vals.update(move._prepare_common_svl_vals())
-            if forced_quantity:
-                svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
-            svl_vals_list.append(svl_vals)
-        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
-
-    def _create_out_svl(self, forced_quantity=None):
-        """Create a `stock.valuation.layer` from `self`.
-
-        :param forced_quantity: under some circunstances, the quantity to value is different than
-            the initial demand of the move (Default value = None)
-        """
-        svl_vals_list = []
-        for move in self:
-            valued_move_lines = move._get_out_move_lines()
-            valued_quantity = 0
-            for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
-            svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
-            svl_vals.update(move._prepare_common_svl_vals())
-            if forced_quantity:
-                svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
-            svl_vals_list.append(svl_vals)
-        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
-
-    def _create_dropshipped_svl(self, forced_quantity=None):
-        """Create a `stock.valuation.layer` from `self`.
-
-        :param forced_quantity: under some circunstances, the quantity to value is different than
-            the initial demand of the move (Default value = None)
-        """
-        svl_vals_list = []
-        for move in self:
-            valued_move_lines = move.move_line_ids
-            valued_quantity = 0
-            for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
-            quantity = forced_quantity or valued_quantity
-
-            unit_cost = move._get_price_unit()
-            if move.product_id.cost_method == 'standard':
-                unit_cost = move.product_id.standard_price
-
-            common_vals = dict(move._prepare_common_svl_vals(), remaining_qty=0)
-
-            # create the in
-            in_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity,
-                'quantity': quantity,
-            }
-            in_vals.update(common_vals)
-            svl_vals_list.append(in_vals)
-
-            # create the out
-            out_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity * -1,
-                'quantity': quantity * -1,
-            }
-            out_vals.update(common_vals)
-            svl_vals_list.append(out_vals)
-        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
-
-    def _create_dropshipped_returned_svl(self, forced_quantity=None):
-        """Create a `stock.valuation.layer` from `self`.
-
-        :param forced_quantity: under some circunstances, the quantity to value is different than
-            the initial demand of the move (Default value = None)
-        """
-        return self._create_dropshipped_svl(forced_quantity=forced_quantity)
-
     def _action_done(self, cancel_backorder=False):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
@@ -248,7 +145,7 @@ class StockMove(models.Model):
             todo_valued_moves = valued_moves[valued_type]
             if todo_valued_moves:
                 todo_valued_moves._sanity_check_for_valuation()
-                stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
+                stock_valuation_layers |= getattr(todo_valued_moves.mapped('move_line_ids'), '_create_%s_svl' % valued_type)()
                 continue
 
         for svl in stock_valuation_layers:
@@ -383,7 +280,7 @@ class StockMove(models.Model):
             'ref': description,
             'partner_id': partner_id,
             'credit': credit_value if credit_value > 0 else 0,
-            'debit': -credit_value if credit_value < 0 else 0,
+            'debit':-credit_value if credit_value < 0 else 0,
             'account_id': credit_account_id,
         }
 
