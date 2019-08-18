@@ -129,6 +129,9 @@ msgid ""
 "['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">Az alapanyagok nem elérhetőek!</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -553,8 +556,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
-"Anyagjegyzék lehetővé teszi az előállítani kívánt termékhez való alapanyagok"
-" meghatározását."
+"Az anyagjegyzék lehetővé teszi egy kész termék előállításához szükséges "
+"alapanyagok listájának meghatározását."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -2834,12 +2837,12 @@ msgstr "Mennyiség:"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Raw Material"
-msgstr "Nyersanyag"
+msgstr "Alapanyag"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
 msgid "Raw Materials"
-msgstr "Nyersanyagok"
+msgstr "Alapanyagok"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
