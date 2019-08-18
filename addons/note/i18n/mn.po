@@ -1,16 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# nasaaskii <nasaaskii@gmail.com>, 2018
+# Batzul B <batzul.active@gmail.com>, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Ganbold BATKHUYAG <gbatkhuyag@gmail.com>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,9 +27,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "Үйлдэл Шаардлагатай"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -47,31 +77,31 @@ msgstr "Ажилбарын Төлөв"
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "Ажилбарын төрөл"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr ""
+msgstr "Шинэ хувийн тэмдэглэл нэмэх"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Шинэ пайз нэмэх"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:14
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "Тэмдэглэл нэмэх"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:6
 #, python-format
 msgid "Add new note"
-msgstr ""
+msgstr "Шинэ тэмдэглэл нэмэх"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -81,22 +111,12 @@ msgstr "Архив"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Хавсралтын тоо"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Наасан тэмдэглэлийн ангилалаар"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "Ангилал"
 
 #. module: note
 #. openerp-web
@@ -150,7 +170,7 @@ msgstr "Дэлгэцийн Нэр"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Эвхэгддэг цэс"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
@@ -160,7 +180,7 @@ msgstr "Анхныхаараа эвхэгдсэн байна"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
-msgstr ""
+msgstr "Дагагч"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -209,7 +229,7 @@ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад ан
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Үүнийг сонговол алдаа үүсэх үед зурвасууд ирнэ."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
@@ -245,7 +265,7 @@ msgstr "Хожимдсон Үйл ажиллагаанууд"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Үндсэн хавсралт"
 
 #. module: note
 #: selection:mail.activity.type,category:0
@@ -255,12 +275,12 @@ msgstr "Уулзалт"
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr ""
+msgstr "Уулзалтын минут"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Алдаа үүссэн талаарх мессеж"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -280,7 +300,7 @@ msgstr "Шинэ"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Дараагийн ажилбарын эцсийн огноо"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
@@ -290,7 +310,12 @@ msgstr "Дараагийн Ажилбарын Хураангуй"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Дараагийн ажилбарын төрөл"
+
+#. module: note
+#: selection:mail.activity.type,category:0
+msgid "None"
+msgstr "Байхгүй"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -335,6 +360,8 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
+"Тэмдэглэл бол хувийн нууц, гэвч та хүсвэл тэдгээрт дагагчид нэмэх аргаар бусадтай хуваалцаж болно.\n"
+"           (Хурлын тэмдэглэл хөтлөхөд ашиглаж болно)."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -344,7 +371,7 @@ msgstr "Үйлдлийн тоо"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Алдааны тоо"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
@@ -354,17 +381,12 @@ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Уншаагүй зурвасын тоо"
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Бусад"
 
 #. module: note
 #: selection:note.note,activity_state:0
@@ -390,20 +412,20 @@ msgstr "Төлөвлөсөн"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
-msgstr ""
+msgstr "Холбоотой тэмдэглэл"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:23
 #, python-format
 msgid "Remember..."
-msgstr ""
+msgstr "Санамж..."
 
 #. module: note
 #: selection:mail.activity.type,category:0
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "Сануулга"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
@@ -415,7 +437,7 @@ msgstr "Хариуцагч хэрэглэгч"
 #: code:addons/note/static/src/xml/systray.xml:25
 #, python-format
 msgid "SAVE"
-msgstr ""
+msgstr "ХАДГАЛАХ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -428,7 +450,7 @@ msgstr "Дараалал"
 #: code:addons/note/static/src/xml/systray.xml:18
 #, python-format
 msgid "Set date and time"
-msgstr ""
+msgstr "Огноо цаг оноох"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -476,6 +498,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Ажилбаруудын төлөв байдал\n"
+"Хоцорсон: Гүйцэтгэх огноо нь аль хэдий нь өнгөрсөн\n"
+"Өнөөдөр: Өнөөдөр гүйцэтгэх ёстой\n"
+"Төлөвлөгдсөн: Ирээдүйд гүйцэтгэх ажилбарууд"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
@@ -499,7 +525,7 @@ msgstr "Пайзууд"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:97
+#: code:addons/note/static/src/js/systray_activity_menu.js:98
 #: selection:note.note,activity_state:0
 #, python-format
 msgid "Today"
@@ -526,6 +552,11 @@ msgid "Unread Messages Counter"
 msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: note
+#: selection:mail.activity.type,category:0
+msgid "Upload Document"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Тэмдэглэлийн үеийг эрэмбэлэхэд хэрэглэгддэг"
@@ -534,13 +565,3 @@ msgstr "Тэмдэглэлийн үеийг эрэмбэлэхэд хэрэгл�
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Хэрэглэгчид"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "Вебсайтын зурвасууд"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "Вебсайтын харилцааны түүх"

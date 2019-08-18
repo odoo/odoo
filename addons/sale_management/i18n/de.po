@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_management
+# 	* sale_management
 # 
 # Translators:
 # Wolfgang Taferner, 2017
@@ -10,17 +10,18 @@
 # Rudolf Schnapka <rs@techno-flex.de>, 2019
 # Mathias Markl <mathias.markl@mukit.at>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Martin Trigaux, 2019
+# darenkster <inactive+darenkster@transifex.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2017-12-13 14:57+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"Last-Translator: darenkster <inactive+darenkster@transifex.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,19 +36,9 @@ msgid "% discount"
 msgstr "% Rabatt"
 
 #. module: sale_management
-#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
-msgid "4 Person Desk"
-msgstr "Schreibtisch für 4 Personen"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-msgid "<span>Discount</span>"
-msgstr "<span>Rabatt</span>"
-
-#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
-msgid "<span>Optional Products</span>"
-msgstr "<span>Optionale Produkte</span>"
+msgid "<span>Options</span>"
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -180,6 +171,11 @@ msgid "Digest"
 msgstr "Übersicht"
 
 #. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "Disc.%"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__discount
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__discount
@@ -302,11 +298,6 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr "Anzahl der Tage für die Berechnung des Gültigkeitsdatums des Angebots"
 
 #. module: sale_management
-#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
-msgid "Office Chair"
-msgstr "Büro Stuhl"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "Online-Zahlung"
@@ -319,7 +310,6 @@ msgstr "Online-Unterschrift"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Optional Products"
 msgstr "Optionale Produkte"
@@ -329,6 +319,11 @@ msgstr "Optionale Produkte"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__sale_order_option_ids
 msgid "Optional Products Lines"
 msgstr "Optionale Produktpositionen"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Options"
+msgstr "Optionen"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -543,6 +538,11 @@ msgid "Unit of Measure "
 msgstr "Mengeneinheit "
 
 #. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "UoM"
+msgstr "ME"
+
+#. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
@@ -554,7 +554,7 @@ msgstr ""
 "                Nutzen Sie Cross-Selling und Rabatte, um Ihre Umsätze zu steigern."
 
 #. module: sale_management
-#: code:addons/sale_management/models/sale_order.py:193
+#: code:addons/sale_management/models/sale_order.py:198
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr ""

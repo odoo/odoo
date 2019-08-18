@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_wishlist
+# 	* website_sale_wishlist
 # 
 # Translators:
 # Bohdan Lisnenko, 2018
@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 08:00+0000\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
 "PO-Revision-Date: 2017-07-17 09:13+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -38,9 +38,17 @@ msgstr "<small><i class=\"fa fa-trash-o\"/> Видалити</small>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
+"Add to wishlist"
+msgstr ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
+"Додати у список побажань"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -59,7 +67,6 @@ msgstr "Додайте товар у свій кошик, але залиште 
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
 msgstr "Додати в список побажань"
 
@@ -92,6 +99,11 @@ msgstr "Валюта"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
+
+#. module: website_sale_wishlist
+#: sql_constraint:product.wishlist:0
+msgid "Duplicated wishlisted product for this partner."
+msgstr "Дубльовані товари списку побажань для цього партнера."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id

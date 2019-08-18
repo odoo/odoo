@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * snailmail
+# 	* snailmail
 # 
 # Translators:
 # Martin Trigaux, 2019
@@ -17,9 +17,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2019-03-20 14:59+0000\n"
 "Last-Translator: Karol Rybak <karolrybak85@gmail.com>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
@@ -89,13 +89,13 @@ msgid "An error occured when sending a letter with Snailmail"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:320
+#: code:addons/snailmail/models/snailmail_letter.py:318
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:273
+#: code:addons/snailmail/models/snailmail_letter.py:271
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr ""
@@ -198,7 +198,6 @@ msgid "Color"
 msgstr "Kolor"
 
 #. module: snailmail
-#: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "Comment"
 msgstr "Komentarz"
@@ -286,7 +285,6 @@ msgid "Document ID"
 msgstr "ID dokumentu"
 
 #. module: snailmail
-#: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "Email"
 msgstr "E-mail"
@@ -380,7 +378,6 @@ msgid "Last Updated on"
 msgstr "Data ostatniej aktualizacji"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_mail_compose_message__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
@@ -388,7 +385,7 @@ msgid "Letter"
 msgstr "Letter"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:84
+#: code:addons/snailmail/models/snailmail_letter.py:83
 #, python-format
 msgid "Letter sent by post with Snailmail"
 msgstr ""
@@ -410,7 +407,6 @@ msgid "Message"
 msgstr "Wiadomość"
 
 #. module: snailmail
-#: model:ir.model.fields,help:snailmail.field_mail_compose_message__message_type
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,help:snailmail.field_mail_message__message_type
 msgid ""
@@ -432,7 +428,7 @@ msgid "NO_PRICE_AVAILABLE"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:269
+#: code:addons/snailmail/models/snailmail_letter.py:267
 #, python-format
 msgid "One or more required fields are empty."
 msgstr ""
@@ -511,7 +507,6 @@ msgid "Sent by"
 msgstr ""
 
 #. module: snailmail
-#: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "Snailmail"
 msgstr ""
@@ -528,7 +523,6 @@ msgid "Snailmail Letters"
 msgstr ""
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_mail_compose_message__snailmail_status
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_status
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_status
 msgid "Snailmail Status"
@@ -540,7 +534,6 @@ msgid "Snailmail Status Message"
 msgstr ""
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_mail_compose_message__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
 msgid "Snailmail message in error"
@@ -588,7 +581,6 @@ msgid "Street2"
 msgstr "Ulica2"
 
 #. module: snailmail
-#: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "System notification"
 msgstr "Powiadomienie systemowe"
@@ -599,13 +591,13 @@ msgid "TRIAL_ERROR"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:291
+#: code:addons/snailmail/models/snailmail_letter.py:289
 #, python-format
 msgid "The address of the recipient is not complete"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:271
+#: code:addons/snailmail/models/snailmail_letter.py:269
 #, python-format
 msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
@@ -613,7 +605,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:267
+#: code:addons/snailmail/models/snailmail_letter.py:265
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr ""
@@ -626,14 +618,13 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:315
+#: code:addons/snailmail/models/snailmail_letter.py:313
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_mail_compose_message__message_type
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__message_type
 msgid "Type"
@@ -660,6 +651,11 @@ msgid "Update address of partner"
 msgstr ""
 
 #. module: snailmail
+#: selection:mail.message,message_type:0
+msgid "User Specific Notification"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
@@ -668,7 +664,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:265
+#: code:addons/snailmail/models/snailmail_letter.py:263
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
@@ -676,7 +672,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:262
+#: code:addons/snailmail/models/snailmail_letter.py:260
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "

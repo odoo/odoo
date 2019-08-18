@@ -1,17 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_landed_costs
+# 	* stock_landed_costs
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Michael Yeung, 2018
+# Bill Hsu <hcm86@icloud.com>, 2018
+# sejun huang <sejun.huang@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,13 +25,18 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:346
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:350
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:367
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:371
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:358
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:362
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:379
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:383
 #, python-format
 msgid " already out"
 msgstr "已退訂"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
+msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -44,6 +54,16 @@ msgid "Action Needed"
 msgstr "需要採取行動"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid "Activity State"
+msgstr "活動狀態"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
 msgstr "額外的到岸成本"
@@ -51,7 +71,7 @@ msgstr "額外的到岸成本"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數量"
+msgstr "附件數"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -95,7 +115,7 @@ msgstr "公司"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__company_id
 msgid "Company related to this journal"
-msgstr "公司關聯到該日記帳"
+msgstr "日記帳相關的公司"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -119,7 +139,7 @@ msgid "Cost Lines"
 msgstr "成本明細"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:93
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:88
 #, python-format
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
@@ -235,6 +255,11 @@ msgstr "之前成本（每個單位）"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Future Activities"
+msgstr "未來活動"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
 msgstr "分組"
 
@@ -299,8 +324,8 @@ msgstr "日記帳分錄"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
 msgid "Landed Cost"
 msgstr "到岸成本"
 
@@ -363,14 +388,19 @@ msgid "Last Updated on"
 msgstr "最後更新時間"
 
 #. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Late Activities"
+msgstr "逾期活動"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "附件"
+msgstr "主要附件"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
 msgid "Message Delivery error"
-msgstr "消息遞送錯誤"
+msgstr "郵件傳遞錯誤"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
@@ -384,14 +414,29 @@ msgid "Name"
 msgstr "名稱"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:24
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:64
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:18
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:59
 #, python-format
 msgid "New"
 msgstr "新建"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:91
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活動截止日期"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活動摘要"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活動類型"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
@@ -405,7 +450,7 @@ msgstr "行動數量"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
 msgid "Number of error"
-msgstr "錯誤數"
+msgstr "錯誤數量"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
@@ -415,7 +460,7 @@ msgstr "需要行動消息的數量"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "遞送錯誤的消息數量"
+msgstr "發送錯誤的郵件數"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread_counter
@@ -423,13 +468,23 @@ msgid "Number of unread messages"
 msgstr "未讀消息的數量"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:89
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:84
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr "只有批准草稿狀態的到岸成本"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:314
+#: selection:stock.landed.cost,activity_state:0
+msgid "Overdue"
+msgstr "逾期"
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,activity_state:0
+msgid "Planned"
+msgstr "已安排"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:326
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "請配置產品: %s的庫存費用帳戶。"
@@ -466,6 +521,16 @@ msgid "Quantity"
 msgstr "數量"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
+msgid "Responsible User"
+msgstr "責任使用者"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Show all records which has next action date is before today"
+msgstr "顯示在今天之前的下一個行動日期的所有記錄"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -475,12 +540,25 @@ msgstr "拆分方法"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "狀態"
+msgstr "州/省"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Status"
 msgstr "狀態"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"根據活動的狀態 \n"
+" 逾期：已經超過截止日期 \n"
+" 現今：活動日期是當天 \n"
+" 計劃：未來活動。"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
@@ -493,10 +571,25 @@ msgid "Stock Landed Cost Line"
 msgstr "股票落地成本項目"
 
 #. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
 msgstr "庫存移動"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,activity_state:0
+msgid "Today"
+msgstr "今天"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Today Activities"
+msgstr "今天的活動"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
@@ -524,12 +617,17 @@ msgid "Validate"
 msgstr "審核"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:83
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:78
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr "已經驗證的到岸成本不能被取消，但是您可以創建一個負的逆轉到岸成本"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation"
+msgstr "計價"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -563,7 +661,7 @@ msgid "Weight"
 msgstr "重量"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:163
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:166
 #, python-format
 msgid ""
 "You cannot apply landed costs on the chosen transfer(s). Landed costs can "

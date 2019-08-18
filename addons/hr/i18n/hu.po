@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr
+# 	* hr
 # 
 # Translators:
-# Tamás Dombos, 2018
-# Martin Trigaux, 2018
-# krnkris, 2018
-# gezza <geza.nagy@oregional.hu>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Tamás Dombos, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019
+# Martin Trigaux, 2019
+# krnkris, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/models/hr_job.py:55
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -36,41 +37,33 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "<i>Work in a fun atmosphere</i>"
-msgstr "<i>Dolgozni egy vidám környezetben</i>"
+#: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
+msgid "'Print Badge - %s' % (object.name).replace('/', '')"
+msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "<i>You are passionate</i>"
-msgstr "<i>Szenvedélyes vagy</i>"
+#: code:addons/hr/models/hr_employee.py:259
+#, python-format
+msgid ""
+"<b>Congratulations !</b> May I recommand you to setup an <a "
+"href=\"%s\">onboarding plan ?</a>"
+msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "<i>You autonomously and quickly learn</i>"
-msgstr "<i>Önállóan és gyorsan tanul</i>"
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "<i>You easily manage them</i>"
-msgstr "<i>Könnyen kezeled ezeket</i>"
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -120,35 +113,24 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid ""
-"A full time job, with an attractive salary package in a small team of smart "
-"people. You will start contract with a full technical and functional "
-"training. If you are passionate, motivate and flexible apply for this job, "
-"you will certainly join the best company ever."
+#: sql_constraint:hr.employee:0
+msgid "A user cannot be linked to multiple employees in the same company."
 msgstr ""
-"Egy teljes munkaidős munka, vonzó fizetési csomaggal egy értelmes emberből "
-"álló kis csoportban. Szerződtetés esetén teljes technikai és gyakorlati "
-"tréninggel fog kezdeni. Ha munka iránt elkötelezett, motivált és sokoldalú "
-"akkor jelentkezzen erre az állásra, mert biztos az egyik legjobb vállalathoz"
-" fog bekerülni."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "A good job in a young and dynamic team"
-msgstr "Jó munkahely egy fiatal és dinamikus csapatban"
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
+msgid "According to the IP address"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
+msgid "According to the amount of sent emails"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
+msgid "According to the system login (User status on chat)"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -160,13 +142,29 @@ msgstr "Művelet szükséges"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
+#: model:ir.model.fields,field_description:hr.field_hr_plan__active
 msgid "Active"
 msgstr "Aktív"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Activities"
 msgstr "Tevékenységek"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
+msgid "Activity"
+msgstr "Tevékenység"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan
+msgid "Activity Planning"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
@@ -174,25 +172,50 @@ msgid "Activity State"
 msgstr "Tevékenység állapota"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
+msgid "Activity Type"
+msgstr "Tevékenység típus"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
+msgid "Additional Information"
+msgstr "További információ"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
+#: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
 msgstr ""
 
 #. module: hr
+#: model:res.groups,name:hr.group_hr_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Álnév kapcsolat biztonság"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Analyse needs, write specification documents and quotation"
-msgstr "Értékeléshez szükséges, részletezési dokumentumok és ajánlatok írása"
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update their own data."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.server,name:hr.hr_employee_action_toggle_active
+msgid "Archive/Restore"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
@@ -220,12 +243,13 @@ msgstr "Hitelesített ügyfelek"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Részlegek automatikus felíratása"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
 msgstr ""
+"A részleghez tartozó munkatársak automatikus feliratkoztatása a csatornára"
 
 #. module: hr
 #: selection:hr.employee,certificate:0
@@ -233,70 +257,42 @@ msgid "Bachelor"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
+msgid "Badge ID"
+msgstr "Jelvény ID azonosító"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Bankszámla szám"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid ""
-"Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic chief technical officer. So if working on an open "
-"source project in a friendly and cooperative atmosphere sounds like fun to "
-"you, read on..."
+#: model:ir.model,name:hr.model_hr_employee_base
+msgid "Basic Employee"
 msgstr ""
-"Az állandó fejlődésünk miatt, embereket keresünk a lelkes műszaki osztály "
-"vezető csoportjainak megerősítésére. Szóval, ha egy nyílt forráskódú "
-"projekten, barátságos és segítségnyújtó környezetben végzett munka örömére "
-"szolgál, akkor olvasson tovább..."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid ""
-"Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic developers. So if working on an open source project"
-" in a friendly and cooperative atmosphere sounds like fun to you, read on..."
-msgstr ""
-"Az állandó fejlődésünk miatt, embereket keresünk a lelkes fejlesztői csoport"
-" megerősítésére. Szóval, ha egy nyílt forráskódú projekten, barátságos és "
-"segítségnyújtó környezetben végzett munka örömére szolgál, akkor olvasson "
-"tovább..."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid ""
-"Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic trainees. So if working on an open source project "
-"in a friendly and cooperative atmosphere sounds like fun to you, read on..."
-msgstr ""
-"Az állandó fejlődésünk miatt, embereket keresünk a lelkes képzők "
-"csoportjának megerősítésére. Szóval, ha egy nyílt forráskódú projekten, "
-"barátságos és segítségnyújtó környezetben végzett munka örömére szolgál, "
-"akkor olvasson tovább..."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Birth"
-msgstr "Született"
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+msgid "Cancel"
+msgstr "Mégse"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
+#: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
 msgstr ""
 
 #. module: hr
-#: model:hr.job,name:hr.job_ceo
-msgid "Chief Executive Officer"
-msgstr "Legfelsőbb igazgatási tisztségviselő "
+#: model:ir.actions.act_window,name:hr.res_users_action_my
+msgid "Change my Preferences"
+msgstr ""
 
 #. module: hr
-#: model:hr.job,name:hr.job_cto
-msgid "Chief Technical Officer"
-msgstr "Legfelsőbb műszaki tisztségviselő "
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Chat"
+msgstr "Társalgás"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -304,33 +300,34 @@ msgid "Child Departments"
 msgstr "Alrészlegek"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Citizenship & Other Information"
-msgstr "Állampolgárság & egyéb adatok"
+msgid "Citizenship"
+msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Close to the perfection ..."
-msgstr "Közel a tökéleteshez ..."
-
-#. module: hr
+#: selection:hr.plan.activity.type,responsible:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
+#: model:ir.model.fields,field_description:hr.field_res_users__coach_id
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
 msgstr "Tréner"
 
 #. module: hr
+#: code:addons/hr/models/hr_plan.py:34
+#, python-format
+msgid "Coach of employee %s is not set."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
 msgid "Color Index"
-msgstr "Színjegyzék"
+msgstr "Szín jegyzék"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
@@ -340,6 +337,8 @@ msgstr "Vállalatok"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -347,8 +346,23 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_employee
+msgid "Company Address"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Company Logo"
+msgstr "Vállalati logó"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_id
+msgid "Company employee"
 msgstr ""
 
 #. module: hr
@@ -364,55 +378,69 @@ msgstr "Konfigurációs beállítások"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
-msgstr "Konfiguráció"
-
-#. module: hr
-#: model:hr.job,name:hr.job_consultant
-msgid "Consultant"
-msgstr "Tanácsadó"
+msgstr "Beállítások"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Contact"
-msgstr "Kapcsolattartó"
+msgstr "Kapcsolat"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
-msgstr "Elérhetőségek"
+msgstr "Kapcsolat információ"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Contributions to open source projects"
-msgstr "Hozzájárulások a forrás projektek megnyitásához"
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
+msgid "Control presence of employees"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__country_of_birth
 msgid "Country of Birth"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
+msgid "Create Date"
+msgstr "Létrehozás dátuma"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
+msgstr "Új részleg"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Create employee"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -421,15 +449,9 @@ msgstr "Jelenlegi alkalmazottak száma"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday
 msgid "Date of Birth"
 msgstr "Születési idő"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Define a clear communication strategy"
-msgstr "Határozzon meg egy átlátható kommunikációs stratégiát"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -437,13 +459,11 @@ msgid "Define the schedule of resource"
 msgstr "Az erőforrás ütemezésének a meghatározása."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Deliver generic Odoo functional training sessions"
-msgstr "Nyújtson általános Odoo rendszer gyakorlati oktatási szakaszokat"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
+#: model:ir.model.fields,field_description:hr.field_res_users__department_id
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -463,15 +483,49 @@ msgid "Departments"
 msgstr "Osztályok/Részlegek"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Departure"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason
+msgid "Departure Reason"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Dependant"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
+msgid "Direct subordinates"
+msgstr "Közvetlen helyettesek"
+
+#. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
-msgstr "Beszélgetési csatorna"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -481,6 +535,7 @@ msgid "Divorced"
 msgstr "Elvált"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Education"
 msgstr "Tanulmányok"
@@ -496,17 +551,30 @@ msgid "Email Aliases Mixin"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Emergency"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
 msgid "Emergency Contact"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Emergency Phone"
 msgstr ""
 
 #. module: hr
+#: selection:hr.plan.activity.type,responsible:0
 #: model:ir.model,name:hr.model_hr_employee
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_id
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration_employee
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
 msgstr "Alkalmazott"
@@ -517,8 +585,29 @@ msgid "Employee Category"
 msgstr "Alkalmazotti kategória"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_count
+msgid "Employee Count"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__google_drive_link
+#: model:ir.model.fields,field_description:hr.field_res_users__google_drive_link
 msgid "Employee Documents"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
+msgid "Employee Edition"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Employee Image"
+msgstr "Alkalmazott fényképe"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
+msgid "Employee Skills and Resumé"
 msgstr ""
 
 #. module: hr
@@ -528,30 +617,58 @@ msgstr "Alkalmazott címkéje"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model:ir.model.fields,field_description:hr.field_res_users__category_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "Alkalmazott címke"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Employee Update Rights"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
 msgid "Employee bank salary account"
 msgstr "Alkalmazott bankszámlaszáma"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
+msgid "Employee's Bank Account Number"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
+msgid "Employee's Country"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
 msgstr "Alkalmazott neve"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Employee(s)"
+msgstr "Alkalmazott(ak)"
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
+#: model:ir.actions.act_window,name:hr.hr_employee_action_from_user
+#: model:ir.actions.act_window,name:hr.hr_employee_public_action
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
+#: model:ir.ui.menu,name:hr.menu_hr_employee_user
 #: model:ir.ui.menu,name:hr.menu_hr_root
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
@@ -571,6 +688,7 @@ msgstr "Alkalmazottak címkéi"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,help:hr.field_res_users__address_home_id
 msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
@@ -593,24 +711,21 @@ msgid ""
 msgstr "Elvárt munkahelyek száma ehhez a munkához az új felvételiztetés után."
 
 #. module: hr
-#: model:hr.job,name:hr.job_developer
-msgid "Experienced Developer"
-msgstr "Gyakorlott fejlesztő"
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Nő"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
+#: model:ir.model.fields,field_description:hr.field_res_users__study_field
 msgid "Field of Study"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Follow and check the development part"
-msgstr "Kövesse és ellenőrizze a fejlesztési részt"
+#: selection:hr.departure.wizard,departure_reason:0
+#: selection:hr.employee,departure_reason:0
+msgid "Fired"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -639,55 +754,26 @@ msgid "Followers only"
 msgstr "Csak követők"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Jövőbeli tevékenységek"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
+#: model:ir.model.fields,field_description:hr.field_res_users__gender
 msgid "Gender"
 msgstr "Neme"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Good knowledge of HTML and Javascript"
-msgstr "HTML és Javascript jó ismerete"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of object oriented programming"
-msgstr "Objektum orientált programozás jó ismerete"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of the latest web technologies"
-msgstr "Legfrissebb web technológiák jó ismerete"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of the programming language"
-msgstr "Program nyelvek jó ismerete"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good knowledge of web design"
-msgstr "Web szerkesztés jó ismerete"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Good language skills in another language"
-msgstr "Más nyelvek, nyelvi érzéke"
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Generate Badge ID"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
-msgstr "Csoportosítás ezzel"
+msgstr "Csoportosítás"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -697,32 +783,13 @@ msgstr "Emberi erőforrás Osztály, részleg"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "Emberi erőforrás részlegek"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "Emberi erőforrás beállítások"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Help with the configuration of the software"
-msgstr "Segítsen a szoftver beállításában"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Hire a team of great Human Resources people"
-msgstr "Vegyen fel csapatot nagyszerű Emberi Erőforrás-ból"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-msgid "Hire a team of great executive people"
-msgstr "Vegyen fel csapatot nagyszerű vezetőkből"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Hire a team of great marketing people"
-msgstr "Vegyen fel csapatot nagyszerű értékesítési szakemberekből"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
@@ -735,20 +802,28 @@ msgid "Human Resources"
 msgstr "Emberi erőforrás HR"
 
 #. module: hr
-#: model:hr.job,name:hr.job_hrm
-msgid "Human Resources Manager"
-msgstr "Emberi Erőforrás Igazgató"
+#: model:ir.model.fields,field_description:hr.field_hr_department__id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr.field_hr_job__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
+msgid "ID"
+msgstr "Azonosító ID"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__id
-#: model:ir.model.fields,field_description:hr.field_hr_employee__id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
-#: model:ir.model.fields,field_description:hr.field_hr_job__id
-msgid "ID"
-msgstr "Azonosító"
+#: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
+msgid "ID used for employee identification."
+msgstr "ID azonosító az azonosításához."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
+#: model:ir.model.fields,field_description:hr.field_res_users__identification_id
 msgid "Identification No"
 msgstr "Személyi igazolvány száma"
 
@@ -772,6 +847,7 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -783,17 +859,10 @@ msgstr ""
 "anélkül, hogy törölné azt."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:296
+#: code:addons/hr/models/hr_employee.py:326
 #, python-format
 msgid "Import Template for Employees"
 msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Improve our communication to customers"
-msgstr "Fejlessze a vásárlókkal a kommunikációnkat"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -804,20 +873,6 @@ msgstr "Pozícióban"
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
 msgstr "Toborzás folyamatban"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Increase opportunities"
-msgstr "Növelje a lehetőségeket"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Increase the visibility of the product"
-msgstr "Növelje a termék felfedezhetőségét"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -842,9 +897,11 @@ msgstr "Munkaköri leírás"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__name
 msgid "Job Position"
-msgstr "Beosztás"
+msgstr "Állás pozíció"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -853,6 +910,11 @@ msgstr "Álláspozíciók"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_title
+#: model:ir.model.fields,field_description:hr.field_res_users__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Job Title"
 msgstr "Beosztás"
 
@@ -864,47 +926,61 @@ msgstr "Feladatok"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Km home-work"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
+msgstr "Utoljára frissítve "
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Launch new marketing campaigns and offers"
-msgstr "Indítson új marketing kampányokat és ajánlatokat"
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Késő tevékenységek"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Launch new products, Human Resources campaigns and offers"
-msgstr "Indítson új termékekre, Emberi erőforrás kampányokat és ajánlatokat"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-msgid "Launch new products, marketing campaigns and offers"
-msgstr "Indítson új termékekre kampányokat és ajánlatokat"
+#: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Launch Plan"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -917,11 +993,24 @@ msgid "Let's create a job position."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Location"
+msgstr "Helyszín"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Login Information"
+msgstr "Bejelentkezési információk"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Fő melléklet"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -929,22 +1018,40 @@ msgid "Male"
 msgstr "Férfi"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Manage skills, knowledge and resumé of your employees"
+msgstr ""
+
+#. module: hr
+#: selection:hr.plan.activity.type,responsible:0
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__parent_id
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_parent_id
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
-msgstr "Menedzser"
+msgstr "Igazgató"
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:40
+#, python-format
+msgid "Manager of employee %s is not set."
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Managers"
+msgstr "Igazgatók"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
+#: model:ir.model.fields,field_description:hr.field_res_users__marital
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Marital Status"
 msgstr "Családi állapot"
-
-#. module: hr
-#: model:hr.job,name:hr.job_marketing
-msgid "Marketing and Community Manager"
-msgstr "Marketing és Közösségi Igazgató"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -957,14 +1064,8 @@ msgid "Master"
 msgstr "Mester"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Master or engineer in computer science"
-msgstr "Számítógép tudományok mestere vagy mérnöke"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_medium
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_medium
 msgid "Medium-sized photo"
 msgstr "Közepes méretű fotó"
 
@@ -989,7 +1090,7 @@ msgstr "Tagok"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Üzenetkézbesítési hiba"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -999,18 +1100,17 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Must have ..."
-msgstr "Kell, hogy legyen ..."
+#. openerp-web
+#: code:addons/hr/static/src/xml/hr_templates.xml:4
+#, python-format
+msgid "My Profile"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__name
 msgid "Name"
 msgstr "Név"
 
@@ -1022,7 +1122,7 @@ msgstr "Állampolgárság (Ország)"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Következő tevékenység-határidő"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
@@ -1032,18 +1132,13 @@ msgstr "Következő tevékenység összegzése"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Következő tevékenységtípus"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Nice to have"
-msgstr "Jó ha van"
+#: code:addons/hr/models/hr_plan.py:51
+#, python-format
+msgid "No specific user given on activity."
+msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -1053,7 +1148,7 @@ msgstr "Nem toboroz"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
 msgid "Note"
-msgstr "Megjegyzés"
+msgstr "Jegyzet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__notes
@@ -1069,6 +1164,7 @@ msgstr "Műveletek száma"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
+#: model:ir.model.fields,field_description:hr.field_res_users__children
 msgid "Number of Children"
 msgstr "Gyerekek száma"
 
@@ -1082,7 +1178,7 @@ msgstr "Alakalmazottak száma akik jelenleg betöltik ezt az állás pozíciót.
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Hiba száma"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -1102,7 +1198,7 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -1131,24 +1227,9 @@ msgstr "Hivatalnok"
 
 #. module: hr
 #: selection:hr.employee,certificate:0 selection:hr.employee,gender:0
+#: selection:hr.plan.activity.type,responsible:0
 msgid "Other"
 msgstr "Egyéb"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Other Information ..."
-msgstr "Egyéb információ ..."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Our staff at work"
-msgstr "Alkalmazottaink munka közben"
 
 #. module: hr
 #: selection:hr.employee,activity_state:0
@@ -1156,48 +1237,94 @@ msgid "Overdue"
 msgstr "lejárt"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
+msgid "PIN"
+msgstr "PIN"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
+msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
 msgstr "Főrészleg"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Passion for the Internet and its culture"
-msgstr "Szenvedély az Internet és kultúrája iránt"
+#: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
+msgid "Partner-related data of the user"
+msgstr "A felhasználó partner-kapcsolati adatai"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
+#: model:ir.model.fields,field_description:hr.field_res_users__passport_id
 msgid "Passport No"
 msgstr "Útlevélszám"
 
 #. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
+msgid "Payroll"
+msgstr "Bérszámfejtés"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image
 msgid "Photo"
 msgstr "Fénykép"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Pictures of smart and enthusiastic people"
-msgstr "Okos és eltökélt emberek képei"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__place_of_birth
 msgid "Place of Birth"
 msgstr "Születés helye"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__plan_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+msgid "Plan"
+msgstr "Terv"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_wizard
+msgid "Plan Wizard"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_activity_type
+msgid "Plan activity type"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Planned"
+msgstr "Tervezett"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_action
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
+msgid "Planning"
+msgstr "Tervezés"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+#: model:ir.ui.menu,name:hr.menu_config_plan_types
+msgid "Planning Types"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+msgid "Plans"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1210,36 +1337,37 @@ msgstr ""
 "- követők: csak az idevonatkozó dokumentum követői vagy a következő csatornák tagjai\n"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Position"
-msgstr "Beosztás"
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Preferences"
+msgstr "Preferenciák"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Preferably 1 year of experience"
-msgstr "1 év gyakorlat ajánlott"
+#: model:ir.actions.report,name:hr.hr_employee_print_badge
+msgid "Print Badge"
+msgstr "Jelvény nyomtatás"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
 msgid "Private Address"
 msgstr "Lakcím"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
 msgstr "Személyes adatok"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Quantify and negotiate the resources required"
-msgstr "K.b mennyiség tisztázása és tárgyalás a szükséges forrásokról"
+#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
+msgid "Private Phone"
+msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Quick and autonomous learner"
-msgstr "Gyorsan és önállóan tanuló"
+#: model:ir.model,name:hr.model_hr_employee_public
+msgid "Public Employee"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -1247,14 +1375,16 @@ msgid "Ready to recruit more efficiently?"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Recruitment"
-msgstr "Toborzás"
-
-#. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr "Toborzás folyamatban"
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:299
+#: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
+#, python-format
+msgid "Register Departure"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1263,8 +1393,8 @@ msgstr "Kapcsolódó felhasználó"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
-msgid "Related employees"
-msgstr "Ide kapcsolódó alkalmazottak"
+msgid "Related employee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -1274,9 +1404,10 @@ msgstr ""
 "erőforráshoz."
 
 #. module: hr
+#: model:ir.ui.menu,name:hr.hr_menu_hr_reports
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reporting"
-msgstr "Riportkészítés"
+msgstr "Riport készítés"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
@@ -1284,25 +1415,44 @@ msgid "Requirements"
 msgstr "Követelmények"
 
 #. module: hr
+#: selection:hr.departure.wizard,departure_reason:0
+#: selection:hr.employee,departure_reason:0
+msgid "Resigned"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_id
 msgid "Resource"
 msgstr "Erőforrás"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Responsibilities"
-msgstr "Felelősségek"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_calendar_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
+msgid "Resource Calendar"
+msgstr "Erőforrás naptár"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
+msgid "Responsible"
+msgstr "Felelős"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
+msgid "Responsible Person"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 msgid "Responsible User"
 msgstr "Felelős felhasználó"
+
+#. module: hr
+#: selection:hr.departure.wizard,departure_reason:0
+#: selection:hr.employee,departure_reason:0
+msgid "Retired"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
@@ -1315,14 +1465,19 @@ msgid "SSN No"
 msgstr "Adóazonosító jele"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Scale our events organization all around the world"
-msgstr "Mérlegelje az eseményeink szervezését az egész világról"
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Save"
+msgstr "Mentés"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Schedule"
+msgstr "Ütemezés"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
+#: model:ir.model.fields,field_description:hr.field_res_users__study_school
 msgid "School"
 msgstr ""
 
@@ -1369,18 +1524,8 @@ msgid "Single"
 msgstr "Egyedülálló"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Skills"
-msgstr "Szakképzettségek"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_small
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_small
 msgid "Small-sized photo"
 msgstr "Kis-méretű fotó"
 
@@ -1406,12 +1551,19 @@ msgid "Social Security Number"
 msgstr "Társadalombiztosítási szám"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
+msgid "Specific responsible of activity if not linked to the employee."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
 msgid "Spouse Birthdate"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
 msgid "Spouse Complete Name"
 msgstr ""
 
@@ -1422,6 +1574,7 @@ msgstr "Toborzás elindítása"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
@@ -1435,6 +1588,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tevékenységeken alapuló állapot\n"
+"Lejárt: Az esedékesség dátuma már elmúlt\n"
+"Ma: A tevékenység dátuma ma van\n"
+"Tervezett: Jövőbeli tevékenységek."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1447,33 +1604,50 @@ msgid "Subordinate Hierarchy"
 msgstr "Alárendeltségi rangsor"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
-msgid "Subordinates"
-msgstr "Beosztottak"
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
+msgid "Summary"
+msgstr "Összefoglalás"
 
 #. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr "A címkenév már létezik!"
+msgstr "Címke név már létezik!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Tags"
 msgstr "Címkék"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Take part in the consulting services"
-msgstr "Legyen része a tanácsadói szolgáltatásokban"
+#: sql_constraint:hr.employee:0
+msgid ""
+"The Badge ID must be unique, this one is already assigned to another "
+"employee."
+msgstr ""
+"A jelvényeknek egyedieknek kell lennie, ezt már hozzárendelt egy másik "
+"alkalmazotthoz."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Team spirit and good communication"
-msgstr "Csoport  szellem és jó kommunikációs készség"
+#: code:addons/hr/models/hr_employee.py:201
+#, python-format
+msgid "The PIN must be a sequence of digits."
+msgstr "A PIN sorrendbe állított számokat kell tartalmaznia."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
+#: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
 msgid "The employee adress has a company linked"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:147
+#, python-format
+msgid ""
+"The fields \"%s\" you try to read is not available on the public employee "
+"profile."
 msgstr ""
 
 #. module: hr
@@ -1521,20 +1695,14 @@ msgid "Today"
 msgstr "Ma"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Mai tevékenységek"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Összes előjegyzett alkalmazott"
-
-#. module: hr
-#: model:hr.job,name:hr.job_trainee
-msgid "Trainee"
-msgstr "Gyakornok"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Transform our product into a suite of well positioned business Apps"
-msgstr ""
-"Alakítsa át a termékünket egy jól beállított üzleti alkalmazás készletre"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -1554,6 +1722,7 @@ msgid "Unread Messages Counter"
 msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "Use here the home address of the employee.\n"
@@ -1563,8 +1732,33 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
 msgid "User"
 msgstr "Felhasználó"
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:47
+#, python-format
+msgid "User linked to employee %s is required."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:37
+#, python-format
+msgid "User of coach of employee %s is not set."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_plan.py:43
+#, python-format
+msgid "User of manager of employee %s is not set."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
+msgid "User's partner"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -1578,90 +1772,15 @@ msgstr "Üresedések"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expire Date"
 msgstr "Vízum lejárati dátuma"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_no
 msgid "Visa No"
 msgstr "Vízum száma"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid ""
-"We are looking for a motivated and results-driven Functional Consultant! You"
-" will take part in the consulting services we provide to our partners and "
-"customers, on the functional side. Your job start from the quotation to the "
-"customer to the delivery to the customer. You listen the customer and try to"
-" give him the best service. You report to the head of consulting service and"
-" will be coached by a senior consultant."
-msgstr ""
-"Keresünk motivált és eredmény-alapú Gyakorlati tanácsadót! Részt vehet az "
-"általunk a partnereink és ügyfeleink részére biztosított tanácsadói "
-"szolgáltatásokban, a tanácsadói oldalról. A feladata a vásárlókhoz kiküldött"
-" árajánlatokkal kezdődik és a vásárlók részére történt kiszállítással "
-"fejeződik be. Meghallgatja a vásárlót és megpróbálja a legjobb szolgáltatást"
-" megadni a részére. Jelentést tesz a tanácsadói szolgáltatás vezetőjének és "
-"lesz egy rangidős tanácsadó mentora."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid ""
-"We are looking for a passionated Human Resources Manager to help us make "
-"products people love to use. We need someone who is ambitious, passionated, "
-"and ..... not afraid to start new things, a lot of new things and scale "
-"them."
-msgstr ""
-"Keresünk szenvedélyes Emberi Erőforrás Igazgatót, emberek által szerethető "
-"termékek létrehozásának hozzásegítésére. Nekünk szükségünk van olyan "
-"személyre aki ambiciózus, szenvedélyes, és  ..... nem fél új dolgok "
-"bevezetésértől, nagyon sok új dologtól és azok beosztásától."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-msgid ""
-"We are looking for a passionated executive manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
-msgstr ""
-"Keresünk szenvedélyes Főelőadó Igazgatót, emberek által szerethető termékek "
-"létrehozásának hozzásegítésére. Nekünk szükségünk van olyan személyre aki "
-"ambiciózus, szenvedélyes, és  ..... nem fél új dolgok bevezetésértől, nagyon"
-" sok új dologtól és azok beosztásától."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid ""
-"We are looking for a passionated marketer manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
-msgstr ""
-"Keresünk szenvedélyes Marketing Igazgatót, emberek által szerethető termékek"
-" létrehozásának hozzásegítésére. Nekünk szükségünk van olyan személyre aki "
-"ambiciózus, szenvedélyes, és  ..... nem fél új dolgok bevezetésértől, nagyon"
-" sok új dologtól és azok beosztásától."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "What we offer"
-msgstr "Mit ajánlunk"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "What you will do ..."
-msgstr "Mit fog végezni ..."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1669,13 +1788,8 @@ msgid "Widower"
 msgstr "Özvegy"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Will report to the Head of Professional Services"
-msgstr "Be fog számolni a  Szak Szolgáltatások Vezetőségének"
-
-#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
-#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
@@ -1686,45 +1800,49 @@ msgstr ""
 "kapcsolati adatok, munka pozíció, elérhetőség, stb."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
-"With our product, which is a suite of 3000 business apps. It is fully open "
-"source, full featured and it’s online offer is 3 times cheaper than "
-"traditional competitors. We have 2.000.000 users, and we're growing fast."
+"With just a quick glance on the Odoo employee screen, you\n"
+"               can easily find all the information you need for each person;\n"
+"               contact data, job position, availability, etc."
 msgstr ""
-"Termékeinkkel, mely magában foglal 3000 üzleti alkalmazást. Teljesen nyílt "
-"forráskódú, teljes kialakítású és online felülete 3-szor olcsóbb mint a "
-"hagyományos versenytársaké. Több mint 2.000.000 felhasználónk van, és "
-"gyorsan fejlődünk."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_id
 msgid "Work Address"
 msgstr "Munkahely címe"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
+#: model:ir.model.fields,field_description:hr.field_res_users__work_email
 msgid "Work Email"
 msgstr "Munkahelyi e-mail"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
 msgstr "Munkahelyi adatok"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location
+#: model:ir.model.fields,field_description:hr.field_res_users__work_location
 msgid "Work Location"
 msgstr "Munka helyszín"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Work Mobile"
 msgstr "Munkahelyi mobil"
 
@@ -1734,17 +1852,22 @@ msgid "Work Organization"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
 msgstr "Munkavállalási engedély"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
+#: model:ir.model.fields,field_description:hr.field_res_users__permit_no
 msgid "Work Permit No"
 msgstr "Munkavállalási engedély száma"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__work_phone
 msgid "Work Phone"
 msgstr "Munkahelyi telefon"
 
@@ -1754,195 +1877,18 @@ msgid "Working Hours"
 msgstr "Munkaórák"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Write attractive content"
-msgstr "Írjon megnyerő tartalmat"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Write attractive content and build up Human Resources materials"
-msgstr "Írjon megnyerő tartalmat és építse fel az Emberi Erőforrás eszközeit"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-msgid "Write attractive content and build up executive materials"
-msgstr "Írjon megnyerő tartalmat és építse fel a Főelőadó eszközeit"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are a quick and autonomous learner"
-msgstr "Ön egy gyorsan és önállóan tanuló"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are an excellent communicator and negotiator"
-msgstr "Ön egy kiváló kommunikációs képességű és tárgyaló"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You are approachable, honest and fun team player"
-msgstr "Ön elérhető,  őszinte és kedvenc csapat játékos"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are available immediately"
-msgstr "Ön azonnal elérhető"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You are creative"
-msgstr "Ön kreatív"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You are ready to travel in US"
-msgstr "Ön készen áll utazni az Egesül Államokban"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You are ready to work in a dynamic company"
-msgstr "Ön készen áll egy dinamikus vállalatnál dolgozni"
-
-#. module: hr
-#: code:addons/hr/models/hr.py:206
+#: code:addons/hr/models/res_users.py:153
 #, python-format
-msgid "You cannot create a recursive hierarchy."
+msgid ""
+"You are only allowed to update your preferences. Please contact a HR officer"
+" to update other informations."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:331
+#: code:addons/hr/models/hr_department.py:44
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You have 2 or 3 years of experience"
-msgstr "Önnek 2 vagy 3 év gyakorlattal rendelkezik"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You have a Master degree in Business Management"
-msgstr "Mester vizsgával rendelkezik az Üzleti Szervezésben"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You have an affinity with the IT world"
-msgstr "Vonzódik az IT világ felé"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "You have an affinity with the product"
-msgstr "Vonzódik a termék nyújtotta lehetőségek felé"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You have good knowledge in accounting"
-msgstr "Jól ismeri a könnyvvitelt"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You speak a third language"
-msgstr "Harmadik nyelven is beszél"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "You speak fluently French and English"
-msgstr "Folyékonyan beszél Franciául és Angolul"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid ""
-"You will be responsible for developing and improving applications. You will "
-"work autonomously as well as                     coordinate and supervise "
-"small distributed development teams for specific projects. You will become a"
-" technical                 expert of the product."
-msgstr ""
-"Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében. Egyedül és "
-"fogja munkáit végezni és koordinálja                    és felügyeli az "
-"egyedi projekt témákban a kisebb fejlesztési csoportoknak kiosztott "
-"munkákat. A termék műszaki                 szakértője lesz. "
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid ""
-"You will be responsible for developing and improving applications. You will "
-"work autonomously as well as coordinate and supervise small distributed "
-"development teams for specific projects. You will become a technical expert "
-"of the product."
-msgstr ""
-"Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében. Egyedül és "
-"fogja munkáit végezni és koordinálja                    és felügyeli az "
-"egyedi projekt témákban a kisebb fejlesztési csoportoknak kiosztott "
-"munkákat. A termék műszaki                 szakértője lesz. "
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid ""
-"You will be responsible for developing and improving product communication. "
-"You will work autonomously as well as coordinate and supervise small "
-"distributed development teams for specific projects. You will become a "
-"techinical expert of the product."
-msgstr ""
-"Felelős lesz a termék hírközlés fejlesztésében és kifejlesztésében, mint egyedül, mint irányítás alatt fogja munkáit\n"
-"                     végezni és felügyeli az egyedi projekt témákban a kisebb fejlesztési csoportoknak \n"
-"                     kiosztott munkákat. A termék műszaki szakértője lesz."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will become a technical expert of the product."
-msgstr "A termék műszaki szakértője lesz."
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "You will initially be coached by senior developers"
-msgstr "Önt elsődlegesen rangidős fejlesztők  fogják betanítani"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "You will initially be coached by senior technical officer"
-msgstr "Önt elsődlegesen műszaki vezetők fogják betanítani"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will initially be coached by senior trainees"
-msgstr "Önt elsődlegesen rangidős gyakornokok  fogják betanítani"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will report to the head of R&amp;D"
-msgstr "Ön jelentani fog a R&amp;D vezetőnek"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "You will work closely with all developers"
-msgstr "Ön szorosan fog közreműködni a fejlesztőkkel"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "You will work closely with all technical officer"
-msgstr "Ön szorosan fog közreműködni a műszaki vezetőkkel"
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "You will work closely with all trainees"
-msgstr "Ön szorosan fog közreműködni a gyakornokokkal"
+msgstr "Rekurzív részlegek nem hozhatóak létre."
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
@@ -1950,16 +1896,21 @@ msgid "Your document has not been created"
 msgstr "A dokumentuma nem készült el"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "barcode"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "részleg"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "e.g. Part Time"
-msgstr "Pl. Rész időben"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "pl. Értékesítési menedzsment"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan
+msgid "plan"
+msgstr ""

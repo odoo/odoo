@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * project
+# 	* project
 # 
 # Translators:
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Sandra Franch <sandra.franch@upc.edu>, 2018
-# Martin Trigaux, 2018
-# Quim - eccit <quim@eccit.com>, 2018
-# Manel Fernandez <manelfera@outlook.com>, 2018
+# Manel Fernandez <manelfera@outlook.com>, 2019
+# Martin Trigaux, 2019
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2019
+# RGB Consulting <odoo@rgbconsulting.com>, 2019
+# Sandra Franch <sandra.franch@upc.edu>, 2019
+# M Palau <mpalau@tda.ad>, 2019
+# Quim - eccit <quim@eccit.com>, 2019
+# Arnau Ros, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Arnau Ros, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,18 +33,19 @@ msgstr "# Dies per la data límit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
+#: model:ir.model.fields,field_description:project.field_res_users__task_count
 msgid "# Tasks"
 msgstr "# Tasques"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Dies feiners per assignar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Dies feiners per tancar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
@@ -52,16 +55,16 @@ msgstr "# de tasques"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Enquesta de satisfacció"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% En"
 
 #. module: project
-#: code:addons/project/models/project.py:302
-#: code:addons/project/models/project.py:624
+#: code:addons/project/models/project.py:287
+#: code:addons/project/models/project.py:646
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (còpia)"
@@ -72,10 +75,12 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks. Do you want to"
 " proceed?"
 msgstr ""
+"Des(arxivar) un projecte automàticament (des)arxiva les seves tasques. Vols "
+"procedir?"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:91
+#: code:addons/project/static/src/js/tours/project.js:86
 #, python-format
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
@@ -86,14 +91,14 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:102
+#: code:addons/project/static/src/js/tours/project.js:97
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr "<b>Clic el botó de guardar</b> per aplicar els canvis a la tasca."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:71
+#: code:addons/project/static/src/js/tours/project.js:71
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
 msgstr "<b>Tasques inicials</b> per marcar prioritats d'equip."
@@ -158,6 +163,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Hola ${partner.name},<br/>\n"
+"            Si us plau pren un moment per valorar els nostres serveis relacionats amb la tasca \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                assignat a <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Digueu-nos què us sembla el nostre servei</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(fes clic en una d'aquestes cares)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Agraïm els vostres comentaris. Ens ajuden a seguir millorant.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Aquesta enquesta de clients s'ha enviat perquè la tasca s'ha mogut <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">questa enquesta de clients s'ha enviat <b>${object.project_id.rating_status_period}</b> mentre la tasca estigui <b>${object.stage_id.name}</b> en l'etapa.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -172,49 +233,88 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Estimat ${object.partner_id.name or 'customer'},<br/>\n"
+"    Gràcies per la seva consulta.<br/>\n"
+"    Fes-nos saber si tens més preguntes..\n"
+"    <br/><br/>\n"
+"    Gràcies,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-arrow-circle-right \"/> See the feedbacks"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right \"/> Veure els comentaris"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-calendar\"/> End date :"
+msgstr "<i class=\"fa fa-calendar\"/> Data de finalització:"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-envelope\"/> Email :"
+msgstr "<i class=\"fa fa-envelope\"/> Correu electrònic:"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Sense valoracions"
 
 #. module: project
-#: code:addons/project/models/project.py:121
+#: code:addons/project/models/project.py:115
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Documents are attached to the tasks and issues of your project.</p><p>\n"
+"                        Documents are attached to the tasks of your project.</p><p>\n"
 "                        Send messages or log internal notes with attachments to link\n"
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:149
+#: code:addons/project/models/project.py:143
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Crear un nou projecte</p>"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:66
+#: code:addons/project/static/src/js/tours/project.js:66
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
 msgstr ""
@@ -227,6 +327,16 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_project
+msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
+msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<span class=\"o_label\">Profitability</span>"
 msgstr ""
 
 #. module: project
@@ -297,7 +407,7 @@ msgstr "Acceptar emails de"
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
 #: model:ir.model.fields,field_description:project.field_project_task__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Advertència d'accés"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
@@ -334,12 +444,17 @@ msgstr "Afegir una descripció..."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:40
-#: code:addons/project/static/src/js/tour.js:47
+#: code:addons/project/static/src/js/tours/project.js:40
+#: code:addons/project/static/src/js/tours/project.js:47
 #, python-format
 msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
+msgstr ""
+
+#. module: project
+#: model:res.groups,name:project.group_project_manager
+msgid "Administrator"
 msgstr ""
 
 #. module: project
@@ -349,7 +464,7 @@ msgstr "Avançat"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:34
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
 #, python-format
 msgid "Agile"
 msgstr ""
@@ -392,10 +507,23 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:36
 #, python-format
 msgid "Analysis"
 msgstr "Anàlisi"
+
+#. module: project
+#: model:ir.model,name:project.model_account_analytic_account
+#: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
+msgid "Analytic Account"
+msgstr "Compte analític"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__analytic_account_id
+msgid ""
+"Analytic account to which this project is linked for financial management. "
+"Use an analytic account to record cost and revenue on your project."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -409,7 +537,7 @@ msgid "Assign to Me"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__date_start
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Assignation Date"
 msgstr "Data d'assignació"
@@ -447,13 +575,6 @@ msgstr ""
 "Pots definir aquí les etiquetes que es mostraran per l'estat en lloc de les etiquetes predeterminades."
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/xml/project.xml:7
-#, python-format
-msgid "Attachment"
-msgstr "Adjunt"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_attachment_count
 #: model:ir.model.fields,field_description:project.field_project_task__message_attachment_count
 msgid "Attachment Count"
@@ -465,7 +586,7 @@ msgid "Attachment that don't come from message."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:114
+#: code:addons/project/models/project.py:108
 #, python-format
 msgid "Attachments"
 msgstr "Adjunts"
@@ -491,7 +612,7 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:36
 #, python-format
 msgid "Backlog"
 msgstr "Cartera"
@@ -508,10 +629,6 @@ msgstr "Bàsic"
 
 #. module: project
 #: code:addons/project/models/project.py:29
-#: model:project.task,legend_blocked:project.project_task_19
-#: model:project.task,legend_blocked:project.project_task_24
-#: model:project.task,legend_blocked:project.project_task_3
-#: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -524,8 +641,6 @@ msgstr "Bàsic"
 #: model:project.task,legend_blocked:project.project_task_data_6
 #: model:project.task,legend_blocked:project.project_task_data_7
 #: model:project.task,legend_blocked:project.project_task_data_9
-#: model:project.task.type,legend_blocked:project.project_stage_2
-#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model:project.task.type,legend_blocked:project.project_stage_data_0
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
@@ -536,24 +651,10 @@ msgstr "Bloquejat"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Brainstorm"
 msgstr ""
-
-#. module: project
-#: model:project.task,legend_done:project.project_task_10
-#: model:project.task,legend_done:project.project_task_11
-#: model:project.task,legend_done:project.project_task_2
-#: model:project.task,legend_done:project.project_task_21
-#: model:project.task,legend_done:project.project_task_22
-#: model:project.task,legend_done:project.project_task_4
-#: model:project.task,legend_done:project.project_task_5
-#: model:project.task,legend_done:project.project_task_6
-#: model:project.task,legend_done:project.project_task_7
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr "Avisar o marcar com a fet"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
@@ -561,13 +662,8 @@ msgid "By Responsible"
 msgstr "Per Responsable"
 
 #. module: project
-#: model:project.task.type,name:project.project_stage_3
-msgid "Cancelled"
-msgstr "Cancel·lat"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:29
+#: code:addons/project/static/src/js/tours/project.js:29
 #, python-format
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
@@ -578,7 +674,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:61
+#: code:addons/project/static/src/js/tours/project.js:61
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
 msgstr ""
@@ -587,14 +683,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
 msgstr "Esculli un e-mail de projecte"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__subtask_project_id
-#: model:ir.model.fields,help:project.field_project_task__subtask_project_id
-msgid ""
-"Choosing a sub-tasks project will both enable sub-tasks and set their "
-"default project (possibly the project itself)"
-msgstr ""
 
 #. module: project
 #: constraint:project.task:0
@@ -608,14 +696,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:76
-#, python-format
-msgid "Click on a card to get the details of the task."
-msgstr "Clic en una carta per veure els detalls de la tasca."
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/tour.js:81
+#: code:addons/project/static/src/js/tours/project.js:76
 #, python-format
 msgid ""
 "Click on the card to write more information about it and collaborate with "
@@ -624,7 +705,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:86
+#: code:addons/project/static/src/js/tours/project.js:81
 #, python-format
 msgid "Click on this button to modify the task."
 msgstr "Clic en aquest botó per modificar la tasca."
@@ -638,7 +719,7 @@ msgstr "Índex de color"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:68
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:77
 #, python-format
 msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo "
@@ -665,7 +746,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Configuració"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -675,7 +756,7 @@ msgstr "Configuració"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:57
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Consulting"
 msgstr "Consultoria"
@@ -692,7 +773,7 @@ msgstr "Contacte"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:72
 #, python-format
 msgid "Copywriting"
 msgstr ""
@@ -706,6 +787,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create"
 msgstr "Crear"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Create Date"
+msgstr "Data de creació"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -726,7 +812,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Crear una nova etiqueta"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -779,7 +865,7 @@ msgid "Current stage of this task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:879
+#: code:addons/project/models/project.py:902
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
@@ -791,15 +877,15 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: project
-#: code:addons/project/models/project.py:879
-#: code:addons/project/models/project.py:882
+#: code:addons/project/models/project.py:902
+#: code:addons/project/models/project.py:905
 #, python-format
 msgid "Customer Email"
 msgstr "Correu del client"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:44
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:47
 #, python-format
 msgid "Customer Feedback"
 msgstr ""
@@ -808,7 +894,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL del portal dels clients"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -834,7 +920,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:46
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:49
 #, python-format
 msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and "
@@ -878,6 +964,16 @@ msgstr ""
 "problema."
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+msgid ""
+"Defines the visibility of the tasks of the project:\n"
+"- Visible by invited employees: employees may only see the followed project and tasks.\n"
+"- Visible by employees: employees may see all project and tasks.\n"
+"- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"   them or by someone of their company."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Delete"
 msgstr "Eliminar"
@@ -898,7 +994,7 @@ msgstr "Descripció"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:72
 #, python-format
 msgid "Design"
 msgstr "Disseny"
@@ -906,7 +1002,7 @@ msgstr "Disseny"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:36
 #, python-format
 msgid "Development"
 msgstr "Desenvolupament"
@@ -918,16 +1014,13 @@ msgstr "Digerir"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:38
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:40
 #, python-format
 msgid "Digital Marketing"
 msgstr ""
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:76
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
-#, python-format
 msgid "Discard"
 msgstr "Rebutgi"
 
@@ -953,19 +1046,18 @@ msgstr "Documents"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
-#: model:project.task.type,name:project.project_stage_2
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:36
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:41
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:48
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:62
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:76
 #, python-format
 msgid "Done"
 msgstr "Fet"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Draft"
 msgstr "Esborrany"
@@ -994,7 +1086,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:41
 #, python-format
 msgid "Editing"
 msgstr ""
@@ -1015,6 +1107,11 @@ msgid "Email Template"
 msgstr "Plantilla de correu electrònic"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__email_cc
+msgid "Email cc"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
 msgstr "Correus electrònics"
@@ -1026,7 +1123,7 @@ msgid "Ending Date"
 msgstr "Data de finalització"
 
 #. module: project
-#: code:addons/project/models/project.py:631
+#: code:addons/project/models/project.py:653
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
 msgstr ""
@@ -1038,7 +1135,7 @@ msgstr "Error! La data d'inici ha de ser anterior a la data de fi. "
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:40
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:42
 #, python-format
 msgid ""
 "Everyone can propose ideas, and the Editor marks the best ones as %s. Attach"
@@ -1070,7 +1167,7 @@ msgstr "Informació extra"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:52
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:56
 #, python-format
 msgid ""
 "Fill your Inbox easily with the email gateway. Periodically review your "
@@ -1081,7 +1178,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Final Document"
 msgstr ""
@@ -1140,15 +1237,10 @@ msgstr "GTD"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:50
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:54
 #, python-format
 msgid "Getting Things Done (GTD)"
 msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__label_tasks
-msgid "Gives label to tasks on project's kanban view."
-msgstr "Doni més etiquetes a la vista kanban del projecte."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1188,18 +1280,19 @@ msgid "Group By"
 msgstr "Agrupar per"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:68
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:73
+#, python-format
+msgid ""
+"Handle your idea gahtering within Tasks of your new Project and discuss them"
+" in the chatter of the tasks. Use the %s and %s to signalize what is the "
+"current status of your Idea"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
 msgid "Happy"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_project
-msgid "Happy % on Project"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_task
-msgid "Happy % on Task"
 msgstr ""
 
 #. module: project
@@ -1214,21 +1307,6 @@ msgid "High"
 msgstr "Alta"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-msgid ""
-"Holds visibility of the tasks or issues that belong to the current project:\n"
-"- On invitation only: Employees may only see the followed project, tasks or issues\n"
-"- Visible by all employees: Employees may see all project, tasks or issues\n"
-"- Visible by following customers: employees see everything;\n"
-"   if website is activated, portal users may see project, tasks or issues followed by\n"
-"   them or by someone of their company\n"
-msgstr ""
-"Manté la visibilitat de les tasques o incidències que pertanyin al projecte actual:\n"
-"- Només invitació: els empleats poden només veure el projecte seguit, tasques o incidències\n"
-"- Visible per tots els empleats: els empleats poden veure tot el projecte, tasques o incidències\n"
-"- Visible per tots els clients: els empleats ho veuen tot; si la web és activada, els usuaris del portal poden veure el projecte, tasques o incidències seguides per ells o per algú de la companyia\n"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hours"
 msgstr "Hores"
@@ -1236,15 +1314,15 @@ msgstr "Hores"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
 msgid ""
-"How to get the customer's feedbacks?\n"
-"- Rating when changing stage: Email will be sent when a task/issue is pulled in another stage\n"
-"- Periodical Rating: Email will be sent periodically\n"
+"How to get customer feedback?\n"
+"- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+"- Periodical Rating: email will be sent periodically.\n"
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:808
+#: code:addons/project/models/project.py:833
 #, python-format
 msgid "I take it"
 msgstr "Ho tinc"
@@ -1269,7 +1347,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:41
 #, python-format
 msgid "Ideas"
 msgstr "Idees"
@@ -1278,13 +1356,13 @@ msgstr "Idees"
 #: model:ir.model.fields,help:project.field_project_project__message_unread
 #: model:ir.model.fields,help:project.field_project_task__message_unread
 msgid "If checked new messages require your attention."
-msgstr "Si està marcat, els nous missatges requereixen la vostra atenció."
+msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, els nous missatges requereixen la vostra atenció."
+msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_has_error
@@ -1318,28 +1396,14 @@ msgstr ""
 "Si el camp actiu es desmarca, permet ocultar el projecte sense eliminar-ho."
 
 #. module: project
+#: selection:project.task,priority:0
+msgid "Important"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/models/project.py:35
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
-#: model:project.task,legend_normal:project.project_task_1
-#: model:project.task,legend_normal:project.project_task_10
-#: model:project.task,legend_normal:project.project_task_11
-#: model:project.task,legend_normal:project.project_task_12
-#: model:project.task,legend_normal:project.project_task_19
-#: model:project.task,legend_normal:project.project_task_2
-#: model:project.task,legend_normal:project.project_task_20
-#: model:project.task,legend_normal:project.project_task_21
-#: model:project.task,legend_normal:project.project_task_22
-#: model:project.task,legend_normal:project.project_task_24
-#: model:project.task,legend_normal:project.project_task_25
-#: model:project.task,legend_normal:project.project_task_26
-#: model:project.task,legend_normal:project.project_task_3
-#: model:project.task,legend_normal:project.project_task_4
-#: model:project.task,legend_normal:project.project_task_5
-#: model:project.task,legend_normal:project.project_task_6
-#: model:project.task,legend_normal:project.project_task_7
-#: model:project.task,legend_normal:project.project_task_8
-#: model:project.task,legend_normal:project.project_task_9
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:62
 #: model:project.task,legend_normal:project.project_task_data_0
 #: model:project.task,legend_normal:project.project_task_data_1
 #: model:project.task,legend_normal:project.project_task_data_11
@@ -1352,14 +1416,9 @@ msgstr ""
 #: model:project.task,legend_normal:project.project_task_data_6
 #: model:project.task,legend_normal:project.project_task_data_7
 #: model:project.task,legend_normal:project.project_task_data_9
-#: model:project.task.type,legend_normal:project.project_stage_0
-#: model:project.task.type,legend_normal:project.project_stage_1
-#: model:project.task.type,legend_normal:project.project_stage_2
-#: model:project.task.type,legend_normal:project.project_stage_3
 #: model:project.task.type,legend_normal:project.project_stage_data_0
 #: model:project.task.type,legend_normal:project.project_stage_data_1
 #: model:project.task.type,legend_normal:project.project_stage_data_2
-#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 #, python-format
 msgid "In Progress"
@@ -1367,14 +1426,14 @@ msgstr "En curs"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:48
 #, python-format
 msgid "In development"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:55
 #, python-format
 msgid "Inbox"
 msgstr "Bústia d'entrada"
@@ -1437,6 +1496,11 @@ msgstr "Explicació del kanban vàlid"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__label_tasks
+msgid "Label used for the tasks of the project."
 msgstr ""
 
 #. module: project
@@ -1518,14 +1582,14 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:24
+#: code:addons/project/static/src/js/tours/project.js:24
 #, python-format
 msgid "Let's create your first project."
 msgstr "Anem a crear el seu primer projecte"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:55
+#: code:addons/project/static/src/js/tours/project.js:55
 #, python-format
 msgid "Let's create your first task."
 msgstr ""
@@ -1538,8 +1602,13 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_task__email_cc
+msgid "List of cc from incoming emails."
+msgstr ""
+
+#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:72
 #, python-format
 msgid "Live"
 msgstr ""
@@ -1551,20 +1620,19 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:76
 #, python-format
 msgid "Logo Design"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:55
 #, python-format
 msgid "Long Term"
 msgstr ""
 
 #. module: project
-#: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Low"
 msgstr "Baixa"
@@ -1581,9 +1649,14 @@ msgid "Main Attachments"
 msgstr ""
 
 #. module: project
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr "Director"
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:63
+#, python-format
+msgid ""
+"Manage the lifecycle of your project using the kanban view. Add newly "
+"acquired project, assign them and use the %s and %s to define if the project"
+" is ready for the next step."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -1637,20 +1710,6 @@ msgid "Name of the tasks :"
 msgstr ""
 
 #. module: project
-#: model:project.task,legend_blocked:project.project_task_10
-#: model:project.task,legend_blocked:project.project_task_11
-#: model:project.task,legend_blocked:project.project_task_2
-#: model:project.task,legend_blocked:project.project_task_21
-#: model:project.task,legend_blocked:project.project_task_22
-#: model:project.task,legend_blocked:project.project_task_4
-#: model:project.task,legend_blocked:project.project_task_5
-#: model:project.task,legend_blocked:project.project_task_6
-#: model:project.task,legend_blocked:project.project_task_7
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr "Necessita ajuda funcional o tècnica"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
@@ -1658,7 +1717,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:48
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
@@ -1667,14 +1726,14 @@ msgstr "Nou"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:76
 #, python-format
 msgid "New Orders"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:62
 #, python-format
 msgid "New Projects"
 msgstr ""
@@ -1701,7 +1760,7 @@ msgstr "Activitat següent"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Data límit de la següent activitat"
+msgstr "Propera data límit d'activitat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
@@ -1714,7 +1773,7 @@ msgid "Next Activity Type"
 msgstr "Tipus de la següent activitat"
 
 #. module: project
-#: code:addons/project/models/project.py:852
+#: code:addons/project/models/project.py:876
 #, python-format
 msgid "No Subject"
 msgstr "Sense assumpte"
@@ -1746,22 +1805,6 @@ msgstr "Cap"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: project
-#: model:project.task,legend_blocked:project.project_task_1
-#: model:project.task,legend_blocked:project.project_task_12
-#: model:project.task,legend_blocked:project.project_task_20
-#: model:project.task,legend_blocked:project.project_task_25
-#: model:project.task,legend_blocked:project.project_task_26
-#: model:project.task,legend_blocked:project.project_task_9
-#: model:project.task.type,legend_blocked:project.project_stage_0
-msgid "Not validated"
-msgstr "No validat"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__notes
-msgid "Notes"
-msgstr "Notes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
@@ -1816,29 +1859,19 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "On invitation only"
-msgstr "Només amb invitació"
-
-#. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:30
-#, python-format
-msgid ""
-"Once a task is specified, set it %s in the Specifications column, so that "
-"developers know they can pull it. If you work in sprints, use %s to mark "
-"tasks of the current sprint."
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
 msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Opened"
+msgstr "Obert"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -1866,7 +1899,7 @@ msgstr ""
 "d'hores de factura) per projectes interns, personals o de client."
 
 #. module: project
-#: code:addons/project/controllers/portal.py:129
+#: code:addons/project/controllers/portal.py:138
 #, python-format
 msgid "Others"
 msgstr ""
@@ -1918,7 +1951,7 @@ msgstr "Propietari"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:72
 #, python-format
 msgid "Page Ideas"
 msgstr ""
@@ -1934,7 +1967,7 @@ msgid "Parent Record Thread ID"
 msgstr "Id del registre pare"
 
 #. module: project
-#: code:addons/project/models/project.py:919
+#: code:addons/project/models/project.py:937
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
@@ -1951,6 +1984,11 @@ msgstr ""
 "El model pare conte el pseudònim. El model que conte la referència del "
 "pseudònim no és necessàriament el model que es dóna a través del camp "
 "alias_model_id (exemple: projecto (parent_model) i tasca (model))"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1981,6 +2019,16 @@ msgid "Planned Hours"
 msgstr "Hores estimades"
 
 #. module: project
+#: code:addons/project/models/analytic_account.py:28
+#, python-format
+msgid ""
+"Please remove existing tasks in the project linked to the accounts you want "
+"to delete."
+msgstr ""
+"Si us plau, elimini les tasques al projecte vinculades als comptes que vol "
+"eliminar."
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -1997,6 +2045,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
+msgstr "URL del portal d'accés"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:30
+#, python-format
+msgid ""
+"Prioritize Tasks by using the %s icon.%s Use the %s button to signalize to "
+"your colleagues that a task is ready for the next stage.%s Use the %s to "
+"signalize a problem or a need for discussion on a task."
 msgstr ""
 
 #. module: project
@@ -2026,6 +2084,11 @@ msgstr "Privacitat"
 #, python-format
 msgid "Project"
 msgstr "Projecte"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
+msgid "Project Count"
+msgstr "Comte de projecte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -2058,10 +2121,19 @@ msgid "Project Tags"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
 msgstr "Tasques de projecte"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__subtask_project_id
+#: model:ir.model.fields,help:project.field_project_task__subtask_project_id
+msgid ""
+"Project in which sub-tasks of the current project will be created. It can be"
+" the current project itself."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2083,9 +2155,11 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type__project_ids
 #: model:ir.ui.menu,name:project.menu_projects
 #: model:ir.ui.menu,name:project.menu_projects_config
+#: model_terms:ir.ui.view,arch_db:project.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2093,11 +2167,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Projectes"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-msgid "Projects & Tasks"
-msgstr "Projectes & tasques"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -2121,6 +2190,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
 msgstr "Classificació"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__rating_avg
+msgid "Rating Average"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -2153,6 +2227,11 @@ msgid "Rating Request Deadline"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
 msgstr "Classificar recompte"
@@ -2168,27 +2247,19 @@ msgid "Rating when changing stage"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_ids
 #: model:mail.message.subtype,description:project.mt_task_rating
 msgid "Ratings"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:388
+#: code:addons/project/models/project.py:397
 #, python-format
 msgid "Ratings of %s"
 msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:32
-#: model:project.task,legend_done:project.project_task_1
-#: model:project.task,legend_done:project.project_task_12
-#: model:project.task,legend_done:project.project_task_20
-#: model:project.task,legend_done:project.project_task_24
-#: model:project.task,legend_done:project.project_task_25
-#: model:project.task,legend_done:project.project_task_26
-#: model:project.task,legend_done:project.project_task_3
-#: model:project.task,legend_done:project.project_task_8
-#: model:project.task,legend_done:project.project_task_9
 #: model:project.task,legend_done:project.project_task_data_0
 #: model:project.task,legend_done:project.project_task_data_1
 #: model:project.task,legend_done:project.project_task_data_11
@@ -2201,8 +2272,6 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_data_6
 #: model:project.task,legend_done:project.project_task_data_7
 #: model:project.task,legend_done:project.project_task_data_9
-#: model:project.task.type,legend_done:project.project_stage_0
-#: model:project.task.type,legend_done:project.project_stage_2
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
@@ -2214,12 +2283,6 @@ msgstr ""
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
 msgstr "Preparat per propera etapa"
-
-#. module: project
-#: model:project.task,legend_done:project.project_task_19
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr "Llest per reobrir"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
@@ -2253,17 +2316,10 @@ msgstr "Ref."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:48
 #, python-format
 msgid "Refused"
 msgstr "Rebutjada"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:74
-#, python-format
-msgid "Remove Cover Image"
-msgstr "Eliminar imatge en coberta"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -2272,28 +2328,28 @@ msgstr "Informes"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Research"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:60
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:66
 #, python-format
 msgid "Research Project"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:41
 #, python-format
 msgid "Researching"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:62
 #, python-format
 msgid "Resources Allocation"
 msgstr ""
@@ -2357,13 +2413,6 @@ msgid "Security Token"
 msgstr "Token de Seguretat"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:65
-#, python-format
-msgid "Select"
-msgstr "Seleccionar"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -2386,13 +2435,6 @@ msgid "Set Email Template to Stages"
 msgstr ""
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:64
-#, python-format
-msgid "Set a Cover Image"
-msgstr "Establir una Imatge de la coberta"
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2400,9 +2442,9 @@ msgid "Settings"
 msgstr "Configuració"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
 msgstr "Comparteix"
@@ -2490,11 +2532,6 @@ msgid "Start Date"
 msgstr "Data inicial"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__date_start
-msgid "Starting Date"
-msgstr "Data inicial"
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_state
 msgid ""
 "Status based on activities\n"
@@ -2533,7 +2570,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:66
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:75
 #, python-format
 msgid "T-shirt Printing"
 msgstr ""
@@ -2560,7 +2597,7 @@ msgid "Task"
 msgstr "Tasca"
 
 #. module: project
-#: code:addons/project/models/project.py:616
+#: code:addons/project/models/project.py:638
 #, python-format
 msgid "Task %s cannot have several subtask levels."
 msgstr ""
@@ -2654,12 +2691,12 @@ msgid "Task ready for Next Stage"
 msgstr "Tasca llesta per la següent etapa"
 
 #. module: project
-#: code:addons/project/models/project.py:189
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 #: model:ir.model.fields,field_description:project.field_project_project__task_ids
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
+#: model:ir.model.fields,field_description:project.field_res_users__task_ids
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2668,10 +2705,6 @@ msgstr "Tasca llesta per la següent etapa"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
-#: model:project.project,label_tasks:project.project_project_1
-#: model:project.project,label_tasks:project.project_project_2
-#: model:project.project,label_tasks:project.project_project_data
-#, python-format
 msgid "Tasks"
 msgstr "Tasques"
 
@@ -2698,7 +2731,7 @@ msgstr "Fases de tasques"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:36
 #, python-format
 msgid "Testing"
 msgstr "En proves"
@@ -2745,7 +2778,7 @@ msgstr ""
 "compta d'administrador si no es troba un usuari per aquesta adreça."
 
 #. module: project
-#: code:addons/project/models/project.py:253
+#: code:addons/project/models/project.py:245
 #, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
@@ -2754,7 +2787,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:571
+#: code:addons/project/models/project.py:598
 #, python-format
 msgid ""
 "The task cannot be shared with the recipient(s) because the privacy of the "
@@ -2773,26 +2806,9 @@ msgid "There are no tasks."
 msgstr ""
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/xml/project.xml:11
-#, python-format
-msgid "There is no available image to be set as cover."
-msgstr ""
-
-#. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment"
 msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__email_cc
-msgid ""
-"These email addresses will be added to the CC field of all inbound\n"
-"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
-msgstr ""
-"Aquestes adreces de correu seran afegides al camp CC per a tots els correus "
-"entrants i sortints d'aquest registre abans de ser enviats. Separeu les "
-"diferents adreces de correu amb una coma."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -2801,14 +2817,14 @@ msgstr "Aquestes persones rebran un correu electrònic."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:55
 #, python-format
 msgid "This Month"
 msgstr "Aquest mes"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:55
 #, python-format
 msgid "This Week"
 msgstr "Aquest setmana"
@@ -2841,7 +2857,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:33
+#: code:addons/project/static/src/js/tours/project.js:33
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
 msgstr ""
@@ -2870,13 +2886,8 @@ msgid "Title"
 msgstr "Títol"
 
 #. module: project
-#: model:project.task.type,name:project.project_stage_0
-msgid "To Do"
-msgstr "Per fer"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:76
 #, python-format
 msgid "To Print"
 msgstr ""
@@ -2890,7 +2901,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:55
 #: selection:project.task,activity_state:0
 #, python-format
 msgid "Today"
@@ -2923,6 +2934,12 @@ msgid "Unassigned"
 msgstr "Sense assignar"
 
 #. module: project
+#: code:addons/project/models/project.py:411
+#, python-format
+msgid "Unknown Analytic Account"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2935,13 +2952,6 @@ msgstr "Missatges pendents de llegir"
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Comptador de missatges no llegits"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:72
-#, python-format
-msgid "Upload and Set"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
@@ -2966,15 +2976,10 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:107
+#: code:addons/project/static/src/js/tours/project.js:102
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr "Utilitza fil d'Ariadna per <b>tornar al seu canal de tasques</b>."
-
-#. module: project
-#: model:project.task.type,legend_priority:project.project_stage_0
-msgid "Use the star for tasks related to gold customers"
-msgstr ""
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -2988,25 +2993,30 @@ msgstr "Email de l'usuari"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
-msgid "Visible by all employees"
-msgstr "Visible per tots els empleats"
+msgid "Visible by employees"
+msgstr ""
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
-msgid "Visible by following customers"
-msgstr "Visible pels següents clients"
+msgid "Visible by invited employees"
+msgstr ""
+
+#. module: project
+#: selection:project.project,privacy_visibility:0
+msgid "Visible by portal users and employees"
+msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:36
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:37
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:13
-#: code:addons/project/static/src/js/tour.js:18
+#: code:addons/project/static/src/js/tours/project.js:13
+#: code:addons/project/static/src/js/tours/project.js:18
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
@@ -3015,19 +3025,14 @@ msgstr ""
 "comença.</i>"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__email_cc
-msgid "Watchers Emails"
-msgstr "Observadors d'Emails (CC)"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
 msgid "Website Messages"
-msgstr "Missatges del lloc web"
+msgstr "Missatges de la pàgina web"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:63
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:71
 #, python-format
 msgid "Website Redesign"
 msgstr ""
@@ -3045,8 +3050,8 @@ msgstr "Setmanalment"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
-msgid "Whether this project should be displayed on the dashboard or not"
-msgstr "Ja sigui si aquest projecte s'ha de mostrar-se al taulell o no"
+msgid "Whether this project should be displayed on your dashboard."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3090,7 +3095,7 @@ msgstr "Càrrega de treball"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:41
 #, python-format
 msgid "Writing"
 msgstr ""
@@ -3119,7 +3124,7 @@ msgstr ""
 " i a la vista formulari."
 
 #. module: project
-#: code:addons/project/models/project.py:86
+#: code:addons/project/models/project.py:328
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
@@ -3162,7 +3167,7 @@ msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
 
 #. module: project
-#: code:addons/project/models/project.py:635
+#: code:addons/project/models/project.py:657
 #, python-format
 msgid "task"
 msgstr ""

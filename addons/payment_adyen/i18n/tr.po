@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_adyen
+# 	* payment_adyen
 # 
 # Translators:
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2018
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -25,13 +26,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:187
+#: code:addons/payment_adyen/models/payment.py:223
 #, python-format
 msgid "; multiple order found"
 msgstr "; birden çok emir bulundu"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:185
+#: code:addons/payment_adyen/models/payment.py:221
 #, python-format
 msgid "; no order found"
 msgstr "; sipariş bulunmadı"
@@ -42,29 +43,34 @@ msgid "Adyen"
 msgstr "Adyen"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:229
+#: code:addons/payment_adyen/models/payment.py:265
 #, python-format
 msgid "Adyen: feedback error"
 msgstr "Adyen: Geri bildirim hatası"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:197
+#: code:addons/payment_adyen/models/payment.py:233
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
 msgstr ""
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:183
+#: code:addons/payment_adyen/models/payment.py:219
 #, python-format
 msgid "Adyen: received data for reference %s"
 msgstr ""
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:176
+#: code:addons/payment_adyen/models/payment.py:212
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
+msgstr ""
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Alipay"
 msgstr ""
 
 #. module: payment_adyen
@@ -80,7 +86,7 @@ msgstr "Buckaroo"
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
-msgstr "Adyen hesabınız nasıl ayarlanır?"
+msgstr "Adyen hesabı nasıl konfigüre edilir?"
 
 #. module: payment_adyen
 #: selection:payment.acquirer,provider:0
@@ -96,6 +102,11 @@ msgstr "Ticari Kimliği (Merchant ID)"
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "PayU Latam"
+msgstr ""
 
 #. module: payment_adyen
 #: selection:payment.acquirer,provider:0

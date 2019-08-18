@@ -1,26 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_contract
+# 	* hr_contract
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Levent Karakaş <levent@mektup.at>, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Buket Şeker <buket_skr@hotmail.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +35,7 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
-msgstr "<span class=\"text-muted\">(belirli süreli sözleşmeyse)</span>"
+msgstr "<span class=\"text-muted\">(sınırlı süreli sözleşmeyse)</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -59,14 +63,27 @@ msgid "Activity State"
 msgstr "Aktivite Durumu"
 
 #. module: hr_contract
+#: model:res.groups,name:hr_contract.group_hr_contract_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
 msgid "Advantages"
-msgstr "Yan Haklar"
+msgstr "Avantajlar"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr "Yan Haklar..."
+msgstr "Avantajlar..."
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:80
+#, python-format
+msgid ""
+"An employee can only have one contract at the same time. (Excluding Draft "
+"and Cancelled contracts)"
+msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -77,6 +94,11 @@ msgstr "Arşivlendi"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
 msgid "Attachment Count"
 msgstr "Ek Sayısı"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__bank_account_id
+msgid "Bank Account Number"
+msgstr "Banka Hesap No"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -90,8 +112,14 @@ msgstr "Şirket"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__vehicle
 msgid "Company Vehicle"
-msgstr "Şirket Aracı"
+msgstr "Firma Aracı"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+msgid "Contract"
+msgstr "Sözleşme"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
@@ -115,22 +143,6 @@ msgid "Contract Terms"
 msgstr "Sözleşme Koşulları"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Contract Type"
-msgstr "Sözleşme Türü"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
-msgid "Contract Types"
-msgstr "Sözleşme Türleri"
-
-#. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
@@ -142,7 +154,7 @@ msgid "Contract expired"
 msgstr "Sözleşme süresi doldu"
 
 #. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:99
+#: code:addons/hr_contract/models/hr_contract.py:85
 #, python-format
 msgid "Contract start date must be earlier than contract end date."
 msgstr "Sözleşme başlangıç ​​tarihi sözleşme bitiş tarihinden önce olmalıdır."
@@ -156,6 +168,8 @@ msgstr "Yenilenecek Sözleşme"
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+#: model:ir.ui.menu,name:hr_contract.menu_human_resources_configuration_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -169,13 +183,11 @@ msgstr "Yeni Bir Sözleşme Oluştur"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_date
 msgid "Created on"
 msgstr "Oluşturulma"
 
@@ -188,6 +200,7 @@ msgstr "Para Birimi"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_user_view_form
 msgid "Current Contract"
 msgstr "Mevcut Sözleşme"
 
@@ -195,6 +208,11 @@ msgstr "Mevcut Sözleşme"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
 msgstr "Mevcut Personel"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
+msgid "Current contract of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -208,7 +226,6 @@ msgstr "Departman"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
@@ -230,29 +247,19 @@ msgid "Employee"
 msgstr "Personel"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__type_id
-msgid "Employee Category"
-msgstr "Personel Kategorisi"
-
-#. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Employee Contract"
-msgstr "Personel Sözleşmesi"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
 msgstr "Personel Sözleşmeleri"
 
 #. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
+msgid "Employee bank salary account"
+msgstr "Personel banka maaş hesabı"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 msgid "Employee's monthly gross wage."
 msgstr "Personelin aylık brüt ücreti."
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__resource_calendar_id
-msgid "Employee's working schedule."
-msgstr "Personelin çalışma saatleri."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
@@ -262,7 +269,7 @@ msgstr "Bitiş Tarihi"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
-msgstr "Sözleşmenin bitiş tarihi (belirli süreli sözleşme değilse)"
+msgstr "Sözleşmenin bitiş tarihi (sınırlı süreli sözleşme değilse)"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
@@ -296,18 +303,6 @@ msgid "Followers (Partners)"
 msgstr "Tekipçiler (İş ortakları)"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
-msgid "Gives the sequence when displaying a list of Contract."
-msgstr "Sözleşme listesini görüntülerken sıralamayı verir."
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__reported_to_secretariat
-msgid ""
-"Green this button when the contract information has been transfered to the "
-"social secretariat."
-msgstr ""
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
 msgstr "Grupla"
@@ -320,8 +315,12 @@ msgid "HR Contract: update state"
 msgstr "İK Sözleşme: durum güncelleme"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
+msgid "HR Responsible"
+msgstr "İK Sorumlusu"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__id
 msgid "ID"
 msgstr "ID"
 
@@ -338,7 +337,7 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -346,14 +345,14 @@ msgid "Important Messages"
 msgstr "Önemli Mesajlar"
 
 #. module: hr_contract
+#: selection:hr.contract,state:0
+msgid "Incoming"
+msgstr "Girişi Beklenen"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
 msgid "Is Follower"
 msgstr "Takipçi mi"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__manager
-msgid "Is a Manager"
-msgstr "Yöneticidir"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -367,26 +366,18 @@ msgstr "İş Pozisyonu"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract____last_update
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type____last_update
 msgid "Last Modified on"
 msgstr "Son Güncelleme"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
-msgid "Latest contract of the employee"
-msgstr "Personelin son sözleşmesi"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
@@ -394,19 +385,16 @@ msgid "Main Attachment"
 msgstr "Ana Ek"
 
 #. module: hr_contract
-#: model:res.groups,name:hr_contract.group_hr_contract_manager
-msgid "Manager"
-msgstr "Yönetici"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_user_view_form
 msgid "Medical Exam"
-msgstr "Sağlık Raporu"
+msgstr "Medikal Sınavı"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__medic_exam
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__medic_exam
 msgid "Medical Examination Date"
-msgstr "Sağlık Raporu Tarihi"
+msgstr "Sağlık Kontrolü Tarihi"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
@@ -467,7 +455,7 @@ msgstr "Eylem gerektiren mesaj sayısı"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Teslimat hatası olan mesaj sayısı"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread_counter
@@ -478,6 +466,11 @@ msgstr "Okunmamış mesaj sayısı"
 #: selection:hr.contract,activity_state:0
 msgid "Overdue"
 msgstr "Geciken"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
+msgid "Person responsible for validating the employee's contracts."
+msgstr ""
 
 #. module: hr_contract
 #: selection:hr.contract,activity_state:0
@@ -491,34 +484,19 @@ msgstr "Sorumlu Kullanıcı"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Running"
-msgstr "Devam Eden"
+msgstr "Aktif"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
-msgstr "Ücret Bilgisi"
+msgstr "Maaş Bilgisi"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
 msgstr "Sözleşme Ara"
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
-msgid "Search Contract Type"
-msgstr "Sözleşme Türü Ara"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__sequence
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
-msgid "Sequence"
-msgstr "Sıra"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__reported_to_secretariat
-msgid "Social Secretariat"
-msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
@@ -538,7 +516,7 @@ msgstr "Durum"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_state
@@ -548,6 +526,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Etkinliklerdeki aşamalar\n"
+"Zamanı Geçmiş: Tarihi geçmiş \n"
+"Bugün: Etkinlik günü bugün\n"
+"Planlanan: Gelecek etkinlikler."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__state
@@ -560,11 +542,6 @@ msgstr "Sözleşme Durumu"
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
 msgstr "Yenilenecek"
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "To Report to Social Secretariat"
-msgstr ""
 
 #. module: hr_contract
 #: selection:hr.contract,activity_state:0
@@ -580,6 +557,11 @@ msgstr "Okunmamış Mesajlar"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Okunmamış Mesaj Sayacı"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire
@@ -614,4 +596,4 @@ msgstr "Çalışma İzin No"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Working Schedule"
-msgstr "Çalışma Saatleri"
+msgstr "Çalışma Takvimi"

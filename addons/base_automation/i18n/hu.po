@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_automation
+# 	* base_automation
 # 
 # Translators:
-# Martin Trigaux, 2018
-# krnkris, 2018
-# gezza <geza.nagy@oregional.hu>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Martin Trigaux, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# krnkris, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: krnkris, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,42 +113,6 @@ msgid "Base Action Rule: check and execute"
 msgstr ""
 
 #. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_recursive
-#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
-msgid "Base Automation: test recursive rule"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_create
-#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
-msgid "Base Automation: test rule on create"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_recompute
-#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
-msgid "Base Automation: test rule on recompute"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_line
-#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
-msgid "Base Automation: test rule on secondary model"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
-msgid "Base Automation: test rule on write"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write_check_context
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
-msgid "Base Automation: test rule on write check context"
-msgstr ""
-
-#. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
 msgstr "Űrlap módosítás alapján"
@@ -174,9 +138,14 @@ msgid "Binding Type"
 msgstr ""
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
+msgid "Binding View Types"
+msgstr ""
+
+#. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "Cancelled"
-msgstr "Visszavonva"
+msgstr "Törölt"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
@@ -263,6 +232,11 @@ msgid "Delay type"
 msgstr "Késedelem típusa"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_demo
+msgid "Demo"
+msgstr "Minta"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
@@ -272,12 +246,12 @@ msgstr "Megjelenített név"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Határidő"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Esedékesség típusa"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -288,6 +262,11 @@ msgstr "E-mail sablon"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
 msgstr "Külső azonosító"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
+msgid "Groups"
+msgstr "Csoportok"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -338,7 +317,7 @@ msgstr "Utolsó művelet"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test____last_update
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára módosítva"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -350,14 +329,14 @@ msgstr "Utolsó futás"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_uid
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
+msgstr "Utoljára frissítve "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
@@ -383,11 +362,6 @@ msgstr "Percek"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
 msgstr "Modell"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "Modell leírás"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -490,16 +464,6 @@ msgid "Python Code"
 msgstr "Python kód"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr ""
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "A szerverművelethez köthető összefüggő művelet eltávolítása"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
@@ -554,16 +518,28 @@ msgid "Summary"
 msgstr "Összegzés"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "Cél modell"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
 msgstr ""
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:87
+#: code:addons/base_automation/models/base_automation.py:90
 #, python-format
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid ""
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
 msgstr ""
 
 #. module: base_automation
@@ -587,6 +563,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Szerver akció típusa. A következő értékek állnak rendelkezésre:\n"
+"- 'Python kód végrehajtása': python kód blokk végrehajtása\n"
+"- 'Új rekord létrehozása vagy másolása': új rekord létrehozása új értékekkel, vagy létező rekord másolása\n"
+"- 'Rekord írása': létező rekord értékeinek frissítése\n"
+"- 'Több akció végrehajtása': olyan akció definiálása, mely több más szerver akciót hajt végre\n"
+"- 'Követők hozzáadása': követők hozzáadása egy rekordhoz (Csevegés app-ban elérhető)\n"
+"- 'E-mail küdése': e-mail küldése automatikusan (e-mail sablonban elérhető)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -633,10 +616,15 @@ msgid "Value Mapping"
 msgstr "Érték leképezése"
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:86
+#: code:addons/base_automation/models/base_automation.py:89
 #, python-format
 msgid "Warning"
 msgstr "Figyelmeztetés"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+msgid "Watched fields"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

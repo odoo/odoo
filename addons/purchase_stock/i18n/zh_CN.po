@@ -1,25 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_stock
+# 	* purchase_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# roye w <159820@qq.com>, 2018
-# 湘子 南 <1360857908@qq.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
+# 苏州远鼎 <tiexinliu@126.com>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
+# 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2018
+# HQ Shang <shanghq@pharmarise.com.cn>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # v2exerer <9010446@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# 湘子 南 <1360857908@qq.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# roye w <159820@qq.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 黎伟杰 <674416404@qq.com>, 2019
+# Martin Trigaux, 2019
+# 张宏奎 <zhanghongkui@inspur.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2018-08-02 11:17+0000\n"
+"Last-Translator: 张宏奎 <zhanghongkui@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,9 +40,32 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
 msgstr "<span class=\"o_stat_text\">采购订单</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>送货地址:</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -38,7 +73,7 @@ msgid "Action"
 msgstr "动作"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:127
+#: code:addons/purchase_stock/models/stock.py:126
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
 #: selection:stock.rule,action:0
@@ -59,7 +94,7 @@ msgstr "购买补给"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置设定"
+msgstr "配置设置"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
@@ -72,11 +107,13 @@ msgid "Deliver To"
 msgstr "交货到"
 
 #. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO, etc."
-msgstr "依你所安装的模块， 系统允许你定义产品的特定路线， 如采购，制造，依订单制造等。"
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -91,12 +128,12 @@ msgstr "下游移动"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "代发货"
+msgstr "直运"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "采购单出现异常:"
+msgstr "采购单出现异常"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -126,11 +163,6 @@ msgid ""
 msgstr "国际商业条款是一系列用于国际交易的事先定义的商业条款。"
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_account_invoice
-msgid "Invoice"
-msgstr "发票"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
 msgid "Is Shipped"
 msgstr "是否要运送"
@@ -141,6 +173,11 @@ msgid "Is the Sale Module Installed"
 msgstr "销售模块是否已安装"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move
+msgid "Journal Entries"
+msgstr "凭证录入"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Logistics"
 msgstr "物流"
@@ -149,6 +186,11 @@ msgstr "物流"
 #: model:ir.model,name:purchase_stock.model_stock_production_lot
 msgid "Lot/Serial"
 msgstr "批次/序列号"
+
+#. module: purchase_stock
+#: selection:purchase.order.line,qty_received_method:0
+msgid "Manual"
+msgstr "手动"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -204,9 +246,19 @@ msgid "Product Template"
 msgstr "产品模板"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_date
+msgid "Propagate Rescheduling"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
+msgid "Propagate cancellation"
+msgstr ""
+
+#. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Pull & Push"
-msgstr "推拉"
+msgstr "拉并推"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
@@ -257,6 +309,11 @@ msgid "Receive Products"
 msgstr "接收产品"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
 msgid "Receptions"
@@ -266,6 +323,11 @@ msgstr "接收"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
 msgstr "请求您的供应商交付给您的客户"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
+msgid "Reschedule if Higher Than"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -278,6 +340,7 @@ msgid "Return Picking"
 msgstr "退回拣货"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
 msgid "Routes"
 msgstr "路线"
@@ -294,6 +357,7 @@ msgstr "库存调拨"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+#: selection:purchase.order.line,qty_received_method:0
 msgid "Stock Moves"
 msgstr "库存移动"
 
@@ -310,10 +374,15 @@ msgstr "库存规则报告"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "技术字段用于显示代发货地址"
+msgstr "于显示直接发运地址的技术字段"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:265
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
+msgid "The change must be higher than this value to be propagated"
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:308
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -321,7 +390,12 @@ msgid ""
 msgstr "您的采购订单上的数量表明少于账单。 你应该要求退款。"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:38
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date
+msgid "The rescheduling is propagated to the next move."
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/stock_rule.py:48
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -370,7 +444,7 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "已购买产品后能够发运到此仓库。"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:20
+#: code:addons/purchase_stock/models/stock_rule.py:21
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
@@ -378,7 +452,7 @@ msgid ""
 msgstr "当需要产品在<b>%s</b>时，<br/>为了满足需求而创建报价请求。"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:257
+#: code:addons/purchase_stock/models/purchase.py:300
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
@@ -388,7 +462,7 @@ msgstr ""
 "         首先创建一个退货。"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:186
+#: code:addons/purchase_stock/models/purchase.py:188
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "你必须为此合作伙伴设置一个供应商的位置%s"

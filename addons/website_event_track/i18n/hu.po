@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_track
+# 	* website_event_track
 # 
 # Translators:
-# gezza <geza.nagy@oregional.hu>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
-# Zsofia Biro <zsbiro1205@gmail.com>, 2018
+# Zsofia Biro <zsbiro1205@gmail.com>, 2016
 # Martin Trigaux, 2018
 # krnkris, 2018
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,11 +113,6 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track7
-msgid "A technical explanation of how to use computer design apps"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
 msgid ""
 "A track's kanban state indicates special situations affecting it:\n"
@@ -168,17 +163,7 @@ msgid "Add a new track"
 msgstr ""
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track19
-msgid "Advanced lead management : tips and tricks from the fields"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track13
-msgid "Advanced reporting"
-msgstr ""
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event.py:97
+#: code:addons/website_event_track/models/event.py:94
 #, python-format
 msgid "Agenda"
 msgstr "Napirend"
@@ -203,7 +188,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr "Alkalmazás"
+msgstr "Jelentkezés"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -231,6 +216,11 @@ msgid "Call for Proposals"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can publish"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Canceled Stage"
 msgstr ""
@@ -238,13 +228,13 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
 msgid "Cancelled"
-msgstr "Visszavonva"
+msgstr "Visszavont"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
 msgid "Color Index"
-msgstr "Színjegyzék"
+msgstr "Szín jegyzék"
 
 #. module: website_event_track
 #: model:event.type,name:website_event_track.event_type_data_tracks
@@ -259,7 +249,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
 msgid "Confirmed"
-msgstr "Megerősített"
+msgstr "Jóváhagyott"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
@@ -270,7 +260,7 @@ msgstr "Megerősített"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_date
@@ -281,7 +271,7 @@ msgstr "Létrehozta"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -301,26 +291,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Delete"
 msgstr "Törlés"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track25
-msgid "Design contest (entire afternoon)"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track24
-msgid "Design contest (entire day)"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track6
-msgid "Detailed roadmap of our new products"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track11
-msgid "Discover our new design team"
-msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__display_name
@@ -470,7 +440,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
 msgid "Folded in Kanban"
-msgstr "Kanbannézetben behajtott"
+msgstr "Kanban nézetben behajtott"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
@@ -490,7 +460,7 @@ msgstr "Követők (Partnerek)"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Future Activities"
-msgstr ""
+msgstr "Jövőbeli tevékenységek"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -505,12 +475,12 @@ msgstr "Zöld"
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Szürke"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
-msgstr "Csoportosítás ezzel"
+msgstr "Csoportosítás"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
@@ -523,51 +493,6 @@ msgid "Highest"
 msgstr "Legmagasabb"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track21
-msgid "House of World Cultures"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track18
-msgid "How to build your marketing strategy within a competitive environment"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track15
-msgid "How to communicate with your community"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track1
-msgid "How to design a new piece of furniture"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track4
-msgid "How to develop automated processes"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track16
-msgid "How to follow us on the social media"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track9
-msgid "How to improve your quality processes"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track2
-msgid "How to integrate hardware materials in your pieces of furniture"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track8
-msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
@@ -576,7 +501,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "Azonosító ID"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
@@ -592,6 +517,7 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
@@ -623,12 +549,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
-msgstr "Kanbanállapot"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track23
-msgid "Key Success factors selling our furniture"
-msgstr ""
+msgstr "Kanban státusz"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor____last_update
@@ -639,7 +560,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_uid
@@ -650,7 +571,7 @@ msgstr "Legutóbb frissítve"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_date
@@ -661,17 +582,12 @@ msgstr "Legutóbb frissítette"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
+msgstr "Utoljára frissítve "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Late Activities"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track12
-msgid "Latest trends"
-msgstr ""
+msgstr "Késő tevékenységek"
 
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
@@ -689,14 +605,9 @@ msgid "Low"
 msgstr "Alacsony"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track31
-msgid "Lunch"
-msgstr "Ebéd"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Fő melléklet"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
@@ -728,7 +639,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Üzenetkézbesítési hiba"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
@@ -736,29 +647,9 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track22
-msgid "Minimal but efficient design"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track30
-msgid "Morning break"
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Activities"
 msgstr "Tevékenységeim"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track27
-msgid "My Company global presentation"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track20
-msgid "New Certification Program"
-msgstr ""
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -778,7 +669,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Következő tevékenység-határidő"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
@@ -788,7 +679,7 @@ msgstr "Következő tevékenység összegzése"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Következő tevékenységtípus"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks
@@ -803,7 +694,7 @@ msgstr "Műveletek száma"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Hiba száma"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
@@ -813,7 +704,7 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_unread_counter
@@ -831,19 +722,9 @@ msgid "Overdue"
 msgstr "lejárt"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track14
-msgid "Partnership programs"
-msgstr ""
-
-#. module: website_event_track
 #: selection:event.track,activity_state:0
 msgid "Planned"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track3
-msgid "Portfolio presentation"
-msgstr ""
+msgstr "Tervezett"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -853,7 +734,7 @@ msgstr "Hasznos Információk"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
 msgid "Priority"
-msgstr "Prioritás"
+msgstr "Elsőbbségi"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -886,11 +767,6 @@ msgid ""
 "Put here the list of documents, like slides of\n"
 "                            the presentations. Remove the above t-if when\n"
 "                            it's implemented."
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track10
-msgid "Raising qualitive insights from your customers"
 msgstr ""
 
 #. module: website_event_track
@@ -961,7 +837,7 @@ msgid "Speaker Biography"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:164
+#: code:addons/website_event_track/models/event_track.py:163
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
 #, python-format
 msgid "Speaker Email"
@@ -978,7 +854,7 @@ msgid "Speaker Phone"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:184
+#: code:addons/website_event_track/models/event_track.py:183
 #, python-format
 msgid "Speakers"
 msgstr "Hangszórók"
@@ -1024,17 +900,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
-msgstr "Szakasz"
+msgstr "Értékesítési szint"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
-msgstr "Szakasz neve"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track28
-msgid "Status & Strategy"
-msgstr ""
+msgstr "Értékesítési szint neve"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
@@ -1044,6 +915,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tevékenységeken alapuló állapot\n"
+"Lejárt: Az esedékesség dátuma már elmúlt\n"
+"Ma: A tevékenység dátuma ma van\n"
+"Tervezett: Jövőbeli tevékenységek."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1063,7 +938,7 @@ msgstr "Címke"
 #. module: website_event_track
 #: sql_constraint:event.track.tag:0
 msgid "Tag name already exists !"
-msgstr "A címkenév már létezik!"
+msgstr "Címke név már létezik!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
@@ -1077,7 +952,7 @@ msgid "Talk Introduction"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:102
+#: code:addons/website_event_track/models/event.py:99
 #, python-format
 msgid "Talk Proposals"
 msgstr ""
@@ -1088,7 +963,7 @@ msgid "Talk Title"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:96
+#: code:addons/website_event_track/models/event.py:93
 #, python-format
 msgid "Talks"
 msgstr ""
@@ -1110,17 +985,6 @@ msgstr ""
 "A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track17
-#: model:event.track,name:website_event_track.event_track29
-msgid "The new marketing strategy"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track5
-msgid "The new way to promote your creations"
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "This event does not accept proposals."
 msgstr ""
@@ -1131,7 +995,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ez a szakasz behajtott kanbannézetben, ha nincsenek benne megjeleníthető "
+"Ez a szint behajtott a kanban nézetben, ha nincsenek benne megjeleníthető "
 "rekordok."
 
 #. module: website_event_track
@@ -1341,7 +1205,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Email"
-msgstr "Az Ön e-mail címe"
+msgstr "Az Ön emailje"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal

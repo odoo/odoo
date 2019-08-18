@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_coupon
+# 	* sale_coupon
 # 
 # Translators:
 # Michael Yeung, 2018
@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2+e\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 14:08+0000\n"
+"POT-Creation-Date: 2019-08-12 12:27+0000\n"
 "PO-Revision-Date: 2017-02-15 11:46+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -44,12 +44,6 @@ msgstr "%s %% 全宇宙最給力的產品折扣"
 #, python-format
 msgid "%s%% discount on total amount"
 msgstr "%s%%總價上打折"
-
-#. module: sale_coupon
-#: model:product.product,name:sale_coupon.product_product_10_percent_discount
-#: model:product.template,name:sale_coupon.product_product_10_percent_discount_product_template
-msgid "10.0% discount on total amount"
-msgstr ""
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
@@ -267,7 +261,7 @@ msgstr "優惠券已經申請相同的回報"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:62
-#: code:addons/sale_coupon/models/sale_coupon_program.py:155
+#: code:addons/sale_coupon/models/sale_coupon_program.py:168
 #, python-format
 msgid "A minimum of %s %s should be purchased to get the reward"
 msgstr "至少%s%s應該購買得到的獎勵"
@@ -375,7 +369,7 @@ msgstr "適用於第一"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:80
-#: code:addons/sale_coupon/models/sale_coupon_program.py:176
+#: code:addons/sale_coupon/models/sale_coupon_program.py:189
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
 msgstr "在規定的條件下至少有一個是不符合獲得獎勵！"
@@ -422,11 +416,6 @@ msgstr ""
 " 如果滿足某些條件，您可以共享促銷代碼或自動授予促銷。"
 
 #. module: sale_coupon
-#: model:sale.coupon.program,name:sale_coupon.3_ipad_plus_1_free
-msgid "Buy 3 large cabinets, get one for free"
-msgstr ""
-
-#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_generate_view_form
 msgid "Cancel"
@@ -448,11 +437,6 @@ msgstr "關閉程序"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__code
 msgid "Code"
 msgstr "代碼"
-
-#. module: sale_coupon
-#: model:sale.coupon.program,name:sale_coupon.10_percent_auto_applied
-msgid "Code for 10% on orders"
-msgstr ""
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__company_id
@@ -718,12 +702,6 @@ msgid "Free Product - %s"
 msgstr "免費產品－%s"
 
 #. module: sale_coupon
-#: model:product.product,name:sale_coupon.product_product_free_large_cabinet
-#: model:product.template,name:sale_coupon.product_product_free_large_cabinet_product_template
-msgid "Free Product - Large Cabinet"
-msgstr ""
-
-#. module: sale_coupon
 #: selection:sale.coupon.reward,reward_type:0
 msgid "Free Shipping"
 msgstr "免費送貨"
@@ -767,7 +745,7 @@ msgid "Global discounts are not cumulable."
 msgstr "全球折扣不累計的。"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:167
+#: code:addons/sale_coupon/models/sale_coupon_program.py:180
 #, python-format
 msgid "Global discounts are not cumulative."
 msgstr "全球折扣不是累積的。"
@@ -1054,19 +1032,19 @@ msgid "Promo Code Usage"
 msgstr "促銷代碼的使用"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:153
+#: code:addons/sale_coupon/models/sale_coupon_program.py:166
 #, python-format
 msgid "Promo code %s has been expired."
 msgstr "促銷代碼%s已經過期。"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:163
+#: code:addons/sale_coupon/models/sale_coupon_program.py:176
 #, python-format
 msgid "Promo code is expired"
 msgstr "促銷代碼過期"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:161
+#: code:addons/sale_coupon/models/sale_coupon_program.py:174
 #, python-format
 msgid "Promo code is invalid"
 msgstr "促銷代碼無效"
@@ -1099,7 +1077,7 @@ msgid "Promotional Program"
 msgstr "推廣計劃"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:165
+#: code:addons/sale_coupon/models/sale_coupon_program.py:178
 #, python-format
 msgid "Promotionals codes are not cumulative."
 msgstr "促銷代碼不累積。"
@@ -1302,7 +1280,7 @@ msgstr "優惠券計劃草案或是關閉狀態"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:74
-#: code:addons/sale_coupon/models/sale_coupon_program.py:171
+#: code:addons/sale_coupon/models/sale_coupon_program.py:184
 #, python-format
 msgid "The customer doesn't have access to this reward."
 msgstr "客戶並沒有獲得這些獎勵。"
@@ -1326,20 +1304,20 @@ msgid "The program code must be unique!"
 msgstr "程序代碼必須是唯一的！"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:157
+#: code:addons/sale_coupon/models/sale_coupon_program.py:170
 #, python-format
 msgid "The promo code is already applied on this order"
 msgstr "促銷代碼已經應用在這個訂單上"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:159
+#: code:addons/sale_coupon/models/sale_coupon_program.py:172
 #, python-format
 msgid "The promotional offer is already applied on this order"
 msgstr "促銷提供已經應用此訂單上"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon.py:72
-#: code:addons/sale_coupon/models/sale_coupon_program.py:169
+#: code:addons/sale_coupon/models/sale_coupon_program.py:182
 #, python-format
 msgid ""
 "The reward products should be in the sales order lines to apply the "
@@ -1379,14 +1357,6 @@ msgstr "此優惠券%s已使用或已過期。"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__reward_product_uom_id
 msgid "Unit of Measure"
 msgstr "計量單位"
-
-#. module: sale_coupon
-#: model:product.product,uom_name:sale_coupon.product_product_10_percent_discount
-#: model:product.product,uom_name:sale_coupon.product_product_free_large_cabinet
-#: model:product.template,uom_name:sale_coupon.product_product_10_percent_discount_product_template
-#: model:product.template,uom_name:sale_coupon.product_product_free_large_cabinet_product_template
-msgid "Unit(s)"
-msgstr "件"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -1445,7 +1415,7 @@ msgid ""
 msgstr "您不在您的銷售訂單所需的產品數量。所有的產品應記錄在銷售訂單。例如：如果促銷是「買2，免費1」，您需要在您的銷售訂單上有3件T恤。"
 
 #. module: sale_coupon
-#: code:addons/sale_coupon/models/sale_coupon_program.py:173
+#: code:addons/sale_coupon/models/sale_coupon_program.py:186
 #, python-format
 msgid ""
 "You don't have the required product quantities on your sales order. If the "

@@ -1,17 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * phone_validation
+# 	* phone_validation
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2017-12-13 14:56+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +23,13 @@ msgstr ""
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "Add international prefix"
-msgstr ""
+msgstr "Dodaj međunarodni prefiks"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_res_company__phone_international_format
 msgid ""
 "Always encode phone numbers using international format. Otherwise numbers "
-"coming from the company's country are nationaly formatted. International "
+"coming from the company's country are nationally formatted. International "
 "numbers are always using international format."
 msgstr ""
 
@@ -51,13 +52,13 @@ msgstr "ID"
 #: code:addons/phone_validation/tools/phone_validation.py:23
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits"
-msgstr ""
+msgstr "Nemoguć broj %s: vjerojatno neispravan broj znamenaka"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:25
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix"
-msgstr ""
+msgstr "Neispravan broj %s: vjerojatno neispravan prefiks"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
@@ -72,6 +73,11 @@ msgstr "Lokalni brojevi"
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "No prefix"
+msgstr "Nema prefiksa"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_validation_mixin
+msgid "Phone Validation Mixin"
 msgstr ""
 
 #. module: phone_validation
@@ -81,6 +87,8 @@ msgid ""
 "Unable to format %s:\n"
 "%s"
 msgstr ""
+"Nemogu formatirati %s:\n"
+"%s"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:20
@@ -89,8 +97,5 @@ msgid ""
 "Unable to parse %s:\n"
 "%s"
 msgstr ""
-
-#. module: phone_validation
-#: model:ir.model,name:phone_validation.model_phone_validation_mixin
-msgid "phone.validation.mixin"
-msgstr "phone.validation.mixin"
+"Nemoguće parsirati%s:\n"
+"%s"

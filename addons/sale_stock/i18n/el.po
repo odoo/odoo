@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_stock
+# 	* sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2019
+# Martin Trigaux, 2019
+# Kostas Goutoudis <goutoudis@gmail.com>, 2019
+# Stelios Steiakakis <fs_corpse@yahoo.gr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Stelios Steiakakis <fs_corpse@yahoo.gr>, 2019\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:273
+#: code:addons/sale_stock/models/sale_order.py:304
 #, python-format
 msgid ""
 "\n"
@@ -38,30 +40,25 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid ""
-"<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> Cancelled</span>"
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid ""
-"<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Preparation</span>"
+msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid ""
-"<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Shipped</span>"
+msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
-"<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Partially Available</span>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: sale_stock
@@ -75,6 +72,21 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
+msgid "<span>Product</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "Ποσότητα"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
+msgid "<span>SN/LN</span>"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
 msgstr "<strong>Αναφορά Πελάτη:</strong>"
@@ -85,10 +97,14 @@ msgid "<strong>Delivery Orders</strong>"
 msgstr "<strong>Εντολές Παράδοσης</strong>"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<strong>Incoterm: </strong>"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
-msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>Διεθνείς Εμπορικοί Όροι:</strong>"
+msgid "<strong>Incoterm:</strong>"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -111,14 +127,14 @@ msgid "Analytic From Expenses"
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr "Εφαρμογή ειδικών διαδρομών από παραγγελίες (π.χ. dropshipping, MTO)"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific rotues"
 msgstr ""
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "As soon as possible"
+msgstr "Το συντομότερο δυνατόν"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -141,14 +157,9 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "Παράδοση όλων των ειδών ταυτόχρονα"
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "Παράδοση κάθε είδους μόλις είναι διαθέσιμο"
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Date:"
+msgstr "Ημερομηνία:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -161,6 +172,16 @@ msgid "Delivery Orders"
 msgstr "Εντολές Παράδοσης"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
+msgid "Display Lots & Serial Numbers on Invoices"
+msgstr ""
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_lot_on_invoice
+msgid "Display Serial & Lot Number on Invoices"
+msgstr ""
+
+#. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr "Εμφάνιση Διεθνών Οικονομικών Όρων σε Παραγγελίες και Τιμολόγια"
@@ -171,14 +192,16 @@ msgid "Display incoterms on orders &amp; invoices"
 msgstr "Εμφάνιση incoterms στις παραγγελίες & τιμολόγια "
 
 #. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:119
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
 msgstr "Ημερομηνία έναρξης ισχύος"
-
-#. module: sale_stock
-#: model:res.groups,name:sale_stock.group_route_so_lines
-msgid "Enable Route on Sales Order Line"
-msgstr "Ενεργοποίηση Διαδρομής στις Γραμμές Παραγγελίας Πώλησης"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -210,24 +233,15 @@ msgid "Impacted Transfer(s):"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
 msgstr "Συντομεύσεις"
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_account_invoice__incoterms_id
-msgid ""
-"Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr ""
-"Οι Διεθνείς Οικονομικοί Όροι είναι σειρές απο όρους  πωλήσεων. "
-"Χρησιμοποιούνται για να διαχωρίσει τα κόστη συναλλαγών και τις αρμοδιότητες "
-"μεταξύ αγοραστή και πωλητή και αντανακλά πρακτικές μεταφοράς σε τεχνολογία "
-"αιχμής."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -244,19 +258,19 @@ msgid "Inventory Routes"
 msgstr "Διαδρομές Απογραφής"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice
-msgid "Invoice"
-msgstr "Τιμολόγιο"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Γραμμή Τιμολογίου"
-
-#. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
 msgstr "Τιμολόγηση"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move
+msgid "Journal Entries"
+msgstr "Ημερολογιακές Καταχωρήσεις"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "Στοιχείο Ημερολογίου"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
@@ -264,7 +278,12 @@ msgid "Lot/Serial"
 msgstr "Παρτίδα/Σειριακός"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:418
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Lots &amp; Serial numbers will appear on the invoice"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:453
 #, python-format
 msgid "Make To Order"
 msgstr "Παραγωγή Κατά Παραγγελία"
@@ -316,18 +335,13 @@ msgid "Move forward expected delivery dates by"
 msgstr "Προχωρήστε τις αναμενόμενες ημερομηνίες παράδοσης από"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:280
+#: code:addons/sale_stock/models/sale_order.py:311
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Ανεπαρκές Απόθεμα!"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
-msgid "Order-Specific Routes"
-msgstr "Συγκεκριμένες Διαδρομές Παραγγελιών"
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:294
+#: code:addons/sale_stock/models/sale_order.py:332
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Μειώθηκε η ποσότητα παραγγελίας!"
@@ -378,17 +392,11 @@ msgid "Route"
 msgstr "Διαδρομή"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Routes for Sales Order Lines"
-msgstr "Διαδρομές για Γραμμή Παραγγελίας"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
 msgstr "Γραμμή Πώλησης"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
 msgstr "Παραγγελία"
@@ -409,6 +417,7 @@ msgid "Sales Analysis Report"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
 msgstr "Παραγγελία"
@@ -500,21 +509,16 @@ msgid "Stock rule report"
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: code:addons/sale_stock/models/sale_order.py:70
+#, python-format
 msgid ""
-"This allows to apply a special route on sales order lines (e.g. "
-"dropshipping, make-to-order) in case of unusual order scenario. To be "
-"available in sales orders, routes must have 'Sales Order Line' option "
-"checked in their setup form."
+"The delivery address has been changed on the Sales Order<br/>\n"
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                        You should probably update the partner on this document."
 msgstr ""
-"Αυτό επιτρέπει την εφαρμογή μιας ειδικής διαδρομής στις γραμμές παραγγελίας "
-"(π.χ. Απευθείας παράδοση σε πελάτη, παραγωγή-κατά-παραγγελία) σε περίπτωση "
-"ασυνήθιστου σεναρίου παραγγελίας. Για να είναι διαθέσιμες στις παραγγελίες "
-"πώλησης, οι διαδρομές πρέπει να έχουν επιλέξει την επιλογή 'Γραμμή "
-"Παραγγελίας' στη φόρμα εγκατάστασης."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:397
+#: code:addons/sale_stock/models/sale_order.py:433
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr ""
@@ -537,10 +541,21 @@ msgid "Warehouse"
 msgstr "Αποθήκη"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:396
+#: code:addons/sale_stock/models/sale_order.py:432
 #, python-format
 msgid "Warning"
 msgstr "Προσοχή"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:118
+#, python-format
+msgid "Warning!"
+msgstr "Προειδοποίηση"
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "When all products are ready"
+msgstr "Όταν όλα τα είδη είναι έτοιμα"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -553,7 +568,7 @@ msgid "When to start shipping"
 msgstr "Πότε να αρχίσει η αποστολή"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:295
+#: code:addons/sale_stock/models/sale_order.py:333
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -563,7 +578,7 @@ msgstr ""
 "αυτόματο τρόπο τη σειρά παραλαβής, αν χρειαστεί."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:437
+#: code:addons/sale_stock/models/sale_order.py:474
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
@@ -571,7 +586,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:269
+#: code:addons/sale_stock/models/sale_order.py:297
 #, python-format
 msgid ""
 "You plan to sell %s %s of %s but you only have %s %s available in %s "

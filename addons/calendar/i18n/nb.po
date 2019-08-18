@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * calendar
+# 	* calendar
 # 
 # Translators:
-# Jorunn D. Newth, 2018
-# Martin Trigaux, 2018
-# Marius Stedjan <marius@stedjan.com>, 2018
+# Viktor Basso <viktor@voit.no>, 2018
+# Jorunn D. Newth, 2019
+# Marius Stedjan <marius@stedjan.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: Dato oppdatert"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:741
+#: code:addons/calendar/models/calendar.py:751
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -42,57 +43,22 @@ msgstr ""
 " %s kl %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:732
+#: code:addons/calendar/models/calendar.py:742
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:229
+#: code:addons/calendar/models/calendar.py:230
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s har godtatt invitasjonen"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:237
+#: code:addons/calendar/models/calendar.py:239
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s har avslått invitasjonen"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_5
-msgid "1 Day(s)"
-msgstr "1 dag(er)"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_3
-msgid "1 Hour(s)"
-msgstr "1 time(r)"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_1
-msgid "15 Minute(s)"
-msgstr "15 minutt(er)"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_4
-msgid "2 Hour(s)"
-msgstr "2 time(r)"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_1
-msgid "3 Hour(s), by e-mail"
-msgstr "3 time(r), per epost"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_2
-msgid "30 Minute(s)"
-msgstr "30 minutt(er)"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_2
-msgid "6 Hour(s), by e-mail"
-msgstr "6 time(r), per epost"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -336,6 +302,18 @@ msgid "Action Needed"
 msgstr "Handling påkrevd"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
@@ -358,14 +336,14 @@ msgstr "Aktivitetstype"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 #, python-format
 msgid "All Day"
 msgstr "Hele dagen"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:728
+#: code:addons/calendar/models/calendar.py:738
 #, python-format
 msgid "AllDay , %s"
 msgstr "AllDay , %s"
@@ -409,7 +387,7 @@ msgid "Availability"
 msgstr "Tilgjengelighet"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1693
+#: code:addons/calendar/models/calendar.py:1709
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -461,16 +439,6 @@ msgstr "Kalendermøte"
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
 msgstr "Kalenderpåminnelse"
-
-#. module: calendar
-#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
-msgid "Category"
-msgstr "Kategori"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -556,7 +524,7 @@ msgstr "Beskrivelse"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:18
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:13
 #, python-format
 msgid "Details"
 msgstr "Detaljer"
@@ -605,10 +573,20 @@ msgid "Duration in minutes"
 msgstr "Varighet i minutter"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:calendar.alarm,alarm_type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
 msgid "Email"
 msgstr "Epost"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hour(s)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -667,12 +645,6 @@ msgid "Event Time"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1234
-#, python-format
-msgid "Event recurrence interval cannot be negative."
-msgstr "Intervallet mellom møtene kan ikke være negativt."
-
-#. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "Alle"
@@ -694,7 +666,7 @@ msgid "First"
 msgstr "Første"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:998
+#: code:addons/calendar/models/calendar.py:1013
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Først må du spesifisere datoen for invitasjonen"
@@ -746,7 +718,7 @@ msgid "Group By"
 msgstr "Grupper etter"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1636
+#: code:addons/calendar/models/calendar.py:1652
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "Du kan ikke gruppere på dato, bruk kalendervisning i stedet."
@@ -915,8 +887,8 @@ msgid "Meeting"
 msgstr "Møte"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:942
-#: code:addons/calendar/models/calendar.py:947
+#: code:addons/calendar/models/calendar.py:957
+#: code:addons/calendar/models/calendar.py:962
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
@@ -1016,9 +988,39 @@ msgid "No I'm not going."
 msgstr "Nei, jeg skal ikke."
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:mail.activity.type,category:0
+msgid "None"
+msgstr "Ingen"
+
+#. module: calendar
+#: selection:calendar.alarm,alarm_type:0
 msgid "Notification"
 msgstr "Varsling"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Day(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minute(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minute(s)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1052,7 +1054,7 @@ msgstr "Antall uleste meldinger"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:17
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:12
 #, python-format
 msgid "OK"
 msgstr "OK"
@@ -1083,11 +1085,6 @@ msgid "Options"
 msgstr "Valg"
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Annet"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
@@ -1104,7 +1101,7 @@ msgid "Partner-related data of the user"
 msgstr "Partnerrelatert brukerdata"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1247
+#: code:addons/calendar/models/calendar.py:1264
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr ""
@@ -1197,7 +1194,7 @@ msgid "Responsible"
 msgstr "Ansvarlig"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:calendar.alarm,alarm_type:0
 msgid "SMS Text Message"
 msgstr "SMS-melding"
 
@@ -1243,7 +1240,7 @@ msgstr "Vis tid som"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:19
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:14
 #, python-format
 msgid "Snooze"
 msgstr ""
@@ -1344,16 +1341,28 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:941
+#: code:addons/calendar/models/calendar.py:956
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:946
+#: code:addons/calendar/models/calendar.py:961
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1249
+#, python-format
+msgid "The interval cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1251
+#, python-format
+msgid "The number of repetitions  cannot be negative."
 msgstr ""
 
 #. module: calendar
@@ -1377,6 +1386,11 @@ msgid "Thursday"
 msgstr "Torsdag"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+msgid "Timezone"
+msgstr "Tidssone"
+
+#. module: calendar
 #: code:addons/calendar/models/res_users.py:41
 #, python-format
 msgid "Today's Meetings"
@@ -1393,7 +1407,7 @@ msgid "Tuesday"
 msgstr "Tirsdag"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "Type"
 
@@ -1435,6 +1449,11 @@ msgid "Update only this instance"
 msgstr "Oppdater bare denne instansen"
 
 #. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Upload Document"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_users
 msgid "Users"
 msgstr "Brukere"
@@ -1470,7 +1489,7 @@ msgid "Yes I'm going."
 msgstr "Ja, jeg skal."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:159
+#: code:addons/calendar/models/calendar.py:160
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "Du kan ikke kopiere en kalenderdeltaker."
@@ -1479,9 +1498,3 @@ msgstr "Du kan ikke kopiere en kalenderdeltaker."
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "for eksempel Forretningslunsj"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1232
-#, python-format
-msgid "interval cannot be negative."
-msgstr "intervallet kan ikke være negativt."

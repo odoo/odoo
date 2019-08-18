@@ -1,17 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_automation
+# 	* base_automation
 # 
 # Translators:
-# Martin Trigaux, 2018
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
+# Carles Antoli <carlesantoli@hotmail.com>, 2017
+# Sergio Flores <vitavitae1@gmail.com>, 2017
+# Diego de la Torre <diego.delatorreh@gmail.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
+# Antonio Trueba, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Miguel Orueta <mo@landoo.es>, 2017
+# e2f <projects@e2f.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2018
+# Raquel Iciarte <ric@odoo.com>, 2018
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: e2f_EPV Translator <e2f_EPV@outlook.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,44 +133,6 @@ msgid "Base Action Rule: check and execute"
 msgstr "Norma de acción básica: revisar y ejecutar"
 
 #. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_recursive
-#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
-msgid "Base Automation: test recursive rule"
-msgstr "Automatización básica: regla recursiva de prueba"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_create
-#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
-msgid "Base Automation: test rule on create"
-msgstr "Automatización básica: regla de prueba para crear"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_recompute
-#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
-msgid "Base Automation: test rule on recompute"
-msgstr "Automatización básica: regla de prueba para recalcular"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_line
-#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
-msgid "Base Automation: test rule on secondary model"
-msgstr "Automatización básica: regla de prueba para el modelo secundario"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
-msgid "Base Automation: test rule on write"
-msgstr "Automatización básica: regla de prueba para la escritura"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write_check_context
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
-msgid "Base Automation: test rule on write check context"
-msgstr ""
-"Automatización básica: regla de prueba para una escritura de revisión del "
-"contexto"
-
-#. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
 msgstr "En base a modificación de formulario"
@@ -173,6 +158,11 @@ msgid "Binding Type"
 msgstr "Tipo de vínculo"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
+msgid "Binding View Types"
+msgstr ""
+
+#. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
@@ -183,6 +173,8 @@ msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
 msgstr ""
+"Marque esta casilla si este contacto es un cliente. Puede ser seleccionado "
+"en órdenes de venta. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -259,6 +251,11 @@ msgid "Delay type"
 msgstr "Tipo retraso"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_demo
+msgid "Demo"
+msgstr "Demostración"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
@@ -268,7 +265,7 @@ msgstr "Nombre mostrado"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Fecha de vencimiento en"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
@@ -284,6 +281,11 @@ msgstr "Plantilla de correo electrónico"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
 msgstr "ID externo"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
+msgid "Groups"
+msgstr "Grupos"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -380,11 +382,6 @@ msgstr "Minutos"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
 msgstr "Modelo"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "Descripción del modelo"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -489,16 +486,6 @@ msgid "Python Code"
 msgstr "Código Python"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "Eliminar acción"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "Eliminar la acción contextual relacionada con esta acción de servidor"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
@@ -555,16 +542,28 @@ msgid "Summary"
 msgstr "Resumen"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "Modelo de objetivo"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
 msgstr ""
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:87
+#: code:addons/base_automation/models/base_automation.py:90
 #, python-format
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid ""
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
 msgstr ""
 
 #. module: base_automation
@@ -641,10 +640,15 @@ msgid "Value Mapping"
 msgstr "Mapeo de valores"
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:86
+#: code:addons/base_automation/models/base_automation.py:89
 #, python-format
 msgid "Warning"
 msgstr "Alerta"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+msgid "Watched fields"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -684,3 +688,6 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Escribe el código de Python que ejecutará la acción. Algunas variables están"
+" disponibles para su uso; La ayuda sobre la expresión de Python se encuentra"
+" en la pestaña de ayuda."

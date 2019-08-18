@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_restaurant
+# 	* pos_restaurant
 # 
 # Translators:
-# Martin Trigaux, 2018
-# krnkris, 2018
-# gezza <geza.nagy@oregional.hu>, 2018
-# Kovács Tibor <kovika@gmail.com>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Kovács Tibor <kovika@gmail.com>, 2017
+# Martin Trigaux, 2019
+# krnkris, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,53 +24,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "$ 3.12"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "$ 4.40"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "$ 4.50"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "$ 8.50"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "<span class=\"pos-change_amount\">$ 0.86</span>"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "<span class=\"pos-change_title\">Change</span>"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "<span>$ 470.00</span>"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "<span>Cash (USD):</span>"
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid ""
+"<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
+"role=\"img\" aria-label=\"For bars and restaurants\"/>"
 msgstr ""
 
 #. module: pos_restaurant
@@ -184,7 +141,7 @@ msgstr "Megjelenítés"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:562
+#: code:addons/pos_restaurant/static/src/js/floors.js:505
 #, python-format
 msgid "Are you sure ?"
 msgstr "Biztos benne ?"
@@ -250,13 +207,13 @@ msgstr "Kék"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:39
 #, python-format
 msgid "CANCELLED"
-msgstr "VISSZAVONVA"
+msgstr "VISSZAVONT"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:270
-#: code:addons/pos_restaurant/static/src/js/floors.js:309
-#: code:addons/pos_restaurant/static/src/js/floors.js:425
+#: code:addons/pos_restaurant/static/src/js/floors.js:222
+#: code:addons/pos_restaurant/static/src/js/floors.js:261
+#: code:addons/pos_restaurant/static/src/js/floors.js:368
 #, python-format
 msgid "Changes could not be saved"
 msgstr "Változtatások nem menthetőek"
@@ -270,12 +227,6 @@ msgid "Close"
 msgstr "Bezárás"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.coke
-#: model:product.template,name:pos_restaurant.coke_product_template
-msgid "Coca-Cola"
-msgstr ""
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
 msgid "Color"
 msgstr "Szín"
@@ -285,14 +236,14 @@ msgstr "Szín"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -302,20 +253,15 @@ msgid "Delete"
 msgstr "Törlés"
 
 #. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "Desk Organizer"
-msgstr ""
-
-#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:88
 #, python-format
 msgid "Discount:"
 msgstr "Árengedmény:"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:140
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:137
 #, python-format
 msgid "Discounts"
 msgstr "Árengedmények"
@@ -326,11 +272,6 @@ msgstr "Árengedmények"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
-
-#. module: pos_restaurant
-#: model:pos.category,name:pos_restaurant.drinks
-msgid "Drinks"
-msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -395,7 +336,7 @@ msgstr "Zöld"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:154
 #, python-format
 msgid "Grey"
-msgstr ""
+msgstr "Szürke"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -407,7 +348,7 @@ msgstr "Vendégek"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:946
+#: code:addons/pos_restaurant/static/src/js/floors.js:889
 #, python-format
 msgid "Guests ?"
 msgstr "Vendégek ?"
@@ -435,7 +376,7 @@ msgstr "Vízszintes pozíció"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__id
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "Azonosító ID"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -456,26 +397,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer____last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "Led Lamp"
-msgstr ""
+msgstr "Utoljára frissítve "
 
 #. module: pos_restaurant
 #. openerp-web
@@ -495,17 +431,6 @@ msgstr "Logó"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.minute_maid
-#: model:product.template,name:pos_restaurant.minute_maid_product_template
-msgid "Minute Maid"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "Monitor Stand"
 msgstr ""
 
 #. module: pos_restaurant
@@ -529,26 +454,21 @@ msgstr "ÉRTESÍTÉS"
 #: code:addons/pos_restaurant/static/src/xml/notes.xml:16
 #, python-format
 msgid "Note"
-msgstr "Megjegyzés"
+msgstr "Jegyzet"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:495
+#: code:addons/pos_restaurant/static/src/js/floors.js:438
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Székek száma ?"
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "Odoo Logo"
-msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:13
 #, python-format
 msgid "Ok"
-msgstr "Ok"
+msgstr "Rendben"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -604,11 +524,6 @@ msgid "Payment"
 msgstr "Kifizetés"
 
 #. module: pos_restaurant
-#: model:product.category,name:pos_restaurant.product_category_pos
-msgid "PoS"
-msgstr ""
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
 msgid "Point of Sale"
 msgstr "Értékesítési pont"
@@ -622,11 +537,6 @@ msgstr "Értékesítési pont beállítása"
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "Értékesítési pont rendelések"
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "Price"
-msgstr "Ár"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -669,11 +579,6 @@ msgid "Purple"
 msgstr "Lila"
 
 #. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "Quantity"
-msgstr "Mennyiség"
-
-#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:134
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:148
@@ -683,7 +588,7 @@ msgstr "Piros"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:563
+#: code:addons/pos_restaurant/static/src/js/floors.js:506
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "Visszaállíthatatlan asztal eltávolítása"
@@ -750,7 +655,7 @@ msgstr "Sorszám"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:71
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:68
 #, python-format
 msgid "Served by"
 msgstr "Felszolgálta"
@@ -786,14 +691,14 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:118
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:115
 #, python-format
 msgid "Subtotal"
 msgstr "Részösszeg"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:131
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:128
 #, python-format
 msgid "TOTAL"
 msgstr "ÖSSZESEN"
@@ -815,7 +720,7 @@ msgstr "Asztal neve"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:483
+#: code:addons/pos_restaurant/static/src/js/floors.js:426
 #, python-format
 msgid "Table Name ?"
 msgstr "Asztal neve ?"
@@ -828,7 +733,7 @@ msgstr "Asztalok"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:54
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:51
 #, python-format
 msgid "Tel:"
 msgstr "Tel:"
@@ -948,16 +853,6 @@ msgid "Turquoise"
 msgstr ""
 
 #. module: pos_restaurant
-#: model:product.product,uom_name:pos_restaurant.coke
-#: model:product.product,uom_name:pos_restaurant.minute_maid
-#: model:product.product,uom_name:pos_restaurant.water
-#: model:product.template,uom_name:pos_restaurant.coke_product_template
-#: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
-#: model:product.template,uom_name:pos_restaurant.water_product_template
-msgid "Unit(s)"
-msgstr "Egység(ek)"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
 msgid "Used to sort Floors"
 msgstr "Ülésrendek csoportosításához használt"
@@ -966,17 +861,6 @@ msgstr "Ülésrendek csoportosításához használt"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
 msgstr "Függőleges pozíció"
-
-#. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.water
-#: model:product.template,name:pos_restaurant.water_product_template
-msgid "Water"
-msgstr "Víz"
-
-#. module: pos_restaurant
-#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
-msgid "Whiteboard Pen"
-msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
@@ -1000,9 +884,9 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:271
-#: code:addons/pos_restaurant/static/src/js/floors.js:310
-#: code:addons/pos_restaurant/static/src/js/floors.js:426
+#: code:addons/pos_restaurant/static/src/js/floors.js:223
+#: code:addons/pos_restaurant/static/src/js/floors.js:262
+#: code:addons/pos_restaurant/static/src/js/floors.js:369
 #, python-format
 msgid "You must be connected to the internet to save your changes."
 msgstr "Internethez csatlakozva tudja csak mentani a változtatásait."
@@ -1035,13 +919,3 @@ msgstr "a gombot a szerkesztési  eszköztárban az új asztalok létrehozásáh
 #, python-format
 msgid "discount"
 msgstr "árengedmény"
-
-#. module: pos_restaurant
-#: model:product.product,weight_uom_name:pos_restaurant.coke
-#: model:product.product,weight_uom_name:pos_restaurant.minute_maid
-#: model:product.product,weight_uom_name:pos_restaurant.water
-#: model:product.template,weight_uom_name:pos_restaurant.coke_product_template
-#: model:product.template,weight_uom_name:pos_restaurant.minute_maid_product_template
-#: model:product.template,weight_uom_name:pos_restaurant.water_product_template
-msgid "kg"
-msgstr "kg"
