@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_stock
+# 	* website_sale_stock
 # 
 # Translators:
 # Bohdan Lisnenko, 2018
@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -64,22 +64,12 @@ msgstr "Повідомлення клієнта"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Mode"
-msgstr "Режим за замовчуванням"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 "Режим доступності за замовчуванням встановлено на щойно створені товари, які"
 " можна зберігати. Це можна змінити на рівні товару."
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default threshold"
-msgstr "Порогове значення за замовчуванням"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -110,6 +100,11 @@ msgstr ""
 "веб-сайті."
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Mode"
+msgstr "Режим"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
 msgstr "Товар"
@@ -137,7 +132,6 @@ msgstr "Продавайте незалежно від запасу"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr ""
 "Покажіть запас нижче порогової величини та запобігайте продажам, якщо не "
@@ -150,6 +144,15 @@ msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
 "Показуйте запас на веб-сайті та запобігайте продажам, якщо не вистачає "
 "запасів"
+
+#. module: website_sale_stock
+#: selection:res.config.settings,inventory_availability:0
+msgid ""
+"Show inventory when below the threshold and prevent sales if not enough "
+"stock"
+msgstr ""
+"Показуйте товарний запас, коли нижче порогового значення, і запобігайте "
+"продажу, якщо не вистачає запасів"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
@@ -175,9 +178,21 @@ msgid "Temporarily out of stock"
 msgstr "Тимчасово немає в наявності"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Threshold"
+msgstr "Порогове значення"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Переміщення"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "Склад"
 
 #. module: website_sale_stock
 #. openerp-web

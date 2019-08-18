@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_track
+# 	* website_event_track
 # 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 # Martin Trigaux, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Eric Geens <ericgeens@yahoo.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +67,7 @@ msgstr "<b>Datum</b><br/>"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr "<b>E-Mail</b>:"
+msgstr "<b>Mail</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -136,13 +136,6 @@ msgstr ""
 "toegewezen in blokken van 60 minuten."
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track7
-msgid "A technical explanation of how to use computer design apps"
-msgstr ""
-"Een technische uitleg over hoe een computer te gebruiken om apps te "
-"ontwikkelen"
-
-#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
 msgid ""
 "A track's kanban state indicates special situations affecting it:\n"
@@ -150,10 +143,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-"De kanban status van een parallelsessie geeft speciale situaties aan die van invloed zijn:\n"
+"De kanban status van een track geeft speciale situaties aan die van invloed zijn:\n"
 "* Grijs is de standaard situatie\n"
-"* Rood geeft aan dat iets de voortgang van deze parallelsessie belemmert\n"
-"* Groen geeft aan dat de parallelsessie gereed is om naar de volgende fase te worden gezet"
+"* Rood geeft aan dat iets de voortgang van deze track belemmert\n"
+"* Groen geeft aan dat de track gereed is om naar de volgende fase te worden getrokken"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -197,17 +190,7 @@ msgid "Add a new track"
 msgstr "Voeg een nieuwe parallelsessie toe"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track19
-msgid "Advanced lead management : tips and tricks from the fields"
-msgstr "Geavanceerd lead management: Tips en Tricks vanuit het veld"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track13
-msgid "Advanced reporting"
-msgstr "Geavanceerde rapportages"
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event.py:97
+#: code:addons/website_event_track/models/event.py:94
 #, python-format
 msgid "Agenda"
 msgstr "Agenda"
@@ -262,6 +245,11 @@ msgid "Call for Proposals"
 msgstr "Oproep voor voorstellen"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can publish"
+msgstr "Kan publiceren"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Canceled Stage"
 msgstr "Geannuleerde fase"
@@ -275,7 +263,7 @@ msgstr "Geannuleerd"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
 msgid "Color Index"
-msgstr "Kleurindex"
+msgstr "Kleur index"
 
 #. module: website_event_track
 #: model:event.type,name:website_event_track.event_type_data_tracks
@@ -328,34 +316,14 @@ msgid ""
 "                solving an event track."
 msgstr ""
 "Definieer de stappen die in de evenementen worden gebruikt vanaf het\n"
-"                 aanmaken van de parallelsessie, tot het sluiten van de parallelsessie.\n"
-"                 Je zult deze fases gebruiken om de voortgang in te volgen\n"
-"                 en problemen in een parallelsessie op te lossen."
+"aanmaken van de parallelsessie, tot het sluiten van de parallelsessie.\n"
+"Je zult deze fases gebruiken om de voortgang op te volgen\n"
+"en problemen in een parallelsessie op te lossen."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Delete"
 msgstr "Verwijder"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track25
-msgid "Design contest (entire afternoon)"
-msgstr "Ontwerp wedstrijd (volledige middag)"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track24
-msgid "Design contest (entire day)"
-msgstr "Ontwerp wedstrijd (volledige dag)"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track6
-msgid "Detailed roadmap of our new products"
-msgstr "Gedetailleerde roadmap van onze nieuwe producten"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track11
-msgid "Discover our new design team"
-msgstr "Ontdek ons nieuwe design team"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__display_name
@@ -366,7 +334,7 @@ msgstr "Ontdek ons nieuwe design team"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -400,23 +368,23 @@ msgstr "E-mailsjabloon"
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
-msgstr "Afspraak"
+msgstr "Gebeurtenis"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_type
 msgid "Event Category"
-msgstr "Evenementcategorie"
+msgstr "Evenement categorie"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
-msgstr "Evenementlocatie"
+msgstr "Evenement locatie"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
 msgid "Event Locations"
-msgstr "Evenementlocatie"
+msgstr "Evenement locatie"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
@@ -433,7 +401,7 @@ msgstr "Evenement sponsor"
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_tree
 msgid "Event Sponsor Type"
-msgstr "Evenement sponsorsoort"
+msgstr "Evenement sponsor soort"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_form
@@ -560,53 +528,6 @@ msgid "Highest"
 msgstr "Hoogste"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track21
-msgid "House of World Cultures"
-msgstr "House of World Cultures"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track18
-msgid "How to build your marketing strategy within a competitive environment"
-msgstr ""
-"Hoe u uw marketingstrategie kunt ontwikkelen binnen een concurrerende "
-"omgeving"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track15
-msgid "How to communicate with your community"
-msgstr "Hoe met uw community communiceren"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track1
-msgid "How to design a new piece of furniture"
-msgstr "Hoe een nieuw meubel ontwerpen"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track4
-msgid "How to develop automated processes"
-msgstr "Hoe geautomatiseerde processen ontwikkelen"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track16
-msgid "How to follow us on the social media"
-msgstr "Hoe ons volgen op sociale media"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track9
-msgid "How to improve your quality processes"
-msgstr "Hoe uw kwaliteitsprocessen verbeteren"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track2
-msgid "How to integrate hardware materials in your pieces of furniture"
-msgstr "Hoe hardwarematerialen in uw meubels te integreren"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track8
-msgid "How to optimize your sales, from leads to sales orders"
-msgstr "Hoe uw verkopen optimaliseren van leads tot verkooporders"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
@@ -667,11 +588,6 @@ msgid "Kanban State"
 msgstr "Kanban Status"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track23
-msgid "Key Success factors selling our furniture"
-msgstr "Sleutel succesfactoren bij het verkopen van onze meubels"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
@@ -710,11 +626,6 @@ msgid "Late Activities"
 msgstr "Te late activiteiten"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track12
-msgid "Latest trends"
-msgstr "Laatste trends"
-
-#. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Locations"
 msgstr "Locaties"
@@ -730,11 +641,6 @@ msgid "Low"
 msgstr "Laag"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track31
-msgid "Lunch"
-msgstr "Lunch"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Hoofd bijlage"
@@ -742,7 +648,7 @@ msgstr "Hoofd bijlage"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
-msgstr "Gemiddeld"
+msgstr "Kanaal"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
@@ -769,7 +675,7 @@ msgstr "Soort menu"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr "Bericht afleverfout"
+msgstr "Bericht aflever fout"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
@@ -777,29 +683,9 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track22
-msgid "Minimal but efficient design"
-msgstr "Minimaal maar efficiënt design"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track30
-msgid "Morning break"
-msgstr "Ochtendpauze"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Activities"
 msgstr "Mijn activiteiten"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track27
-msgid "My Company global presentation"
-msgstr "Mijn bedrijfspresentatie"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track20
-msgid "New Certification Program"
-msgstr "Nieuw certificering proces"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -872,19 +758,9 @@ msgid "Overdue"
 msgstr "Vervallen"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track14
-msgid "Partnership programs"
-msgstr "Partnership programma's"
-
-#. module: website_event_track
 #: selection:event.track,activity_state:0
 msgid "Planned"
 msgstr "Gepland"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track3
-msgid "Portfolio presentation"
-msgstr "Portfolio presentatie"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -932,11 +808,6 @@ msgstr ""
 "                            de presentaties."
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track10
-msgid "Raising qualitive insights from your customers"
-msgstr "Het verhogen van kwalitatieve inzichten van uw klanten"
-
-#. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Red"
 msgstr "Rood"
@@ -973,7 +844,7 @@ msgstr "SEO geoptimaliseerd"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
 msgid "Sequence"
-msgstr "Volgorde"
+msgstr "Reeks"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1002,7 +873,7 @@ msgid "Speaker Biography"
 msgstr "Biografie spreker"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:164
+#: code:addons/website_event_track/models/event_track.py:163
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
 #, python-format
 msgid "Speaker Email"
@@ -1019,7 +890,7 @@ msgid "Speaker Phone"
 msgstr "Telefoon spreker"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:184
+#: code:addons/website_event_track/models/event_track.py:183
 #, python-format
 msgid "Speakers"
 msgstr "Sprekers"
@@ -1027,7 +898,7 @@ msgstr "Sprekers"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_count
 msgid "Sponsor Count"
-msgstr "Aantal sponsors"
+msgstr "Sponsor teller"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__name
@@ -1071,11 +942,6 @@ msgstr "Fase"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
 msgstr "Naam fase"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track28
-msgid "Status & Strategy"
-msgstr "Status & Strategie"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
@@ -1122,7 +988,7 @@ msgid "Talk Introduction"
 msgstr "Presentatie introductie"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:102
+#: code:addons/website_event_track/models/event.py:99
 #, python-format
 msgid "Talk Proposals"
 msgstr "Presentatie voorstel"
@@ -1130,10 +996,10 @@ msgstr "Presentatie voorstel"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Title"
-msgstr "Presentatietitel"
+msgstr "Presentatie titel"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:96
+#: code:addons/website_event_track/models/event.py:93
 #, python-format
 msgid "Talks"
 msgstr "Presentaties"
@@ -1151,19 +1017,7 @@ msgstr "Bedankt voor uw voorstel."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
-"De volledige URL om toegang tot het document te krijgen via de website."
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track17
-#: model:event.track,name:website_event_track.event_track29
-msgid "The new marketing strategy"
-msgstr "De nieuwe marketing strategie"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track5
-msgid "The new way to promote your creations"
-msgstr "De nieuwe manier om uw creaties te promoten"
+msgstr "De volledige URL om het document te kunnen raadplegen via de website."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1290,7 +1144,7 @@ msgid ""
 "table, a meeting, etc."
 msgstr ""
 "Parallelsessies definiëren de agenda van uw evenement. Deze kunnen een "
-"babbel zijn, een ronde tafel, een afspraak, etc."
+"babbel zijn, een ronde tafel, een meeting, etc."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -1431,4 +1285,4 @@ msgstr "presentaties"
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks
 msgid "unpublished"
-msgstr "niet gepubliceerd"
+msgstr "Niet gepubliceerd"

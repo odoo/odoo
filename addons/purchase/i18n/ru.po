@@ -1,23 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase
+# 	* purchase
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Роман Яхненко <bsap132@gmail.com>, 2018
+# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Vladimir Lukianov <lvm.mobile@gmail.com>, 2017
+# Василий Коробатов <boxat@mail.ru>, 2017
+# Denis Baranov <baranov@itlibertas.com>, 2017
+# Alex Puchkov <ap@alteco.co>, 2017
+# Yuriy Ney <kwizardn@gmail.com>, 2018
+# Gennady Marchenko <gennadym@gmail.com>, 2018
+# Collex100, 2018
+# Max Belyanin <maxbelyanin@gmail.com>, 2018
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Максим Дронь <dronmax@gmail.com>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2018
+# Masha Koc <mariya.kos.ua@gmail.com>, 2018
+# Роман Яхненко <bsap132@gmail.com>, 2019
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Андрей Гусев <gaussgss@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Sergey Vilizhanin, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Роман Яхненко <bsap132@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: purchase
+#: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
+msgid ""
+"                 (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or                 'Purchase Order - %s' % "
+"(object.name))"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -35,6 +62,11 @@ msgstr "кол-во строк"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} Заказ (Ссылка ${object.name or 'n/a' })"
+
+#. module: purchase
+#: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
+msgid "'Request for Quotation - %s' % (object.name)"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -101,6 +133,13 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Shopping cart\"/>"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid ""
 "<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-file-text\"/> "
@@ -112,6 +151,21 @@ msgstr ""
 msgid ""
 "<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-remove\"/> "
 "Cancelled</span>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
 
 #. module: purchase
@@ -152,14 +206,14 @@ msgid "<strong>Order Date:</strong>"
 msgstr "<strong>Дата Заказа:</strong>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Our Order Reference:</strong>"
-msgstr "<strong>Ссылка на Ваш Заказ:</strong>"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Product</strong>"
 msgstr "<strong>Продукт</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Purchase Representative:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -235,6 +289,14 @@ msgid "Access warning"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
 msgid "Action Needed"
 msgstr "Требует внимания"
@@ -250,12 +312,12 @@ msgid "Activity State"
 msgstr "Этап действия"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_invoice__purchase_id
-msgid "Add Purchase Order"
-msgstr "Добавить заказ"
+#: model:res.groups,name:purchase.group_purchase_manager
+msgid "Administrator"
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:50
+#: code:addons/purchase/controllers/portal.py:62
 #, python-format
 msgid "All"
 msgstr "Все"
@@ -282,43 +344,39 @@ msgid "Analytic Tags"
 msgstr "Теги аналитики"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
-msgid "Approval Date"
-msgstr "Дата Утверждения"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Approve Order"
 msgstr "Утвердить заказ"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_invoice_line__purchase_id
-msgid ""
-"Associated Purchase Order. Filled in automatically when a PO is chosen on "
-"the vendor bill."
-msgstr ""
-"Связанный заказ на покупку. Заполняется автоматически когда заказ на покупку"
-" выбран в счёте поставщика."
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
+msgstr "Количество вложений"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
+msgid "Auto-complete"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
-msgid "Auto-Complete"
+#: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
+msgid "Auto-complete from a past bill / purchase order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_move__purchase_id
+msgid "Auto-complete from a past purchase order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
+msgid "Average Cost"
 msgstr ""
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
 msgstr "Среднее время доставки"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
-msgid "Average Price"
-msgstr "Средняя цена"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__default_purchase_method
@@ -336,9 +394,19 @@ msgid "Bill Lines"
 msgstr "строки счёта"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Billed"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
 msgid "Billed Qty"
 msgstr "Кол-во по счёту"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Billed Quantity"
+msgstr "Выставленное количество"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -352,6 +420,7 @@ msgstr "Статус счёта"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Bills"
 msgstr "Счета"
 
@@ -402,7 +471,7 @@ msgid "Cancel"
 msgstr "Отменить"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:52
+#: code:addons/purchase/controllers/portal.py:64
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 #, python-format
 msgid "Cancelled"
@@ -414,10 +483,15 @@ msgid "Cancelled Purchase Order #"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:509
+#: code:addons/purchase/models/purchase.py:570
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Нельзя удалить строку заказа на закупку, которая в состоянии '%s'."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
+msgid "Category"
+msgstr "Категория"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
@@ -444,7 +518,7 @@ msgid "Company Currency"
 msgstr "Валюта компании"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:268
+#: code:addons/purchase/models/purchase.py:289
 #, python-format
 msgid "Compose Email"
 msgstr "Написать письмо"
@@ -452,7 +526,7 @@ msgstr "Написать письмо"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Настройки конфигурации"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -468,6 +542,13 @@ msgstr "Подтвердить заказ"
 #: selection:res.company,po_double_validation:0
 msgid "Confirm purchase orders in one step"
 msgstr "Подтвердите заказ покупки в один шаг"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Confirmation Date"
+msgstr "Дата подтверждения"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
@@ -489,6 +570,15 @@ msgstr "Контроль"
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
 msgid "Control Policy"
 msgstr "Политика контроля"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Преобразование между единицами измерения возможно если они принадлежат одной"
+" категории. Преобразование будет сделано на основе коэффициентов."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -516,11 +606,6 @@ msgid "Create a request for quotation"
 msgstr ""
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.action_invoice_pending
-msgid "Create a vendor bill"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
 msgid "Created by"
@@ -541,9 +626,14 @@ msgid "Currency"
 msgstr "Валюта"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_rate
+msgid "Currency Rate"
+msgstr "Курс валюты"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Ссылка на портал клиента"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
@@ -551,34 +641,24 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
-msgid "Date Approved"
-msgstr "Дата утверждения"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__date_order
 msgid "Date on which this document has been created"
 msgstr "Дата на которую этот документ был создан"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
-msgid "Days to Deliver"
-msgstr "Дней на доставку"
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
+msgid "Days to Confirm"
+msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
-msgid "Days to Validate"
-msgstr "Дней на утверждение"
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
+msgid "Days to Receive"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
 msgstr "Определите свои правила и условия  ..."
-
-#. module: purchase
-#: selection:res.config.settings,default_purchase_method:0
-msgid "Delivered quantities"
-msgstr "Доставленное количество"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -594,11 +674,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
 msgid "Description"
 msgstr "Описание"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
-msgid "Description for Vendors"
-msgstr "Описание для поставщиков"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
@@ -639,7 +714,7 @@ msgid "Extended Filters"
 msgstr "Расширенные фильтры"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:491
+#: code:addons/purchase/models/purchase.py:552
 #, python-format
 msgid "Extra line with %s "
 msgstr "К %s "
@@ -647,7 +722,6 @@ msgstr "К %s "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__fiscal_position_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__fiscal_position_id
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Fiscal Position"
 msgstr "Система налогов"
 
@@ -665,6 +739,11 @@ msgstr "Подписчики (Каналы)"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Подписчики (Партнеры)"
+
+#. module: purchase
+#: selection:purchase.order,invoice_status:0
+msgid "Fully Billed"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -731,7 +810,7 @@ msgstr ""
 "поставщиков: чтобы выставить счет, товары должны быть оприходованы в заказе."
 
 #. module: purchase
-#: code:addons/purchase/models/product.py:38
+#: code:addons/purchase/models/product.py:37
 #, python-format
 msgid "Import Template for Products"
 msgstr ""
@@ -742,7 +821,7 @@ msgid "Import vendor pricelists"
 msgstr "Импортировать прайс-лист производителя"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:165
+#: code:addons/purchase/models/purchase.py:170
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "Для того, чтобы удалить заказ, сначала вы должны отменить его."
@@ -760,16 +839,6 @@ msgid ""
 msgstr ""
 "Международные правила по толкованию наиболее широко используемых торговых "
 "терминов в области внешней торговли."
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_account_invoice
-msgid "Invoice"
-msgstr "Счёт"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Позиция счета"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -790,6 +859,16 @@ msgstr "Подписчик"
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid "It will be converted into a purchase order."
 msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_move
+msgid "Journal Entries"
+msgstr "Записи журнала"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_move_line
+msgid "Journal Item"
+msgstr "Элемент журнала"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
@@ -827,13 +906,6 @@ msgid "Levels of Approvals *"
 msgstr "Уровни утверждений *"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_invoice__purchase_id
-msgid ""
-"Load the vendor bill based on selected purchase order. Several PO can be "
-"selected."
-msgstr ""
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Lock"
 msgstr "Блокировать"
@@ -844,7 +916,7 @@ msgid "Lock Confirmed Orders"
 msgstr "Защитить подтвержденные заказы от изменений"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:53
+#: code:addons/purchase/controllers/portal.py:65
 #: selection:purchase.order,state:0
 #, python-format
 msgid "Locked"
@@ -874,19 +946,24 @@ msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr "Управляйте вашими закупками, используя тендеры и стандартные заказы"
 
 #. module: purchase
-#: model:res.groups,name:purchase.group_purchase_manager
-msgid "Manager"
-msgstr "Менеджер"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Managers must approve orders"
 msgstr "Менеджеры должны подтверждать заказы"
 
 #. module: purchase
+#: selection:purchase.order.line,qty_received_method:0
+msgid "Manual"
+msgstr "Вручную"
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Manual Invoices"
 msgstr "Счета вручную"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
+msgid "Manual Received Qty"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -961,7 +1038,7 @@ msgid "My Purchases"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:41
+#: code:addons/purchase/controllers/portal.py:53
 #, python-format
 msgid "Name"
 msgstr "Название"
@@ -972,7 +1049,7 @@ msgid "Name, TIN, Email, or Reference"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:40
+#: code:addons/purchase/controllers/portal.py:52
 #, python-format
 msgid "Newest"
 msgstr "Свежайшее"
@@ -993,11 +1070,6 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,invoice_status:0
-msgid "No Bill to Receive"
-msgstr "No Bill to Receive"
-
-#. module: purchase
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
@@ -1007,15 +1079,6 @@ msgstr "Не предупреждать"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "No longer edit orders once confirmed"
 msgstr "Не редактировать заказы после утверждения"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_image
-msgid ""
-"Non-stored related field to allow portal user to see the image of the "
-"product he has ordered"
-msgstr ""
-"Non-stored related field to allow portal user to see the image of the "
-"product he has ordered"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1071,6 +1134,11 @@ msgid "On received quantities"
 msgstr "На полученных количествах"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
+msgid "Order"
+msgstr "Заказ"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
@@ -1108,8 +1176,8 @@ msgid "Ordered quantities"
 msgstr "Заказанное кол-во"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Orders"
 msgstr "Заказы"
 
@@ -1151,7 +1219,7 @@ msgstr "Запланировано"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Ссылка для доступа в портал"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1177,6 +1245,7 @@ msgstr "Распечатать Запрос предложений"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_id
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product"
 msgstr "Продукт"
 
@@ -1193,16 +1262,6 @@ msgid "Product Category"
 msgstr "Категория продукта"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_image
-msgid "Product Image"
-msgstr "Изображения продукта "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__unit_quantity
-msgid "Product Quantity"
-msgstr "Количество продукта"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
 msgid "Product Template"
@@ -1214,11 +1273,6 @@ msgid "Product Type"
 msgstr "Тип продукта"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom
-msgid "Product Unit of Measure"
-msgstr "Ед. изм. продукта"
-
-#. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
@@ -1228,15 +1282,11 @@ msgstr "Варианты продукта"
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_products
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Products"
 msgstr "Продукты"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_standard
-msgid "Products Value"
-msgstr "Стоимость товара"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
@@ -1245,8 +1295,8 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Обеспечить механизм двойной проверки для покупок"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
+#: model:ir.ui.menu,name:purchase.menu_report_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
 msgstr "Закупка"
@@ -1258,6 +1308,7 @@ msgstr "Соглашения о покупке"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
 msgid "Purchase Analysis"
 msgstr "Анализ закупок"
 
@@ -1274,16 +1325,22 @@ msgstr ""
 "поставщиков и т. д."
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Purchase Description"
+msgstr "Описание закупки"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lead
 msgid "Purchase Lead Time"
 msgstr "Запас по времени на закупку"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:51
+#: code:addons/purchase/controllers/portal.py:63
+#: code:addons/purchase/models/purchase.py:286
 #: model:ir.actions.report,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
-#: model:ir.model.fields,field_description:purchase.field_account_invoice_line__purchase_id
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn
@@ -1292,6 +1349,7 @@ msgstr "Запас по времени на закупку"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_graph
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_pivot
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_activity
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 #, python-format
 msgid "Purchase Order"
@@ -1308,24 +1366,14 @@ msgid "Purchase Order Approval"
 msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "Purchase Order Confirmation #"
-msgstr "Подтверждение Заказа Закупки №"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
 msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Purchase Order Fiscal Position"
-msgstr "Система налогов заказа на закупку"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: model:ir.model.fields,field_description:purchase.field_account_invoice_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1379,7 +1427,6 @@ msgstr "Заказы на закупку #"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
 msgid "Purchase Orders Statistics"
 msgstr "Статистика заказов закупки"
 
@@ -1412,20 +1459,10 @@ msgid "Purchase orders that include lines not invoiced."
 msgstr "Заказы закупок, которые имеют позиции не указанные в счетах."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__negociation
-msgid "Purchase-Standard Price"
-msgstr "Стандартная цена закупки"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
 msgid "Purchased"
 msgstr "Куплено"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Purchased Last 365 Days"
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -1453,6 +1490,26 @@ msgstr ""
 "В противном случае оставьте пустым для доставки в свою компанию."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
+msgid "Qty Billed"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
+msgid "Qty Ordered"
+msgstr "Qty Ordered"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
+msgid "Qty Received"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
+msgid "Qty to be Billed"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
 msgstr "Количества, сфактурированные поставщиками"
@@ -1464,7 +1521,6 @@ msgstr "Количество"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Quotations"
 msgstr "Предложения цен"
 
@@ -1504,9 +1560,19 @@ msgid "RFQs and Purchases"
 msgstr "Запросы цен и закупки"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
+msgid "Ratio between the purchase order currency and the company currency"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send by Email"
 msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Received"
+msgstr "Получено"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
@@ -1514,18 +1580,28 @@ msgid "Received Qty"
 msgstr "Полученное кол-во"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Received Quantity"
+msgstr "Полученное количество"
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
 msgstr "Полученное количество:"
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
-msgid "Record a new vendor bill"
+#: selection:res.config.settings,default_purchase_method:0
+msgid "Received quantities"
 msgstr ""
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
-msgid "Record a vendor bill related to this purchase"
+#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+msgid "Record a new vendor bill"
 msgstr ""
 
 #. module: purchase
@@ -1572,8 +1648,11 @@ msgid "Reporting"
 msgstr "Отчетность"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:284
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, python-format
 msgid "Request for Quotation"
 msgstr "Запрос цены поставщика"
 
@@ -1585,6 +1664,7 @@ msgstr "Запрос цен №"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
 msgstr "Запросы цен"
 
@@ -1621,7 +1701,7 @@ msgid "Security Token"
 msgstr "Маркер доступа"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_invoice_supplier_purchase_form
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Select a purchase order or an old bill"
 msgstr ""
 
@@ -1708,6 +1788,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: selection:purchase.order.line,qty_received_method:0
+msgid "Stock Moves"
+msgstr "Движения запасов"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
 msgid "Subtotal"
 msgstr "Подытог"
@@ -1717,6 +1802,11 @@ msgstr "Подытог"
 #: model:ir.model.fields,field_description:purchase.field_res_users__property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr "Валюта Поставщика"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Каталог поставщика"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
@@ -1807,13 +1897,13 @@ msgid "This note will show up on purchase orders."
 msgstr "Эта пометка будет показана в заказах на закупку"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:156
+#: code:addons/purchase/models/account_invoice.py:82
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Этот счет поставщика создан от: %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:170
+#: code:addons/purchase/models/account_invoice.py:98
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr "Этот счет поставщика изменен от: %s"
@@ -1840,18 +1930,14 @@ msgid "Today Activities"
 msgstr "Сегодняшние мероприятия"
 
 #. module: purchase
-#: code:addons/purchase/controllers/portal.py:42
+#: code:addons/purchase/controllers/portal.py:54
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_total
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_total
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 #, python-format
 msgid "Total"
 msgstr "Всего"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_total
-msgid "Total Price"
-msgstr "Итоговая цена"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -1869,7 +1955,7 @@ msgid "Total amount"
 msgstr "Итоговая сумма"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:324
+#: code:addons/purchase/models/purchase.py:345
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
@@ -1880,6 +1966,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
 msgid "Unit Price"
 msgstr "Цена за ед."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom
+msgid "Unit of Measure"
+msgstr "Единица измерения"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -1922,17 +2013,14 @@ msgid "Untaxed Amount:"
 msgstr "Сумма без Налога"
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.action_invoice_pending
-msgid ""
-"Use this menu to control the invoices to be received from your\n"
-"            vendors. When registering a new bill, set the purchase order\n"
-"            and Odoo will fill the bill automatically according to ordered\n"
-"            or received quantities."
-msgstr ""
-"Используйте это меню для управления счетов от, которые будут получены от ваших\n"
-"             поставщиков. При регистрации нового счета, установите заказа на покупку\n"
-"             и Odoo заполнит этот счет автоматически в соответствии с заказанными\n"
-"             или полученных количествах."
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
+msgid "Untaxed Total"
+msgstr "Итого без налогов"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "UoM"
+msgstr "UoM"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1962,9 +2050,6 @@ msgstr "Счет от поставщика"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
-#: model:ir.actions.act_window,name:purchase.action_invoice_pending
-#: model:ir.actions.act_window,name:purchase.purchase_open_invoice
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
@@ -2024,8 +2109,8 @@ msgid "Warning"
 msgstr "Предупреждение"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:227
-#: code:addons/purchase/models/purchase.py:574
+#: code:addons/purchase/models/purchase.py:232
+#: code:addons/purchase/models/purchase.py:627
 #, python-format
 msgid "Warning for %s"
 msgstr "Предупреждение для %s"
@@ -2056,15 +2141,6 @@ msgid "Website communication history"
 msgstr "История общения с сайта"
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
-msgid ""
-"You can control the invoice from your vendor according to\n"
-"            what you purchased (services) or received (products)."
-msgstr ""
-"Вы можете контролировать счет от вашего поставщика в соответствии с\n"
-"             тем что вы приобрели (услуги) или получили (продукты)."
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
@@ -2073,13 +2149,13 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
-"You must define a product for everything you purchase,\n"
-"                whether it's a physical product, a consumable or services."
+"You must define a product for everything you sell or purchase,\n"
+"                whether it's a storable product, a consumable or a service."
 msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid ""
-"You must define a product for everything you purchase,\n"
-"            whether it's a physical product, a consumable or services."
+"You must define a product for everything you sell or purchase,\n"
+"            whether it's a storable product, a consumable or a service."
 msgstr ""

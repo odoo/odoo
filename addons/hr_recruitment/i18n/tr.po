@@ -1,28 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_recruitment
+# 	* hr_recruitment
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
+# alisan alacam <alisanalacam@gmail.com>, 2017
+# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Esin Kandemir <esaykandemir@gmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
+# Mehmet Demirel <mdemirell@gmail.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
-# Mehmet Demirel <mdemirell@gmail.com>, 2018
 # Metin Akın <aknmetin@gmail.com>, 2018
-# Buket Şeker <buket_skr@hotmail.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Gökhan Yüksel <yg_yuksel@hotmail.com>, 2019
+# Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,14 +38,46 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_text\">Meetings</span>"
-msgstr "<span class=\"o_stat_text\">Görüşmeler</span>"
+msgstr "<span class=\"o_stat_text\">Toplantılar</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
 msgstr "<span class=\"o_stat_text\">Kaynaklar</span>"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid ""
+"<span title=\"Documents\"><i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>\n"
+"                                                </span>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -286,15 +325,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
-msgid ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
-msgstr ""
-"Bir Python sözlüğü, bu rumuz için yeni kayıtlar oluştururken varsayılan "
-"değerleri sağlamak için değerlendirilir."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 msgid "Action Needed"
 msgstr "Eylem Gerekiyor"
@@ -302,7 +332,7 @@ msgstr "Eylem Gerekiyor"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__active
 msgid "Active"
-msgstr "Etkin"
+msgstr "Aktif"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_ids
@@ -339,7 +369,12 @@ msgstr "Yeni bir etiket ekle"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__address_id
 msgid "Address where employees are working"
-msgstr "Personelin çalışacağı adres"
+msgstr "Personelin çalışma adresi nere olacak"
+
+#. module: hr_recruitment
+#: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
+msgid "Administrator"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_id
@@ -347,29 +382,9 @@ msgid "Alias"
 msgstr "Rumuz"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_contact
-msgid "Alias Contact Security"
-msgstr "Rumuz İletişim Güvenliği"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__alias_id
 msgid "Alias ID"
 msgstr "Rumuz ID"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_name
-msgid "Alias Name"
-msgstr "Rumuz Adı"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
-msgid "Alias domain"
-msgstr "Rumuz alan adı"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
-msgid "Aliased Model"
-msgstr "Rumuzlanan Model"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
@@ -380,7 +395,7 @@ msgstr "Tüm Başvurular"
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__applicant_id
 msgid "Applicant"
-msgstr "Aday"
+msgstr "Başvuru"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
@@ -401,7 +416,12 @@ msgstr "Aday Aşaması Değişti"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr "Aday oluşturuldu"
+msgstr "Başvuru oluşturuldu"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
+msgid "Applicant email"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -411,13 +431,14 @@ msgstr "Aday işe alındı"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
 msgid "Applicant's Name"
-msgstr "Adayın İsmi"
+msgstr "Başvuranın Adı"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_activity
 msgid "Applicants"
-msgstr "Adaylar"
+msgstr "İş Başvurular"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -427,8 +448,8 @@ msgid ""
 "                so that you can easily search through their content."
 msgstr ""
 "Başvurular ve eklenmiş CV'leri eposta gönderildiğinde otomatik olarak oluşturulur.\n"
-" Eğer belge yönetimi modüllerini kurduysanız tüm özgeçmişler işlenir,\n"
-" ve böylelikle içeriğinde kolaylıkla arama yapabilirsiniz."
+"                Eğer belge yönetimi modüllerini kurduysanız, tüm özgeçmişler işlenir,\n"
+"                ve içeriğinde kolaylıkla arama yapabilirsiniz."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -449,12 +470,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_count
 msgid "Application Count"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Application Summary"
 msgstr "İş Başvuru Özeti"
 
@@ -464,18 +486,21 @@ msgid "Application email"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-msgid "Application(s)"
-msgstr "İş Başvuru(ları)"
-
-#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:341
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#, python-format
 msgid "Applications"
-msgstr "Başvurular"
+msgstr "İş Başvuruları"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
+msgid "Applications with the same email"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -485,12 +510,12 @@ msgstr "Başvurulan İş"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
 msgid "Appreciation"
-msgstr "Değerlendirme"
+msgstr "Takdir"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Archived"
-msgstr "Arşivlendi"
+msgstr "Arşivlenmiş"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -516,7 +541,7 @@ msgstr "Otomatik Eposta "
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__availability
 msgid "Availability"
-msgstr "Başlayabileceği Tarih"
+msgstr "Uygunluk"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
@@ -525,6 +550,23 @@ msgstr "Lisans Derecesi"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:65
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev2
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev3
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -538,17 +580,17 @@ msgstr "Engellendi"
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
-msgstr "Departmana Göre"
+msgstr "Departman"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
 msgid "By Job"
-msgstr "İşe Göre"
+msgstr "İş"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
 msgid "By Recruiter"
-msgstr "Sorumluya Göre"
+msgstr "İşveren"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
@@ -558,7 +600,7 @@ msgstr "Kampanya"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 msgid "Cases By Stage and Estimates"
-msgstr "Aşama ve Tahminlere göre Başvurular"
+msgstr "Aşama ve Tahminler göre Durumlar"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
@@ -567,7 +609,7 @@ msgstr "Aday Kategorisi"
 
 #. module: hr_recruitment
 #. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tour.js:22
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:22
 #, python-format
 msgid "Click here to create a new job position."
 msgstr "Yeni bir iş pozisyonu oluşturmak için buraya tıklayın."
@@ -575,20 +617,20 @@ msgstr "Yeni bir iş pozisyonu oluşturmak için buraya tıklayın."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
 msgid "Closed"
-msgstr "Kapanma"
+msgstr "Kapalı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__color
 msgid "Color Index"
-msgstr "Renk"
+msgstr "Renk İndeksi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__company_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_config_settings
@@ -601,17 +643,17 @@ msgid "Configuration"
 msgstr "Yapılandırma"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:371
+#: code:addons/hr_recruitment/models/hr_recruitment.py:388
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
 #, python-format
 msgid "Contact"
-msgstr "İletişim"
+msgstr "Kontak"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:373
+#: code:addons/hr_recruitment/models/hr_recruitment.py:390
 #, python-format
 msgid "Contact Email"
-msgstr "İletişim Eposta"
+msgstr "Kontak E-mail"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
@@ -619,7 +661,7 @@ msgid "Content"
 msgstr "İçerik"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Contract"
 msgstr "Sözleşme"
 
@@ -639,7 +681,7 @@ msgid "Create"
 msgstr "Oluştur"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Create Employee"
 msgstr "Personel Oluştur"
 
@@ -681,22 +723,17 @@ msgstr "Oluşturulma"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Creation Date"
-msgstr "Oluşturulma Tarihi"
+msgstr "Oluşturma Tarihi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
 msgid "Days to Close"
-msgstr "Kapanmaya Kalan Gün"
+msgstr "Kapanma Gün"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_open
 msgid "Days to Open"
-msgstr "Açılmaya Kalan Gün"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
-msgid "Default Values"
-msgstr "Öntanımlı Değerler"
+msgstr "Açılış Günü"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -706,9 +743,8 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Bu iş pozisyonu için belirli bir iletişim adresi tanımlayın. Boş "
-"bırakırsanız insan kaynakları ayarlarındaki varsayılan e-posta adresi "
-"kullanılır"
+"Bu pozisyon için belirli bir ilgili kişi adres tanımlayın. Boş sende, "
+"varsayılan e-posta adresi olan insan kaynakları ayarlarında kullanılır"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -719,13 +755,13 @@ msgid ""
 msgstr ""
 "Burada işe alım sürecinizin adımlarını tanımlayın, mesela:\n"
 "uygunluk araması, ilk görüşme, ikinci görüşme, reddedildi,\n"
-"işe alındı."
+"            işe alındı."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__type_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -740,7 +776,7 @@ msgstr "Dereceler"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__delay_close
 msgid "Delay to Close"
-msgstr "Açık Kalma Süresi"
+msgstr "Kapanmada Gecikme"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -767,12 +803,12 @@ msgstr "Departmanlar"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__description
 msgid "Description"
-msgstr "Açıklama"
+msgstr "Tanım"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Özet"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -792,7 +828,7 @@ msgstr "Görünüm Adı"
 #: code:addons/hr_recruitment/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Erişiminiz yok, kullanıcı e-mail özeti için bu veriyi atlayın"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -806,11 +842,11 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Documents"
-msgstr "Belgeler"
+msgstr "Belge"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -834,19 +870,15 @@ msgstr "Düzenle"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__email
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Email"
-msgstr "Eposta"
+msgstr "E-Posta"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "Eposta Rumuzu"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-msgid "Email alias"
-msgstr "Eposta rumuzu"
+msgstr "E-posta Rumuzu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_id
@@ -854,13 +886,18 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
-"Bu iş pozisyonu için eposta rumuzu. Gelen epostalar otomatik olarak bu iş "
-"pozisyonu için yeni aday oluşturur."
+"Bu iş pozisyonu için e-posta takma adı. Bu iş pozisyonu için başvuruda yeni "
+"e-posta otomatik olarak oluşturur."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
+msgid "Email cc"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Employee"
 msgstr "Personel"
 
@@ -872,7 +909,7 @@ msgstr "Personel Adı"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_id
 msgid "Employee linked to the applicant."
-msgstr "Adayla ilişkilendirilmiş personel."
+msgstr "Personel adayla bağlandı."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_no_employee
@@ -904,7 +941,7 @@ msgstr "Beklenen Ücret"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected_extra
 msgid "Expected Salary Extra"
-msgstr "Beklenen Ücret Yan Hakları"
+msgstr "Ekstra Beklenen Ücret"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -912,14 +949,19 @@ msgid "Extended Filters"
 msgstr "Genişletilmiş Filtreler"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Extra advantages..."
-msgstr "Ekstra maaş yan hakları..."
+msgstr "Ekstra avantajları ..."
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_user_ids
+msgid "Favorite User"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Feedback of interviews..."
-msgstr "Görüşme geribildirimleri..."
+msgstr "Görüşme Geribildirimleri ..."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
@@ -929,7 +971,7 @@ msgstr "İlk Görüşme"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__fold
 msgid "Folded in Recruitment Pipe"
-msgstr "Katlanmış"
+msgstr "Katlanmış Görünüm"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
@@ -949,17 +991,17 @@ msgstr "Tekipçiler (İş ortakları)"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Future Activities"
-msgstr "Yapılacaklar"
+msgstr "Sonraki Aktiviteler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr "Derecelerin listesi gösterilirken nasıl sıralanacağını belirler. "
+msgstr "Derecelerde bir listesi gösteren zaman sırasına verir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Aşamaların listesi gösterilirken nasıl sıralanacağını belirler. "
+msgstr "Aşamaların bir listesini görüntülerken sırasını verir."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1000,7 +1042,7 @@ msgstr "Grupla"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "HR Department"
-msgstr "İK Departmanı"
+msgstr "İK Bölümü"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__hr_responsible_id
@@ -1010,7 +1052,7 @@ msgstr "İK Sorumlusu"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr "İşe Alınan Personeller"
+msgstr "İşe Alınan Personel"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
@@ -1020,14 +1062,6 @@ msgstr "İşe Alınan Personeller"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__id
 msgid "ID"
 msgstr "ID"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_thread_id
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
-"Rumuzu tutan üst kayıt ID (örnek: görev oluşturma rumuzunu tutan proje)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread
@@ -1042,7 +1076,7 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1050,7 +1084,7 @@ msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
 msgstr ""
-"Eğer ayarlanırsa, şablonu kullanan adaya, ilgili aşamaya gelince bir mesaj "
+"Eğer ayarlanırsa, mesaj şablon kullanan adaya, aday ilgili aşamaya gelince "
 "gönderilir."
 
 #. module: hr_recruitment
@@ -1059,11 +1093,28 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
-"Etkin alanda yanlış olarak ayarlayarak silinmeden gizlenmesini "
-"sağlayabilirsiniz."
+"Etkin alanda yanlış olarak ayarlanırsa, bu durumda gizleme sağlayacak "
+"kaldırmadan."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:69
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev2
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev3
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
@@ -1081,13 +1132,18 @@ msgstr "Devam Eden"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
-msgstr "Ön Yeterlilik"
+msgstr "İlk Elemeler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr "Aday Değerlendirme Formları"
+msgstr "Görüşme Formları"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
+msgid "Is Favorite"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
@@ -1095,8 +1151,8 @@ msgid "Is Follower"
 msgstr "Takipçi mi"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_job.py:94
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: code:addons/hr_recruitment/models/hr_job.py:137
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #, python-format
 msgid "Job"
@@ -1120,7 +1176,7 @@ msgstr "İş ID"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__address_id
 msgid "Job Location"
-msgstr "İş Konumu"
+msgstr "İş Lokasyonu"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -1148,7 +1204,7 @@ msgstr "İş Pozisyonları"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr "İş Başvuruları Yayınlama"
+msgstr "İş Başvuruları"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_id
@@ -1158,17 +1214,17 @@ msgstr "İş Pozisyonuna Özel"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Jobs"
-msgstr "İş"
+msgstr "İnsan Kaynakları"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Jobs - Recruitment Form"
 msgstr "İşler - İşe Alım Formu"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
-msgstr "Aday Kaynakları"
+msgstr "Başvuru Kaynakları"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
@@ -1242,25 +1298,25 @@ msgstr "Geciken Aktiviteler"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position."
-msgstr ""
+msgstr "Yeni bir iş pozisyonu oluşturalım."
 
 #. module: hr_recruitment
 #. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tour.js:27
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:27
 #, python-format
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
 msgstr "Bu iş pozisyonunun <b>başvurular hunisine</b> bakalım."
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
+msgid "List of cc from incoming emails."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Ana Ek"
-
-#. module: hr_recruitment
-#: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
-msgid "Manager"
-msgstr "Yönetici"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1298,9 +1354,9 @@ msgid "My Applications"
 msgstr "Başvurularım"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_activity
-msgid "My Next Activities"
-msgstr "Yapacaklarım"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
+msgid "My Favorites"
+msgstr "Favorilerim"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
@@ -1316,15 +1372,16 @@ msgstr "Yeni"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_applicant_count
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
 msgid "New Applicant"
-msgstr "Yeni Aday"
+msgstr "Yeni Başvuru"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr "Yeni Adaylar"
+msgstr "Yeni Başvuranlar"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__new_application_count
 msgid "New Application"
 msgstr "Yeni Başvuru"
 
@@ -1334,10 +1391,15 @@ msgid "New Applications"
 msgstr "Yeni Başvurular"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:447
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "New Applications <br/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:463
 #, python-format
 msgid "New Employee %s Hired"
-msgstr "Yeni Personel %s İşe Alındı"
+msgstr "Yeni Personel %s İş Alındı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
@@ -1367,7 +1429,6 @@ msgid "Newly hired employee"
 msgstr "İşe yeni alınan personel"
 
 #. module: hr_recruitment
-#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_nmenu_activity
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
 msgid "Next Activities"
 msgstr "Sonraki Aktiviteler"
@@ -1388,7 +1449,7 @@ msgid "Next Activity Type"
 msgstr "Sonraki Faaliyet Türü"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:389
+#: code:addons/hr_recruitment/models/hr_recruitment.py:406
 #, python-format
 msgid "No Subject"
 msgstr "Konu Yok"
@@ -1405,11 +1466,6 @@ msgid "No document yet"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_activity
-msgid "No scheduled activities for the moment"
-msgstr ""
-
-#. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 msgid "Normal"
 msgstr "Normal"
@@ -1423,6 +1479,13 @@ msgstr "Eylemlerin Sayısı"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_number
 msgid "Number of Attachments"
 msgstr "Eklentilerin Sayısı"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__new_application_count
+msgid ""
+"Number of applications that are new in the flow (typically at first step of "
+"the flow)"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -1442,7 +1505,7 @@ msgstr "Eylem gerektiren mesaj sayısı"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Teslimat hatası olan mesaj sayısı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread_counter
@@ -1464,18 +1527,13 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
-"Odoo işe alım sürecinde adaylarınızı takip etmenize ve tüm\n"
-"işlemleri takip etmenize yardımcı olur: toplantılar, görüşmeler, vb."
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-msgid "Offer"
-msgstr "Teklif"
+"Odoo işe alım sürecinde adaylarınızı takip etmenize\n"
+"ve tüm işlemleri takip etmenize yardımcı olur: toplantılar, görüşmeler, vb."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer"
-msgstr "Yetkili"
+msgstr "Memur"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1489,45 +1547,9 @@ msgid "Online Posting"
 msgstr "İnternette Yayınla"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_force_thread_id
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
-msgstr ""
-"Yanıtlamasalar bile gelen mesajların ekleneceği isteğe bağlı başlık IDsi. "
-"Ayarlanırsa, yeni kayıtların oluşumunu tamamen engelleyecektir."
-
-#. module: hr_recruitment
 #: selection:hr.applicant,activity_state:0
 msgid "Overdue"
 msgstr "Geciken"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
-msgid "Owner"
-msgstr "Sahibi"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
-msgid "Parent Model"
-msgstr "Üst Model"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_thread_id
-msgid "Parent Record Thread ID"
-msgstr "Üst Kayıt Mesaj Dizisi ID"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_model_id
-msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
-"(parent_model) and task (model))"
-msgstr ""
-"Rumuzun bulunduğu üst model. Rumuz referansın bulunduğu model zorunlu olarak"
-" alias_model_id tarafından verilen model değildir.  (örnek: project "
-"(parent_model) ve görev (model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
@@ -1545,19 +1567,6 @@ msgid "Planned"
 msgstr "Planlanan"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
-msgid ""
-"Policy to post a message on the document using the mailgateway.\n"
-"- everyone: everyone can post\n"
-"- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
-msgstr ""
-"Posta geçidini kullanarak gönderilecek mesajların kuralları:\n"
-"- herkes: herkes posta gönderebilir\n"
-"- iş ortakları: sadece onaylanmış iş ortakları\n"
-"- takipçiler: sadece ilgili dokümanın veya takipçi kanalların takipçileri\n"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
 msgid "Probability"
 msgstr "Olasılık"
@@ -1570,7 +1579,7 @@ msgstr "Önerilen Ücret"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Proposed Salary Extra"
-msgstr "Önerilen Ücret Yan Hakları"
+msgstr "Ekstra Önerilen Ücret"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1579,6 +1588,23 @@ msgstr "Açık iş pozisyonlarını web sitenizde yayınlayın"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:67
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev2
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev3
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -1593,12 +1619,7 @@ msgstr "Bir Sonraki Aşama için Hazır"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Ready to recruit more efficiently?"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_force_thread_id
-msgid "Record Thread ID"
-msgstr "Kayıt Başlık ID"
+msgstr "Daha etkili işe alım için hazır mısınız?"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -1610,7 +1631,7 @@ msgstr "İşe Alım"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr "İşe Alım / Başvuru Aşamaları"
+msgstr "İşe Alma/Başvuru Aşamaları"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -1625,17 +1646,12 @@ msgstr "İşe Alım Analizi"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Recruitment Done"
-msgstr "İşe Alımı Yapılan"
+msgstr "İşe Alımı Bitir"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment Process"
 msgstr "İşe Alım Süreci"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
-msgid "Recruitment Responsible"
-msgstr "İşe Alım Sorumlusu"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1660,20 +1676,20 @@ msgstr "Kırmızı Kanban Etiketi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__reference
 msgid "Referred By"
-msgstr "Refere Eden"
+msgstr "Öneren"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Refuse"
 msgstr "Reddet"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Refused"
-msgstr "Reddedildi"
+msgstr "Rededildi"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Reopen Application"
 msgstr "Başvuruyu Yeniden Aç"
 
@@ -1690,6 +1706,7 @@ msgstr "Gereksinimler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Responsible"
@@ -1704,7 +1721,7 @@ msgstr "Sorumlu Kullanıcı"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job02
 msgid "Resumes and Letters"
-msgstr "Özgeçmişler ve Tavsiye Mektupları"
+msgstr "Özgeçmişler ve Mektuplar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected
@@ -1714,7 +1731,7 @@ msgstr "Adayın Beklediği Ücret"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr "Aday tarafından Beklenen Ücret Yan Hakları"
+msgstr "Aday tarafından Beklenen Ücret, ekstra avantajlar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
@@ -1724,22 +1741,22 @@ msgstr "İşletme Tarafından Önerilen Ücret"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr "İşletme Tarafından Önerilen Ücret Yan Hakları"
+msgstr "İşletme tarafından önerilen ücret, ekstra avantajları"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr "Görüşme Planla"
+msgstr "Görüşme Programı"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Schedule interview with this applicant"
 msgstr "Bu adayla iş görüşmesi planlayın"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Search Applicants"
-msgstr "Adayları Arama"
+msgstr "Başvuruları Arama"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -1782,14 +1799,14 @@ msgstr "Kaynak Adı"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr "Aday Kaynağı"
+msgstr "İş Başvuru Kaynağı"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr "Aday Kaynakları"
+msgstr "İş Başvuru Kaynakları"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_id
@@ -1832,7 +1849,7 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
-"Adayın şu anki aşamasından önceki aşaması. Kayıp vaka analizi için "
+"Şu anki aşamasında olmak önce başvuru aşaması. Kayıp vaka analizi için "
 "kullanılır."
 
 #. module: hr_recruitment
@@ -1860,6 +1877,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Etkinliklerdeki aşamalar\n"
+"Zamanı Geçmiş: Tarihi geçmiş \n"
+"Bugün: Etkinlik günü bugün\n"
+"Planlanan: Gelecek etkinlikler."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1869,7 +1890,7 @@ msgstr "Konu / Aday"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application Name"
-msgstr "Konu / Başvuru Adı"
+msgstr "Konu / Aday Adı"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.applicant.category:0
@@ -1890,42 +1911,9 @@ msgid "The date at which the applicant will be available to start working"
 msgstr "Adayın çalışmaya başlayabileceği tarih"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr ""
-"Diğer isimle uyuşan model (Odoo belge gibi). Herhangi gelen cevaplanmamış "
-"bir e-posta  bu modelin yeni kaydını oluşturmaya sebep olur. (örn. bir Proje"
-" Görevi)"
-
-#. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
 msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "İşe- Alma Derecesi adı benzersiz olmalıdır!"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_name
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
-"Eposta rumuzunun adı, ör. <kariyer@example.odoo.com> adresine gelen "
-"epostaları yakalamak için 'kariyer' "
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"Kayıtların sahibi, bu rumuza epostalar alındıktan sonra oluşturulmuştur. Bu "
-"alan ayarlanmamışsa, sistem gönderenin (Kimden) adresinden doğru sahibini "
-"bulmaya çalışacaktır ya da o adres için hiç sistem kullanıcısı bulunamazsa "
-"Administrator hesabını kullanacaktır."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -1935,22 +1923,6 @@ msgid ""
 msgstr ""
 "Bu rumuzlar her bir kaynak için eposta veya adres olabilir. Eğer başvuru "
 "bunlardan birisi üzerinden gelirse nereden geldiğini bileceksiniz."
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
-msgstr ""
-"Bu eposta adresleri bu kayıt gönderilmeden önce bütün gelen ve giden "
-"epostaların CC satırına eklenecektir. Birden fazla eposta adresini virgül "
-"ile ayırınız"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
-msgid "These people will receive email."
-msgstr "Bu kişiler eposta alacaklar."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
@@ -2005,7 +1977,7 @@ msgstr "Bugün"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Today Activities"
-msgstr "Bugünkü Aktiviteler"
+msgstr "Bu Gunkü Aktiviteler"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2014,7 +1986,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tour.js:37
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:37
 #, python-format
 msgid ""
 "Try to send an email to this address, it will create an application "
@@ -2054,13 +2026,13 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on Survey app."
 msgstr ""
-"İşe alım sürecindeki her bir iş pozisyonu için özelleştirilmiş aday "
-"değerlendirme formlarını kullanın. İş pozisyonu ayrıntısı formunda "
-"kullanılacak formu seçin. Bu Anket uygulamasına bağlıdır."
+"İşe alım sürecindeki her bir iş pozisyonu için özelleştirilmiş görüşme "
+"formlarını kullanın. İş pozisyonu ayrıntısı formunda kullanılacak formu "
+"seçin. Bu Anket uygulamasına bağlıdır."
 
 #. module: hr_recruitment
 #. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tour.js:32
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:32
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
 msgstr "<b>Panoya geri dönmek için</b> yol bağlantılarını kullanın."
@@ -2068,7 +2040,7 @@ msgstr "<b>Panoya geri dönmek için</b> yol bağlantılarını kullanın."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
 msgid "User Email"
-msgstr "Kullanıcı Epostası"
+msgstr "Kullanı Emaili"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -2077,16 +2049,11 @@ msgstr "Çok İyi"
 
 #. module: hr_recruitment
 #. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tour.js:11
-#: code:addons/hr_recruitment/static/src/js/tour.js:16
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:11
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:16
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
 msgstr "Profesyonelce <b>işe alım yapmak</b> ister misiniz? <i>Başlayın.</i>"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
-msgid "Watchers Emails"
-msgstr "İzleyici Epostaları"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
@@ -2107,7 +2074,7 @@ msgid ""
 msgstr ""
 "Odoo personel ekranına hızlıca göz atarak, \n"
 "                herkesle ilgili bilgileri kolayca bulabilirsiniz;\n"
-"                kontak bilgisi, iş posizyonu, iletişim bilgileri, job position, müsaitlik, vb."
+"                kontak bilgisi, iş posizyonu, contact data, job position, müsaitlik, vb."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2117,10 +2084,10 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:450
+#: code:addons/hr_recruitment/models/hr_recruitment.py:466
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
-msgstr "Bu aday için Başvurulan İş ve İletişim İsmi tanımlamanız gerekir."
+msgstr "Bu aday için Başvurulmuş İş ve İletişim Adı tanımlamanız gerekir."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -2135,7 +2102,12 @@ msgid "e.g. Sales Manager"
 msgstr "ör. Satış Müdürü"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:295
+#: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
+msgid "hr.applicant.resumes.server"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:300
 #, python-format
 msgid "job applicant"
 msgstr ""

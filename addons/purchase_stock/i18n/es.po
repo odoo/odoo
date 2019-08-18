@@ -1,21 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_stock
+# 	* purchase_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Carlos Lopez <celm1990@hotmail.com>, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2018
+# Ana Juaristi <ajuaristio@gmail.com>, 2018
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2018
+# David Arnold <blaggacao@users.noreply.github.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Antonio Trueba, 2018
+# Carlos rodriguez <carlosalbertor436@gmail.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# David Vidal <david.vidal@trespinos.es>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
 # Miquel Torner <miq@odoo.com>, 2018
 # Mariela Moreno <mam@odoo.com>, 2018
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2018
+# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
+# Cristopher Cravioto <ccr@odoo.com>, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: Rick Hunter <rick.hunter.ec@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2018-08-02 11:17+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,8 +36,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
+msgstr "<span class=\"o_stat_text\"> Órdenes de Compra</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>Dirección de Envío</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 
 #. module: purchase_stock
@@ -34,7 +69,7 @@ msgid "Action"
 msgstr "Acción"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:127
+#: code:addons/purchase_stock/models/stock.py:126
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
 #: selection:stock.rule,action:0
@@ -50,7 +85,7 @@ msgstr "Regla de compra"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr ""
+msgstr "Comprar para Resurtir"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -68,13 +103,13 @@ msgid "Deliver To"
 msgstr "Entregar a"
 
 #. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO, etc."
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
 msgstr ""
-"Dependiendo de los módulos instalados, este permite definir la ruta del "
-"producto: si será comprado, manufacturado, bajo pedido, etc."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -94,7 +129,7 @@ msgstr "Dropshipping"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Excepcion(es) ocurrida(s) en la(s) orden(es) de compra."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -126,11 +161,6 @@ msgstr ""
 "comerciales usadas en las transacciones internacionales."
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_account_invoice
-msgid "Invoice"
-msgstr "Factura"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
 msgid "Is Shipped"
 msgstr "Es enviado"
@@ -139,6 +169,11 @@ msgstr "Es enviado"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
 msgstr "Es el Módulo de Venta Instalado"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move
+msgid "Journal Entries"
+msgstr "Asientos contables"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -151,9 +186,14 @@ msgid "Lot/Serial"
 msgstr "Lote/Número de serie"
 
 #. module: purchase_stock
+#: selection:purchase.order.line,qty_received_method:0
+msgid "Manual"
+msgstr "Manual"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Acciones manuales pueden ser necesarias."
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
@@ -207,14 +247,24 @@ msgid "Product Template"
 msgstr "Plantilla del producto"
 
 #. module: purchase_stock
-#: selection:stock.rule,action:0
-msgid "Pull & Push"
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_date
+msgid "Propagate Rescheduling"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
+msgid "Propagate cancellation"
 msgstr ""
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
+msgid "Pull & Push"
+msgstr "Jalar & Empujar"
+
+#. module: purchase_stock
+#: selection:stock.rule,action:0
 msgid "Pull From"
-msgstr ""
+msgstr "Obtener Desde"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -237,27 +287,32 @@ msgstr "Pedidos de compra"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Reporte de Compras"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr ""
+msgstr "Contador de Orden de Compra"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Push To"
-msgstr ""
+msgstr "Empujar A"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Recepción"
+msgstr "Tiquet"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
 msgstr "Recibir productos"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.purchase_open_picking
@@ -271,6 +326,11 @@ msgid "Request your vendors to deliver to your customers"
 msgstr "Solicite a sus proveedores que entreguen a sus clientes"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
+msgid "Reschedule if Higher Than"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
 msgid "Reservation"
 msgstr "Reserva"
@@ -281,6 +341,7 @@ msgid "Return Picking"
 msgstr "Albarán de devolución"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
 msgid "Routes"
 msgstr "Rutas"
@@ -297,6 +358,7 @@ msgstr "Movimiento de Stock"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+#: selection:purchase.order.line,qty_received_method:0
 msgid "Stock Moves"
 msgstr "Movimientos de stock"
 
@@ -308,7 +370,7 @@ msgstr "Regla de Inventario"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Reporte de Regla de Inventario"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -316,7 +378,12 @@ msgid "Technical field used to display the Drop Ship Address"
 msgstr "Campo técnico utilizado para mostrar la dirección de envió directo"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:265
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
+msgid "The change must be higher than this value to be propagated"
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:308
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -326,7 +393,12 @@ msgstr ""
 "solicitar un reembolso."
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:38
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date
+msgid "The rescheduling is propagated to the next move."
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/stock_rule.py:48
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -382,23 +454,27 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "Cuando se compren productos, podrán ser enviados a este almacén"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:20
+#: code:addons/purchase_stock/models/stock_rule.py:21
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
 msgstr ""
+"Cuando un producto es requerido en <b>%s</b>, <br/> una solicitud de "
+"cotización es creada para cumplir con la necesidad."
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:257
+#: code:addons/purchase_stock/models/purchase.py:300
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"No puede disminuir la cantidad pedida por debajo de la cantidad recibida.\n"
+"Crea un retorno primero."
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:186
+#: code:addons/purchase_stock/models/purchase.py:188
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Debe asignar una localización para este socio %s"
@@ -416,4 +492,4 @@ msgstr "de"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr ""
+msgstr "ordenado en lugar de"

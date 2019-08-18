@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * repair
+# 	* repair
 # 
 # Translators:
 # Kovács Tibor <kovika@gmail.com>, 2018
-# krnkris, 2018
 # gezza <geza.nagy@oregional.hu>, 2018
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # Martin Trigaux, 2019
+# krnkris, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:51+0000\n"
+"POT-Creation-Date: 2019-08-12 12:28+0000\n"
 "PO-Revision-Date: 2018-03-22 16:02+0000\n"
 "Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -32,6 +32,13 @@ msgstr ""
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
+msgstr ""
+
+#. module: repair
+#: model:ir.actions.report,print_report_name:repair.action_report_repair_order
+msgid ""
+"(                 object.state == 'draft' and 'Repair Quotation - %s' % "
+"(object.name) or                 'Repair Order - %s' % (object.name))"
 msgstr ""
 
 #. module: repair
@@ -210,10 +217,17 @@ msgid "Cancelled"
 msgstr "Törölve"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:244
+#: code:addons/repair/models/repair.py:245
 #, python-format
 msgid "Cannot cancel completed repairs."
 msgstr "Végrehajtott javításokat nem tudja törölni!"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
+msgid "Category"
+msgstr "Kategória"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -240,8 +254,19 @@ msgid "Confirmed"
 msgstr "Megerősített"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:607
-#: code:addons/repair/models/repair.py:667
+#: model:ir.model.fields,help:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_order__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"A mértékegységek közötti átváltás csak akkor valósul meg, ha ugyanabba a "
+"kategóriába tartoznak. Az átváltás az arányszámok alapján történik."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:670
+#: code:addons/repair/models/repair.py:738
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -437,7 +462,7 @@ msgstr ""
 "                eltöltött időt."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:210
+#: code:addons/repair/models/repair.py:211
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Elégtelen mennyiség"
@@ -485,7 +510,7 @@ msgid "Invoice and shipping address:"
 msgstr "Számlázási és szállítási cím:"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:385
+#: code:addons/repair/models/repair.py:439
 #, python-format
 msgid "Invoice created"
 msgstr "Számla létrehozva ekkor"
@@ -507,6 +532,16 @@ msgstr "Számlázási cím"
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
 msgid "Is Follower"
 msgstr "Ő egy követő"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move
+msgid "Journal Entries"
+msgstr "Könyvelési tételek"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
+msgstr "Könyvelési napló tételsor"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
@@ -606,34 +641,28 @@ msgid "No Invoice"
 msgstr "Nincs számla"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:308
-#, python-format
-msgid "No account defined for partner \"%s\"."
-msgstr "Nincs számla definiálva \"%s\" partnerhez."
-
-#. module: repair
-#: code:addons/repair/models/repair.py:334
-#: code:addons/repair/models/repair.py:362
+#: code:addons/repair/models/repair.py:346
+#: code:addons/repair/models/repair.py:389
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Nincs számla definiálva \"%s\" termékhez."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:598
-#: code:addons/repair/models/repair.py:658
+#: code:addons/repair/models/repair.py:653
+#: code:addons/repair/models/repair.py:721
 #, python-format
 msgid "No pricelist found."
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:355
+#: code:addons/repair/models/repair.py:385
 #, python-format
 msgid "No product defined on fees."
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:605
-#: code:addons/repair/models/repair.py:665
+#: code:addons/repair/models/repair.py:668
+#: code:addons/repair/models/repair.py:736
 #, python-format
 msgid "No valid pricelist line found."
 msgstr ""
@@ -669,7 +698,7 @@ msgid "Number of unread messages"
 msgstr "Olvasatlan üzenetek száma"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:232
+#: code:addons/repair/models/repair.py:233
 #, python-format
 msgid "Only draft repairs can be confirmed."
 msgstr ""
@@ -700,6 +729,12 @@ msgstr ""
 #: selection:repair.order,activity_state:0
 msgid "Planned"
 msgstr "Tervezett"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:307
+#, python-format
+msgid "Please define an accounting sales journal for the company %s (%s)."
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -800,10 +835,16 @@ msgid "Remove"
 msgstr "Eltávolítás"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move__repair_ids
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
 msgstr "Javítás"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
+msgid "Repair Fee"
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
@@ -811,7 +852,7 @@ msgid "Repair Fees"
 msgstr ""
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
 msgid "Repair Line"
 msgstr "Javítási sor"
 
@@ -854,31 +895,25 @@ msgid "Repair Reference"
 msgstr "Hivatkozás javításra"
 
 #. module: repair
-#: model:product.product,name:repair.product_service_order_repair
-#: model:product.template,name:repair.product_service_order_repair_product_template
-msgid "Repair Services"
-msgstr ""
-
-#. module: repair
-#: code:addons/repair/models/repair.py:196
+#: code:addons/repair/models/repair.py:197
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr "Javításoknak érvénytelenítettnek kell lennie vázlattá alakításhoz."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:404
+#: code:addons/repair/models/repair.py:458
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "Javításoknak jóváhagyottaknak kell lennie a javítás megkezdéséhez."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:432
+#: code:addons/repair/models/repair.py:486
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "Javításoknak elvégzettnek kell lennie termék egyeztetéshez."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:415
+#: code:addons/repair/models/repair.py:469
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Javításoknak javítás alatt kell lennie a javítás befejezéséhez."
@@ -933,7 +968,7 @@ msgid "Send Quotation"
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:545
+#: code:addons/repair/models/repair.py:600
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Szériaszám szükséges a terméken végzett művelet sorhoz '%s'"
@@ -1010,7 +1045,7 @@ msgid "The name of the Repair Order must be unique!"
 msgstr "A javítás megrendelés nevének egyedinek kell lennie!"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
+#: code:addons/repair/models/repair.py:173
 #, python-format
 msgid ""
 "The product unit of measure you chose has a different category than the "
@@ -1018,7 +1053,7 @@ msgid ""
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:246
+#: code:addons/repair/models/repair.py:247
 #, python-format
 msgid "The repair order is already invoiced."
 msgstr ""
@@ -1106,12 +1141,6 @@ msgid "Unit of Measure"
 msgstr "Mértékegység"
 
 #. module: repair
-#: model:product.product,uom_name:repair.product_service_order_repair
-#: model:product.template,uom_name:repair.product_service_order_repair_product_template
-msgid "Unit(s)"
-msgstr "Egység(ek)"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
@@ -1132,12 +1161,17 @@ msgid "Untaxed amount"
 msgstr "Nettó érték"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "UoM"
+msgstr "Mértékegység"
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
+#: code:addons/repair/models/repair.py:173
 #, python-format
 msgid "Warning"
 msgstr "Figyelmeztetés"
@@ -1164,8 +1198,8 @@ msgid "Yes"
 msgstr "Igen"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:600
-#: code:addons/repair/models/repair.py:660
+#: code:addons/repair/models/repair.py:655
+#: code:addons/repair/models/repair.py:723
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -1175,7 +1209,7 @@ msgstr ""
 "Válasszon ki egyet mielőtt terméket választana."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:296
+#: code:addons/repair/models/repair.py:298
 #, python-format
 msgid "You have to select an invoice address in the repair form."
 msgstr ""

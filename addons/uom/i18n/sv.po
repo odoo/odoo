@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * uom
+# 	* uom
 # 
 # Translators:
 # Martin Trigaux, 2018
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -57,16 +58,6 @@ msgid ""
 msgstr ""
 "Omräkning av enheter kan endast ske om de tillhör samma kategori. "
 "Omräkningen baseras på angiven ratio."
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:138
-#, python-format
-msgid ""
-"Conversion from Product UoM %s to Default UoM %s is not possible as they "
-"both belong to different Category!."
-msgstr ""
-"Konvertering från produkt måttenheter %s till standard måttenheter %s är "
-"inte möjligt, eftersom båda tillhör annan kategori!."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -155,15 +146,9 @@ msgid "Liter(s)"
 msgstr "Liter"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_res_users__has_group_uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Administrera flera mått"
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__name
-msgid "Name"
-msgstr "Namn"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -209,13 +194,23 @@ msgstr "Omvandlingsfaktorn får inte vara noll!"
 
 #. module: uom
 #: sql_constraint:uom.uom:0
-msgid "The rounding precision must be greater than 0!"
+msgid "The reference unit must have a conversion factor equal to 1."
 msgstr ""
 
 #. module: uom
-#: selection:uom.category,measure_type:0
-msgid "Time"
-msgstr "Tid"
+#: sql_constraint:uom.uom:0
+msgid "The rounding precision must be strictly positive."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:151
+#, python-format
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category than the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -254,6 +249,11 @@ msgid "Unit of Measure Categories"
 msgstr "Måttenhetskategorier"
 
 #. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__name
+msgid "Unit of Measure Category"
+msgstr ""
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Unit(s)"
 msgstr "st"
@@ -285,7 +285,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:86
+#: code:addons/uom/models/uom_uom.py:92
 #, python-format
 msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
@@ -293,15 +293,10 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:88
+#: code:addons/uom/models/uom_uom.py:94
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
-
-#. module: uom
-#: model:ir.model,name:uom.model_res_users
-msgid "Users"
-msgstr "Användare"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -316,6 +311,7 @@ msgid "Weight"
 msgstr "Vikt"
 
 #. module: uom
+#: selection:uom.category,measure_type:0
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
 msgstr "Arbetstid"
@@ -323,6 +319,20 @@ msgstr "Arbetstid"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:28
+#, python-format
+msgid "You cannot delete this UoM Category as it is used by the system."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:114
+#, python-format
+msgid ""
+"You cannot delete this UoM as it is used by the system. You should rather "
+"archive it."
 msgstr ""
 
 #. module: uom

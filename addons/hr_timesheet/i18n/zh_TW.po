@@ -1,23 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_timesheet
+# 	* hr_timesheet
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Bill Hsu <hcm86@icloud.com>, 2018
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
@@ -75,6 +89,11 @@ msgid "Activities"
 msgstr "活動"
 
 #. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_timesheet_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
@@ -83,13 +102,10 @@ msgstr "所有工時表"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allow_timesheets
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
 msgstr "允許工時表"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_account_analytic_account
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Analytic Account"
 msgstr "分析帳戶"
@@ -136,11 +152,6 @@ msgstr "按任務"
 #: model:ir.model,name:hr_timesheet.model_res_company
 msgid "Companies"
 msgstr "公司"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__company_uom_id
-msgid "Company UOM"
-msgstr "公司的計量單位"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
@@ -190,11 +201,12 @@ msgstr "顯示目前任務的進度。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Duration"
 msgstr "時長"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/hr_timesheet.py:95
+#: code:addons/hr_timesheet/models/hr_timesheet.py:98
 #, python-format
 msgid "Duration (%s)"
 msgstr "持續時間 (%s)"
@@ -210,6 +222,11 @@ msgstr "有效時數"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Employee"
 msgstr "員工"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
+msgid "Enable timesheeting on the project."
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -254,25 +271,6 @@ msgid "Initially Planned Hours"
 msgstr "最初計劃時數"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Leaves"
-msgstr "休假"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
-msgid ""
-"Link this project to an analytic account if you need financial management on"
-" projects. It enables you to connect projects with budgets, planning, cost "
-"and revenue analysis, timesheets on projects, etc."
-msgstr "如果您需要專案的財務管理，鏈接此專案到一個分析帳戶。它能讓您鏈接預算、規劃、成本和收入分析、專案工時表等到專案。"
-
-#. module: hr_timesheet
-#: model:res.groups,name:hr_timesheet.group_timesheet_manager
-msgid "Manager"
-msgstr "經理"
-
-#. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_mine
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -283,14 +281,6 @@ msgstr "我的工時表"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
 msgid "Planned Hours"
 msgstr "已計劃的時數"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/models/analytic_account.py:28
-#, python-format
-msgid ""
-"Please remove existing tasks in the project linked to the accounts you want "
-"to delete."
-msgstr "請刪除鏈接到您想刪除的科目的專案中的任務。"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -316,21 +306,10 @@ msgid "Project -"
 msgstr "專案 -"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__project_count
-msgid "Project Count"
-msgstr "專案個數"
-
-#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid "Project Time Unit"
 msgstr "專案時間單位"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__project_ids
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.account_analytic_account_view_form_inherit
-msgid "Projects"
-msgstr "專案"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -364,9 +343,14 @@ msgid "Responsible"
 msgstr "負責"
 
 #. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
+msgid "See all Timesheets"
+msgstr ""
+
+#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Set time unit used to record your timesheets"
-msgstr "設定時間單位用於記錄您的工時表"
+msgid "Set the time unit used to record your timesheets"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -391,8 +375,8 @@ msgstr "子任務上實際花費的小時數匯總"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Synchronize time spent with web/mobile app"
-msgstr "將用時與網頁/手機應用同步"
+msgid "Synchronize time spent with our web/mobile apps"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -408,7 +392,12 @@ msgid "Tasks Analysis"
 msgstr "任務分析"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/hr_timesheet.py:113
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
+msgid "Team Approver"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:116
 #, python-format
 msgid ""
 "The project you are timesheeting on is not linked to an active analytic "
@@ -416,15 +405,14 @@ msgid ""
 msgstr "您計時的專案未鏈接到活動的分析帳戶。可以在專案配置上設定一個。"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/project.py:147
+#: code:addons/hr_timesheet/models/project.py:122
 #, python-format
 msgid ""
-"This task must be part of a project because they some timesheets are linked "
-"to it."
-msgstr "這個任務必須是專案的一部分，因為和部分時間表有關聯。"
+"This task must be part of a project because there are some timesheets linked"
+" to it."
+msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_account_analytic_account__company_uom_id
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
@@ -448,6 +436,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
 msgstr "時間編碼"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Time Off"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -508,11 +502,16 @@ msgid "Timesheets can be logged on this task."
 msgstr "可以在這個任務上記錄工時表。"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/project.py:32
+#: code:addons/hr_timesheet/models/project.py:29
 #, python-format
 msgid ""
 "To allow timesheet, your project %s should have an analytic account set."
 msgstr "要允許時間表，您的專案%s應具有分析帳戶集。"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+msgid "Total"
+msgstr "總計"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -527,20 +526,9 @@ msgid ""
 msgstr "總剩餘時間，任務執行者可定期重估。"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/project.py:51
-#, python-format
-msgid "Unknown Analytic Account"
-msgstr "未知分析帳戶"
-
-#. module: hr_timesheet
-#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
-msgid "User"
-msgstr "使用者"
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Validated leaves create timesheets automatically."
-msgstr "經驗證的休假可自動創建時間表。"
+msgid "Validated time off create timesheets automatically."
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget

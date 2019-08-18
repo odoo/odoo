@@ -1,31 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * fleet
+# 	* fleet
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Tina Milas, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2018
 # Marko Carević <marko.carevic@live.com>, 2018
+# Tina Milas, 2018
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
 # Ivan Marijanović <ivanm101@yahoo.com>, 2018
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Ivan Marijanović <ivanm101@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">End Date Contract Alert</span>"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span> days before the end date</span>"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span>Send an alert </span>"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -84,9 +101,9 @@ msgid "Additional Details"
 msgstr "Dodatni podaci"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Additional Properties"
-msgstr "Dodatna svojstva"
+#: model:res.groups,name:fleet.fleet_group_manager
+msgid "Administrator"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -101,15 +118,36 @@ msgid "Amount"
 msgstr "Iznos"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Apply Change"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
 msgstr "Arhivirano"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
+msgid "Assignation Date"
+msgstr "Datum dodjeljivanja"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
 msgid "Assignation Logs"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_attachment_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr "Broj priloga"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Attention: renewal overdue"
 msgstr ""
 
 #. module: fleet
@@ -126,6 +164,11 @@ msgid "Automatically Generated"
 msgstr "Automatski generirano"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+msgid "Brand"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
 msgid "Brand of the vehicle"
 msgstr ""
@@ -139,6 +182,12 @@ msgstr "Emisija CO2"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
 msgstr "CO2 emisija vozila"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
+msgid "Car Manufacturers"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
@@ -207,13 +256,27 @@ msgstr "Boja vozila"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__company_id
 msgid "Company"
 msgstr "Tvrtka"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Postavke"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
 msgid "Configuration"
 msgstr "Postava"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
 
 #. module: fleet
 #: selection:fleet.service.type,category:0
@@ -222,6 +285,7 @@ msgstr "Postava"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__contract_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contract"
 msgstr "Ugovor"
 
@@ -233,12 +297,17 @@ msgstr "Mjesečni troškovi ugovora"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_count
 msgid "Contract Count"
-msgstr ""
+msgstr "Broj ugovora"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid "Contract Expiration Date"
 msgstr "Datum isteka ugovora"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Contract Informations"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__ins_ref
@@ -263,11 +332,6 @@ msgstr "Vrste ugovora"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__contract_id
 msgid "Contract attached to this cost"
 msgstr "Kontakt pridružen ovom trošku"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Contract details"
-msgstr "Pojedinosti ugovora"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
@@ -300,6 +364,7 @@ msgstr "Ugovori"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Cost"
 msgstr "Trošak"
 
@@ -374,7 +439,7 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid "Create a new contract"
-msgstr ""
+msgstr "Kreiranje novog ugovora."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -397,7 +462,7 @@ msgstr ""
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
-msgid "Create a new make"
+msgid "Create a new manufacturer"
 msgstr ""
 
 #. module: fleet
@@ -468,6 +533,20 @@ msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer
+msgid "Creation Contract Odometer"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
 msgstr "Trenutno stanje vozila"
@@ -513,6 +592,11 @@ msgid "Date when the vehicle has been immatriculated"
 msgstr ""
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
+msgid "Delay alert contract outdated"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
 msgid "Diesel"
 msgstr "Diesel"
@@ -544,6 +628,7 @@ msgstr "Broj vrata"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__purchaser_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__driver_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Driver"
 msgstr "Vozač"
 
@@ -557,6 +642,11 @@ msgstr "Vozač ovog vozila"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Drivers History"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
+msgid "Drivers History Count"
 msgstr ""
 
 #. module: fleet
@@ -589,7 +679,7 @@ msgid "Electric"
 msgstr "Električni"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:44
+#: code:addons/fleet/models/fleet_vehicle_cost.py:46
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
 msgstr "Brisanje vrijednosti kilometraže nije dozvoljeno."
@@ -601,8 +691,8 @@ msgstr "Završni datum"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Engine Options"
-msgstr "Opcije motora"
+msgid "Engine"
+msgstr ""
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -622,11 +712,27 @@ msgid "First Contract Date"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_res_users__group_fleet_user
 #: model:ir.module.category,name:fleet.module_fleet_category
 #: model:ir.ui.menu,name:fleet.menu_root
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "Fleet"
 msgstr "Prevoz"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "Fleet Management"
+msgstr "Upravljanje flotom"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__manager_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__manager_id
+msgid "Fleet Manager"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_service_type
+msgid "Fleet Service Type"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
@@ -711,14 +817,19 @@ msgid "Future Activities"
 msgstr "Buduće aktivnosti"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
+msgid "Future Driver"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Future Driver :"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
 msgid "Gasoline"
 msgstr "Benzin"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "General Properties"
-msgstr "Osnovna svojstva"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__generated_cost_ids
@@ -854,14 +965,8 @@ msgstr "Analiza indikativnih troškova"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__sum_cost
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Indicative Costs Total"
 msgstr "Ukupni indikativni troškovi"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "Informacije o vozilu"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -873,6 +978,11 @@ msgstr "Datum računa"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__inv_ref
 msgid "Invoice Reference"
 msgstr "Vezna oznaka računa"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Is Available"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
@@ -888,6 +998,11 @@ msgstr "Kilometri"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
 msgid "Km"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "LPG"
 msgstr ""
 
 #. module: fleet
@@ -947,7 +1062,7 @@ msgstr "Vrijeme promjene"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Late Activities"
-msgstr ""
+msgstr "Posljednje aktivnosti"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
@@ -995,16 +1110,17 @@ msgid "Logo (small)"
 msgstr "Logo (mali)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__name
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
-msgid "Make"
-msgstr "Marka"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_main_attachment_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Glavni prilog"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
-msgid "Make of the vehicle"
-msgstr "Marka vozila"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__name
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Make"
+msgstr "Marka"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1029,14 +1145,20 @@ msgid ""
 msgstr ""
 
 #. module: fleet
-#: model:res.groups,name:fleet.fleet_group_manager
-msgid "Manager"
-msgstr "Voditelj"
-
-#. module: fleet
 #: selection:fleet.vehicle,transmission:0
 msgid "Manual"
 msgstr "Ručno"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
+msgid "Manufacturer"
+msgstr "Proizvođač"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__brand_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
+msgid "Manufacturer of the vehicle"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_medium
@@ -1060,7 +1182,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška pri isporuci poruke"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_ids
@@ -1076,6 +1198,7 @@ msgstr "Milja"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
 msgstr "Model"
@@ -1090,12 +1213,6 @@ msgstr "Model marke"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_year
 msgid "Model Year"
 msgstr ""
-
-#. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
-msgid "Model make of Vehicle"
-msgstr "Model marke vozila"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__name
@@ -1141,10 +1258,15 @@ msgid "Name of contract to renew soon"
 msgstr "Naziv ugovora za skoro obnavljanje"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_new_request
+msgid "New Request"
+msgstr "Novi zahtjev"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Krajnji rok slijedeće aktivnosti"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_summary
@@ -1156,6 +1278,11 @@ msgstr "Sažetak sljedeće aktivnosti"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
 msgid "Next Activity Type"
+msgstr "Tip sljedeće aktivnosti"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__future_driver_id
+msgid "Next Driver of the vehicle"
 msgstr ""
 
 #. module: fleet
@@ -1164,7 +1291,7 @@ msgid "No"
 msgstr "Ne"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:84
+#: code:addons/fleet/models/fleet_vehicle.py:93
 #, python-format
 msgid "No Plate"
 msgstr ""
@@ -1197,7 +1324,7 @@ msgstr "Broj vrata vozila"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
@@ -1209,7 +1336,7 @@ msgstr "Broj poruka koje zahtijevaju aktivnost"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__seats
@@ -1263,16 +1390,6 @@ msgid "Odometer Values Per Vehicle"
 msgstr "Stanje kilometraže po vozilu"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer
-msgid "Odometer at creation"
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Odometer details"
-msgstr "Podaci o kilometraži"
-
-#. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
 msgstr "Dnevnik kilometraže za vozilo"
@@ -1303,6 +1420,11 @@ msgid ""
 msgstr ""
 "Odoo Vam pomaže upravljati troškovima Vaših vozila\n"
 "Troškovi se obično kreiraju iz usluga i ugovora i pojavljuju se ovdje."
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Open"
+msgstr "Otvori"
 
 #. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
@@ -1338,10 +1460,22 @@ msgid "Person to which the contract is signed for"
 msgstr "Osoba na koju glasi ugovor"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_car
+#: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
+#: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
+msgid "Plan To Change Car"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,activity_state:0
 #: selection:fleet.vehicle.log.contract,activity_state:0
 msgid "Planned"
 msgstr "Planirano"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Planned for Change"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
@@ -1367,6 +1501,16 @@ msgid "Price Per Liter"
 msgstr "Cijena po litri"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__net_car_value
+msgid "Purchase Value"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__net_car_value
+msgid "Purchase Value of the car"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__purchaser_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__purchaser_id
 msgid "Purchaser"
@@ -1388,7 +1532,7 @@ msgid "Refueling Details"
 msgstr "Podaci o točenju goriva"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:201
+#: code:addons/fleet/models/fleet_vehicle_cost.py:211
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
@@ -1480,6 +1624,12 @@ msgstr "Servisi za vozila"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Set Contract In Progress"
 msgstr "Ugovor u tijeku"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_config_settings_action
+#: model:ir.ui.menu,name:fleet.fleet_config_settings_menu
+msgid "Settings"
+msgstr "Postavke"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
@@ -1574,6 +1724,13 @@ msgstr ""
 "1024x1024 piksela"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
+msgid ""
+"This is the date at which the car will be available, if not set it means "
+"available instantly"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,activity_state:0
 #: selection:fleet.vehicle.log.contract,activity_state:0
 msgid "Today"
@@ -1629,11 +1786,6 @@ msgid "Type"
 msgstr "Vrsta"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_service_type
-msgid "Type of services available on a vehicle"
-msgstr "Vrste servisa dostupnih za vozilo"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
 msgid "Unique number written on the vehicle motor (VIN/SN number)"
 msgstr "Broj šasije/motora (VIN/SN number)"
@@ -1680,16 +1832,12 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_res_users
-msgid "Users"
-msgstr "Korisnici"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__car_value
 msgid "Value of the bought vehicle"
 msgstr "Vrijednost kupljenog vozila"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__vehicle_id
@@ -1701,14 +1849,13 @@ msgstr "Vrijednost kupljenog vozila"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "Vehicle"
 msgstr "Vozilo"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Vehicle Costs"
 msgstr "Troškovi vozila"
@@ -1724,16 +1871,21 @@ msgid "Vehicle Details"
 msgstr "Detalji vozila"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
-msgid "Vehicle Model"
-msgstr "Model vozila"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Vehicle Informations"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_action
+#: model:ir.model,name:fleet.model_fleet_vehicle_state
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
 msgstr "Status vozila"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_tag
+msgid "Vehicle Tag"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
@@ -1759,15 +1911,23 @@ msgstr "Troškovi vozila"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
 #: model:ir.ui.menu,name:fleet.fleet_vehicles
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_activity
 msgid "Vehicles"
 msgstr "Vozila"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vehicles Contracts"
 msgstr "Ugovori za vozila"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
+msgid "Vehicles Costs"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_action
@@ -1775,6 +1935,12 @@ msgstr "Ugovori za vozila"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 msgid "Vehicles Fuel Logs"
 msgstr "Evidencija potrošnje goriva"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
+msgid "Vehicles Model"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
@@ -1821,6 +1987,11 @@ msgstr "Dobavljači"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
 msgstr "Datum upozorenja"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Warning: renewal due soon"
+msgstr ""
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1894,16 +2065,6 @@ msgstr "npr. PAE 326"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "e.g. Tesla"
 msgstr "npr. Tesla"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_state
-msgid "fleet.vehicle.state"
-msgstr "fleet.vehicle.state"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_tag
-msgid "fleet.vehicle.tag"
-msgstr "Oznake"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form

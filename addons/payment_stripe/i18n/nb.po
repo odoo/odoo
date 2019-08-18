@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_stripe
+# 	* payment_stripe
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Jorunn D. Newth, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +41,11 @@ msgstr ""
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
 msgstr "Adyen"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Alipay"
+msgstr ""
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -92,7 +98,7 @@ msgstr "Utløper (MM/YY)"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:33
+#: code:addons/payment_stripe/static/src/js/stripe.js:37
 #, python-format
 msgid "Just one more second, confirming your payment..."
 msgstr "Bare et øyeblikk, bekrefter betalingen..."
@@ -106,6 +112,11 @@ msgstr "Manuelt oppsett"
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "PayU Latam"
+msgstr ""
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -129,7 +140,7 @@ msgstr "Betalingstransaksjon"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:59
+#: code:addons/payment_stripe/static/src/js/stripe.js:62
 #, python-format
 msgid "Payment error"
 msgstr "Betalingsfeil"
@@ -191,6 +202,12 @@ msgstr "Stripe: %s ordrer funnet for referanse %s"
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr "Stripe: Ingen ordre funnet for referansen %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:260
+#, python-format
+msgid "Stripe: no payment token was provided or the token creation failed."
+msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:170

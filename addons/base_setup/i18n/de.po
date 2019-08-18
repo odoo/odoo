@@ -1,18 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_setup
+# 	* base_setup
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Johannes Croe <jcr@odoo.com>, 2018
-# Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
+# Wolfgang Taferner, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# 4e7311735ad180fde514b5b19202d965, 2017
+# Renzo Meister, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Niki Waibel, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Johannes Croe <jcr@odoo.com>, 2019
+# Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Andi, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +54,8 @@ msgid ""
 "<span class=\"o_form_label\">Document Template</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Dokumentvorlage</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -47,6 +63,17 @@ msgid ""
 "<span class=\"o_form_label\">Format</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Format</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Geo "
+"Provider."
+msgstr ""
+"<strong>Speichern</strong> Sie diese Seite und kommen Sie hierher zurück, um"
+" Ihren Geo-Provider auszuwählen."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -62,7 +89,7 @@ msgstr "Zugriffsrechte"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
-msgstr ""
+msgstr "Fügen Sie lustiges Feedback hinzu und motivieren Sie Ihre Mitarbeiter"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
@@ -92,14 +119,9 @@ msgid "Attach Google documents to any record"
 msgstr "Hängen Sie Google Dokumente an jeden beliebigen Datensatz an"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
-msgid "Auto-populate company data"
-msgstr ""
-
-#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Autocomplete company data (name, logo, address, etc.)"
-msgstr ""
+msgid "Automatically enrich your contact base with company data"
+msgstr "Reichern Sie Ihre Kontaktdatenbank automatisch mit Firmendaten an."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -120,7 +142,7 @@ msgid "Change Document Template"
 msgstr "Dokumentvorlage ändern"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:100
+#: code:addons/base_setup/models/res_config_settings.py:101
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Wählen Sie Ihr Dokumentenlayout"
@@ -167,6 +189,11 @@ msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Contacts"
+msgstr "Kontakte"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Create and attach Google Drive documents to any record"
 msgstr ""
 "Sie können in jedem Datensatz Google Drive-Dokumente erstellen und "
@@ -206,7 +233,7 @@ msgstr "Extrahieren und analysieren Sie Odoo-Daten über Google Tabellen"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Find free high-resolution images from Unsplash"
-msgstr ""
+msgstr "Hier finden Sie hochauflösende Bilder von Unsplash"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
@@ -228,6 +255,21 @@ msgstr "Allgemeine Einstellungen"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Gengo Translations"
 msgstr "Gengo Translations"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Geo Localization"
+msgstr "Geo Lokalisation"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
+msgid "GeoLocalize"
+msgstr "GeoLokalisieren"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "GeoLocalize your partners"
+msgstr "GeoLokalisieren Sie Ihre Partner"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -262,7 +304,7 @@ msgstr "Integration"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter Company Flows"
-msgstr ""
+msgstr "Interne Unternehmensabläufe"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -274,11 +316,6 @@ msgstr "LDAP-Authentifizierung"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_inter_company_rules
 msgid "Manage Inter Company"
 msgstr "Inter-Company verwalten"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_company
-msgid "Manage multiple companies"
-msgstr "Multi-Unternehmen Verwaltung"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -293,7 +330,7 @@ msgstr "Mehrere Währungen"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Multi-companies"
-msgstr ""
+msgstr "Multi-Unternehmen"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -306,9 +343,24 @@ msgid "Paper format"
 msgstr "Papierformat"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Partner Autocomplete"
+msgstr "Partner Autovervollständigung"
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
 msgstr "Vorschaudokument"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
+msgid "Send SMS"
+msgstr "Sende SMS"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Send texts to your contacts"
+msgstr "Senden Sie Texte an Ihre Kontakte"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -344,7 +396,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
 msgid "Show Effect"
-msgstr ""
+msgstr "Zeige Effekte"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -369,7 +421,7 @@ msgstr "Übersetzen Sie Ihre Website mit Gengo"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr ""
+msgstr "Unsplash Bilder Galerie"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -403,3 +455,6 @@ msgid ""
 "companies. When selecting one item, the company data and logo are auto-"
 "filled."
 msgstr ""
+"Beim Auffüllen Ihres Adressbuchs stellt Odoo eine Liste passender "
+"Unternehmen zur Verfügung. Bei der Auswahl eines Artikels werden die "
+"Firmendaten und das Logo automatisch ausgefüllt."

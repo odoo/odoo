@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_stripe
+# 	* payment_stripe
 # 
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
 # Daniel Forslund <daniel.forslund@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
 "Last-Translator: Daniel Forslund <daniel.forslund@gmail.com>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
 #, python-format
 msgid "&times;"
 msgstr "&times;"
@@ -39,6 +40,11 @@ msgstr ""
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Alipay"
 msgstr ""
 
 #. module: payment_stripe
@@ -80,7 +86,7 @@ msgstr "Stäng"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
 #, python-format
 msgid "Error"
 msgstr "Fel"
@@ -92,7 +98,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:33
+#: code:addons/payment_stripe/static/src/js/stripe.js:37
 #, python-format
 msgid "Just one more second, confirming your payment..."
 msgstr ""
@@ -109,6 +115,11 @@ msgstr ""
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
+msgid "PayU Latam"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
 msgstr ""
 
@@ -118,13 +129,18 @@ msgid "Payment Acquirer"
 msgstr "Betalväxel"
 
 #. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_token
+msgid "Payment Token"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalningstransaktion"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:59
+#: code:addons/payment_stripe/static/src/js/stripe.js:62
 #, python-format
 msgid "Payment error"
 msgstr ""
@@ -135,7 +151,7 @@ msgid "Paypal"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:175
+#: code:addons/payment_stripe/models/payment.py:174
 #, python-format
 msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
@@ -168,25 +184,31 @@ msgid "Stripe Secret Key"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:173
+#: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:185
+#: code:addons/payment_stripe/models/payment.py:184
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:181
+#: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:171
+#: code:addons/payment_stripe/models/payment.py:260
+#, python-format
+msgid "Stripe: no payment token was provided or the token creation failed."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:170
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
 msgstr ""
@@ -194,9 +216,4 @@ msgstr ""
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
-
-#. module: payment_stripe
-#: model:ir.model,name:payment_stripe.model_payment_token
-msgid "payment.token"
 msgstr ""

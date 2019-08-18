@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * calendar
+# 	* calendar
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2019
+# George Tarasidis <george_tarasidis@yahoo.com>, 2019
+# Kostas Goutoudis <goutoudis@gmail.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: Η ημερομηνία ενημερώθηκε"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:741
+#: code:addons/calendar/models/calendar.py:751
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -42,57 +43,22 @@ msgstr ""
 " %s στο %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:732
+#: code:addons/calendar/models/calendar.py:742
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s στο (%s Προς %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:229
+#: code:addons/calendar/models/calendar.py:230
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s έχει δεχθεί την πρόσκληση"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:237
+#: code:addons/calendar/models/calendar.py:239
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s έχει απορρίψει την πρόσκληση"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_5
-msgid "1 Day(s)"
-msgstr "1 Ημέρα"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_3
-msgid "1 Hour(s)"
-msgstr "1 Ώρα"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_1
-msgid "15 Minute(s)"
-msgstr "15 Λεπτά"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_4
-msgid "2 Hour(s)"
-msgstr "2 Ώρες"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_1
-msgid "3 Hour(s), by e-mail"
-msgstr "3 Ώρες, με email"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_2
-msgid "30 Minute(s)"
-msgstr "30 Λεπτά"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_2
-msgid "6 Hour(s), by e-mail"
-msgstr "6 Ώρες, με email"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -336,6 +302,18 @@ msgid "Action Needed"
 msgstr "Απαιτείται ενέργεια"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
@@ -358,14 +336,14 @@ msgstr "Τύπος Δραστηριότητας"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 #, python-format
 msgid "All Day"
 msgstr "Ολοήμερη"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:728
+#: code:addons/calendar/models/calendar.py:738
 #, python-format
 msgid "AllDay , %s"
 msgstr "Ολοήμερη, %s"
@@ -409,7 +387,7 @@ msgid "Availability"
 msgstr "Διαθεσιμότητα"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1693
+#: code:addons/calendar/models/calendar.py:1709
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -461,18 +439,6 @@ msgstr "Συνάντηση Ημερολογίου"
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
 msgstr "Ημερολόγιο: Υπενθύμιση Συμβάντος"
-
-#. module: calendar
-#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-"Οι κατηγορίες ενδέχεται να ενεργοποιήσουν συγκεκριμένη συμπεριφορά όπως την "
-"προβολή ημερολογίου"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
-msgid "Category"
-msgstr "Κατηγορία"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -560,7 +526,7 @@ msgstr "Περιγραφή"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:18
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:13
 #, python-format
 msgid "Details"
 msgstr "Λεπτομέρειες"
@@ -609,10 +575,20 @@ msgid "Duration in minutes"
 msgstr "Διάρκεια σε λεπτά"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:calendar.alarm,alarm_type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
 msgid "Email"
 msgstr "Email"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hour(s)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -671,12 +647,6 @@ msgid "Event Time"
 msgstr "Ώρα Συμβάντος"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1234
-#, python-format
-msgid "Event recurrence interval cannot be negative."
-msgstr "Το διάστημα επανάληψης συμβάντος δεν μπορεί να είναι αρνητικό."
-
-#. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "Όλοι"
@@ -698,7 +668,7 @@ msgid "First"
 msgstr "Πρώτο"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:998
+#: code:addons/calendar/models/calendar.py:1013
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Πρώτα θα πρέπει να καθορίσετε την ημέρα της πρόσκλησης"
@@ -750,7 +720,7 @@ msgid "Group By"
 msgstr "Ομαδοποίηση κατά"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1636
+#: code:addons/calendar/models/calendar.py:1652
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -925,8 +895,8 @@ msgid "Meeting"
 msgstr "Συνάντηση"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:942
-#: code:addons/calendar/models/calendar.py:947
+#: code:addons/calendar/models/calendar.py:957
+#: code:addons/calendar/models/calendar.py:962
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
@@ -1026,9 +996,39 @@ msgid "No I'm not going."
 msgstr "Όχι, δεν θα παρευρεθώ."
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:mail.activity.type,category:0
+msgid "None"
+msgstr "Κανένα"
+
+#. module: calendar
+#: selection:calendar.alarm,alarm_type:0
 msgid "Notification"
 msgstr "Ειδοποίηση"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Day(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minute(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minute(s)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1062,7 +1062,7 @@ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:17
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:12
 #, python-format
 msgid "OK"
 msgstr "OK"
@@ -1093,11 +1093,6 @@ msgid "Options"
 msgstr "Επιλογές"
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Άλλο"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
@@ -1114,7 +1109,7 @@ msgid "Partner-related data of the user"
 msgstr "Τα δεδομένα του χρήστη σε σχέση με τον συνεργάτη"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1247
+#: code:addons/calendar/models/calendar.py:1264
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Παρακαλώ διαλέξτε μία κατάλληλη μέρα του μήνα."
@@ -1207,7 +1202,7 @@ msgid "Responsible"
 msgstr "Υπεύθυνοι"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:calendar.alarm,alarm_type:0
 msgid "SMS Text Message"
 msgstr "Κείμενο SMS"
 
@@ -1253,7 +1248,7 @@ msgstr "Εμφάνιση χρόνου ως"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:19
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:14
 #, python-format
 msgid "Snooze"
 msgstr "Αναβολή"
@@ -1363,16 +1358,28 @@ msgstr ""
 "            τις Ευκαιρίες Πωλήσεων."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:941
+#: code:addons/calendar/models/calendar.py:956
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:946
+#: code:addons/calendar/models/calendar.py:961
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1249
+#, python-format
+msgid "The interval cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1251
+#, python-format
+msgid "The number of repetitions  cannot be negative."
 msgstr ""
 
 #. module: calendar
@@ -1396,6 +1403,11 @@ msgid "Thursday"
 msgstr "Πέμπτη"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+msgid "Timezone"
+msgstr "Ζώνη Ώρας"
+
+#. module: calendar
 #: code:addons/calendar/models/res_users.py:41
 #, python-format
 msgid "Today's Meetings"
@@ -1412,7 +1424,7 @@ msgid "Tuesday"
 msgstr "Τρίτη"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "Τύπος"
 
@@ -1454,6 +1466,11 @@ msgid "Update only this instance"
 msgstr "Ενημέρωσε μόνο αυτό το περιστατικό"
 
 #. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Upload Document"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_users
 msgid "Users"
 msgstr "Χρήστες"
@@ -1489,7 +1506,7 @@ msgid "Yes I'm going."
 msgstr "Ναι, θα παρευρεθώ."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:159
+#: code:addons/calendar/models/calendar.py:160
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "Δεν μπορείτε να αντίγράψετε ένα συμμετέχοντα του ημερολογίου"
@@ -1498,9 +1515,3 @@ msgstr "Δεν μπορείτε να αντίγράψετε ένα συμμετ�
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "π.χ. Επαγγελματικό Γεύμα"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1232
-#, python-format
-msgid "interval cannot be negative."
-msgstr "Το διάστημα δεν μπορεί να είναι αρνητικό."

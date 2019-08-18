@@ -1,16 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_authorize
+# 	* payment_authorize
 # 
 # Translators:
-# Martin Trigaux, 2018
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Niki Waibel, 2017
+# e2f <projects@e2f.com>, 2018
+# Ralf Hilgenstock <rh@dialoge.info>, 2018
+# Wolfgang Taferner, 2018
+# Tina Rittmüller <tr@ife.de>, 2018
+# Fabian Liesch <fabian.liesch@gmail.com>, 2018
+# Andi, 2018
+# Rudolf Schnapka <rs@techno-flex.de>, 2018
+# Martin Trigaux, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,9 +31,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:62
+#, python-format
+msgid ""
+" If you don't have any account, ask your salesperson to grant you a portal "
+"access. "
+msgstr ""
+"Wenn Sie noch kein Konto haben, bitten Sie Ihren Verkäufer, Ihnen einen "
+"Portalzugang zu gewähren."
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
 msgstr "API Anmeldungs Id"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
+msgid "API Signature Key"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -35,6 +62,11 @@ msgstr "Adyen"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
+msgid "Alipay"
+msgstr ""
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
 msgstr "Authorize.Net"
 
@@ -44,7 +76,7 @@ msgid "Authorize.net Profile ID"
 msgstr "Authorize.net Profil-ID"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:177
+#: code:addons/payment_authorize/models/payment.py:207
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
@@ -84,22 +116,14 @@ msgid "How to get paid with Authorize.Net"
 msgstr "Wie Sie mit Authorize.Net bezahlt werden"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:64
-#, python-format
-msgid ""
-"If you don't have any account, please ask your salesperson to update your "
-"profile. "
-msgstr ""
-"Wenn Sie kein Konto besitzen, bitten Sie Ihren Verkaufssachbearbeiter Ihr "
-"Profil zu aktualisieren."
-
-#. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:261
+#: code:addons/payment_authorize/models/payment.py:292
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Ungültiges Token gefunden: Das Berechtigungsprofil fehlt. Stellen Sie "
+"sicher, dass das Token eine gültige Erwerberreferenz hat."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -110,6 +134,11 @@ msgstr "Manuelle Konfiguration"
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "PayU Latam"
+msgstr ""
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -143,10 +172,10 @@ msgid "Please complete your profile. "
 msgstr "Bitte vervollständigen Sie Ihr Profil."
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:61
+#: code:addons/payment_authorize/controllers/main.py:59
 #, python-format
-msgid "Please sign in to complete your profile."
-msgstr "Bitte loggen Sie sich ein, um Ihr Profil zu vervollständigen."
+msgid "Please sign in to complete the payment."
+msgstr "Bitte melden Sie sich an, um die Zahlung abzuschließen."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -170,13 +199,13 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:365
+#: code:addons/payment_authorize/models/payment.py:397
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "Die Erstellung des Kundenprofils bei Autorize.NET ist fehlgeschlagen."
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:58
+#: code:addons/payment_authorize/controllers/main.py:64
 #, python-format
 msgid ""
 "The transaction cannot be processed because some contact details are missing"

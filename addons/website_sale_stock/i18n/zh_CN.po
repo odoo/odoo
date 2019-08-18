@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_stock
+# 	* website_sale_stock
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# waveyeung <waveyeung@qq.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# Youfu Sheng <wdmsyf@sina.com>, 2018
-# 棋子 琥珀 <hopekee@163.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# 琥珀棋子 <hopekee@163.com>, 2019
+# Youfu Sheng <wdmsyf@sina.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: 棋子 琥珀 <hopekee@163.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +39,7 @@ msgstr "<strong>警告！</strong>"
 #: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
-msgstr "在网站产品页面添加库存可用性状态。"
+msgstr "在网站产品页面添加库存可用性状态"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -59,7 +61,7 @@ msgstr "购物车数量"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置设定"
+msgstr "配置设置"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
@@ -69,20 +71,10 @@ msgstr "自定义消息"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Mode"
-msgstr "默认模式"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr "在新创建的可存储产品上设置默认可用性模式。这可以在产品级别上进行更改。"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default threshold"
-msgstr "默认阈值"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -108,7 +100,12 @@ msgstr "库存可用性"
 msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
-msgstr "管理你的产品的库存, 在网站显示他们的可用性状态。"
+msgstr "管理产品的库存, 在网站显示他们的可用性状态"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Mode"
+msgstr "模式"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -122,7 +119,7 @@ msgstr "产品模板"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "销售订单"
 
 #. module: website_sale_stock
@@ -138,7 +135,6 @@ msgstr "不考虑库存的销售"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr "显示的库存低于阈值，如果没有足够的库存，则阻止销售"
 
@@ -147,6 +143,13 @@ msgstr "显示的库存低于阈值，如果没有足够的库存，则阻止销
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr "在网站上显示库存并且如果没有足够的库存，则阻止销售"
+
+#. module: website_sale_stock
+#: selection:res.config.settings,inventory_availability:0
+msgid ""
+"Show inventory when below the threshold and prevent sales if not enough "
+"stock"
+msgstr ""
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
@@ -170,9 +173,21 @@ msgid "Temporarily out of stock"
 msgstr "暂时缺货"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Threshold"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "调拨"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "仓库"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -208,7 +223,7 @@ msgstr "您已经添加"
 #: code:addons/website_sale_stock/models/sale_order.py:27
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr "您想要 %s 的产品但只有 %s 可用"
+msgstr "您想要 % 的产品但只有 % 可用"
 
 #. module: website_sale_stock
 #. openerp-web

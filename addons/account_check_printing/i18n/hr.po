@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_check_printing
+# 	* account_check_printing
 # 
 # Translators:
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
@@ -25,13 +25,13 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:58
+#: code:addons/account_check_printing/models/account_journal.py:61
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Provjerite brojvni krug"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:63
+#: code:addons/account_check_printing/models/account_payment.py:51
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Ček memo ne može sadržavati više od 60 znakova."
@@ -40,6 +40,11 @@ msgstr "Ček memo ne može sadržavati više od 60 znakova."
 #: model:ir.model,name:account_check_printing.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Predložak kontnog plana"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr "Widget zatvaranja temeljnice"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -55,7 +60,6 @@ msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_amount_in_words
 msgid "Amount in Words"
 msgstr "Iznos slovima"
 
@@ -78,7 +82,6 @@ msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_number
 msgid "Check Number"
 msgstr "Broj čeka"
 
@@ -111,7 +114,6 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
 msgstr ""
 
@@ -136,7 +138,7 @@ msgid "Checks numbering sequence."
 msgstr "Brojevni krug čekova"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:97
+#: code:addons/account_check_printing/models/account_journal.py:100
 #, python-format
 msgid "Checks to Print"
 msgstr "Čekovi za ispis"
@@ -182,7 +184,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:84
+#: code:addons/account_check_printing/models/account_payment.py:72
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
@@ -214,7 +216,6 @@ msgstr "Vrijeme promjene"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Manual Numbering"
 msgstr "Ručno numeriranje"
 
@@ -231,17 +232,16 @@ msgid "Next Check Number"
 msgstr "Sljedeći broj čeka"
 
 #. module: account_check_printing
+#: code:addons/account_check_printing/models/account_journal.py:27
+#: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:19
+#, python-format
+msgid "Next Check Number should only contains numbers."
+msgstr ""
+
+#. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "None"
 msgstr "Ništa"
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_number
-msgid ""
-"Number of the check corresponding to this payment. If your pre-printed check"
-" are not already numbered, you can manage the numbering in the journal "
-"configuration page."
-msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -249,7 +249,7 @@ msgid "Payments"
 msgstr "Plaćanja"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:81
+#: code:addons/account_check_printing/models/account_payment.py:69
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
@@ -285,7 +285,7 @@ msgid "Print Date Label"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:94
+#: code:addons/account_check_printing/models/account_payment.py:83
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -293,9 +293,9 @@ msgid "Print Pre-numbered Checks"
 msgstr "Ispiši pred-numerirane čekove"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_register_payments
-msgid "Register Payments"
-msgstr "Registriraj plaćanja"
+#: model:ir.model,name:account_check_printing.model_account_payment_register
+msgid "Register Payment"
+msgstr "Registriraj plaćanje"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -332,7 +332,7 @@ msgstr ""
 "Možete koristiti za brzo pretraživanje."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/models/account_journal.py:29
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
@@ -377,7 +377,7 @@ msgid "Unmark Sent"
 msgstr "Odznači poslano"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: code:addons/account_check_printing/models/account_payment.py:105
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "

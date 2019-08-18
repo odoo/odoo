@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_adyen
+# 	* payment_adyen
 # 
 # Translators:
-# Sergey Vilizhanin, 2017
-# Andrey Samorukov <andrey.samorukov@me.com>, 2017
 # Martin Trigaux, 2017
-# Collex100, 2017
+# Andrey Samorukov <andrey.samorukov@me.com>, 2017
+# Collex100, 2018
+# Sergey Vilizhanin, 2018
 # Василий Коробатов <boxat@mail.ru>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Василий Коробатов <boxat@mail.ru>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -23,13 +24,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:187
+#: code:addons/payment_adyen/models/payment.py:223
 #, python-format
 msgid "; multiple order found"
 msgstr "; найден многократный заказ"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:185
+#: code:addons/payment_adyen/models/payment.py:221
 #, python-format
 msgid "; no order found"
 msgstr "; заказ не найден"
@@ -40,25 +41,25 @@ msgid "Adyen"
 msgstr "Adyen"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:229
+#: code:addons/payment_adyen/models/payment.py:265
 #, python-format
 msgid "Adyen: feedback error"
 msgstr "Adyen: Ошибка Обратная связь"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:197
+#: code:addons/payment_adyen/models/payment.py:233
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
 msgstr "Adyen: недопустимый merchantSig, получил %s, вычисленный %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:183
+#: code:addons/payment_adyen/models/payment.py:219
 #, python-format
 msgid "Adyen: received data for reference %s"
 msgstr "Adyen: получил данные для ссылки %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:176
+#: code:addons/payment_adyen/models/payment.py:212
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
@@ -66,6 +67,11 @@ msgid ""
 msgstr ""
 "Adyen: полученные данные с отсутствующей ссылкой (%s) или отсутствует "
 "pspReference (%s)"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Alipay"
+msgstr ""
 
 #. module: payment_adyen
 #: selection:payment.acquirer,provider:0
@@ -96,6 +102,11 @@ msgstr "Мерчант аккаунт"
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "PayU Latam"
+msgstr ""
 
 #. module: payment_adyen
 #: selection:payment.acquirer,provider:0

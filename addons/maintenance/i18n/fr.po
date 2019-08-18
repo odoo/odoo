@@ -1,22 +1,46 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * maintenance
+# 	* maintenance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
-# Thomas Dobbelsteyn <tdo@odoo.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
-# e2f <projects@e2f.com>, 2018
+# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
+# Saad Thaifa <saad.thaifa@gmail.com>, 2016
+# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Henri Cornuau <hcornuau@gmail.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# Lucas Deliege <lud@openerp.com>, 2017
+# bb76cd9ac0cb7e20167a14728edb858b, 2017
+# 31c77b784710e4a287a92d851a40e039, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2018
+# 6534c450c77b2549e41c52e2051f5839, 2018
+# Olivier Dony <odo@odoo.com>, 2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
+# Hubert TETARD <htetard@apik-conseils.com>, 2018
+# Nancy Bolognesi <nb@microcom.ca>, 2018
+# Xavier Belmere <Info@cartmeleon.com>, 2018
+# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Laura Piraux <lap@odoo.com>, 2019
+# Thomas Dobbelsteyn <tdo@odoo.com>, 2019
+# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
+"Last-Translator: Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +69,16 @@ msgid "<b>Serial Number:</b>"
 msgstr "<b>Numéro de série :</b>"
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
 msgstr "<span class=\"badge badge-warning float-right\">Annulé</span>"
@@ -57,7 +91,7 @@ msgstr "<span class=\"ml8\">heures</span>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Analyse</span>"
+msgstr "<span>Suivi d'activité</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -82,12 +116,6 @@ msgid ""
 msgstr ""
 "Un dictionnaire Python qui sera interprété pour fournir les valeurs par "
 "défaut lors de la création des nouveaux enregistrements pour cet alias."
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_computer3
-#: model:maintenance.equipment,name:maintenance.equipment_computer5
-msgid "Acer Laptop"
-msgstr "Ordinateur Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
@@ -221,7 +249,7 @@ msgstr "Date d'attribution"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nombre de pièces jointes"
+msgstr "Compte des pièces jointes"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -279,11 +307,6 @@ msgstr "Commentaires"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__company_id
 msgid "Company"
 msgstr "Société"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_computer
-msgid "Computers"
-msgstr "Ordinateurs"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
@@ -421,8 +444,8 @@ msgstr "Durée"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__duration
-msgid "Duration in minutes and seconds."
-msgstr "Durée en minutes et secondes"
+msgid "Duration in hours."
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -449,6 +472,12 @@ msgstr ""
 "Alias email pour cette catégorie d'équipement. Les emails entrants vont "
 "créer des demandes de maintenance automatiquement pour cette catégorie "
 "d'équipement."
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Email cc"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
@@ -548,17 +577,6 @@ msgstr "Activités futures"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "Regrouper par..."
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_printer1
-msgid "HP Inkjet printer"
-msgstr "Imprimante HP Inkjet"
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_computer11
-#: model:maintenance.equipment,name:maintenance.equipment_computer9
-msgid "HP Laptop"
-msgstr "Ordinateur HP"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -668,6 +686,11 @@ msgid "Late Activities"
 msgstr "Activités en retard"
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__email_cc
+msgid "List of cc from incoming emails."
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
 msgid "Location"
 msgstr "Lieu"
@@ -708,7 +731,7 @@ msgstr "Calendrier des maintenances"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__maintenance_count
 msgid "Maintenance Count"
-msgstr "Nombre de Maintenances"
+msgstr "Nombre de Maintenance"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_duration
@@ -822,19 +845,9 @@ msgid "Messages"
 msgstr "Messages"
 
 #. module: maintenance
-#: model:maintenance.team,name:maintenance.equipment_team_metrology
-msgid "Metrology"
-msgstr "Métrologie"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
 msgstr "Modèle"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
-msgid "Monitors"
-msgstr "Moniteurs"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1012,11 +1025,6 @@ msgstr ""
 "(parent_model) et task (modèle))"
 
 #. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_phone
-msgid "Phones"
-msgstr "Téléphones"
-
-#. module: maintenance
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 msgid "Planned"
@@ -1050,11 +1058,6 @@ msgstr "Maintenance préventive – %s"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Preventive Maintenance Frequency"
 msgstr "Fréquence de maintenance préventive"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_printer
-msgid "Printers"
-msgstr "Imprimantes"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__priority
@@ -1095,7 +1098,7 @@ msgstr "Réparé"
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr "Analyse"
+msgstr "Rapport"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__request_ids
@@ -1119,7 +1122,7 @@ msgid "Request Done"
 msgstr "Demande terminée"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:375
+#: code:addons/maintenance/models/maintenance.py:377
 #, python-format
 msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
 msgstr "Demande prévue pour <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
@@ -1151,13 +1154,6 @@ msgstr "Responsable"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
 msgid "Responsible User"
 msgstr "Responsable"
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_monitor1
-#: model:maintenance.equipment,name:maintenance.equipment_monitor4
-#: model:maintenance.equipment,name:maintenance.equipment_monitor6
-msgid "Samsung Monitor 15\""
-msgstr "Écran Samsung 15\""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1218,11 +1214,6 @@ msgstr ""
 "actions est pour aujourd'hui ou avant. "
 
 #. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_software
-msgid "Software"
-msgstr "Logiciel"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__stage_id
 msgid "Stage"
 msgstr "Étape"
@@ -1256,11 +1247,6 @@ msgstr ""
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
 msgstr "Etat modifié"
-
-#. module: maintenance
-#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
-msgid "Subcontractor"
-msgstr "Sous-traitant"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1358,7 +1344,7 @@ msgstr "Aujourd'hui"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Today Activities"
-msgstr "Activités du Jour"
+msgstr "Activités du jour"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1432,7 +1418,7 @@ msgstr "Très bas"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
 msgid "Warranty Expiration Date"
-msgstr "Date d'Expiration de Garantie"
+msgstr "Date Limite de Garantie"
 
 #. module: maintenance
 #: code:addons/maintenance/models/maintenance.py:77

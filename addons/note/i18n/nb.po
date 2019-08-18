@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
 # Viktor Basso <viktor@voit.no>, 2018
 # Marius Stedjan <marius@stedjan.com>, 2019
-# Martin Trigaux, 2019
 # Jorunn D. Newth, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Jorunn D. Newth, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +36,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "Handling påkrevd"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -101,18 +113,6 @@ msgstr "Antall vedlegg"
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Etter notatkategori"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid ""
-"Categories may trigger specific behavior like opening calendar view or "
-"automatically mark as done when a document is uploaded"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "Kategori"
 
 #. module: note
 #. openerp-web
@@ -307,6 +307,11 @@ msgid "Next Activity Type"
 msgstr "Neste aktivitetstype"
 
 #. module: note
+#: selection:mail.activity.type,category:0
+msgid "None"
+msgstr "Ingen"
+
+#. module: note
 #: model:ir.model,name:note.model_note_note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
@@ -480,11 +485,6 @@ msgid "Stages of Users"
 msgstr "Brukerstadier"
 
 #. module: note
-#: selection:mail.activity.type,category:0
-msgid "Standard"
-msgstr "Standard"
-
-#. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_state
 msgid ""
 "Status based on activities\n"
@@ -519,7 +519,7 @@ msgstr "Tagger"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:97
+#: code:addons/note/static/src/js/systray_activity_menu.js:98
 #: selection:note.note,activity_state:0
 #, python-format
 msgid "Today"

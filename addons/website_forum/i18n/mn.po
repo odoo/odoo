@@ -1,21 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_forum
+# 	* website_forum
 # 
 # Translators:
 # Bayarkhuu Bataa, 2018
-# Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Tsogjav <Tsogjav2007@yahoo.com>, 2018
+# nasaaskii <nasaaskii@gmail.com>, 2018
+# Ganbold BATKHUYAG <gbatkhuyag@gmail.com>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
-# Martin Trigaux, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Otgonbayar.A <gobi.mn@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,32 +28,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:24
-#, python-format
-msgid ""
-" karma is required to perform this action. You can earn karma by having your"
-" answers upvoted by the community."
-msgstr ""
-" карма энэ үйлдлийг хийхэд шаардлагтай. Та хариултууддаа бүлгэмээс санал "
-"нэмүүлж карма цуглуулах боломжтой."
-
-#. module: website_forum
-#: model:mail.template,subject:website_forum.validation_email
-msgid "${object.company_id.name} Forums validation"
-msgstr "${object.company_id.name} Хэлэлцүүлгийн баталгаажуулалт"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid ""
-"&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\" title=\"Close\" role=\"img\" "
-"aria-label=\"Close\"/>&amp;nbsp;&amp;nbsp;"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "&amp;times;"
-msgstr "&amp;times;"
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -86,15 +67,35 @@ msgid "/ (days + 2) **"
 msgstr "/ (өдөр + 2) **"
 
 #. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__image_big
+msgid "1024px * 1024px"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__image_medium
+msgid "128px * 128px"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__image_large
+msgid "256px * 256px"
+msgstr ""
+
+#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:45
 #, python-format
 msgid "45% of questions shared"
 msgstr "асуултуудын 45% хуваалцсан"
 
 #. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__image_small
+msgid "64px * 64px"
+msgstr ""
+
+#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:30
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
 #, python-format
 msgid ""
 "65% more chance to get an\n"
@@ -123,18 +124,9 @@ msgid "<b> [Offensive]</b>"
 msgstr "<b> [Доромжилсон]</b>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.users
-msgid "<b> badges:</b>"
-msgstr "<b> тэмдэгтүүд:</b>"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"<b>Answers should not add or expand questions</b>. Instead\n"
-"    either edit the question or add a comment."
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>About This Community</b>"
 msgstr ""
-"<b>Хариулт нь асуулт нэмэх эсвэл дэлгэрүүлэх ёсгүй</b>. Үүний оронд\n"
-"    асуултыг засах эсвэл сэтгэгдэл нэмнэ үү."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -148,11 +140,9 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers should not comment other answers</b>. Instead\n"
-"    add a comment on the other answers."
+"<b>Answers should not add or expand questions</b>. Insteadeither edit the "
+"question or add a comment."
 msgstr ""
-"<b>Хариулт нь бусад хариултын сэтгэгдэл байх ёсгүй</b>. Үүний оронд\n"
-" бусад хариулт дээр сэтгэгдэл нэмнэ үү."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -166,15 +156,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers should not start debates</b>\n"
-"    This community Q&amp;A is not a discussion group. Please avoid holding debates in\n"
-"    your answers as they tend to dilute the essence of questions and answers. For\n"
-"    brief discussions please use commenting facility."
+"<b>Answers should not start debates</b> This community Q&amp;A is not a "
+"discussion group. Please avoid holding debates in your answers as they tend "
+"to dilute the essence of questions and answers. For brief discussions please"
+" use commenting facility."
 msgstr ""
-"<b>Хариултууд нь мэтгэлцээн үүсгэх ёсгүй</b>\n"
-"Энэ бүлгийн А&amp;Х нь хөөрөлдөөний бүлэг биш юм. Та өөрийн хариултанд мэтгэлцээн\n"
-" оруулахаас зайлс хийгээрэй. Учир нь мэтгэлцээн нь асуулт ба хариултуудын мөн чанарыг\n"
-" багасгадаг. Товч хөөрөлдөөнд сэтгэгдлийг ашиглана уу."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -192,31 +178,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers shouldn't just point to other questions</b>.\n"
-"    Instead add a comment indicating <i>\"Possible duplicate\n"
-"    of...\"</i>. However, it's fine to include links to other\n"
-"    questions or answers providing relevant additional\n"
-"    information."
+"<b>Answers shouldn't just point to other questions</b>.Instead add a comment"
+" indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
+"include links to other questions or answers providing relevant additional "
+"information."
 msgstr ""
-"<b>Хариултууд нь зүгээр л бусад асуулт руу чиглүүлэх ёсгүй.</b>\n"
-" Үүний оронд <i>\"...-тай давхардсан байх магадлалтай\"</i> гэсэн \n"
-"сэтгэгдэл үлдээнэ үү. Гэхдээ бусад асуулт эсвэл хариулт дээр чухал \n"
-"нэмэлт мэдээллээр хангасан холбоос оруулахад зүгээр."
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"<b>Answers shouldn't just provide a\n"
-"    link a solution</b>. Instead provide the solution\n"
-"    description text in your answer, even if it's just a\n"
-"    copy/paste. Links are welcome, but should be complementary to\n"
-"    answer, referring sources or additional reading."
-msgstr ""
-"<b>Хариултууд нь шийдлийн зөвхөн \n"
-"холбоосыг агуулах ёсгүй.</b> Үүний оронд хуулж \n"
-"тавиад ч хамаагүй шийдлийн талаарх тайлбар текстыг \n"
-"хариултанд оруулна уу. Холбоос ашиглаж болох ч энэ нь хариулт дээр \n"
-"нэмэлт болох, эх сурвалжийг дурьдах эсвэл нэмэлт материалаар хангах ёстой."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -234,32 +200,27 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Before you ask - please make sure to search for a similar question.</b> You can\n"
-"    search questions by their title or tags.  It’s also OK to\n"
-"    answer your own question."
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can search questions by their title or tags. It’s also OK to answer your"
+" own question."
 msgstr ""
-"<b>Асуухаасаа өмнө - ижил төстэй асуултууд байгаа эсэхийг хайж үзээрэй.</b> Та\n"
-" асуултуудыг гарчиг эсвэл пайзаар нь хайх боломжтой. \n"
-"Мөн өөрийн асуултанд хариулж болно."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "<b>No badge yet!</b><br/>"
-msgstr "<b>Одоогоор тэмдэгт алга!</b><br/>"
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>Keep Informed</b>"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-msgid "<b>No vote given by you yet!</b>"
-msgstr "<b>Одоогоор таны өгсөн санал алга!</b>"
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>Moderation Tools</b>"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Please avoid asking questions that are too subjective\n"
-"    and argumentative</b> or not relevant to this community."
+"<b>Please avoid asking questions that are too subjective and "
+"argumentative</b> or not relevant to this community."
 msgstr ""
-"<b>Хэт субьектив ба маргаантай</b> эсвэл энэ бүлэгт хамааралгүй асуулт "
-"асуухаас зайсхий."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -275,9 +236,37 @@ msgstr ""
 "- энэ нь шилдэг асуулт, хариултыг сонгоход маш их тусладаг!"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "<b>Share</b> Something Awesome."
-msgstr "Ямар нэгэн гоё зүйл <b>Хуваалц</b>."
+#: model_terms:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>What kinds of questions can I ask here?</b> <i class=\"fa fa-caret-down "
+"float-right\"></i>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>What should I avoid in my answers?</b> <i class=\"fa fa-caret-down float-"
+"right\"></i>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>What should I avoid in my questions?</b> <i class=\"fa fa-caret-down "
+"float-right\"></i>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
+msgid ""
+"<b>Why can other people edit my questions/answers?</b> <i class=\"fa fa-"
+"caret-down float-right\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>Writer</b>"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -285,29 +274,98 @@ msgid "<b>[Answer]</b>"
 msgstr "<b>[Хариулт]</b>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "<i class=\"fa fa-arrow-right\"/> Back to"
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "<i class=\"fa fa-arrow-right\"/> Read Guidelines"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\" fa fa-comment-o\"/> <b>Comment</b>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<i class=\"fa fa-arrow-right\"/>Edit Your Profile"
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-bug\"/> Mark as spam"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "<i class=\"text-muted\"> awarded users</i>"
-msgstr "<i class=\"text-muted\"> шагнуулсан хэрэглэгчид</i>"
+#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+msgid "<i class=\"fa fa-caret-left mr-2\"/>back to post"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "<i class=\"text-muted\">awarded users</i>"
-msgstr "<i class=\"text-muted\">шагнуулсан хэрэглэгчид</i>"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"<i class=\"fa fa-check-circle text-success\"/> <b class=\"text-"
+"success\">Resolved</b>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid ""
+"<i class=\"fa fa-cog\" role=\"img\" aria-label=\"Dropdown menu\" "
+"title=\"Dropdown menu\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid ""
+"<i class=\"fa fa-flag ml-4 mr4\"/>\n"
+"                                    Flagged"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid ""
+"<i class=\"fa fa-flag ml-4 mr4\"/>\n"
+"                        Flagged"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-flag\"/> Country"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-reply\"/> <b>Reply</b>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "<i class=\"fa fa-share-alt text-primary\"/> Share"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-share-alt\"/> <b>Share</b>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-user\"/> User"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<small class=\"font-weight-bold\">Votes</small>"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -321,13 +379,27 @@ msgstr ""
 "                </small>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<small class=\"text-muted\">profile</small>"
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "<span class=\"sr-only\">Select Post</span>"
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<span class=\"font-weight-bold\">No answer posted yet.</span>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<span class=\"font-weight-bold\">No question posted yet.</span>"
 msgstr ""
 
 #. module: website_forum
@@ -339,135 +411,28 @@ msgstr ""
 "зөвшөөрөгдсөн)</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<span class=\"text-muted\">bio</span>"
-msgstr "<span class=\"text-muted\">өөрийн тухай</span>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted\">or</span>"
 msgstr "<span class=\"text-muted\">эсвэл</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<span class=\"text-muted\">stats</span>"
-msgstr "<span class=\"text-muted\">үзүүлэлтүүд</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<span> on </span>"
-msgstr "<span> дээр </span>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid ""
-"<span> • </span>\n"
-"                Flagged"
+"<span title=\"Question has accepted answer\" role=\"img\" aria-"
+"label=\"Question has accepted answer\"><i class=\"fa fa-check-circle text-"
+"success bg-white\"/></span>"
 msgstr ""
-"<span> • </span>\n"
-"                Туг хатгасан"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span>&amp;times;</span>"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<span>By </span>"
 msgstr "<span>Хэнээс </span>"
-
-#. module: website_forum
-#: model:mail.template,body_html:website_forum.validation_email
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\">\n"
-"                        <span style=\"font-size: 10px;\">Your Forum</span><br/>\n"
-"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            ${object.company_id.name} Forum validation\n"
-"                        </span>\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\">\n"
-"                        <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hello ${object.name},<br/><br/>\n"
-"                            You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
-"                            To validate your email, please click on the following link:\n"
-"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                                    Validate my account\n"
-"                                </a>\n"
-"                            </div>\n"
-"                            Thanks for your participation!\n"
-"                        </p>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\" align=\"left\">\n"
-"                         ${user.company_id.name}\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
-"                        ${user.company_id.phone}\n"
-"                        % if user.company_id.email:\n"
-"                            | <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.email}\n"
-"                            </a>\n"
-"                        % endif\n"
-"                        % if user.company_id.website:\n"
-"                            | <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.website}\n"
-"                            </a>\n"
-"                        % endif\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
-"        </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
-msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -490,11 +455,6 @@ msgstr ""
 "Пайз нь таны асуултыг бусад төстэй асуултуудтай хамт ангилдаг шошго юм. Зөв "
 "пайз ашиглах нь бусад хүмүүс таны асуултыг олж хариулахыг хялбарчилдаг. ( "
 "Пайз(ууд) - ыг дагах/дагахаа болих бол хулганаа дээр нь байрлуулна уу)"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "About This Community"
-msgstr "Энэ Бүлгэмийн тухай"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -536,18 +496,18 @@ msgid "Active"
 msgstr "Идэвхитэй"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Activities"
+msgstr "Ажилбар"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Activity"
 msgstr "Ажилбар"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
-msgid "Add a Comment"
-msgstr "Сэтгэгдэл нэмэх"
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:42
 #, python-format
 msgid "Add to menu"
 msgstr ""
@@ -563,7 +523,7 @@ msgstr ""
 "дэхь тархалтыг бий болгодог."
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:203
+#: code:addons/website_forum/controllers/main.py:179
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -576,11 +536,12 @@ msgstr "Мөргөхийг зөвшөөрөх"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Answer"
 msgstr "Хариулт"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:521
+#: code:addons/website_forum/models/forum.py:473
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -660,7 +621,8 @@ msgstr "Хамгийн багадаа 4 санал авсан хариулагд
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_ids
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
@@ -676,11 +638,6 @@ msgstr "Дотор нь харагдах"
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Archived"
 msgstr "Архивласан"
-
-#. module: website_forum
-#: selection:forum.post,post_type:0
-msgid "Article"
-msgstr "Өгүүлэл"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -704,7 +661,7 @@ msgstr "Баталгаажуулалтгүй асуулт асуух"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:29
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:27
 #, python-format
 msgid "Ask the question in this forum by clicking on the button."
 msgstr "Товчлуур дээр дарж энэ хэлэлцүүлэгт асуулт тавина уу."
@@ -740,11 +697,6 @@ msgid "Asked on"
 msgstr "Энд асуусан"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Asked:"
-msgstr "Асуусан:"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_new
 msgid "Asking a question"
 msgstr "Асуулт асууж байна"
@@ -754,7 +706,7 @@ msgstr "Асуулт асууж байна"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Хавсралтын тоо"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -767,11 +719,9 @@ msgid "Autobiographer"
 msgstr "Өөрийн намтрыг бичигч"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_user_tooltip
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-#: model_terms:ir.ui.view,arch_db:website_forum.users
 msgid "Avatar"
 msgstr "Зураг"
 
@@ -782,47 +732,26 @@ msgstr ""
 "Хэрэгцээгүй оршилоос зайлс хий (Сайн уу,... Гуйж байна... Баярлалаа...),"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:345
-#: code:addons/website_forum/controllers/main.py:414
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Back to"
+msgstr "Дараах руу буцах"
+
+#. module: website_forum
+#: code:addons/website_forum/controllers/main.py:318
+#: code:addons/website_forum/controllers/main.py:386
 #, python-format
 msgid "Bad Request"
 msgstr "Муу Хүсэлт"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__badge_ids
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Badges"
 msgstr "Медаль"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid ""
-"Besides gaining reputation with your questions and answers,\n"
-"            you receive badges for being especially helpful. Badges\n"
-"            appear on your profile page, and your posts."
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_big
+msgid "Big-sized Image"
 msgstr ""
-"Асуулт ба хариултаар та нэр хүнд цуглуулахаас гадна \n"
-"ялангуяа тустай байснаар тэмдэгтүүд авна. Тэмдэгтүүд нь \n"
-"таны профайл хуудас болон таны бичлэгүүд дээр харагдана."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Biography"
-msgstr "Намтар"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Bronze badge"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__bronze_badge
-msgid "Bronze badges count"
-msgstr "Хүрэл тэмдэгтийн тоо"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
@@ -831,7 +760,7 @@ msgstr "Мөргөлдсөн"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:50
 #, python-format
 msgid "By sharing you answer, you will get additional"
 msgstr "Хариултаа хуваалцсанаар танд нэмэлт "
@@ -907,14 +836,14 @@ msgid "Can View"
 msgstr "Үзэж болно"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__can_image_be_zoomed
+msgid "Can image raw be zoomed"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
 msgid "Change question tags"
 msgstr "Асуултын пайзуудыг өөрчлөх"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Check available badges"
-msgstr "Боломжит тэмдэгтүүдийг үзэх"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_bump
@@ -934,37 +863,18 @@ msgid "Chief Commentator"
 msgstr "Ерөнхий тайлбарлагч"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "City"
-msgstr "Сум/Дүүрэг"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Clear"
-msgstr "Цэвэрлэх"
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:24
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:22
 #, python-format
 msgid "Click <em>Continue</em> to create the forum."
 msgstr "Хэлэлцүүлгийг үүсгэхийн тулд <em>Үргэлжлүүлэх</em> дээр дарна уу."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:73
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:71
 #, python-format
 msgid "Click here to accept this answer."
 msgstr "Энэ хариултыг зөвшөөрөх бол энд дарна уу."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"Click here to send a verification email allowing you to participate to the "
-"forum."
-msgstr ""
-"Таныг хэлэлцүүлэгт оролцох эрх олгох баталгаажуулалт имэйл илгээх бол энд "
-"дарна уу."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -978,22 +888,22 @@ msgstr "Сайн асуултын гарчиг авах бол дарна уу"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:65
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:63
 #, python-format
 msgid "Click to post your answer."
 msgstr "Хариултыг илгээх бол дарна уу."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:51
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:49
 #, python-format
 msgid "Click to post your question."
 msgstr "Асуултыг илгээх бол дарна уу."
 
 #. module: website_forum
 #: selection:forum.post,state:0
-#: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Close"
 msgstr "Хаах"
 
@@ -1034,10 +944,8 @@ msgstr "Хаах Шалтгаан"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Comment"
 msgstr "Сэтгэгдэл"
 
@@ -1067,8 +975,8 @@ msgstr "Тайлбарлагч"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Comments"
 msgstr "Сэтгэгдэл"
 
@@ -1085,15 +993,6 @@ msgid "Completed own biography"
 msgstr "Өөрийн намтрыг дуусгасан"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"Congratulations! Your email has just been validated. You may now participate"
-" to our forums."
-msgstr ""
-"Баяр хүргэе! Таны имэйл баталгаажлаа. Та одоо манай хэлэлцүүлэгүүдэд оролцох"
-" боломжтой."
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__content
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Content"
@@ -1105,14 +1004,14 @@ msgid "Convert all answers to comments and vice versa"
 msgstr "Бүх хариултыг сэтгэгдэл рүү, мөн эсрэгээр нь хувиргах"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as a answer"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Convert as a comment"
 msgstr "Сэтгэгдэл рүү хувиргах"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Convert as an answer"
-msgstr "Хариулт руу хувиргах"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
@@ -1133,16 +1032,6 @@ msgstr "Зөв"
 #: model:ir.model.fields,help:website_forum.field_forum_post__is_correct
 msgid "Correct answer or answer accepted"
 msgstr "Зөв хариулт эсвэл зөвшөөрсөн хариулт"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Country"
-msgstr "Улс"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Country..."
-msgstr "Улс..."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_date
@@ -1206,11 +1095,6 @@ msgid "Default Order"
 msgstr "Үндсэн Дараалал"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_post_type
-msgid "Default Post"
-msgstr "Үндсэн Бичлэг"
-
-#. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_gamification_challenge__category
 msgid "Define the visibility of the challenge through menus"
 msgstr "Менюгээр сорилтын үзэгдэх хүрээг тодорхойлох"
@@ -1248,7 +1132,7 @@ msgid "Description"
 msgstr "Тодорхойлолт"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Design Welcome Message"
 msgstr "Угтах Зурвас загварчлах"
 
@@ -1259,18 +1143,6 @@ msgstr "Угтах Зурвас загварчлах"
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
 msgstr "Дэг журамтай"
-
-#. module: website_forum
-#: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Discussion"
-msgstr "Хөөрөлдөөн"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_discussion
-msgid "Discussions"
-msgstr "Хөөрөлдөөн"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
@@ -1292,22 +1164,15 @@ msgid "Downvote"
 msgstr "Хасах санал өгөх"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr "Засах"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Edit Profile"
-msgstr "Профайлыг засах"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Edit Your Previous Answer"
-msgstr "Өөрийн өмнөх хариултыг засах"
+msgid "Edit Your Answer"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_all
@@ -1321,13 +1186,13 @@ msgstr "Өөрийн бичлэгүүдийг засах"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-msgid "Edit reply"
-msgstr "Хариуг засах"
+msgid "Edit question"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "Edit your Link"
-msgstr "Өөрийн холбоосыг засах"
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit reply"
+msgstr "Хариуг засах"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -1348,11 +1213,6 @@ msgid "Editor Features: image and links"
 msgstr "Засварлагчийн боломжууд: зураг ба холбоосууд"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Email"
-msgstr "Имэйл"
-
-#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.challenge.line,name:website_forum.line_enlightened
@@ -1362,21 +1222,21 @@ msgstr "Гэгээрсэн"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:19
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:17
 #, python-format
 msgid "Enter a name for your new forum."
 msgstr "Шинэ хэлэлцүүлэгтээ нэр өгнө үү."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "External link"
-msgstr ""
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
 msgstr "Алдартай Асуулт"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Favorite"
+msgstr "Эрхэм"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_count
@@ -1388,6 +1248,11 @@ msgstr "Дуртай Тоо"
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
 msgstr "Дуртай Асуулт"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Favorites"
+msgstr "Түүвэр"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_ids
@@ -1413,7 +1278,7 @@ msgid "Favourite Question (5)"
 msgstr "Дуртай Асуулт (5)"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Favourite Questions"
 msgstr "Дуртай Асуултууд"
 
@@ -1448,7 +1313,6 @@ msgid "First upvote"
 msgstr "Анхны нэмэх санал"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flag"
 msgstr "Туг хатгах"
@@ -1462,8 +1326,6 @@ msgstr "Доромжилсон бичлэгт туг хатгах"
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr "Туг хатгасан"
 
@@ -1478,7 +1340,7 @@ msgid "Followed"
 msgstr "Дагасан"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Followed Questions"
 msgstr "Дагасан Асуултууд"
 
@@ -1506,18 +1368,13 @@ msgstr "Дагагчид (Харилцагчид)"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"For example, if you ask an interesting question or give a helpful answer, your\n"
-"    input will be upvoted. On the other hand if the answer is misleading - it will\n"
-"    be downvoted. Each vote in favor will generate 10 points, each vote against\n"
-"    will subtract 10 points. There is a limit of 200 points that can be accumulated\n"
-"    for a question or answer per day. The table given at the end explains reputation point\n"
-"    requirements for each type of moderation task."
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate 10 points, each vote "
+"against will subtract 10 points. There is a limit of 200 points that can be "
+"accumulated for a question or answer per day. The table given at the end "
+"explains reputation point requirements for each type of moderation task."
 msgstr ""
-"Жишээлбэл, хэрэв та сонирхолтой асуулт тавих эсвэл тустай хариулт өгвөл \n"
-"таны оролт дээр санал нэмэгдэх болно. Харин ташаа хариултын саналаас хасна. \n"
-"Нэмэх санал бүр 10 оноо өгч, хасах санал бүр 10 оноог хасдаг. Өдөр бүр асуулт \n"
-"эсвэл хариулт дээр цуглуулах 200 онооны хязгаар бий. Төгсгөлд байгаа хүснэгтэнд \n"
-"тохиргооны даалгаврын төрөл бүрт шаардагдах нэр хүндийн оноог харуулсан."
 
 #. module: website_forum
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
@@ -1527,19 +1384,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum_global
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_website_forums
 msgid "Forum"
 msgstr "Хэлэлцүүлэг"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_gamification_badge__level
-#: model:ir.model.fields,field_description:website_forum.field_gamification_badge_user__level
-msgid "Forum Badge Level"
-msgstr "Хэлэлцүүлгийн тэмдэгтийн түвшин"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
@@ -1549,7 +1399,7 @@ msgstr "Хэлэлцүүлгийн Карма"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:31
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
 #, python-format
 msgid "Forum Name"
@@ -1568,7 +1418,7 @@ msgid "Forum Posts"
 msgstr "Хэлэлцүүлгийн Бичлэгүүд"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Forum Settings"
 msgstr "Хэлэлцүүлгийн Тохиргоо"
 
@@ -1585,37 +1435,16 @@ msgid "Forums"
 msgstr "Хэлэлцүүлгүүд"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_gamification_badge
-msgid "Gamification Badge"
-msgstr ""
-
-#. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification Challenge"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_gamification_badge_user
-msgid "Gamification User Badge"
-msgstr ""
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:33
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:31
 #, python-format
 msgid "Give your question title."
 msgstr "Асуултын гарчигийг өгнө үү."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Gold badge"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__gold_badge
-msgid "Gold badges count"
-msgstr "Алтан тэмдэгтийн тоо"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -1742,7 +1571,7 @@ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад ан
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Үүнийг сонговол алдаа үүсэх үед зурвасууд ирнэ."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
@@ -1753,13 +1582,11 @@ msgstr ""
 "нэмэгддэг"
 
 #. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid ""
-"If this approach is not for you, please respect the community and use Google+\n"
-"    communities instead."
+"If this approach is not for you, please respect the community and use "
+"Google+ communities instead."
 msgstr ""
-"Хэрэв энэ арга танд таалагдахгүй байгаа бол бүлгийг хүндлээд оронд нь Google+\n"
-" бүлгүүдийг ашиглаарай."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1775,17 +1602,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"If you fit in one of these example or if your motivation for asking the\n"
-"    question is “I would like to participate in a discussion about ______”, then\n"
-"    you should not be asking here but on our mailing lists.\n"
-"    However, if your motivation is “I would like others to explain ______ to me”,\n"
-"    then you are probably OK."
+"If you fit in one of these example or if your motivation for asking the "
+"question is “I would like to participate in a discussion about ______”, then"
+" you should not be asking here but on our mailing lists. However, if your "
+"motivation is “I would like others to explain ______ to me”, then you are "
+"probably OK."
 msgstr ""
-"Хэрэв та эдгээр жишээний аль нэгд хамаарч байвал эсвэл таны асуулт \n"
-"тавих шалтгаан \"Би ______ - н талаарх хөөрөлдөөнд оролцмоор байна\", \n"
-"гэвэл та энд биш манай мэйл жагсаалт дээр асуултаа тавих хэрэгтэй.\n"
-"Гэхдээ, хэрэв таны шалтгаан \"Бусад хүмүүс надад ______ - г тайлбарлаж \n"
-"өгөөсэй\" бол зүгээр."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1799,8 +1621,18 @@ msgstr ""
 "доромж бичлэгүүдийг харж өөрчлөх боломжтой."
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image
+msgid "Image"
+msgstr "Зураг"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__image_original
+msgid "Image in its original size, as it was uploaded."
+msgstr ""
+
+#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:43
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:41
 #, python-format
 msgid "Insert tags related to your question."
 msgstr "Асуулттай холбоотой пайзууд оруулна уу."
@@ -1837,22 +1669,16 @@ msgid "Is the author's biography visible from his post"
 msgstr "Зохиогчийн намтар түүний бичлэгээс харагдана"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "It appears your email has not been verified."
-msgstr "Таны имэйл баталгаажаагүй бололтой."
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:890
-#: code:addons/website_forum/models/forum.py:910
+#: code:addons/website_forum/models/forum.py:899
 #, python-format
-msgid "It is not allowed to vote for its own post."
+msgid "It is not allowed to modify someone else's vote."
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__karma
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "Karma"
-msgstr "Карма"
+#: code:addons/website_forum/models/forum.py:896
+#, python-format
+msgid "It is not allowed to vote for its own post."
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -1890,9 +1716,9 @@ msgid "Karma to unlink"
 msgstr "Холбоосыг арилгах карма"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Keep Informed"
-msgstr "Холбоотой байх"
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_large
+msgid "Large-sized Image"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum____last_update
@@ -1930,34 +1756,16 @@ msgid "Last activity date"
 msgstr "Хамгийн сүүлийн үйлдэлийн огноо"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Last updated:"
-msgstr "Хамгийн сүүлд шинэчлэсэн:"
-
-#. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_25
 msgid "Left 10 answers with score of 10 or more"
 msgstr "10 ба түүнээс дээш оноотой 10 асуултыг орхисон"
-
-#. module: website_forum
-#: selection:forum.forum,default_post_type:0
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Link"
-msgstr "Линк"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_link
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Links"
-msgstr "Холбоосууд"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Үндсэн хавсралт"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1966,11 +1774,21 @@ msgid "Mark as offensive"
 msgstr "Доромжилсоноор тэмдэглэх"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Mark as spam"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_medium
+msgid "Medium-sized Image"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Алдаа үүссэн талаарх мессеж"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
@@ -1983,11 +1801,6 @@ msgstr "Зурвасууд"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_moderate
 msgid "Moderate posts"
 msgstr "Бичлэгүүдийг тохируулах"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Moderation Tools"
-msgstr "Тохиргооны Багажууд"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2011,7 +1824,7 @@ msgstr "Хамгийн их санал авсан"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:47
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:63
 #, python-format
 msgid ""
 "Move this question to the top of the list by sharing it on social networks."
@@ -2043,13 +1856,8 @@ msgid "New Answer"
 msgstr "Шинэ Хариулт"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "New Discussion"
-msgstr "Шинэ Хөөрөлдөөн"
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:30
 #, python-format
 msgid "New Forum"
 msgstr "Шинэ Хэлэлцүүлэг"
@@ -2062,14 +1870,9 @@ msgid "New Question"
 msgstr "Шинэ Асуулт"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "New Topic"
-msgstr "Шинэ Сэдэв"
-
-#. module: website_forum
 #: selection:forum.forum,default_order:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Newest"
 msgstr "Хамгийн шинэ"
 
@@ -2092,8 +1895,18 @@ msgid "Nice Question"
 msgstr "Дажгүй Асуулт"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_activities
+msgid "No activities yet!"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
-msgid "No forum post yet."
+msgid "No forum is available yet."
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "No vote given by you yet!"
 msgstr ""
 
 #. module: website_forum
@@ -2102,7 +1915,19 @@ msgid "Nofollow links"
 msgstr "Дагах холбоос алга"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:511
+#: code:addons/website_forum/models/forum.py:804
+#, python-format
+msgid "Not enough karma to comment"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:584
+#, python-format
+msgid "Not enough karma to refuse a post"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:463
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "Дахин пайзлахад карма хүрэлцэхгүй байна."
@@ -2140,7 +1965,7 @@ msgstr "Хариултын тоо"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Алдааны тоо"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
@@ -2159,7 +1984,7 @@ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
@@ -2185,13 +2010,8 @@ msgid "Offensive Post"
 msgstr "Доромж Бичлэг"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "On"
-msgstr "Асаах"
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:45
 #, python-format
 msgid "On average,"
 msgstr "Дунджаар,"
@@ -2207,7 +2027,12 @@ msgid "Orders"
 msgstr "Захиалгууд"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_original
+msgid "Original Image"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 msgid "Our forums"
 msgstr "Манай хэлэлцүүлгүүд"
 
@@ -2225,7 +2050,7 @@ msgid "Pending"
 msgstr "Хүлээгдэж буй"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "People"
 msgstr "Хүмүүс"
 
@@ -2238,15 +2063,6 @@ msgstr "Энгийн контент"
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
 msgstr "Тодорхой асуулт тавина уу ( '?' - ээр төгссөн байх хэрэгтэй)"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid ""
-"Please enter a valid email address in order to receive notifications from "
-"answers or comments."
-msgstr ""
-"Хариулт эсвэл сэтгэгдлүүдээс мэдэгдэл хүлээн авахын тулд зөв имэйл хаяг "
-"оруулна уу."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2280,7 +2096,6 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
@@ -2298,22 +2113,6 @@ msgid "Post Closing Reason"
 msgstr "Хаах шалтгааныг оруулах"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.post_reply
-msgid "Post Comment"
-msgstr "Сэтгэгдлийг оруулах"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "Post Title"
-msgstr "Гарчгийг оруулах"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-msgid "Post Types"
-msgstr "Төрлүүдийг оруулах"
-
-#. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Post Vote"
 msgstr ""
@@ -2322,11 +2121,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
 msgstr "Асуултаа оруулна уу"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "Post Your Topic"
-msgstr "Сэдвээ оруулна уу"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -2344,7 +2138,7 @@ msgid "Posted 100 comments"
 msgstr "100 сэтгэгдэл оруулсан"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:448
+#: code:addons/website_forum/models/forum.py:410
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2352,7 +2146,6 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__post_ids
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Posts"
 msgstr "Бичлэгүүд"
 
@@ -2360,11 +2153,6 @@ msgstr "Бичлэгүүд"
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Provide enough details and, if possible, give an example."
 msgstr "Хангалттай мэдээлэл, боломжтой бол жишээ оруулна уу."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Public profile"
-msgstr "Нийтийн профайл"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -2376,28 +2164,27 @@ msgstr "Эрдэмтэн"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:59
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:57
 #, python-format
 msgid "Put your answer here."
 msgstr "Хариултаа энд оруулна уу."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:37
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:35
 #, python-format
 msgid "Put your question here."
 msgstr "Асуултаа энд оруулна уу."
 
 #. module: website_forum
-#: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Question"
 msgstr "Асуулт"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:524
+#: code:addons/website_forum/models/forum.py:476
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2410,7 +2197,8 @@ msgid "Question downvoted"
 msgstr "Асуултанд хасах санал өгсөн"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Question has accepted answer"
 msgstr "Асуулт нь зөвшөөрсөн хариулттай"
 
@@ -2435,15 +2223,10 @@ msgid "Question set as favorite by 5 users"
 msgstr "Асуулт нь 5 хэрэглэгчид эрхэм"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:319
 #, python-format
 msgid "Question should not be empty."
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Question tools"
-msgstr "Асуултын багажууд"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_upvote
@@ -2466,28 +2249,34 @@ msgid "Question voted up 6 times"
 msgstr "Асуултанд 6 удаа санал нэмсэн"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_question
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Questions"
 msgstr "Асуултууд"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:542
+#: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
+msgid "Ranks"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:493
 #, python-format
 msgid "Re: %s"
 msgstr "Хариу: %s"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Reactivate"
-msgstr "Дахин идэвхижүүлэх"
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Read Guidelines"
+msgstr "Удирдамжийг унших"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Real name"
-msgstr "Жинхэнэ нэр"
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:190
+#, python-format
+msgid "Read the guidelines to know how to gain karma."
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_reason_id
@@ -2508,11 +2297,6 @@ msgstr "Шалтгаан:"
 #: model:gamification.badge,description:website_forum.badge_a_1
 msgid "Received at least 3 upvote for an answer for the first time"
 msgstr "Анх удаа хариултанд хамгийн багадаа 3 нэмэх санал авсан"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "Redirect to external link"
-msgstr "Гадаад холбоос руу хандах"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2547,10 +2331,10 @@ msgid "Reopen"
 msgstr "Дахин нээх"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Reply"
-msgstr "Хариулах"
+#: code:addons/website_forum/controllers/main.py:319
+#, python-format
+msgid "Reply should not be empty."
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
@@ -2564,8 +2348,12 @@ msgid "Restrict publishing to this website."
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.404
 #: model_terms:ir.ui.view,arch_db:website_forum.private_profile
+msgid "Return to the forum."
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.404
 msgid "Return to the question list."
 msgstr "Асуултын жагсаалт руу буцах."
 
@@ -2600,6 +2388,11 @@ msgid "Search in Post"
 msgstr "Бичлэг дотор хайх"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Search..."
+msgstr "Хайх..."
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
 msgid "Second Relevance Parameter"
 msgstr "Хоёрдогч ач холбогдлын Үзүүлэлт"
@@ -2615,13 +2408,13 @@ msgid "See question"
 msgstr "Асуултыг үзэх"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Seen:"
-msgstr "Үзсэн:"
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Select All"
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:15
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:13
 #, python-format
 msgid "Select this menu item to create a new forum."
 msgstr "Энэ цэсийг сонгон шинэ хэлэлцүүлэг үүсгээрэй."
@@ -2636,7 +2429,7 @@ msgstr "Бие даан-Суралцагч"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Accept answer"
+msgid "Send answer"
 msgstr ""
 
 #. module: website_forum
@@ -2654,23 +2447,8 @@ msgid "Settings / Gamification Tools"
 msgstr "Тохиргоо / Тоглоомчлолын багажууд"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Share"
-msgstr "Хуваалцах"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid ""
-"Share an awesome link. Your post will appear in the 'Newest' top-menu.\n"
-"            If the community vote on your post, it will get traction by being promoted\n"
-"            in the homepage."
-msgstr ""
-"Гайхалтай холбоос хуваалцаарай. Таны бичлэг 'Шинэ' дээд цэсэнд гарах болно.\n"
-"Хэрэв таны бичлэгэд бүлэгээс санал өгвөл нүүр хуудас руу дэвших боломжтой."
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:39
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:55
 #, python-format
 msgid ""
 "Share this content to increase your chances to be featured on the front page"
@@ -2685,40 +2463,34 @@ msgid "Sharing Options"
 msgstr "Хуваалцах Сонголтууд"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Silver badge"
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_small
+msgid "Small-sized Image"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__silver_badge
-msgid "Silver badges count"
-msgstr "Мөнгөн тэмдэгтийн тоо"
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:26
+#: code:addons/website_forum/static/src/js/website_forum.js:193
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
 msgstr "Уучлаарай та энэ үйлдлийг хийхэд нэвтэрсэн байх ёстой"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:101
+#: code:addons/website_forum/static/src/js/website_forum.js:255
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr "Уучлаарай та бичлэгт туг хатгахын тулд нэвтэрсэн байх ёстой"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:150
+#: code:addons/website_forum/static/src/js/website_forum.js:315
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr "Уучлаарай та санал өгөхийн тулд нэвтэрсэн байх ёстой"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:200
+#: code:addons/website_forum/static/src/js/website_forum.js:372
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr "Уучлаарай, нэргүй хэрэглэгчид зөв хариултыг сонгох боломжгүй."
@@ -2730,7 +2502,7 @@ msgstr "Уучлаарай, энэ асуулт боломжгүй болсон.
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:145
+#: code:addons/website_forum/static/src/js/website_forum.js:310
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Уучлаарай, та өөрийн бичлэгт санал өгөх боломжгүй"
@@ -2741,9 +2513,14 @@ msgid "Sort by"
 msgstr "Эрэмбэлэх"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Stats"
-msgstr "Статистик"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Spam"
+msgstr "Спам"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Spam all post"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__state
@@ -2763,10 +2540,9 @@ msgid "Student"
 msgstr "Суралцагч"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "Submit a Link"
-msgstr "Холбоос илгээх"
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "Subscribe"
+msgstr "Бүртгүүлэх"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
@@ -2777,10 +2553,8 @@ msgid "Supporter"
 msgstr "Дэмжигч"
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.forum_tag_action
-#: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_list
+#: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
 msgstr "Пайз"
@@ -2791,12 +2565,14 @@ msgid "Tag name already exists !"
 msgstr "Пайзын нэр аль хэдийн үүссэн байна !"
 
 #. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_tag_action
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__tag_ids
+#: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_list
 #: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Tags"
@@ -2832,66 +2608,56 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:6
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:7
 #, python-format
 msgid "Thanks for posting!"
 msgstr "Илгээсэнд баярлалаа!"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
+msgid ""
+"The goal of this site is create a relevant knowledge base that would answer "
+"questions related to Odoo."
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "The"
-msgstr "Энэ"
+msgid "The question has been closed"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "The flagged queue is empty."
-msgstr "Туг хатгасан дараалал хоосон байна."
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
+msgid ""
+"Therefore questions and answers can be edited like wiki pages by experienced"
+" users of this site in order to improve the overall quality of the knowledge"
+" base content. Such privileges are granted based on user karma level: you "
+"will be able to do the same once your karma gets high enough."
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers."
+msgstr ""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"The goal of this site is create a relevant knowledge base that would answer\n"
-"    questions related to Odoo."
+"This community is for professional and enthusiast users, partners and "
+"programmers. You can ask questions about:"
 msgstr ""
-"Энэ сайтын зорилго бол Odoo - той холбоотой асуултуудад хариулах \n"
-"хэрэгцээт мэдлэгийн суурийг цогцлоох юм."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "The offensive queue is empty."
-msgstr "Доромжилсон дараалал хоосон байна."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "The validation queue is empty."
-msgstr "Баталгаажуулах дараалал хоосон байна."
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"Therefore questions and answers can be edited like wiki pages by experienced users of\n"
-"    this site in order to improve the overall quality of the knowledge base content.\n"
-"    Such privileges are granted based on user karma level: you will be able to do the same\n"
-"    once your karma gets high enough."
-msgstr ""
-"Тиймээс мэдлэгийн суурь агуулгын ерөнхий чанарыг сайжруулахын тулд энэ сайтын\n"
-" туршлагажсан хэрэглэгчид асуулт болон хариултуудыг википедиа хуудас шиг засах\n"
-" боломжтой. Ийм эрхийг хэрэглэгчийн карма түвшин дээр суурилж олгоно: таны карма\n"
-" хангалттай өндөр болох үед та ч мөн үүнийг хийх боломжтой болно."
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"This community is for professional and enthusiast users,\n"
-"    partners and programmers. You can ask questions about:"
-msgstr ""
-"Энэ бүлэг нь мэргэжлийн, урам зоригтой хэрэглэгчид, түншүүд болон \n"
-"программистуудад зориулагдсан. Та дараах сэдвээр асуулт асуух боломжтой:"
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:51
-#: model:forum.forum,description:website_forum.forum_help
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and services.\n"
+"                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:36
+#: model:forum.forum,description:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -2915,26 +2681,20 @@ msgstr ""
 "илэрхийлнэ"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:411
-#, python-format
-msgid "This forum does not allow %s"
-msgstr "Энэ хэлэлцүүлэгт %s боломжгүй"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "This forum has been archived."
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:111
+#: code:addons/website_forum/static/src/js/website_forum.js:270
 #, python-format
 msgid "This post can not be flagged"
 msgstr "Энэ бичлэгт туг хатгах боломжгүй"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:106
+#: code:addons/website_forum/static/src/js/website_forum.js:262
 #, python-format
 msgid "This post is already flagged"
 msgstr "Энэ бичлэгт аль хэдийн туг хатгасан байна"
@@ -2950,16 +2710,6 @@ msgstr ""
 "<i>Татгалзах</i> уу?"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.private_profile
-msgid "This profile is private!"
-msgstr "Энэ бол хувийн профайл!"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Threads"
-msgstr "Салбарууд"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__name
 msgid "Title"
 msgstr "Гарчиг"
@@ -2971,8 +2721,7 @@ msgid "Title must not be empty"
 msgstr "Гарчиг хоосон байх ёсгүй"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:414
+#: code:addons/website_forum/controllers/main.py:387
 #, python-format
 msgid "Title should not be empty."
 msgstr "Гарчиг хоосон байж болохгүй."
@@ -2985,11 +2734,9 @@ msgstr "Хүртэл"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"To prevent your question from being flagged and possibly removed, avoid asking\n"
-"    subjective questions where …"
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking subjective questions where …"
 msgstr ""
-"Асуултууддаа туг хатгуулах, устгуулахаас сэргийлж хувийн асуулт тавихаас \n"
-"зайлс хийгээрэй ..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3002,34 +2749,19 @@ msgid "Total Votes"
 msgstr "Нийт саналууд"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Trending"
 msgstr "Чиг хандлага"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__post_type
-msgid "Type"
-msgstr "Төрөл"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__content_link
-msgid "URL"
-msgstr "URL"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_post__content_link
-msgid "URL of Link Articles"
-msgstr "Холбоос өгүүллүүдийн URL"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "URL to Share"
-msgstr "Хуваалцах URL"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Unanswered"
 msgstr "Хариулагдаагүй"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Undelete"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
@@ -3054,11 +2786,6 @@ msgstr "Уншаагүй Зурвасууд"
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Уншаагүй зурвасын тоолуур"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Update"
-msgstr "Шинэчлэлт"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
@@ -3110,16 +2837,8 @@ msgid "Users"
 msgstr "Хэрэглэгчид"
 
 #. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_question
-msgid ""
-"Users can answer only once per question. Contributors can edit answers and "
-"mark the right ones."
-msgstr ""
-"Хэрэглэгч нар асуулт бүрт нэг л удаа хариулах боломжтой. Хувь оруулагч нар "
-"асуултыг засаж, зөвийг нь тэмдэглэх боломжтой."
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Validate"
 msgstr "Батлах"
 
@@ -3134,11 +2853,6 @@ msgid "View"
 msgstr "Харагдац"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "View Your Badges"
-msgstr "Өөрийн тэмдэгтүүдийг харах"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Views"
 msgstr "Дэлгэцүүд"
@@ -3149,8 +2863,13 @@ msgid "Vote"
 msgstr "Санал өгөх"
 
 #. module: website_forum
+#: sql_constraint:forum.post.vote:0
+msgid "Vote already exists !"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Votes"
 msgstr "Саналууд"
 
@@ -3170,18 +2889,8 @@ msgid "Waiting post"
 msgstr "Хүлээлгэнд буй бичлэг"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid ""
-"We keep a high level of quality in showcased posts, around 20% of the submited\n"
-"            posts will be featured."
-msgstr ""
-"Бид өндөр түвшний чанартай бичлэгүүдийг үзүүлдэг, илгээгдсэн бичлэгүүдийн "
-"ойролцоогоор 20% - ийг онцолдог."
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_id
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Website"
 msgstr "Вэбсайт"
 
@@ -3189,6 +2898,11 @@ msgstr "Вэбсайт"
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
 msgstr "Вэбсайт / Хэлэлцүүлэг"
+
+#. module: website_forum
+#: selection:gamification.challenge,category:0
+msgid "Website / Slides"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
@@ -3244,41 +2958,12 @@ msgstr ""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "What kinds of questions can I ask here?"
-msgstr "Би энд ямар төрлийн асуулт асуух боломжтой вэ?"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "What should I avoid in my answers?"
-msgstr "Би хариулах үедээ юунаас зайлс хийх хэрэгтэй вэ?"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "What should I avoid in my questions?"
-msgstr "Би асуух үедээ юунаас зайлс хийх хэрэгтэй вэ?"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"When a question or answer is upvoted, the user who posted them will gain some\n"
-"    points, which are called \"karma points\". These points serve as a rough\n"
-"    measure of the community trust to him/her. Various moderation tasks are\n"
-"    gradually assigned to the users based on those points."
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
 msgstr ""
-"Асуулт эсвэл хариултад санал нэмэгдэх үед түүнийг оруулсан хэрэглэгчид \n"
-"\"карма оноо\" өгдөг. Эдгээр оноо нь бүлгээс үзүүлж буй итгэлийн хэмжүүр юм. \n"
-"Үүн дээр үндэслэн хэрэглэгчдэд янз бүрийн тохируулгын даалгавруудыг \n"
-"аажмаар оноодог."
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_link
-msgid "When clicking on the post, it redirects to an external link"
-msgstr "Бичлэг дээр дарах үед гадаад холбоос руу хандуулна"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "Why can other people edit my questions/answers?"
-msgstr "Яагаад бусад хүмүүс миний асуулт/хариултыг засах боломжтой юм бэ?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -3290,15 +2975,7 @@ msgstr ""
 "Үргэлжлүүлэхээс өмнө модератор таны өмнөх бичлэгийг батлахыг хүлээнэ үү."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:139
-#, python-format
-msgid ""
-"You cannot choose %s as default post since the forum does not allow it."
-msgstr ""
-"Хэлэлцүүлэг зөвшөөрдөггүй тул %s - г үндсэн бичлэгээр сонгох боломжгүй."
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:438
+#: code:addons/website_forum/models/forum.py:400
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr ""
@@ -3309,7 +2986,7 @@ msgid "You cannot post an empty answer"
 msgstr "Та хоосон хариулт илгээх боломжгүй"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:953
+#: code:addons/website_forum/models/forum.py:942
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr ""
@@ -3317,25 +2994,15 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"You should only ask practical, answerable questions based\n"
-"    on actual problems that you face. Chatty, open-ended\n"
-"    questions diminish the usefulness of this site and push\n"
-"    other questions off the front page."
+"You should only ask practical, answerable questions based on actual problems"
+" that you face. Chatty, open-ended questions diminish the usefulness of this"
+" site and push other questions off the front page."
 msgstr ""
-"Та зөвхөн өөрт тулгарсан бодит асуудлуудын талаар практик, \n"
-"хариулж болохуйц асуултууд тавих хэрэгтэй. Нуршуу, нээлттэй \n"
-"асуултууд нь энэ сайтын ашиг тусыг бууруулж, бусад асуултуудыг \n"
-"эхний хуудсаас түлхдэг."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 msgid "Your Answer"
 msgstr "Таны Хариулт"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "Your Discussion Title..."
-msgstr "Таны Хөөрөлдөөний Гарчиг..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -3358,19 +3025,9 @@ msgid "and"
 msgstr "ба"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
-msgid "back to post"
-msgstr "бичлэг рүү буцах"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "bad examples"
 msgstr "муу жишээнүүд"
-
-#. module: website_forum
-#: selection:gamification.badge,level:0
-msgid "bronze"
-msgstr "хүрэл"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3438,11 +3095,6 @@ msgid "duplicate post"
 msgstr "давхардсан бичлэг"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "e.g. https://www.odoo.com"
-msgstr "ж.нь. https://www.odoo.com"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "edit any post, view offensive flags"
 msgstr "бүх бичлэгийг засах, доромж тугуудыг харах"
@@ -3473,19 +3125,9 @@ msgid "for reason:"
 msgstr "шалтгаан:"
 
 #. module: website_forum
-#: selection:gamification.badge,level:0
-msgid "gold"
-msgstr "алт"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "good examples"
 msgstr "сайн жишээнүүд"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "has been closed"
-msgstr "хаагдсан"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -3507,7 +3149,7 @@ msgstr "нийтлэгдсэн. Энд дарж асуултыг үзнэ үү :
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:36
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:52
 #, python-format
 msgid "here"
 msgstr "энд"
@@ -3529,7 +3171,7 @@ msgstr "хэрхэн Odoo - г тодорхой дэд бүтэц дээр су�
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:50
 #, python-format
 msgid ""
 "if your\n"
@@ -3560,31 +3202,18 @@ msgstr ""
 "энэ бол асуултаар дүрээ хувилгасан дургүйцэл: “______ хөгийн, тийм ээ?”"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "karma"
-msgstr "карма"
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:188
+#, python-format
+msgid "karma is required to perform this action. "
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:50
 #, python-format
 msgid "karma points"
 msgstr "карма оноо"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "last connection"
-msgstr "сүүлийн холболт"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "location"
-msgstr "байршил"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "member since"
-msgstr "гишүүнээр элссэн"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
@@ -3604,14 +3233,13 @@ msgstr "сэдвээс гажсан эсвэл чухал биш"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "on"
 msgstr "дээр"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:45
 #, python-format
 msgid ""
 "on social networks get an answer within\n"
@@ -3629,11 +3257,6 @@ msgstr "бичлэг"
 #: model:forum.post.reason,name:website_forum.reason_15
 msgid "racist and hate speech"
 msgstr "арьс өнгөөр ялгаварласан ба үзэн ядсан үг"
-
-#. module: website_forum
-#: selection:gamification.badge,level:0
-msgid "silver"
-msgstr "мөнгө"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
@@ -3657,16 +3280,6 @@ msgstr ""
 #: model:forum.post.reason,name:website_forum.reason_14
 msgid "threatening language"
 msgstr "заналхийлсэн үг хэллэг"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "time"
-msgstr "цаг"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "times"
-msgstr "цагууд"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
@@ -3694,11 +3307,6 @@ msgid "violent language"
 msgstr "хүчирхийлсэн үг хэллэг"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "votes"
-msgstr "саналууд"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "waiting for validation"
 msgstr "батлахыг хүлээж буй"
@@ -3709,11 +3317,6 @@ msgid ""
 "we are being asked an open-ended, hypothetical question: “What if ______ "
 "happened?”"
 msgstr "бидэнд нээлттэй, таамагласан асуулт тавидаг: \"______ - вэл яах вэ?\""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "website"
-msgstr "вэбсайт"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3733,3 +3336,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "your biography can be seen as tooltip"
 msgstr "таны намтрыг tooltip - ээр харуулах боломжтой"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "圾 Typical Character"
+msgstr ""

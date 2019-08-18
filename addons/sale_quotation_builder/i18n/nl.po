@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_quotation_builder
+# 	* sale_quotation_builder
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
-# Thomas Pot <thomas@open2bizz.nl>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Thomas Pot <thomas@open2bizz.nl>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,9 +24,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 msgid "&amp;times;"
 msgstr "&amp;times;"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid ""
+",\n"
+"                an awesome"
+msgstr ""
+",\n"
+"                een geweldige"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -51,6 +60,17 @@ msgstr ""
 "product wordt gebruikt op de offerte."
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
+msgid ""
+":\n"
+"                        this content will appear on the quotation only if this\n"
+"                        product is not removed."
+msgstr ""
+":\n"
+"                        deze inhoud verschijnt alleen in de offerte als dit\n"
+"product niet is verwijderd."
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
 "<strong>Template Header:</strong> this content\n"
@@ -73,19 +93,14 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
-"Als een toonaangevend professionele services bedrijf,\n"
+"Als een toonaangevend professionele diensten bedrijf,\n"
 "weten we dat het succes sterk afhangt van de\n"
-"toeweiding die we hebben voor onze sterk services."
+"toeweiding die we hebben voor onze sterke diensten."
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
-msgid "Back"
-msgstr "Terug"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 msgid "Close"
-msgstr "Sluiten"
+msgstr "Afsluiten"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_res_config_settings
@@ -126,6 +141,16 @@ msgstr ""
 "het aangepaste sjabloon gebruiken."
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Open Source CRM"
+msgstr "Open Source CRM"
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Optional Product:"
 msgstr "Optioneel product:"
@@ -144,6 +169,11 @@ msgstr "Onze kwaliteit"
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Service"
 msgstr "Onze diensten"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Powered by"
+msgstr "Aangeboden door"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -167,6 +197,7 @@ msgstr ""
 "focus op stof, performantie en vakmanschap."
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Product:"
 msgstr "Product:"
@@ -201,11 +232,11 @@ msgstr "Offerte sjabloon optie"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
 msgid "Sale Options"
-msgstr "Verkoop opties"
+msgstr "Verkoopopties"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: sale_quotation_builder
@@ -244,9 +275,14 @@ msgid ""
 "                                Quotation Templates."
 msgstr ""
 "Dit is een <strong>voorbeeld offertesjabloon</strong>. U zou het moeten\n"
-"personaliseren naar uw eigen nodig vanuit de <i>Verkoopbeheer</i>\n"
-"installatie, door het menu Configuratie /\n"
+"personaliseren naar uw eigen noden vanuit de <i>Verkoopbeheer</i>\n"
+"applicatie, door het menu Configuratie /\n"
 "Offertesjablonen te gebruiken."
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
+msgid "This is a preview of the sale order template."
+msgstr "Dit is een voorbeeld van het verkoopordersjabloon."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -291,7 +327,7 @@ msgid ""
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
 "U kunt <strong>een omschrijving instellen per product</strong>. Odoo zal\n"
-"automatisch een offerte te maken met behulp van de omschrijvingen\n"
+"automatisch een offerte maken met behulp van de omschrijvingen\n"
 "van alle producten in het voorstel. De inhoudsopgave\n"
 "aan de linkerkant wordt automatisch gegenereerd met behulp van de stijlen die u\n"
 "gebruikt in uw beschrijving (rubriek 1, rubriek 2, ...)"

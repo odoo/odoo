@@ -1,19 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_check_printing
+# 	* account_check_printing
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Benedicte HANET <hanetb@gmail.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Clo <clo@odoo.com>, 2016
+# Florent de Labarre <florent@iguanayachts.com>, 2017
+# Laura Piraux <lap@odoo.com>, 2017
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Marie Willemyns <mwi@odoo.com>, 2018
+# Fabien Pinckaers <fp@openerp.com>, 2018
+# Richard Mathot <rim@odoo.com>, 2018
+# Stéphane GUILLY <stephane.guilly@laposte.net>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2019
+# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +33,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:58
+#: code:addons/account_check_printing/models/account_journal.py:61
 #, python-format
 msgid " : Check Number Sequence"
 msgstr " : Séquence du numéro de chèque"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:63
+#: code:addons/account_check_printing/models/account_payment.py:51
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Un mémo de chèque ne peut dépasser 60 caractères."
@@ -36,6 +47,11 @@ msgstr "Un mémo de chèque ne peut dépasser 60 caractères."
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_chart_template
 msgid "Account Chart Template"
+msgstr "Modèle de plan comptable"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
 msgstr ""
 
 #. module: account_check_printing
@@ -53,7 +69,6 @@ msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_amount_in_words
 msgid "Amount in Words"
 msgstr "Montant en toutes lettres"
 
@@ -76,7 +91,6 @@ msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_number
 msgid "Check Number"
 msgstr "Numéro de chèque"
 
@@ -109,7 +123,6 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
 msgstr ""
 "Cochez cette option si vos chèques pré-imprimés ne sont pas numérotés."
@@ -135,7 +148,7 @@ msgid "Checks numbering sequence."
 msgstr "Séquence de numérotation des chèques."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:97
+#: code:addons/account_check_printing/models/account_journal.py:100
 #, python-format
 msgid "Checks to Print"
 msgstr "Chèques à imprimer"
@@ -181,7 +194,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:84
+#: code:addons/account_check_printing/models/account_payment.py:72
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
@@ -213,7 +226,6 @@ msgstr "Dernière mise à jour le"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Manual Numbering"
 msgstr "Numérotation manuelle"
 
@@ -230,20 +242,16 @@ msgid "Next Check Number"
 msgstr "Numéro de chèque suivant"
 
 #. module: account_check_printing
+#: code:addons/account_check_printing/models/account_journal.py:27
+#: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:19
+#, python-format
+msgid "Next Check Number should only contains numbers."
+msgstr ""
+
+#. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "None"
 msgstr "Aucun"
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_number
-msgid ""
-"Number of the check corresponding to this payment. If your pre-printed check"
-" are not already numbered, you can manage the numbering in the journal "
-"configuration page."
-msgstr ""
-"Numéro du chèque correspondant à ce paiement. Si vos chèques pré-imprimés ne"
-" sont pas déjà numérotés, vous pouvez gérer la numérotation dans la page de "
-"configuration du journal."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -251,7 +259,7 @@ msgid "Payments"
 msgstr "Paiements"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:81
+#: code:addons/account_check_printing/models/account_payment.py:69
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
@@ -291,7 +299,7 @@ msgid "Print Date Label"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:94
+#: code:addons/account_check_printing/models/account_payment.py:83
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -299,9 +307,9 @@ msgid "Print Pre-numbered Checks"
 msgstr "Imprimer les chèques pré-numérotés"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_register_payments
-msgid "Register Payments"
-msgstr "Enregistrer des paiements"
+#: model:ir.model,name:account_check_printing.model_account_payment_register
+msgid "Register Payment"
+msgstr "Enregistrer un paiement"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -342,7 +350,7 @@ msgstr ""
 "Vous pouvez utiliser ce champ pour une recherche rapide."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/models/account_journal.py:29
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
@@ -395,7 +403,7 @@ msgid "Unmark Sent"
 msgstr "Décochez ceux qui ont été envoyés"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: code:addons/account_check_printing/models/account_payment.py:105
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "

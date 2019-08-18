@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_holidays
+# 	* hr_holidays
 # 
 # Translators:
-# Bohdan Lisnenko, 2018
-# Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Olga Lugova <trolka.olug@gmail.com>, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2019
+# Martin Trigaux, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,11 +27,28 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_type
 msgid ""
-"\tFixed by HR: allocated by HR and cannot be bypassed; users can request "
-"leaves;\tFixed by HR + allocation request: allocated by HR and users can "
-"request leaves and allocations;\tNo allocation: no allocation by default, "
-"users can freely request leaves;"
+"\tNo Allocation Needed: no allocation by default, users can freely request "
+"time off;\tFree Allocation Request: allocated by HR and users can request "
+"time off and allocations;\tAllocated by HR only: allocated by HR and cannot "
+"be bypassed; users can request time off;"
 msgstr ""
+"\tНемає необхідності розподілу: відсутність розподілу за замовчуванням, "
+"користувачі можуть вільно запитувати відпустку;\tВільний запит на розподіл: "
+"розподілені відділом кадрів і користувачі можуть запитувати відпустку і "
+"розподілення;\tРозподілено тільки відділом кадрів: розподілено відділом "
+"кадрів і не можна обійти; користувачі можуть запитувати відпустку;"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_type.py:286
+#, python-format
+msgid " days"
+msgstr " дні"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_type.py:286
+#, python-format
+msgid " hours"
+msgstr "години"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -56,22 +76,34 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_type.py:212
+#: code:addons/hr_holidays/models/hr_leave_type.py:283
 #, python-format
 msgid "%g remaining out of %g"
 msgstr "%g залишився поза %g"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:428
+#: code:addons/hr_holidays/models/hr_leave.py:490
 #, python-format
 msgid "%s : %.2f day(s)"
 msgstr "%s : %.2f день(і)"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:440
+#: code:addons/hr_holidays/models/hr_leave.py:488
 #, python-format
-msgid "%s on %s :%.2f day(s)"
-msgstr ""
+msgid "%s : %.2f hour(s)"
+msgstr "%s : %.2f година(и)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:503
+#, python-format
+msgid "%s on %s : %.2f hour(s)"
+msgstr "%s на %s : %.2f годину(и)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:509
+#, python-format
+msgid "%s on %s: %.2f day(s)"
+msgstr "%s на %s: %.2f днів"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -105,242 +137,242 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "0:30 AM"
-msgstr ""
+msgstr "0:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "0:30 PM"
-msgstr ""
+msgstr "0:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:00 AM"
-msgstr ""
+msgstr "10:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:00 PM"
-msgstr ""
+msgstr "22:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:30 AM"
-msgstr ""
+msgstr "10:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "10:30 PM"
-msgstr ""
+msgstr "22:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:00 AM"
-msgstr ""
+msgstr "11:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:00 PM"
-msgstr ""
+msgstr "23:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:30 AM"
-msgstr ""
+msgstr "11:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "11:30 PM"
-msgstr ""
+msgstr "23:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "12:00 AM"
-msgstr ""
+msgstr "00:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "12:00 PM"
-msgstr ""
+msgstr "12:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:00 AM"
-msgstr ""
+msgstr "1:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:00 PM"
-msgstr ""
+msgstr "13:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:30 AM"
-msgstr ""
+msgstr "1:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "1:30 PM"
-msgstr ""
+msgstr "1:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:00 AM"
-msgstr ""
+msgstr "2:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:00 PM"
-msgstr ""
+msgstr "14:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:30 AM"
-msgstr ""
+msgstr "2:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "2:30 PM"
-msgstr ""
+msgstr "14:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:00 AM"
-msgstr ""
+msgstr "3:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:00 PM"
-msgstr ""
+msgstr "15:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:30 AM"
-msgstr ""
+msgstr "3:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "3:30 PM"
-msgstr ""
+msgstr "15:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:00 AM"
-msgstr ""
+msgstr "4:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:00 PM"
-msgstr ""
+msgstr "16:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:30 AM"
-msgstr ""
+msgstr "4:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "4:30 PM"
-msgstr ""
+msgstr "16:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:00 AM"
-msgstr ""
+msgstr "5:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:00 PM"
-msgstr ""
+msgstr "17:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:30 AM"
-msgstr ""
+msgstr "5:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "5:30 PM"
-msgstr ""
+msgstr "17:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:00 AM"
-msgstr ""
+msgstr "6:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:00 PM"
-msgstr ""
+msgstr "18:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:30 AM"
-msgstr ""
+msgstr "6:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "6:30 PM"
-msgstr ""
+msgstr "18:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:00 AM"
-msgstr ""
+msgstr "7:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:00 PM"
-msgstr ""
+msgstr "19:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:30 AM"
-msgstr ""
+msgstr "7:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "7:30 PM"
-msgstr ""
+msgstr "19:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:00 AM"
-msgstr ""
+msgstr "8:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:00 PM"
-msgstr ""
+msgstr "20:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:30 AM"
-msgstr ""
+msgstr "8:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "8:30 PM"
-msgstr ""
+msgstr "20:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:00 AM"
-msgstr ""
+msgstr "9:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:00 PM"
-msgstr ""
+msgstr "21:00"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:30 AM"
-msgstr ""
+msgstr "9:30"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "9:30 PM"
-msgstr ""
+msgstr "21:30"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
@@ -358,31 +390,70 @@ msgid ""
 "<span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '=', 'hour')]}\">Days</span>\n"
 "                                <span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '!=', 'hour')]}\">Hours</span>"
 msgstr ""
+"<span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '=', 'hour')]}\">Дні</span>\n"
+"                                <span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '!=', 'hour')]}\">Години</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"ml8\">Days</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">Дні</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"ml8\">Hours</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">Години</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
-msgid "<span class=\"ml8\">of leaves every</span>"
+msgid "<span class=\"ml8\">of time off every</span>"
+msgstr "<span class=\"ml8\">відпустка кожного</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Time Off\n"
+"                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Відпустка\n"
+"                                </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Absent Until\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Відсутній до\n"
+"                        </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Time Off\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Відпустка\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Days Allocated</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Виділені дні</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
-msgid "<span class=\"o_stat_text\">Group Leaves</span>"
-msgstr ""
+msgid "<span class=\"o_stat_text\">Group Time Off</span>"
+msgstr "<span class=\"o_stat_text\">Групувати відпустки</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -391,21 +462,24 @@ msgid ""
 "                                    To\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
+"                                    До\n"
+"                                </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">from</span>"
-msgstr ""
+msgid "<span class=\"text-muted\">from </span>"
+msgstr "<span class=\"text-muted\">з </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">to</span>"
-msgstr ""
+msgid "<span class=\"text-muted\">to </span>"
+msgstr "<span class=\"text-muted\">до </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "<span>Add</span>"
-msgstr ""
+msgstr "<span>Додати</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -413,16 +487,24 @@ msgid "<strong>Departments and Employees</strong>"
 msgstr "<strong>Відділення та співробітники</strong>"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:516
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:359
+#: code:addons/hr_holidays/models/hr_leave.py:619
 #, python-format
 msgid "A leave cannot be duplicated."
-msgstr ""
+msgstr "Відпустка не може дублюватися."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:404
+#, python-format
+msgid "A time off cannot be duplicated."
+msgstr "Відпустка не може повторюватися."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
-msgid "Able to see Remaining Leaves"
-msgstr "Можна бачити залишок відпусток"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__show_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__show_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__show_leaves
+msgid "Able to see Remaining Time Off"
+msgstr "Може бачити залишену відпустку"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
@@ -449,27 +531,37 @@ msgid "Absent Employees"
 msgstr "Відсутні співробітники"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__is_absent_totay
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__is_absent
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "Absent Today"
 msgstr "Відсутній сьогодні"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid "Absent Until"
+msgstr "Відсутній до"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual
 msgid "Accrual"
-msgstr ""
+msgstr "Нарахування"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Accrual Allocations"
-msgstr ""
+msgstr "Розподіл нарахувань"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
 #: model:ir.cron,cron_name:hr_holidays.hr_leave_allocation_cron_accrual
 #: model:ir.cron,name:hr_holidays.hr_leave_allocation_cron_accrual
-msgid "Accrual Leave: Updates the number of leaves"
-msgstr ""
+msgid "Accrual Time Off: Updates the number of time off"
+msgstr "Нарахування відпустки: оновлення кількості неробочих днів"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -485,13 +577,13 @@ msgstr "Активно"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Active Allocations"
-msgstr ""
+msgstr "Активні нарахування"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
-msgid "Active Leaves"
-msgstr ""
+msgid "Active Time Off"
+msgstr "Активувати завершений час"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -516,7 +608,7 @@ msgstr "Стан дії"
 #: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Типи дії"
+msgstr "Типи діяльності"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -526,9 +618,16 @@ msgstr "Додати причину..."
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__validity_start
 msgid ""
-"Adding validity to types of leaves so that it cannot be selected outside "
+"Adding validity to types of time off so that it cannot be selected outside "
 "this time period"
 msgstr ""
+"Додавання валідності до типів відпустки, щоб її не можна було вибрати за "
+"межами цього періоду часу"
+
+#. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
+msgid "Administrator"
+msgstr "Адміністратор"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_date_from_period:0
@@ -543,83 +642,87 @@ msgstr "Всі"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_all
 msgid "All Allocations"
-msgstr ""
+msgstr "Усі нарахування"
+
+#. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_user
+msgid "All Approver"
+msgstr "Усі затверджуючі"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
-msgid "All Leaves"
-msgstr "Всі відпустки"
+msgid "All Time Off"
+msgstr "Уся відпустка"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-msgid "Allocated Days"
-msgstr "Заброньовані дні"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
+msgid "Allocated (Days/Hours)"
+msgstr "Заброньовані (Дні/Години)"
+
+#. module: hr_holidays
+#: selection:hr.leave.type,allocation_type:0
+msgid "Allocated by HR only"
+msgstr "Розподілено тільки відділом кадрів"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation
 msgid "Allocation"
 msgstr "Бронювання"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
 msgid "Allocation Approval"
-msgstr ""
-
-#. module: hr_holidays
-#: model:mail.message.subtype,name:hr_holidays.mt_department_leave_allocation_approved
-msgid "Allocation Approved"
-msgstr ""
+msgstr "Схвалення розподілу"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_type
 msgid "Allocation Mode"
-msgstr "Режим бронювання"
+msgstr "Режим розподілу"
 
 #. module: hr_holidays
-#: model:mail.message.subtype,name:hr_holidays.mt_department_leave_allocation_refused
-msgid "Allocation Refused"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
+msgid "Allocation Notification Subtype"
+msgstr "Підтип сповіщення про розподіл"
 
 #. module: hr_holidays
-#: selection:hr.leave.report,type:0
+#: selection:hr.leave.report,leave_type:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_allocation
 msgid "Allocation Request"
-msgstr "Запит на бронювання"
+msgstr "Запит на розподіл"
 
 #. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Allocation Requests"
-msgstr "Запити на бронювання"
+msgstr "Запити на розподіл"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approve"
-msgstr ""
+msgstr "Друге затвердження розподілу"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:302
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:340
 #, python-format
 msgid "Allocation of %s : %.2f %s to %s"
-msgstr ""
+msgstr "Нарахування %s : %.2f %s до %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
 msgid "Allocation to Approve"
-msgstr "Бронювання до затвердження"
+msgstr "Розподіл до затвердження"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_all_allocations
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_approve_allocations
 msgid "Allocations"
-msgstr "Бронювання"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
-msgid "Allocations Requests"
-msgstr ""
+msgstr "Розподіл"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
@@ -630,11 +733,16 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
+"Дозвольте створювати запити групою:\n"
+"- Співробітником: для конкретного співробітника\n"
+"- Компанією: всіх працівників зазначеної компанії\n"
+"- Відділом: усі співробітники зазначеного відділу\n"
+"- За тегом Працівник: всі працівники конкретної категорії працівників групи"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Analyze from"
-msgstr "Аналіз від"
+msgstr "Аналізувати від"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_evaluation_report_graph
@@ -642,8 +750,8 @@ msgid "Appraisal Analysis"
 msgstr "Аналіз атестації"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:778
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:562
+#: code:addons/hr_holidays/models/hr_leave.py:913
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:627
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -656,29 +764,34 @@ msgstr "Затвердити"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
 #: selection:hr.leave.report,state:0
-#: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation_approved
-#: model:mail.message.subtype,name:hr_holidays.mt_leave_approved
 msgid "Approved"
 msgstr "Затверджено"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Approved Allocations"
-msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Approved Leaves"
-msgstr "Затверджені відпустки"
+msgstr "Затверджені розподіли"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Approved Requests"
-msgstr ""
+msgstr "Затверджені запити"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Approved Time Off"
+msgstr "Затверджена відпустка"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
+msgid "Archived"
+msgstr "Заархівовано"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_attachment_count
@@ -689,7 +802,12 @@ msgstr "Підрахунок прикріплення"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual_limit
 msgid "Balance limit"
-msgstr ""
+msgstr "Ліміт балансу"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Звичайний користувач"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -716,7 +834,7 @@ msgstr "Коричневий"
 #: selection:hr.leave,holiday_type:0
 #: selection:hr.leave.allocation,holiday_type:0
 msgid "By Company"
-msgstr ""
+msgstr "Компанією"
 
 #. module: hr_holidays
 #: selection:hr.leave,holiday_type:0
@@ -729,14 +847,14 @@ msgstr "Відділом"
 #: selection:hr.leave.allocation,holiday_type:0
 #: selection:hr.leave.report,holiday_type:0
 msgid "By Employee"
-msgstr "По співробітникам"
+msgstr "За співробітником"
 
 #. module: hr_holidays
 #: selection:hr.leave,holiday_type:0
 #: selection:hr.leave.allocation,holiday_type:0
 #: selection:hr.leave.report,holiday_type:0
 msgid "By Employee Tag"
-msgstr "По мітці співробітників"
+msgstr "За тегом співробітника"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -744,8 +862,8 @@ msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
 msgstr ""
-"По співробітнику: Бронювання/Запити по окремим співробітникам.\n"
-"По мітці співробітників: Бронювання/Запити по групі співробітників, що мають певний тег."
+"За співробітником: Бронювання/Запити за окремим співробітником.\n"
+"За тегом співробітників: Бронювання/Запити за групою співробітників, що мають певний тег."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -756,7 +874,7 @@ msgstr "Календар"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_approve
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__can_approve
 msgid "Can Approve"
-msgstr "Може затвердити"
+msgstr "Можна затвердити"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
@@ -771,8 +889,11 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0 selection:hr.leave.report,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
+#: selection:hr.leave.report,state:0
 msgid "Cancelled"
 msgstr "Скасовано"
 
@@ -789,6 +910,11 @@ msgid "Category of Employee"
 msgstr "Категорія співробітника"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__code
+msgid "Code"
+msgstr "Код"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
 msgstr "Колір"
@@ -800,6 +926,7 @@ msgstr "Колір у звіті"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
 msgid "Comment by Manager"
 msgstr "Коментар керівника"
 
@@ -833,15 +960,20 @@ msgid "Confirmed"
 msgstr "Підтверджено"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
-msgid "Create a new leave allocation"
-msgstr ""
+msgid "Create a new time off allocation"
+msgstr "Створити новий розподіл завершеного часу"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
-msgid "Create a new leave allocation request"
-msgstr ""
+msgid "Create a new time off allocation request"
+msgstr "Створити новий запит на розподіл відпустки"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -849,9 +981,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_payroll
-#: model_terms:ir.actions.act_window,help:hr_holidays.open_company_allocation
-msgid "Create a new leave request"
-msgstr ""
+msgid "Create a new time off request"
+msgstr "Створити новий запит на відпустку"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__create_uid
@@ -873,13 +1004,17 @@ msgstr "Створено"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
-msgid "Current Leave Status"
-msgstr "Поточний статус відпустки"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
+msgid "Current Time Off Status"
+msgstr "Статус поточної відпустки"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
-msgid "Current Leave Type"
-msgstr "Поточний тип відпустки"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_id
+msgid "Current Time Off Type"
+msgstr "Тип поточного завершеного часу"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -891,17 +1026,23 @@ msgstr "Поточний рік"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
 msgid "Custom Hours"
-msgstr ""
+msgstr "Власні години"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
+#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_new_request
+msgid "Dashboard"
+msgstr "Панель приладів"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from_period
 msgid "Date Period Start"
-msgstr ""
+msgstr "Початок періоду дати"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__nextcall
 msgid "Date of the next accrual allocation"
-msgstr ""
+msgstr "Дата наступного розподілу нарахування"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,request_unit:0
@@ -911,17 +1052,17 @@ msgstr "День"
 #. module: hr_holidays
 #: selection:hr.leave.allocation,unit_per_interval:0
 msgid "Day(s)"
-msgstr "День(і)"
+msgstr "День(дні)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_allocation
 msgid "Days Allocated"
-msgstr ""
+msgstr "Заброньовані дні"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_custom
 msgid "Days-long custom hours"
-msgstr ""
+msgstr "Власні години тривалих днів"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -930,21 +1071,24 @@ msgid "Delete"
 msgstr "Видалити"
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:34
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__department_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__department_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__department_id
+#, python-format
 msgid "Department"
 msgstr "Відділ"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Department Allocation to Approve"
-msgstr ""
+msgstr "Відділ затвердження розподілу"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_approve_department
-msgid "Department Leaves"
-msgstr "Відпустки відділу"
+msgid "Department Time Off"
+msgstr "Відпустка відділу"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__depts
@@ -962,6 +1106,11 @@ msgid "Description"
 msgstr "Опис"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_channel
+msgid "Discussion Channel"
+msgstr "Канал обговорення"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__display_name
@@ -973,9 +1122,9 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: hr_holidays
-#: selection:hr.leave.type,validation_type:0
-msgid "Double Validation"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid "Display Time Off in Calendar"
+msgstr "Відображати відпустку у календарі"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -992,45 +1141,44 @@ msgstr "Тривалість"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_days
 msgid "Duration (Days)"
-msgstr ""
+msgstr "Тривалість (Дні)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days_display
 msgid "Duration (days)"
-msgstr ""
+msgstr "Тривалість (Дні)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_hours_display
 msgid "Duration (hours)"
-msgstr ""
+msgstr "Тривалість (години)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_days_display
 msgid "Duration in days"
-msgstr ""
+msgstr "Тривалість у днях"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days
 msgid "Duration in days. Reference field to use when necessary."
-msgstr ""
+msgstr "Тривалість у днях. Довідкове поле для використання при необхідності."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours_display
 msgid "Duration in hours"
-msgstr ""
+msgstr "Тривалість у годинах"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 msgid "Edit Allocation"
-msgstr ""
+msgstr "Редагувати бронювання"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "Edit Leave"
-msgstr ""
+msgid "Edit Time Off"
+msgstr "Редагувати відпустку"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__employee_id
@@ -1039,11 +1187,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Employee"
 msgstr "Співробітник"
-
-#. module: hr_holidays
-#: selection:hr.leave.type,validation_type:0
-msgid "Employee Manager"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__category_id
@@ -1061,46 +1204,58 @@ msgstr "Співробітник(и)"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_to
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__date_to
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__date_to
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__validity_stop
 msgid "End Date"
 msgstr "Кінцева дата"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_type.py:93
+#: code:addons/hr_holidays/models/hr_leave_type.py:101
 #, python-format
 msgid "End of validity period should be greater than start of validity period"
 msgstr ""
+"Період закінчення терміну дії повинен бути більшим, ніж початок періоду дії"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
+msgid ""
+"Field allowing to see the allocation duration in days or hours depending on "
+"the type_request_unit"
+msgstr ""
+"Поле дозволяє бачити бронювання тривалості у днях або годинах залежно від "
+"type_request_unit"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
+msgid ""
+"Field allowing to see the leave request duration in days or hours depending "
+"on the leave_type_request_unit"
+msgstr ""
+"Поле дозволяє бачити тривалість запиту на відпустку у днях та годинах "
+"залежно від leave_type_request_unit"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid ""
-"Filters only on allocations that belong to an leave type that is 'active' "
-"(active field is True)"
+"Filters only on allocations that belong to an time off type that is 'active'"
+" (active field is True)"
 msgstr ""
+"Фільтри лише для розподілу, який належить до типу \"активний\" (активне поле"
+" - Правильно)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid ""
-"Filters only on requests that belong to an leave type that is 'active' "
+"Filters only on requests that belong to an time off type that is 'active' "
 "(active field is True)"
 msgstr ""
+"Фільтри лише за запитами, які належать до типу \"активний\" (активне поле - "
+"Правильно)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__first_approver_id
 msgid "First Approval"
 msgstr "Перше затвердження"
-
-#. module: hr_holidays
-#: selection:hr.leave.type,allocation_type:0
-msgid "Fixed by HR"
-msgstr ""
-
-#. module: hr_holidays
-#: selection:hr.leave.type,allocation_type:0
-msgid "Fixed by HR + allocation request"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_follower_ids
@@ -1127,16 +1282,29 @@ msgid "Form content is missing, this report cannot be printed."
 msgstr "Формат вмісту відсутній, цей звіт неможливо роздрукувати."
 
 #. module: hr_holidays
+#: selection:hr.leave.type,allocation_type:0
+msgid "Free Allocation Request"
+msgstr "Вільні запити на розподіл"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__date_from
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__validity_start
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "From"
 msgstr "Від"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_from
 msgid "From Date"
 msgstr "Дата з"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "From:"
+msgstr "Від:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1147,10 +1315,11 @@ msgstr "Майбутня діяльність"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__payslip_status
 msgid ""
-"Green this button when the leave has been taken into account in the payslip."
+"Green this button when the time off has been taken into account in the "
+"payslip."
 msgstr ""
-"Позначте цю кнопку зеленим, коли ця відпустка буде відображена у розрахунку "
-"зарплати."
+"Позначте зеленим цю кнопку, коли відпустку буде внесено в облік "
+"розрахункових листів."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1161,8 +1330,8 @@ msgstr "Групувати за"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_leave
-msgid "Group Leaves"
-msgstr ""
+msgid "Group Time Off"
+msgstr "Групувати відпутски"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
@@ -1176,48 +1345,55 @@ msgstr "Відділ кадрів"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
-msgid "HR Leaves Summary Report By Department"
-msgstr "Підсумковий звіт відділу кадрів про відпустки по відділах"
+msgid "HR Time Off Summary Report By Department"
+msgstr "Підсумковий звіт відпусток відділу кадрів за відділом"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
-msgid "HR Leaves Summary Report By Employee"
-msgstr "Підсумковий звіт відділу кадрів про відпустки по співробітниках"
+msgid "HR Time Off Summary Report By Employee"
+msgstr "Підсумковий звіт відпусток відділу кадрів по співробітникам"
 
 #. module: hr_holidays
+#: selection:hr.leave.type,request_unit:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
 msgid "Half Day"
-msgstr ""
+msgstr "Півдня"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "Holidays Summary Report"
-msgstr ""
+msgstr "Зведений звіт про свята"
+
+#. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_home_working
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_home_working
+msgid "Home Working"
+msgstr "Робота з дому"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_hw
+msgid "Home Workings"
+msgstr "Робота з дому"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_from
 msgid "Hour from"
-msgstr ""
+msgstr "Година від"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_to
 msgid "Hour to"
-msgstr ""
+msgstr "Година до"
 
 #. module: hr_holidays
 #: selection:hr.leave.allocation,unit_per_interval:0
 msgid "Hour(s)"
-msgstr "Година (и)"
+msgstr "Година(и)"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,request_unit:0
 msgid "Hours"
 msgstr "Години"
-
-#. module: hr_holidays
-#: selection:hr.leave.type,validation_type:0
-msgid "Human Resource officer"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__id
@@ -1240,7 +1416,7 @@ msgstr "Якщо позначено, то повідомленя потребу�
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
@@ -1251,25 +1427,30 @@ msgstr "Якщо позначено, деякі повідомлення маю�
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "If no value set, runs indefinitely"
-msgstr ""
+msgstr "Якщо не встановлено жодних значень, працює нескінченно"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__active
 msgid ""
-"If the active field is set to false, it will allow you to hide the leave "
+"If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
 msgstr ""
-"Якщо активне поле встановлено на помилкве, це дозволить вам приховати тип "
-"відпустки, не видаляючи його."
+"Якщо активне поле встановлене на помилкове,  це дозволить вам приховати "
+"відпустку, не видаляючи її."
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave:0
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
 msgstr ""
+"Якщо ви хочете змінити кількість днів, ви повинні використовувати режим "
+"\"період\""
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:34
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#, python-format
 msgid "In"
 msgstr "В"
 
@@ -1282,7 +1463,7 @@ msgstr "Стежить"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
 msgid "Is Unpaid"
-msgstr ""
+msgstr "Неоплачено"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1292,7 +1473,7 @@ msgstr "Слонова кістка"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__time_type
 msgid "Kind of Leave"
-msgstr ""
+msgstr "Вид відпустки"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept____last_update
@@ -1332,214 +1513,27 @@ msgstr "Останні дії"
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
 msgid "Lavender"
-msgstr "Лаванда"
+msgstr "Лавандовий"
 
 #. module: hr_holidays
-#: selection:hr.leave.type,time_type:0
-#: model:ir.model,name:hr_holidays.model_hr_leave
-msgid "Leave"
-msgstr "Покинути"
-
-#. module: hr_holidays
-#: selection:hr.leave.report,type:0
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__holiday_id
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Leave Request"
 msgstr "Запит на відпустку"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
-msgid "Leave Requests"
-msgstr "Запити на відпустку"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_leave_report
-msgid "Leave Summary / Report"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_leave_type
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__holiday_type
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_status_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_status_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_status_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__name
-#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Leave Type"
 msgstr "Тип відпустки"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
-#: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
-msgid "Leave Types"
-msgstr "Типи відпусток"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
+msgid "Leaves Taken"
+msgstr "Використані відпустки"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:623
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:409
-#, python-format
-msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
-"Запит на відпустку повинен бути підтверджений (\"Затвердити\"), щоб його "
-"затвердити."
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:636
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:423
-#, python-format
-msgid "Leave request must be confirmed in order to approve it."
-msgstr "Запит на відпустку потрібно підтвердити, щоб його затвердити."
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:671
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:461
-#, python-format
-msgid "Leave request must be confirmed or validated in order to refuse it."
-msgstr ""
-"Запит на відпустку має бути підтверджений або підтверджений для відмови."
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:613
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:399
-#, python-format
-msgid ""
-"Leave request must be in Draft state (\"To Submit\") in order to confirm it."
-msgstr ""
-"Запит на відпустку має бути в стані \"Чернетки\" (\"Відправити\"), щоб "
-"підтвердити його."
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:597
-#, python-format
-msgid ""
-"Leave request state must be \"Refused\" or \"To Approve\" in order to be "
-"reset to draft."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:383
-#, python-format
-msgid ""
-"Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
-"to Draft."
-msgstr ""
-"Стан запиту на відпустку має бути \"Відмовлено\" або \"Затвердити\", щоб "
-"повернутися до Чернетки."
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
-msgid "Leave to Approve"
-msgstr "Відпустки до затвердження"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_all
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_root
-#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
-#: model:ir.ui.menu,name:hr_holidays.menu_open_employee_leave
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
-msgid "Leaves"
-msgstr "Відпустки"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_leave_allocation
-msgid "Leaves Allocation"
-msgstr "Бронювання відпусток"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
-msgid "Leaves Already Taken"
-msgstr "Використані віпустки"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
-#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
-msgid "Leaves Analysis"
-msgstr "Аналіз відпусток"
-
-#. module: hr_holidays
-#: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
-msgid "Leaves Approval"
-msgstr ""
-
-#. module: hr_holidays
-#: model:mail.message.subtype,name:hr_holidays.mt_department_leave_approved
-msgid "Leaves Approved"
-msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
-msgid "Leaves Left"
-msgstr "Залишок відпусток"
-
-#. module: hr_holidays
-#: model:mail.message.subtype,name:hr_holidays.mt_department_leave_refused
-msgid "Leaves Refused"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
-#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_payroll
-#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
-msgid "Leaves Requests"
-msgstr ""
-
-#. module: hr_holidays
-#: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
-msgid "Leaves Second Approve"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
-#: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
-#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary
-#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary2
-#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_graph
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_pivot
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
-msgid "Leaves Summary"
-msgstr "Підсумок відпусток"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
-msgid "Leaves Taken:"
-msgstr "Взяті відпустки:"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
-msgid "Leaves by Department"
-msgstr "Відпустки по відділах"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
-msgid "Leaves of Your Team Member"
-msgstr "Відпустки члена вашої команди"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll_to_report
-msgid "Leaves to report"
-msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
-msgid "Leaves."
-msgstr "Відпустки."
-
-#. module: hr_holidays
-#: model:hr.leave.type,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2018"
-msgstr "Законні відпустки 2018"
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "Leaves Taken/Total Allocated"
+msgstr "Використані відпустки/Всього заброньовано"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1595,8 +1589,8 @@ msgstr "Основне прикріплення"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__manager_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
 msgstr "Керівник"
 
@@ -1606,9 +1600,14 @@ msgid "Managers"
 msgstr "Керівники"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
+msgid "Max Leaves"
+msgstr "Максимум відпусток"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
-msgid "Max Leaves:"
-msgstr "Максимальні відпустки:"
+msgid "Max Time Off:"
+msgstr "Максимальний завершений час:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
@@ -1617,21 +1616,22 @@ msgstr "Максимально дозволено"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__remaining_leaves
-msgid "Maximum Leaves Allowed - Leaves Already Taken"
-msgstr "Максимально дозволено - відпустку вже використано"
+msgid "Maximum Time Off Allowed - Time Off Already Taken"
+msgstr "Дозволено максимальну відпустку - Відпустку повністю використано"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
+"Approval"
 msgstr ""
-"Максимально дозволено - відпустку вже використано - відпустки очікують "
-"затвердження"
+"Максимальну відпустку дозволено - Відпустку повністю використано - Відпустка"
+" очікує підтвердження"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__accrual_limit
 msgid "Maximum of allocation for accrual; 0 means no maximum."
-msgstr ""
+msgstr "Максимум бронювання для нарахування; 0 означає не максимум."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
@@ -1639,15 +1639,15 @@ msgid "Meeting"
 msgstr "Зустріч"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__categ_id
-msgid "Meeting Type"
-msgstr "Тип зустрічі"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
 msgstr "Помилка доставлення повідомлення"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_message_subtype
+msgid "Message subtypes"
+msgstr "Підтипи повідомлення"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_ids
@@ -1682,20 +1682,14 @@ msgstr "Ранок"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_my
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Allocations"
-msgstr ""
+msgstr "Мій розподіл"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
-msgid "My Department Leaves"
-msgstr "Відпустки мого відділу"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Leaves"
-msgstr "Мої відпустки"
+msgid "My Department Time Off"
+msgstr "Відпустка мого відділу"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1703,28 +1697,61 @@ msgid "My Requests"
 msgstr "Мої запити"
 
 #. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
+msgid "My Team"
+msgstr "Моя команда"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
-msgid "My Team Leaves"
-msgstr "Відпустки моєї команди"
+msgid "My Team Time Off"
+msgstr "Відпустка моєї команди"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "My Time Off"
+msgstr "Моя відпустка"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 msgid "New"
 msgstr "Новий"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
-#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_new_request
-msgid "New Request"
-msgstr "Новий запит"
+#: code:addons/hr_holidays/models/hr_leave.py:869
+#, python-format
+msgid "New %s Request created by %s from %s to %s"
+msgstr "Новий %s запит створений %s від %s до %s"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/js/time_off_calendar.js:59
+#, python-format
+msgid "New Allocation Request"
+msgstr "Новий запит на розподілення"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:583
+#, python-format
+msgid "New Allocation Request created by %s: %s Days of %s"
+msgstr "Новий запит на призначення створений %s: %s Днів %s"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/js/time_off_calendar.js:58
+#, python-format
+msgid "New Time Off Request"
+msgstr "Новий запит на відпустку"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Наступий дедлайн дії"
+msgstr "Дедлайн наступної дії"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
@@ -1736,12 +1763,30 @@ msgstr "Підсумок наступної дії"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_id
 msgid "Next Activity Type"
-msgstr "Наступний тип дії"
+msgstr "Тип наступної дії"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,allocation_type:0
-msgid "No allocation"
-msgstr ""
+msgid "No Allocation Needed"
+msgstr "Немає необхідності розподілу"
+
+#. module: hr_holidays
+#: selection:hr.leave.type,validation_type:0
+msgid "No Validation"
+msgstr "Немає перевірки"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:16
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:42
+#, python-format
+msgid "None"
+msgstr "Немає"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Notification"
+msgstr "Сповіщення"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction_counter
@@ -1753,26 +1798,33 @@ msgstr "Кількість дій"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__number_of_days
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Number of Days"
 msgstr "Кількість днів"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leaves_count
-msgid "Number of Leaves"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leaves_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leaves_count
+msgid "Number of Time Off"
 msgstr "Кількість відпусток"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days_display
+msgid ""
+"Number of days of the time off request according to your working schedule. "
+"Used for interface."
+msgstr ""
+"Кількість днів запиту на відпустку відповідно до вашого графіку роботи. "
+"Використано ля інтерфейсу."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
 msgid ""
-"Number of days of the leave request according to your working schedule."
+"Number of days of the time off request. Used in the calculation. To manually"
+" correct the duration, use this field."
 msgstr ""
-"Кількість днів запиту на відпустку відповідно до вашого робочого графіка."
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days_display
-msgid "Number of days of the leave request. Used for interface."
-msgstr ""
+"Кількість днів запиту на відпустку. Використано у підрахунку. Для ручного "
+"виправлення тривалості, використовуйте це поле."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -1783,9 +1835,11 @@ msgstr "Кількість помилок"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours_display
 msgid ""
-"Number of hours of the leave request according to your working schedule. "
+"Number of hours of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
+"Кількість годин запиту на відпустку відповідно до вашого робочого графіку. "
+"Використано для інтерфейсу."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -1802,12 +1856,12 @@ msgstr "Кількість повідомлень з помилковою дст
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__interval_number
 msgid "Number of unit between two intervals"
-msgstr ""
+msgstr "Кількість одиниць між двома інтервалами"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_per_interval
 msgid "Number of unit per interval"
-msgstr ""
+msgstr "Кількість одиниць між інтервалами"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_unread_counter
@@ -1816,59 +1870,71 @@ msgid "Number of unread messages"
 msgstr "Кількість непрочитаних повідомлень"
 
 #. module: hr_holidays
-#: model:res.groups,name:hr_holidays.group_hr_holidays_user
-msgid "Officer"
-msgstr "Начальник"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__categ_id
-msgid ""
-"Once a leave is validated, Odoo will create a corresponding meeting of this "
-"type in the calendar."
-msgstr "Після затвердження в календарі буде створено відповідні зустрічі. "
-
-#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_payroll
 msgid ""
-"Once you have recorded your leave request, it will be sent\n"
-"                to a manager for validation. Be sure to set the right leave\n"
-"                type (recuperation, legal leaves, sickness) and the exact\n"
-"                number of open days related to your leave."
+"Once a time off request is posted, your manager is notified for validation."
 msgstr ""
-"Після того, як ви записали запит на відпустку, він буде відправлений\n"
-"                 менеджеру для перевірки. Обов'язково встановіть правильний тип відпустки\n"
-"                 (видужування, законна відпустка, хвороба) і точну\n"
-"                 кількість відкритих днів, пов'язаних з вашою відпусткою."
+"Після публікації запиту на відпустку, ваш менеджер отримає повідомлення про "
+"перевірку."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:709
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:495
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/discuss.xml:5
+#, python-format
+msgid "Online"
+msgstr "Онлайн"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:827
 #, python-format
 msgid "Only a Leave Manager can approve its own requests."
-msgstr ""
+msgstr "Тільки менеджер відпусток може схвалити свої власні запити."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:698
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:484
+#: code:addons/hr_holidays/models/hr_leave.py:818
 #, python-format
 msgid "Only a Leave Manager can reset other people leaves."
-msgstr ""
+msgstr "Лише менеджер відпусток може скинути відпустки інших людей."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:702
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:488
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:551
 #, python-format
-msgid "Only a Leave Officer or Manager can approve or refuse leave requests."
-msgstr ""
+msgid "Only a time off Manager can approve its own requests."
+msgstr "Лише менеджер відпусток може затверджувати власні запити."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:718
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:504
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:540
+#, python-format
+msgid "Only a time off Manager can reset other people time off."
+msgstr "Лише менеджер відпусток може відхиляти відпустки іншим людям."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:544
+#, python-format
+msgid ""
+"Only a time off Officer or Manager can approve or refuse time off requests."
+msgstr ""
+"Лише керівник відпусток або менеджер можуть затверджувати або відмовляти у "
+"запитах на відпустки."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:843
 #, python-format
 msgid "Only an Leave Manager can apply the second approval on leave requests."
 msgstr ""
+"Тільки менеджер відпусток може застосувати друге схвалення на запит на "
+"відпустку."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:560
+#, python-format
+msgid ""
+"Only an time off Manager can apply the second approval on time off requests."
+msgstr ""
+"Лише менеджер відпусток може застосувати друге затвердження запитів на "
+"відпустки."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1881,25 +1947,27 @@ msgid "Other"
 msgstr "Інше"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__out_of_office_message
+msgid "Out of Office Message"
+msgstr "Повідомлення з офісу"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/discuss.xml:6
+#, python-format
+msgid "Out of office"
+msgstr "З офісу"
+
+#. module: hr_holidays
 #: selection:hr.leave,activity_state:0
 #: selection:hr.leave.allocation,activity_state:0
 msgid "Overdue"
 msgstr "Протерміновано"
 
 #. module: hr_holidays
-#: model:hr.leave.type,name:hr_holidays.hr_holiday_status_hl
-msgid "Overtime Compensation"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
-msgid "Overview"
-msgstr "Загальний огляд"
-
-#. module: hr_holidays
-#: model:hr.leave.type,name:hr_holidays.holiday_status_cla
-msgid "Paid Time Off 2018"
-msgstr ""
+#: model:hr.leave.type,name:hr_holidays.holiday_status_cl
+msgid "Paid Time Off 2019"
+msgstr "Оплачений відпустка за 2019"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
@@ -1908,14 +1976,14 @@ msgid "Parent"
 msgstr "Батьківський"
 
 #. module: hr_holidays
-#: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Leaves"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll
 msgid "Payroll"
 msgstr "Зарплата"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "People I Manage"
+msgstr "Люди, якими я керую"
 
 #. module: hr_holidays
 #: selection:hr.leave,activity_state:0
@@ -1941,8 +2009,8 @@ msgid "Red"
 msgstr "Червоний"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:781
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:565
+#: code:addons/hr_holidays/models/hr_leave.py:916
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:630
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -1954,10 +2022,11 @@ msgid "Refuse"
 msgstr "Відхилити"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.leave,state:0
-#: selection:hr.leave.allocation,state:0 selection:hr.leave.report,state:0
-#: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation_refused
-#: model:mail.message.subtype,name:hr_holidays.mt_leave_refused
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
+#: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
+#: selection:hr.leave.report,state:0
 msgid "Refused"
 msgstr "Відхилено"
 
@@ -1972,16 +2041,20 @@ msgid "Remaining Days"
 msgstr "Залишилось днів"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__remaining_leaves
-msgid "Remaining Leaves"
-msgstr "Залишилось відпусток"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__remaining_leaves
-msgid "Remaining Legal Leaves"
-msgstr "Залишок дозволених відпусток"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
+msgid "Remaining Paid Time Off"
+msgstr "Залишок оплачуваної відпустки"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__remaining_leaves
+msgid "Remaining Time Off"
+msgstr "Залишок відпустки"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Remaining leaves"
 msgstr "Залишок відпусток"
@@ -1989,7 +2062,7 @@ msgstr "Залишок відпусток"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_dept
 msgid "Report by Department"
-msgstr ""
+msgstr "Звіт відділу"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__payslip_status
@@ -2003,31 +2076,34 @@ msgid "Reporting"
 msgstr "Звітність"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+msgid "Request Allocation"
+msgstr "Запит на розподіл"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
-msgstr ""
+msgstr "Кінцева дата запиту"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
-msgstr ""
+msgstr "Початкова дата запиту"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__type
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+msgid "Request Time off"
+msgstr "Запит на відпустку"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
 msgid "Request Type"
 msgstr "Тип запиту"
 
 #. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_leave_allocation_approved
-#: model:mail.message.subtype,description:hr_holidays.mt_leave_approved
-msgid "Request approved"
-msgstr "Запит підтверджено"
-
-#. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_leave_allocation_refused
-#: model:mail.message.subtype,description:hr_holidays.mt_leave_refused
-msgid "Request refused"
-msgstr "Запит відхилено"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
+msgid "Requested (Days/Hours)"
+msgstr "Запитані (Дні/Години)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -2037,8 +2113,13 @@ msgstr "Зробити чернеткою"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
-msgid "Resource Leaves Detail"
-msgstr "Деталі відпустки ресурсу"
+msgid "Resource Time Off Detail"
+msgstr "Деталі робочого часу ресурсу"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
+msgid "Responsible"
+msgstr "Відповідальний"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -2049,28 +2130,28 @@ msgstr "Відповідальний користувач"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run Until"
-msgstr ""
+msgstr "Запуск до"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
-msgstr ""
+msgstr "Запуск до"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
-msgid "Search Leave"
-msgstr "Пошук відпусток"
+msgid "Search Time Off"
+msgstr "Пошук відпустки"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
-msgid "Search Leave Type"
-msgstr "Пошук типу відпусток"
+msgid "Search Time Off Type"
+msgstr "Пошук типу відпустки"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Search allocations"
-msgstr ""
+msgstr "Пошук бронювань"
 
 #. module: hr_holidays
 #: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
@@ -2082,8 +2163,8 @@ msgstr "Друге підтвердження"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
-msgid "Select Leave Type"
-msgstr "Оберіть тип відпустки"
+msgid "Select Time Off Type"
+msgstr "Обрати тип відпустки"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__sequence
@@ -2098,14 +2179,15 @@ msgstr "Показати всі записи, які мають дату нас�
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_sl
-msgid "Sick Leaves"
-msgstr "Лікарняні"
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
+msgid "Sick Time Off"
+msgstr "Лікарняний"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__date_from
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__date_from
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__validity_start
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Start Date"
@@ -2128,7 +2210,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Етап заснований на діях\n"
-"Прострочений: термін виконання вже минув\n"
+"Протермінований: термін виконання вже минув\n"
 "Сьогодні: дата дії сьогодні\n"
 "Заплановано: майбутні дії."
 
@@ -2138,16 +2220,26 @@ msgid "Sum"
 msgstr "Всього"
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
-msgid "Summary"
-msgstr "Підсумок"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
-msgid "Take Leaves in"
-msgstr ""
+msgid "Take Time Off in"
+msgstr "Взяти відпустку на"
+
+#. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_team_leader
+msgid "Team Approver"
+msgstr "Затверджуючий команди "
+
+#. module: hr_holidays
+#: selection:hr.leave.type,validation_type:0
+msgid "Team Leader"
+msgstr "Лідер команди"
+
+#. module: hr_holidays
+#: selection:hr.leave.type,validation_type:0
+msgid "Team Leader and Time Off Officer"
+msgstr "Лідер команди та керівник відпусток"
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave:0 sql_constraint:hr.leave.allocation:0
@@ -2155,11 +2247,14 @@ msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
 msgstr ""
+"Категорія цього співробітника, відділу, компанії чи співробітника цього "
+"запиту відсутня. Переконайтеся, що ваш обліковий запис користувача "
+"пов'язаний з працівником."
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave.allocation:0
 msgid "The interval number should be greater than 0"
-msgstr ""
+msgstr "Номер інтервалу повинен бути більше 0"
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave.allocation:0
@@ -2167,17 +2262,19 @@ msgid "The number of days must be greater than 0."
 msgstr "Кількість днів повинна бути більша за 0."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:407
+#: code:addons/hr_holidays/models/hr_leave.py:462
 #, python-format
 msgid ""
-"The number of remaining leaves is not sufficient for this leave type.\n"
-"Please also check the leaves waiting for validation."
+"The number of remaining time off is not sufficient for this time off type.\n"
+"Please also check the time off waiting for validation."
 msgstr ""
+"Кількість залишеної відпустки, не є достатньою для цього типу відпустки.\n"
+"Перевірте також відпустки, які очікують на перевірку."
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave.allocation:0
 msgid "The number per interval should be greater than 0"
-msgstr ""
+msgstr "Число в кожному інтервалі повинно бути більше 0"
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave:0
@@ -2188,72 +2285,322 @@ msgstr "Початкова дата повинна бути раніше за к
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
 msgid ""
-"The status is set to 'To Submit', when a leave request is created.\n"
-"The status is 'To Approve', when leave request is confirmed by user.\n"
-"The status is 'Refused', when leave request is refused by manager.\n"
-"The status is 'Approved', when leave request is approved by manager."
+"The status is set to 'To Submit', when a time off request is created.\n"
+"The status is 'To Approve', when time off request is confirmed by user.\n"
+"The status is 'Refused', when time off request is refused by manager.\n"
+"The status is 'Approved', when time off request is approved by manager."
 msgstr ""
-"Статус встановлено на \"Надіслати\", коли запит на відпустку створений.\n"
-"Статус \"Затвердити\", коли запит на відпустку підтверджується користувачем.\n"
-"Статус \"Відмовлено\", коли менеджер відхиляє запит на відпустку.\n"
-"Статус \"Затверджено\", коли запит на відпустку затверджується менеджером."
+"Статус встановлено на 'Відправити', коли створюється запит на відпустку.\n"
+"Статус встановлено на 'Затвердити', коли запит на відпустку підтверджено користувачем.\n"
+"Статус встановлено на 'Відмовлено', коли менеджер відхиляє запит на відпустку.\n"
+"Статус встановлено на 'Затверджено', коли запит на відпустку підтверджено менеджером."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:569
+#, python-format
+msgid "The time off has been automatically approved"
+msgstr "Відпустка автоматично затверджена"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
 msgid ""
-"The type with the smallest sequence is the default value in leave request"
+"The type with the smallest sequence is the default value in time off request"
 msgstr ""
+"Тип з найменшою послідовністю - це значення за замовчуванням у запиті на "
+"відпустку"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__first_approver_id
-msgid "This area is automatically filled by the user who validate the leave"
+msgid ""
+"This area is automatically filled by the user who validate the time off"
 msgstr ""
-"Ця область автоматично заповнюється користувачем, який підтверджує відпустку"
+"Ця область автоматично заповнюється користувачем, який перевіряє відпустку"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validate the leave with "
-"second level (If Leave type need second validation)"
+"This area is automaticly filled by the user who validate the time off with "
+"second level (If time off type need second validation)"
 msgstr ""
-"Ця область автоматично заповнюється користувачем, який підтверджує відпустку"
-" на другому рівні (якщо тип відпустки потребує другої перевірки)"
+"Ця область автоматично заповнюється користувачем, який перевіряє відпустку з"
+" другим рівнем (Якщо відпустка потребує другої перевірки)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
 msgid ""
-"This color will be used in the leaves summary located in Reporting > Leaves "
-"by Department."
+"This color will be used in the time off summary located in Reporting > Time "
+"off by Department."
 msgstr ""
-"Цей колір буде використано у підсумку відпустки, розташованому у розділі "
-"Звітування > Відпустки за відділом."
+"Цей колір буде використано у підсумку про відпустку, розташованому у Звіт > "
+"Відпустки за відділом."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__valid
 msgid "This indicates if it is still possible to use this type of leave"
+msgstr "Це вказує, чи можна використовувати цей тип відпустки"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
+msgid ""
+"This user will be responsible for approving this type of times offThis is "
+"only used when validation is 'hr' or 'both'"
 msgstr ""
+"Цей користувач несе відповідальність за затвердження цього виду відпусток. "
+"Це використовується лише тоді, коли перевірка дорівнює \"відділу кадрів\" "
+"або \"обом\""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
 msgid ""
-"This value is given by the sum of all leaves requests with a negative value."
+"This value is given by the sum of all time off requests with a negative "
+"value."
 msgstr ""
-"Ця величина визначається сумою всіх запитів на відпустку з від'ємним "
-"значенням."
+"Це значення задається сумою усіх запитів на відпустку з від'ємним значенням."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
 msgid ""
-"This value is given by the sum of all leaves requests with a positive value."
+"This value is given by the sum of all time off requests with a positive "
+"value."
 msgstr ""
-"Ця величина задана сумою всіх запитів на відпустку з позитивним значенням."
+"Це значення задається сумою всіх запитів на відпустку з позитивним "
+"значенням."
 
 #. module: hr_holidays
+#: selection:hr.leave.type,time_type:0
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_all
+#: model:ir.model,name:hr_holidays.model_hr_leave
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_root
+#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
+#: model:ir.ui.menu,name:hr_holidays.menu_open_employee_leave
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model:mail.message.subtype,name:hr_holidays.mt_leave
+msgid "Time Off"
+msgstr "Відпустка"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr "Розподіл на відпустку"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
+msgid "Time Off Analysis"
+msgstr "Аналіз відпустки"
+
+#. module: hr_holidays
+#: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
+msgid "Time Off Approval"
+msgstr "Дозвіл на відпустку"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
+msgid "Time Off Notification Subtype"
+msgstr "Підтип сповіщення про відпустку"
+
+#. module: hr_holidays
+#: selection:hr.leave.type,validation_type:0
+msgid "Time Off Officer"
+msgstr "Керівник відпусток"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
+msgid ""
+"Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
+"                Employees request allocations to Time Off Officers (e.g. recuperation days)."
+msgstr ""
+"Керівник відпустки розподіляє дні співробітникам (напр., оплачувана відпустка).<br>\n"
+"                Запит співробітників призначається керівникам відпусток (напр., дні відновлення)."
+
+#. module: hr_holidays
+#: selection:hr.leave.report,leave_type:0
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model:mail.message.subtype,description:hr_holidays.mt_leave
+msgid "Time Off Request"
+msgstr "Запит на відпустку"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_payroll
+#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+msgid "Time Off Requests"
+msgstr "Запити на відпустку"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
+msgid "Time Off Responsible"
+msgstr "Відповідальний за відпустку"
+
+#. module: hr_holidays
+#: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
+msgid "Time Off Second Approve"
+msgstr "Друге підтвердження відпустки"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
+#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary
+#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary2
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_graph
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_pivot
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
+msgid "Time Off Summary"
+msgstr "Підсумок відпустки"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_report
+msgid "Time Off Summary / Report"
+msgstr "Підсумок/Звіт відпустки"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
+msgid "Time Off Taken:"
+msgstr "Використана відпустка:"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__holiday_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__name
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
+msgid "Time Off Type"
+msgstr "Тип відпустки"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
+msgid "Time Off Types"
+msgstr "Типи відпустки"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
+msgid "Time Off by Department"
+msgstr "Відпустка за відділом"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Time Off of Your Team Member"
+msgstr "Відпустка члена вашої команди"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:9
+#, python-format
+msgid "Time Off taken by"
+msgstr "Відпустку використано"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
+msgid "Time Off to Approve"
+msgstr "Відпустка на затвердження"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll_to_report
+msgid "Time Off to report"
+msgstr "Відпустка для звіту"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Time Off."
+msgstr "Відпустка."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
+msgid "Time off Already Taken"
+msgstr "Відпустка вже використана"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Time off of Your Team Members"
+msgstr "Відпустки членів вашої команди"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Time off of people you are manager of"
+msgstr "Відпустка людей, якими ви керуєте"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:734
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:463
+#, python-format
+msgid ""
+"Time off request must be confirmed (\"To Approve\") in order to approve it."
+msgstr ""
+"Запит на відпустку потрібно підтвердити (\"Підтвердити\") щоб схвалити його."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:747
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:477
+#, python-format
+msgid "Time off request must be confirmed in order to approve it."
+msgstr "Запит на відпустку потрібно підтвердити, щоб схвалити його."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:788
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:515
+#, python-format
+msgid "Time off request must be confirmed or validated in order to refuse it."
+msgstr ""
+"Запит на відпустку потрібно підтвердити чи перевірити, щоби відхилити його."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:724
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:453
+#, python-format
+msgid ""
+"Time off request must be in Draft state (\"To Submit\") in order to confirm "
+"it."
+msgstr ""
+"Запит на відпустку має бути у стані чернетки (\"Відправити\"), щоби "
+"підтвердити його."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:708
+#, python-format
+msgid ""
+"Time off request state must be \"Refused\" or \"To Approve\" in order to be "
+"reset to draft."
+msgstr ""
+"Стан запиту на відпустку має бути \"Відхилено\" чи \"Підтвердити\", щоби "
+"перемістити у чернетку."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:437
+#, python-format
+msgid ""
+"Time off request state must be \"Refused\" or \"To Approve\" in order to "
+"reset to Draft."
+msgstr ""
+"Стан запиту на відпустку має бути \"Відхилено\" або \"Підтвердити\", щоби "
+"перемістити у Чернетку."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__validity_stop
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "To"
-msgstr "По"
+msgstr "До"
 
 #. module: hr_holidays
 #: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
@@ -2267,6 +2614,9 @@ msgstr "Необхідно затвердити"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_date_to
 msgid "To Date"
 msgstr "По дату"
 
@@ -2289,6 +2639,11 @@ msgid "To Submit"
 msgstr "До розгляду"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "To:"
+msgstr "До:"
+
+#. module: hr_holidays
 #: selection:hr.leave,activity_state:0
 #: selection:hr.leave.allocation,activity_state:0
 msgid "Today"
@@ -2306,25 +2661,33 @@ msgid "Total Employee"
 msgstr "Всього працівників"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-msgid "Total allocated days"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_count
+msgid "Total number of days allocated."
+msgstr "Загальна кількість днів розподілена."
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
-msgid "Total leaves"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_used_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocation_used_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_used_count
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_used_count
+msgid "Total number of days off used"
+msgstr "Загальна кількість днів відпустки використовується"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__remaining_leaves
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_base__remaining_leaves
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid ""
-"Total number of legal leaves allocated to this employee, change this value "
-"to create allocation/leave request. Total based on all the leave types "
-"without overriding limit."
+"Total number of paid time off allocated to this employee, change this value "
+"to create allocation/time off request. Total based on all the time off types"
+" without overriding limit."
 msgstr ""
-"Загальна кількість відпусток, що виділяються для цього працівника, змінюють "
-"це значення для створення запиту про бронювання/відпустку. Усього на основі "
-"всіх типів відпусток без перевищення ліміту."
+"Загальне кількість оплачуваної відпустки розподілено співробітнику, змініть "
+"це значення, щоби створити розподілення/запит на відпустку. Сума базується "
+"на всіх типах відпусток без перевизначення ліміту."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2339,6 +2702,8 @@ msgid ""
 "UX field allowing to see and modify the allocation duration, computed in "
 "days."
 msgstr ""
+"Поле UX, що дозволяє бачити і змінювати заброньовану тривалість, обчислену в"
+" днях."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -2346,21 +2711,29 @@ msgid ""
 "UX field allowing to see and modify the allocation duration, computed in "
 "hours."
 msgstr ""
+"Поле UX, що дозволяє бачити і змінювати тривалість бронювання, обчислену в "
+"годинах."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__unit_per_interval
 msgid "Unit of time added at each interval"
-msgstr ""
+msgstr "Одиниця часу, додана в кожному інтервалі"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__interval_unit
 msgid "Unit of time between two intervals"
-msgstr ""
+msgstr "Одиниця часу між двома інтервалами"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
 msgstr "Неоплачено"
+
+#. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_unpaid
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_unpaid
+msgid "Unpaid Time Off"
+msgstr "Неоплачувані відпустки"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_unread
@@ -2382,29 +2755,44 @@ msgid "User"
 msgstr "Користувач"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_res_users__leave_manager_id
+msgid ""
+"User responsible of leaves approval. Should be Team Leader or Department "
+"Manager."
+msgstr ""
+"Користувач відповідає за схвалення відпустки. Має бути керівник групи або "
+"менеджер відділу."
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_users
+msgid "Users"
+msgstr "Користувачі"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__valid
 msgid "Valid"
 msgstr "Дійсний"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Validate"
 msgstr "Підтвердити"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
-msgid "Validation"
-msgstr "Підтвердження"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__validation_type
-msgid "Validation By"
-msgstr "Перевірка по"
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Validation"
+msgstr "Підтвердження"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2424,16 +2812,20 @@ msgstr "Фіолетовий"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
-msgid "Virtual Remaining Leaves"
-msgstr "Теоретичний залишок відпусток"
+msgid "Virtual Remaining Time Off"
+msgstr "Віртуальний залишок відпустки"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 msgid "Waiting Approval"
 msgstr "Очікує затвердження"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
+#: selection:hr.employee.base,current_leave_state:0
+#: selection:hr.employee.public,current_leave_state:0
 msgid "Waiting Second Approval"
 msgstr "Очікує другого затвердження"
 
@@ -2441,7 +2833,7 @@ msgstr "Очікує другого затвердження"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__website_message_ids
 msgid "Website Messages"
-msgstr "Повідомлення з вебсайту"
+msgstr "Повідомлення з веб-сайту"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__website_message_ids
@@ -2472,55 +2864,123 @@ msgid "Year(s)"
 msgstr "Рік(роки)"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:326
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:364
 #, python-format
 msgid "You can allocate %s only between %s and %s"
-msgstr ""
+msgstr "Ви можете забронювати %s лише між %s та %s"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:397
+#: code:addons/hr_holidays/models/hr_leave.py:764
 #, python-format
 msgid "You can not have 2 leaves that overlaps on the same day."
-msgstr ""
+msgstr "Ви не можете мати 2 відпустки, які перекриваються в той же день."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:463
+#: code:addons/hr_holidays/models/hr_leave.py:452
+#, python-format
+msgid ""
+"You can not set 2 times off that overlaps on the same day for the same "
+"employee."
+msgstr ""
+"Ви не можете встановити дві відпустки, що перетинається у той же день для "
+"одного й того ж працівника."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:536
+#, python-format
+msgid "You can take %s from %s"
+msgstr "Ви можете взяти %s з %s"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:531
 #, python-format
 msgid "You can take %s only between %s and %s"
-msgstr ""
+msgstr "Ви можете взяти %s тільки між %s та %s"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:511
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:354
+#: code:addons/hr_holidays/models/hr_leave.py:541
 #, python-format
-msgid "You cannot delete a leave which is in %s state."
-msgstr "Ви не можете вилучити відпустку, що у стані %s."
+msgid "You can take %s until %s"
+msgstr "Ви можете взяти %s до %s"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:614
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:399
+#, python-format
+msgid "You cannot delete a time off which is in %s state."
+msgstr "Ви не можете видалити відпустку, яка перебуває у стані %s."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one department."
-msgstr ""
+msgstr "Ви повинні вибрати принаймні одне відділення."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:714
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:500
+#: code:addons/hr_holidays/models/hr_leave.py:840
 #, python-format
 msgid "You must be either %s's manager or Leave manager to approve this leave"
 msgstr ""
+"Ви повинні бути менеджером %s або менеджером відпусток, щоби затвердити цю "
+"відпустку"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:556
+#, python-format
+msgid ""
+"You must be either %s's manager or time off manager to approve this time off"
+msgstr ""
+"Ви повинні бути керівником %s або менеджером відпустки, щоби затвердити цю "
+"відпустку"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:414
+#, python-format
+msgid "day(s)"
+msgstr "день(дні)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:234
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#, python-format
 msgid "days"
 msgstr "днів"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
 msgid "e.g. Report to the next month..."
 msgstr "наприклад, Запит на наступний місяць"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:34
+#, python-format
+msgid "for"
+msgstr "для"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:414
+#, python-format
+msgid "hour(s)"
+msgstr "година(и)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:234
+#, python-format
+msgid "hours"
+msgstr "годин"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:9
+#, python-format
+msgid "in"
+msgstr "в"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2530,4 +2990,4 @@ msgstr "для"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
-msgstr "по"
+msgstr "до"

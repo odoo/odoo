@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux, 2017
 # Mario Jureša <mario.juresa@uvid.hr>, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
-# Tina Milas, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2018
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2018
 # Marko Carević <marko.carevic@live.com>, 2018
+# Tina Milas, 2018
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
 # Ivan Marijanović <ivanm101@yahoo.com>, 2018
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Ivan Marijanović <ivanm101@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Vladimir Olujić <olujic.vladimir@storm.hr>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,9 +31,31 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "Potrebna dodatna radnja"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -74,7 +98,7 @@ msgstr "Dodaj novu oznaku"
 #: code:addons/note/static/src/xml/systray.xml:14
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "Dodaj bilješku"
 
 #. module: note
 #. openerp-web
@@ -89,19 +113,21 @@ msgid "Archive"
 msgstr "Arhiviraj"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr "Broj priloga"
+
+#. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Po kategoriji bilješke"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "Kategorija"
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:10
+#, python-format
+msgid "Channel"
+msgstr "Kanal"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__color
@@ -146,9 +172,19 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr "Padajući izbornik"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Zatvoreno (zadano)"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -226,7 +262,12 @@ msgstr "Vrijeme promjene"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Posljednje aktivnosti"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Glavni prilog"
 
 #. module: note
 #: selection:mail.activity.type,category:0
@@ -241,7 +282,7 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška pri isporuci poruke"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -261,7 +302,7 @@ msgstr "Novi"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Krajnji rok slijedeće aktivnosti"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
@@ -271,7 +312,12 @@ msgstr "Sažetak sljedeće aktivnosti"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip sljedeće aktivnosti"
+
+#. module: note
+#: selection:mail.activity.type,category:0
+msgid "None"
+msgstr "Ništa"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -311,6 +357,13 @@ msgid "Notes"
 msgstr "Bilješke"
 
 #. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Broj akcija"
@@ -318,7 +371,7 @@ msgstr "Broj akcija"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
@@ -328,17 +381,12 @@ msgstr "Broj poruka koje zahtijevaju aktivnost"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Broj nepročitanih poruka"
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Ostalo"
 
 #. module: note
 #: selection:note.note,activity_state:0
@@ -377,7 +425,7 @@ msgstr ""
 #: selection:mail.activity.type,category:0
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "Podsjetnik"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
@@ -396,6 +444,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
 msgstr "Sekvenca"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:18
+#, python-format
+msgid "Set date and time"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -466,7 +521,7 @@ msgstr "Oznake"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray.js:90
+#: code:addons/note/static/src/js/systray_activity_menu.js:98
 #: selection:note.note,activity_state:0
 #, python-format
 msgid "Today"
@@ -493,13 +548,8 @@ msgid "Unread Messages Counter"
 msgstr "Brojač nepročitanih poruka"
 
 #. module: note
-#: model_terms:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
+#: selection:mail.activity.type,category:0
+msgid "Upload Document"
 msgstr ""
 
 #. module: note
@@ -511,12 +561,3 @@ msgstr "Koristi se za poredak faza bilješki"
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Korisnici"
-
-#. module: note
-#: model_terms:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
-"Možete prilagoditi način procesiranja Vaših bilježaka/zadataka dodajući, "
-"uklanjajući ili mijenjajući stupce."

@@ -1,16 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * calendar
+# 	* calendar
 # 
 # Translators:
-# Martin Trigaux, 2018
+# nasaaskii <nasaaskii@gmail.com>, 2018
+# Batzul B <batzul.active@gmail.com>, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Tsogjav <Tsogjav2007@yahoo.com>, 2018
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +37,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: Огноо шинэчлэгдсэн"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:741
+#: code:addons/calendar/models/calendar.py:751
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -39,57 +47,22 @@ msgstr ""
 " %s %s (%s) хүртэл"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:732
+#: code:addons/calendar/models/calendar.py:742
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s (%s-д %s хүртэл) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:229
+#: code:addons/calendar/models/calendar.py:230
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s урилгыг хүлээн авсан"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:237
+#: code:addons/calendar/models/calendar.py:239
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s урилгаас татгалзсан"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_5
-msgid "1 Day(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_3
-msgid "1 Hour(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_1
-msgid "15 Minute(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_4
-msgid "2 Hour(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_1
-msgid "3 Hour(s), by e-mail"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_2
-msgid "30 Minute(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_2
-msgid "6 Hour(s), by e-mail"
-msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -333,6 +306,18 @@ msgid "Action Needed"
 msgstr "Үйлдэл Шаардлагатай"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
@@ -351,18 +336,18 @@ msgstr "Ажилбар"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "Ажилбарын төрөл"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 #, python-format
 msgid "All Day"
 msgstr "Өдөржин"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:728
+#: code:addons/calendar/models/calendar.py:738
 #, python-format
 msgid "AllDay , %s"
 msgstr "Бүтэн өдөр , %s"
@@ -380,7 +365,7 @@ msgstr "Хавсралт"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Хавсралтын тоо"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
@@ -406,7 +391,7 @@ msgid "Availability"
 msgstr "Бэлэн байдал"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1693
+#: code:addons/calendar/models/calendar.py:1709
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -458,16 +443,6 @@ msgstr ""
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
 msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
-msgid "Category"
-msgstr "Ангилал"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -555,7 +530,7 @@ msgstr "Тодорхойлолт"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:18
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:13
 #, python-format
 msgid "Details"
 msgstr "Задаргаа"
@@ -604,10 +579,20 @@ msgid "Duration in minutes"
 msgstr "Үргэлжлэх хугацаа минутаар"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:calendar.alarm,alarm_type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
 msgid "Email"
 msgstr "Имэйл"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hour(s)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -666,12 +651,6 @@ msgid "Event Time"
 msgstr "Арга хэмжээний цаг"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1234
-#, python-format
-msgid "Event recurrence interval cannot be negative."
-msgstr "Арга хэмжээний давталт хасах тоо байж болохгүй."
-
-#. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "Бүгд"
@@ -693,7 +672,7 @@ msgid "First"
 msgstr "Эхний"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:998
+#: code:addons/calendar/models/calendar.py:1013
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Эхлээд урилгын огноог зааж өгөх хэрэгтэй."
@@ -745,7 +724,7 @@ msgid "Group By"
 msgstr "Бүлэглэх"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1636
+#: code:addons/calendar/models/calendar.py:1652
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -755,7 +734,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Routing"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -787,7 +766,7 @@ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад ан
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Үүнийг сонговол алдаа үүсэх үед зурвасууд ирнэ."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -906,7 +885,7 @@ msgstr "Лого"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Үндсэн хавсралт"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
@@ -920,8 +899,8 @@ msgid "Meeting"
 msgstr "Уулзалт"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:942
-#: code:addons/calendar/models/calendar.py:947
+#: code:addons/calendar/models/calendar.py:957
+#: code:addons/calendar/models/calendar.py:962
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
@@ -966,7 +945,7 @@ msgstr "Зурвас"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Алдаа үүссэн талаарх мессеж"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -1021,9 +1000,39 @@ msgid "No I'm not going."
 msgstr "Үгүй би явахгүй."
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:mail.activity.type,category:0
+msgid "None"
+msgstr "Байхгүй"
+
+#. module: calendar
+#: selection:calendar.alarm,alarm_type:0
 msgid "Notification"
 msgstr "Мэдэгдэл"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Day(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minute(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hour(s)"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minute(s)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1033,7 +1042,7 @@ msgstr "Үйлдлийн тоо"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Алдааны тоо"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
@@ -1043,7 +1052,7 @@ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -1057,7 +1066,7 @@ msgstr "Уншаагүй зурвасын тоо"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:17
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:12
 #, python-format
 msgid "OK"
 msgstr "OK"
@@ -1088,11 +1097,6 @@ msgid "Options"
 msgstr "Сонголтууд"
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Бусад"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
@@ -1109,7 +1113,7 @@ msgid "Partner-related data of the user"
 msgstr "Хэрэглэгчийн харилцагчтай холбоотой өгөгдөл"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1247
+#: code:addons/calendar/models/calendar.py:1264
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Сарын зөв өдөрийг сонгоно уу."
@@ -1163,7 +1167,7 @@ msgstr ""
 #. module: calendar
 #: selection:mail.activity.type,category:0
 msgid "Reminder"
-msgstr ""
+msgstr "Сануулга"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -1202,7 +1206,7 @@ msgid "Responsible"
 msgstr "Хариуцагч"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: selection:calendar.alarm,alarm_type:0
 msgid "SMS Text Message"
 msgstr ""
 
@@ -1248,7 +1252,7 @@ msgstr "Үзүүлэх цаг"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:19
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:14
 #, python-format
 msgid "Snooze"
 msgstr "Хүлээлгэ"
@@ -1351,16 +1355,28 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:941
+#: code:addons/calendar/models/calendar.py:956
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:946
+#: code:addons/calendar/models/calendar.py:961
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1249
+#, python-format
+msgid "The interval cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:1251
+#, python-format
+msgid "The number of repetitions  cannot be negative."
 msgstr ""
 
 #. module: calendar
@@ -1384,6 +1400,11 @@ msgid "Thursday"
 msgstr "Пүрэв"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+msgid "Timezone"
+msgstr "Цагийн бүс"
+
+#. module: calendar
 #: code:addons/calendar/models/res_users.py:41
 #, python-format
 msgid "Today's Meetings"
@@ -1400,7 +1421,7 @@ msgid "Tuesday"
 msgstr "Мягмар"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "Төрөл"
 
@@ -1442,6 +1463,11 @@ msgid "Update only this instance"
 msgstr "Зөвхөн энэ тохиолдлыг шинэчлэх"
 
 #. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Upload Document"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_users
 msgid "Users"
 msgstr "Хэрэглэгчид"
@@ -1477,7 +1503,7 @@ msgid "Yes I'm going."
 msgstr "Тиймээ би явна."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:159
+#: code:addons/calendar/models/calendar.py:160
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "Цаглабарын ирцыг хувилж болохгүй"
@@ -1486,9 +1512,3 @@ msgstr "Цаглабарын ирцыг хувилж болохгүй"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "ж: Бизнес үдийн хоол"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1232
-#, python-format
-msgid "interval cannot be negative."
-msgstr "муж сөрөг байж болохгүй."

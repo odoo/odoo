@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_automation
+# 	* base_automation
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Quim - eccit <quim@eccit.com>, 2018
-# Manel Fernandez <manelfera@outlook.com>, 2018
+# Manel Fernandez <manelfera@outlook.com>, 2019
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2019
+# Quim - eccit <quim@eccit.com>, 2019
+# RGB Consulting <odoo@rgbconsulting.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:26+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,42 +114,6 @@ msgid "Base Action Rule: check and execute"
 msgstr ""
 
 #. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_recursive
-#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
-msgid "Base Automation: test recursive rule"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_create
-#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
-msgid "Base Automation: test rule on create"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_recompute
-#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
-msgid "Base Automation: test rule on recompute"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_line
-#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
-msgid "Base Automation: test rule on secondary model"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
-msgid "Base Automation: test rule on write"
-msgstr ""
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write_check_context
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
-msgid "Base Automation: test rule on write check context"
-msgstr ""
-
-#. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
 msgstr "Basat en el formulari de modificació "
@@ -172,6 +136,11 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
+msgid "Binding View Types"
 msgstr ""
 
 #. module: base_automation
@@ -263,6 +232,11 @@ msgid "Delay type"
 msgstr "Tipus de retard"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_demo
+msgid "Demo"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
@@ -288,6 +262,11 @@ msgstr "Plantilla de correu electrònic"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
 msgstr "ID externa "
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
+msgid "Groups"
+msgstr "Grups"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -384,11 +363,6 @@ msgstr "Minuts"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
 msgstr "Model"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "Descripció del model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -491,16 +465,6 @@ msgid "Python Code"
 msgstr "Codi Python"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr ""
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "Eliminar l'acció contextual relacionada amb aquesta acció de servidor"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
@@ -555,16 +519,28 @@ msgid "Summary"
 msgstr "Resum"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "Model destí"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
 msgstr ""
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:87
+#: code:addons/base_automation/models/base_automation.py:90
 #, python-format
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid ""
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
 msgstr ""
 
 #. module: base_automation
@@ -634,10 +610,15 @@ msgid "Value Mapping"
 msgstr "Mapeig de valors"
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:86
+#: code:addons/base_automation/models/base_automation.py:89
 #, python-format
 msgid "Warning"
 msgstr "Avís"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+msgid "Watched fields"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

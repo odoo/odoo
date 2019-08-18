@@ -1,18 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_landed_costs
+# 	* stock_landed_costs
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Максим Дронь <dronmax@gmail.com>, 2018
+# Mekan Bash <tmbashimov@gmail.com>, 2017
+# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Collex100, 2018
 # Sergey Vilizhanin, 2018
+# Max Belyanin <maxbelyanin@gmail.com>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2018
+# Martin Trigaux, 2019
+# Андрей Гусев <gaussgss@gmail.com>, 2019
+# Максим Дронь <dronmax@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Sergey Vilizhanin, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Максим Дронь <dronmax@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,13 +29,18 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:346
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:350
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:367
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:371
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:358
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:362
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:379
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:383
 #, python-format
 msgid " already out"
 msgstr "уже выбыл"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
+msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -45,6 +58,16 @@ msgid "Action Needed"
 msgstr "Требует внимания"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
+msgid "Activities"
+msgstr "Деятельность"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid "Activity State"
+msgstr "Этап действия"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
 msgstr "Дополнительная стоимость с издержками"
@@ -52,7 +75,7 @@ msgstr "Дополнительная стоимость с издержками"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Количество вложений"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -120,7 +143,7 @@ msgid "Cost Lines"
 msgstr "Строки стоимости"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:93
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:88
 #, python-format
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
@@ -238,8 +261,13 @@ msgstr "Прежняя стоимость (за ед.)"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Future Activities"
+msgstr "Будущие действия"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
@@ -302,8 +330,8 @@ msgstr "Запись журнала"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
 msgid "Landed Cost"
 msgstr "Стоимость с издержками"
 
@@ -366,6 +394,11 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Late Activities"
+msgstr "Действия с опозданием"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
@@ -387,14 +420,29 @@ msgid "Name"
 msgstr "Название"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:24
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:64
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:18
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:59
 #, python-format
 msgid "New"
 msgstr "Новый"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:91
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
+msgid "Next Activity Summary"
+msgstr "Резюме следующего мероприятия"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
@@ -428,13 +476,23 @@ msgid "Number of unread messages"
 msgstr "Количество непрочитанных сообщений"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:89
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:84
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr "Только черновик стоимости с издержками может быть подтвержден"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:314
+#: selection:stock.landed.cost,activity_state:0
+msgid "Overdue"
+msgstr "Просроченные"
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,activity_state:0
+msgid "Planned"
+msgstr "Запланировано"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:326
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Пожалуйста, сконфигурируйте счёт складских расходов для продукта: %s."
@@ -471,6 +529,16 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
+msgid "Responsible User"
+msgstr "Ответственный"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Show all records which has next action date is before today"
+msgstr "Показать все записи с просроченой датой следующего действия"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -488,6 +556,15 @@ msgid "Status"
 msgstr "Статус"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
 msgstr "Складская стоимость с издержками"
@@ -498,10 +575,25 @@ msgid "Stock Landed Cost Line"
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
 msgstr "Перемещение запасов"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,activity_state:0
+msgid "Today"
+msgstr "Сегодня"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Today Activities"
+msgstr "Сегодняшние мероприятия"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
@@ -529,7 +621,7 @@ msgid "Validate"
 msgstr "Проверить"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:83
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:78
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -537,6 +629,11 @@ msgid ""
 msgstr ""
 "Утверждённая стоимость с издержками не может быть отменена, но вы можете "
 "создать отрицательную стоимость с издержками, чтобы реверсировать их"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation"
+msgstr "Оценка"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -570,7 +667,7 @@ msgid "Weight"
 msgstr "Вес"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:163
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:166
 #, python-format
 msgid ""
 "You cannot apply landed costs on the chosen transfer(s). Landed costs can "
