@@ -127,6 +127,34 @@ var MessagingMenu = Widget.extend({
         return this.$el.hasClass('show');
     },
     /**
+     * Process Preview Mark As Read
+     *
+     * @private
+     * @param {Element} $preview
+     */
+    _markAsRead: function ($preview) {
+        var previewID = $preview.data('preview-id');
+        if (previewID === 'mailbox_inbox') {
+            var messageIDs = [].concat($preview.data('message-ids'));
+            this.call('mail_service', 'markMessagesAsRead', messageIDs);
+        } else if (previewID === 'mail_failure') {
+            var documentModel = $preview.data('document-model');
+            var unreadCounter = $preview.data('unread-counter');
+            this.do_action('mail.mail_resend_cancel_action', {
+                additional_context: {
+                    default_model: documentModel,
+                    unread_counter: unreadCounter
+                }
+            });
+        } else {
+            // this is mark as read on a thread
+            var thread = this.call('mail_service', 'getThread', previewID);
+            if (thread) {
+                thread.markAsRead();
+            }
+        }
+    },
+    /**
      * Open discuss
      *
      * @private
@@ -315,28 +343,8 @@ var MessagingMenu = Widget.extend({
      */
     _onClickPreviewMarkAsRead: function (ev) {
         ev.stopPropagation();
-        var thread;
         var $preview = $(ev.currentTarget).closest('.o_mail_preview');
-        var previewID = $preview.data('preview-id');
-        if (previewID === 'mailbox_inbox') {
-            var messageIDs = [].concat($preview.data('message-ids'));
-            this.call('mail_service', 'markMessagesAsRead', messageIDs);
-        } else if (previewID === 'mail_failure') {
-            var documentModel = $preview.data('document-model');
-            var unreadCounter = $preview.data('unread-counter');
-            this.do_action('mail.mail_resend_cancel_action', {
-                additional_context: {
-                    default_model: documentModel,
-                    unread_counter: unreadCounter
-                }
-            });
-        } else {
-            // this is mark as read on a thread
-            thread = this.call('mail_service', 'getThread', previewID);
-            if (thread) {
-                thread.markAsRead();
-            }
-        }
+        this._markAsRead($preview);
     },
 });
 
