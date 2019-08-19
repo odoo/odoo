@@ -208,10 +208,12 @@ class SaleOrder(models.Model):
 
     def _get_reward_line_values(self, program):
         self.ensure_one()
+        self = self.with_context(lang=self.partner_id.lang)
+        program = program.with_context(lang=self.partner_id.lang)
         if program.reward_type == 'discount':
-            return self._get_reward_values_discount(program.with_context(lang=self.partner_id.lang))
+            return self._get_reward_values_discount(program)
         elif program.reward_type == 'product':
-            return [self._get_reward_values_product(program.with_context(lang=self.partner_id.lang))]
+            return [self._get_reward_values_product(program)]
 
     def _create_reward_line(self, program):
         self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
