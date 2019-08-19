@@ -203,6 +203,22 @@ MailManager.include({
         this._mailBus.trigger('activity_updated', data);
     },
     /**
+     * Called to open the channel in detach mode (minimized) even if no new message:
+     *
+     * @private
+     * @param {Object} channelData
+     * @param {integer} channelData.id
+     * @param {string} [channelData.info]
+     * @param {boolean} channelData.is_minimized
+     * @param {string} channelData.state
+     */
+    _handlePartnerChannelMinimizeNotification: function (channelData) {
+        var self = this;
+        this._addChannel(channelData).then(function (channelID){
+            self.getChannel(channelID).detach()
+        });
+    },
+    /**
      * Called when receiving a channel state as a partner notification:
      *
      *  - if it is a new channel, it means we have been invited to this channel
@@ -422,6 +438,8 @@ MailManager.include({
         } else if (data.type === 'simple_notification') {
             var title = _.escape(data.title), message = _.escape(data.message);
             data.warning ? this.do_warn(title, message, data.sticky) : this.do_notify(title, message, data.sticky);
+        } else if (data.info === 'channel_minimize') {
+            this._handlePartnerChannelMinimizeNotification(data);
         } else {
             this._handlePartnerChannelNotification(data);
         }

@@ -1256,7 +1256,6 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
 
     return babel.dates.format_time(value, format=time_format, locale=locale)
 
-
 def format_amount(env, amount, currency, lang_code=False):
     fmt = "%.{0}f".format(currency.decimal_places)
     lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
