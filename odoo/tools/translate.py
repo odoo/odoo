@@ -1151,36 +1151,3 @@ def load_language(cr, lang):
     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     installer = env['base.language.install'].create({'lang': lang})
     installer.lang_install()
-
-def _format_time_ago(env, time):
-    # Set Context to be used by translate _get_Lang (by introspection)
-    # DO NOT REMOVE THIS context VARIABLE
-    context = env.context
-    seconds = time.total_seconds()
-    days = round(seconds / (60 * 60 * 24))
-
-    if not days:
-        if seconds < 10:
-            return _("just now")
-        if seconds / 60 < 1:
-            return _("%s seconds ago") % round(seconds)
-        if seconds < 120:
-            return _("a minute ago")
-        if seconds / 3600 < 1:
-            return _("%s minutes ago") % round(seconds / 60)
-        if seconds < 7200:
-            return _("an hour ago")
-        return _("%s hours ago") % round(seconds / (60*60))
-    else:
-        if days == 1:
-            return _("yesterday")
-        if days < 7:
-            return _("%s days ago") % days
-        if days < 31:
-            nbr_weeks = round(days / 7)
-            return _("%s week%s ago") % (nbr_weeks, '' if nbr_weeks == 1 else 's')
-        if days < 365:
-            nbr_months = round(days / 30)
-            return _("%s month%s ago") % (nbr_months, '' if nbr_months == 1 else 's')
-        nbr_years = round(days / 365)
-        return _("%s year%s ago") % (nbr_years, '' if nbr_years == 1 else 's')

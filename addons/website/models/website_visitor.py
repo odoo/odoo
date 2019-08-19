@@ -6,8 +6,7 @@ from hashlib import sha256
 import hmac
 
 from odoo import fields, models, api, _
-from odoo.tools.translate import _format_time_ago
-from odoo.tools.misc import _consteq
+from odoo.tools.misc import _consteq, _format_time_ago
 from odoo.http import request
 
 
