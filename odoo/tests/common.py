@@ -775,6 +775,12 @@ class ChromeBrowser():
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
         self._websocket_send('Network.setCookie', params=params)
 
+    def delete_cookie(self, name, **kwargs):
+        params = {kw:kwargs[kw] for kw in kwargs if kw in ['url', 'domain', 'path']}
+        params.update({'name': name})
+        _id = self._websocket_send('Network.deleteCookies', params=params)
+        return self._websocket_wait_id(_id) 
+
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
         awaited_result = {'result': {'type': 'boolean', 'value': True}}
@@ -871,6 +877,8 @@ class ChromeBrowser():
         self.screencast_frames = []
         self._websocket_send('Page.stopLoading')
         self._logger.info('Deleting cookies and clearing local storage')
+        dc_id = self._websocket_send('Network.clearBrowserCache')
+        self._websocket_wait_id(dc_id)
         dc_id = self._websocket_send('Network.clearBrowserCookies')
         self._websocket_wait_id(dc_id)
         cl_id = self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})
@@ -1036,6 +1044,7 @@ class HttpCase(TransactionCase):
         finally:
             # clear browser to make it stop sending requests, in case we call
             # the method several times in a test method
+            self.browser.delete_cookie('session_id', domain=HOST)
             self.browser.clear()
             self._wait_remaining_requests()
 
