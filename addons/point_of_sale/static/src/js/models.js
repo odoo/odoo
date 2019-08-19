@@ -100,15 +100,29 @@ exports.PosModel = Backbone.Model.extend({
         });
     },
     after_load_server_data: function(){
-        this.load_orders();
-        this.set_start_order();
-        if(this.config.use_proxy){
-            if (this.config.iface_customer_facing_display) {
-                this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
+        var self = this;
+        return new Promise(function(resolve, reject){
+            try {
+                self.load_orders();
+            } catch (error){
+                if (error.name === "JsonError") {
+                    self.chrome.json_error({
+                        title: error.message,
+                        content: self.export_paid_orders() + self.export_unpaid_orders(),
+                    });
+                    reject();
+                }
             }
+            self.set_start_order();
+            if(self.config.use_proxy){
+                if (self.config.iface_customer_facing_display) {
+                    self.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
+                }
 
-            return this.connect_to_proxy();
-        }
+                resolve(self.connect_to_proxy());
+            }
+            resolve();
+        });
     },
     // releases ressources holds by the model at the end of life of the posmodel
     destroy: function(){
@@ -2065,8 +2079,15 @@ exports.Paymentline = Backbone.Model.extend({
         this.amount = 0;
         this.selected = false;
         if (options.json) {
-            this.init_from_JSON(options.json);
-            return;
+            try {
+                this.init_from_JSON(options.json);
+                return;
+            } catch(error) {
+                throw {
+                    name: "JsonError",
+                    message:_t("Payment journal ID " + json.statement_id + " is not available in the point of sale.")
+                };
+            }
         }
         this.payment_method = options.payment_method;
         if (this.payment_method === undefined) {
@@ -2210,14 +2231,16 @@ exports.Order = Backbone.Model.extend({
         this.user_id = json.user_id;
 
         if (json.fiscal_position_id) {
-            var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
-                return fp.id === json.fiscal_position_id;
-            });
-
-            if (fiscal_position) {
+            try {
+                var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+                    return fp.id === json.fiscal_position_id;
+                });
                 this.fiscal_position = fiscal_position;
-            } else {
-                console.error('ERROR: trying to load a fiscal position not available in the pos');
+            } catch(error) {
+                throw {
+                    name: "JsonError",
+                    message: _t("Fiscal position ID " + json.fiscal_position_id + " is not available in the point of sale.")
+                };
             }
         }
 
@@ -2230,9 +2253,16 @@ exports.Order = Backbone.Model.extend({
         }
 
         if (json.partner_id) {
-            client = this.pos.db.get_partner_by_id(json.partner_id);
-            if (!client) {
-                console.error('ERROR: trying to load a partner not available in the pos');
+            try {
+                client = this.pos.db.get_partner_by_id(json.partner_id);
+                if (!client) {
+                    throw "Partner not available";
+                }
+            } catch(error) {
+                throw {
+                    name: "JsonError",
+                    message: _t("Partner ID " + json.partner_id + " is not available in the point of sale.")
+                };
             }
         } else {
             client = null;

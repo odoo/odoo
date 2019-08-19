@@ -329,44 +329,56 @@ var Gui = core.Class.extend({
     // if 'contents' is not a string, it is converted into
     // a JSON representation of the contents.
 
-
-    // TODO: remove me in master: deprecated in favor of prepare_download_link
-    // this method is kept for backward compatibility but is likely not going
-    // to work as many browsers do to not accept fake click events on links
-    download_file: function(contents, name) {
-        href_params = this.prepare_file_blob(contents,name);
-        var evt  = document.createEvent("HTMLEvents");
-        evt.initEvent("click");
-
-        $("<a>",href_params).get(0).dispatchEvent(evt);
-
-    },
-
     prepare_download_link: function(contents, filename, src, target) {
-        var href_params = this.prepare_file_blob(contents, filename);
+        /**
+         * Prepare a download link for downloading a JSON Object.
+         *
+         * @param {object} contents The object to be downloaded.
+         * @param {string} filename Filename to be assigned to the blob.
+         * @param {object} src DOM element that triggers this function (can be undefined).
+         * @param {object} target child DOM object of <a> element to link the download reference to.
+         */
+        var href_params
+        this.prepare_file_blob(contents, filename).then(function(result){
+            href_params = result;
+            $(target).parent().attr(href_params);
 
-        $(target).parent().attr(href_params);
-        $(src).addClass('oe_hidden');
-        $(target).removeClass('oe_hidden');
+            if (src !== undefined) {
+                $(src).addClass('oe_hidden');
+                $(target).removeClass('oe_hidden');
 
-        // hide again after click
-        $(target).click(function() {
-            $(src).removeClass('oe_hidden');
-            $(this).addClass('oe_hidden');
+                // hide again after click
+                $(target).click(function() {
+                    $(this).addClass('oe_hidden');
+                    $(src).removeClass('oe_hidden');
+                });
+            }
         });
+
     },
 
-    prepare_file_blob: function(contents, name) {
-        var URL = window.URL || window.webkitURL;
+    prepare_file_blob: function(contents, name="document.txt") {
+        /**
+         * Prepare a downloadable blob for an JSON object.
+         *
+         * @param {object} content The object to be downloaded.
+         * @param {string} [name="document.txt"] Filename to be assigned to the blob.
+         * @return {Promise<Object>} href parameters to create a download link in the DOM
+         *      {string} download Default filename for download.
+         *      {string} href Download url of the Blob.
+         */
+        return new Promise(function(resolve, reject){
+            var URL = window.URL || window.webkitURL;
 
-        if (typeof contents !== 'string') {
-            contents = JSON.stringify(contents,null,2);
-        }
+            if (typeof contents !== 'string') {
+                contents = JSON.stringify(contents,null,2);
+            }
 
-        var blob = new Blob([contents]);
+            var blob = new Blob([contents]);
 
-        return {download: name || 'document.txt',
-                href: URL.createObjectURL(blob),}
+            resolve ({download: name,
+                    href: URL.createObjectURL(blob),})
+        });
     },
 
     /* ---- Gui: EMAILS ---- */

@@ -245,7 +245,7 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.delete_orders').click(function(){
             self.gui.show_popup('confirm',{
                 'title': _t('Delete Paid Orders ?'),
-                'body':  _t('This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone.'),
+                'body':  _t('This operation will permanently delete all paid orders from the browser cache. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_orders();
                     self.pos.set_synch('connected', 0);
@@ -255,7 +255,7 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.delete_unpaid_orders').click(function(){
             self.gui.show_popup('confirm',{
                 'title': _t('Delete Unpaid Orders ?'),
-                'body':  _t('This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone.'),
+                'body':  _t('This operation will permanently delete all unpaid orders from the browser cache. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_unpaid_orders();
                     window.location = '/';
@@ -609,7 +609,9 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             self.replace_crashmanager();
             self.pos.push_order();
         }).guardedCatch(function (err) { // error when loading models data from the backend
-            self.loading_error(err);
+            if (err !== undefined) {
+                self.loading_error(err);
+            }
         });
     },
 
@@ -742,7 +744,6 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
            }
        });
     },
-
     loading_error: function(err){
         var self = this;
 
@@ -765,12 +766,44 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             widget: { options: {title: title , body: body }},
         }));
 
+        popup.find('.button.icon').hide();
         popup.find('.button').click(function(){
             self.gui.close();
         });
 
         popup.css({ zindex: 9001 });
 
+        popup.appendTo(this.$el);
+    },
+    json_error: function(err){
+        var self = this;
+        var body = _t("There are conflicts between the browser cache and the loaded data. " +
+            "Changes where made in the database after first initialisation of this PoS session.\n\n" +
+            "Some possible causes could be:\n" +
+            "- Products used in the session are not available anymore.\n" +
+            "- Customers used in the session are not available anymore.\n" +
+            "- Changes in the PoS configuration.\n\n" +
+            "Use the buttons to download or to clear the browser cache. Click Ok to leave the session.");
+//        }
+        var popup = $(QWeb.render('ErrorJsonPopupWidget',{
+            widget: { options: {title: err.title, body: body}},
+        }));
+        popup.find('.button.icon.clear').click(function(){
+            localStorage.clear();
+            self.gui.close();
+        });
+
+        var target = popup.find('.button.icon.download')
+        //var content = Object.keys(localStorage)
+        //        .filter(key => key.includes("order"))
+        //        .reduce((obj, key) => {obj[key] = localStorage[key]; return obj;},{});
+        var content = err.content;
+        self.gui.prepare_download_link(content, "local-storage.json", undefined, target)
+
+        popup.find('.button.cancel').click(function(){
+            self.gui.close();
+        });
+        popup.css({ zindex: 9001 });
         popup.appendTo(this.$el);
     },
     loading_progress: function(fac){

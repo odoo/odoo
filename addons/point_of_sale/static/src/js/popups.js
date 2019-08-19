@@ -2,7 +2,7 @@ odoo.define('point_of_sale.popups', function (require) {
 "use strict";
 
 // This file contains the Popups.
-// Popups must be loaded and named in chrome.js. 
+// Popups must be loaded and named in chrome.js.
 // They are instanciated / destroyed with the .gui.show_popup()
 // and .gui.close_popup() methods.
 
@@ -25,12 +25,12 @@ var PopupWidget = PosBaseWidget.extend({
         'click .mode-button':    'click_numpad',
     },
 
-    // show the popup !  
+    // show the popup !
     show: function(options){
         if(this.$el){
             this.$el.removeClass('oe_hidden');
         }
-        
+
         if (typeof options === 'string') {
             this.options = {title: options};
         } else {
@@ -39,7 +39,7 @@ var PopupWidget = PosBaseWidget.extend({
 
         this.renderElement();
 
-        // popups block the barcode reader ... 
+        // popups block the barcode reader ...
         if (this.pos.barcode_reader) {
             this.pos.barcode_reader.save_callbacks();
             this.pos.barcode_reader.reset_action_callbacks();
@@ -47,7 +47,7 @@ var PopupWidget = PosBaseWidget.extend({
     },
 
     // called before hide, when a popup is closed.
-    // extend this if you want a custom action when the 
+    // extend this if you want a custom action when the
     // popup is closed.
     close: function(){
         if (this.pos.barcode_reader) {
@@ -55,8 +55,8 @@ var PopupWidget = PosBaseWidget.extend({
         }
     },
 
-    // hides the popup. keep in mind that this is called in 
-    // the initialization pass of the pos instantiation, 
+    // hides the popup. keep in mind that this is called in
+    // the initialization pass of the pos instantiation,
     // so you don't want to do anything fancy in here
     hide: function(){
         if (this.$el) {
@@ -112,6 +112,14 @@ var SyncErrorPopupWidget = ErrorPopupWidget.extend({
 });
 gui.define_popup({name:'error-sync', widget: SyncErrorPopupWidget});
 
+var ErrorJsonPopupWidget = PopupWidget.extend({
+    template:'ErrorJsonPopupWidget',
+    show: function(options){
+        this._super(options);
+        this.gui.play_sound('error');
+    },
+});
+gui.define_popup({name:'error-json', widget: ErrorJsonPopupWidget});
 
 var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
     template:'ErrorTracebackPopupWidget',
@@ -301,12 +309,12 @@ var NumberPopupWidget = PopupWidget.extend({
     },
     click_numpad: function(event){
         var newbuf = this.gui.numpad_input(
-            this.inputbuffer, 
-            $(event.target).data('action'), 
+            this.inputbuffer,
+            $(event.target).data('action'),
             {'firstinput': this.firstinput});
 
         this.firstinput = (newbuf.length === 0);
-        
+
         if (newbuf !== this.inputbuffer) {
             this.inputbuffer = newbuf;
             this.$('.value').text(this.inputbuffer);

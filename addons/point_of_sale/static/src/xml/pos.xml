@@ -1092,6 +1092,28 @@
         </div>
     </t>
 
+    <t t-name="ErrorJsonPopupWidget">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-error">
+                <header class="title"><t t-esc=" widget.options.title || 'Error' " /></header>
+                <main class="body traceback"><t t-esc=" widget.options.body || '' "/></main>
+                <footer class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                    <div class="button icon clear">
+                        <i class="fa fa-trash" role="img" aria-label="Clear localStorage" title="Clear localStorage"></i>
+                    </div>
+                    <a>
+                        <div class="button icon download">
+                            <i class="fa fa-download" role="img" aria-label="Download localStorage" title="Download localStorage"></i>
+                        </div>
+                    </a>
+                </footer>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorBarcodePopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-barcode">
