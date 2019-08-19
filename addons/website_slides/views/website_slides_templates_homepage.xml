@@ -116,6 +116,9 @@
                                     <div class="col-12 col-sm-6 col-lg-12 d-flex align-items-center">
                                         <t t-call="website_slides.slides_home_user_achievements_small"/>
                                     </div>
+                                    <div class="col-12 col-sm-6 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4">
+                                        <t t-call="website_slides.slides_home_users_small"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -365,8 +368,13 @@
     </div>
 </template>
 
-<template id='slides_home_users_small' name="Latest Users">
+<template id='slides_home_users_small' name="Users">
     <div class="o_wslides_home_aside">
+    </div>
+</template>
+
+<template id="toggle_leaderboard" inherit_id="website_slides.slides_home_users_small" active="True" customize_show="True" name='Display Leaderboard'>
+    <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
         <div class="row o_wslides_home_aside_title">
             <div class="col">
                 <a href="/profile/users" class="float-right">View all</a>
@@ -386,7 +394,7 @@
             </t>
             <t t-else=""><p class="col mt8">No leaderboard currently :(</p></t>
         </div>
-    </div>
+    </xpath>
 </template>
 
 <template id='user_quickkarma_card' name="User QuickKarma Card">
