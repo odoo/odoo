@@ -20,20 +20,15 @@ class AccountMoveReversal(models.TransientModel):
             return move
         return self.env['account.move']
 
-    @api.model
-    def _get_default_reason(self):
-        move = self._get_default_move()
-        return move and move.invoice_payment_ref or False
-
     move_id = fields.Many2one('account.move', string='Journal Entry',
         default=_get_default_move,
         domain=[('state', '=', 'posted'), ('type', 'not in', ('out_refund', 'in_refund'))])
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
-    reason = fields.Char(string='Reason', default=_get_default_reason)
+    reason = fields.Char(string='Reason')
     refund_method = fields.Selection(selection=[
-            ('refund', 'Create a draft credit note (partial refunding)'),
-            ('cancel', 'Cancel: create credit note and reconcile (full refunding)'),
-            ('modify', 'Create credit note, reconcile and create a new draft invoice (cancel)')
+            ('refund', 'Partial Refund'),
+            ('cancel', 'Full Refund'),
+            ('modify', 'Full refund and new draft invoice')
         ], default='refund', string='Credit Method', required=True,
         help='Choose how you want to credit this invoice. You cannot "modify" nor "cancel" if the invoice is already reconciled.')
     journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.')
@@ -50,7 +45,7 @@ class AccountMoveReversal(models.TransientModel):
         default_values_list = []
         for move in moves:
             default_values_list.append({
-                'ref': _('Reversal of: %s, %s') % (move.name, self.reason),
+                'ref': _('Reversal of: %s, %s') % (move.name, self.reason) if self.reason else _('Reversal of: %s') % (move.name),
                 'date': self.date or move.date,
                 'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
                 'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
