@@ -222,15 +222,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).message_post(**kwargs)
 
         if 'no_new_invoice' not in self.env.context and len(self) == 1 and self.state == 'draft':
-            # Get attachments.
-            # - 'attachments' is a namedtuple defined in mail.thread looking like:
-            # _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
-            # - 'attachment_ids' is a list of ir.attachment records ids.
-            attachments = kwargs.get('attachments', [])
-            if kwargs.get('attachment_ids'):
-                attachments += self.env['ir.attachment'].browse(kwargs['attachment_ids'])
-
-            for attachment in attachments:
+            for attachment in res.attachment_ids:
                 self._create_invoice_from_attachment(attachment)
         return res
 
