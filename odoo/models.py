@@ -3315,7 +3315,8 @@ Fields:
                 records_to_inverse[field] = self.filtered('id')
             if field.relational or self._field_inverses[field]:
                 relational_names.append(fname)
-            protected.update(self._field_computed.get(field, [field]))
+            if field.compute and not field.readonly:
+                protected.update(self._field_computed.get(field, [field]))
 
         # protect fields being written against recomputation
         with env.protecting(protected, self):
@@ -3516,11 +3517,8 @@ Fields:
                 elif field.inverse:
                     inversed[key] = val
                     inversed_fields.add(field)
-                # ignore the protection of compute fields which do not have an
-                # inverse, otherwise their computation are not correctly
-                # performed, neither the fields which are computed in the same
-                # compute method (`test_validation_error`)
-                if not field.compute or field.inverse:
+                # protect non-readonly computed fields against (re)computation
+                if field.compute and not field.readonly:
                     protected.update(self._field_computed.get(field, [field]))
 
             data_list.append(data)
@@ -5452,9 +5450,7 @@ Fields:
                     # Dont force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
                     if field.compute and field.store:
-                        records_to_invalidate = records.filtered(lambda r: not r.id)
-                        self.env.add_to_compute(field, records - records_to_invalidate)
-                        self.env.cache.invalidate([(field, records_to_invalidate._ids)])
+                        self.env.add_to_compute(field, records)
                     else:
                         self.env.cache.invalidate([(field, records._ids)])
                     # recursively trigger recomputation of field's dependents

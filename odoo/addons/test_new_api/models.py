@@ -373,8 +373,8 @@ class Related(models.Model):
     related_related_name = fields.Char(related='related_name', string='A related on a related on Name', readonly=False)
 
     message = fields.Many2one('test_new_api.message')
-    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body', readonly=False)
-    message_currency = fields.Many2one(related="message.author", string='Message Author', readonly=False)
+    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
+    message_currency = fields.Many2one(related="message.author", string='Message Author')
 
 class ComputeProtected(models.Model):
     _name = 'test_new_api.compute.protected'
@@ -493,6 +493,27 @@ class ComputeCascade(models.Model):
     def _compute_baz(self):
         for record in self:
             record.baz = "<%s>" % (record.bar or "")
+
+
+class ComputeOnchange(models.Model):
+    _name = 'test_new_api.compute.onchange'
+    _description = "Compute method as an onchange"
+
+    active = fields.Boolean()
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True)
+    baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
+
+    @api.depends('active', 'foo')
+    def _compute_baz(self):
+        for record in self:
+            if record.active:
+                record.baz = record.foo
 
 
 class ModelImage(models.Model):
