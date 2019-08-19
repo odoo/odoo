@@ -272,7 +272,7 @@ class TestBase(TransactionCase):
         self.assertEqual(p3.commercial_partner_id, p3, "being both parent-less and company should be the same as either")
 
         notcompanies = p0 | p1 | p12 | p21
-        self.env.cr.execute('update res_partner set is_company=null where id = any(%s)', [notcompanies.ids])
+        self.env.cr.execute('update res_partner set is_company=FALSE where id = any(%s)', [notcompanies.ids])
         for parent in notcompanies:
             p = P.create({
                 'name': parent.name + '_sub',
@@ -282,7 +282,7 @@ class TestBase(TransactionCase):
             self.assertEqual(
                 p.commercial_partner_id,
                 parent.commercial_partner_id,
-                "check that is_company=null is properly handled when looking for ancestor"
+                "check that is_company=FALSE is properly handled when looking for ancestor"
             )
 
     def test_50_res_partner_commercial_sync(self):

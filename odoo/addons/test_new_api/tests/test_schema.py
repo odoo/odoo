@@ -120,11 +120,11 @@ class TestSchema(common.TransactionCase):
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['important'], {
             'character_maximum_length': None,
-            'column_default': None,
+            'column_default': 'false',
             'column_name': u'important',
             'data_type': u'boolean',
             'datetime_precision': None,
-            'is_nullable': u'YES',
+            'is_nullable': u'NO',
             'is_updatable': u'YES',
             'numeric_precision': None,
             'numeric_precision_radix': None,

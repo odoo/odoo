@@ -1206,6 +1206,15 @@ class Boolean(Field):
     type = 'boolean'
     column_type = ('bool', 'bool')
 
+    def update_db_column(self, model, column):
+        if not column:
+            sql.create_column(
+                model._cr, model._table, self.name, self.column_type[1],
+                self.string, default="FALSE",
+            )
+            return
+        super().update_db_column(model, column)
+
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 

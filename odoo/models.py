@@ -2311,14 +2311,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             value = field.convert_to_column(value, self)
         else:
             value = None
-        # Write value if non-NULL, except for booleans for which False means
-        # the same as NULL - this saves us an expensive query on large tables.
-        necessary = (value is not None) if field.type != 'boolean' else value
-        if necessary:
+        if value is not None:
+            query = 'UPDATE "{}" SET "{}"={} WHERE "{}"'.format(
+                self._table, column_name, field.column_format, column_name,
+            )
+            if field.type == 'boolean' and value is not False:
+                # Boolean fields are set to DEFAULT FALSE in the database, we should only change
+                # this value if the python default is different from the sql default
+                query += '=FALSE'
+            else:
+                query += 'IS NULL'
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
-            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, field.column_format, column_name)
             self._cr.execute(query, (value,))
 
     @ormcache()
@@ -3653,12 +3657,6 @@ Fields:
         assert data_list
         cr = self.env.cr
         quote = '"{}"'.format
-
-        # set boolean fields to False by default (avoid NULL in database)
-        for name, field in self._fields.items():
-            if field.type == 'boolean' and field.store:
-                for data in data_list:
-                    data['stored'].setdefault(name, False)
 
         # insert rows
         ids = []                        # ids of created records
