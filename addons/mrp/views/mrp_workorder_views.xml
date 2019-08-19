@@ -353,7 +353,7 @@
         <field name="name">mrp.production.work.order.kanban</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard" create="0">
+            <kanban class="oe_background_grey o_kanban_dashboard o_mrp_workorder_kanban" create="0">
                 <field name="name"/>
                 <field name="production_id"/>
                 <field name="state"/>
@@ -367,7 +367,7 @@
                 <field name="product_uom_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div style="width: 400px;" class="oe_kanban_global_click">
+                        <div class="oe_kanban_global_click">
                             <div class="o_kanban_card_header o_kanban_record_top">
                                 <div class="o_kanban_record_headings o_kanban_card_header_title">
                                     <strong class="o_primary ml8">
