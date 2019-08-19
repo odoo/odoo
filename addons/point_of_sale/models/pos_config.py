@@ -104,7 +104,8 @@ class PosConfig(models.Model):
         'stock.picking.type',
         string='Operation Type',
         default=_default_picking_type_id,
-        domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]")
+        domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]",
+        ondelete='restrict')
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=False)
     journal_id = fields.Many2one(
         'account.journal', string='Sales Journal',
@@ -150,7 +151,7 @@ class PosConfig(models.Model):
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
-        "to customize the reference numbers of your orders.", copy=False)
+        "to customize the reference numbers of your orders.", copy=False, ondelete='restrict')
     sequence_line_id = fields.Many2one('ir.sequence', string='Order Line IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
         "to customize the reference numbers of your orders lines.", copy=False)

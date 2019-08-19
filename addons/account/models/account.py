@@ -555,9 +555,10 @@ class AccountJournal(models.Model):
     account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Accounts Allowed',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
     default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
-        domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount")
+        domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount",
+        ondelete='restrict')
     default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount")
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount", ondelete='restrict')
     update_posted = fields.Boolean(string='Allow Cancelling Entries',
         help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
