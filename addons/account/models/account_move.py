@@ -418,16 +418,23 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
-        prec = self.env.user.company_id.currency_id.decimal_places
 
-        self._cr.execute("""\
-            SELECT      move_id
-            FROM        account_move_line
-            WHERE       move_id in %s
-            GROUP BY    move_id
-            HAVING      abs(sum(debit) - sum(credit)) > %s
-            """, (tuple(self.ids), 10 ** (-max(5, prec))))
-        if len(self._cr.fetchall()) != 0:
+        # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
+        # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
+        # It happens as the ORM makes the create with the 'no_recompute' statement.
+        self._cr.execute('''
+            SELECT line.move_id
+            FROM account_move_line line
+            JOIN account_move move ON move.id = line.move_id
+            JOIN account_journal journal ON journal.id = move.journal_id
+            JOIN res_company company ON company.id = journal.company_id
+            JOIN res_currency currency ON currency.id = company.currency_id
+            WHERE line.move_id IN %s
+            GROUP BY line.move_id, currency.decimal_places
+            HAVING ROUND(SUM(debit - credit), currency.decimal_places) != 0.0;
+        ''', [tuple(self.ids)])
+
+        if self._cr.fetchone():
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
 
@@ -674,9 +681,12 @@ class AccountMoveLine(models.Model):
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Date', index=True, store=True, copy=False, readonly=False)  # related is required
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
-    tax_ids = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
-    tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict', compute='_compute_tax_line_id', store=True)
-    tax_repartition_line_id = fields.Many2one(comodel_name='account.tax.repartition.line', string="Originator Tax Repartition Line", ondelete='restrict', help="Tax repartition line that caused the creation of this move line, if any")
+    tax_ids = fields.Many2many('account.tax', string='Taxes Applied', domain=['|', ('active', '=', False), ('active', '=', True)],
+        help="Taxes that apply on the base amount")
+    tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict', compute='_compute_tax_line_id', store=True,
+        help="Indicates that this journal item is a tax line")
+    tax_repartition_line_id = fields.Many2one(comodel_name='account.tax.repartition.line', string="Originator Tax Repartition Line", ondelete='restrict',
+        help="Tax repartition line that caused the creation of this move line, if any")
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', index=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True, readonly=True)

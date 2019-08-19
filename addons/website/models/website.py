@@ -152,6 +152,19 @@ class Website(models.Model):
             self.env['ir.qweb'].clear_caches()
         return result
 
+    @api.multi
+    def unlink(self):
+        # Do not delete invoices, delete what's strictly necessary
+        attachments_to_unlink = self.env['ir.attachment'].search([
+            ('website_id', 'in', self.ids),
+            '|', '|',
+            ('key', '!=', False),  # theme attachment
+            ('url', 'ilike', '.custom.'),  # customized theme attachment
+            ('url', 'ilike', '.assets\\_'),
+        ])
+        attachments_to_unlink.unlink()
+        return super(Website, self).unlink()
+
     # ----------------------------------------------------------
     # Page Management
     # ----------------------------------------------------------
