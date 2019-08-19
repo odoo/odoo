@@ -12,6 +12,17 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="action_redirect_to_contents"
+                                type="object"
+                                icon="fa-files-o"
+                                class="oe_stat_button"
+                                groups="website.group_website_publisher">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="total_slides" nolabel="1"/></span>
+                                    <span name="stat_label" class="o_stat_text">Contents</span>
+                                </div>
+                            </button>
+
                             <button name="action_redirect_to_done_members"
                                 type="object"
                                 icon="fa-trophy"
@@ -45,12 +56,11 @@
                             <label for="name" class="oe_edit_only" string="Course Title"/>
                             <h1><field name="name" default_focus="1" placeholder="Course Title"/></h1>
                         </div>
-                        <group>
-                            <group>
-                                <field name="active" invisible="1"/>
-                                <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
-                            </group>
-                        </group>
+                        <div>
+                            <field name="active" invisible="1"/>
+                            <label for="tag_ids"/>
+                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                        </div>
                         <notebook colspan="4">
                             <page name="content" string="Content">
                                 <field name="slide_ids" colspan="4" nolabel="1" widget="slide_category_one2many" context="{'default_channel_id': active_id}">
@@ -81,15 +91,15 @@
                                     </group>
                                     <group name="access_rights" string="Access Rights">
                                         <field name="enroll" widget="radio" options="{'horizontal': true}"/>
-                                        <field name="upload_group_ids" string="New Content" widget="many2many_tags"/>
+                                        <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                     </group>
                                 </group>
                                 <group>
                                     <group name="communication" string="Communication">
                                         <field string="Allow Rating" name="allow_comment"/>
-                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
-                                        <field name="share_template_id" domain="[('model','=','slide.slide')]"/>
+                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="share_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
                                     </group>
                                     <group name="display" string="Display">
                                         <field name="visibility" widget="radio"/>
@@ -119,8 +129,6 @@
                                         <field name="nbr_infographic"/>
                                         <field name="nbr_quiz" string="Quizzes"/>
                                         <field name="nbr_webpage"/>
-                                        <separator/>
-                                        <field name="total_slides"/>
                                     </group>
                                     <group name="view_stats">
                                         <field name="total_views" string="Visits"/>
@@ -241,23 +249,21 @@
                                     </div>
                                 </div>
                                 <div class="container o_kanban_card_content mt0">
-                                    <div class="row">
+                                    <div class="row mb16">
                                         <div class="col-6 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="open_website_url" type="object">View course</button>
                                         </div>
                                         <div class="col-6 o_kanban_primary_right">
                                             <div class="d-flex">
-                                                <span class="mr-auto"><label for="rating_avg" class="mb0">Rating</label></span>
-                                                <a name="action_view_ratings" type="object">
-                                                    <field name="rating_count"/><span class="ml-2">reviews</span> (<field name="rating_avg_stars"/>/5)
-                                                </a>
+                                                <a name="action_view_ratings" type="object" class="mr-auto"><field name="rating_count"/> reviews</a>
+                                                <span><field name="rating_avg_stars"/> / 5</span>
                                             </div>
                                             <div class="d-flex">
                                                 <span class="mr-auto"><label for="total_views" class="mb0">Views</label></span>
                                                 <field name="total_views"/>
                                             </div>
                                             <div class="d-flex" name="info_total_time">
-                                                <span class="mr-auto"><label for="total_time" class="mb0">Completion Time</label></span>
+                                                <span class="mr-auto"><label for="total_time" class="mb0">Duration</label></span>
                                                 <field name="total_time" widget="float_time"/>
                                             </div>
                                         </div>

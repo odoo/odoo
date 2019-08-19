@@ -351,6 +351,15 @@ var SlideUploadDialog = Dialog.extend({
         };
     },
     /**
+     * Show the preview/right column and resize the modal
+     * @private
+     */
+    _showPreviewColumn: function() {
+        this.$('#slide_js_upload_left_column').removeClass('col').addClass('col-md-6');
+        this.$('#slide_js_upload_preview_column').removeClass('d-none');
+        this.$modal.find('.modal-dialog').addClass('modal-lg');
+    },
+    /**
      * @private
      */
     // TODO: Remove this part, as now SVG support in image resize tools is included
@@ -389,6 +398,8 @@ var SlideUploadDialog = Dialog.extend({
         } else {
             this.set_title(_t("Upload a document"));
         }
+
+        this.$modal.find('.modal-dialog').removeClass('modal-lg');
     },
     _onChangeCanSubmitForm: function (ev) {
         if (this.get('can_submit_form')) {
@@ -426,6 +437,7 @@ var SlideUploadDialog = Dialog.extend({
             }
             buffer = buffer.split(',')[1];
             self.file.data = buffer;
+            self._showPreviewColumn();
         });
 
         if (file.type === 'application/pdf') {
@@ -478,6 +490,7 @@ var SlideUploadDialog = Dialog.extend({
                                 self.set('can_submit_form', true);
                             }
                             loaded = true;
+                            self._showPreviewColumn();
                         });
                     });
                 });
@@ -510,6 +523,7 @@ var SlideUploadDialog = Dialog.extend({
                 self._formSetFieldValue('description', data.description);
 
                 self.isValidUrl = true;
+                self._showPreviewColumn();
             }
         });
     },

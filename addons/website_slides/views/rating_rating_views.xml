@@ -18,14 +18,15 @@
                         <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="d-flex flex-row">
-                                <div class="o_slide_rating_kanban_left">
+                                <div class="o_slide_rating_kanban_left mr-3">
+                                    <h1 class="o_slide_rating_value text-center text-primary" t-esc="val_stars"/>
                                     <t t-foreach="_.range(0, val_integer)" t-as="num">
-                                        <i class="fa fa-star" role="img" aria-label="One star" title="One star"></i>
+                                        <i class="fa fa-star" role="img"></i>
                                     </t>
                                     <t t-if="val_decimal">
-                                        <i class="fa fa-star-half-o" role="img" aria-label="Half a star" title="Half a star"></i>
+                                        <i class="fa fa-star-half-o" role="img"></i>
                                     </t>
-                                    <t t-foreach="_.range(0, empty_star)" t-as="num" role="img" t-attf-aria-label="#{empty_star} on 5" t-attf-title="#{empty_star} on 5">
+                                    <t t-foreach="_.range(0, empty_star)" t-as="num" role="img">
                                         <i class="fa fa-star text-black-25"></i>
                                     </t>
                                 </div>
@@ -36,14 +37,14 @@
                                         </div>
                                     </div>
                                     <div class="o_kanban_card_content mt0 d-flex flex-column">
-                                        <span>for
+                                        <span>
+                                            <i class="fa fa-folder mr-2"></i>
                                             <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
                                                 <field name="res_name" />
                                             </a>
                                         </span>
-                                        <span><i class="fa fa-clock-o mr-2"/>on <field name="create_date" /></span>
+                                        <span><i class="fa fa-clock-o mr-2"/> <field name="create_date" /></span>
                                         <div class="d-flex mt-2">
-                                            <i t-if="record.feedback.raw_value" class="fa fa-comment mr-2" t-att-title="record.feedback.raw_value"  t-att-aria-label="record.feedback.raw_value" role="img"/>
                                             <span t-esc="record.feedback.raw_value"/>
                                         </div>
                                     </div>
@@ -74,19 +75,32 @@
     </record>
 
     <record id="rating_rating_view_graph_slide_channel" model="ir.ui.view">
-       <field name="name">rating.rating.graph</field>
-       <field name="model">rating.rating</field>
-       <field name="priority">20</field>
-       <field name="arch" type="xml">
-            <graph string="Rating Average" type="bar" stacked="False">
+        <field name="name">rating.rating.graph</field>
+        <field name="model">rating.rating</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph string="Rating Average" type="bar">
                 <field name="res_name" type="row"/>
-                <field name="rating" type="col"/>
+                <field name="rating" type="measure"/>
             </graph>
         </field>
     </record>
 
+    <record id="rating_rating_view_pivot_slide_channel" model="ir.ui.view">
+        <field name="name">rating.rating.pivot</field>
+        <field name="model">rating.rating</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="res_name" type="row"/>
+                <field name="rating_text" type="col"/>
+                <field name="rating" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="rating_rating_action_slide_channel" model="ir.actions.act_window">
-        <field name="name">Courses Rating</field>
+        <field name="name">Rating</field>
         <field name="res_model">rating.rating</field>
         <field name="view_mode">kanban,tree,graph,pivot,form</field>
         <field name="domain">[('consumed', '=', True), ('res_model', '=', 'slide.channel')]</field>
@@ -101,13 +115,15 @@
     </record>
 
     <record id="rating_rating_action_slide_channel_report" model="ir.actions.act_window">
-        <field name="name">Courses Rating</field>
+        <field name="name">Rating</field>
         <field name="res_model">rating.rating</field>
-        <field name="view_mode">graph,tree</field>
         <field name="domain">[('consumed', '=', True), ('res_model', '=', 'slide.channel')]</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="rating_rating_view_search_slide_channel"/>
-        <field name="view_id" ref="rating_rating_view_graph_slide_channel"/>
+        <field name="view_ids" eval="[(5,0,0),
+                                      (0,0,{'view_mode':'graph', 'view_id': ref('rating_rating_view_graph_slide_channel')}),
+                                      (0,0,{'view_mode':'pivot', 'view_id': ref('rating_rating_view_pivot_slide_channel')}),
+                                      (0,0,{'view_mode':'tree'})]"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 There is no rating for these courses at the moment
