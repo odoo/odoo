@@ -40,7 +40,7 @@
         'report/report_stock_rule.xml',
         'report/mrp_zebra_production_templates.xml',
     ],
-    'qweb': ['static/src/xml/mrp.xml'],
+    'qweb': ['static/src/xml/*.xml'],
     'demo': [
         'data/mrp_demo.xml',
     ],
