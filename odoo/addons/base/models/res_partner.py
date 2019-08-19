@@ -813,10 +813,14 @@ class Partner(models.Model):
                 e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
         assert email, 'an email is required for find_or_create to work'
         emails = tools.email_split(email)
+        name_emails = tools.email_split_and_format(email)
         if emails:
             email = emails[0]
+            name_email = name_emails[0]
+        else:
+            name_email = email
         partners = self.search([('email', '=ilike', email)], limit=1)
-        return partners.id or self.name_create(email)[0]
+        return partners.id or self.name_create(name_email)[0]
 
     def _get_gravatar_image(self, email):
         email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
