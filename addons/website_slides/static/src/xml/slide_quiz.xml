@@ -11,7 +11,7 @@
                         <small class="text-muted"><span t-esc="question_index+1"/>. </small> <span t-esc="question.question"/>
                     </div>
                     <div class="list-group">
-                        <t t-foreach="question.answers" t-as="answer">
+                        <t t-foreach="question.answer_ids" t-as="answer">
                             <a t-att-data-answer-id="answer.id" href="#"
                                 t-att-data-text="answer.text_value"
                                 t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center #{widget.readonly ? 'disabled bg-transparent' : 'list-group-item-action'} #{widget.slide.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
@@ -29,12 +29,6 @@
                             </a>
                         </t>
                     </div>
-                </div>
-                <div class="alert alert-danger o_wslides_js_lesson_quiz_error mt-2 d-none" role="alert">
-                    <span></span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span>&amp;times;</span>
-                    </button>
                 </div>
                 <div t-if="!widget.slide.completed" class="o_wslides_js_lesson_quiz_validation border-top pt-3"/>
                 <div t-else="" class="row">
@@ -77,9 +71,14 @@
                         </span>
                     </span>
                 </div>
-                <button t-if="widget.slide.completed &amp;&amp; widget.slide.hasNext" class="btn btn-primary o_wslides_quiz_continue">
-                    Continue <i class="fa fa-chevron-right ml-1"/>
-                </button>
+                <div class="ml-auto">
+                    <button t-if="widget.quiz.quizAttemptsCount > 0 &amp;&amp; widget.slide.channelCanUpload" class="btn btn-light border o_wslides_js_lesson_quiz_reset">
+                        Reset
+                    </button>
+                    <button t-if="widget.slide.completed &amp;&amp; widget.slide.hasNext" class="btn btn-primary o_wslides_quiz_continue">
+                        Continue <i class="fa fa-chevron-right ml-1"/>
+                    </button>
+                </div>
             </div>
         </div>
     </t>

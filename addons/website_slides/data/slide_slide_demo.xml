@@ -76,34 +76,41 @@
     </record>
         <record id="slide_slide_demo_0_4_question_0" model="slide.question">
             <field name="question">What is a strawberry ?</field>
+            <field name="sequence">1</field>
             <field name="slide_id" ref="slide_slide_demo_0_4"/>
         </record>
         <record id="slide_slide_demo_0_4_question_0_0" model="slide.answer">
             <field name="text_value">A fruit</field>
+            <field name="sequence">1</field>
             <field name="is_correct" eval="True"/>
             <field name="question_id" ref="slide_slide_demo_0_4_question_0"/>
         </record>
         <record id="slide_slide_demo_0_4_question_0_1" model="slide.answer">
             <field name="text_value">A vegetable</field>
+            <field name="sequence">2</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_0_4_question_0"/>
         </record>
         <record id="slide_slide_demo_0_4_question_0_2" model="slide.answer">
             <field name="text_value">A table</field>
+            <field name="sequence">3</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_0_4_question_0"/>
         </record>
         <record id="slide_slide_demo_0_4_question_1" model="slide.question">
             <field name="question">What is the best tool to dig a hole for your plants ?</field>
+            <field name="sequence">2</field>
             <field name="slide_id" ref="slide_slide_demo_0_4"/>
         </record>
         <record id="slide_slide_demo_0_4_question_1_0" model="slide.answer">
             <field name="text_value">A shovel</field>
+            <field name="sequence">1</field>
             <field name="is_correct" eval="True"/>
             <field name="question_id" ref="slide_slide_demo_0_4_question_1"/>
         </record>
         <record id="slide_slide_demo_0_4_question_1_1" model="slide.answer">
             <field name="text_value">A spoon</field>
+            <field name="sequence">2</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_0_4_question_1"/>
         </record>
@@ -256,34 +263,41 @@
         </record>
         <record id="slide_slide_demo_1_4_question_0" model="slide.question">
             <field name="question">Do you think Harry Potted has a good name ?</field>
+            <field name="sequence">1</field>
             <field name="slide_id" ref="slide_slide_demo_1_4"/>
         </record>
         <record id="slide_slide_demo_1_4_question_0_0" model="slide.answer">
             <field name="text_value">Yes</field>
+            <field name="sequence">1</field>
             <field name="is_correct" eval="True"/>
             <field name="question_id" ref="slide_slide_demo_1_4_question_0"/>
         </record>
         <record id="slide_slide_demo_1_4_question_0_1" model="slide.answer">
             <field name="text_value">No</field>
+            <field name="sequence">2</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_1_4_question_0"/>
         </record>
         <record id="slide_slide_demo_1_4_question_1" model="slide.question">
             <field name="question">Did you read the whole article ?</field>
+            <field name="sequence">2</field>
             <field name="slide_id" ref="slide_slide_demo_1_4"/>
         </record>
         <record id="slide_slide_demo_1_4_question_1_0" model="slide.answer">
             <field name="text_value">Yes</field>
+            <field name="sequence">1</field>
             <field name="is_correct" eval="True"/>
             <field name="question_id" ref="slide_slide_demo_1_4_question_1"/>
         </record>
         <record id="slide_slide_demo_1_4_question_1_1" model="slide.answer">
             <field name="text_value">No</field>
+            <field name="sequence">2</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_1_4_question_1"/>
         </record>
         <record id="slide_slide_demo_1_4_question_1_2" model="slide.answer">
             <field name="text_value">What was the question again ?</field>
+            <field name="sequence">3</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_1_4_question_1"/>
         </record>
@@ -371,34 +385,41 @@
         <!-- QUIZZ -->
         <record id="slide_slide_demo_2_0_question_0" model="slide.question">
             <field name="question">Do you make beams out of lemon trees ?</field>
+            <field name="sequence">1</field>
             <field name="slide_id" ref="slide_slide_demo_2_0"/>
         </record>
         <record id="slide_slide_demo_2_0_question_0_0" model="slide.answer">
             <field name="text_value">Yes</field>
+            <field name="sequence">1</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_2_0_question_0"/>
         </record>
         <record id="slide_slide_demo_2_0_question_0_1" model="slide.answer">
             <field name="text_value">No</field>
+            <field name="sequence">2</field>
             <field name="is_correct" eval="True"/>
             <field name="question_id" ref="slide_slide_demo_2_0_question_0"/>
         </record>
         <record id="slide_slide_demo_2_0_question_1" model="slide.question">
             <field name="question">Do you make lemons out of beams ?</field>
+            <field name="sequence">2</field>
             <field name="slide_id" ref="slide_slide_demo_2_0"/>
         </record>
         <record id="slide_slide_demo_2_0_question_1_0" model="slide.answer">
             <field name="text_value">Yes</field>
+            <field name="sequence">1</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_2_0_question_1"/>
         </record>
         <record id="slide_slide_demo_2_0_question_1_1" model="slide.answer">
             <field name="text_value">No</field>
+            <field name="sequence">2</field>
             <field name="is_correct" eval="True"/>
             <field name="question_id" ref="slide_slide_demo_2_0_question_1"/>
         </record>
         <record id="slide_slide_demo_2_0_question_1_2" model="slide.answer">
             <field name="text_value">And also bananas</field>
+            <field name="sequence">3</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_2_0_question_1"/>
         </record>
@@ -638,15 +659,18 @@
     </record>
         <record id="slide_slide_demo_5_3_question_0" model="slide.question">
             <field name="question">Do you want to reply correctly ?</field>
+            <field name="sequence">1</field>
             <field name="slide_id" ref="slide_slide_demo_5_3"/>
         </record>
         <record id="slide_slide_demo_5_3_question_0_0" model="slide.answer">
             <field name="text_value">Yes</field>
+            <field name="sequence">1</field>
             <field name="is_correct" eval="True"/>
             <field name="question_id" ref="slide_slide_demo_5_3_question_0"/>
         </record>
         <record id="slide_slide_demo_5_3_question_0_1" model="slide.answer">
             <field name="text_value">No</field>
+            <field name="sequence">2</field>
             <field name="is_correct" eval="False"/>
             <field name="question_id" ref="slide_slide_demo_5_3_question_0"/>
         </record>
