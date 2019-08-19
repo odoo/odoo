@@ -11,6 +11,10 @@ var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
 
+var mathUtils = require('web.mathUtils');
+var cartesian = mathUtils.cartesian;
+var sections = mathUtils.sections;
+
 /**
  * Helper function that returns, given a pivot instance, the values of the
  * table, separated by ','.
@@ -2571,5 +2575,87 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
+
+    QUnit.test('Test pivot view performances', async function (assert) {
+        assert.expect(1);
+
+        let rpcCounter = 0;
+
+        const customers = [];
+        const products = [];
+        let id = 0;
+        for (let i = 1; i < 25; i++) {
+            customers.push([id, "Customer_" + id]);
+            products.push([id, "Product_" + id]);
+            id++;
+        }
+
+        const ranges =  {
+            date: ['2016-12-15', '2016-12-17', '2016-11-22', '2016-11-03'].map(val => {return {date: [val, val]}}),
+            bar: [true, false].map(val => {return {bar: val}}),
+            customer: customers.map(val => {return {customer: val}}),
+            product_id: products.map(val => {return {product_id: val}}),
+            other_product_id: products.map(val => {return {other_product_id: val}}),
+        }
+
+        const leftDivisors = sections(['product_id', 'date']);
+        const rightDivisors = sections(['customer', 'other_product_id', 'bar']);
+        const divisors = cartesian(leftDivisors, rightDivisors);
+
+        let fakeGroup = { __count: 1, __domain: []};
+        const groups = divisors.map(function ([rowGroupBys, colGroupBys]) {
+            const groupBys = [...rowGroupBys, ...colGroupBys];
+            if (!groupBys.length) {
+                return [fakeGroup];
+            } else {
+                const objectTuples = cartesian(...(groupBys.map(gb => ranges[gb])));
+                const subGroups = objectTuples.map(tuple => {
+                    if (!(tuple instanceof Array)) {
+                        return _.extend(tuple, fakeGroup, {foo: Math.floor(Math.random() * Math.floor(4))});
+                    }
+                    let g = _.extend({}, fakeGroup);
+                    for (let o of tuple) {
+                        _.extend(g, o);
+                    }
+                    return g;
+                });
+                return subGroups;
+            }
+        });
+
+        const now = Date.now();
+
+        var pivot = await createView({
+            View: PivotView,
+            model: 'partner',
+            data: this.data,
+            arch: '<pivot>' +
+                    '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            viewOptions: {
+                context: {
+                    pivot_measures: ['foo'],
+                    pivot_column_groupby: ['customer', 'other_product_id', 'bar'],
+                    pivot_row_groupby: ['product_id', 'date'],
+                },
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    const subGroups = groups[rpcCounter];
+                    rpcCounter++
+                    return Promise.resolve(subGroups);
+                }
+                return this._super(route, args);
+            }
+        });
+
+        const delta = Date.now() - now;
+
+        assert.ok(delta < 40, `should take less than 40 seconds to process data and render the pivot view. ` +
+                                `Recorded time: ${delta} sec`);
+
+        pivot.destroy();
+    });
+
 });
 });
