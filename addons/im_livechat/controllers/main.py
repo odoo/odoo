@@ -98,7 +98,7 @@ class LivechatController(http.Controller):
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
-        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
+        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
