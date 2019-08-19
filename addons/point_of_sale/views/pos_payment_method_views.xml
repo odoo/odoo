@@ -12,10 +12,12 @@
                     </div>
                     <group name="Payment methods">
                         <group>
+                            <field name="hide_use_payment_terminal" invisible="1"/>
                             <field name="receivable_account_id" groups="account.group_account_user" />
                             <field name="is_cash_count" />
                             <field name="cash_journal_id" attrs="{'invisible': [('is_cash_count', '=', False)], 'required': [('is_cash_count', '=', True)]}" />
                             <field name="split_transactions" groups="base.group_no_one" />
+                            <field name="use_payment_terminal" attrs="{'invisible': ['|', ('is_cash_count', '=', True), ('hide_use_payment_terminal', '=', True)]}"/>
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                         </group>
                         <group>
