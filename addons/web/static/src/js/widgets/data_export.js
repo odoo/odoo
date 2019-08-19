@@ -178,7 +178,7 @@ var DataExport = Dialog.extend({
                 })
             },
             complete: framework.unblockUI,
-            error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+            error: (error) => this.call('crash_manager', 'rpc_error', error),
         });
     },
     /**

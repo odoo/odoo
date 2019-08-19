@@ -103,7 +103,7 @@ var stock_report_generic = AbstractAction.extend({
                 url: url_data.replace('output_format', 'pdf'),
                 data: {data: JSON.stringify(dict)},
                 complete: framework.unblockUI,
-                error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+                error: (error) => self.call('crash_manager', 'rpc_error', error),
             });
         });
         return this.$buttons;

@@ -1941,7 +1941,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
-                error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+                error: (error) => this.call('crash_manager', 'rpc_error', error),
                 url: '/web/content',
             });
             ev.stopPropagation();
