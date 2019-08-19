@@ -46,7 +46,6 @@
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/thread_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/discuss_mobile.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                     <!-- composers -->
                     <script type="text/javascript" src="/mail/static/src/js/composers/basic_composer.js"></script>
@@ -138,12 +137,6 @@
                 <script type="text/javascript" src="/mail/static/tests/activity_tests.js"></script>
                 <!-- services -->
                 <script type="text/javascript" src="/mail/static/tests/mail_status_manager_tests.js"></script>
-            </xpath>
-        </template>
-
-        <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite">
-            <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/mail/static/tests/discuss_mobile_tests.js"></script>
             </xpath>
         </template>
 
