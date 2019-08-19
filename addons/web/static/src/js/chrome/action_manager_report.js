@@ -53,8 +53,8 @@ ActionManager.include({
                     data: JSON.stringify([url, type]),
                 },
                 success: resolve,
-                error: () => {
-                    this.call('crash_manager', 'rpc_error', ...arguments);
+                error: (error) => {
+                    self.call('crash_manager', 'rpc_error', error);
                     reject();
                 },
                 complete: framework.unblockUI,

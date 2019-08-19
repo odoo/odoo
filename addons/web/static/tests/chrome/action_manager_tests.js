@@ -2205,6 +2205,46 @@ QUnit.module('ActionManager', {
         testUtils.mock.unpatch(ReportClientAction);
     });
 
+    QUnit.test('crashmanager service called on failed report download actions', async function (assert) {
+        assert.expect(1);
+
+        var actionManager = await createActionManager({
+            data: this.data,
+            actions: this.actions,
+            services: {
+                report: ReportService,
+            },
+            mockRPC: function (route) {
+                if (route === '/report/check_wkhtmltopdf') {
+                    return Promise.resolve('ok');
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    params.error({
+                        data: {
+                            name: 'error',
+                            exception_type: 'warning',
+                            arguments: ['could not download file'],
+                        }
+                    });
+                    params.complete();
+                },
+            },
+        });
+
+        try {
+            await actionManager.doAction(11);
+        } catch (e) {
+            // e is undefined if we land here because of a rejected promise,
+            // otherwise, it is an Error, which is not what we expect
+            assert.strictEqual(e, undefined);
+        }
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Window Actions');
 
     QUnit.test('can execute act_window actions from db ID', async function (assert) {
