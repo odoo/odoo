@@ -18,14 +18,15 @@ class WebsiteSaleProductComparison(WebsiteSale):
         products = request.env['product.product'].search([('id', 'in', product_ids)])
         values['products'] = products.with_context(display_default_code=False)
 
-        res = {}
+        res = OrderedDict()
+        attrs = products.mapped('attribute_line_ids.attribute_id').filtered(lambda x: x.create_variant)
+        for attr in attrs.sorted(lambda att: (att.category_id.sequence, att.sequence)):
+            cat_name = attr.category_id.name or _('Uncategorized')
+            res.setdefault(cat_name, OrderedDict()).setdefault(attr.name, [' - '] * len(products))
         for num, product in enumerate(products):
-            for var in product.attribute_line_ids.sorted(lambda x: x.attribute_id.sequence):
+            for var in product.attribute_line_ids.filtered(lambda x: x.attribute_id.create_variant):
                 cat_name = var.attribute_id.category_id.name or _('Uncategorized')
                 att_name = var.attribute_id.name
-                if not var.attribute_id.create_variant:
-                    continue
-                res.setdefault(cat_name, OrderedDict()).setdefault(att_name, [' - '] * len(products))
                 val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
                 res[cat_name][att_name][num] = val[0].name
         values['specs'] = res
