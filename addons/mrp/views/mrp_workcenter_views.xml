@@ -145,7 +145,7 @@
                     <field name="oee_target"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div style="width: 400px;" t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header o_kanban_record_top">
                                     <div class="o_kanban_record_headings o_kanban_card_header_title">
                                         <span class="o_primary ml8" style="display: inline-block">
