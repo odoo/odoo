@@ -5,31 +5,41 @@ import json
 from odoo import api, models, _
 from odoo.tools import float_round
 
+
 class ReportBomStructure(models.AbstractModel):
     _name = 'report.mrp.report_bom_structure'
     _description = 'BOM Structure Report'
 
     @api.model
+    def get_data(self, report_name):
+        header = self.get_header(report_name)
+        bom_columns = self.get_column_key(report_name)
+        return header, bom_columns
+
+    @api.model
     def _get_report_values(self, docids, data=None):
         docs = []
+        report_name = data.get('report_name') or 'all'
+        quantity = float(data.get('quantity')) or 1
         for bom_id in docids:
             bom = self.env['mrp.bom'].browse(bom_id)
             candidates = bom.product_id or bom.product_tmpl_id.product_variant_ids
             for product_variant_id in candidates:
                 if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
+                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, child_bom_ids=json.loads(data.get('childs')), report_name=report_name)
                 else:
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), unfolded=True)
                 doc['report_type'] = 'pdf'
-                doc['report_structure'] = data and data.get('report_type') or 'all'
+                doc['report_name'] = data and data.get('report_name') or 'all'
                 docs.append(doc)
             if not candidates:
                 if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
+                    doc = self._get_pdf_line(bom_id, qty=quantity, child_bom_ids=json.loads(data.get('childs')), report_name=report_name)
                 else:
                     doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), unfolded=True)
+
                 doc['report_type'] = 'pdf'
-                doc['report_structure'] = data and data.get('report_type') or 'all'
+                doc['report_name'] = data and data.get('report_name') or 'all'
                 docs.append(doc)
         return {
             'doc_ids': docids,
@@ -41,7 +51,7 @@ class ReportBomStructure(models.AbstractModel):
     def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
         res = self._get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant)
         res['lines']['report_type'] = 'html'
-        res['lines']['report_structure'] = 'all'
+        res['lines']['report_name'] = 'all'
         res['lines']['has_attachments'] = res['lines']['attachments'] or any(component['attachments'] for component in res['lines']['components'])
         res['lines'] = self.env.ref('mrp.report_mrp_bom').render({'data': res['lines']})
         return res
@@ -82,44 +92,56 @@ class ReportBomStructure(models.AbstractModel):
         return {
             'lines': lines,
             'variants': bom_product_variants,
-            'bom_uom_name': bom_uom_name,
-            'bom_qty': bom_quantity,
+            'uom': bom_uom_name,
+            'quantity': bom_quantity,
             'is_variant_applied': self.env.user.user_has_groups('product.group_product_variant') and len(bom_product_variants) > 1,
             'is_uom_applied': self.env.user.user_has_groups('uom.group_uom')
         }
 
+    def _get_seller(self, product, quantity, uom):
+        seller = product._select_seller(partner_id=False, quantity=quantity, date=False, uom_id=uom)
+        if not seller and product.seller_ids:
+            seller = product.seller_ids[0]
+        return seller
+
     def _get_bom(self, bom_id=False, product_id=False, line_qty=False, line_id=False, level=False):
         bom = self.env['mrp.bom'].browse(bom_id)
         bom_quantity = line_qty
+        product = False
         if line_id:
             current_line = self.env['mrp.bom.line'].browse(int(line_id))
             bom_quantity = current_line.product_uom_id._compute_quantity(line_qty, bom.product_uom_id)
         # Display bom components for current selected product variant
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
-        else:
+        if not product:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
         if product:
+            seller = self._get_seller(product=product, quantity=bom_quantity, uom=bom.product_uom_id)
             attachments = self.env['mrp.document'].search(['|', '&', ('res_model', '=', 'product.product'),
             ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id)])
         else:
             product = bom.product_tmpl_id
+            seller = self._get_seller(product=product, quantity=bom_quantity, uom=bom.product_uom_id)
             attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', product.id)])
         operations = self._get_operation_line(bom.routing_id, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
-            'bom_qty': bom_quantity,
-            'bom_prod_name': product.display_name,
-            'currency': self.env.company.currency_id,
+            'quantity': bom_quantity,
+            'name': product.display_name,
+            'currency': self.env.user.company_id.currency_id,
             'product': product,
             'code': bom and bom.display_name or '',
-            'price': product.uom_id._compute_price(product.standard_price, bom.product_uom_id) * bom_quantity,
+            'prod_cost': product.uom_id._compute_price(product.standard_price, bom.product_uom_id) * bom_quantity,
             'total': sum([op['total'] for op in operations]),
             'level': level or 0,
             'operations': operations,
             'operations_cost': sum([op['total'] for op in operations]),
             'attachments': attachments,
-            'operations_time': sum([op['duration_expected'] for op in operations])
+            'operations_time': sum([op['duration_expected'] for op in operations]),
+            'vendor_name': seller.display_name or '',
+            'vendor_cost': seller.price or 0.0,
+            'type': 'bom'
         }
         components, total = self._get_bom_lines(bom, bom_quantity, product, line_id, level)
         lines['components'] = components
@@ -140,13 +162,14 @@ class ReportBomStructure(models.AbstractModel):
             else:
                 sub_total = price
             sub_total = self.env.company.currency_id.round(sub_total)
+            seller = self._get_seller(product=line.product_id, quantity=line_quantity, uom=line.product_uom_id)
             components.append({
                 'prod_id': line.product_id.id,
-                'prod_name': line.product_id.display_name,
+                'name': line.product_id.display_name,
                 'code': line.child_bom_id and line.child_bom_id.display_name or '',
-                'prod_qty': line_quantity,
-                'prod_uom': line.product_uom_id.name,
-                'prod_cost': self.env.company.currency_id.round(price),
+                'quantity': line_quantity,
+                'uom': line.product_uom_id.name,
+                'prod_cost': self.env.user.company_id.currency_id.round(price),
                 'parent_id': bom.id,
                 'line_id': line.id,
                 'level': level or 0,
@@ -155,7 +178,9 @@ class ReportBomStructure(models.AbstractModel):
                 'phantom_bom': line.child_bom_id and line.child_bom_id.type == 'phantom' or False,
                 'attachments': self.env['mrp.document'].search(['|', '&',
                     ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)]),
-
+                'vendor_name': seller.display_name or '',
+                'vendor_cost': seller.price or 0.0,
+                'type': 'bom'
             })
             total += sub_total
         return components, total
@@ -202,37 +227,41 @@ class ReportBomStructure(models.AbstractModel):
                 price += self.env.company.currency_id.round(not_rounded_price)
         return price
 
-    def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=[], unfolded=False):
+    def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=[], unfolded=False, report_name='all'):
 
         data = self._get_bom(bom_id=bom_id, product_id=product_id.id, line_qty=qty)
 
-        def get_sub_lines(bom, product_id, line_qty, line_id, level):
+        def get_sub_lines(bom, product_id, line_qty, line_id, level, report_name):
             data = self._get_bom(bom_id=bom.id, product_id=product_id.id, line_qty=line_qty, line_id=line_id, level=level)
             bom_lines = data['components']
             lines = []
             for bom_line in bom_lines:
                 lines.append({
-                    'name': bom_line['prod_name'],
+                    'name': bom_line['name'],
                     'type': 'bom',
-                    'quantity': bom_line['prod_qty'],
-                    'uom': bom_line['prod_uom'],
+                    'quantity': bom_line['quantity'],
+                    'uom': bom_line['uom'],
                     'prod_cost': bom_line['prod_cost'],
-                    'bom_cost': bom_line['total'],
+                    'total': bom_line['total'],
                     'level': bom_line['level'],
                     'code': bom_line['code'],
                     'child_bom': bom_line['child_bom'],
-                    'prod_id': bom_line['prod_id']
+                    'prod_id': bom_line['prod_id'],
+                    'vendor_name': bom_line['vendor_name'],
+                    'vendor_cost': bom_line['vendor_cost']
                 })
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
-                    lines += (get_sub_lines(line.child_bom_id, line.product_id, bom_line['prod_qty'], line, level + 1))
+                    lines += (get_sub_lines(line.child_bom_id, line.product_id, bom_line['quantity'], line, level + 1, report_name))
+            if report_name == 'bom_structure':
+                return lines
             if data['operations']:
                 lines.append({
                     'name': _('Operations'),
                     'type': 'operation',
                     'quantity': data['operations_time'],
                     'uom': _('minutes'),
-                    'bom_cost': data['operations_cost'],
+                    'total': data['operations_cost'],
                     'level': level,
                 })
                 for operation in data['operations']:
@@ -242,14 +271,31 @@ class ReportBomStructure(models.AbstractModel):
                             'type': 'operation',
                             'quantity': operation['duration_expected'],
                             'uom': _('minutes'),
-                            'bom_cost': operation['total'],
+                            'total': operation['total'],
                             'level': level + 1,
                         })
             return lines
 
         bom = self.env['mrp.bom'].browse(bom_id)
         product = product_id or bom.product_id or bom.product_tmpl_id.product_variant_id
-        pdf_lines = get_sub_lines(bom, product, qty, False, 1)
+        pdf_lines = get_sub_lines(bom, product, qty, False, 1, report_name)
         data['components'] = []
         data['lines'] = pdf_lines
+        return data
+
+    def get_header(self, report_name):
+        return {
+            'name': 'Product',
+            'code': 'BoM',
+            'quantity': 'Quantity',
+            'prod_cost': 'Product Cost',
+            'total': 'Bom Cost',
+            'vendor_name': 'Vendor Name',
+            'vendor_cost': 'Vendor Cost',
+        }
+
+    def get_column_key(self, report_name):
+        data = ['name', 'code', 'quantity', 'vendor_name', 'vendor_cost', 'prod_cost']
+        if(report_name == "all"):
+            data.insert(4, 'total')
         return data

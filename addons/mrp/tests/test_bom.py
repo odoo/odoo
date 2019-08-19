@@ -589,7 +589,7 @@ class TestBoM(TestMrpCommon):
             ('attribute_value_ids', '=', self.color_blue.id)
         ])
         self.assertEqual(blue_paint.id, report_values['lines']['components'][0]['prod_id'])
-        self.assertEqual(report_values['lines']['components'][0]['prod_qty'], 10)
+        self.assertEqual(report_values['lines']['components'][0]['quantity'], 10)
         # 1 blue dashboard with GPS
         blue_dashboard_gps = self.env['product.product'].search([
             ('product_tmpl_id', '=', self.dashboard.id),
@@ -597,10 +597,10 @@ class TestBoM(TestMrpCommon):
             ('attribute_value_ids', '=', self.color_blue.id)
         ])
         self.assertEqual(blue_dashboard_gps.id, report_values['lines']['components'][1]['prod_id'])
-        self.assertEqual(report_values['lines']['components'][1]['prod_qty'], 1)
+        self.assertEqual(report_values['lines']['components'][1]['quantity'], 1)
         component = report_values['lines']['components'][1]
         report_values_dashboad = self.env['report.mrp.report_bom_structure']._get_bom(
-            component['child_bom'], component['prod_id'], component['prod_qty'],
+            component['child_bom'], component['prod_id'], component['quantity'],
             component['line_id'], component['level'] + 1)
 
         self.assertEqual(len(report_values_dashboad['components']), 2)

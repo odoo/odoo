@@ -4,6 +4,8 @@ odoo.define('mrp.mrp_bom_report', function (require) {
 var core = require('web.core');
 var framework = require('web.framework');
 var stock_report_generic = require('stock.stock_report_generic');
+var session = require('web.session');
+var crash_manager = require('web.crash_manager')
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -110,10 +112,11 @@ var MrpBomReport = stock_report_generic.extend({
         this.$buttonPrint = $(QWeb.render('mrp.button'));
         this.$buttonPrint.filter('.o_mrp_bom_print').on('click', this._onClickPrint.bind(this));
         this.$buttonPrint.filter('.o_mrp_bom_print_unfolded').on('click', this._onClickPrint.bind(this));
+        this.$buttonPrint.filter('.o_mrp_bom_print_xlsx').on('click', this._onClickXlsx.bind(this));
         this.$searchView = $(QWeb.render('mrp.report_bom_search', _.omit(this.data, 'lines')));
         this.$searchView.find('.o_mrp_bom_report_qty').on('change', this._onChangeQty.bind(this));
         this.$searchView.find('.o_mrp_bom_report_variants').on('change', this._onChangeVariants.bind(this));
-        this.$searchView.find('.o_mrp_bom_report_type').on('change', this._onChangeType.bind(this));
+        this.$searchView.find('.o_mrp_bom_report_name').on('change', this._onChangeType.bind(this));
     },
     _onClickPrint: function (ev) {
         var childBomIDs = _.map(this.$el.find('.o_mrp_bom_foldable').closest('tr'), function (el) {
@@ -121,7 +124,7 @@ var MrpBomReport = stock_report_generic.extend({
         });
         framework.blockUI();
         var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id +
-                         '&report_type=' + this.given_context.report_type +
+                         '&report_name=' + this.given_context.report_name +
                          '&quantity=' + (this.given_context.searchQty || 1);
         if (! $(ev.currentTarget).hasClass('o_mrp_bom_print_unfolded')) {
             reportname += '&childs=' + JSON.stringify(childBomIDs);
@@ -139,6 +142,31 @@ var MrpBomReport = stock_report_generic.extend({
             framework.unblockUI();
         });
     },
+     _onClickXlsx: function (ev) {
+        var childBomIDs = _.map(this.$el.find('.o_mrp_bom_foldable').closest('tr'), function (el) {
+            return $(el).data('id');
+        });
+        framework.blockUI();
+        var quantity = this.$searchView.find('.o_mrp_bom_report_qty').val();
+        var bom_id = parseInt(this.given_context.active_id);
+        var variant = this.$searchView.find('.o_mrp_bom_report_variants').val();
+        var report_name = this.$searchView.find('.o_mrp_bom_report_name').children('option:selected').attr('data-type'); 
+        var def = $.Deferred();
+        session.get_file({
+            url: '/bom_report_xslx/'+ bom_id,
+            data: {
+                quantity: quantity || 1,
+                variant: variant || 0,
+                report_name: report_name,
+            },
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+    },
     _onChangeQty: function (ev) {
         var qty = $(ev.currentTarget).val().trim();
         if (qty) {
@@ -147,8 +175,8 @@ var MrpBomReport = stock_report_generic.extend({
         }
     },
     _onChangeType: function (ev) {
-        var report_type = $("option:selected", $(ev.currentTarget)).data('type');
-        this.given_context.report_type = report_type;
+        var report_name = $("option:selected", $(ev.currentTarget)).data('type');
+        this.given_context.report_name = report_name;
         this._reload_report_type();
     },
     _onChangeVariants: function (ev) {
@@ -195,7 +223,7 @@ var MrpBomReport = stock_report_generic.extend({
     },
     _reload_report_type: function () {
         this.$('.o_mrp_bom_cost.o_hidden, .o_mrp_prod_cost.o_hidden').toggleClass('o_hidden');
-        if (this.given_context.report_type === 'bom_structure') {
+        if (this.given_context.report_name === 'bom_structure') {
            this.$('.o_mrp_bom_cost, .o_mrp_prod_cost').toggleClass('o_hidden');
         }
     },
