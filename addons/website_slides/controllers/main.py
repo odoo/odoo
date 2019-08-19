@@ -264,12 +264,9 @@ class WebsiteSlides(WebsiteProfile):
             ]).mapped('challenge_id')
 
         # fetch 'heroes of the week' for non logged people
-        if request.env.user._is_public():
-            users = request.env['res.users'].sudo().search([
-                ('karma', '>', 0),
-                ('website_published', '=', True)], limit=5, order='karma desc')
-        else:
-            users = None
+        users = request.env['res.users'].sudo().search([
+            ('karma', '>', 0),
+            ('website_published', '=', True)], limit=5, order='karma desc')
 
         values = self._prepare_user_values(**post)
         values.update({
