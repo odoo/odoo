@@ -64,7 +64,12 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
 
     _getSlides: function (){
         var categories = [];
-        this.$('.o_wslides_js_list_item').each(function (){
+        // first get all slides that have no category
+        this.$('.o_wslides_slide_list_no_category .o_wslides_js_list_item').each(function () {
+            categories.push(parseInt($(this).data('slideId')));
+        });
+        // then get the remaining
+        this.$('.o_wslides_slide_list_category, .o_wslides_slide_list_category .o_wslides_js_list_item').each(function () {
             categories.push(parseInt($(this).data('slideId')));
         });
         return categories;

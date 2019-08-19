@@ -58,7 +58,7 @@ class SlideLink(models.Model):
 
     slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
     name = fields.Char('Title', required=True)
-    link = fields.Char('External Link', required=True)
+    link = fields.Char('Link', required=True)
 
 
 class EmbeddedSlide(models.Model):
@@ -122,8 +122,8 @@ class Slide(models.Model):
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
-    is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
-    completion_time = fields.Float('Completion Time', digits=(10, 4), help="The estimated completion time for this slide")
+    is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
+    completion_time = fields.Float('Duration', digits=(10, 4), help="The estimated completion time for this slide")
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
     category_id = fields.Many2one('slide.slide', string="Category", compute="_compute_category_id", store=True)
@@ -137,6 +137,7 @@ class Slide(models.Model):
         help="Subscriber information for the current logged in user")
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
+    questions_count = fields.Integer(string="Numbers of Questions", compute='_compute_questions_count')
     quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
     quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
     quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
@@ -160,7 +161,7 @@ class Slide(models.Model):
     html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
-    date_published = fields.Datetime('Publish Date')
+    date_published = fields.Datetime('Publish Date', readonly=True, tracking=True)
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
     user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
@@ -210,6 +211,11 @@ class Slide(models.Model):
                     current_category = slide
                 elif slide.category_id != current_category:
                     slide.category_id = current_category.id
+
+    @api.depends('question_ids')
+    def _compute_questions_count(self):
+        for slide in self:
+            slide.questions_count = len(slide.question_ids)
 
     @api.depends('website_message_ids.res_id', 'website_message_ids.model', 'website_message_ids.message_type')
     def _compute_comments_count(self):
@@ -390,7 +396,7 @@ class Slide(models.Model):
 
         slide = super(Slide, self).create(values)
 
-        if slide.is_published:
+        if slide.is_published and not slide.is_category:
             slide._post_publication()
         return slide
 
