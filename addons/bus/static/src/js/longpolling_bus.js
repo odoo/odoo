@@ -158,6 +158,26 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         return this._lastPresenceTime;
     },
     /**
+     * @private
+     * @param {Object[]} notifications
+     * @param {Object} notifications[i]
+     * @param {Array} notifications[i].channel
+     * @param {Object} notifications[i].message
+     */
+    _parseAndEmitNotifications(notifications) {
+        const lastNotificationID = this._lastNotificationID;
+        if (notifications.length) {
+            this._lastNotificationID = Math.max(
+                ...notifications.map(notif => notif.id),
+                this._lastNotificationID
+            );
+        }
+        const notifs = notifications
+            .filter(notif => notif.id > lastNotificationID)
+            .map(notif => [notif.channel, notif.message]);
+        this.trigger('notification', notifs);
+    },
+    /**
      * Continually start a poll:
      *
      * A poll is a connection that is kept open for a relatively long period
@@ -224,18 +244,9 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      *
      * @private
      * @param {Object[]} notifications, Input notifications have an id, channel, message
-     * @returns {Array[]} Output arrays have notification's channel and message
      */
     _onPoll: function (notifications) {
-        var self = this;
-        var notifs = _.map(notifications, function (notif) {
-            if (notif.id > self._lastNotificationID) {
-                self._lastNotificationID = notif.id;
-            }
-            return [notif.channel, notif.message];
-        });
-        this.trigger("notification", notifs);
-        return notifs;
+        this._parseAndEmitNotifications(notifications);
     },
     /**
      * Handler when they are an activity on the window (click, keydown, keyup)

@@ -213,6 +213,133 @@ QUnit.module('Bus', {
         parentSlave.destroy();
     });
 
+    QUnit.test('background slave tabs should not loose notifications', async function (assert) {
+        // when some slave tabs are in background, they are throttled, so they
+        // behave as if the local storage did not register some notifications.
+        // That's why this test simulates this issue by non-commiting the 1st
+        // write of notifications in the local storage, by so-called "slow local
+        // storage".
+        assert.expect(7);
+
+        // 1. Setup: "slow local storage"
+        let storageNotificationStep = 0;
+        const SlowRamStorage = RamStorage.extend({
+            /**
+             * Intentionally drop 1st notification
+             *
+             * @override
+             */
+            setItem(key, value) {
+                if (key.indexOf('notification') === -1) {
+                    return this._super(...arguments);
+                }
+                storageNotificationStep++;
+                if (storageNotificationStep === 1) {
+                    return;
+                }
+                this._super(...arguments);
+            },
+        });
+        const SlowLocalStorageServiceMock = AbstractStorageService.extend({
+            storage: new SlowRamStorage(),
+        });
+
+        // 2. Setup: master tab
+        function pollAbort() {
+            this.reject({
+                message: 'XmlHttpRequestError abort',
+            }, $.Event());
+        }
+        let step = 0;
+        let pollMasterProm1;
+        let pollMasterProm2;
+        const parentMaster = new Widget();
+        testUtils.mock.addMockEnvironment(parentMaster, {
+            data: {},
+            services: {
+                bus_service: BusService,
+                local_storage: SlowLocalStorageServiceMock,
+            },
+            mockRPC(route, args) {
+                if (route === '/longpolling/poll') {
+                    step++;
+                    assert.step(`master - ${route} - ${args.channels.join(',')}`);
+                    if (step === 1) {
+                        pollMasterProm1 = testUtils.makeTestPromise();
+                        pollMasterProm1.abort = pollAbort.bind(pollMasterProm1);
+                        return pollMasterProm1;
+                    }
+                    if (step === 2) {
+                        pollMasterProm2 = testUtils.makeTestPromise();
+                        pollMasterProm2.abort = pollAbort.bind(pollMasterProm2);
+                        return pollMasterProm2;
+                    }
+                    if (step === 3) {
+                        const prom = testUtils.makeTestPromise();
+                        prom.abort = pollAbort.bind(prom);
+                        return prom;
+                    }
+                    if (step > 3) {
+                        throw new Error('should not call longpolling/poll more than 3 times');
+                    }
+                }
+                return this._super(...arguments);
+            }
+        });
+        const master = new Widget(parentMaster);
+        await master.appendTo($('#qunit-fixture'));
+        master.call('bus_service', 'onNotification', master, notifications =>
+            assert.step(`master - notification - ${notifications.toString()}`));
+        master.call('bus_service', 'addChannel', 'lambda');
+
+        // 3. Setup: slave tab
+        await testUtils.nextTick();
+        const parentSlave = new Widget();
+        testUtils.mock.addMockEnvironment(parentSlave, {
+            data: {},
+            services: {
+                bus_service: BusService,
+                local_storage: SlowLocalStorageServiceMock,
+            },
+            mockRPC(route) {
+                if (route === '/longpolling/poll') {
+                    throw new Error("Can not use the longpolling of the slave client");
+                }
+                return this._super(...arguments);
+            }
+        });
+        const slave = new Widget(parentSlave);
+        await slave.appendTo($('#qunit-fixture'));
+        slave.call('bus_service', 'onNotification', slave, notifications =>
+            assert.step(`slave - notification - ${notifications.toString()}`));
+        slave.call('bus_service', 'addChannel', 'lambda');
+
+        // 4. Test
+        pollMasterProm1.resolve([{
+            id: 1,
+            channel: 'lambda',
+            message: 'beta',
+        }]);
+        await testUtils.nextTick();
+        pollMasterProm2.resolve([{
+            id: 2,
+            channel: 'lambda',
+            message: 'gamma',
+        }]);
+        await testUtils.nextTick();
+        assert.verifySteps([
+            'master - /longpolling/poll - lambda',
+            'master - notification - lambda,beta',
+            'master - /longpolling/poll - lambda',
+            'master - notification - lambda,gamma',
+            'slave - notification - lambda,beta,lambda,gamma',
+            'master - /longpolling/poll - lambda',
+        ]);
+
+        parentMaster.destroy();
+        parentSlave.destroy();
+    });
+
     QUnit.test('cross tab bus elect new master on master unload', async function (assert) {
         assert.expect(8);
 

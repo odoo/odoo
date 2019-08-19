@@ -52,6 +52,21 @@ var CrossTabBus = Longpolling.extend({
             this._callLocalStorage('removeItem', 'last');
         }
         this._lastNotificationID = this._callLocalStorage('getItem', 'last', 0);
+        /**
+         * List of raw notifications that are kept by master tab. Those
+         * notifications are forwarded by the master tab and kept for some time
+         * (e.g. 10 sec.). It fowards old notifications so that slave tabs do
+         * not miss some notifications, which may happen in case master tab
+         * overwrites notifications while slaves did not take time to read them.
+         */
+        this._masterNotifs = [];
+        /**
+         * Object whose index is a notification ID and the value is a momentjs.
+         * This is used to track time elapsed from reception of a notification,
+         * which is useful in order to reduce the amount of notifications to
+         * foward from master tab to slave tabs. @see _masterNotifs
+         */
+        this._masterNotifTimestamps = {};
         this.call('local_storage', 'onStorage', this, this._onStorage);
     },
     destroy: function () {
@@ -279,11 +294,34 @@ var CrossTabBus = Longpolling.extend({
      * @override
      */
     _onPoll: function (notifications) {
-        var notifs = this._super(notifications);
-        if (this._isMasterTab && notifs.length) {
+        if (this._isMasterTab && notifications.length) {
+            const currentMoment = moment();
+            const masterNotifIds = this._masterNotifs.map(notif =>
+                notif.id);
+            const newNotifs = notifications.filter(notif =>
+                !masterNotifIds.includes(notif.id) &&
+                this._lastNotificationID < notif.id);
+            // register timestamp for new notifications
+            for (const newNotif of newNotifs) {
+                this._masterNotifTimestamps[newNotif.id] = currentMoment;
+            }
+            // remove old notifications (more than 10 sec.)
+            for (const notif of Object.values(this._masterNotifs)) {
+                if (this._masterNotifTimestamps[notif.id].diff(currentMoment) > 10000) {
+                    this._masterNotifs = this._masterNotifs.filter(n => n.id === notif.id);
+                    delete this._masterNotifTimestamps[notif.id];
+                }
+            }
+            // add new notifications + sort by id
+            this._masterNotifs = this._masterNotifs
+                .concat(newNotifs)
+                .sort((notif1, notif2) => notif1.id < notif2.id ? -1 : 1);
+        }
+        this._super(notifications);
+        if (this._isMasterTab && notifications.length) {
             this._callLocalStorage('setItem', 'last', this._lastNotificationID);
             this._callLocalStorage('setItem', 'last_ts', new Date().getTime());
-            this._callLocalStorage('setItem', 'notification', notifs);
+            this._callLocalStorage('setItem', 'notification', this._masterNotifs);
         }
     },
     /**
@@ -303,14 +341,10 @@ var CrossTabBus = Longpolling.extend({
             this._startElection();
         }
 
-        // last notification id changed
-        if (key === this._generateKey('last')) {
-            this._lastNotificationID = value || 0;
-        }
         // notifications changed
         else if (key === this._generateKey('notification')) {
             if (!this._isMasterTab) {
-                this.trigger("notification", value);
+                this._parseAndEmitNotifications(value);
             }
         }
         // update channels
