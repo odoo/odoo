@@ -83,7 +83,7 @@
             </field>
         </record>
 
-        <menuitem id="product_menu_catalog" name="Products" action="product_template_action" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
+        <menuitem id="product_menu_catalog" name="Products" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
         <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="base.group_no_one" active="False"/>
         <menuitem action="product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
@@ -316,7 +316,7 @@
                                 <label for="date_order" string="Order Date"/> 
                             </div>
                             <field name="date_order" attrs="{'required': [('state', 'in', ['sale', 'done'])], 'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
-                            <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                            <field name="pricelist_id" groups="product.group_product_pricelist" options="{'no_open':True,'no_create': True}"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_open':True,'no_create': True}"/>
                         </group>
@@ -633,7 +633,7 @@
                                 <group name="sale_info" string="Invoicing">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                                     <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
-                                    <field name="invoice_status" states="sale,done"/>
+                                    <field name="invoice_status" states="sale,done" groups="base.group_no_one"/>
                                 </group>
                             </group>
                             <group>

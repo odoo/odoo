@@ -36,6 +36,10 @@ class SaleOrder(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
     effective_date = fields.Date("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
+    expected_date = fields.Datetime( help="Delivery date you can promise to the customer, computed from the minimum lead time of "
+                                          "the order lines in case of Service products. In case of shipping, the shipping policy of "
+                                          "the order will be taken into account to either use the minimum or maximum lead time of "
+                                          "the order lines.")
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
