@@ -75,6 +75,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEquals(avail_qty_comp2, -1)
         self.assertEquals(avail_qty_finished, 1)
 
+        # Ensure returns to subcontractor location
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking_receipt.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_picking_id, pick_type_id = return_wizard._create_returns()
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        self.assertEqual(len(return_picking), 1)
+        self.assertEqual(return_picking.move_lines.location_dest_id, self.subcontractor_partner1.property_stock_subcontractor)
+
     def test_flow_2(self):
         """ Tick "Resupply Subcontractor on Order" on the components and trigger the creation of
         the subcontracting manufacturing order through a receipt picking. Checks if the resupplying
