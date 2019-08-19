@@ -213,6 +213,11 @@ class MrpWorkorder(models.Model):
         for order in (self - late_orders):
             order.color = 2
 
+    @api.onchange('date_planned_start', 'duration_expected')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.duration_expected:
+            self.date_planned_finished = self.date_planned_start  + relativedelta(minutes=self.duration_expected)
+
     @api.multi
     def write(self, values):
         if list(values.keys()) != ['time_ids'] and any(workorder.state == 'done' for workorder in self):

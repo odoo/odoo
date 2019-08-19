@@ -404,6 +404,8 @@ class PurchaseOrder(models.Model):
             'default_company_id': self.company_id.id,
             'company_id': self.company_id.id
         }
+        if self.user_id:
+            result['context']['default_user_id'] = self.user_id.id
         # choose the view_mode accordingly
         if len(self.invoice_ids) > 1 and not create_bill:
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"

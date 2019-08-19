@@ -151,23 +151,23 @@ class Channel(models.Model):
     @api.constrains('moderator_ids')
     def _check_moderator_email(self):
         if any(not moderator.email for channel in self for moderator in channel.moderator_ids):
-            raise ValidationError("Moderators must have an email address.")
+            raise ValidationError(_("Moderators must have an email address."))
 
     @api.constrains('moderator_ids', 'channel_partner_ids', 'channel_last_seen_partner_ids')
     def _check_moderator_is_member(self):
         for channel in self:
             if not (channel.mapped('moderator_ids.partner_id') <= channel.sudo().channel_partner_ids):
-                raise ValidationError("Moderators should be members of the channel they moderate.")
+                raise ValidationError(_("Moderators should be members of the channel they moderate."))
 
     @api.constrains('moderation', 'email_send')
     def _check_moderation_parameters(self):
         if any(not channel.email_send and channel.moderation for channel in self):
-            raise ValidationError('Only mailing lists can be moderated.')
+            raise ValidationError(_('Only mailing lists can be moderated.'))
 
     @api.constrains('moderator_ids')
     def _check_moderator_existence(self):
         if any(not channel.moderator_ids for channel in self if channel.moderation):
-            raise ValidationError('Moderated channels must have moderators.')
+            raise ValidationError(_('Moderated channels must have moderators.'))
 
     @api.multi
     def _compute_is_member(self):
@@ -254,7 +254,7 @@ class Channel(models.Model):
         # First checks if user tries to modify moderation fields and has not the right to do it.
         if any(key for key in MODERATION_FIELDS if vals.get(key)) and any(self.env.user not in channel.moderator_ids for channel in self if channel.moderation):
             if not self.env.user.has_group('base.group_system'):
-                raise UserError("You do not possess the rights to modify fields related to moderation on one of the channels you are modifying.")
+                raise UserError(_("You do not have the rights to modify fields related to moderation on one of the channels you are modifying."))
 
         tools.image_resize_images(vals)
         result = super(Channel, self).write(vals)
@@ -431,9 +431,9 @@ class Channel(models.Model):
         if self.env.user in self.moderator_ids or self.env.user.has_group('base.group_system'):
             success = self._send_guidelines(self.channel_partner_ids)
             if not success:
-                raise UserError('View "mail.mail_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.')
+                raise UserError(_('View "mail.mail_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.'))
         else:
-            raise UserError("Only an administrator or a moderator can send guidelines to channel members!")
+            raise UserError(_("Only an administrator or a moderator can send guidelines to channel members!"))
 
     @api.multi
     def _send_guidelines(self, partners):
