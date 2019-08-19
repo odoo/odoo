@@ -193,6 +193,7 @@ class ProductTemplateAttributeLine(models.Model):
     def create(self, values):
         res = super(ProductTemplateAttributeLine, self).create(values)
         res._update_product_template_attribute_values()
+        self.env['product.template'].invalidate_cache(fnames=['attribute_line_ids'])
         return res
 
     def write(self, values):

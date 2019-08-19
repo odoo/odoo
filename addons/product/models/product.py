@@ -14,7 +14,6 @@ from odoo.tools import float_compare
 _logger = logging.getLogger(__name__)
 
 
-
 class ProductCategory(models.Model):
     _name = "product.category"
     _description = "Product Category"
@@ -348,14 +347,7 @@ class ProductProduct(models.Model):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
-        self.env['product.template'].invalidate_cache(
-            fnames=[
-                'product_variant_ids',
-                'product_variant_id',
-                'product_variant_count'
-            ],
-            ids=products.mapped('product_tmpl_id').ids
-        )
+        self.env['product.template'].invalidate_cache(fnames=['product_variant_ids'])
         return products
 
     def write(self, values):
@@ -364,9 +356,7 @@ class ProductProduct(models.Model):
             # `_get_variant_id_for_combination` depends on `attribute_value_ids`
             self.clear_caches()
         if 'active' in values:
-            # prefetched o2m have to be reloaded (because of active_test)
-            # (eg. product.template: product_variant_ids)
-            self.invalidate_cache()
+            self.env['product.template'].invalidate_cache(fnames=['product_variant_ids'])
             # `_get_first_possible_variant_id` depends on variants active state
             self.clear_caches()
         return res

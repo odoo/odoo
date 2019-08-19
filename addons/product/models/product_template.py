@@ -597,11 +597,9 @@ class ProductTemplate(models.Model):
         if variants_to_unlink:
             variants_to_unlink._unlink_or_archive()
 
-        # prefetched o2m have to be reloaded (because of active_test)
-        # (eg. product.template: product_variant_ids)
         # We can't rely on existing invalidate_cache because of the savepoint
         # in _unlink_or_archive.
-        self.invalidate_cache()
+        self.env['product.template'].invalidate_cache(fnames=['product_variant_ids'], ids=self.ids)
         return True
 
     def has_dynamic_attributes(self):
@@ -614,7 +612,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return any(a.create_variant == 'dynamic' for a in self.valid_product_attribute_ids)
 
-    @api.depends('attribute_line_ids', 'attribute_line_ids.value_ids')
+    @api.depends('attribute_line_ids.value_ids', 'attribute_line_ids.attribute_id.create_variant')
     def _compute_valid_attributes(self):
         """A product template attribute line is considered valid if it has at
         least one possible value.
