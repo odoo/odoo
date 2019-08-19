@@ -25,9 +25,35 @@
         </record>
 
         <record id="product_template_form_view" model="ir.ui.view">
-            <field name="name">product.template.supplier.form.inherit</field>
+            <field name="name">product.template.form.inherit.purchase</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="priority">40</field>
+            <!-- After e-commerce, stock, and sale. -->
+            <field name="arch" type="xml">
+                <!-- Extending account product view because the purchase page is defined there ! -->
+                <group name="purchase" position="before">
+                    <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)]}"/>
+                    <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id), 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}"/>
+                </group>
+                <page name="purchase" position="attributes">
+                    <!-- Purchase Tab is only accessible by purchase or account users -->
+                    <attribute name="groups">purchase.group_purchase_user,account.group_account_user</attribute>
+                </page>
+                <group name="bill" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager</attribute>
+                </group>
+                <group name="bill" position="inside">
+                    <field name="purchase_method" widget="radio"/>
+                </group>
+            </field>
+        </record>
+
+        <record id="product_template_form_view_purchase" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.purchase</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="purchase.product_template_form_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="priority">40</field>
             <!-- After e-commerce, stock, and sale. -->
             <field name="arch" type="xml">
@@ -43,16 +69,6 @@
                         </div>
                     </button>
                 </div>
-                <group name="purchase" position="before">
-                    <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)]}"/>
-                    <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id), 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}"/>
-                </group>
-                <group name="bill" position="attributes">
-                    <attribute name="groups">purchase.group_purchase_manager</attribute>
-                </group>
-                <group name="bill" position="inside">
-                    <field name="purchase_method" widget="radio"/>
-                </group>
                 <page name="purchase" position="inside">
                     <group string="Purchase Description">
                        <field name="description_purchase" nolabel="1"
@@ -67,31 +83,27 @@
             </field>
         </record>
 
+        <record id="product_template_form_view_account_inherit_purchase" model="ir.ui.view">
+            <field name="name">product.template.form.account.inherit.purchase</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="account.product_template_form_view_account"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="arch" type="xml">
+                <!-- VFE TODO remove the domain extension in 13.0 -->
+                <field name="property_account_expense_id" position="after">
+                    <!-- In invoicing tab -->
+                    <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]"/>
+                </field>
+            </field>
+        </record>
+
         <record id="view_category_property_form" model="ir.ui.view">
-            <field name="name">product.category.property.form.inherit.stock</field>
+            <field name="name">product.category.property.form.inherit.purchase</field>
             <field name="model">product.category</field>
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <field name="property_account_income_categ_id" position="before">
                     <field name="property_account_creditor_price_difference_categ" domain="[('deprecated','=',False)]" groups="account.group_account_user"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="product_template_form_view_inherit_purchase" model="ir.ui.view">
-            <field name="name">product.template.form.account.inherit.purchase</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="account.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <field name="property_account_expense_id" position="attributes">
-                    <attribute name="domain">[('deprecated','=',False)]</attribute>
-                    <!-- VFE FIXME is it on purpose that we make a less restrictive domain?
-                      domain="[('internal_type','=','other'),('deprecated','=',False)]"
-                      in account view.
-                    -->
-                </field>
-                <field name="property_account_expense_id" position="after">
-                    <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" groups="account.group_account_user"/>
                 </field>
             </field>
         </record>

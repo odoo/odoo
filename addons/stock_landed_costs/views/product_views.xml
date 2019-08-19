@@ -4,7 +4,8 @@
         <record id="view_product_landed_cost_form" model="ir.ui.view">
             <field name="name">product.template.landed.cost.form</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="inherit_id" ref="account.product_template_form_view_account"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
             <field name="arch" type="xml">
                 <page name="invoicing" position="inside">
                     <div attrs="{'invisible':[('type', '!=', 'service')]}">
