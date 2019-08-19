@@ -273,7 +273,7 @@ class Partner(models.Model):
             domain = [('vat', '=', partner.vat)]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            partner.same_vat_partner_id = partner.vat and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
+            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
