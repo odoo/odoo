@@ -730,6 +730,12 @@ class Field(MetaField('DummyField', (object,), {})):
             path = []                   # fields from model to field_model
             for fname in dotnames.split('.'):
                 field = field_model._fields[fname]
+
+                if model._transient and not field_model._transient:
+                    # modifying fields on regular models should not trigger
+                    # recomputations of fields on transient models
+                    break
+
                 # Do not make self trigger itself
                 # e.g. `fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])`
                 # will have 'move_line_nosuggest_ids.product_qty' as a dependency
