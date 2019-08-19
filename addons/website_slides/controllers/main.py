@@ -127,10 +127,10 @@ class WebsiteSlides(WebsiteProfile):
             'slide_questions': [{
                 'id': question.id,
                 'question': question.question,
-                'answers': [{
+                'answer_ids': [{
                     'id': answer.id,
                     'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide_completed else None
+                    'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
@@ -700,6 +700,57 @@ class WebsiteSlides(WebsiteProfile):
     # QUIZZ SECTION
     # --------------------------------------------------
 
+    @http.route('/slides/slide/quiz/question_add_or_update', type='json', methods=['POST'], auth='user', website=True)
+    def slide_quiz_question_add_or_update(self, slide_id, question, sequence, answer_ids, existing_question_id=None):
+        """ Add a new question to an existing slide. Completed field of slide.partner
+        link is set to False to make sure that the creator can take the quiz again.
+
+        An optional question_id to udpate can be given. In this case question is
+        deleted first before creating a new one to simplify management.
+
+        :param integer slide_id: Slide ID
+        :param string question: Question Title
+        :param integer sequence: Question Sequence
+        :param array answer_ids: Array containing all the answers :
+                [
+                    'sequence': Answer Sequence (Integer),
+                    'text_value': Answer Title (String),
+                    'is_correct': Answer Is Correct (Boolean)
+                ]
+        :param integer existing_question_id: question ID if this is an update
+
+        :return: rendered question template
+        """
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        slide = fetch_res['slide']
+        if existing_question_id:
+            request.env['slide.question'].search([
+                ('slide_id', '=', slide.id),
+                ('id', '=', int(existing_question_id))
+            ]).unlink()
+
+        request.env['slide.slide.partner'].search([
+            ('slide_id', '=', slide_id),
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ]).write({'completed': False})
+
+        slide_question = request.env['slide.question'].create({
+            'sequence': sequence,
+            'question': question,
+            'slide_id': slide_id,
+            'answer_ids': [(0, 0, {
+                'sequence': answer['sequence'],
+                'text_value': answer['text_value'],
+                'is_correct': answer['is_correct']
+            }) for answer in answer_ids]
+        })
+        return request.env.ref('website_slides.lesson_content_quiz_question').render({
+            'slide': slide,
+            'question': slide_question,
+        })
+
     @http.route('/slides/slide/quiz/get', type="json", auth="public", website=True)
     def slide_quiz_get(self, slide_id):
         fetch_res = self._fetch_slide(slide_id)
@@ -707,6 +758,16 @@ class WebsiteSlides(WebsiteProfile):
             return fetch_res
         slide = fetch_res['slide']
         return self._get_slide_quiz_data(slide)
+
+    @http.route('/slides/slide/quiz/reset', type="json", auth="user", website=True)
+    def slide_quiz_reset(self, slide_id):
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        request.env['slide.slide.partner'].search([
+            ('slide_id', '=', fetch_res['slide'].id),
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ]).write({'completed': False, 'quiz_attempts_count': 0})
 
     @http.route('/slides/slide/quiz/submit', type="json", auth="public", website=True)
     def slide_quiz_submit(self, slide_id, answer_ids):
@@ -768,7 +829,6 @@ class WebsiteSlides(WebsiteProfile):
             'motivational': next_rank.description_motivational,
             'progress': progress
         }
-
     # --------------------------------------------------
     # CATEGORY MANAGEMENT
     # --------------------------------------------------
@@ -878,9 +938,6 @@ class WebsiteSlides(WebsiteProfile):
             redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
-        if slide.slide_type == "quiz":
-            action_id = request.env.ref('website_slides.slide_slide_action').id
-            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' %( slide.id, action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,

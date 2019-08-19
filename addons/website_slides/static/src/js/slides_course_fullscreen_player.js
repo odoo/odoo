@@ -11,7 +11,7 @@ odoo.define('website_slides.fullscreen', function (require) {
 
     var session = require('web.session');
 
-    var Quiz = require('website_slides.quiz');
+    var Quiz = require('website_slides.quiz').Quiz;
 
     var Dialog = require('web.Dialog');
 
