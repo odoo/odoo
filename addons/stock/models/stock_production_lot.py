@@ -39,7 +39,7 @@ class ProductionLot(models.Model):
     @api.multi
     def write(self, vals):
         if 'product_id' in vals and any([vals['product_id'] != lot.product_id.id for lot in self]):
-            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids)])
+            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:
                 raise UserError(_(
                     'You are not allowed to change the product linked to a serial or lot number ' +
