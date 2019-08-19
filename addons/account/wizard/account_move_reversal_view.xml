@@ -14,21 +14,14 @@
                          </group>
                          <group attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'in_invoice'))]}">
                             <div attrs="{'invisible':[('refund_method', '!=', 'refund')]}" class="oe_grey" colspan="4">
-                               You will be able to edit and validate this
-                               credit note directly or keep it draft,
-                               waiting for the document to be issued by
-                               your supplier/customer.
+                               The credit note is created in draft and can be edited before being issued.
                             </div>
                             <div attrs="{'invisible':[('refund_method', '!=', 'cancel')]}" class="oe_grey" colspan="4">
-                               Use this option if you want to cancel an invoice you should not
-                               have issued. The credit note will be created, validated and reconciled
-                               with the invoice. You will not be able to modify the credit note.
+                               The credit note is auto-validated and reconciled with the invoice.
                             </div>
                             <div attrs="{'invisible':[('refund_method', '!=', 'modify')]}" class="oe_grey" colspan="4">
-                               Use this option if you want to cancel an invoice and create a new
-                               one. The credit note will be created, validated and reconciled
-                               with the current invoice. A new draft invoice will be created
-                               so that you can edit it.
+                               The credit note is auto-validated and reconciled with the invoice.
+                               The original invoice is duplicated as a new draft.
                             </div>
                          </group>
                          <group>
