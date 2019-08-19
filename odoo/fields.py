@@ -724,7 +724,7 @@ class Field(object):
     # on ``path``. See method ``modified`` below for details.
     #
 
-    def resolve_deps(self, model):
+    def resolve_deps(self, model, path0=[], seen=frozenset()):
         """ Return the dependencies of ``self`` as tuples ``(model, field, path)``,
             where ``path`` is an optional list of field names.
         """
@@ -735,11 +735,12 @@ class Field(object):
         for dotnames in self.depends:
             if dotnames == self.name:
                 _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
-            model, path = model0, dotnames.split('.')
-            for i, fname in enumerate(path):
+            model, path = model0, path0
+            for fname in dotnames.split('.'):
                 field = model._fields[fname]
-                result.append((model, field, path[:i]))
+                result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
+                path = None if path is None else path + [fname]
 
         # add self's model dependencies
         for mname, fnames in model0._depends.iteritems():
@@ -749,11 +750,14 @@ class Field(object):
                 result.append((model, field, None))
 
         # add indirect dependencies from the dependencies found above
+        seen = seen.union([self])
         for model, field, path in list(result):
             for inv_field in model._field_inverses[field]:
                 inv_model = model0.env[inv_field.model_name]
                 inv_path = None if path is None else path + [field.name]
                 result.append((inv_model, inv_field, inv_path))
+            if not field.store and field not in seen:
+                result += field.resolve_deps(model, path, seen)
 
         return result
 
