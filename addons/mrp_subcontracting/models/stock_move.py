@@ -100,7 +100,11 @@ class StockMove(models.Model):
             })
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
-        return super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
+
+        res = super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
+        if subcontract_details_per_picking:
+            self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
+        return res
 
     def _action_record_components(self):
         action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
@@ -149,6 +153,13 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
     def _has_tracked_subcontract_components(self):
         self.ensure_one()
         return any(m.has_tracking != 'none' for m in self.move_orig_ids.production_id.move_raw_ids)
+
+    def _should_bypass_reservation(self):
+        """ If the move is subcontracted then ignore the reservation. """
+        should_bypass_reservation = super(StockMove, self)._should_bypass_reservation()
+        if not should_bypass_reservation and self.is_subcontract:
+            return True
+        return should_bypass_reservation
 
     def _update_subcontract_order_qty(self):
         for move in self:
