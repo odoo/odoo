@@ -59,6 +59,8 @@ class PosOrder(models.Model):
             'amount': ui_paymentline['amount'] or 0.0,
             'payment_date': payment_date,
             'payment_method_id': ui_paymentline['payment_method_id'],
+            'card_type': ui_paymentline.get('card_type'),
+            'transaction_id': ui_paymentline.get('transaction_id'),
             'pos_order_id': order.id,
         }
 

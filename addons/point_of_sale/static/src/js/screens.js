@@ -131,6 +131,10 @@ var ScreenWidget = PosBaseWidget.extend({
         if(this.pos.barcode_reader){
             this.pos.barcode_reader.reset_action_callbacks();
         }
+
+        if(this.payment_interface){
+            this.payment_interface.close();
+        }
     },
 
     // this methods hides the screen. It's not a good place to put your cleanup stuff as it is called on the
@@ -1869,6 +1873,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
     // handle both keyboard and numpad input. Accepts
     // a string that represents the key pressed.
     payment_input: function(input) {
+        var paymentline = this.pos.get_order().selected_paymentline;
+
+        // disable changing amount on paymentlines with running or done payments on a payment terminal
+        if (this.payment_interface && !['pending', 'retry'].includes(paymentline.get_payment_status())) {
+            return;
+        }
+
         var newbuf = this.gui.numpad_input(this.inputbuffer, input, {'firstinput': this.firstinput});
 
         this.firstinput = (newbuf.length === 0);
@@ -1881,14 +1892,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
         if (newbuf !== this.inputbuffer) {
             this.inputbuffer = newbuf;
             var order = this.pos.get_order();
-            if (order.selected_paymentline) {
+            if (paymentline) {
                 var amount = this.inputbuffer;
 
                 if (this.inputbuffer !== "-") {
                     amount = field_utils.parse.float(this.inputbuffer);
                 }
 
-                order.selected_paymentline.set_amount(amount);
+                paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();
                 this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
@@ -1923,8 +1934,16 @@ var PaymentScreenWidget = ScreenWidget.extend({
     click_delete_paymentline: function(cid){
         var lines = this.pos.get_order().get_paymentlines();
         for ( var i = 0; i < lines.length; i++ ) {
-            if (lines[i].cid === cid) {
-                this.pos.get_order().remove_paymentline(lines[i]);
+            var line = lines[i];
+            if (line.cid === cid) {
+                // If a paymentline with a payment terminal linked to
+                // it is removed, the terminal should get a cancel
+                // request.
+                if (['waiting', 'waitingCard', 'timeout'].includes(lines[i].get_payment_status())) {
+                    line.payment_method.payment_terminal.send_payment_cancel(this.pos.get_order(), cid);
+                }
+
+                this.pos.get_order().remove_paymentline(line);
                 this.reset_input();
                 this.render_paymentlines();
                 return;
@@ -1941,6 +1960,82 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 return;
             }
         }
+    },
+    /**
+     * link the proper functions to buttons for payment terminals
+     * send_payment_request, force_payment_done and cancel_payment.
+     */
+    render_payment_terminal: function() {
+        var self = this;
+        var order = this.pos.get_order();
+        if (!order) {
+            return;
+        }
+
+        this.$el.find('.send_payment_request').click(function () {
+            var cid = $(this).data('cid');
+            // Other payment lines can not be reversed anymore
+            order.get_paymentlines().forEach(function (line) {
+                line.can_be_reversed = false;
+            });
+
+            var line = self.pos.get_order().get_paymentline(cid);
+            var payment_terminal = line.payment_method.payment_terminal;
+            line.set_payment_status('waiting');
+            self.render_paymentlines();
+
+            payment_terminal.send_payment_request(cid).then(function (payment_successful) {
+                if (payment_successful) {
+                    line.set_payment_status('done');
+                    line.can_be_reversed = self.payment_interface.supports_reversals;
+                    self.reset_input(); // in case somebody entered a tip the amount tendered should be updated
+                } else {
+                    line.set_payment_status('retry');
+                }
+            }).finally(function () {
+                self.render_paymentlines();
+            });
+
+            self.render_paymentlines();
+        });
+        this.$el.find('.send_payment_cancel').click(function () {
+            var cid = $(this).data('cid');
+            var line = self.pos.get_order().get_paymentline($(this).data('cid'));
+            var payment_terminal = line.payment_method.payment_terminal;
+            line.set_payment_status('waitingCancel');
+            self.render_paymentlines();
+
+            payment_terminal.send_payment_cancel(self.pos.get_order(), cid).finally(function () {
+                line.set_payment_status('retry');
+                self.render_paymentlines();
+            });
+
+            self.render_paymentlines();
+        });
+        this.$el.find('.send_payment_reversal').click(function () {
+            var cid = $(this).data('cid');
+            var line = self.pos.get_order().get_paymentline($(this).data('cid'));
+            var payment_terminal = line.payment_method.payment_terminal;
+            line.set_payment_status('reversing');
+            self.render_paymentlines();
+
+            payment_terminal.send_payment_reversal(cid).then(function (reversal_successful) {
+                if (reversal_successful) {
+                    line.set_amount(0);
+                    line.set_payment_status('reversed');
+                } else {
+                    line.set_payment_status('done');
+                }
+                self.render_paymentlines();
+            });
+        });
+
+        this.$el.find('.send_force_done').click(function () {
+            var line = self.pos.get_order().get_paymentline($(this).data('cid'));
+            var payment_terminal = line.payment_method.payment_terminal;
+            line.set_payment_status('done');
+            self.render_paymentlines();
+        });
     },
     render_paymentlines: function() {
         var self  = this;
@@ -1969,20 +2064,38 @@ var PaymentScreenWidget = ScreenWidget.extend({
         });
             
         lines.appendTo(this.$('.paymentlines-container'));
+
+        this.render_payment_terminal();
     },
     compute_extradue: function (order) {
         var lines = order.get_paymentlines();
         var due   = order.get_due();
-        if (due && lines.length  && due !== order.get_due(lines[lines.length-1])) {
+        if (due && lines.length && (due !== order.get_due(lines[lines.length-1]) || lines[lines.length - 1].payment_status === 'reversed')) {
             return due;
         }
         return 0;
     },
     click_paymentmethods: function(id) {
-        var payment_method = this.pos.payment_methods_by_id[id]
-        this.pos.get_order().add_paymentline(payment_method);
-        this.reset_input();
-        this.render_paymentlines();
+        var payment_method = this.pos.payment_methods_by_id[id];
+        var order = this.pos.get_order();
+
+        if (order.electronic_payment_in_progress()) {
+            this.gui.show_popup('error',{
+                'title': _t('Error'),
+                'body':  _t('There is already an electronic payment in progress.'),
+            });
+        } else {
+            order.add_paymentline(payment_method);
+            this.reset_input();
+
+            this.payment_interface = payment_method.payment_terminal;
+            if (this.payment_interface) {
+                order.selected_paymentline.set_payment_status('pending');
+            }
+
+            this.render_paymentlines();
+            this.order_changes();
+        }
     },
     render_paymentmethods: function() {
         var self = this;
@@ -2082,6 +2195,10 @@ var PaymentScreenWidget = ScreenWidget.extend({
     hide: function(){
         $('body').off('keypress', this.keyboard_handler);
         $('body').off('keydown', this.keyboard_keydown_handler);
+        var order = this.pos.get_order();
+        if (order) {
+            order.stop_electronic_payment();
+        }
         this._super();
     },
     // sets up listeners to watch for order changes
@@ -2092,7 +2209,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
             return;
         }
         if(this.old_order){
-            this.old_order.unbind(null,null,this);
+            this.old_order.stop_electronic_payment();
+            this.old_order.unbind(null, null, this);
+            this.old_order.paymentlines.unbind(null, null, this);
         }
         order.bind('all',function(){
             self.order_changes();
