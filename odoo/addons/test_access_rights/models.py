@@ -20,6 +20,7 @@ class Container(models.Model):
 
 class ObjCateg(models.Model):
     _name = 'test_access_right.obj_categ'
+    _description = "Context dependent searchable model"
 
     name = fields.Char(required=True)
 
