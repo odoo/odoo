@@ -62,6 +62,9 @@ var PortalChatter = Widget.extend({
         ).then(function(result){
             self.result = result;
             self.options = _.extend(self.options, self.result['options'] || {});
+            if (!self.options['author_avatar_url']) {
+                self.options['author_avatar_url'] = "/web/image/res.partner/" + self.options['partner_id'] + "/image_small";
+            }
             return result;
         });
     },

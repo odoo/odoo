@@ -213,7 +213,16 @@ var LivechatButton = Widget.extend({
         this._openingChat = true;
         clearTimeout(this._autoPopupTimeout);
         if (cookie) {
-            def = $.when(JSON.parse(cookie));
+            var livechatData = JSON.parse(cookie);
+            def = session.rpc('/im_livechat/get_operator_avatar', {
+                'uuid': livechatData.uuid,
+                'pid': livechatData.operator_pid[0],
+            }).then(function (data) {
+                if (data['operator_avatar']) {
+                    livechatData['operator_avatar'] = data['operator_avatar'];
+                }
+                return livechatData;
+            });
         } else {
             this._messages = []; // re-initialize messages cache
             def = session.rpc('/im_livechat/get_session', {
@@ -293,6 +302,7 @@ var LivechatButton = Widget.extend({
                 id: '_welcome',
                 attachment_ids: [],
                 author_id: this._livechat.getOperatorPID(),
+                author_avatar: this._livechat._operatorAvatar,
                 body: this.options.default_message,
                 channel_ids: [this._livechat.getID()],
                 date: time.datetime_to_str(new Date()),

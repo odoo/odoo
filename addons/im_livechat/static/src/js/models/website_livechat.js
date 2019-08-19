@@ -24,6 +24,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {integer} [params.data.message_unread_counter] the unread counter
      *   of this livechat.
      * @param {Array} params.data.operator_pid
+     * @param {string} params.data.operator_avatar
      * @param {string} params.data.name the name of this livechat.
      * @param {string} [params.data.state] if 'folded', the livechat is folded.
      *   This is ignored if `folded` is provided and is a boolean value.
@@ -36,6 +37,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
 
         this._members = [];
         this._operatorPID = params.data.operator_pid;
+        this._operatorAvatar = params.data.operator_avatar;
         this._uuid = params.data.uuid;
 
         if (params.data.message_unread_counter !== undefined) {

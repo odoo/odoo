@@ -478,8 +478,11 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
+        <t t-set="author" t-value="request.env.user.partner_id"/>
+        <t t-if="request.env.user._is_public()" t-set="author" t-value="object.partner_id if 'partner_id' in object._fields else author"/>
+        <t t-if="not author_avatar_url" t-set="author_avatar_url" t-value="author.image_small and image_data_uri(author.image_small)"/>
         <div id="discussion" class="d-print-none o_portal_chatter o_not_editable p-0"
-            t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-pid="pid" t-att-data-hash="hash" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
+            t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-pid="pid" t-att-data-hash="hash" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'" t-att-data-author_avatar_url="author_avatar_url">
         </div>
     </template>
 

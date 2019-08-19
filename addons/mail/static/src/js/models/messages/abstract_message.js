@@ -45,6 +45,7 @@ var AbstractMessage =  Class.extend({
         this._isDiscussion = data.is_discussion;
         this._isNotification = data.is_notification;
         this._serverAuthorID = data.author_id;
+        this._serverAuthorAvatar = data.author_avatar;
         this._type = data.message_type || undefined;
 
         this._processAttachmentURL();

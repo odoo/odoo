@@ -3,7 +3,7 @@
 
 import base64
 
-from odoo import http, _
+from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.web.controllers.main import binary_content
@@ -125,3 +125,11 @@ class LivechatController(http.Controller):
         Channel = request.env['mail.channel']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
         channel.notify_typing(is_typing=is_typing, is_website_user=True)
+
+    @http.route('/im_livechat/get_operator_avatar', type='json', auth='public')
+    def get_operator_avatar(self, uuid, pid):
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
+        operator = channel.livechat_channel_id.user_ids.filtered(lambda u: u.partner_id.id == int(pid)).partner_id
+        return {
+            'operator_avatar': operator.image_small and tools.image_data_uri(operator.image_small),
+        }

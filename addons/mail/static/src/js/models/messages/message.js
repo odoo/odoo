@@ -99,7 +99,10 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (this._isOdoobotAuthor()) {
             return '/mail/static/src/img/odoobot.png';
         } else if (this.hasAuthor()) {
-            return '/web/image/res.partner/' + this.getAuthorID() + '/image_small';
+            if (this._serverAuthorAvatar) {
+                return this._serverAuthorAvatar;
+            }
+            return '/web/image/mail.message/' + this._id + '/author_avatar';
         } else if (this.getType() === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }

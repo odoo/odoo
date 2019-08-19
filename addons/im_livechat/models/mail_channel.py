@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 
 class ChannelPartner(models.Model):
     _inherit = 'mail.channel.partner'
@@ -69,9 +69,11 @@ class MailChannel(models.Model):
         channel_infos = super(MailChannel, self).channel_info(extra_info)
         # add the operator id
         if self.env.context.get('im_livechat_operator_partner_id'):
-            partner_name = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id')).name_get()[0]
+            partner = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id'))
+            partner_name = partner.name_get()[0]
             for channel_info in channel_infos:
                 channel_info['operator_pid'] = partner_name
+                channel_info['operator_avatar'] = partner.image_small and tools.image_data_uri(partner.image_small)
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             # add the anonymous name
