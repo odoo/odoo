@@ -63,7 +63,10 @@
                                     </span>
                                 </div>
                                 <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
-                                    <span class="o_stat_value">
+                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
+                                        <field name="last_activity_time"/>
+                                    </span>
+                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
                                         <field name="last_activity"/>
                                     </span>
                                     <span class="o_stat_text">Connected Since</span>
@@ -86,6 +89,7 @@
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="work_phone" widget="phone"/>
                                 <field name="work_email" widget="email"/>
+                                <field name="work_location"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
@@ -102,7 +106,6 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
-                                            <field name="work_location"/>
                                         </group>
                                         <group name="managers" string="Responsibles">
                                             <field name="coach_id"/>

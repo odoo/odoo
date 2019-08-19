@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from pytz import timezone, UTC
+from odoo.tools import format_time
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -29,6 +31,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('absent', 'Absent'),
         ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define')
     last_activity = fields.Date(compute="_compute_last_activity")
+    last_activity_time = fields.Char(compute="_compute_last_activity")
 
     def _compute_presence_state(self):
         """
@@ -51,4 +54,11 @@ class HrEmployeeBase(models.AbstractModel):
         presences = self.env['bus.presence'].search([('user_id', 'in', employees.mapped('user_id.id'))])
 
         for presence in presences:
-            presence.user_id.employee_ids.last_activity = presence.last_presence.date()
+            for employee in presence.user_id.employee_ids.filtered(lambda e: e in self):
+                tz = employee.tz
+                last_activity_datetime = presence.last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
+                employee.last_activity = last_activity_datetime.date()
+                if employee.last_activity == fields.Date.today():
+                    employee.last_activity_time = format_time(self.env, last_activity_datetime, time_format='short')
+                else:
+                    employee.last_activity_date = False
