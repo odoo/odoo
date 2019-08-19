@@ -32,9 +32,6 @@ class RestaurantFloor(models.Model):
                 raise UserError(error_msg)
         return super(RestaurantFloor, self).unlink()
 
-    def _check_pos_sessions(self, error_msg):
-        import pudb; pudb.set_trace()
-
 
 class RestaurantTable(models.Model):
 
