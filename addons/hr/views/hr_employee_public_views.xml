@@ -53,6 +53,7 @@
                                     <field name="mobile_phone" widget="phone"/>
                                     <field name="work_phone" widget="phone"/>
                                     <field name="work_email" widget="email"/>
+                                    <field name="work_location"/>
                                 </group>
                                 <group>
                                     <field name="department_id"/>
@@ -68,7 +69,6 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
-                                            <field name="work_location"/>
                                         </group>
                                         <group name="managers" string="Responsibles">
                                             <field name="coach_id"/>

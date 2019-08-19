@@ -54,6 +54,7 @@ class User(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
     last_activity = fields.Date(related='employee_id.last_activity')
+    last_activity_time = fields.Char(related='employee_id.last_activity_time')
 
     @api.depends('employee_ids')
     def _compute_employee_count(self):
@@ -73,6 +74,7 @@ class User(models.Model):
             'employee_parent_id',
             'hr_presence_state',
             'last_activity',
+            'last_activity_time',
         ]
 
         hr_writable_fields = [

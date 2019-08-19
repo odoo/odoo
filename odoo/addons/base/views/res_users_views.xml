@@ -371,15 +371,15 @@
                     <group name="signature">
                         <field name="signature" readonly="0"/>
                     </group>
-                    <group name="status" string="Status">
+                    <group name="status" string="Status" invisible="1">
                         <field name="company_id" options="{'no_create': True}" readonly="0"
                             groups="base.group_multi_company"/>
                     </group>
                     <group name="preference_contact"></group>
-                    <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>
                         <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                        <button name="preference_change_password" type="object" string="Change password" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>

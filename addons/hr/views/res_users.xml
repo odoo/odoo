@@ -14,6 +14,7 @@
             <field name="arch" type="xml">
                 <footer position="replace"/>
                 <h1 position="replace"/>
+                <widget name="notification_alert" position="replace"/>
                 <xpath expr="//field[@name='image_1920']" position="replace"/>
                 <xpath expr="//field[@name='email']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -28,7 +29,6 @@
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <button name="preference_change_password" position="replace"/>
             </field>
         </record>
 
@@ -52,8 +52,9 @@
                 <form create="false" js_class="hr_employee_profile_form">
                     <field name="hr_presence_state" invisible="1"/>
                     <header>
-                        <button name="preference_change_password" type="object" string="Change password" class="btn btn-primary"/>
+                        <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                     </header>
+                    <widget name="notification_alert" class="mb-0"/> 
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button
@@ -72,7 +73,10 @@
                                     </span>
                                 </div>
                                 <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
-                                    <span class="o_stat_value">
+                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
+                                        <field name="last_activity_time"/>
+                                    </span>
+                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
                                         <field name="last_activity"/>
                                     </span>
                                     <span class="o_stat_text">Connected Since</span>
@@ -85,9 +89,11 @@
                                 <field name="name" placeholder="Employee's Name" required="True" readonly="context.get('from_my_profile', False)"/>
                             </h1>
                         </div>
-                        <h2>
-                            <field name="job_title" placeholder="Job Position"/>
-                        </h2>
+                        <div class="row">
+                            <h2 class="col-6">
+                                <field name="job_title" placeholder="Job Position"/>
+                            </h2>
+                        </div>
                         <group>
                             <group>
                                 <field name="mobile_phone" widget="phone"/>
@@ -95,6 +101,7 @@
                             </group>
                             <group>
                                 <field name="work_email" widget="email"/>
+                                <field name="work_location"/>
                                 <field name="company_id" invisible="1"/>
                             </group>
                         </group>
@@ -110,7 +117,6 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
-                                            <field name="work_location"/>
                                         </group>
                                         <group name="managers" string="Responsibles">
                                             <field name="employee_parent_id"/>
