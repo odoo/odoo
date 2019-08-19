@@ -516,6 +516,7 @@ class TestMrpOrder(TestMrpCommon):
         update_quantity_wizard.change_prod_qty()
 
         self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity_done, 20, 'Update the produce quantity should not impact already produced quantity.')
+        self.assertEqual(mo.move_finished_ids.product_uom_qty, 4)
         mo.button_mark_done()
 
     def test_product_produce_6(self):

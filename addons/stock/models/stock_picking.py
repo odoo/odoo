@@ -912,6 +912,8 @@ class Picking(models.Model):
         stream is 'DOWN', it should sort/group by tuple(object on
         which the activity is log, the responsible for this object)
         """
+        if self.env.context.get('skip_activity'):
+            return {}
         move_to_orig_object_rel = {co: ooc for ooc in orig_obj_changes.keys() for co in ooc[stream_field]}
         origin_objects = self.env[list(orig_obj_changes.keys())[0]._name].concat(*list(orig_obj_changes.keys()))
         # The purpose here is to group each destination object by

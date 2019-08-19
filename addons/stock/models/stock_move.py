@@ -872,8 +872,8 @@ class StockMove(models.Model):
         """ return create values for new picking that will be linked with group
         of moves in self.
         """
-        origins = self.filtered(lambda m: m.origin).mapped('origin')
-        origin = len(origins) == 1 and origins[0] or False
+        origins = set(self.filtered(lambda m: m.origin).mapped('origin'))
+        origin = len(origins) == 1 and origins.pop() or False
         partners = self.mapped('partner_id')
         partner = len(partners) == 1 and partners.id or False
         return {
@@ -1048,6 +1048,10 @@ class StockMove(models.Model):
                     self.env['stock.move.line'].create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
         return taken_quantity
 
+    def _should_bypass_reservation(self):
+        self.ensure_one()
+        return self.location_id.should_bypass_reservation() or self.product_id.type != 'product'
+
     def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `product_qty` for all its move lines is
@@ -1064,8 +1068,7 @@ class StockMove(models.Model):
             rounding = roundings[move]
             missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-            if move.location_id.should_bypass_reservation()\
-                    or move.product_id.type == 'consu':
+            if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
                     for i in range(0, int(missing_reserved_quantity)):
@@ -1453,11 +1456,6 @@ class StockMove(models.Model):
         """ This method will try to apply the procure method MTO on some moves if
         a compatible MTO route is found. Else the procure method will be set to MTS
         """
-        try:
-            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto',
-                                                                       'Make To Order')
-        except ValueError:
-            mto_route = False
         for move in self:
             product_id = move.product_id
             domain = [
@@ -1466,10 +1464,7 @@ class StockMove(models.Model):
                 ('action', '!=', 'push')
             ]
             rules = self.env['procurement.group']._search_rule(False, product_id, move.warehouse_id, domain)
-            routes = product_id.route_ids + product_id.route_from_categ_ids + move.warehouse_id.route_ids
             if rules and (rules.procure_method == 'make_to_order'):
                 move.procure_method = rules.procure_method
-            elif mto_route and mto_route.id in [x.id for x in routes]:
-                move.procure_method = 'make_to_order'
             else:
                 move.procure_method = 'make_to_stock'

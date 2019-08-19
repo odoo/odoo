@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 
 
 class StockWarehouse(models.Model):
@@ -107,8 +107,7 @@ class StockWarehouse(models.Model):
             'subcontracting_type_id': {
                 'name': _('Subcontracting'),
                 'code': 'mrp_operation',
-                'use_create_lots': True,
-                'use_existing_lots': True,
+                'use_create_components_lots': True,
                 'sequence': next_sequence + 2,
                 'sequence_code': 'SBC',
             },
@@ -137,4 +136,3 @@ class StockWarehouse(models.Model):
 
     def _get_subcontracting_location(self):
         return self.company_id.subcontracting_location_id
-
