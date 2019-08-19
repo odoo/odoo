@@ -134,6 +134,11 @@ class MrpProductProduce(models.TransientModel):
                     move_id = self.env['stock.move'].create(values)
                 line.move_id = move_id.id
 
+        # because of an ORM limitation (fields on transient models are not
+        # recomputed by updates in non-transient models), the related fields on
+        # this model are not recomputed by the creations above
+        self.invalidate_cache(['move_raw_ids', 'move_finished_ids'])
+
         # Save product produce lines data into stock moves/move lines
         quantity = self.qty_producing
         if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
