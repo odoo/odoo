@@ -1853,7 +1853,7 @@ class AccountInvoiceLine(models.Model):
                 default_tax = self.invoice_id.company_id.account_sale_tax_id
             else:
                 default_tax = self.invoice_id.company_id.account_purchase_tax_id
-            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids or default_tax, partner=self.partner_id).ids
+            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids or default_tax, partner=self.partner_id)
         elif not self.price_unit:
             self._set_taxes()
 
