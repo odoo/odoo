@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
-                <field name="subcontractor_ids" widget="many2many_tags" context="{'default_type': 'subcontractor'}" attrs="{'invisible': [('type', '!=', 'subcontract')]}"/>
+                <field name="subcontractor_ids" widget="many2many_tags" context="{'default_type': 'subcontractor'}" attrs="{'invisible': [('type', '!=', 'subcontract')], 'required': [('type', '=', 'subcontract')]}"/>
             </xpath>
         </field>
     </record>
