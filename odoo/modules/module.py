@@ -297,6 +297,18 @@ def get_module_root(path):
         path = new_path
     return path
 
+_DEPENDENCY_NAME_RE = re.compile(r"^(?P<name>[a-zA-Z0-9_]+)(?P<version>.*)$")
+
+def _dependency_name(dependency):
+    """
+    Extract the name part of a dependency specifier of the form
+    {addon name}{version specifier}.
+
+    The version part, while not used by Odoo itself yet, is expected
+    to look like a PEP 440 version specifier.
+    """
+    return _DEPENDENCY_NAME_RE.match(dependency).group('name')
+
 def load_information_from_description_file(module, mod_path=None):
     """
     :param module: The name of the module (sale, purchase, ...)
@@ -333,6 +345,8 @@ def load_information_from_description_file(module, mod_path=None):
             info.update(ast.literal_eval(pycompat.to_text(f.read())))
         finally:
             f.close()
+
+        info['depends'] = [_dependency_name(d) for d in info.get('depends', [])]
 
         if not info.get('description'):
             readme_path = [opj(mod_path, x) for x in README
