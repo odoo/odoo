@@ -37,6 +37,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.action_confirm()
 
         # Nothing should be tracked
+        self.assertTrue(all(m.product_uom_qty == m.reserved_availability for m in picking_receipt.move_lines))
+        self.assertEqual(picking_receipt.state, 'assigned')
         self.assertFalse(picking_receipt.display_action_record_components)
 
         # Check the created manufacturing order
