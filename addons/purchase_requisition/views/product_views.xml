@@ -6,7 +6,7 @@
         <field name="model">product.supplierinfo</field>
         <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
         <field name="arch" type="xml">
-          <xpath expr="//field[@name='min_qty']" position="before">
+          <xpath expr="//field[@name='name']" position="after">
               <field name="purchase_requisition_id"/>
           </xpath>
         </field>
@@ -15,6 +15,7 @@
     <record id="supplier_info_form_inherit" model="ir.ui.view">
         <field name="name">product.supplierinfo.requisition.view</field>
         <field name="model">product.supplierinfo</field>
+        <field name="priority">20</field>
         <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
         <field name="arch" type="xml">
             <field name="product_code" position="after">
