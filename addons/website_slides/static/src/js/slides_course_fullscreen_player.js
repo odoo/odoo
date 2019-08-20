@@ -47,21 +47,22 @@ odoo.define('website_slides.fullscreen', function (require) {
             });
         },
         _loadYoutubeAPI: function () {
-            var def = new Promise(function () {});
-            if ($(document).find('script[src="' + this.youtubeUrl + '"]').length === 0) {
-                var $youtubeElement = $('<script/>', {src: this.youtubeUrl});
-                $(document.head).append($youtubeElement);
+            var self = this;
+            var prom = new Promise(function (resolve, reject) {
+                if ($(document).find('script[src="' + self.youtubeUrl + '"]').length === 0) {
+                    var $youtubeElement = $('<script/>', {src: self.youtubeUrl});
+                    $(document.head).append($youtubeElement);
 
-                // function called when the Youtube asset is loaded
-                // see https://developers.google.com/youtube/iframe_api_reference#Requirements
-                onYouTubeIframeAPIReady = function () {
-                    def.resolve();
-                };
-
-            } else {
-                def.resolve();
-            }
-            return def;
+                    // function called when the Youtube asset is loaded
+                    // see https://developers.google.com/youtube/iframe_api_reference#Requirements
+                    onYouTubeIframeAPIReady = function () {
+                        resolve();
+                    };
+                } else {
+                    resolve();
+                }
+            });
+            return prom;
         },
         /**
          * Links the youtube api to the iframe present in the template
