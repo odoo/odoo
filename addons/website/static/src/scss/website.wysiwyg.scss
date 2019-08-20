@@ -3,11 +3,14 @@
 //------------------------------------------------------------------------------
 
 body.editor_enable {
-    padding-top: 0 !important;
+    padding-top: $o-navbar-height !important;
+
+    &.editor_has_snippets {
+        padding-left: $o-we-sidebar-width !important;
+    }
 
     #wrapwrap {
         height: calc(100vh - #{$o-navbar-height});
-        padding-top: 46px;
 
         .btn {
             -webkit-user-select: none;
@@ -22,13 +25,12 @@ body.editor_enable {
 // TOP BAR (EDIT)
 #web_editor-top-edit {
     height: $o-navbar-height;
-    border: 1px solid $o-we-color-divider;
     background-color: $o-we-color-dark;
     z-index: $zindex-modal - 9;
     position: fixed;
     top: 0px;
     right: 0px;
-    width: 100%;
+    left: 0px;
     white-space: nowrap;
 
     transition: background-color 400ms $o-we-md-ease 0s;
@@ -536,7 +538,7 @@ body .modal {
     }
 }
 
-.wysiwyg_multizone.note-editor {
+.note-editor {
     &>.note-toolbar-wrapper .note-toolbar {
         height: $o-navbar-height;
 
@@ -554,8 +556,17 @@ body .modal {
     }
 }
 
-.wysiwyg_multizone.note-popover.popover {
+.note-popover .popover {
+    height: $o-navbar-height;
+    top: 0 !important;
+    left: 0 !important;
+    padding: 0;
+    margin: 0 0 0 $o-we-sidebar-width;
+    border-radius: 0;
     border-width: 0 1px;
+    width: auto;
+    text-align: center;
+    box-shadow: none;
 
     .popover-content .btn {
         height: $o-navbar-height;
@@ -563,8 +574,8 @@ body .modal {
 }
 
 #web_editor-toolbars .popover,
-.wysiwyg_multizone.note-popover,
-.wysiwyg_multizone.note-editor>.note-toolbar-wrapper .note-toolbar {
+.note-popover,
+.note-editor>.note-toolbar-wrapper .note-toolbar {
     // force this because of themes
     background-color: $o-we-color-dark !important;
 
@@ -647,30 +658,5 @@ body .modal {
 
     .note-style .dropdown-item * {
         color: $o-we-color-text-light !important;
-    }
-}
-
-// ~ revert to v12 in v13
-// todo: check all these hardcoded values! What about themes?
-
-#oe_snippets.o_loaded ~ #wrapwrap {
-    padding-left: 210px;
-}
-#oe_snippets.o_loaded ~ #web_editor-top-edit #web_editor-toolbars {
-    position: relative;
-    left: 210px;
-}
-#web_editor-toolbars .popover {
-    top: 0 !important;
-    left: 0 !important;
-    border: 0;
-    .btn {
-        background-color: transparent;
-        border: 0;
-        color: $o-we-color-text-light;
-        opacity: 0.5;
-    }
-    .note-color ul {
-        min-width: 340px;
     }
 }
