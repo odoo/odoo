@@ -317,10 +317,9 @@ var CrashManager = AbstractService.extend({
      * @param {Object} options
      */
     _displayWarning: function (message, title, options) {
-        return new WarningDialog(this, {
-            ...options,
+        return new WarningDialog(this, Object.assign({}, options, {
             title,
-        }, {
+        }), {
             message,
         }).open();
     },
