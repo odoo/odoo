@@ -101,7 +101,7 @@ class PosOrder(models.Model):
 
 
     @api.model
-    def _process_order(self, order, draft, existing_order):
+    def _process_order(self, order, draft, existing_order, wrong_lots_pickings=[]):
         """Create or update an pos.order from a given dictionary.
 
         :param pos_order: dictionary representing the order.
@@ -110,6 +110,8 @@ class PosOrder(models.Model):
         :type draft: bool.
         :param existing_order: order to be updated or False.
         :type existing_order: pos.order.
+        :param wrong_lots_pickings: pickings that have wrong serial or lots.
+        :type wrong_lots_pickings: list.
         :returns number pos_order id
         """
         to_invoice = order['to_invoice'] if not draft else False
@@ -131,7 +133,7 @@ class PosOrder(models.Model):
 
         if not draft:
             try:
-                pos_order.action_pos_order_paid()
+                pos_order.action_pos_order_paid(wrong_lots_pickings)
             except psycopg2.DatabaseError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
@@ -345,11 +347,11 @@ class PosOrder(models.Model):
             'res_id': self.account_move.id,
         }
 
-    def action_pos_order_paid(self):
+    def action_pos_order_paid(self, wrong_lots_pickings=[]):
         if not float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding):
             raise UserError(_("Order %s is not fully paid.") % self.name)
         self.write({'state': 'paid'})
-        return self.create_picking()
+        return self.create_picking(wrong_lots_pickings)
 
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
@@ -420,15 +422,25 @@ class PosOrder(models.Model):
         :Returns: list -- list of db-ids for the created and updated orders.
         """
         order_ids = []
+        wrong_lots_pickings = []
+        session = self.env['pos.session'].browse(orders[0]['data']['pos_session_id'])
+
         for order in orders:
             existing_order = False
             if 'server_id' in order['data']:
                 existing_order = self.env['pos.order'].search([('id', '=', order['data']['server_id'])], limit=1)
-            order_ids.append(self._process_order(order, draft, existing_order))
+            order_ids.append(self._process_order(order, draft, existing_order, wrong_lots_pickings))
+
+        if wrong_lots_pickings:
+            session.activity_schedule_with_view('mail.mail_activity_data_warning',
+                user_id=session.user_id.id,
+                views_or_xmlid='point_of_sale.exception_stock_moves_confirmation',
+                render_context={'stock_pickings': wrong_lots_pickings}
+            )
 
         return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
 
-    def create_picking(self):
+    def create_picking(self, wrong_lots_pickings=[]):
         """Create a picking for each order and validate it."""
         Picking = self.env['stock.picking']
         Move = self.env['stock.move']
@@ -457,7 +469,7 @@ class PosOrder(models.Model):
                 picking_vals = {
                     'origin': order.name,
                     'partner_id': address.get('delivery', False),
-                    'user_id': False,
+                    'user_id': self.env.user.id,
                     'date_done': order.date_order,
                     'picking_type_id': picking_type.id,
                     'company_id': order.company_id.id,
@@ -498,9 +510,9 @@ class PosOrder(models.Model):
             order.write({'picking_id': order_picking.id or return_picking.id})
 
             if return_picking:
-                order._force_picking_done(return_picking)
+                order._force_picking_done(return_picking, wrong_lots_pickings)
             if order_picking:
-                order._force_picking_done(order_picking)
+                order._force_picking_done(order_picking, wrong_lots_pickings)
 
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
@@ -509,12 +521,17 @@ class PosOrder(models.Model):
 
         return True
 
-    def _force_picking_done(self, picking):
+    def _force_picking_done(self, picking, wrong_lots_pickings=[]):
         """Force picking in order to be set as done."""
         self.ensure_one()
         picking.action_assign()
         wrong_lots = self.set_pack_operation_lot(picking)
-        if not wrong_lots:
+        if wrong_lots:
+            wrong_lots_pickings.append({
+                'id': picking.id,
+                'name': picking.name
+            })
+        else:
             picking.action_done()
 
     def set_pack_operation_lot(self, picking=None):

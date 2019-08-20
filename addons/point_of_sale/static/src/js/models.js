@@ -1570,7 +1570,24 @@ exports.Orderline = Backbone.Model.extend({
             return true;
         }
         var valid_product_lot = this.pack_lot_lines.get_valid_lots();
-        return this.get_required_number_of_lots() === valid_product_lot.length;
+        return this.get_required_number_of_lots() === valid_product_lot.length && this.has_valid_quantity();
+    },
+
+    has_valid_quantity: function( ) {
+        var self = this;
+        var valid_lots = 0;
+        var lots = this.pack_lot_lines.get_valid_lots();
+
+        lots.forEach(function (lot) {
+            var available_qty = self.order.get_available_quantity(lot.get_lot_name());
+            if (self.product.tracking == "serial" && self.quantity == lots.length && available_qty <= 0) {
+                valid_lots++;
+            }
+            if (self.product.tracking == "lot" && available_qty >= 0) {
+                valid_lots++;
+            }
+        });
+        return lots.length == valid_lots;
     },
 
     // return the unit of measure of the product
@@ -2528,6 +2545,23 @@ exports.Order = Backbone.Model.extend({
         }
         return null;
     },
+    get_available_quantity: function(lot_name) {
+        var lot_quantity = this.pos.db.load("lot_quantity", {});
+        if (lot_quantity) {
+            var total_reserved_qty = 0;
+            this.orderlines.forEach(function(line) {
+                if (line.has_product_lot) {
+                    line.pack_lot_lines.each(function (lot) {
+                        if (lot.get('lot_name') == lot_name) {
+                            total_reserved_qty += line.quantity;
+                        }
+                    });
+                }
+            });
+            return lot_quantity[lot_name] - total_reserved_qty;
+        }
+        return 0;
+    },
     get_orderlines: function(){
         return this.orderlines.models;
     },
@@ -3018,6 +3052,25 @@ exports.Order = Backbone.Model.extend({
     },
     wait_for_push_order: function () {
         return this.is_to_email();
+    },
+    // get lots and serial information
+    get_existing_lots: function () {
+        var active_line = this.selected_orderline;
+        var product_id = active_line.product.id;
+        var lots = {};
+        this.orderlines.forEach(function(line) {
+            if (line.product.id === product_id && line.cid != active_line.cid ) {
+                line.pack_lot_lines.forEach(function (lot) {
+                    var lot_name = lot.get('lot_name');
+                    if (lot_name in lots) {
+                        lots[lot_name] += active_line.quantity;
+                    } else {
+                        lots[lot_name] = active_line.quantity;
+                    }
+                });
+            }
+        });
+        return lots;
     },
 });
 

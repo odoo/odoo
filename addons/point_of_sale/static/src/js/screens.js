@@ -491,8 +491,8 @@ var ActionpadWidget = PosBaseWidget.extend({
             });
             if(!has_valid_product_lot){
                 self.gui.show_popup('confirm',{
-                    'title': _t('Empty Serial/Lot Number'),
-                    'body':  _t('One or more product(s) required serial/lot number.'),
+                    'title': _t('Empty Lot/Serial Number'),
+                    'body':  _t('One or more product(s) required Lot/Serial number.'),
                     confirm: function(){
                         self.gui.show_screen('payment');
                     },
