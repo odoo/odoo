@@ -28,7 +28,6 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     deduplicate = fields.Boolean('Apply deduplication', default=True, help='Merge with existing leads/opportunities of each partner')
     action = fields.Selection(selection_add=[
         ('each_exist_or_create', 'Use existing partner or create'),
-        ('nothing', 'Do not link to a customer')
     ], string='Related Customer', required=True)
     force_assignation = fields.Boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities')
 

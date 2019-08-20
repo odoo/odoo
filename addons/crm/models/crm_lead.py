@@ -990,6 +990,34 @@ class Lead(models.Model):
             return partner_company
         return Partner.create(self._create_lead_partner_data(self.name, is_company=False))
 
+    def _find_matching_partner(self):
+        """ Try to find a matching partner with available information on the Lead.
+            Like the customer's name, email, phone number, etc.
+            :return int partner_id if any, False otherwise
+        """
+        self.ensure_one()
+
+        # find the best matching partner
+        Partner = self.env['res.partner']
+        if self.partner_id:  # a partner is set already
+            return self.partner_id.id
+
+        if self.email_from:  # search through the existing partners based on the lead's email
+            return Partner.search([('email', '=', self.email_from)], limit=1).id
+
+        search_criteria = False
+        if self.partner_name:  # search through the existing partners based on the lead's partner or contact name
+            search_criteria = self.partner_name
+        elif self.contact_name:
+            search_criteria = self.contact_name
+        elif self.name:  # to be aligned with _create_lead_partner, search on lead's name as last possibility
+            search_criteria = self.name
+
+        if search_criteria:
+            return Partner.search([('name', 'ilike', '%' + search_criteria + '%')], limit=1).id
+
+        return False
+
     def handle_partner_assignation(self, action='create', partner_id=False):
         """ Handle partner assignation during a lead conversion.
 
