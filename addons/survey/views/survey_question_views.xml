@@ -24,7 +24,7 @@
                     </group>
                     <group attrs="{'invisible': [('is_page', '=', True)]}">
                         <group>
-                            <field name="question_type" widget="radio" />
+                            <field name="question_type" widget="radio" attrs="{'required': [('is_page', '=', False)]}" />
                         </group>
                         <group>
                             <div class="col-lg-6 offset-lg-3 o_preview_questions">
@@ -194,6 +194,7 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="survey_question_search"/>
         <field name="context">{'search_default_group_by_page': True}</field>
+        <field name="domain">[('is_page', '=', False)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
             No questions found
