@@ -11,10 +11,9 @@ CrashManager.include({
      * @override
      */
     getMapTitle() {
-        return {
-            ...this._super(...arguments),
+        return _.extend({}, this._super(...arguments), {
             karma_error: _lt("Karma Error"),
-        };
+        });
     },
 });
 });
