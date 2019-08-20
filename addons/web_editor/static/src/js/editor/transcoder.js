@@ -1,7 +1,9 @@
-odoo.define('web_editor.convertInline', function (require) {
+odoo.define('web_editor.transcoder', function (require) {
 'use strict';
 
-var FieldHtml = require('web_editor.field.html');
+var base = require('web_editor.base');
+
+var rulesCache = [];
 
 /**
  * Returns the css rules which applies on an element, tweaked so that they are
@@ -12,11 +14,8 @@ var FieldHtml = require('web_editor.field.html');
  */
 function getMatchedCSSRules(a) {
     var i, r, k;
-    var doc = a.ownerDocument;
-    var rulesCache = a.ownerDocument._rulesCache || (a.ownerDocument._rulesCache = []);
-
     if (!rulesCache.length) {
-        var sheets = doc.styleSheets;
+        var sheets = document.styleSheets;
         for (i = sheets.length-1 ; i >= 0 ; i--) {
             var rules;
             // try...catch because browser may not able to enumerate rules for cross-domain sheets
@@ -188,13 +187,11 @@ function getMatchedCSSRules(a) {
  *                           converted to images
  */
 function fontToImg($editable) {
-    var fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
-
     $editable.find('.fa').each(function () {
         var $font = $(this);
         var icon, content;
-        _.find(fonts.fontIcons, function (font) {
-            return _.find(fonts.getCssSelectors(font.parser), function (data) {
+        _.find(base.fontIcons, function (font) {
+            return _.find(base.getCssSelectors(font.parser), function (data) {
                 if ($font.is(data.selector.replace(/::?before/g, ''))) {
                     icon = data.names[0].split('-').shift();
                     content = data.css.match(/content:\s*['"]?(.)['"]?/)[1];
@@ -268,6 +265,9 @@ function applyOverDescendants(node, func) {
  * @param {jQuery} $editable
  */
 function classToStyle($editable) {
+    if (!rulesCache.length) {
+        getMatchedCSSRules($editable[0]);
+    }
     applyOverDescendants($editable[0], function (node) {
         var $target = $(node);
         var css = getMatchedCSSRules(node);
@@ -328,7 +328,9 @@ function styleToClass($editable) {
         $(this).after($('a,img', this));
     }).remove();
 
-    var $c = $('<span/>').appendTo($editable[0].ownerDocument.body);
+    getMatchedCSSRules($editable[0]);
+
+    var $c = $('<span/>').appendTo(document.body);
 
     applyOverDescendants($editable[0], function (node) {
         var $target = $(node);
@@ -340,7 +342,7 @@ function styleToClass($editable) {
             }
         });
         css = ($c.attr('style', style).attr('style') || '').split(/\s*;\s*/);
-        style = ($target.attr('style') || '').replace(/\s*:\s*/, ':').replace(/\s*;\s*/, ';');
+        style = $target.attr('style') || '';
         _.each(css, function (v) {
             style = style.replace(v, '');
         });
@@ -362,13 +364,13 @@ function styleToClass($editable) {
  * @param {jQuery} $editable
  */
 function attachmentThumbnailToLinkImg($editable) {
-    $editable.find('a[href*="/web/content/"][data-mimetype]').filter(':empty, :containsExact( )').each(function () {
+    $editable.find('a[href*="/web/content/"][data-mimetype]:empty').each(function () {
         var $link = $(this);
         var $img = $('<img/>')
             .attr('src', $link.css('background-image').replace(/(^url\(['"])|(['"]\)$)/g, ''))
             .css('height', Math.max(1, $link.height()) + 'px')
             .css('width', Math.max(1, $link.width()) + 'px');
-        $link.prepend($img);
+        $link.append($img);
     });
 }
 
@@ -381,83 +383,6 @@ function attachmentThumbnailToLinkImg($editable) {
 function linkImgToAttachmentThumbnail($editable) {
     $editable.find('a[href*="/web/content/"][data-mimetype] > img').remove();
 }
-
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-
-
-FieldHtml.include({
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    commitChanges: function () {
-        if (this.nodeOptions['style-inline'] && this.isRendered) {
-            this._toInline();
-        }
-        return this._super();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Converts CSS dependencies to CSS-independent HTML.
-     * - CSS display for attachment link -> real image
-     * - Font icons -> images
-     * - CSS styles -> inline styles
-     *
-     * @private
-     */
-    _toInline: function () {
-        var $editable = this.wysiwyg.getEditable();
-        var html = this.wysiwyg.getValue();
-        $editable.html(html);
-
-        attachmentThumbnailToLinkImg($editable);
-        fontToImg($editable);
-        classToStyle($editable);
-        this.wysiwyg.setValue($editable.html(), {
-            notifyChange: false,
-        });
-    },
-    /**
-     * Revert _toInline changes.
-     *
-     * @private
-     */
-    _fromInline: function () {
-        var $editable = this.wysiwyg.getEditable();
-        var html = this.wysiwyg.getValue();
-        $editable.html(html);
-
-        styleToClass($editable);
-        imgToFont($editable);
-        linkImgToAttachmentThumbnail($editable);
-        this.wysiwyg.setValue($editable.html(), {
-            notifyChange: false,
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handler
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onLoadWysiwyg: function () {
-        if (this.nodeOptions['style-inline']) {
-            this._fromInline();
-        }
-        this._super();
-    },
-});
 
 return {
     fontToImg: fontToImg,
