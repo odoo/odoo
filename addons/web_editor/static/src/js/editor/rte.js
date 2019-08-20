@@ -246,7 +246,7 @@ var RTEWidget = Widget.extend({
     /**
      * @constructor
      */
-    init: function (parent, params) {
+    init: function (parent, getConfig) {
         var self = this;
         this._super.apply(this, arguments);
 
@@ -259,8 +259,7 @@ var RTEWidget = Widget.extend({
             return res;
         };
 
-        this._getConfig = params && params.getConfig || this._getDefaultConfig;
-        this._saveElement = params && params.saveElement || this._saveElement;
+        this._getConfig = getConfig || this._getDefaultConfig;
 
         base.computeFonts();
     },
@@ -441,7 +440,7 @@ var RTEWidget = Widget.extend({
      *
      * @param {Object} [context] - the context to use for saving rpc, default to
      *                           the editor context found on the page
-     * @return {Promise} rejected if the save cannot be done
+     * @return {Deferred} rejected if the save cannot be done
      */
     save: function (context) {
         var self = this;
@@ -495,7 +494,7 @@ var RTEWidget = Widget.extend({
             });
         });
 
-        return Promise.all(defs).then(function () {
+        return $.when.apply($, defs).then(function () {
             window.onbeforeunload = null;
         }, function (failed) {
             // If there were errors, re-enable edition

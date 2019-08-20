@@ -29,17 +29,7 @@ var EditorMenuBar = Widget.extend({
     init: function (parent) {
         var self = this;
         var res = this._super.apply(this, arguments);
-        var Editor = options.Editor || rte.Class;
-        this.rte = new Editor(this, {
-            getConfig: function ($editable) {
-                var param = self._getDefaultConfig($editable);
-                if (options.generateOptions) {
-                    param = options.generateOptions(param);
-                }
-                return param;
-            },
-            saveElement: options.saveElement,
-        });
+        this.rte = new rte.Class(this);
         this.rte.on('rte:start', this, function () {
             self.trigger('rte:start');
         });
@@ -47,15 +37,7 @@ var EditorMenuBar = Widget.extend({
         // Snippets edition
         var $editable = this.rte.editable();
         window.__EditorMenuBar_$editable = $editable; // TODO remove this hack asap
-
-
-        var options = this.getParent().params;
-        if (options.snippets) {
-            this.snippetsMenu = new snippetsEditor.Class(this, Object.assign({
-                $el: $editable,
-                selectorEditableArea: '.o_editable',
-            }, options));
-        }
+        this.snippetsMenu = new snippetsEditor.Class(this, $editable);
 
         return res;
     },
@@ -106,12 +88,10 @@ var EditorMenuBar = Widget.extend({
         };
 
         // Snippets menu
-        if (self.snippetsMenu) {
-            defs.push(this.snippetsMenu.insertAfter(this.$el));
-        }
+        defs.push(this.snippetsMenu.insertAfter(this.$el));
         this.rte.editable().find('*').off('mousedown mouseup click');
 
-        return Promise.all(defs).then(function () {
+        return $.when.apply($, defs).then(function () {
             self.trigger_up('edit_mode');
         });
     },
@@ -135,20 +115,20 @@ var EditorMenuBar = Widget.extend({
      * @param {boolean} [reload=true]
      *        true if the page has to be reloaded when the user answers yes
      *        (do nothing otherwise but add this to allow class extension)
-     * @returns {Promise}
+     * @returns {Deferred}
      */
     cancel: function (reload) {
         var self = this;
-        return new Promise(function(resolve, reject) {
-            if (!rte.history.getEditableHasUndo().length) {
-                resolve();
-            } else {
-                var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
-                    confirm_callback: resolve,
-                });
-                confirm.on('closed', self, reject);
-            }
-        }).then(function () {
+        var def = $.Deferred();
+        if (!rte.history.getEditableHasUndo().length) {
+            def.resolve();
+        } else {
+            var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                confirm_callback: def.resolve.bind(def),
+            });
+            confirm.on('closed', def, def.reject);
+        }
+        return def.then(function () {
             if (reload !== false) {
                 window.onbeforeunload = null;
                 return self._reload();
@@ -161,16 +141,14 @@ var EditorMenuBar = Widget.extend({
      *
      * @param {boolean} [reload=true]
      *        true if the page has to be reloaded after the save
-     * @returns {Promise}
+     * @returns {Deferred}
      */
     save: function (reload) {
         var self = this;
         var defs = [];
         this.trigger_up('ready_to_save', {defs: defs});
-        return Promise.all(defs).then(function () {
-            if (self.snippetsMenu) {
-                self.snippetsMenu.cleanForSave();
-            }
+        return $.when.apply($, defs).then(function () {
+            self.snippetsMenu.cleanForSave();
             return self._saveCroppedImages();
         }).then(function () {
             return self.rte.save();
@@ -189,7 +167,7 @@ var EditorMenuBar = Widget.extend({
      * Reloads the page in non-editable mode, with the right scrolling.
      *
      * @private
-     * @returns {Promise} (never resolved, the page is reloading anyway)
+     * @returns {Deferred} (never resolved, the page is reloading anyway)
      */
     _reload: function () {
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
@@ -198,7 +176,7 @@ var EditorMenuBar = Widget.extend({
         } else {
             window.location.reload(true);
         }
-        return new Promise(function(){});
+        return $.Deferred();
     },
     /**
      * @private
@@ -248,7 +226,7 @@ var EditorMenuBar = Widget.extend({
                 });
             }
         });
-        return Promise.all(defs);
+        return $.when.apply($, defs);
     },
 
     //--------------------------------------------------------------------------

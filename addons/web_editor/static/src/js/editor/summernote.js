@@ -1011,18 +1011,7 @@ renderer.tplButtonInfo.color = function (lang, options) {
         dropdown: renderer.getTemplate().dropdown(backColorItems)
     });
     return recentColorButton + foreColorButton + backColorButton;
-};
-
-renderer.tplButtonInfo.checklist = function (lang, options) {
-    return '<button ' +
-            'type="button" ' +
-            'class="btn btn-secondary btn-sm" ' +
-            'title="' + _t('Checklist') + '" ' +
-            'data-event="insertCheckList" ' +
-            'tabindex="-1" ' +
-            'data-name="ul" ' +
-        '><i class="fa fa-check-square"></i></button>';
-};
+},
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -1673,12 +1662,9 @@ function isFormatNode(node) {
     return node.tagName && options.styleTags.indexOf(node.tagName.toLowerCase()) !== -1;
 }
 
-$.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutInfo, type) {
+$.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
-
-    type = type || "UL";
-    var sorted = type === "OL";
 
     var parent;
     var r = range.create();
@@ -1700,10 +1686,6 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
             return;
 
         } else if (node.tagName === (sorted ? "OL" : "UL")) {
-
-            if (type !== 'checklist') {
-                node.classList.remove('o_checklist');
-            }
 
             var lis = [];
             for (var i=0; i<node.children.length; i++) {
@@ -1778,15 +1760,10 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
     }
     r.clean().select();
     event.preventDefault();
-    return ul;
+    return false;
 };
 $.summernote.pluginEvents.insertOrderedList = function (event, editor, layoutInfo) {
-    $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, "OL");
-};
-$.summernote.pluginEvents.insertCheckList = function (event, editor, layoutInfo) {
-    var ul = $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, "checklist");
-    ul.classList.add('o_checklist');
-    console.log(ul);
+    return $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, true);
 };
 $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent) {
     var $editable = layoutInfo.editable();
@@ -1800,9 +1777,8 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
         var tagName = UL.tagName;
         var node = UL.firstChild;
         var ul = document.createElement(tagName);
-        ul.className = UL.className;
         var li = document.createElement("li");
-        li.classList.add('o_indent');
+        li.style.listStyle = "none";
         li.appendChild(ul);
 
         if (flag) {
@@ -2455,43 +2431,17 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     }
 };
 
-function mouseDownChecklist (e) {
-    if (!dom.isLi(e.target) || !$(e.target).parent('ul.o_checklist').length || e.offsetX > 0) {
-        return;
-    }
-    e.preventDefault();
-    var checked = $(e.target).hasClass('o_checked');
-    $(e.target).toggleClass('o_checked', !checked);
-    var $sublevel = $(e.target).next('ul.o_checklist, li:has(> ul.o_checklist)').find('> li, ul.o_checklist > li');
-    var $parents = $(e.target).parents('ul.o_checklist').map(function () {
-        return this.parentNode.tagName === 'LI' ? this.parentNode : this;
-    });
-    if (checked) {
-        $sublevel.removeClass('o_checked');
-        $parents.prev('ul.o_checklist li').removeClass('o_checked');
-    } else {
-        $sublevel.addClass('o_checked');
-        var $lis;
-        do {
-            $lis = $parents.not(':has(li:not(.o_checked))').prev('ul.o_checklist li:not(.o_checked)');
-            $lis.addClass('o_checked');
-        } while ($lis.length);
-    }
-};
-
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_attach.call(this, oLayoutInfo, options);
     $editable.on("scroll", summernote_table_scroll);
-    $editable.on("mousedown", mouseDownChecklist);
 };
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_detach.call(this, oLayoutInfo, options);
     $editable.off("scroll", summernote_table_scroll);
-    $editable.off("mousedown", mouseDownChecklist);
     $('.o_table_handler').remove();
 };
 
