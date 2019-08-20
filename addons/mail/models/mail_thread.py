@@ -994,7 +994,7 @@ class MailThread(models.AbstractModel):
         )
 
     @api.model
-    def message_route_process(self, message, message_dict, routes):
+    def _message_route_process(self, message, message_dict, routes):
         self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         original_partner_ids = message_dict.pop('partner_ids', [])
@@ -1104,7 +1104,7 @@ class MailThread(models.AbstractModel):
 
         # find possible routes for the message
         routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
-        thread_id = self.message_route_process(message, msg_dict, routes)
+        thread_id = self._message_route_process(message, msg_dict, routes)
         return thread_id
 
     @api.model
