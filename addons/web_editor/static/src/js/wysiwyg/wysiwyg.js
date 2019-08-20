@@ -163,7 +163,6 @@ var Wysiwyg = Widget.extend({
      * @returns {String}
      */
     setValue: function (value, options) {
-        this._value = value;
         if (this.$editor.is('textarea')) {
             this.$target.val(value);
         } else {
