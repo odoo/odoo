@@ -5916,7 +5916,7 @@ def itemgetter_tuple(items):
 
 def convert_pgerror_not_null(model, fields, info, e):
     if e.diag.table_name != model._table:
-        return {'message': tools.ustr(e)}
+        return {'message': _(u"Missing required value for the field '%s'") % (e.diag.column_name)}
 
     field_name = e.diag.column_name
     field = fields[field_name]
@@ -5964,11 +5964,18 @@ def convert_pgerror_unique(model, fields, info, e):
         # no field, unclear which one we should pick and they could be in any order
     }
 
+def convert_pgerror_constraint(model, fields, info, e):
+    sql_constraints = dict([(('%s_%s') % (e.diag.table_name, x[0]), x) for x in model._sql_constraints])
+    if e.diag.constraint_name in sql_constraints.keys():
+        return {'message': sql_constraints[e.diag.constraint_name][2]}
+    return {'message': tools.ustr(e)}
+
 PGERROR_TO_OE = defaultdict(
     # shape of mapped converters
     lambda: (lambda model, fvg, info, pgerror: {'message': tools.ustr(pgerror)}), {
     '23502': convert_pgerror_not_null,
     '23505': convert_pgerror_unique,
+    '23514': convert_pgerror_constraint,
 })
 
 

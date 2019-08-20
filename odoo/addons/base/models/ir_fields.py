@@ -305,10 +305,13 @@ class IrFieldsConverter(models.AbstractModel):
         id = None
         warnings = []
         error_msg = ''
-        action = {'type': 'ir.actions.act_window', 'target': 'new',
-                  'view_mode': 'tree,form',
-                  'views': [(False, 'tree'), (False, 'form')],
-                  'help': _(u"See all possible values")}
+        action = {
+            'name': 'Possible Values',
+            'type': 'ir.actions.act_window', 'target': 'new',
+            'view_mode': 'tree,form',
+            'views': [(False, 'list'), (False, 'form')],
+            'context': {'create': False},
+            'help': _(u"See all possible values")}
         if subfield is None:
             action['res_model'] = field.comodel_name
         elif subfield in ('id', '.id'):
@@ -353,8 +356,8 @@ class IrFieldsConverter(models.AbstractModel):
                 if name_create_enabled_fields.get(field.name):
                     try:
                         id, _name = RelatedModel.name_create(name=value)
-                    except Exception as e:
-                        error_msg = repr(e)
+                    except (Exception, psycopg2.IntegrityError):
+                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.") % RelatedModel._description
         else:
             raise self._format_import_error(
                 Exception,
