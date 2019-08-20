@@ -9,7 +9,6 @@ from odoo.tools.translate import _
 class Lead2OpportunityPartner(models.TransientModel):
     _name = 'crm.lead2opportunity.partner'
     _description = 'Convert Lead to Opportunity (not in mass)'
-    _inherit = 'crm.partner.binding'
 
     @api.model
     def default_get(self, fields):
@@ -21,8 +20,10 @@ class Lead2OpportunityPartner(models.TransientModel):
         if self._context.get('active_id'):
             tomerge = {int(self._context['active_id'])}
 
-            partner_id = result.get('partner_id')
             lead = self.env['crm.lead'].browse(self._context['active_id'])
+            result['lead_id'] = lead.id
+
+            partner_id = lead._find_matching_partner()
             email = lead.partner_id.email if lead.partner_id else lead.email_from
 
             tomerge.update(self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=True).ids)
@@ -41,20 +42,28 @@ class Lead2OpportunityPartner(models.TransientModel):
                 result['team_id'] = lead.team_id.id
             if not partner_id and not lead.contact_name:
                 result['action'] = 'nothing'
+
         return result
 
     name = fields.Selection([
         ('convert', 'Convert to opportunity'),
         ('merge', 'Merge with existing opportunities')
     ], 'Conversion Action', required=True)
+    action = fields.Selection([
+        ('create', 'Create a new customer'),
+        ('exist', 'Link to an existing customer'),
+        ('nothing', 'Do not link to a customer')
+    ], string='Related Customer', required=True)
+    lead_id = fields.Many2one('crm.lead', "Associated Lead")
     opportunity_ids = fields.Many2many('crm.lead', string='Opportunities')
-    user_id = fields.Many2one('res.users', 'Salesperson', index=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', index=True)
+    partner_id = fields.Many2one('res.partner', 'Customer')
+    user_id = fields.Many2one('res.users', 'Salesperson')
+    team_id = fields.Many2one('crm.team', 'Sales Team')
 
     @api.onchange('action')
     def onchange_action(self):
         if self.action == 'exist':
-            self.partner_id = self._find_matching_partner()
+            self.partner_id = self.lead_id._find_matching_partner()
         else:
             self.partner_id = False
 
@@ -144,7 +153,7 @@ class Lead2OpportunityPartner(models.TransientModel):
         #wizard and would probably diserve to be refactored or at least
         #moved to a better place
         if action == 'each_exist_or_create':
-            partner_id = self.with_context(active_id=lead_id)._find_matching_partner()
+            partner_id = self.env['crm.lead'].browse(lead_id)._find_matching_partner()
             action = 'create'
         result = self.env['crm.lead'].browse(lead_id).handle_partner_assignation(action, partner_id)
         return result.get(lead_id)
