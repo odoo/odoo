@@ -3,7 +3,7 @@
 {
     'name': 'POS Adyen',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Integrate your POS with an Adyen payment terminal',
     'description': '',

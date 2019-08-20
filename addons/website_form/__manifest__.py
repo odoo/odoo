@@ -1,6 +1,6 @@
 {
     'name': 'Website Form',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Build custom web forms',
     'description': """
         Customize and create your own web forms.

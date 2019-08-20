@@ -2,7 +2,7 @@
 {
     'name' : 'Import Bills/Invoices From XML',
     'version' : '1.0',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'depends' : ['account'],
     'data': [
         'data/facturx_templates.xml',

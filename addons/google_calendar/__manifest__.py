@@ -4,7 +4,7 @@
 {
     'name': 'Google Calendar',
     'version': '1.0',
-    'category': 'Extra Tools',
+    'category': 'Tools',
     'description': "",
     'depends': ['google_account', 'calendar'],
     'qweb': ['static/src/xml/*.xml'],

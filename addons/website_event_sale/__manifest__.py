@@ -2,7 +2,7 @@
 
 {
     'name': "Online Event Ticketing",
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': "Sell event tickets online",
     'description': """
 Sell event tickets through eCommerce app.

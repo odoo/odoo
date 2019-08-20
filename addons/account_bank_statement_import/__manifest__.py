@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
     'name': 'Account Bank Statement Import',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'version': '1.0',
     'depends': ['account'],
     'description': """Generic Wizard to Import Bank Statements.

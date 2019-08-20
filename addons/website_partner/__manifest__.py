@@ -3,7 +3,7 @@
 
 {
     'name': 'Website Partner',
-    'category': 'Technical Settings',
+    'category': 'Hidden',
     'summary': 'Partner module for website',
     'version': '0.1',
     'description': """

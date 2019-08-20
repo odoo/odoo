@@ -4,7 +4,7 @@
 {
     'name': 'SMS in CRM',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales/CRM',
     'summary': 'Add SMS capabilities to CRM',
     'description': "",
     'depends': ['crm', 'sms'],

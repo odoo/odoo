@@ -6,7 +6,7 @@
     'description': """
         Bridge module to make the website e-commerce stock management compatible with the product configurator
     """,
-    'category': 'Technical Settings',
+    'category': 'Hidden',
     'version': '1.0',
     'depends': ['website_sale_stock', 'sale_product_configurator'],
     'auto_install': True,
