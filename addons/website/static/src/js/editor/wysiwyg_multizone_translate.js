@@ -3,11 +3,39 @@ odoo.define('web_editor.wysiwyg.multizone.translate', function (require) {
 
 var core = require('web.core');
 var webDialog = require('web.Dialog');
-var Dialog = require('wysiwyg.widgets.Dialog');
 var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+var rte = require('web_editor.rte');
+var Dialog = require('wysiwyg.widgets.Dialog');
+var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
 
+
+var RTETranslatorWidget = rte.Class.extend({
+    /**
+     * If the element holds a translation, saves it. Otherwise, fallback to the
+     * standard saving but with the lang kept.
+     *
+     * @override
+     */
+    _saveElement: function ($el, context, withLang) {
+        var self = this;
+        if ($el.data('oe-translation-id')) {
+            return this._rpc({
+                model: 'ir.translation',
+                method: 'save_html',
+                args: [
+                    [+$el.data('oe-translation-id')],
+                    this._getEscapedElement($el).html()
+                ],
+                context: context,
+            }).catch(function (error) {
+                Dialog.alert(null, error.data.message);
+            });
+        }
+        return this._super($el, context, withLang === undefined ? true : withLang);
+    },
+});
 
 var AttributeTranslateDialog = Dialog.extend({
     /**
@@ -44,6 +72,10 @@ var AttributeTranslateDialog = Dialog.extend({
 });
 
 var WysiwygTranslate = WysiwygMultizone.extend({
+    custom_events: _.extend({}, WysiwygMultizone.prototype.custom_events || {}, {
+        ready_to_save: '_onSave',
+    }),
+
     /**
      * @override
      * @param {string} options.lang
@@ -60,7 +92,12 @@ var WysiwygTranslate = WysiwygMultizone.extend({
      */
     start: function () {
         var self = this;
-        return this._super().then(function () {
+        this.editor = new (this.Editor)(this, Object.assign({Editor: RTETranslatorWidget}, this.options));
+        this.$editor = this.editor.rte.editable();
+        var promise = this.editor.prependTo(this.$editor[0].ownerDocument.body);
+
+        return promise.then(function () {
+            self.options.toolbarHandler.append(self.editor.$el);
             var attrs = ['placeholder', 'title', 'alt'];
             _.each(attrs, function (attr) {
                 self._getEditableArea().filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
@@ -107,14 +144,6 @@ var WysiwygTranslate = WysiwygMultizone.extend({
     isDirty: function () {
         return this._super() || this.$editables_attribute.hasClass('o_dirty');
     },
-    /**
-     * @override
-     * @param {Node} node
-     * @returns {Boolean}
-     */
-    isUnbreakableNode: function (node) {
-        return !!this._super(node) || !!$(node).data('oe-readonly');
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -149,34 +178,6 @@ var WysiwygTranslate = WysiwygMultizone.extend({
         return recordInfo;
     },
     /**
-     * Saves one (dirty) element of the page.
-     *
-     * @override
-     * @param {string} outerHTML
-     * @param {Object} recordInfo
-     * @param {DOM} editable
-     * @returns {Promise}
-     */
-    _saveElement: function (outerHTML, recordInfo, editable) {
-        if (!recordInfo.translation_id) {
-            return this._super(outerHTML, recordInfo);
-        }
-        return this._rpc({
-            model: 'ir.translation',
-            method: 'save_html',
-            args: [
-                [recordInfo.translation_id],
-                $(editable).html(),
-            ],
-            kwargs: {
-                context: recordInfo.context,
-            },
-        }).guardedCatch(function (error) {
-            console.error(error.data.message);
-            webDialog.alert(null, error.data.message);
-       });
-    },
-    /**
      * @override
      * @returns {Object} the summernote configuration
      */
@@ -191,14 +192,6 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             ['history', ['undo', 'redo']],
         ];
         return options;
-    },
-    /**
-     * @override
-     * @returns {Object} modules list to load
-     */
-    _getPlugins: function () {
-        var plugins = this._super();
-        return _.omit(plugins, 'linkPopover', 'ImagePopover', 'MediaPlugin', 'ImagePlugin', 'VideoPlugin', 'IconPlugin', 'DocumentPlugin', 'tablePopover');
     },
     /**
      * Called when text is edited -> make sure text is not messed up and mark
@@ -282,6 +275,14 @@ var WysiwygTranslate = WysiwygMultizone.extend({
 
             new AttributeTranslateDialog(self, {}, ev.target).open();
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    _onSave: function (ev) {
+        ev.stopPropagation();
     },
 });
 
