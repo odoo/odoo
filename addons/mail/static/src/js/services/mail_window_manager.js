@@ -106,7 +106,7 @@ MailManager.include({
             // This may happen due to concurrent calls to this method from
             // messaging menu preview click and handling of longpolling chat
             // window state.
-            return;
+            return Promise.resolve();
         }
         var threadWindow = this._getThreadWindow(threadID);
         var prom = Promise.resolve();
