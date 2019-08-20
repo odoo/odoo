@@ -4,8 +4,6 @@
 import logging
 import re
 
-from email.utils import formataddr
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
@@ -21,7 +19,7 @@ class SurveyInvite(models.TransientModel):
     @api.model
     def _get_default_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            return tools.formataddr((self.env.user.name, self.env.user.email))
         raise UserError(_("Unable to post message, please configure the sender's email address."))
 
     @api.model

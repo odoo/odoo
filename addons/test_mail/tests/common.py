@@ -4,12 +4,12 @@ import json
 import time
 
 from contextlib import contextmanager
-from email.utils import formataddr
 from functools import partial
 
 from odoo import api
 from odoo.addons.bus.models.bus import json_dump
 from odoo.tests import common, tagged, new_test_user
+from odoo.tools import formataddr
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
@@ -327,7 +327,7 @@ class MockEmails(common.SingleTransactionCase):
         self._mails[:] = []
 
     def format(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
-               extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
+               extra='', email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
                cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
         return template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
 
