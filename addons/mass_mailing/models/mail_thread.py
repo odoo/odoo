@@ -30,15 +30,14 @@ class MailThread(models.AbstractModel):
 
         return super(MailThread, self).message_route(message, message_dict, model, thread_id, custom_values)
 
-    @api.model
-    def message_route_process(self, message, message_dict, routes):
+    def _message_route_process(self, message, message_dict, routes):
         """ Override to update the parent mail statistics. The parent is found
         by using the References header of the incoming message and looking for
         matching message_id in mail.mail.statistics. """
         if message.get('References'):
             message_ids = [x.strip() for x in decode_smtp_header(message['References']).split()]
             self.env['mail.mail.statistics'].set_replied(mail_message_ids=message_ids)
-        return super(MailThread, self).message_route_process(message, message_dict, routes)
+        return super(MailThread, self)._message_route_process(message, message_dict, routes)
 
     @api.multi
     def message_post_with_template(self, template_id, **kwargs):
