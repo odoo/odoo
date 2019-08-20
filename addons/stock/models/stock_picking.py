@@ -89,13 +89,24 @@ class PickingType(models.Model):
         picking_type = super(PickingType, self).create(vals)
         return picking_type
 
-    @api.onchange('sequence_code')
-    def _onchange_sequence_code(self):
-        if self.sequence_id:
-            if self.warehouse_id:
-                self.sequence_id.prefix = self.warehouse_id.code + '/' + self.sequence_code
-            else:
-                self.sequence_id.prefix = self.sequence_code
+    def write(self, vals):
+        if 'sequence_code' in vals:
+            for picking_type in self:
+                if picking_type.warehouse_id:
+                    picking_type.sequence_id.write({
+                        'name': picking_type.warehouse_id.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
+                        'prefix': picking_type.warehouse_id.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
+                        'company_id': picking_type.warehouse_id.company_id.id,
+                    })
+                else:
+                    picking_type.sequence_id.write({
+                        'name': _('Sequence') + ' ' + vals['sequence_code'],
+                        'prefix': vals['sequence_code'], 'padding': 5,
+                        'company_id': picking_type.env.company.id,
+                    })
+
+        picking_type = super(PickingType, self).write(vals)
+        return picking_type
 
     def _compute_picking_count(self):
         # TDE TODO count picking can be done using previous two
