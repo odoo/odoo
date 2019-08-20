@@ -9,7 +9,6 @@ class Opportunity2Quotation(models.TransientModel):
 
     _name = 'crm.quotation.partner'
     _description = 'Create new or use existing Customer on new Quotation'
-    _inherit = 'crm.partner.binding'
 
     @api.model
     def default_get(self, fields):
@@ -21,11 +20,22 @@ class Opportunity2Quotation(models.TransientModel):
 
         active_id = self._context.get('active_id')
         if 'lead_id' in fields and active_id:
-            result['lead_id'] = active_id
+            lead = self.env['crm.lead'].browse(active_id)
+            result.update({
+                'lead_id': active_id,
+                'partner_id': lead._find_matching_partner(),
+            })
+
         return result
 
-    action = fields.Selection(string='Quotation Customer')
+    action = fields.Selection([
+        ('create', 'Create a new customer'),
+        ('exist', 'Link to an existing customer'),
+        ('nothing', 'Do not link to a customer')
+    ], string='Quotation Customer', required=True)
+
     lead_id = fields.Many2one('crm.lead', "Associated Lead", required=True)
+    partner_id = fields.Many2one('res.partner', 'Customer')
 
     def action_apply(self):
         """ Convert lead to opportunity or merge lead and opportunity and open
