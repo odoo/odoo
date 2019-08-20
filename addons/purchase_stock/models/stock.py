@@ -42,7 +42,7 @@ class StockMove(models.Model):
             if line.taxes_id:
                 price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_void']
             if line.product_uom.id != line.product_id.uom_id.id:
-                price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+                price_unit = line.product_uom._compute_price(line.price_unit, line.product_id.uom_id)
             if order.currency_id != order.company_id.currency_id:
                 # The date must be today, and not the date of the move since the move move is still
                 # in assigned state. However, the move date is the scheduled date until move is
