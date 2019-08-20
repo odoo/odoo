@@ -1198,7 +1198,7 @@ QUnit.test('chatter: new message notification from document', async function (as
     };
     const notifications = [ [['myDB', 'ir.needaction'], message] ];
     form.call('bus_service', 'trigger', 'notification', notifications);
-    await testUtils.nextMicrotaskTick();
+    await testUtils.nextTick();
     assert.strictEqual(
         thread.getUnreadCounter(),
         1,
