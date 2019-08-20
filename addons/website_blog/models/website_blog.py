@@ -5,12 +5,11 @@ from datetime import datetime
 import random
 import json
 
-import itertools
-
 from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
+
 
 class Blog(models.Model):
     _name = 'blog.blog'
@@ -48,7 +47,8 @@ class Blog(models.Model):
                 subtype = 'mail.mt_note'
         return super(Blog, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
-    def all_tags(self, min_limit=1):
+    def all_tags(self, join=False, min_limit=1):
+        BlogTag = self.env['blog.tag']
         req = """
             SELECT
                 p.blog_id, count(*), r.blog_tag_id
@@ -65,13 +65,20 @@ class Blog(models.Model):
         """
         self._cr.execute(req, [tuple(self.ids)])
         tag_by_blog = {i.id: [] for i in self}
+        all_tags = set()
         for blog_id, freq, tag_id in self._cr.fetchall():
             if freq >= min_limit:
-                tag_by_blog[blog_id].append(tag_id)
+                if join:
+                    all_tags.add(tag_id)
+                else:
+                    tag_by_blog[blog_id].append(tag_id)
 
-        BlogTag = self.env['blog.tag']
+        if join:
+            return BlogTag.browse(all_tags)
+
         for blog_id in tag_by_blog:
             tag_by_blog[blog_id] = BlogTag.browse(tag_by_blog[blog_id])
+
         return tag_by_blog
 
 

@@ -112,13 +112,7 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_cover_post" name="Top banner - Show Latest Post" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
-
-        <!-- In the general post list, exclude the first post since it will be shown here -->
-        <t t-set="posts_list_exclude_first" t-value="True"/>
-
-         <!-- Check if 'opt_blog_cover_post_show_author' option is enabled -->
         <t t-set="opt_blog_cover_post_show_author" t-value="request.website.viewref('website_blog.opt_blog_cover_post_show_author').active"/>
-
         <t t-set="blog_post" t-value="first_post"/>
 
         <div class="container">
@@ -178,11 +172,12 @@ list of filtered posts (by date or tag).
                         <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                     </a>
 
-                    <div t-if="not blog or opt_blog_cover_post_show_author">
+                    <div>
                         <span t-if="not blog" class="text-white small mt-2 mb-3">
                             in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
                             <t t-if="opt_blog_cover_post_show_author">, </t>
                         </span>
+                        <span t-else="">&amp;nbsp;</span>
                         <small t-if="opt_blog_cover_post_show_author">
                             by
                             <t t-if="opt_blog_cover_post_show_author" t-call="website_blog.post_author">
