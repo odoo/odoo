@@ -47,6 +47,14 @@ class StatusController(http.Controller):
             return True
         return False
 
+    @http.route('/hw_drivers/check_certificate', type='http', auth='none', cors='*', csrf=False, save_session=False)
+    def check_certificate(self):
+        """
+        This route is called when we want to check if certificate is up-to-date
+        Used in cron.daily
+        """
+        helpers.check_certificate()
+
     @http.route('/hw_drivers/event', type='json', auth='none', cors='*', csrf=False, save_session=False)
     def event(self, listener):
         """
@@ -69,10 +77,17 @@ class StatusController(http.Controller):
         server = helpers.get_odoo_server_url()
         image = get_resource_path('hw_drivers', 'static/img', 'False.jpg')
         if server == '':
-            token = b64decode(token).decode('utf-8')
-            url, token = token.split('|')
+            credential = b64decode(token).decode('utf-8').split('|')
+            url = credential[0]
+            token = credential[1]
+            if len(credential) > 2:
+                # IoT Box send token with db_uuid and enterprise_code only since V13
+                db_uuid = credential[2]
+                enterprise_code = credential[3]
+                helpers.add_credential(db_uuid, enterprise_code)
             try:
                 subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
+                helpers.check_certificate()
                 m.send_alldevices()
                 image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
             except subprocess.CalledProcessError as e:
@@ -238,10 +253,15 @@ class Manager(Thread):
         """
         server = helpers.get_odoo_server_url()
         if server:
+            subject = helpers.read_file_first_line('odoo-subject.conf')
+            if subject:
+                domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
+            else:
+                domain = helpers.get_ip()
             iot_box = {
                 'name': socket.gethostname(),
                 'identifier': helpers.get_mac_address(),
-                'ip': helpers.get_ip(),
+                'ip': domain,
                 'token': helpers.get_token(),
                 'version': helpers.get_version()
                 }
@@ -341,6 +361,7 @@ class Manager(Thread):
         """
         Thread that will check connected/disconnected device, load drivers if needed and contact the odoo server with the updates
         """
+        helpers.check_certificate()
         devices = {}
         updated_devices = {}
         self.send_alldevices()

@@ -145,5 +145,8 @@
         <a class="btn" href='/point_of_sale/display'>POS Display</a>
         <a class="btn" style="margin-left: 10px;" href='/remote_connect'>Remote Debug</a>
         <a target="_blank" class="btn" style="margin-left: 10px;" href="http://{{ ip }}:631">Printers server</a>
+        {% if server_status != "Not Configured" %}
+        <a class="btn" style="margin-left: 10px;" href='/list_credential'>Credential</a>
+        {% endif %}
     </div>
 {% endblock %}
