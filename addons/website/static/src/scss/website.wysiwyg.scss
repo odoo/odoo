@@ -3,12 +3,11 @@
 //------------------------------------------------------------------------------
 
 body.editor_enable {
-    overflow: hidden;
     padding-top: 0 !important;
 
     #wrapwrap {
         height: calc(100vh - #{$o-navbar-height});
-        padding-top: 0px;
+        padding-top: 46px;
 
         .btn {
             -webkit-user-select: none;
@@ -23,15 +22,15 @@ body.editor_enable {
 // TOP BAR (EDIT)
 #web_editor-top-edit {
     height: $o-navbar-height;
+    border: 1px solid $o-we-color-divider;
     background-color: $o-we-color-dark;
     z-index: $zindex-modal - 9;
     position: fixed;
     top: 0px;
     right: 0px;
-    width: auto;
+    width: 100%;
     white-space: nowrap;
 
-    background-color: rgba(0, 0, 0, 0);
     transition: background-color 400ms $o-we-md-ease 0s;
     font-family: $o-we-font-family;
 
@@ -42,7 +41,7 @@ body.editor_enable {
         padding: 0;
         position: absolute;
         top: -1px;
-        right: 0;
+        right: -1px;
         transition: right 0.4s $o-we-md-ease 0s;
         border-left: 1px solid $o-we-color-divider;
         background-color: inherit;
@@ -120,9 +119,11 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;
-    @include o-position-absolute(0, auto, 0, -$o-we-sidebar-width);
+    position: fixed;
     width: $o-we-sidebar-width;
+    z-index: 1042;
 
+    border-top: 0;
     border-right: 1px solid $o-we-color-divider;
     transition: left 400ms $o-we-md-ease 0s;
     background-image: linear-gradient(45deg, $o-we-color-normal, darken($o-we-color-normal, 10%));
@@ -561,6 +562,7 @@ body .modal {
     }
 }
 
+#web_editor-toolbars .popover,
 .wysiwyg_multizone.note-popover,
 .wysiwyg_multizone.note-editor>.note-toolbar-wrapper .note-toolbar {
     // force this because of themes
@@ -645,5 +647,29 @@ body .modal {
 
     .note-style .dropdown-item * {
         color: $o-we-color-text-light !important;
+    }
+}
+
+// ~ revert for v12 in v13
+
+#oe_snippets.o_loaded ~ #wrapwrap {
+    padding-left: 210px;
+}
+#oe_snippets.o_loaded ~ #web_editor-top-edit #web_editor-toolbars {
+    position: relative;
+    left: 210px;
+}
+#web_editor-toolbars .popover {
+    top: 0 !important;
+    left: 0 !important;
+    border: 0;
+    .btn {
+        background-color: transparent;
+        border: 0;
+        color: $o-we-color-text-light;
+        opacity: 0.5;
+    }
+    .note-color ul {
+        min-width: 340px;
     }
 }

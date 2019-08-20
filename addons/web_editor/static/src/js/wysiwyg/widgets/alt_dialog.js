@@ -18,7 +18,7 @@ var AltDialog = Dialog.extend({
     /**
      * @constructor
      */
-    init: function (parent, options, media) {
+    init: function (parent, options, $editable, media) {
         options = options || {};
         this._super(parent, _.extend({}, {
             title: _t("Change media description and tooltip")

@@ -15,7 +15,6 @@ tour.register('rte_translator', {
     test: true,
     url: '/',
     wait_for: ready,
-    url: '/',
 }, [{
     content: "click on Add a language",
     trigger: '.js_language_selector a:has(i.fa)',
@@ -133,10 +132,6 @@ tour.register('rte_translator', {
     run: function () {}, // it's a check
 
 }, {
-    content : "click language dropdown",
-    trigger : '.js_language_selector .dropdown-toggle',
-
-}, {
     content: "open language selector",
     trigger: '.js_language_selector button:first',
     extra_trigger: 'html[lang*="fr"]:not(:has(#wrap p span))',
@@ -149,18 +144,22 @@ tour.register('rte_translator', {
     extra_trigger: 'body:not(:has(#wrap p font:first:containsExact(paragraphs <b>describing</b>)))',
 }, {
     content: "select text",
-    extra_trigger: 'button[data-action=save]',
+    extra_trigger: '#oe_snippets.o_loaded',
     trigger: '#wrap p',
     run: function (action_helper) {
         action_helper.click();
         var el = this.$anchor[0];
-        this.$anchor.trigger('mousedown');
+        var mousedown = document.createEvent('MouseEvents');
+        mousedown.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
+        el.dispatchEvent(mousedown);
+        var mouseup = document.createEvent('MouseEvents');
         Wysiwyg.setRange(el.childNodes[2], 6, el.childNodes[2], 13);
-        this.$anchor.trigger('mouseup');
+        mouseup.initMouseEvent('mouseup', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
+        el.dispatchEvent(mouseup);
     },
 }, {
     content: "underline",
-    trigger: 'button.note-btn-underline',
+    trigger: '.note-air-popover button[data-event="underline"]',
 }, {
     content: "save new change",
     trigger: 'button[data-action=save]',
@@ -169,7 +168,6 @@ tour.register('rte_translator', {
     }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
-    extra_trigger: '#wrap p u',
 }, {
     content: "return in french",
     trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-lang="fr_BE"]',

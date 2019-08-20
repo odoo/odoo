@@ -23,7 +23,7 @@ var LinkDialog = Dialog.extend({
     /**
      * @constructor
      */
-    init: function (parent, options, linkInfo) {
+    init: function (parent, options, editable, linkInfo) {
         var self = this;
         this.options = options || {};
 
