@@ -18,6 +18,7 @@
                                         <t t-esc="option.label"/></label>
                                     <input t-attf-id="#{option.name}_#{_id}"
                                            t-attf-class="oe_import_#{option.name}"
+                                           style="max-width: 50%;"
                                            t-att-value="option.value"/>
                                 </p>
                             </div>
@@ -28,6 +29,7 @@
                                         <t t-esc="option.label"/></label>
                                     <input t-attf-id="#{option.name}_#{_id}"
                                            t-attf-class="oe_import_#{option.name}"
+                                           style="max-width: 50%;"
                                            t-att-value="option.value"/>
                                 </p>
                             </div>
@@ -140,23 +142,48 @@
     <ul t-name="ImportView.error">
         <li t-foreach="errors" t-as="error"
             t-attf-class="oe_import_report bg-#{error_value[0].type}">
-            <t t-call="ImportView.error.each">
-                <t t-set="error" t-value="error_value[0]"/>
-            </t>
-
-            <a href="#" class="oe_import_report_count" t-if="error_value.length gt 1">
-                <t t-esc="more(error_value.length - 1)"/>
-            </a>
-            <ul class="oe_import_report_more" t-if="error_value.length gt 1">
-                <li t-foreach="error_value.length - 1" t-as="index">
-                    <t t-call="ImportView.error.each">
-                        <t t-set="error" t-value="error_value[index + 1]"/>
+            <t t-if="error_value.length gt 1">
+                <t t-call="ImportView.error.multi.header">
+                    <t t-set="error" t-value="error_value[0]"/>
+                    <t t-set="error_length" t-value="error_value.length"/>
+                </t>
+                <ul>
+                    <t t-foreach="error_value.length" t-as="index">
+                        <li t-att-class="index gt 4 ? 'oe_import_report_more':''">
+                            <t t-call="ImportView.error.multi.body">
+                                <t t-set="error" t-value="error_value[index]"/>
+                                <t t-set="index" t-value="index"/>
+                            </t>
+                        </li>
+                        <li t-if="error_value.length gt 5 and index == 4" style="display: block;">
+                            <a href="#" class="oe_import_report_count">
+                                <t t-esc="more(error_value.length - 5)"/>
+                            </a>
+                        </li>
                     </t>
-                </li>
-            </ul>
+                </ul>
+                <t t-if="error_value[0].moreinfo" t-raw="info(error_value[0].moreinfo)"/>
+
+            </t>
+            <t t-else="">
+                <t t-call="ImportView.error.single">
+                    <t t-set="error" t-value="error_value[0]"/>
+                </t>
+            </t>
         </li>
     </ul>
-    <t t-name="ImportView.error.each">
+    <t t-name="ImportView.error.multi.header">
+        <span class="oe_import_report_message">
+            <t t-esc="error.message"/>
+            <t t-esc="at_multi_header(error_length)"/>
+        </span>
+    </t>
+    <t t-name="ImportView.error.multi.body">
+        <span class="oe_import_report_message">
+            <t t-esc="at_multi(error.rows)"/>
+        </span>
+    </t>
+    <t t-name="ImportView.error.single">
         <span class="oe_import_report_message">
             <t t-esc="error.message"/>
         </span>
