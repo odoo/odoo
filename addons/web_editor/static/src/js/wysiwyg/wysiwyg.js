@@ -78,18 +78,6 @@ var Wysiwyg = Widget.extend({
         this.$editor.data('oe-model', options.recordInfo.res_model);
         this.$editor.data('oe-id', options.recordInfo.res_id);
         var $wysiwyg = this.$editor.closest('odoo-wysiwyg-container');
-        var focus = false;
-        this._blur = function (e) {
-            if ($wysiwyg[0].contains(e.target)) {
-                if (!focus) {
-                    focus = true;
-                    self.trigger_up('wysiwyg_focus');
-                }
-            } else if (focus) {
-                focus = false;
-                self.trigger_up('wysiwyg_blur');
-            }
-        };
         $(document).on('mousedown', this._blur);
         this._value = this.$target.html() || this.$target.val();
         return this._super.apply(this, arguments).then(() => {
@@ -199,6 +187,12 @@ var Wysiwyg = Widget.extend({
         };
         options.onUpload = function (attachments) {
             self.trigger_up('wysiwyg_attachment', attachments);
+        };
+        options.onFocus = function () {
+            self.trigger_up('wysiwyg_focus');
+        };
+        options.onBlur = function () {
+            self.trigger_up('wysiwyg_blur');
         };
         return options;
     },
