@@ -40,13 +40,9 @@ var TranslatableFieldMixin = {
      * @returns {jQuery}
      */
     _renderTranslateButton: function () {
-        if (_t.database.multi_lang && this.field.translate && this.res_id) {
+        if (_t.database.multi_lang && this.field.translate) {
             var lang = _t.database.parameters.code.split('_')[0].toUpperCase();
-            return $('<button>', {
-                    type: 'button',
-                    'class': 'o_field_translate fa fa-globe btn btn-link',
-                    'data-code': lang,
-                })
+            return $(`<span class="o_field_translate btn btn-link">${lang}</span>`)
                 .on('click', this._onTranslate.bind(this));
         }
         return $();
@@ -59,10 +55,16 @@ var TranslatableFieldMixin = {
     /**
      * open the translation view for the current field
      *
+     * @param {MouseEvent} ev
      * @private
      */
-    _onTranslate: function () {
-        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID});
+    _onTranslate: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('translate', {
+            fieldName: this.name,
+            id: this.dataPointID,
+            isComingFromTranslationAlert: false,
+        });
     },
 };
 
@@ -213,7 +215,9 @@ var InputField = DebouncedField.extend({
         if (!event || event === this.lastChangeEvent) {
             this.isDirty = false;
         }
-        if (this.isDirty || (event && event.target === this && event.data.changes[this.name] === this.value)) {
+        if (this.isDirty || (event && event.target === this &&
+            event.data.changes &&
+            event.data.changes[this.name] === this.value)) {
             if (this.attrs.decorations) {
                 // if a field is modified, then it could have triggered an onchange
                 // which changed some of its decorations. Since we bypass the
@@ -498,7 +502,10 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         if (this.field.size && this.field.size > 0) {
             this.$el.attr('maxlength', this.field.size);
         }
-        this.$el = this.$el.add(this._renderTranslateButton());
+        if (this.field.translate) {
+            this.$el = this.$el.add(this._renderTranslateButton());
+            this.$el.addClass('o_field_translate');
+        }
         return def;
     },
     /**
@@ -1327,8 +1334,10 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     start: function () {
         if (this.mode === 'edit') {
             dom.autoresize(this.$el, this.autoResizeOptions);
-
-            this.$el = this.$el.add(this._renderTranslateButton());
+            if (this.field.translate) {
+                this.$el = this.$el.add(this._renderTranslateButton());
+                this.$el.addClass('o_field_translate');
+            }
         }
         return this._super();
     },

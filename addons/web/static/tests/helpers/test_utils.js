@@ -103,7 +103,8 @@ async function nextTick() {
 return Promise.all([
     session.is_bound,
     ajax.loadXML('/web/static/src/xml/debug.xml', core.qweb),
-    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb)
+    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb),
+    ajax.loadXML('/web/static/src/xml/translation_dialog.xml', core.qweb),
 ]).then(function () {
     setTimeout(function () {
         // jquery autocomplete refines the search in a setTimeout() parameterized
