@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-from email.utils import formataddr
 
 from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError, except_orm
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, formataddr
 from odoo.tests import tagged
 
 
