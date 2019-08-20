@@ -78,6 +78,7 @@ class AccountAnalyticAccount(models.Model):
                 line['credit'] = sum(accounts.mapped('credit'))
         return res
 
+    @api.depends('line_ids.amount')
     def _compute_debit_credit_balance(self):
         Curr = self.env['res.currency']
         analytic_line_obj = self.env['account.analytic.line']
