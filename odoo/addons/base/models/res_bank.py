@@ -139,11 +139,6 @@ class ResPartnerBank(models.Model):
     @api.multi
     def _validate_qr_code_arguments(self):
         for bank in self:
-            if bank.currency_id.name == False:
-                currency = bank.company_id.currency_id
-            else:
-                currency = bank.currency_id
             bank.qr_code_valid = (bank.bank_bic
                                             and bank.company_id.name
-                                            and bank.acc_number
-                                            and (currency.name == 'EUR'))
+                                            and bank.acc_number)
