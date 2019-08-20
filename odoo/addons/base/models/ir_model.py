@@ -1042,11 +1042,11 @@ class IrModelSelection(models.Model):
         for value in new_rows.keys() | cur_rows.keys():
             new_row, cur_row = new_rows.get(value), cur_rows.get(value)
             if new_row is None:
-                if not self._context.get(MODULE_UNINSTALL_FLAG) and not self._context.get('module'):
+                if self.pool.ready:
                     # removing a selection in the new list, at your own risks
                     _logger.warning("Removing selection value %s on %s.%s",
                                     cur_row['value'], model_name, field_name)
-                rows_to_remove.append(cur_row['id'])
+                    rows_to_remove.append(cur_row['id'])
             elif cur_row is None:
                 rows_to_insert.append(dict(new_row, field_id=field_id))
             elif any(new_row[key] != cur_row[key] for key in new_row):
@@ -1125,7 +1125,7 @@ class IrModelSelection(models.Model):
     def unlink(self):
         # Prevent manual deletion of module columns
         if (
-            not self._context.get(MODULE_UNINSTALL_FLAG) and not self._context.get('module')
+            self.pool.ready
             and any(selection.field_id.state != 'manual' for selection in self)
         ):
             raise UserError(_('Properties of base fields cannot be altered in this manner! '
