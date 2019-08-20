@@ -1076,8 +1076,11 @@ var VideoWidget = MediaWidget.extend({
             }
         }
         var allVideoClasses = /(^|\s)media_iframe_video(\s|$)/g;
-        this.media.className = this.media.className && this.media.className.replace(allVideoClasses, ' ');
-        this.media.innerHTML = '';
+        var isVideo = this.media.className && this.media.className.match(allVideoClasses);
+        if (isVideo) {
+            this.media.className = this.media.className.replace(allVideoClasses, ' ');
+            this.media.innerHTML = '';
+        }
     },
     /**
      * Creates a video node according to the given URL and options. If not

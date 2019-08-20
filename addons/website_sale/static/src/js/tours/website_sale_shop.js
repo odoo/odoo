@@ -25,7 +25,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         position: "right",
     }, {
         trigger: ".product_price .oe_currency_value:visible",
-        extra_trigger: ".note-editable",
+        extra_trigger: ".editor_enable",
         content: _t("Edit the price of this product by clicking on the amount."),
         position: "bottom",
         run: "text 1.99",

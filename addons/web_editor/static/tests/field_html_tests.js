@@ -822,7 +822,7 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                 "should not have a translate button in readonly mode");
 
             await testUtils.form.clickEdit(form);
-            var $button = form.$('.oe_form_field_html .note-toolbar .o_field_translate');
+            var $button = form.$('.oe_form_field_html .o_field_translate');
             assert.strictEqual($button.length, 1, "should have a translate button");
             $button.click();
 
@@ -854,9 +854,8 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                     return this._super.apply(this, arguments);
                 },
             });
-            var $field = form.$('.oe_form_field[name="body"]');
             await testUtils.form.clickEdit(form);
-            $field = form.$('.oe_form_field[name="body"]');
+            var $field = form.$('.oe_form_field[name="body"]');
             var $iframe = $field.find('iframe');
 
             await $iframe.data('loadDef');
@@ -864,7 +863,7 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
             var doc = $iframe.contents()[0];
             var $content = $('#iframe_target', doc);
 
-            var $button = $content.find('.note-toolbar .o_field_translate');
+            var $button = $content.find('.o_field_translate');
             assert.strictEqual($button.length, 1, "should have a translate button");
             await testUtils.dom.click($button);
 

@@ -152,40 +152,6 @@ var WysiwygTest = Wysiwyg.extend({
         this.$target.remove();
         this._parentToDestroyForTest.destroy();
     },
-    /**
-     * @override
-     */
-    isUnbreakableNode: function (node) {
-        var Node = (node.tagName ? node : node.parentNode);
-        return (!this.options.useOnlyTestUnbreakable && this._super(node)) ||
-            !this.isEditableNode(node) ||
-            Node.tagName === "UNBREAKABLE" ||
-            (Node.className + '').indexOf('unbreakable') !== -1;
-    },
-    /**
-     * @override
-     */
-    isEditableNode: function (node) {
-        if (!$(node).closest(this.$el).length) {
-            return false;
-        }
-        while (node) {
-            if (node.tagName === "EDITABLE") {
-                return true;
-            }
-            if (node.tagName === "NOTEDITABLE") {
-                return false;
-            }
-            if ((node.className + '').indexOf('editable') !== -1) {
-                return true;
-            }
-            if (this.$el[0] === node) {
-                return true;
-            }
-            node = node.parentNode;
-        }
-        return false;
-    },
 });
 
 
