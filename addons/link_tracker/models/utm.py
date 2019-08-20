@@ -18,7 +18,7 @@ class UtmCampaign(models.Model):
             [('campaign_id', 'in', self.ids)],
             ['campaign_id'], ['campaign_id'])
 
-        mapped_data = {datum['campaign_id']: datum['campaign_id_count'] for datum in click_data}
+        mapped_data = {datum['campaign_id'][0]: datum['campaign_id_count'] for datum in click_data}
 
         for campaign in self:
             campaign.click_count = mapped_data.get(campaign.id, 0)
