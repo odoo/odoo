@@ -253,10 +253,14 @@
             margin: 20px;
             padding: 112px 0px;
             text-align: center;
+            color: gray('400');
             &:before {
                 content: attr(data-editor-message);
                 font-size: 20px;
-                color: gray('400');
+            }
+            &:after {
+                display: block;
+                content: attr(data-editor-sub-message);
             }
         }
         > p:empty:only-child {
