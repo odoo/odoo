@@ -108,7 +108,8 @@
                     <sheet>
                         <group>
                             <field name="name" />
-                            <field name="proxy_ip" />
+                            <field name="printer_type" widget="radio"/>
+                            <field name="proxy_ip" attrs="{'invisible': [('printer_type', '!=', 'iot')]}"/>
                             <field name="product_categories_ids" />
                         </group>
                     </sheet>
