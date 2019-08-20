@@ -25,7 +25,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     auto: true,
 }, {
     trigger: "a:contains('Add a product')",
-    extra_trigger: ".o_field_widget[name=pricelist_id] > .o_external_button", // Wait for pricelist (onchange_partner_id)
+    extra_trigger: ".o_field_widget[name=partner_shipping_id] > .o_external_button", // Wait for onchange_partner_id
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: function (){
