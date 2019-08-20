@@ -38,11 +38,11 @@ def _auto_install_l10n(cr, registry):
             module_list.append('l10n_us_check_printing')
         if country_code == 'CA':
             module_list.append('l10n_ca_check_printing')
-        if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
+        if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'GB']:
             module_list.append('account_yodlee')
         if country_code in SYSCOHADA_LIST + [
             'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO',
-            'PL', 'PT', 'RO', 'SI', 'TR', 'UK', 'VE', 'VN'
+            'PL', 'PT', 'RO', 'SI', 'TR', 'GB', 'VE', 'VN'
             ]:
             module_list.append('base_vat')
         if country_code == 'MX':
