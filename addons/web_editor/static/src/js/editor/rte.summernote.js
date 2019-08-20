@@ -4,12 +4,12 @@ odoo.define('web_editor.rte.summernote', function (require) {
 var ajax = require('web.ajax');
 var Class = require('web.Class');
 var core = require('web.core');
-var ColorpickerDialog = require('web.colorpicker');
+var ColorpickerDialog = require('web.ColorpickerDialog');
 var mixins = require('web.mixins');
 var base = require('web_editor.base');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
-var weWidgets = require('web_editor.widget');
+var weWidgets = require('wysiwyg.widgets');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -17,9 +17,12 @@ var _t = core._t;
 ajax.jsonRpc('/web/dataset/call', 'call', {
     'model': 'ir.ui.view',
     'method': 'read_template',
-    'args': ['web_editor.colorpicker', weContext.get()]
-}).done(function (data) {
-    QWeb.add_template(data);
+    'args': ['web_editor.colorpicker'],
+    'kwargs': {
+        'context': weContext.get(),
+    }
+}).then(function (data) {
+    QWeb.add_template('<templates>' + data + '</templates>');
 });
 
 // Summernote Lib (neek change to make accessible: method and object)
@@ -40,7 +43,7 @@ function _rgbToHex(cssColor) {
     if (rgba[4]) {
         return cssColor;
     }
-    var hex = ColorpickerDialog.prototype.convertRgbToHex(
+    var hex = ColorpickerDialog.convertRgbToHex(
         parseInt(rgba[1]),
         parseInt(rgba[2]),
         parseInt(rgba[3])
@@ -107,13 +110,27 @@ renderer.createPalette = function ($container, options) {
 
     $palettes.push.apply($palettes, $customColorPalettes);
 
-    var $fore = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
-    var $bg = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $forePalette = $palettes.filter(":even").closest('li').addClass('note-palette');
+    var $bgPalette = $palettes.filter(":odd").closest('li').addClass('note-palette');
+
+    $forePalette.add($bgPalette).find('.note-color-reset').remove();
+    $forePalette.children().each(function () {
+        var $reset = $('<div class="note-color-reset" data-event="foreColor" data-value="inherit"></div>').text(_t('Reset to default'));
+        $(this).prepend($reset);
+    })
+    $bgPalette.children().each(function () {
+        var $reset = $('<div class="note-color-reset" data-event="backColor" data-value="inherit"></div>').text(_t('Reset to default'));
+        $(this).prepend($reset);
+    })
+
+    var $fore = $forePalette.find("button:not(.note-color-btn)").addClass("note-color-btn");
     $fore.each(function () {
         var $el = $(this);
         var className = $el.hasClass('o_custom_color') ? $el.data('color') : 'text-' + $el.data('color');
         $el.attr('data-event', 'foreColor').attr('data-value', className).addClass($el.hasClass('o_custom_color') ? '' : 'bg-' + $el.data('color'));
     });
+
+    var $bg = $bgPalette.find("button:not(.note-color-btn)").addClass("note-color-btn");
     $bg.each(function () {
         var $el = $(this);
         var className = $el.hasClass('o_custom_color') ? $el.data('color') : 'bg-' + $el.data('color');
@@ -325,6 +342,15 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     }
 };
 
+var fn_toolbar_boutton_update = eventHandler.modules.toolbar.button.update;
+eventHandler.modules.toolbar.button.update = function ($container, oStyle) {
+    fn_toolbar_boutton_update.call(this, $container, oStyle);
+
+    $container.find('button[data-event="insertUnorderedList"]').toggleClass("active", $(oStyle.ancestors).is('ul:not(.o_checklist)'));
+    $container.find('button[data-event="insertOrderedList"]').toggleClass("active", $(oStyle.ancestors).is('ol'));
+    $container.find('button[data-event="insertCheckList"]').toggleClass("active", $(oStyle.ancestors).is('ul.o_checklist'));
+};
+
 var fn_popover_update = eventHandler.modules.popover.update;
 eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     var $imagePopover = $popover.find('.note-image-popover');
@@ -456,6 +482,11 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
             lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
             noVideos: $editable.data('oe-model') === "mail.compose.message",
+        },
+        onSave: function (media) {
+            if(!document.body.contains(media)) {
+            r.insertNode(media);
+            };
         },
     });
     return new $.Deferred().reject();
