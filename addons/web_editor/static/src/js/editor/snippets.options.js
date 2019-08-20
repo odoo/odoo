@@ -4,9 +4,8 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var weWidgets = require('wysiwyg.widgets');
-var FontPlugin = require('web_editor.wysiwyg.plugin.font');
-var ColorpickerDialog = require('web.ColorpickerDialog');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
+var weWidgets = require('web_editor.widget');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -19,12 +18,10 @@ var _t = core._t;
 var SnippetOption = Widget.extend({
     events: {
         'mouseenter': '_onLinkEnter',
-        'mouseenter a': '_onLinkEnter',
+        'mouseenter .dropdown-item': '_onLinkEnter',
         'click': '_onLinkClick',
-        'click a': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave a': '_onMouseleave',
-        'mouseleave .dropdown-menu': '_onMouseleave',
+        'mouseleave .dropdown-item': '_onMouseleave',
     },
     /**
      * When editing a snippet, its options are shown alongside the ones of its
@@ -41,11 +38,9 @@ var SnippetOption = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent, $target, $overlay, data, options) {
+    init: function (parent, $target, $overlay, data) {
         this._super.apply(this, arguments);
-        this.options = options;
         this.$target = $target;
-        this.ownerDocument = this.$target[0].ownerDocument;
         this.$overlay = $overlay;
         this.data = data;
         this.__methodNames = [];
@@ -245,7 +240,6 @@ var SnippetOption = Widget.extend({
         if (!previewMode) {
             this._reset();
             this.trigger_up('request_history_undo_record', {$target: this.$target});
-            this.$target.trigger('content_changed');
         }
 
         // Search for methods (data-...) (i.e. data-toggle-class) on the
@@ -373,7 +367,7 @@ var SnippetOption = Widget.extend({
      */
     _onLinkClick: function (ev) {
         var $opt = $(ev.target).closest('.dropdown-item');
-        if (ev.isDefaultPrevented() || !$opt.length || !$opt.is(':hasData')) {
+        if (!$opt.length || !$opt.is(':hasData')) {
             return;
         }
 
@@ -460,7 +454,7 @@ registry.sizing = SnippetOption.extend({
             var regClass = new RegExp('\\s*' + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
 
             var cursor = $handle.css('cursor') + '-important';
-            var $body = $(this.ownerDocument.body);
+            var $body = $(document.body);
             $body.addClass(cursor);
 
             var xy = ev['page' + XY];
@@ -667,19 +661,12 @@ registry.colorpicker = SnippetOption.extend({
         }
 
         if (!this.$el.find('.colorpicker').length) {
-            // Add common colors to palettes if not excluded
-            var fontPlugin = new FontPlugin({
-                layoutInfo: {
-                    editable: $('<div/>'),
-                    editingArea: $('<div/>'),
-                },
-                options: {},
-            });
+            // TODO remove old UI's code that survived
+            var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
+            var $clpicker = $(qweb.render('web_editor.colorpicker'));
 
-            var $clpicker = fontPlugin.createPalette('backColor').find('.note-color-palette'); // don't use custom color
-            $clpicker.find('.note-color-reset').remove();
-            $clpicker.find('h6').each(function () {
-                $(this).replaceWith($('<div class="mt8"/>').text($(this).text()));
+            _.each($clpicker.find('.o_colorpicker_section'), function (elem) {
+                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>");
             });
 
             // Retrieve excluded palettes list
@@ -689,7 +676,7 @@ registry.colorpicker = SnippetOption.extend({
             }
             // Apply a custom title if specified
             if (this.data.paletteTitle) {
-                $clpicker.find('.note-palette-title').text(this.data.paletteTitle);
+                $pt.find('.note-palette-title').text(this.data.paletteTitle);
             }
 
             // Remove excluded palettes
@@ -697,29 +684,39 @@ registry.colorpicker = SnippetOption.extend({
                 $clpicker.find('[data-name="' + exc + '"]').remove();
             });
 
-            var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
+            // Add common colors to palettes if not excluded
+            if (!('common' in excluded)) {
+                var $commonColorSection = $clpicker.find('[data-name="common"]');
+                _.each(summernoteCustomColors, function (colorRow, i) {
+                    var $div = $('<div/>', {class: 'clearfix'}).appendTo($commonColorSection);
+                    if (i === 0) {
+                        // Ignore the summernote gray palette and use ours
+                        return;
+                    }
+                    _.each(colorRow, function (color) {
+                        $div.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
+                    });
+                });
+            }
+
             $pt.find('.o_colorpicker_section_tabs').append($clpicker);
             this.$el.find('.dropdown-menu').append($pt);
         }
 
-        var bgColor = ColorpickerDialog.formatColor(self.$target.css('background-color'));
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
             var $color = $(this);
             var color = $color.data('color');
-            if (color) {
-                $color.addClass('bg-' + color);
-                var className = self.colorPrefix + color;
-                if (self.$target.hasClass(className)) {
-                    $color.addClass('selected');
-                }
-                classes.push(className);
-            } else {
-                color = $color.data('value');
-                if (bgColor === ColorpickerDialog.formatColor(color)) {
-                    $color.addClass('selected');
-                }
+            if (!color) {
+                return;
             }
+
+            $color.addClass('bg-' + color);
+            var className = self.colorPrefix + color;
+            if (self.$target.hasClass(className)) {
+                $color.addClass('selected');
+            }
+            classes.push(className);
         });
         this.classes = classes.join(' ');
 
@@ -753,9 +750,6 @@ registry.colorpicker = SnippetOption.extend({
         var color = $(ev.currentTarget).data('color');
         if (color) {
             this.$target.addClass(this.colorPrefix + color);
-        } else if ($(ev.currentTarget).data('value')) {
-            color = $(ev.currentTarget).data('value');
-            this.$target.css('background-color', color);
         } else if ($(ev.target).hasClass('o_custom_color')) {
             this.$target
                 .removeClass(this.classes)
@@ -848,20 +842,18 @@ registry.background = SnippetOption.extend({
      */
     chooseImage: function (previewMode, value, $opt) {
         // Put fake image in the DOM, edit it and use it as background-image
-        var $image = $('<img/>', {class: 'd-none', src: value === 'true' ? '' : value}).appendTo(this.$target);
+        var $image = $('<img/>', {class: 'd-none', src: value}).appendTo(this.$target);
 
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
-            mediaWidth: 1920,
             firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
-        }, $image[0]).open();
+        }, null, $image[0]).open();
 
-        _editor.on('save', this, function (image) {
-            this._setCustomBackground(image.src);
-            this.$target.trigger('content_changed');
+        _editor.on('save', this, function () {
+            this._setCustomBackground($image.attr('src'));
         });
         _editor.on('closed', this, function () {
             $image.remove();
@@ -916,8 +908,7 @@ registry.background = SnippetOption.extend({
         if (value === undefined) {
             value = this.$target.css('background-image');
         }
-        var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
-        return value && value.replace(srcValueWrapper, '') || '';
+        return value.replace(/url\(['"]*|['"]*\)|^none$/g, '');
     },
     /**
      * @override
@@ -1182,11 +1173,6 @@ registry.many2one = SnippetOption.extend({
      */
     start: function () {
         var self = this;
-        this.trigger_up('getRecordInfo', _.extend(this.options, {
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
-            },
-        }));
 
         this.Model = this.$target.data('oe-many2one-model');
         this.ID = +this.$target.data('oe-many2one-id');
@@ -1219,7 +1205,6 @@ registry.many2one = SnippetOption.extend({
         this.$search.find('input')
             .focus()
             .on('keyup', function (e) {
-                self.$overlay.removeClass('o_keypress');
                 self._findExisting($(this).val());
             });
 
@@ -1260,7 +1245,7 @@ registry.many2one = SnippetOption.extend({
      *
      * @private
      * @param {string} name
-     * @returns {Promise}
+     * @returns {Deferred}
      */
     _findExisting: function (name) {
         var self = this;
@@ -1286,7 +1271,6 @@ registry.many2one = SnippetOption.extend({
             kwargs: {
                 order: [{name: 'name', asc: false}],
                 limit: 5,
-                context: this.options.context,
             },
         }).then(function (result) {
             self.$search.siblings().remove();
@@ -1325,7 +1309,6 @@ registry.many2one = SnippetOption.extend({
                         args: [[self.ID]],
                         kwargs: {
                             options: options,
-                            context: self.options.context,
                         },
                     }).then(function (html) {
                         $node.html(html);

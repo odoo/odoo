@@ -94,8 +94,13 @@
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
     </t>
     <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.wysiwyg.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.edit_mode.scss"/>
 
+    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/rte.summernote.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"/>
+
     <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone_translate.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/widget_link.js"/>
@@ -103,9 +108,6 @@
 
 <template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
     <t t-call="web._assets_helpers"/>
-
-    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
-    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.edit_mode.scss"/>
 
     <script type="text/javascript" src="/website/static/src/js/editor/editor_menu.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/editor_menu_translate.js"/>
