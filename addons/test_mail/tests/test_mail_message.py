@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-from email.utils import formataddr
 
 from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError, except_orm
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, formataddr
 from odoo.tests import tagged
 
 
@@ -70,7 +69,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         reply_to_name = '%s %s' % (self.env.user.company_id.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, self.alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
         # no alias domain -> author
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
