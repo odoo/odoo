@@ -18,7 +18,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Select the blog you want to add the post to."),
     }, {
         trigger: "div[data-oe-expression=\"blog_post.name\"]",
-        extra_trigger: ".o_snippets_loaded",
+        extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Write a title, the subtitle is optional."),
         position: "top",
         run: "text",

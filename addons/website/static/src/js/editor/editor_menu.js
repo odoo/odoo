@@ -39,7 +39,6 @@ var EditorMenu = Widget.extend({
                 $wrapwrap.removeClass('o_editable'); // clean the dom before edition
                 self.editable($wrapwrap).addClass('o_editable');
                 self.wysiwyg = self._wysiwygInstance();
-                return self.wysiwyg.attachTo($wrapwrap);
             });
     },
     /**
@@ -48,7 +47,7 @@ var EditorMenu = Widget.extend({
     start: function () {
         var self = this;
         this.$el.css({width: '100%'});
-        return this._super().then(function () {
+        return this.wysiwyg.attachTo($('#wrapwrap')).then(function () {
             self.trigger_up('edit_mode');
             self.$el.css({width: ''});
         });
@@ -92,6 +91,7 @@ var EditorMenu = Widget.extend({
             var $wrapwrap = $('#wrapwrap');
             self.editable($wrapwrap).removeClass('o_editable');
             if (reload !== false) {
+                window.onbeforeunload = null;
                 self.wysiwyg.destroy();
                 return self._reload();
             } else {
@@ -113,7 +113,7 @@ var EditorMenu = Widget.extend({
     save: function (reload) {
         var self = this;
         this.trigger_up('edition_will_stopped');
-        return this.wysiwyg.save().then(function (result) {
+        return this.wysiwyg.save(true).then(function (result) {
             var $wrapwrap = $('#wrapwrap');
             self.editable($wrapwrap).removeClass('o_editable');
             if (result.isDirty && reload !== false) {
@@ -196,7 +196,7 @@ var EditorMenu = Widget.extend({
      * @private
      */
     _onCancelClick: function () {
-        this.cancel(false);
+        this.cancel(true);
     },
     /**
      * Get the cleaned value of the editable element.

@@ -4,8 +4,8 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
+var weWidgets = require('wysiwyg.widgets');
 var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
-var weWidgets = require('web_editor.widget');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -18,10 +18,12 @@ var _t = core._t;
 var SnippetOption = Widget.extend({
     events: {
         'mouseenter': '_onLinkEnter',
-        'mouseenter .dropdown-item': '_onLinkEnter',
+        'mouseenter a': '_onLinkEnter',
         'click': '_onLinkClick',
+        'click a': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave .dropdown-item': '_onMouseleave',
+        'mouseleave a': '_onMouseleave',
+        'mouseleave .dropdown-menu': '_onMouseleave',
     },
     /**
      * When editing a snippet, its options are shown alongside the ones of its
@@ -38,9 +40,11 @@ var SnippetOption = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent, $target, $overlay, data) {
+    init: function (parent, $target, $overlay, data, options) {
         this._super.apply(this, arguments);
+        this.options = options;
         this.$target = $target;
+        this.ownerDocument = this.$target[0].ownerDocument;
         this.$overlay = $overlay;
         this.data = data;
         this.__methodNames = [];
@@ -240,6 +244,7 @@ var SnippetOption = Widget.extend({
         if (!previewMode) {
             this._reset();
             this.trigger_up('request_history_undo_record', {$target: this.$target});
+            this.$target.trigger('content_changed');
         }
 
         // Search for methods (data-...) (i.e. data-toggle-class) on the
@@ -367,7 +372,7 @@ var SnippetOption = Widget.extend({
      */
     _onLinkClick: function (ev) {
         var $opt = $(ev.target).closest('.dropdown-item');
-        if (!$opt.length || !$opt.is(':hasData')) {
+        if (ev.isDefaultPrevented() || !$opt.length || !$opt.is(':hasData')) {
             return;
         }
 
@@ -454,7 +459,7 @@ registry.sizing = SnippetOption.extend({
             var regClass = new RegExp('\\s*' + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
 
             var cursor = $handle.css('cursor') + '-important';
-            var $body = $(document.body);
+            var $body = $(this.ownerDocument.body);
             $body.addClass(cursor);
 
             var xy = ev['page' + XY];
@@ -842,7 +847,7 @@ registry.background = SnippetOption.extend({
      */
     chooseImage: function (previewMode, value, $opt) {
         // Put fake image in the DOM, edit it and use it as background-image
-        var $image = $('<img/>', {class: 'd-none', src: value}).appendTo(this.$target);
+        var $image = $('<img/>', {class: 'd-none', src: value === 'true' ? '' : value}).appendTo(this.$target);
 
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
@@ -850,10 +855,11 @@ registry.background = SnippetOption.extend({
             firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
-        }, null, $image[0]).open();
+        }, $image[0]).open();
 
         _editor.on('save', this, function () {
             this._setCustomBackground($image.attr('src'));
+            this.$target.trigger('content_changed');
         });
         _editor.on('closed', this, function () {
             $image.remove();
@@ -908,7 +914,8 @@ registry.background = SnippetOption.extend({
         if (value === undefined) {
             value = this.$target.css('background-image');
         }
-        return value.replace(/url\(['"]*|['"]*\)|^none$/g, '');
+        var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
+        return value && value.replace(srcValueWrapper, '') || '';
     },
     /**
      * @override
@@ -1173,6 +1180,11 @@ registry.many2one = SnippetOption.extend({
      */
     start: function () {
         var self = this;
+        this.trigger_up('getRecordInfo', _.extend(this.options, {
+            callback: function (recordInfo) {
+                _.defaults(self.options, recordInfo);
+            },
+        }));
 
         this.Model = this.$target.data('oe-many2one-model');
         this.ID = +this.$target.data('oe-many2one-id');
@@ -1205,6 +1217,7 @@ registry.many2one = SnippetOption.extend({
         this.$search.find('input')
             .focus()
             .on('keyup', function (e) {
+                self.$overlay.removeClass('o_keypress');
                 self._findExisting($(this).val());
             });
 
@@ -1245,7 +1258,7 @@ registry.many2one = SnippetOption.extend({
      *
      * @private
      * @param {string} name
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _findExisting: function (name) {
         var self = this;
@@ -1271,6 +1284,7 @@ registry.many2one = SnippetOption.extend({
             kwargs: {
                 order: [{name: 'name', asc: false}],
                 limit: 5,
+                context: this.options.context,
             },
         }).then(function (result) {
             self.$search.siblings().remove();
@@ -1309,6 +1323,7 @@ registry.many2one = SnippetOption.extend({
                         args: [[self.ID]],
                         kwargs: {
                             options: options,
+                            context: self.options.context,
                         },
                     }).then(function (html) {
                         $node.html(html);
