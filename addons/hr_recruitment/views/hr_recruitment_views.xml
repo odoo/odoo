@@ -253,6 +253,7 @@
                 <field name="user_email"/>
                 <field name="partner_name"/>
                 <field name="type_id"/>
+                <field name="partner_id"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="message_needaction_counter"/>
@@ -263,9 +264,9 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
-                            <li t-if="record.type_id.raw_value"><b>Degree:</b> <field name="type_id"/></li>
-                            <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
-                            <li t-if="record.department_id.raw_value"><b>Departement:</b> <field name="department_id"/></li>
+                            <li t-if="record.type_id.raw_value"><b>Degree:</b> <t t-esc="record.type_id.value"/></li>
+                            <li t-if="record.partner_id.raw_value"><b>Contact:</b> <t t-esc="record.partner_id.value"/></li>
+                            <li t-if="record.department_id.raw_value"><b>Departement:</b> <t t-esc="record.department_id.value"/></li>
                         </ul>
                     </t>
                     <t t-name="kanban-box">
