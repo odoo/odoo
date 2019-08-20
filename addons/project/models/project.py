@@ -507,6 +507,7 @@ class Task(models.Model):
         string='Customer',
         default=lambda self: self._get_default_partner(),
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    partner_city = fields.Char(related='partner_id.city', readonly=False)
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     color = fields.Integer(string='Color Index')
