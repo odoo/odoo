@@ -8,10 +8,9 @@
                 <field name='available_carrier_ids' invisible="1"/>
                 <group>
                     <group>
-                        <field name="carrier_id" domain="[('id', 'in', available_carrier_ids), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" widget='radio'/>
+                        <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" widget='radio'/>
                         <field name="delivery_type" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
                         <field name="order_id" invisible="1"/>
                         <field name='delivery_price' invisible="1"/>
                         <label for="display_price"/>
