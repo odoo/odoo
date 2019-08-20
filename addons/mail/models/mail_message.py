@@ -7,7 +7,6 @@ import re
 from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
-from email.utils import formataddr
 from odoo.http import request
 
 from odoo import _, api, fields, models, modules, tools
@@ -32,7 +31,7 @@ class Message(models.Model):
     @api.model
     def _get_default_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            return tools.formataddr((self.env.user.name, self.env.user.email))
         raise UserError(_("Unable to post message, please configure the sender's email address."))
 
     @api.model
@@ -1183,7 +1182,7 @@ class Message(models.Model):
             if not msg.email_from:
                 continue
             if self.env.user.partner_id.email:
-                email_from = formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
+                email_from = tools.formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
             else:
                 email_from = self.env.company.catchall
 
