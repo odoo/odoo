@@ -23,17 +23,13 @@ def _is_l10n_ch_postal(account_ref):
     return False
 
 
-class ResBank(models.Model):
-    _inherit = 'res.bank'
-
-    l10n_ch_postal_chf = fields.Char(string='CHF ISR reference', help='The postal reference of the bank, used to generate ISR payment slips in CHF.')
-    l10n_ch_postal_eur = fields.Char(string='EUR ISR reference', help='The postal reference of the bank, used to generate ISR payment slips in EUR.')
-
-
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    l10n_ch_postal = fields.Char(string='ISR reference', help='The ISR number of the company within the bank')
+    l10n_ch_postal = fields.Char(string='Swiss postal account', help='Swiss postal account number eg. 01-162-8')
+    # fields to configure ISR payment slip generation
+    l10n_ch_isr_subscription_chf = fields.Char(string='CHF ISR subscription number', help='The subscription number provided by the bank or Postfinance, used to generate ISR in CHF. eg. 01-162-8')
+    l10n_ch_isr_subscription_eur = fields.Char(string='EUR ISR subscription number', help='The subscription number provided by the bank or Postfinance, used to generate ISR in EUR. eg. 03-162-5')
 
     @api.model
     def _get_supported_account_types(self):
@@ -136,7 +132,7 @@ class ResPartnerBank(models.Model):
             t_street_deb = False
 
         if(currency.name == 'EUR'):
-            return (self.bank_id.l10n_ch_postal_eur and
+            return (self.l10n_ch_postal_subscription_eur and
                     self.company_id.zip and
                     self.company_id.city and
                     self.company_id.country_id.code and
@@ -147,7 +143,7 @@ class ResPartnerBank(models.Model):
                     debitor.country_id.code and
                     (number != False) and (number_deb != False))
         elif(currency.name == 'CHF'):
-            return (self.bank_id.l10n_ch_postal_chf and
+            return (self.l10n_ch_postal_subscription_chf and
                     self.company_id.zip and
                     self.company_id.city and
                     self.company_id.country_id.code and
