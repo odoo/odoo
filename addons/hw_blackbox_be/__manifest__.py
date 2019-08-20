@@ -3,7 +3,7 @@
 
 {
     'name': 'Blackbox Hardware Driver',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Belgian Fiscal Data Modules',
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',

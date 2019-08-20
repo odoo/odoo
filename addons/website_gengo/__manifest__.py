@@ -3,7 +3,7 @@
 
 {
     'name': 'Gengo Translator',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Translate website in one-click',
     'description': """
 This module allows to send website content to Gengo translation service in a single click. Gengo then gives back the translated terms in the destination language.

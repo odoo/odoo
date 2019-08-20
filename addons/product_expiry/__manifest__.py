@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name' : 'Products Expiration Date',
-    'category' : 'Warehouse',
-    'depends' : ['stock'],
-    'demo' : [],
+    'name': 'Products Expiration Date',
+    'category': 'Operations/Inventory',
+    'depends': ['stock'],
+    'demo': [],
     'description': """
 Track different dates on products and production lots.
 ======================================================

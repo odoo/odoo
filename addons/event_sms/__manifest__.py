@@ -4,7 +4,7 @@
 {
     'name': 'SMS on Events',
     'version': '1.0',
-    'category': 'Marketing',
+    'category': 'Marketing/Events',
     'description': """Schedule SMS in event management""",
     'depends': ['event', 'sms'],
     'data': [

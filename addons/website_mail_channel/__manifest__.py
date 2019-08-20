@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Website Mail Channels',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Allow visitors to join public mail channels',
     'description': """
 Visitors can join public mail channels managed in the Discuss app in order to get regular updates or reach out with your community.
