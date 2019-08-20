@@ -49,3 +49,49 @@ class TestReconciliationWidget(TestReconciliation):
 
         result = self.env['account.reconciliation.widget'].get_bank_statement_line_data(bank_stmt_line.ids)
         self.assertEqual(result['lines'][0]['reconciliation_proposition'][0]['amount_str'], '$ 50.00')
+
+    def test_filter_partner1(self):
+        inv1 = self.create_invoice(currency_id=self.currency_euro_id)
+        inv2 = self.create_invoice(currency_id=self.currency_euro_id)
+
+        receivable1 = inv1.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        receivable2 = inv2.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+
+        bank_stmt = self.acc_bank_stmt_model.create({
+            'company_id': self.env.ref('base.main_company').id,
+            'journal_id': self.bank_journal_euro.id,
+            'date': time.strftime('%Y-07-15'),
+            'name': 'test',
+        })
+
+        bank_stmt_line = self.acc_bank_stmt_line_model.create({
+            'name': 'testLine',
+            'statement_id': bank_stmt.id,
+            'amount': 100,
+            'date': time.strftime('%Y-07-15'),
+        })
+
+        # This is like opening the widget, and type "deco" in the filter
+        mv_lines_rec = self.env['account.reconciliation.widget'].get_move_lines_for_bank_statement_line(
+            bank_stmt_line.id,
+            partner_id=False,
+            excluded_ids=[],
+            search_str='deco'
+        )
+        mv_lines_ids = [l['id'] for l in mv_lines_rec]
+
+        self.assertTrue(receivable1.id in mv_lines_ids)
+        self.assertTrue(receivable2.id in mv_lines_ids)
+
+        # This is like clicking on the first receivable
+        partner = inv1.partner_id
+        mv_lines_rec = self.env['account.reconciliation.widget'].get_move_lines_for_bank_statement_line(
+            bank_stmt_line.id,
+            partner_id=partner.id,
+            excluded_ids=[receivable1.id],
+            search_str='deco'
+        )
+        mv_lines_ids = [l['id'] for l in mv_lines_rec]
+
+        self.assertFalse(receivable1.id in mv_lines_ids)
+        self.assertTrue(receivable2.id in mv_lines_ids)
