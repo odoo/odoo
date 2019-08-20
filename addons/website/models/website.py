@@ -819,6 +819,10 @@ class Website(models.Model):
         res = urls.url_parse(self.domain)
         return 'http://' + self.domain if not res.scheme else self.domain
 
+    def get_base_url(self):
+        self.ensure_one()
+        return self._get_http_domain() or super(BaseModel, self).get_base_url()
+
 
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
