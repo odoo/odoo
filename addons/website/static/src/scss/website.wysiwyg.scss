@@ -153,6 +153,35 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             color: #999999;
         }
     }
+
+    > .o_we_customize_panel {
+        we3-button, we3-toggler {
+            background-color: $o-we-color-dark;
+            color: $o-we-color-text-normal;
+            border: none;
+
+            > .fa {
+                color: $o-we-color-text-normal;
+            }
+
+            &:hover {
+                color: $o-we-color-text-light;
+
+                > .fa {
+                    color: $o-we-color-text-light;
+                }
+            }
+
+            &.active, &:active {
+                background-color: $o-we-color-dark;
+                color: $o-we-color-text-light;
+
+                > .fa {
+                    color: $o-we-color-text-light;
+                }
+            }
+        }
+    }
 }
 
 .oe_snippet {
@@ -220,131 +249,6 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 color: $o-we-color-danger;
             }
         }
-    }
-}
-
-// DROPZONES
-#wrapwrap .oe_drop_zone {
-    &.oe_insert {
-        height: $o-we-dropzone-size;
-        margin: (-$o-we-dropzone-size/2) 0;
-
-        &:after {
-            border-bottom: $o-we-dropzone-border;
-        }
-
-        &.oe_vertical {
-            width: $o-we-dropzone-size;
-            margin: 0 (-$o-we-dropzone-size/2);
-
-            &:after {
-                border-right: $o-we-dropzone-border;
-            }
-        }
-    }
-}
-
-// MANIPULATORS
-#oe_manipulators {
-
-    // SNIPPET MANIPULATORS
-    .oe_overlay {
-
-        // OVERLAY OPTIONS
-        >.oe_overlay_options {
-            font-family: $o-we-font-family;
-
-            >.btn-group {
-                .btn {
-                    height: $o-we-overlay-option-size;
-                    border: 1px solid $o-we-color-dark;
-                    line-height: #{$o-we-overlay-option-size - 2px};
-
-                    color: $o-we-color-text-light;
-                    background-color: $o-we-color-light;
-
-                    &:hover {
-                        background-color: lighten($o-we-color-dark, 10%);
-                    }
-
-                    &.oe_snippet_remove {
-                        background-color: $o-we-color-danger;
-                        border-color: darken($o-we-color-danger, 20%);
-
-                        &:hover {
-                            background-color: darken($o-we-color-danger, 20%);
-                        }
-                    }
-
-                    >.fa {
-                        color: $o-we-color-text-light;
-                    }
-                }
-
-                // CUSTOMIZE MENU BUTTON
-                >.oe_options {
-                    .btn {
-                        background-color: $o-we-color-dark;
-                        color: $o-we-color-text-light;
-
-                        &:hover,
-                        &:active,
-                        &:focus {
-                            background-color: lighten($o-we-color-dark, 5%);
-                            border-color: lighten($o-we-color-dark, 10%);
-                        }
-
-                        &:before,
-                        &:after {
-                            background-color: $o-we-color-text-light;
-                        }
-                    }
-
-                    // Open menu
-                    &.show .btn {
-                        // background-color: $o-we-color-light;
-                    }
-
-                    // CUSTOMIZE MENU
-                    .dropdown-menu {
-                        border: 1px solid $o-we-color-dark;
-                        background-color: $o-we-color-light;
-
-                        .dropdown-item {
-                            color: $o-we-color-text-light;
-
-                            &:hover {
-                                background-color: fade-out($o-we-color-dark, 0.5);
-                            }
-
-                            &.active {
-                                background-color: fade-out($o-we-color-dark, 0.5);
-                            }
-                        }
-
-                        .dropdown-header {
-                            color: wheat;
-
-                            &.o_parent_editor_header {
-                                color: wheat;
-                            }
-                        }
-
-                        .dropdown-submenu {
-                            &::before {
-                                border-left-color: $o-we-color-text-light;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        &.o_top_cover>.oe_overlay_options {
-            top: $o-we-handle-border-width;
-            right: $o-we-handle-border-width;
-        }
-
     }
 }
 

@@ -3,13 +3,13 @@
 ///
 
 $o-wysiwyg-handles-accent-color: #00e2ff !default;
-$o-wysiwyg-handle-edge-size: 1px !default;
-$o-wysiwyg-dropzone-size: 40px !default;
+$o-wysiwyg-handle-edge-size: 8px !default;
+$o-wysiwyg-dropzone-size: $grid-gutter-width !default;
 $o-wysiwyg-sidebar-width: 210px !default;
 $o-wysiwyg-sidebar-height: 36px !default;
 $o-wysiwyg-overlay-option-size: 25px !default;
 $o-wysiwyg-handles-btn-size: 18px !default;
-$o-wysiwyg-handle-border-width: 1px !default;
+$o-wysiwyg-handle-border-width: 2px !default;
 
 $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
@@ -104,6 +104,10 @@ body.editor_enable.editor_has_snippets {
     box-shadow: 0px 10px 10px -10px black inset;
     border: 1px solid $o-wysiwyg-border-color;
 
+    &.o_loaded {
+        left: 0 !important;
+    }
+
     #snippets_menu {
         flex: 0 0 auto;
         height: $o-wysiwyg-toolbar-height;
@@ -119,6 +123,7 @@ body.editor_enable.editor_has_snippets {
     }
 
     #o_scroll {
+        flex: 1 1000 auto;
         height: 100%;
         overflow: auto;
 
@@ -202,8 +207,165 @@ body.editor_enable.editor_has_snippets {
         }
     }
 
-    &.o_loaded {
-        left: 0 !important;
+    // CUSTOMIZE MENU BUTTON
+    > .o_we_customize_panel {
+        flex: 1 1 auto;
+        height: 100%;
+        overflow: auto;
+
+        we3-button, we3-toggler {
+            cursor: pointer;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            padding: 0.25rem 0.5rem;
+            margin: 0;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+            font-weight: 500;
+            color: #666666;
+            text-align: center;
+            vertical-align: middle;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            line-height: 1.5;
+            user-select: none;
+
+            &.active, &:active {
+                color: #212529;
+                background-color: #e6e5e5;
+                border-color: #dfdfdf;
+            }
+
+            &.disabled {
+                color: #aaaaaa;
+                we3-button {
+                    color: #aaaaaa;
+                }
+            }
+        }
+
+        we3-button {
+            white-space: nowrap;
+        }
+
+        we3-customizeblock-options {
+            display: block;
+            border: 0.25rem solid transparent;
+
+            + we3-customizeblock-options {
+                margin-top: 0.25rem;
+            }
+
+            > we3-title {
+                display: flex;
+                align-items: center;
+                margin: 0.25rem 0;
+                padding: 0 0.5rem;
+                font-weight: bold;
+                color: inherit !important;
+
+                > we3-button-group {
+                    flex: 0 0 auto;
+                    display: block;
+                    margin-left: auto;
+                    text-align: center;
+
+                    > we3-button {
+                        margin-left: 0.25rem;
+                        width: 1.5rem;
+                        padding: 0.125rem;
+                    }
+                }
+            }
+        }
+
+        %we3-icon-button {
+            position: relative;
+            padding-right: 0.5rem + 1rem + 0.5rem;
+
+            &::after {
+                position: absolute;
+                right: 0.5rem;
+                font-family: FontAwesome;
+            }
+        }
+
+        @mixin we3-icon-button($icon, $color: null) {
+            @extend %we3-icon-button;
+
+            &::after {
+                content: $icon;
+                color: $color;
+            }
+        }
+
+        we3-customizeblock-option {
+            position: relative;
+            display: block;
+            overflow: hidden;
+            max-height: 500px;
+            transition: max-height 200ms ease 0s;
+
+            + we3-customizeblock-option {
+                margin-top: 0.25rem;
+            }
+
+            we3-button, we3-toggler {
+                display: block;
+                text-align: left;
+                border-radius: 0;
+            }
+            we3-button {
+                &.we3-button-hover-icon:hover {
+                    @include we3-icon-button('\f040');
+                }
+
+                &.active {
+                    @include we3-icon-button('\f00c', $o-wysiwyg-color-success);
+                }
+            }
+            we3-collapse {
+                position: relative;
+                display: block;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 200ms ease 0s;
+            }
+            we3-toggler {
+                @include we3-icon-button('\f0d7');
+
+                &.active {
+                    @include we3-icon-button('\f0d8');
+
+                    + we3-collapse {
+                        max-height: 500px;
+                    }
+                }
+            }
+
+            .dropdown-menu {
+                // FIXME temporary fix for m2o option for example
+                position: static !important;
+            }
+        }
+
+        we3-customizeblock-options.o_we_closed {
+            cursor: pointer;
+
+            > we3-title {
+                @include we3-icon-button('\f0d7');
+            }
+            > we3-customizeblock-option {
+                max-height: 0;
+                transition-duration: 25ms;
+
+                + we3-customizeblock-option {
+                    margin-top: 0;
+                }
+            }
+        }
     }
 }
 
@@ -265,8 +427,8 @@ body.editor_enable.editor_has_snippets {
 
         button {
             float: left;
-            height: 25px;
-            width: 25px;
+            width: 20px;
+            height: 20px;
             margin: 1px 1px 0 2px;
             border: 1px solid black;
         }
@@ -356,38 +518,17 @@ body.editor_enable.editor_has_snippets {
         z-index: $o-wysiwyg-zindex - 1;
 
         border: 2px dashed $o-wysiwyg-border-color;
-        border-top: none;
-        border-bottom: none;
 
         position: relative;
         width: 100%;
         height: $o-wysiwyg-dropzone-size;
         margin: (-$o-wysiwyg-dropzone-size/2) 0;
 
-        &:after {
-            content: "";
-            display: block;
-            width: 100%;
-            height: 50%;
-            border-bottom: 2px dashed $o-wysiwyg-border-color;
-            box-sizing: content-box;
-        }
-
         &.oe_vertical {
             border: 2px dashed $o-brand-odoo;
-            border-left: none;
-            border-right: none;
-
             width: $o-wysiwyg-dropzone-size;
             float: left;
             margin: 0 (-$o-wysiwyg-dropzone-size/2);
-
-            &:after {
-                width: 50%;
-                height: 100%;
-                border-bottom: none;
-                border-right: 2px dashed $o-wysiwyg-border-color;
-            }
         }
     }
 }
@@ -395,12 +536,14 @@ body.editor_enable.editor_has_snippets {
 // MANIPULATORS
 #oe_manipulators {
     position: relative;
+    z-index: $o-wysiwyg-zindex;
 
     // SNIPPET MANIPULATORS
     .oe_overlay {
         @include o-position-absolute;
         display: none;
         height: 0;
+        border-color: $o-wysiwyg-handles-accent-color;
         background: transparent;
         text-align: center;
         transition: opacity 400ms linear 0s;
@@ -408,264 +551,112 @@ body.editor_enable.editor_has_snippets {
         &.o_keypress {
             opacity: 0;
         }
-
         &.oe_active {
             display: block;
         }
-
-        // OVERLAY OPTIONS
-        >.oe_overlay_options {
-            font-family: $o-wysiwyg-font-family;
-            @include o-position-absolute($bottom: 0, $left: 0);
-            width: 250px; // the parent oe_overlay has a width equal to the snippet width, the 250px is there to force the options to stay on one line without overriding bootstrap .btn-group
-            text-align: left;
-            z-index: $o-wysiwyg-zindex + 1;
-
-            >.btn-group {
-                white-space: nowrap;
-                border: 0;
-
-                .btn {
-                    display: inline-block;
-                    width: $o-wysiwyg-overlay-option-size;
-                    height: $o-wysiwyg-overlay-option-size;
-                    padding: 0;
-                    border: 1px solid $o-wysiwyg-bg-color;
-                    line-height: $o-wysiwyg-overlay-option-size;
-                    font-size: 11px;
-                    border-radius: 0;
-                    font-weight: normal;
-
-                    transition: all 400ms ease 0s;
-                    color: $o-wysiwyg-color;
-                    background-color: $o-wysiwyg-bg-color;
-
-                    &:hover {
-                        color: $o-wysiwyg-color-light;
-                        background-color: lighten($o-wysiwyg-bg-color, 10%);
-                    }
-
-                    &.oe_snippet_remove {
-                        color: $o-wysiwyg-color;
-                        background-color: $o-wysiwyg-color-danger;
-                        border-color: darken($o-wysiwyg-color-danger, 20%);
-
-                        >.fa {
-                            color: $o-wysiwyg-color;
-                        }
-
-                        &:hover {
-                            background-color: darken($o-wysiwyg-color-danger, 20%);
-                        }
-                    }
-
-                    &.oe_snippet_parent>i {
-                        transform: scaleX(-1);
-                        font-size: 12px;
-                    }
-
-                    >.fa {
-                        color: $o-wysiwyg-color;
-                        line-height: inherit;
-                        vertical-align: top;
-                    }
-                }
-
-                // CUSTOMIZE MENU BUTTON
-                >.oe_options {
-                    .btn {
-                        width: auto;
-                        padding: 0 25px 0 5px;
-                        background-color: $o-wysiwyg-bg-color;
-                        text-transform: uppercase;
-
-                        &:hover,
-                        &:active,
-                        &:focus {
-                            background-color: lighten($o-wysiwyg-bg-color, 5%);
-                            border-color: lighten($o-wysiwyg-bg-color, 10%);
-                        }
-
-                        &:before,
-                        &:after {
-                            content: "";
-                            width: 7px;
-                            height: 2px;
-                            background-color: $o-wysiwyg-color-light;
-                            @include o-position-absolute(46%);
-                            transition: all 0.3s ease 0s;
-                        }
-
-                        &:before {
-                            right: 9px;
-                            transform: rotate(45deg);
-                        }
-
-                        &:after {
-                            right: 5px;
-                            transform: rotate(-45deg);
-                        }
-                    }
-
-                    // Open menu
-                    &.show .btn {
-
-                        &:active,
-                        &:focus,
-                        &:active:focus {
-                            box-shadow: none;
-                        }
-
-                        &:before,
-                        &:after {
-                            width: 9px;
-                        }
-
-                        &:before {
-                            right: 10px;
-                            transform: translateX(5px) rotate(-45deg);
-                        }
-
-                        &:after {
-                            transform: rotate(45deg);
-                        }
-                    }
-
-                    // CUSTOMIZE MENU
-                    .dropdown-menu {
-                        margin: -1px 0 0 0;
-                        padding: 0;
-                        border: 1px solid $o-wysiwyg-bg-color;
-                        border-radius: 0;
-                        background-color: $o-wysiwyg-bg-color;
-
-                        .dropdown-item {
-                            position: relative;
-                            color: $o-wysiwyg-color-light;
-                            font-weight: normal;
-                            font-size: 12px;
-                            padding: 5px 40px 5px 10px;
-
-                            &:hover {
-                                background: transparent;
-                                cursor: pointer;
-                            }
-
-                            &.active {
-                                &:before {
-                                    @include o-position-absolute($top: 5px, $right: 5px);
-                                    content: "\f00c";
-                                    font-family: "FontAwesome";
-                                    color: $o-brand-primary;
-                                }
-                            }
-
-                            >i {
-                                width: 15px;
-                                margin-right: 10px;
-                                text-align: center;
-                            }
-                        }
-
-                        .dropdown-submenu {
-                            position: relative;
-
-                            &::before {
-                                @include o-position-absolute($top: 12px, $right: 10px);
-                                @include o-caret-right(4px);
-                                border-left-color: $o-wysiwyg-color-light;
-                            }
-
-                            &:hover>.dropdown-menu {
-                                display: block;
-                                left: 100%;
-                                top: 0;
-
-                                &.o_open_to_left {
-                                    left: auto;
-                                    right: 100%;
-                                }
-                            }
-                        }
-
-                        .dropdown-divider {
-                            display: block;
-                            height: 1px;
-                            border-top: 1px solid #666;
-                            margin: 0;
-                        }
-
-                        .dropdown-header {
-                            color: $o-wysiwyg-color-light;
-                            font-size: 11px;
-                            margin-top: 2px;
-                            text-transform: uppercase;
-
-                            &:hover {
-                                background-color: initial;
-                            }
-
-                            &.o_main_header {
-                                padding-left: 10px;
-                            }
-
-                            &.o_parent_editor_header {
-                                position: relative;
-                                color: $o-wysiwyg-color-light;
-                                font-weight: 400;
-                                font-size: 10px;
-                                margin: 10px 0 0 10px;
-                                text-transform: uppercase;
-                                padding-bottom: .25em;
-
-                                &::before {
-                                    content: "\f148";
-                                    @include o-position-absolute($top: 5px, $left: 4px);
-                                    font-family: FontAwesome;
-                                    transform: scaleX(-1);
-                                }
-
-                                ~.dropdown-submenu .dropdown-item,
-                                ~.dropdown-item {
-                                    font-size: 11px;
-                                    opacity: 0.7;
-
-                                    &:hover {
-                                        opacity: 1;
-                                    }
-                                }
-
-                                ~.dropdown-submenu::before {
-                                    @include o-position-absolute($top: 10px, $right: 10px);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        &.o_top_cover>.oe_overlay_options {
-            bottom: auto;
-            top: 1px;
-            right: 1px;
+        &.o_we_options_opened {
+            z-index: 1;
         }
 
         // HANDLES
-        >.o_handles {
+        > .o_handles {
             @include o-position-absolute(-$o-wysiwyg-handles-offset-to-hide, 0, auto, 0);
-            z-index: $o-wysiwyg-zindex;
+            border-color: inherit;
 
-            &:hover>.o_handle {
-                background-color: rgba($o-wysiwyg-handles-accent-color, 0.05);
+            > .o_handle, > .o_move_handle {
+                position: relative;
+
+                &.w {
+                    @include o-position-absolute($o-wysiwyg-handles-offset-to-hide, auto, -$o-wysiwyg-handles-offset-to-hide, 0);
+                    width: $o-wysiwyg-handle-edge-size;
+                }
+
+                &.e {
+                    @include o-position-absolute($o-wysiwyg-handles-offset-to-hide, 0, -$o-wysiwyg-handles-offset-to-hide, auto);
+                    width: $o-wysiwyg-handle-edge-size;
+                }
+
+                &.n {
+                    @include o-position-absolute($o-wysiwyg-handles-offset-to-hide, 0, auto, 0);
+                    height: $o-wysiwyg-handle-edge-size;
+                }
+
+                &.s {
+                    @include o-position-absolute(auto, 0, -$o-wysiwyg-handles-offset-to-hide, 0);
+                    height: $o-wysiwyg-handle-edge-size;
+                }
             }
 
-            >.o_handle {
-
-                position: relative;
-                border: 0 solid $o-wysiwyg-handles-accent-color;
+            > .o_handle {
+                border: 0 dashed black;
+                border-color: inherit;
                 transition: background 300ms ease 0s;
 
+                &.w {
+                    border-width: $o-wysiwyg-handle-border-width;
+                    border-right-width: 0;
+                    cursor: e-resize;
+
+                    &:after {
+                        @include o-position-absolute($top: 50%, $left: 40%);
+                        margin-top: -$o-wysiwyg-handles-btn-size/2;
+                    }
+                }
+
+                &.e {
+                    border-right-width: $o-wysiwyg-handle-border-width;
+                    cursor: w-resize;
+
+                    &:after {
+                        @include o-position-absolute($top: 50%, $right: 40%);
+                        margin-top: -$o-wysiwyg-handles-btn-size/2;
+                    }
+                }
+
+                &.n {
+                    border-top-width: $o-wysiwyg-handle-border-width;
+                    cursor: ns-resize;
+
+                    &:after {
+                        @include o-position-absolute($left: 50%, $top: 40%);
+                        margin-left: -$o-wysiwyg-handles-btn-size/2;
+                    }
+                }
+
+                &.s {
+                    border-bottom-width: $o-wysiwyg-handle-border-width;
+                    cursor: ns-resize;
+
+                    &:after {
+                        @include o-position-absolute($left: 50%, $bottom: 40%);
+                        margin-left: -$o-wysiwyg-handles-btn-size/2;
+                    }
+                }
+
+                &.readonly {
+                    cursor: auto !important;
+
+                    &:after {
+                        display: none !important;
+                    }
+
+                    &:hover {
+                        opacity: 0.5;
+                    }
+                }
+            }
+
+            > .o_move_handle {
+                cursor: pointer;
+                cursor: move;
+            }
+        }
+
+        &.o_we_sticky > .o_handles {
+            &:hover > .o_handle {
+                background-color: rgba($o-wysiwyg-handles-accent-color, 0.05);
+            }
+            > .o_handle {
                 &:hover,
                 &.o_active {
                     background-color: rgba($o-wysiwyg-handles-accent-color, 0.2);
@@ -692,6 +683,7 @@ body.editor_enable.editor_has_snippets {
                 }
 
                 &:after {
+                    z-index: 1;
                     display: block;
                     width: $o-wysiwyg-handles-btn-size;
                     height: $o-wysiwyg-handles-btn-size;
@@ -738,66 +730,10 @@ body.editor_enable.editor_has_snippets {
                         content: '\f062';
                     }
                 }
-
-                &.w {
-                    @include o-position-absolute($o-wysiwyg-handles-offset-to-hide, auto, -$o-wysiwyg-handles-offset-to-hide, 0);
-                    width: $o-wysiwyg-handle-edge-size;
-                    border-width: $o-wysiwyg-handle-border-width;
-                    border-right-width: 0;
-                    cursor: e-resize;
-
-                    &:after {
-                        @include o-position-absolute($top: 50%, $left: 40%);
-                        margin-top: -$o-wysiwyg-handles-btn-size/2;
-                    }
-                }
-
-                &.e {
-                    @include o-position-absolute($o-wysiwyg-handles-offset-to-hide, 0, -$o-wysiwyg-handles-offset-to-hide, auto);
-                    width: $o-wysiwyg-handle-edge-size;
-                    border-right-width: $o-wysiwyg-handle-border-width;
-                    cursor: w-resize;
-
-                    &:after {
-                        @include o-position-absolute($top: 50%, $right: 40%);
-                        margin-top: -$o-wysiwyg-handles-btn-size/2;
-                    }
-                }
-
-                &.n {
-                    @include o-position-absolute($o-wysiwyg-handles-offset-to-hide, 0, auto, 0);
-                    border-top-width: $o-wysiwyg-handle-border-width;
-                    cursor: ns-resize;
-
-                    &:after {
-                        @include o-position-absolute($left: 50%, $top: 40%);
-                        margin-left: -$o-wysiwyg-handles-btn-size/2;
-                    }
-                }
-
-                &.s {
-                    @include o-position-absolute(auto, 0, -$o-wysiwyg-handles-offset-to-hide, 0);
-                    border-bottom-width: $o-wysiwyg-handle-border-width;
-                    cursor: ns-resize;
-
-                    &:after {
-                        @include o-position-absolute($left: 50%, $bottom: 40%);
-                        margin-left: -$o-wysiwyg-handles-btn-size/2;
-                    }
-                }
-
-                &.readonly {
-                    cursor: auto !important;
-
-                    &:after {
-                        display: none !important;
-                    }
-
-                    &:hover {
-                        opacity: 0.5;
-                    }
-                }
             }
+        }
+        &.o_we_options_opened > .o_handles > .o_handle {
+            border-style: solid;
         }
     }
 

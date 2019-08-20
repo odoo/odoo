@@ -1410,7 +1410,7 @@ options.registry.topMenuTransparency = options.Class.extend({
                 enabled = value;
             },
         });
-        this.$el.find('[data-transparent]').addBack('[data-transparent]').toggleClass('active', !!enabled);
+        this.$el.find('[data-transparent]').toggleClass('active', !!enabled);
     },
 });
 
@@ -1465,7 +1465,6 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
  */
 options.registry.anchorName = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
-    preventChildPropagation: true,
 
     //--------------------------------------------------------------------------
     // Public
