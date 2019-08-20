@@ -15,7 +15,7 @@
                     <a href="/blog" t-attf-class="nav-link font-weight-bold #{(not blog) and 'active'}">All</a>
                 </li>
                 <li class="nav-item" t-foreach="blogs" t-as="nav_blog">
-                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}"
+                    <a t-attf-href="/blog/#{slug(nav_blog)}"
                        t-attf-class="nav-link #{(blog and nav_blog.id == blog.id and (not tag and not date_begin)) and 'active' or ''}">
                         <b t-field="nav_blog.name"/>
                     </a>
@@ -169,8 +169,6 @@ Options:
 <template id="opt_sidebar_blog_index_tags" name="Tags List" priority="3" inherit_id="website_blog.sidebar_blog_index" active="True" customize_show="True">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
 
-        <!-- TO FIX: This template works if a single blog is provided only -->
-        <!-- ==============================================================-->
         <div t-if="other_tags or tag_category" class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom font-weight-bold">Tags</h6>
             <div class="h5">

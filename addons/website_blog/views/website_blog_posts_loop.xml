@@ -47,11 +47,13 @@ according to the enabled options.
                 </div>
             </div>
         </div>
-
         <div t-if="posts" t-attf-class="row #{'mx-n2' if not opt_blog_readable else ''}">
             <!-- If posts are filtered by date or tags, show applyed filters -->
             <div t-if="tag or date_begin" class="col-12 mb-3">
-                <div class="h4 mb-3"> <t t-esc="len(posts)"/> Articles</div>
+                <div class="h4 mb-3"> <t t-esc="len(posts)"/>
+                    <t t-if="len(posts) &lt; 2">Article</t>
+                    <t t-else="">Articles</t>
+                </div>
                 <t t-if="tag">
                     <!-- Show active tags with a category set -->
                     <t t-foreach="tag_category" t-as="nav_tag_category">
@@ -60,6 +62,7 @@ according to the enabled options.
                             <t t-set='dismissibleBtn' t-value="True"/>
                         </t>
                     </t>
+
                     <!-- Show active tags without a category set -->
                     <t t-call="website_blog.tags_list">
                         <t t-set='tags' t-value='other_tags'/>
@@ -75,7 +78,7 @@ according to the enabled options.
             </div>
 
             <!-- Loop through posts: exclude the first one if already displayed as top banner -->
-            <t t-foreach="posts" t-as="blog_post" t-if="not (posts_list_exclude_first and blog_post.id == first_post.id)">
+            <t t-foreach="posts" t-as="blog_post">
 
                 <!-- Define 'colWidth' qWeb variable, to be assigned later.
                 Adjust accordingly if sidebar and/or readability modes are active. -->
@@ -104,7 +107,7 @@ according to the enabled options.
                                 <t t-call="website_blog.post_cover_image"/>
                             </div>
                             <div t-if="opt_posts_loop_show_teaser" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
-                                <t t-call="website_blog.post_excerpt"/>
+                                <t t-call="website_blog.post_teaser"/>
                             </div>
                             <div t-if="opt_blog_cards_design" t-attf-class="opt_blog_cards_design and 'card-body pt-0 pb-2'}">
                                 <t t-call="website_blog.post_info"></t>
@@ -121,7 +124,7 @@ according to the enabled options.
                             <div t-att-class="opt_blog_cards_design and 'card-body px-2 py-0 mb-2'">
                                 <t t-call="website_blog.post_heading"/>
                                 <div t-if="opt_posts_loop_show_teaser">
-                                    <t t-call="website_blog.post_excerpt"/>
+                                    <t t-call="website_blog.post_teaser"/>
                                 </div>
                             </div>
                             <div t-attf-class="o_wblog_normalize_font #{opt_blog_cards_design and 'card-footer px-2 pb-2'">
@@ -144,7 +147,7 @@ according to the enabled options.
 <template id="post_heading">
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}"
        t-field="blog_post.name"
-       t-attf-class="d-block text-reset o_blog_post_title my-0 #{'h3' if opt_blog_list_view else ('h5' if opt_blog_readable else 'h6')}">
+       t-attf-class="d-block text-reset text-decoration-none o_blog_post_title my-0 #{'h3' if opt_blog_list_view else ('h5' if opt_blog_readable else 'h6')}">
        Untitled Post
    </a>
 
@@ -156,7 +159,7 @@ according to the enabled options.
 <!-- ======   Sub-Template: Posts list : Posts Info  ======================= -->
 <template id="post_info">
     <div class="d-flex small flex-wrap mb-1 w-100">
-        <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{'flex-grow-0 w-auto mw-100' if opt_blog_list_view else 'flex-grow-1' }">
+        <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
             <time t-field="blog_post.post_date" class="text-nowrap font-weight-bold px-2" t-options='{"format": "MMM d, yyyy"}'/>
             <div t-if="opt_posts_loop_show_stats" class="px-2">
                 <b class="text-nowrap"><i class="fa fa-comment text-muted mr-1"/><t t-esc="len(blog_post.message_ids)"/></b>
@@ -181,7 +184,7 @@ according to the enabled options.
 
         <t t-call="website_blog.blog_cover">
             <t t-set="cover_properties" t-value="blog_posts_cover_properties[blog_post_index]"/>
-            <t t-set="additionnal_classes" t-value="'o_list_cover' + (' rounded overflow-hidden shadow mb-3' if not opt_blog_cards_design else '' )"/>
+            <t t-set="additionnal_classes" t-value="'o_list_cover' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')"/>
 
             <t t-if="opt_posts_loop_show_author" t-call="website_blog.post_author">
                 <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex text-white w-100 ' + ('p-3 h5 m-0' if opt_blog_list_view else 'px-2 pb-2 pt-3') "/>
@@ -191,9 +194,9 @@ according to the enabled options.
     </a>
 </template>
 
-<!-- ======   Sub-Template: Posts list : Posts Excerpt + Tags  ============= -->
-<template id="post_excerpt">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" class="text-reset" t-att-title="blog_post.name">
+<!-- ======   Sub-Template: Posts list : Posts Teaser + Tags  ============= -->
+<template id="post_teaser">
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" class="text-reset text-decoration-none">
         <div t-if="opt_blog_list_view" t-field="blog_post.teaser" class="mt-2 o_wblog_read_text"/>
         <div t-else="" t-field="blog_post.teaser" t-attf-class="mt-2 #{opt_blog_readable and 'o_wblog_normalize_font'}"/>
     </a>
