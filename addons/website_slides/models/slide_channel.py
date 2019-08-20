@@ -296,11 +296,6 @@ class Channel(models.Model):
     def _get_can_publish_error_message(self):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
 
-    def get_base_url(self):
-        self.ensure_one()
-        icp = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        return self.website_id and self.website_id._get_http_domain() or icp
-
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
         super(Channel, self)._compute_website_url()
