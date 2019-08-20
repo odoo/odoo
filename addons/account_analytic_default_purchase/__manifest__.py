@@ -4,7 +4,7 @@
 {
     'name': 'Account Analytic Defaults for Purchase.',
     'version': '1.0',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'description': """
 Set default values for your analytic accounts on your hr expenses.
 ==================================================================

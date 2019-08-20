@@ -3,7 +3,7 @@
 
 {
     'name': 'PayuLatam Payment Acquirer',
-    'category': 'Payment Acquirer',
+    'category': 'Accounting/Payment',
     'summary': 'Payment Acquirer: PayuLatam Implementation',
     'description': """Payulatam payment acquirer""",
     'depends': ['payment'],

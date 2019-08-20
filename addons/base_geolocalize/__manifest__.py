@@ -3,7 +3,7 @@
 {
     'name': 'Partners Geolocation',
     'version': '2.1',
-    'category': 'Extra Tools',
+    'category': 'Tools',
     'description': """
 Partners Geolocation
 ========================

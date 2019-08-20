@@ -2,7 +2,7 @@
 
 {
     'name': 'Ingenico Payment Acquirer',
-    'category': 'Accounting',
+    'category': 'Accounting/Payment',
     'summary': 'Payment Acquirer: Ingenico Implementation',
     'version': '1.0',
     'description': """Ingenico Payment Acquirer""",

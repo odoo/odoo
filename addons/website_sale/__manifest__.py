@@ -1,6 +1,6 @@
 {
     'name': 'eCommerce',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 55,
     'summary': 'Sell your products online',
     'website': 'https://www.odoo.com/page/e-commerce',
