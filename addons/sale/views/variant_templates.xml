@@ -3,31 +3,31 @@
     <template id="variants">
         <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination, parent_name)"/>
         <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)">
-            <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="variant_id">
+            <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
                 <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
-                <li t-att-data-attribute_id="variant_id.attribute_id.id"
-                    t-att-data-attribute_name="variant_id.attribute_id.name"
-                    t-attf-class="variant_attribute #{'d-none' if len(variant_id.product_template_value_ids) == 1 and not variant_id.product_template_value_ids[0].is_custom else ''}">
+                <li t-att-data-attribute_id="ptal.attribute_id.id"
+                    t-att-data-attribute_name="ptal.attribute_id.name"
+                    t-attf-class="variant_attribute #{'d-none' if len(ptal.product_template_value_ids) == 1 and not ptal.product_template_value_ids[0].is_custom else ''}">
 
                     <!-- Used to customize layout if the only available attribute value is custom -->
-                    <t t-set="single_and_custom" t-value="len(variant_id.product_template_value_ids) == 1 and variant_id.product_template_value_ids[0].is_custom" />
-                    <strong t-field="variant_id.attribute_id.name" class="attribute_name"/>
+                    <t t-set="single_and_custom" t-value="len(ptal.product_template_value_ids) == 1 and ptal.product_template_value_ids[0].is_custom" />
+                    <strong t-field="ptal.attribute_id.name" class="attribute_name"/>
 
-                    <t t-if="variant_id.attribute_id.type == 'select'">
+                    <t t-if="ptal.attribute_id.type == 'select'">
                         <select
-                            t-att-data-attribute_id="variant_id.attribute_id.id"
-                            t-attf-class="form-control js_variant_change #{variant_id.attribute_id.create_variant} #{'d-none' if single_and_custom else ''}"
-                            t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
-                            <t t-foreach="variant_id.product_template_value_ids" t-as="value_id">
-                                <option t-att-value="value_id.id"
-                                    t-att-data-value_id="value_id.product_attribute_value_id.id"
-                                    t-att-data-value_name="value_id.name"
-                                    t-att-data-attribute_name="value_id.attribute_id.name"
-                                    t-att-data-is_custom="value_id.is_custom"
-                                    t-att-selected="value_id in combination"
+                            t-att-data-attribute_id="ptal.attribute_id.id"
+                            t-attf-class="form-control js_variant_change #{ptal.attribute_id.create_variant} #{'d-none' if single_and_custom else ''}"
+                            t-att-name="'attribute-%s-%s' % (product.id, ptal.attribute_id.id)">
+                            <t t-foreach="ptal.product_template_value_ids" t-as="ptav">
+                                <option t-att-value="ptav.id"
+                                    t-att-data-value_id="ptav.product_attribute_value_id.id"
+                                    t-att-data-value_name="ptav.name"
+                                    t-att-data-attribute_name="ptav.attribute_id.name"
+                                    t-att-data-is_custom="ptav.is_custom"
+                                    t-att-selected="ptav in combination"
                                     t-att-data-is_single_and_custom="single_and_custom">
-                                    <span t-field="value_id.name"/>
-                                    <span t-if="value_id.price_extra" class="badge badge-pill badge-secondary">
+                                    <span t-field="ptav.name"/>
+                                    <span t-if="ptav.price_extra" class="badge badge-pill badge-secondary">
                                         <!--
                                             price_extra is displayed as catalog price instead of
                                             price after pricelist because it is impossible to
@@ -37,8 +37,8 @@
                                             attribute is therefore variable and it's not very
                                             accurate to display it.
                                             -->
-                                        <t t-esc="value_id.price_extra > 0 and '+' or '-'"/>
-                                        <span t-esc="abs(value_id.price_extra)" class="variant_price_extra" style="white-space: nowrap;"
+                                        <t t-esc="ptav.price_extra > 0 and '+' or '-'"/>
+                                        <span t-esc="abs(ptav.price_extra)" class="variant_price_extra" style="white-space: nowrap;"
                                             t-options='{
                                                 "widget": "monetary",
                                                 "from_currency": product.currency_id,
@@ -50,28 +50,28 @@
                         </select>
                     </t>
 
-                    <t t-if="variant_id.attribute_id.type == 'radio'">
-                        <ul t-att-data-attribute_id="variant_id.attribute_id.id" t-attf-class="list-unstyled #{'d-none' if single_and_custom else ''}">
-                            <t t-foreach="variant_id.product_template_value_ids" t-as="value_id">
+                    <t t-if="ptal.attribute_id.type == 'radio'">
+                        <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-unstyled #{'d-none' if single_and_custom else ''}">
+                            <t t-foreach="ptal.product_template_value_ids" t-as="ptav">
                                 <li class="form-group js_attribute_value" style="margin: 0;">
                                     <label class="col-form-label">
                                         <div>
                                             <input type="radio"
-                                                t-attf-class="js_variant_change radio_input #{variant_id.attribute_id.create_variant}"
-                                                t-att-checked="value_id in combination"
-                                                t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
-                                                t-att-value="value_id.id"
-                                                t-att-data-value_id="value_id.product_attribute_value_id.id"
-                                                t-att-data-value_name="value_id.name"
-                                                t-att-data-attribute_name="value_id.attribute_id.name"
-                                                t-att-data-is_custom="value_id.is_custom"
+                                                t-attf-class="js_variant_change radio_input #{ptal.attribute_id.create_variant}"
+                                                t-att-checked="ptav in combination"
+                                                t-att-name="'attribute-%s-%s' % (product.id, ptal.attribute_id.id)"
+                                                t-att-value="ptav.id"
+                                                t-att-data-value_id="ptav.product_attribute_value_id.id"
+                                                t-att-data-value_name="ptav.name"
+                                                t-att-data-attribute_name="ptav.attribute_id.name"
+                                                t-att-data-is_custom="ptav.is_custom"
                                                 t-att-data-is_single_and_custom="single_and_custom" />
                                             <div class="radio_input_value">
-                                                <span t-field="value_id.name"/>
-                                                <span class="badge badge-pill badge-secondary" t-if="value_id.price_extra">
+                                                <span t-field="ptav.name"/>
+                                                <span class="badge badge-pill badge-secondary" t-if="ptav.price_extra">
                                                     <!-- see note above about price_extra -->
-                                                    <t t-esc="value_id.price_extra > 0 and '+' or '-'"/>
-                                                    <span t-esc="abs(value_id.price_extra)" class="variant_price_extra" style="white-space: nowrap;"
+                                                    <t t-esc="ptav.price_extra > 0 and '+' or '-'"/>
+                                                    <span t-esc="abs(ptav.price_extra)" class="variant_price_extra" style="white-space: nowrap;"
                                                         t-options='{
                                                             "widget": "monetary",
                                                             "from_currency": product.currency_id,
@@ -86,21 +86,21 @@
                         </ul>
                     </t>
 
-                    <t t-if="variant_id.attribute_id.type == 'color'">
-                        <ul t-att-data-attribute_id="variant_id.attribute_id.id" t-attf-class="list-inline  #{'d-none' if single_and_custom else ''}">
-                            <li t-foreach="variant_id.product_template_value_ids" t-as="value_id" class="list-inline-item">
-                                <label t-attf-style="background-color:#{value_id.html_color or value_id.name if not value_id.is_custom else ''}"
-                                    t-attf-class="css_attribute_color #{'active' if value_id in combination else ''} #{'custom_value' if value_id.is_custom else ''}">
+                    <t t-if="ptal.attribute_id.type == 'color'">
+                        <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-inline  #{'d-none' if single_and_custom else ''}">
+                            <li t-foreach="ptal.product_template_value_ids" t-as="ptav" class="list-inline-item">
+                                <label t-attf-style="background-color:#{ptav.html_color or ptav.name if not ptav.is_custom else ''}"
+                                    t-attf-class="css_attribute_color #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''}">
                                     <input type="radio"
-                                        t-attf-class="js_variant_change  #{variant_id.attribute_id.create_variant}"
-                                        t-att-checked="value_id in combination"
-                                        t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
-                                        t-att-value="value_id.id"
-                                        t-att-title="value_id.name"
-                                        t-att-data-value_id="value_id.product_attribute_value_id.id"
-                                        t-att-data-value_name="value_id.name"
-                                        t-att-data-attribute_name="value_id.attribute_id.name"
-                                        t-att-data-is_custom="value_id.is_custom"
+                                        t-attf-class="js_variant_change  #{ptal.attribute_id.create_variant}"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'attribute-%s-%s' % (product.id, ptal.attribute_id.id)"
+                                        t-att-value="ptav.id"
+                                        t-att-title="ptav.name"
+                                        t-att-data-value_id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value_name="ptav.name"
+                                        t-att-data-attribute_name="ptav.attribute_id.name"
+                                        t-att-data-is_custom="ptav.is_custom"
                                         t-att-data-is_single_and_custom="single_and_custom"/>
                                 </label>
                             </li>
