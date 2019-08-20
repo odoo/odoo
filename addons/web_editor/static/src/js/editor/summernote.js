@@ -1691,6 +1691,11 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
 
             var ul = document.createElement(sorted ? "ol" : "ul");
             ul.className = node.className;
+            if (type !== 'checklist') {
+                ul.classList.remove('o_checklist');
+            } else {
+                ul.classList.add('o_checklist');
+            }
             parent.insertBefore(ul, node);
             while (node.firstChild) {
                 ul.appendChild(node.firstChild);
@@ -1701,8 +1706,12 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
 
         } else if (node.tagName === (sorted ? "OL" : "UL")) {
 
-            if (type !== 'checklist') {
+            if (type === 'checklist' && !node.classList.contains('o_checklist')) {
+                node.classList.add('o_checklist');
+                return;
+            } else if (type === 'UL' && node.classList.contains('o_checklist')) {
                 node.classList.remove('o_checklist');
+                return;
             }
 
             var lis = [];
@@ -1747,6 +1756,9 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
 
     parent = p0.parentNode;
     ul = document.createElement(sorted ? "ol" : "ul");
+    if (type === 'checklist') {
+        ul.classList.add('o_checklist');
+    }
     parent.insertBefore(ul, p0);
     var childNodes = parent.childNodes;
     var brs = [];
@@ -1778,15 +1790,13 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
     }
     r.clean().select();
     event.preventDefault();
-    return ul;
+    return false;
 };
 $.summernote.pluginEvents.insertOrderedList = function (event, editor, layoutInfo) {
     $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, "OL");
 };
 $.summernote.pluginEvents.insertCheckList = function (event, editor, layoutInfo) {
-    var ul = $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, "checklist");
-    ul.classList.add('o_checklist');
-    console.log(ul);
+    $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, "checklist");
 };
 $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent) {
     var $editable = layoutInfo.editable();
