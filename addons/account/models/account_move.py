@@ -117,7 +117,7 @@ class AccountMove(models.Model):
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     auto_reverse = fields.Boolean(string='Reverse Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically reversed at the reversal date you defined.')
     reverse_date = fields.Date(string='Reversal Date', help='Date of the reverse accounting entry.')
-    reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
+    reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True, copy=False)
     tax_type_domain = fields.Char(store=False, help='Technical field used to have a dynamic taxes domain on the form view.')
 
     @api.constrains('line_ids', 'journal_id', 'auto_reverse', 'reverse_date')
