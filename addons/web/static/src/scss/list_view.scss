@@ -250,9 +250,16 @@
                         @include o-position-absolute(0, 0);
                     }
                 }
-                > .o_field_translate {
-                    @include o-position-absolute(0, 5px);
-                    width: 16px; // to have some space on the right
+                > input.o_field_translate, textarea.o_field_translate {
+                    padding-right: 25px;
+                    + span.o_field_translate {
+                        margin-left: -35px;
+                        padding: 0px 1px;
+                        text-align: right;
+                        width: 35px;
+                        vertical-align: top;
+                        font-size: 12px;
+                    }
                 }
                 > .o_row_handle {
                     visibility: hidden; // hide sequence when editing

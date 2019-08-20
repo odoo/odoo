@@ -94,6 +94,30 @@ QUnit.module('Views', {
                     {id: "2-20170808020000", name: "virtual"},
                 ]
             },
+            "ir.translation": {
+                fields: {
+                    lang_code: {type: "char"},
+                    value: {type: "char"},
+                    res_id: {type: "integer"},
+                    name: {type: "char"},
+                    lang: {type: "char"},
+                },
+                records: [{
+                    id: 99,
+                    res_id: 1,
+                    value: '',
+                    lang_code: 'en_US',
+                    lang: 'en_US',
+                    name: 'foo,foo'
+                },{
+                    id: 100,
+                    res_id: 1,
+                    value: '',
+                    lang_code: 'fr_BE',
+                    lang: 'fr_BE',
+                    name: 'foo,foo'
+                }]
+            },
         };
     }
 }, function () {
@@ -1728,6 +1752,48 @@ QUnit.module('Views', {
         assert.strictEqual(startHeight, readonlyHeight);
         assert.strictEqual(startWidth, editionWidth);
         assert.strictEqual(startWidth, readonlyWidth);
+
+        _t.database.multi_lang = multiLang;
+        list.destroy();
+    });
+
+    QUnit.test('fields are translatable in list view', async function (assert) {
+        assert.expect(3);
+
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+        this.data.foo.fields.foo.translate = true;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'foo,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US","English"], ["fr_BE", "Frenglish"]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            arch: '<tree editable="top">' +
+                        '<field name="foo" required="1"/>' +
+                    '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first > td:not(.o_list_record_selector)').first());
+        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
+
+        await testUtils.dom.click(list.$('input.o_field_translate+span.o_field_translate'));
+        await testUtils.nextTick();
+
+        assert.containsOnce($('body'), '.o_translation_dialog');
+        assert.containsN($('.o_translation_dialog'), '.translation>input.o_field_char', 2,
+            'modal should have 2 languages to translate');
 
         _t.database.multi_lang = multiLang;
         list.destroy();

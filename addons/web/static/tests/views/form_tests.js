@@ -104,6 +104,19 @@ QUnit.module('Views', {
                     {id: 14, display_name: "silver", color: 5},
                 ]
             },
+            "ir.translation": {
+                fields: {
+                    lang_code: {type: "char"},
+                    value: {type: "char"},
+                    res_id: {type: "integer"}
+                },
+                records: [{
+                    id: 99,
+                    res_id: 12,
+                    value: '',
+                    lang_code: 'en_US'
+                }]
+            },
         };
         this.actions = [{
             id: 1,
@@ -6135,10 +6148,17 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/product/get_formview_id') {
                     return Promise.resolve(false);
-                } else if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                }
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
                     assert.deepEqual(args.args, ["product",37,"name"], 'should call "call_button" route');
                     nbTranslateCalls++;
-                    return Promise.resolve();
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'partnes,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US"], ["fr_BE"]]);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -6146,12 +6166,10 @@ QUnit.module('Views', {
 
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('[name="product_id"] .o_external_button'));
-
-        assert.strictEqual($('.modal-body .o_field_translate').length, 1,
+        assert.containsOnce($('.modal-body'), 'span.o_field_translate',
             "there should be a translate button in the modal");
 
-        await testUtils.dom.click($('.modal-body .o_field_translate'));
-
+        await testUtils.dom.click($('.modal-body span.o_field_translate'));
         assert.strictEqual(nbTranslateCalls, 1, "should call_button translate once");
 
         form.destroy();
