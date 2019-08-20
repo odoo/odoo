@@ -15,11 +15,13 @@ class TestUi(odoo.tests.HttpCase):
     def test_02_product_configurator_advanced(self):
         # group_product_variant: use the product configurator
         # group_sale_pricelist: display the pricelist to determine when it is changed after choosing
+        # group_delivery_invoice_address: show the shipping address (needed for a trigger)
         #                       the partner
         self.env.ref('base.user_admin').write({
             'groups_id': [
                 (4, self.env.ref('product.group_product_variant').id),
                 (4, self.env.ref('product.group_product_pricelist').id),
+                (4, self.env.ref('sale.group_delivery_invoice_address').id),
             ],
         })
 
