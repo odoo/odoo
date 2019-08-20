@@ -18,8 +18,10 @@ def moreaction(**kwargs):
     return dict(kwargs,
         type='ir.actions.act_window',
         target='new',
+        context={'create': False},
+        name='Possible Values',
         view_mode='tree,form',
-        views=[(False, 'tree'), (False, 'form')],
+        views=[(False, 'list'), (False, 'form')],
         help=u"See all possible values")
 
 def values(seq, field='value'):
