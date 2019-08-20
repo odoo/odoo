@@ -450,7 +450,7 @@ var SnippetEditor = Widget.extend({
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
-            var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone').first();
+            var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
             if ($el.length) {
                 $el.after(this.$target);
                 this.dropped = true;
@@ -609,6 +609,8 @@ var SnippetsMenu = Widget.extend({
         }
         this.$activeSnippet = false;
         this.snippetEditors = [];
+
+        this.setSelectorEditableArea(options.$el, options.selectorEditableArea);
     },
     /**
      * @override
@@ -677,6 +679,7 @@ var SnippetsMenu = Widget.extend({
         // Auto-selects text elements with a specific class and remove this
         // on text changes
         this.$document.on('click.snippets_menu', '.o_default_snippet_text', function (ev) {
+            $(ev.target).closest('.o_default_snippet_text').removeClass('o_default_snippet_text');
             $(ev.target).selectContent();
             $(ev.target).removeClass('o_default_snippet_text');
         });
@@ -747,7 +750,7 @@ var SnippetsMenu = Widget.extend({
             },
         });
         this.cacheSnippetTemplate[this.options.snippets] = this._defLoadSnippets;
-        return this.cacheSnippetTemplate[this.options.snippets];
+        return this._defLoadSnippets;
     },
     /**
      * Sets the instance variables $editor, $body and selectorEditableArea.
@@ -766,7 +769,8 @@ var SnippetsMenu = Widget.extend({
      * @returns {JQuery}
      */
     getEditableArea: function () {
-        return this.$editor.find(this.selectorEditableArea);
+        return this.$editor.find(this.selectorEditableArea)
+            .add(this.$editor.filter(this.selectorEditableArea));
     },
     /**
      * Updates the cover dimensions of the current snippet editor.
@@ -1242,6 +1246,8 @@ var SnippetsMenu = Widget.extend({
         this.$el.html($html);
         this._makeSnippetDraggable(this.$snippets);
         this._disableUndroppableSnippets();
+
+        this.$el.addClass('o_loaded');
     },
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
@@ -1268,7 +1274,8 @@ var SnippetsMenu = Widget.extend({
         }
 
         return Promise.resolve(def).then(function (parentEditor) {
-            snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, self.getEditableArea(), self.options);
+            let editableArea = self.getEditableArea();
+            snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
             self.snippetEditors.push(snippetEditor);
             return snippetEditor.appendTo(self.$snippetEditorArea);
         }).then(function () {

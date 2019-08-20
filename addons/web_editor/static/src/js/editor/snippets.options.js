@@ -5,8 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
-var FontPlugin = require('web_editor.wysiwyg.plugin.font');
-var ColorpickerDialog = require('web.ColorpickerDialog');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -667,19 +666,12 @@ registry.colorpicker = SnippetOption.extend({
         }
 
         if (!this.$el.find('.colorpicker').length) {
-            // Add common colors to palettes if not excluded
-            var fontPlugin = new FontPlugin({
-                layoutInfo: {
-                    editable: $('<div/>'),
-                    editingArea: $('<div/>'),
-                },
-                options: {},
-            });
+            // TODO remove old UI's code that survived
+            var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
+            var $clpicker = $(qweb.render('web_editor.colorpicker'));
 
-            var $clpicker = fontPlugin.createPalette('backColor').find('.note-color-palette'); // don't use custom color
-            $clpicker.find('.note-color-reset').remove();
-            $clpicker.find('h6').each(function () {
-                $(this).replaceWith($('<div class="mt8"/>').text($(this).text()));
+            _.each($clpicker.find('.o_colorpicker_section'), function (elem) {
+                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>");
             });
 
             // Retrieve excluded palettes list
@@ -689,7 +681,7 @@ registry.colorpicker = SnippetOption.extend({
             }
             // Apply a custom title if specified
             if (this.data.paletteTitle) {
-                $clpicker.find('.note-palette-title').text(this.data.paletteTitle);
+                $pt.find('.note-palette-title').text(this.data.paletteTitle);
             }
 
             // Remove excluded palettes
@@ -697,29 +689,39 @@ registry.colorpicker = SnippetOption.extend({
                 $clpicker.find('[data-name="' + exc + '"]').remove();
             });
 
-            var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
+            // Add common colors to palettes if not excluded
+            if (!('common' in excluded)) {
+                var $commonColorSection = $clpicker.find('[data-name="common"]');
+                _.each(summernoteCustomColors, function (colorRow, i) {
+                    var $div = $('<div/>', {class: 'clearfix'}).appendTo($commonColorSection);
+                    if (i === 0) {
+                        // Ignore the summernote gray palette and use ours
+                        return;
+                    }
+                    _.each(colorRow, function (color) {
+                        $div.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
+                    });
+                });
+            }
+
             $pt.find('.o_colorpicker_section_tabs').append($clpicker);
             this.$el.find('.dropdown-menu').append($pt);
         }
 
-        var bgColor = ColorpickerDialog.formatColor(self.$target.css('background-color'));
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
             var $color = $(this);
             var color = $color.data('color');
-            if (color) {
-                $color.addClass('bg-' + color);
-                var className = self.colorPrefix + color;
-                if (self.$target.hasClass(className)) {
-                    $color.addClass('selected');
-                }
-                classes.push(className);
-            } else {
-                color = $color.data('value');
-                if (bgColor === ColorpickerDialog.formatColor(color)) {
-                    $color.addClass('selected');
-                }
+            if (!color) {
+                return;
             }
+
+            $color.addClass('bg-' + color);
+            var className = self.colorPrefix + color;
+            if (self.$target.hasClass(className)) {
+                $color.addClass('selected');
+            }
+            classes.push(className);
         });
         this.classes = classes.join(' ');
 
@@ -753,9 +755,6 @@ registry.colorpicker = SnippetOption.extend({
         var color = $(ev.currentTarget).data('color');
         if (color) {
             this.$target.addClass(this.colorPrefix + color);
-        } else if ($(ev.currentTarget).data('value')) {
-            color = $(ev.currentTarget).data('value');
-            this.$target.css('background-color', color);
         } else if ($(ev.target).hasClass('o_custom_color')) {
             this.$target
                 .removeClass(this.classes)
@@ -853,14 +852,13 @@ registry.background = SnippetOption.extend({
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
-            mediaWidth: 1920,
             firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
         }, $image[0]).open();
 
-        _editor.on('save', this, function (image) {
-            this._setCustomBackground(image.src);
+        _editor.on('save', this, function () {
+            this._setCustomBackground($image.attr('src'));
             this.$target.trigger('content_changed');
         });
         _editor.on('closed', this, function () {
