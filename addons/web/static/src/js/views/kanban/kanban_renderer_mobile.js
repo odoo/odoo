@@ -91,10 +91,15 @@ KanbanRenderer.include({
         var index = _.findIndex(this.widgets, {db_id: localID});
         var $column = this.widgets[index].$el;
         var left = $column.css('left');
+        var right = $column.css('right');
         var scrollTop = $column.scrollTop();
         return this._super.apply(this, arguments).then(function () {
             $column = self.widgets[index].$el;
-            $column.css({left: left});
+            if (_t.database.parameters.direction === 'rtl') {
+                $column.css({right: right});
+            } else {
+                $column.css({left: left});
+            }
             $column.scrollTop(scrollTop); // required when clicking on 'Load More'
             self._enableSwipe();
         });
@@ -115,19 +120,40 @@ KanbanRenderer.include({
             var self = this;
             var moveToIndex = this.activeColumnIndex;
             var updateFunc = animate ? 'animate' : 'css';
+            var rtl = _t.database.parameters.direction === 'rtl';
             _.each(this.widgets, function (column, index) {
                 var columnID = column.id || column.db_id;
                 var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
                 if (index === moveToIndex - 1) {
-                    $column[updateFunc]({left: '-100%'});
+                    if (rtl) {
+                        $column[updateFunc]({right: '-100%'});
+                    } else {
+                        $column[updateFunc]({left: '-100%'});
+                    }
                 } else if (index === moveToIndex + 1) {
-                    $column[updateFunc]({left: '100%'});
+                    if (rtl) {
+                        $column[updateFunc]({right: '100%'});
+                    } else {
+                        $column[updateFunc]({left: '100%'});
+                    }
                 } else if (index === moveToIndex) {
-                    $column[updateFunc]({left: '0%'});
+                    if (rtl) {
+                        $column[updateFunc]({right: '0%'});
+                    } else {
+                        $column[updateFunc]({left: '0%'});
+                    }
                 } else if (index < moveToIndex) {
-                    $column.css({left: '-100%'});
+                    if (rtl) {
+                        $column.css({right: '-100%'});
+                    } else {
+                        $column.css({left: '-100%'});
+                    }
                 } else if (index > moveToIndex) {
-                    $column.css({left: '100%'});
+                    if (rtl) {
+                        $column.css({right: '100%'});
+                    } else {
+                        $column.css({left: '100%'});
+                    }
                 }
             });
         }
@@ -184,6 +210,7 @@ KanbanRenderer.include({
                 }
             }
             // Apply the scroll x on the tabs
+            // XXX in case of RTL, should we use scrollRight?
             this.$('.o_kanban_mobile_tabs').scrollLeft(scrollToLeft);
         }
     },
@@ -213,16 +240,17 @@ KanbanRenderer.include({
      */
     _enableSwipe: function () {
         var self = this;
+        var step = _t.database.parameters.direction === 'rtl' ? -1 : 1;
         this.$el.swipe({
             excludedElements: ".o_kanban_mobile_tabs",
             swipeLeft: function () {
-                var moveToIndex = self.activeColumnIndex + 1;
+                var moveToIndex = self.activeColumnIndex + step;
                 if (moveToIndex < self.widgets.length) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }
             },
             swipeRight: function () {
-                var moveToIndex = self.activeColumnIndex - 1;
+                var moveToIndex = self.activeColumnIndex - step;
                 if (moveToIndex > -1) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }

@@ -2173,9 +2173,9 @@ class AccountMoveLine(models.Model):
         help="The bank statement used for bank reconciliation")
 
     # ==== Tax fields ====
-    tax_ids = fields.Many2many('account.tax', string='Taxes')
+    tax_ids = fields.Many2many('account.tax', string='Taxes', help="Taxes that apply on the base amount")
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict', store=True,
-        compute='_compute_tax_line_id')
+        compute='_compute_tax_line_id', help="Indicates that this journal item is a tax line")
     tax_base_amount = fields.Monetary(string="Base Amount", store=True,
         currency_field='company_currency_id')
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,

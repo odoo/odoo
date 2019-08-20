@@ -85,7 +85,7 @@ var MailManager =  AbstractService.extend({
     addMessage: function (data, options) {
         options = options || {};
         var message = this.getMessage(data.id);
-        var prom = Promise.resolve();
+        var prom;
         if (!message) {
             prom = this._addNewMessage(data, options);
         } else {
@@ -95,6 +95,7 @@ var MailManager =  AbstractService.extend({
                 });
             }
             this._addMessageToThreads(message, options);
+            prom = Promise.resolve(message);
         }
         return prom;
     },

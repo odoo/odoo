@@ -48,8 +48,10 @@ class IrRule(models.Model):
            by the user with the switch company menu. These companies are
            filtered and trusted.
         """
+        # use an empty context for 'user' to make the domain evaluation
+        # independent from the context
         return {
-            'user': self.env.user,
+            'user': self.env.user.with_context({}),
             'time': time,
             'company_ids': self.env.companies.ids,
         }

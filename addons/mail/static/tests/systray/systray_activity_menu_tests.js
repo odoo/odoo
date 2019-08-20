@@ -153,7 +153,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
 });
 
 QUnit.test('activity menu widget: activity view icon', async function (assert) {
-    assert.expect(10);
+    assert.expect(12);
     var self = this;
     var activityMenu = new ActivityMenu();
     testUtils.mock.addMockEnvironment(activityMenu, {
@@ -193,9 +193,15 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
 
     // click on the "Issue" activity icon
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    assert.hasClass(activityMenu.$('.dropdown-menu'), 'show',
+        "dropdown should be expanded");
+
     await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Issue']"));
+    assert.doesNotHaveClass(activityMenu.$('.dropdown-menu'), 'show',
+        "dropdown should be collapsed");
 
     // click on the "Note" activity icon
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
     await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Note']"));
 
     assert.verifySteps([

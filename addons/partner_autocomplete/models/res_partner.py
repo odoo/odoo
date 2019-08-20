@@ -110,7 +110,7 @@ class ResPartner(models.Model):
         if suggestions:
             results = []
             for suggestion in suggestions:
-                results.append(suggestion)
+                results.append(self._format_data_company(suggestion))
             return results
         else:
             return []
