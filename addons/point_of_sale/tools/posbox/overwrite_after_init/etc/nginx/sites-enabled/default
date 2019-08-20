@@ -18,8 +18,8 @@ server {
     listen [::]:443 ssl http2 default_server;
 
     server_name localhost;
-    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
-    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+    ssl_certificate /etc/ssl/certs/nginx-cert.crt;
+    ssl_certificate_key /etc/ssl/private/nginx-cert.key;
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers HIGH:!aNULL:!MD5;
 

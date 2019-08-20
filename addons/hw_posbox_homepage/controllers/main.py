@@ -28,13 +28,6 @@ _logger = logging.getLogger(__name__)
 
 
 #----------------------------------------------------------
-# Helper
-#----------------------------------------------------------
-
-def access_point():
-    return helpers.get_ip() == '10.11.12.1'
-
-#----------------------------------------------------------
 # Controllers
 #----------------------------------------------------------
 
@@ -55,6 +48,7 @@ driver_list_template = jinja_env.get_template('driver_list.html')
 remote_connect_template = jinja_env.get_template('remote_connect.html')
 configure_wizard_template = jinja_env.get_template('configure_wizard.html')
 six_payment_terminal_template = jinja_env.get_template('six_payment_terminal.html')
+list_credential_template = jinja_env.get_template('list_credential.html')
 
 class IoTboxHomepage(web.Home):
 
@@ -87,7 +81,7 @@ class IoTboxHomepage(web.Home):
         if wired == 'up':
             network = 'Ethernet'
         elif ssid:
-            if access_point():
+            if helpers.access_point():
                 network = 'Wifi access point'
             else:
                 network = 'Wifi : ' + ssid
@@ -128,7 +122,7 @@ class IoTboxHomepage(web.Home):
     def index(self):
         wifi = Path.home() / 'wifi_network.txt'
         remote_server = Path.home() / 'odoo-remote-server.conf'
-        if (wifi.exists() == False or remote_server.exists() == False) and access_point():
+        if (wifi.exists() == False or remote_server.exists() == False) and helpers.access_point():
             return configure_wizard_template.render({
                 'title': 'Configure IoT Box',
                 'breadcrumb': 'Configure IoT Box',
@@ -182,6 +176,30 @@ class IoTboxHomepage(web.Home):
         subprocess.check_call("sudo mount -o remount,ro /root_bypass_ramdisks", shell=True)
 
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069/list_drivers'>"
+
+    @http.route('/list_credential', type='http', auth='none', website=True)
+    def list_credential(self):
+        return list_credential_template.render({
+            'title': "Odoo's IoT Box - List credential",
+            'breadcrumb': 'List credential',
+            'db_uuid': helpers.read_file_first_line('odoo-db-uuid.conf'),
+            'enterprise_code': helpers.read_file_first_line('odoo-enterprise-code.conf'),
+        })
+
+    @http.route('/save_credential', type='http', auth='none', cors='*', csrf=False)
+    def save_credential(self, db_uuid, enterprise_code):
+        helpers.add_credential(db_uuid, enterprise_code)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
+        return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
+
+    @http.route('/clear_credential', type='http', auth='none', cors='*', csrf=False)
+    def clear_credential(self):
+        subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+        helpers.unlink_file('odoo-db-uuid.conf')
+        helpers.unlink_file('odoo-enterprise-code.conf')
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
+        subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+        return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
 
     def get_wifi_essid(self):
         wifi_options = []
@@ -245,8 +263,14 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/server_connect', type='http', auth='none', cors='*', csrf=False)
     def connect_to_server(self, token, iotname):
-        url = token.split('|')[0]
-        token = token.split('|')[1]
+        credential = token.split('|')
+        url = credential[0]
+        token = credential[1]
+        if len(credential) > 2:
+            # IoT Box send token with db_uuid and enterprise_code only since V13
+            db_uuid = credential[2]
+            enterprise_code = credential[3]
+            helpers.add_credential(db_uuid, enterprise_code)
         reboot = 'reboot'
         subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, iotname, token, reboot])
         return 'http://' + helpers.get_ip() + ':8069'
