@@ -43,6 +43,7 @@ class SaleOrder(models.Model):
         self._remove_delivery_line()
 
         for order in self:
+            order.carrier_id = carrier.id
             order._create_delivery_line(carrier, amount, price_unit_in_description=self.carrier_id.invoice_policy == 'real')
         return True
 
