@@ -66,7 +66,12 @@ var DataExport = Dialog.extend({
         this.$fieldsList = this.$('.o_fields_list');
 
         proms.push(this._rpc({route: '/web/export/formats'}).then(doSetupExportFormats));
-        proms.push(this._onChangeCompatibleInput());
+        proms.push(this._onChangeCompatibleInput().then(function () {
+            _.each(self.defaultExportFields, function (field) {
+                var record = self.records[field];
+                self._addField(record.id, record.string);
+            });
+        }));
 
         proms.push(this.getParent().getActiveDomain().then(function (domain) {
             if (domain === undefined) {
@@ -78,12 +83,7 @@ var DataExport = Dialog.extend({
             }
         }));
 
-        proms.push(this._showExportsList().then(function () {
-            _.each(self.defaultExportFields, function (field) {
-                var record = self.records[field];
-                self._addField(record.id, record.string);
-            });
-        }));
+        proms.push(this._showExportsList());
 
         // Bind sortable events after Dialog is open
         this.opened().then(function () {
