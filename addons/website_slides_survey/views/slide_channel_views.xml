@@ -30,8 +30,8 @@
                 <field name="nbr_certification"/>
             </xpath>
             <xpath expr="//span[@name='done_members_count_label']" position="replace">
-                <t t-if="record.nbr_certification.raw_value"><span class="text-secondary">Certified</span></t>
-                <t t-else=""><span class="text-secondary">Finished</span></t>
+                <t t-if="record.nbr_certification.raw_value"><span class="text-muted">Certified</span></t>
+                <t t-else=""><span class="text-muted">Finished</span></t>
             </xpath>
         </field>
     </record>
