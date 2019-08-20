@@ -998,7 +998,9 @@ class Field(MetaField('DummyField', (object,), {})):
         # update towrite
         if self.store:
             towrite = records.env.all.towrite[self.model_name]
-            column_value = self.convert_to_column(cache_value, records)
+            record = records[:1]
+            write_value = self.convert_to_write(cache_value, record)
+            column_value = self.convert_to_column(write_value, record)
             for record in records.filtered('id'):
                 towrite[record.id][self.name] = column_value
 
@@ -1435,9 +1437,9 @@ class _String(Field):
         # update towrite if modifying the source
         if update_column:
             towrite = records.env.all.towrite[self.model_name]
-            column_value = self.convert_to_column(cache_value, records)
             for record in records.filtered('id'):
-                towrite[record.id][self.name] = column_value
+                # cache_value is already in database format
+                towrite[record.id][self.name] = cache_value
             if self.translate is True:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, records.ids, value)
@@ -2424,9 +2426,9 @@ class Many2one(_Relational):
         # update towrite
         if self.store:
             towrite = records.env.all.towrite[self.model_name]
-            write_value = self.convert_to_column(self.convert_to_write(cache_value, records), records)
             for record in records.filtered('id'):
-                towrite[record.id][self.name] = write_value
+                # cache_value is already in database format
+                towrite[record.id][self.name] = cache_value
 
         return records
 
