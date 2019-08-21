@@ -304,7 +304,6 @@ class Repair(models.Model):
 
             if not group or len(current_invoices_list) == 0:
                 invoice_vals = {
-                    'name': repair.name,
                     'type': 'out_invoice',
                     'partner_id': partner_invoice.id,
                     'currency_id': currency.id,
@@ -344,19 +343,18 @@ class Repair(models.Model):
                     'tax_ids': [(6, 0, operation.tax_id.ids)],
                     'product_uom_id': operation.product_uom.id,
                     'price_unit': operation.price_unit,
-                    'price_subtotal': operation.product_uom_qty * operation.price_unit,
                     'product_id': operation.product_id.id,
                     'repair_line_ids': [(4, operation.id)],
                 }
 
                 if currency == company.currency_id:
-                    balance = -invoice_line_vals['price_subtotal']
+                    balance = -(operation.product_uom_qty * operation.price_unit)
                     invoice_line_vals.update({
                         'debit': balance > 0.0 and balance or 0.0,
                         'credit': balance < 0.0 and -balance or 0.0,
                     })
                 else:
-                    amount_currency = -invoice_line_vals['price_subtotal']
+                    amount_currency = -(operation.product_uom_qty * operation.price_unit)
                     balance = currency._convert(amount_currency, self.company_id.currency_id, self.company_id, fields.Date.today())
                     invoice_line_vals.update({
                         'amount_currency': amount_currency,
@@ -381,7 +379,6 @@ class Repair(models.Model):
                     raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
 
                 invoice_line_vals = {
-                    'type': 'out_invoice',
                     'name': name,
                     'account_id': account.id,
                     'quantity': fee.product_uom_qty,
@@ -390,17 +387,16 @@ class Repair(models.Model):
                     'price_unit': fee.price_unit,
                     'product_id': fee.product_id.id,
                     'repair_fee_ids': [(4, fee.id)],
-                    'invoice_line_ids': [],
                 }
 
                 if currency == company.currency_id:
-                    balance = -invoice_line_vals['price_subtotal']
+                    balance = -(fee.product_uom_qty * fee.price_unit)
                     invoice_line_vals.update({
                         'debit': balance > 0.0 and balance or 0.0,
                         'credit': balance < 0.0 and -balance or 0.0,
                     })
                 else:
-                    amount_currency = -invoice_line_vals['price_subtotal']
+                    amount_currency = -(fee.product_uom_qty * fee.price_unit)
                     balance = currency._convert(amount_currency, self.company_id.currency_id, self.company_id,
                                                 fields.Date.today())
                     invoice_line_vals.update({

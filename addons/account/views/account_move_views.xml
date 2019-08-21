@@ -821,6 +821,8 @@
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
                                         <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="invoice_user_id"/>
+                                        <field name="invoice_origin" string="Source Document"
+                                               attrs="{'invisible': [('type', '=', 'entry')]}"/>
                                     </group>
                                     <group string="Accounting Information"
                                            name="accounting_info_group"
