@@ -45,7 +45,8 @@ class TestSaleExpense(TestSale):
             'analytic_account_id': so.analytic_account_id.id,
             'unit_amount': 621.54,
             'employee_id': employee.id,
-            'sheet_id': sheet.id
+            'sheet_id': sheet.id,
+            'sale_order_id': so.id,
         })
         # Approve
         sheet.approve_expense_sheets()
@@ -74,7 +75,8 @@ class TestSaleExpense(TestSale):
             'unit_amount': 0.15,
             'quantity': 100,
             'employee_id': employee.id,
-            'sheet_id': sheet.id
+            'sheet_id': sheet.id,
+            'sale_order_id': so.id,
         })
         # Approve
         sheet.approve_expense_sheets()

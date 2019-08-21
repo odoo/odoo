@@ -197,6 +197,9 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
 
     def test_no_expense(self):
         """ Test invoicing expenses with no policy. Check nothing happen. """
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': "AA to track expense",
+        })
         # confirm SO
         sale_order_line = self.env['sale.order.line'].create({
             'name': self.product_no_expense.name,
@@ -220,18 +223,18 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'quantity': 3,
             'sheet_id': self.expense_sheet.id,
             'sale_order_id': self.sale_order.id,
-            'analytic_account_id': self.sale_order.analytic_account_id.id,
+            'analytic_account_id': analytic_account.id,
         })
-        expense1._onchange_product_id()
+        expense1._onchange_product_id()  # will reset the SO field to NULL
 
         # approve and generate entries
         self.expense_sheet.approve_expense_sheets()
         self.expense_sheet.action_sheet_move_create()
 
-        self.assertTrue(self.sale_order.analytic_account_id, "Posting expense with an expense product (even with no expense pilocy) should trigger the analytic account creation")
-        self.assertEquals(self.sale_order.analytic_account_id, expense1.analytic_account_id, "SO analytic account should be the same for the expense")
-        self.assertEquals(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) on expense report posting")
+        self.assertFalse(expense1.sale_order_id, "None reinvoicable expense can not be linked to SO")
+        self.assertFalse(self.sale_order.analytic_account_id, "Posting expense with an non expense product should not trigger analytic Account creation from SO, since non reinvoicable expense can not be linked to SO")
 
+        self.assertEquals(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) on expense report posting")
         self.assertEquals(sale_order_line.price_unit, self.product_no_expense.list_price, "The unit price of SO line should be the same")
         self.assertEquals(sale_order_line.product_uom_qty, 2, "The ordered quantity of SO line should be two")
         self.assertEquals(sale_order_line.qty_delivered, 0, "The delivered quantity of SO line should have been incremented")
