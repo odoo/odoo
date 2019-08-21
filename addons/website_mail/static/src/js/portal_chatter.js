@@ -8,6 +8,6 @@ var portalChatter = require('portal.chatter');
  */
 portalChatter.PortalChatter.include({
     xmlDependencies: (portalChatter.PortalChatter.prototype.xmlDependencies || [])
-        .concat(['/website_mail/static/src/xml/website_mail.xml']),
+        .concat(['/website_mail/static/src/xml/portal_chatter.xml']),
 });
 });
