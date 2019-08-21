@@ -1272,7 +1272,7 @@ class IrModelAccess(models.Model):
             else:
                 msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
                 msg_params = (model,)
-            msg_tail += ' - ({} {}, {} {})'.format(_('Operation:'), mode, _('User:'), self._uid)
+            msg_tail += u' - ({} {}, {} {})'.format(_('Operation:'), mode, _('User:'), self._uid)
             _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise AccessError(msg % msg_params)
