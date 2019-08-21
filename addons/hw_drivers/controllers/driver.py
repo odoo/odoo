@@ -5,7 +5,6 @@ from threading import Thread, Event, Lock
 from usb import core
 from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
-import netifaces
 import json
 from re import sub
 import urllib3
@@ -23,41 +22,10 @@ import ctypes
 
 from odoo import http, _
 from odoo.modules.module import get_resource_path
+from odoo.addons.hw_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
 
-
-#----------------------------------------------------------
-# Helper
-#----------------------------------------------------------
-
-def get_mac_address():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_LINK][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
-
-def get_ip():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
-
-def read_file_first_line(filename):
-    path = Path.home() / filename
-    if path.exists():
-        with path.open('r') as f:
-            return f.readline().strip('\n')
-    return ''
-
-def get_odoo_server_url():
-    return read_file_first_line('odoo-remote-server.conf')
-
-def get_token():
-    return read_file_first_line('token')
-
-def get_version():
-    return '19_07'
 
 #----------------------------------------------------------
 # Controllers
@@ -98,7 +66,7 @@ class StatusController(http.Controller):
         1 - url of odoo DB
         2 - token. This token will be compared to the token of Odoo. He have 1 hour lifetime
         """
-        server = get_odoo_server_url()
+        server = helpers.get_odoo_server_url()
         image = get_resource_path('hw_drivers', 'static/img', 'False.jpg')
         if server == '':
             token = b64decode(token).decode('utf-8')
@@ -268,14 +236,14 @@ class Manager(Thread):
         """
         This method send IoT Box and devices informations to Odoo database
         """
-        server = get_odoo_server_url()
+        server = helpers.get_odoo_server_url()
         if server:
             iot_box = {
                 'name': socket.gethostname(),
-                'identifier': get_mac_address(),
-                'ip': get_ip(),
-                'token': get_token(),
-                'version': get_version()
+                'identifier': helpers.get_mac_address(),
+                'ip': helpers.get_ip(),
+                'token': helpers.get_token(),
+                'version': helpers.get_version()
                 }
             devices_list = {}
             for device in iot_devices:
@@ -473,7 +441,7 @@ printers = conn.getPrinters()
 cups_lock = Lock()  # We can only make one call to Cups at a time
 
 mpdm = MPDManager()
-terminal_id = read_file_first_line('odoo-six-payment-terminal.conf')
+terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
 if terminal_id:
     try:
         subprocess.check_output(["pidof", "eftdvs"])  # Check if MPD server is running
