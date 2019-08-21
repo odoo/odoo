@@ -101,9 +101,11 @@ class ProductProduct(models.Model):
          - 'outgoing_qty'
          - 'free_qty'
          """
+        kits = self.env['product.product']
         for product in self:
             bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
             if bom_kit:
+                kits |= product
                 boms, bom_sub_lines = bom_kit.explode(product, 1)
                 ratios_virtual_available = []
                 ratios_qty_available = []
@@ -128,8 +130,7 @@ class ProductProduct(models.Model):
                     product.incoming_qty = min(ratios_incoming_qty) // 1
                     product.outgoing_qty = min(ratios_incoming_qty) // 1
                     product.free_qty = min(ratios_free_qty) // 1
-            else:
-                super(ProductProduct, self)._compute_quantities()
+        super(ProductProduct, self - kits)._compute_quantities()
 
     def action_view_bom(self):
         action = self.env.ref('mrp.product_open_bom').read()[0]
