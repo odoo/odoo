@@ -831,7 +831,7 @@ exports.PosModel = Backbone.Model.extend({
             self.flush_mutex.exec(function () {
                 var flushed = self._flush_orders(self.db.get_orders(), opts);
 
-                flushed.then(resolve, resolve);
+                flushed.then(resolve, reject);
 
                 return flushed;
             });
@@ -915,13 +915,14 @@ exports.PosModel = Backbone.Model.extend({
             });
 
             return server_ids;
-        }).catch(function(){
+        }).catch(function(error){
             var pending = self.db.get_orders().length;
             if (self.get('failed')) {
                 self.set('synch', { state: 'error', pending: pending });
             } else {
                 self.set('synch', { state: 'disconnected', pending: pending });
             }
+            return Promise.reject(error);
         });
     },
 
@@ -984,6 +985,7 @@ exports.PosModel = Backbone.Model.extend({
                     self.set('failed',error);
                 }
                 console.error('Failed to send orders:', orders);
+                throw error;
             });
     },
 
