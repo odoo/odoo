@@ -12,12 +12,13 @@ import werkzeug.routing
 import werkzeug.utils
 
 import odoo
-from odoo import api, models, registry
+from odoo import api, models, registry, fields
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import config, ormcache
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
+from odoo.osv import osv
 
 from odoo.addons.base.models.qweb import QWebException
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
@@ -87,17 +88,20 @@ class Http(models.AbstractModel):
             super(Http, cls)._auth_method_public()
 
     @classmethod
-    def _extract_website_page(cls, response):
-        if getattr(response, 'status_code', 0) != 200:
+    def _register_website_track(cls, response):
+        if getattr(response, 'status_code', 0) != 200 or not hasattr(response, 'qcontext'):
             return False
-
-        main_object = getattr(response, 'qcontext', {}).get('main_object')
-        return main_object if getattr(main_object, '_name', False) == 'website.page' else False
+        main_object = response.qcontext.get('main_object')
+        website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
+        template = response.qcontext.get('response_template')
+        view = template and request.env['website'].get_template(template)
+        if view and view.track:
+            request.env['website.visitor']._handle_webpage_dispatch(response, website_page)
 
     @classmethod
     def _dispatch(cls):
         response = super(Http, cls)._dispatch()
-        request.env['website.visitor']._handle_webpage_dispatch(response, cls._extract_website_page(response))
+        cls._register_website_track(response)
         return response
 
     @classmethod

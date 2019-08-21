@@ -4,139 +4,199 @@
 from datetime import datetime, timedelta
 from hashlib import sha256
 import hmac
+import uuid
 
 from odoo import fields, models, api, _
 from odoo.tools.misc import _consteq, _format_time_ago
 from odoo.http import request
+from odoo.osv import expression
 
 
-class WebsitVisitorPage(models.Model):
-    _name = 'website.visitor.page'
+class WebsiteTrack(models.Model):
+    _name = 'website.track'
     _description = 'Visited Pages'
     _order = 'visit_datetime DESC'
     _log_access = False
 
     visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
     page_id = fields.Many2one('website.page', index=True, ondelete='cascade', readonly=True)
+    url = fields.Text('Url', index=True)
     visit_datetime = fields.Datetime('Visit Date', default=fields.Datetime.now, required=True, readonly=True)
+
+
+class VisitorLastConnection(models.Model):
+    _name = 'website.visitor.lastconnection'
+    _description = 'temporary table for Visitor'
+
+    visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
+    connection_datetime = fields.Datetime(default=fields.Datetime.now, required=True, readonly=True)
 
 
 class WebsiteVisitor(models.Model):
     _name = 'website.visitor'
     _description = 'Website Visitor'
-    _order = 'last_connection_datetime DESC'
+    _order = 'create_date DESC'
 
     name = fields.Char('Name', default=_('Website Visitor'))
+    access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=True, copy=False, groups='base.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
     user_partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
     create_date = fields.Datetime('First connection date', readonly=True)
-    last_connection_datetime = fields.Datetime('Last Connection', help="Last page view date", readonly=True)
+    last_connection_datetime = fields.Datetime('Last Connection', compute="_compute_time_statistics", help="Last page view date", search='_search_last_connection', readonly=True)
+    last_connections_ids = fields.One2many('website.visitor.lastconnection', 'visitor_id', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     country_flag = fields.Binary(related="country_id.image", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
-    visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
-    visitor_page_ids = fields.One2many('website.visitor.page', 'visitor_id', string='Visited Pages History', readonly=True)
-    visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics")
-    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics", store=True)
-    page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics")
+    visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 24 hours ago.")
+    website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
+    visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
+    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
+    page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
 
-    @api.depends('visitor_page_ids')
+    @api.depends('name')
+    def name_get(self):
+        ret_list = []
+        for record in self:
+            name = '%s #%d' % (record.name, record.id)
+            ret_list.append((record.id, name))
+        return ret_list
+
+    @api.model
+    def _search_last_connection(self, operator, value):
+        assert operator in expression.TERM_OPERATORS
+        self.env['website.visitor.lastconnection'].flush(['visitor_id'])
+        query = """
+            SELECT v.visitor_id
+            FROM website_visitor_lastconnection v
+            WHERE v.connection_datetime %s %%s
+            GROUP BY v.visitor_id, v.connection_datetime
+            ORDER BY v.connection_datetime
+        """ % (operator,)
+        return [('id', 'inselect', (query, [value]))]
+
+    @api.depends('website_track_ids')
     def _compute_page_statistics(self):
-        results = self.env['website.visitor.page'].read_group(
-            [('visitor_id', 'in', self.ids)], ['visitor_id', 'page_id'], ['visitor_id', 'page_id'], lazy=False)
+        results = self.env['website.track'].read_group(
+            [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id', 'url'], ['visitor_id', 'page_id', 'url'], lazy=False)
         mapped_data = {}
         for result in results:
-            visitor_info = mapped_data.get(result['visitor_id'][0], {'page_count': 0, 'page_ids': set()})
-            visitor_info['page_count'] += result['__count']
-            visitor_info['page_ids'].add(result['page_id'][0])
+            visitor_info = mapped_data.get(result['visitor_id'][0], {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
+            visitor_info['visitor_page_count'] += result['__count']
+            visitor_info['page_count'] += 1
+            if result['page_id']:
+                visitor_info['page_ids'].add(result['page_id'][0])
             mapped_data[result['visitor_id'][0]] = visitor_info
 
         for visitor in self:
             visitor_info = mapped_data.get(visitor.id, {'page_ids': [], 'page_count': 0})
-
             visitor.page_ids = [(6, 0, visitor_info['page_ids'])]
-            visitor.visitor_page_count = visitor_info['page_count']
-            visitor.page_count = len(visitor_info['page_ids'])
+            visitor.visitor_page_count = visitor_info['visitor_page_count']
+            visitor.page_count = visitor_info['page_count']
 
-    @api.depends('last_connection_datetime')
+    @api.depends('last_connections_ids')
     def _compute_time_statistics(self):
-        results = self.env['website.visitor'].search_read([('id', 'in', self.ids)], ['id', 'last_connection_datetime'])
-        mapped_data = {result['id']: result['last_connection_datetime'] for result in results}
-
+        results = self.env['website.visitor.lastconnection'].read_group([('visitor_id', 'in', self.ids)], ['visitor_id', 'connection_datetime:max'], ['visitor_id'])
+        mapped_data = {result['visitor_id'][0]: result['connection_datetime'] for result in results}
         for visitor in self:
-            last_connection_date = mapped_data[visitor.id]
-            visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_date))
-            visitor.is_connected = (datetime.now() - last_connection_date) < timedelta(minutes=5)
+            last_connection_datetime = mapped_data.get(visitor.id, False)
+            if last_connection_datetime:
+                visitor.last_connection_datetime = last_connection_datetime
+                visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_datetime))
+                visitor.is_connected = (datetime.now() - last_connection_datetime) < timedelta(minutes=5)
 
-    def _get_visitor_sign(self):
-        return {visitor.id: "%d-%s" % (visitor.id, self._get_visitor_hash(visitor.id)) for visitor in self}
-
-    @api.model
-    def _get_visitor_hash(self, visitor_id):
-        db_secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-        return hmac.new(str(visitor_id).encode('utf-8'), db_secret.encode('utf-8'), sha256).hexdigest()
-
-    def _get_visitor_from_request(self):
+    def _get_visitor_from_request(self, with_previous_visitors=False):
         if not request:
             return None
-        visitor = self.env['website.visitor']
-        cookie_content = request.httprequest.cookies.get('visitor_id')
-        if cookie_content and '-' in cookie_content:
-            visitor_id, visitor_hash = cookie_content.split('-', 1)
-            if _consteq(visitor_hash, self._get_visitor_hash(visitor_id)):
-                return visitor.sudo().with_context(active_test=False).search([('id', '=', visitor_id)])  # search to avoid having to call exists()
-        return visitor
+        if with_previous_visitors and not request.env.user._is_public():
+            partner_id = request.env.user.partner_id
+            # Retrieve all the previous partner's visitors to have full history of his last products viewed.
+            return request.env['website.visitor'].sudo().with_context(active_test=False).search([('user_partner_id', '=', partner_id.id)])
+        else:
+            visitor = self.env['website.visitor']
+            access_token = request.httprequest.cookies.get('visitor_id')
+            if access_token:
+                visitor = visitor.sudo().with_context(active_test=False).search([('access_token', '=', access_token)])
+            return visitor
 
     def _handle_webpage_dispatch(self, response, website_page):
-        if website_page:
-            # get visitor only if page tracked. Done here to avoid having to do it multiple times in case of override.
-            visitor_sudo = self._get_visitor_from_request() if website_page.is_tracked else False
-            self._handle_website_page_visit(response, website_page, visitor_sudo)
+        # get visitor. Done here to avoid having to do it multiple times in case of override.
+        visitor_sudo = self._get_visitor_from_request()
+        self._handle_website_page_visit(response, website_page, visitor_sudo)
 
     def _handle_website_page_visit(self, response, website_page, visitor_sudo):
         """ Called on dispatch. This will create a website.visitor if the http request object
-        is a tracked website page. Only on tracked page to avoid having too much operations done on every page
-        or other http requests.
-        Note: The side effect is that the last_connection_datetime is updated ONLY on tracked pages."""
-        if website_page.is_tracked:
-            if not visitor_sudo:
-                # If visitor does not exist
-                visitor_sudo = self._create_visitor(website_page.id)
-                sign = visitor_sudo._get_visitor_sign().get(visitor_sudo.id)
-                expiration_date = datetime.now() + timedelta(days=100*365)  # never expire
-                response.set_cookie('visitor_id', sign, expires=expiration_date.timestamp())
-            else:
-                # Add page even if already in visitor_page_ids as checks on relations are done in many2many write method
-                vals = {
-                    'last_connection_datetime': datetime.now(),
-                    'visitor_page_ids': [(0, 0, {'page_id': website_page.id, 'visit_datetime': datetime.now()})],
-                }
-                if visitor_sudo.last_connection_datetime < (datetime.now() - timedelta(hours=8)):
-                    vals['visit_count'] = visitor_sudo.visit_count + 1
-                if not visitor_sudo.active:
-                    vals['active'] = True
-                visitor_sudo.write(vals)
+        is a tracked website page or a tracked view. Only on tracked elements to avoid having
+        too much operations done on every page or other http requests.
+        Note: The side effect is that the last_connection_datetime is updated ONLY on tracked elements."""
+        url = request.httprequest.url
+        website_track_values = {
+            'url': url,
+            'visit_datetime': datetime.now(),
+        }
+        if website_page:
+            website_track_values['page_id'] = website_page.id
+            domain = [('page_id', '=', website_page.id)]
+        else:
+            domain = [('url', '=', url)]
+        if not visitor_sudo:
+            visitor_sudo = self._create_visitor(website_track_values)
+            expiration_date = datetime.now() + timedelta(days=365)
+            response.set_cookie('visitor_id', visitor_sudo.access_token, expires=expiration_date)
+        else:
+            visitor_sudo._add_tracking(domain, website_track_values)
 
-    def _create_visitor(self, website_page_id=False):
+    def _add_tracking(self, domain, website_track_values):
+        """ Update the visitor when a website_track is added"""
+        domain = expression.AND([domain, [('visitor_id', '=', self.id)]])
+        last_view = self.env['website.track'].sudo().search(domain, limit=1)
+        if not last_view or last_view.visit_datetime < datetime.now() - timedelta(minutes=30):
+            website_track_values['visitor_id'] = self.id
+            self.env['website.track'].create(website_track_values)
+        self.env['website.visitor.lastconnection'].create({'visitor_id': self.id,
+        'connection_datetime': website_track_values['visit_datetime']})
+
+    def _create_visitor(self, website_track_values=None):
+        """ Create a visitor and add a track to it if website_track_values is set."""
         country_code = request.session.get('geoip', {}).get('country_code', False)
         country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id if country_code else False
         vals = {
-            'last_connection_datetime': datetime.now(),
             'lang_id': request.lang.id,
             'country_id': country_id,
-            'website_id': request.website.id
+            'last_connections_ids': [(0, 0, {'connection_datetime': website_track_values['visit_datetime'] or datetime.now()})],
         }
         if not self.env.user._is_public():
             vals['user_partner_id'] = self.env.user.partner_id.id
-        if website_page_id:
-            vals['visitor_page_ids'] = [(0, 0, {'page_id': website_page_id, 'visit_datetime': datetime.now()})]
-        # Set signed visitor id in cookie
+            vals['name'] = self.env.user.partner_id.name
+        if website_track_values:
+            vals['website_track_ids'] = [(0, 0, website_track_values)]
         return self.sudo().create(vals)
 
     def _cron_archive_visitors(self):
+        self.flush(['visit_count'])
+        yesterday = datetime.now() - timedelta(days=1)
+        query = """
+            UPDATE website_visitor
+            SET visit_count = visit_count + 1
+            WHERE id in (
+                SELECT visitor_id
+                FROM website_visitor_lastconnection
+                GROUP BY visitor_id
+                HAVING COUNT(*) > 1)
+        """
+        self.env.cr.execute(query, [yesterday])
+
+        query = """
+            DELETE FROM website_visitor_lastconnection
+            WHERE (visitor_id, connection_datetime) not in (
+               SELECT v.visitor_id, max(connection_datetime)
+               FROM website_visitor_lastconnection v
+               GROUP BY v.visitor_id)
+        """
+        self.env.cr.execute(query, [])
+
         one_week_ago = datetime.now() - timedelta(days=7)
         visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', one_week_ago)])
         visitors_to_archive.write({'active': False})

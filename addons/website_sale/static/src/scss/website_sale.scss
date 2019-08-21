@@ -537,3 +537,34 @@ a.no-decoration {
 .o_shadow_animation {
     box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important;
 }
+
+/* product recently viewed snippet */
+
+.o_carousel_product_card {
+    .o_carousel_product_card_img_top {
+        object-fit: scale-down;
+        @include media-breakpoint-down(sm) {
+            height: 12rem;
+        }
+        @include media-breakpoint-up(md) {
+            height: 8rem;
+        }
+        @include media-breakpoint-up(lg) {
+            height: 12rem;
+        }
+    }
+}
+
+.o_carousel_product_card_wrap {
+    @include media-breakpoint-up(sm) {
+        float: left;
+    }
+}
+
+.o_carousel_product_control {
+    top: percentage(1/3);
+    bottom: percentage(1/3);
+    width: 2rem;
+    border-radius: 5px;
+    background-color: $o-enterprise-primary-color;
+}
