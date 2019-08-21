@@ -56,7 +56,7 @@
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <field name="analytic_account_active" invisible="1"/>
                     <field name="allow_timesheets" invisible="1"/>
-                    <page string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                    <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <group>
                             <group>
                                 <field name="planned_hours" widget="float_time"/>
