@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import werkzeug.urls
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
@@ -55,7 +56,7 @@ class AccountMove(models.Model):
             record.l10n_ch_isr_subscription = isr_subscription
             record.l10n_ch_isr_subscription_formatted = isr_subscription_formatted
 
-    @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal')
+    @api.depends('name', 'invoice_partner_bank_id.l10n_ch_isr_subscription_eur', 'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_number(self):
         """ The ISR reference number is 27 characters long. The first 12 of them
         contain the postal account number of this ISR's issuer, removing the zeros
@@ -189,3 +190,107 @@ class AccountMove(models.Model):
         if self.env.context.get('l10n_ch_mark_isr_as_sent'):
             self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
         return super(AccountMove, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+
+    @api.model
+    def _combine_address_fields(self, address):
+        """Combine street fields in one string and zip + city in a second"""
+        street_fields = ['street', 'street2']
+        city_fields = ['zip', 'city']
+        return [
+            ' '.join(address[f] for f in street_fields if address[f]),
+            ' '.join(address[f] for f in city_fields if address[f])
+        ]
+
+    @api.model
+    def _build_swiss_code_url(
+            self, iban, amount, currency, date_due, creditor,
+            debitor, ref_type, reference, comment, bill_info):
+        """
+        https://www.paymentstandards.ch/dam/downloads/ig-qr-bill-en.pdf
+        Chapter 4.3.3 Data elements in the QR-bill
+        """
+        communication = ""
+        if comment:
+            communication = (comment[:137] + '...') if len(comment) > 140 else comment
+        cred_addr_lines = self._combine_address_fields(creditor)
+        deb_addr_lines = self._combine_address_fields(debitor)
+        cred_country_code = creditor.country_id.code
+        deb_country_code = debitor.country_id.code
+
+        qr_code_content = [
+            # Header
+            'SPC',                      # QRType
+            '0200',                     # Version
+            '1',                        # Coding type
+            # Creditor information (Account / Payable to)
+            iban,  # IBAN (IBAN or QR-IBAN)
+            # + Creditor
+            creditor.name,              # CR - Name
+            'K',                        # CR - AdressTyp (S: structured, K: combined)
+            cred_addr_lines[0],         # CR - Street or address line 1
+            cred_addr_lines[1],         # CR - Building number or address line 2
+            '',                         # CR - Postal code (keep empty with K)
+            '',                         # CR - City (keep empty with K)
+            cred_country_code,          # CR - Country
+            # Ultimate creditor (In favor of) - Do not fill
+            '',                         # UCR - Name
+            '',                         # UCR - AdressTyp
+            '',                         # UCR - Street or address line 1
+            '',                         # UCR - Building number or address line 2
+            '',                         # UCR - Postal code
+            '',                         # UCR - City
+            '',                         # UCR - Country
+            # Payment amount information
+            str(round(amount, 2)),      # Amount max 12-digits "." separator incl.
+            currency,                   # Currency (CHF or EUR)
+            # Ultimate Debtor (Payable by)
+            debitor.name,               # UD - Name
+            'K',                        # UD - AdressTyp (S: structured, K: combined)
+            deb_addr_lines[0],          # UD - Street or address line 1
+            deb_addr_lines[1],          # UD - Building number or address line 2
+            '',                         # UD - Postal code (keep empty with K)
+            '',                         # UD - City (keep empty with K)
+            deb_country_code,           # UD - Country
+            # Payment reference
+            ref_type,                   # Reference type
+            reference,                  # Reference
+            # Additional information
+            communication,              # Unstructured message
+            'EPD',                      # Trailer
+            bill_info,                  # Bill information (recommendation from Swico)
+        ]
+
+        qr_code_string = '\n'.join(qr_code_content)
+        qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.url_quote_plus(qr_code_string), 256, 256)
+        return qr_code_url
+
+    def build_swiss_code_url(self):
+        return self._build_swiss_code_url(
+            iban=self.invoice_partner_bank_id.sanitized_acc_number,
+            amount=self.amount_residual,
+            currency=self.currency_id.name,
+            date_due=self.invoice_date_due,
+            creditor=self.company_id,
+            debitor=self.partner_id,
+            ref_type='QRR',
+            reference=self.l10n_ch_isr_number,
+            comment=self.ref or self.name,
+            bill_info='')
+
+    def validate_swiss_code_arguments(self):
+        """Account number must be a QR-IBAN to generate Swiss QR-Invoice
+        """
+        creditor = self.company_id
+        debitor = self.partner_id
+        bank_account = self.invoice_partner_bank_id
+
+        return (bank_account.acc_type == 'qr-iban' and
+                self.l10n_ch_isr_number and
+                creditor.zip and
+                creditor.city and
+                (creditor.street or creditor.street2) and
+                creditor.country_id.code and
+                debitor.zip and
+                debitor.city and
+                (debitor.street or debitor.street2) and
+                debitor.country_id.code)
