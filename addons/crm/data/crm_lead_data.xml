@@ -28,6 +28,12 @@
             <field name="default" eval="False"/>
             <field name="description">Opportunity lost</field>
         </record>
+        <record id="mt_lead_restored" model="mail.message.subtype">
+            <field name="name">Opportunity Restored</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Opportunity restored</field>
+        </record>
         <!-- Salesteam-related subtypes for messaging / Chatter -->
         <record id="mt_salesteam_lead" model="mail.message.subtype">
             <field name="name">Opportunity Created</field>
@@ -57,6 +63,14 @@
             <field name="res_model">crm.team</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_lead_lost')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_restored" model="mail.message.subtype">
+            <field name="name">Opportunity Restored</field>
+            <field name="sequence">14</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_lead_restored')"/>
             <field name="relation_field">team_id</field>
         </record>
 

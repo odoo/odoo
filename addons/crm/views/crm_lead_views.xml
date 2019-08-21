@@ -93,8 +93,8 @@
                                                 attrs="{'invisible': [('is_automated_probability', '=', True)]}">
                                             <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
                                         </button>
-                                        <small class="oe_grey" attrs="{'invisible': [('is_automated_probability', '=', True)]}"><field name="automated_probability"/> %%</small>
-                                    </span>
+                                        <small class="oe_grey" attrs="{'invisible': [('is_automated_probability', '=', True)]}"><field name="automated_probability"/> %% (Estimated by Odoo)</small>
+                                        </span>
                                     <div id="probability" class="o_row d-flex">
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline"/>
@@ -248,7 +248,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="lead" string="Followup" attrs="{'invisible': [('type', '=', 'lead')]}">
+                            <page name="lead" string="Follow-up" attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <group>
                                     <group string="Contact Information">
                                         <field name="partner_name"/>
