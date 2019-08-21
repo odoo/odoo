@@ -469,7 +469,14 @@ class AccountMove(models.Model):
                     is_refund=self.type in ('out_refund', 'in_refund'),
                 )
                 for b_tax_res, ac_tax_res in zip(balance_taxes_res['taxes'], amount_currency_taxes_res['taxes']):
+                    tax = self.env['account.tax'].browse(b_tax_res['id'])
                     b_tax_res['amount_currency'] = ac_tax_res['amount']
+
+                    # A tax having a fixed amount must be converted into the company currency when dealing with a
+                    # foreign currency.
+                    if tax.amount_type == 'fixed':
+                        b_tax_res['amount'] = base_line.currency_id._convert(b_tax_res['amount'], move.company_id.currency_id, move.company_id, move.date)
+
             return balance_taxes_res
 
         taxes_map = {}
