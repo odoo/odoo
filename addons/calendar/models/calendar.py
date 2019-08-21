@@ -1656,7 +1656,22 @@ class Meeting(models.Model):
         for calendar_id, real_id in select:
             if not real_data.get(real_id):
                 continue
-            res = real_data[real_id]
+            res = real_data[real_id].copy()
+            ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
+            if not isinstance(ls, (str, int)) and len(ls) >= 2:
+                res['start'] = ls[1]
+                res['stop'] = ls[2]
+
+                if res['allday']:
+                    res['start_date'] = ls[1]
+                    res['stop_date'] = ls[2]
+                else:
+                    res['start_datetime'] = ls[1]
+                    res['stop_datetime'] = ls[2]
+
+                if 'display_time' in fields:
+                    res['display_time'] = self._get_display_time(ls[1], ls[2], res['duration'], res['allday'])
+
             res['id'] = calendar_id
             result.append(res)
 
