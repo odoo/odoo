@@ -240,6 +240,8 @@ class MrpWorkorder(models.Model):
                 order.last_working_user_id = order.working_user_ids[-1]
             elif order.time_ids:
                 order.last_working_user_id = order.time_ids.sorted('date_end')[-1].user_id
+            else:
+                order.last_working_user_id = False
             if order.time_ids.filtered(lambda x: (x.user_id.id == self.env.user.id) and (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 order.is_user_working = True
             else:
