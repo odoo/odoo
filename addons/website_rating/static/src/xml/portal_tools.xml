@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
     <t t-name="website_rating.rating_stars_static">
         <t t-set="val_integer" t-value="Math.floor(val)"/>
         <t t-set="val_decimal" t-value="val - val_integer"/>
@@ -85,5 +84,4 @@
             <input type="hidden" readonly="readonly" name="rating_value" t-att-value="default_rating || ''"/>
         </div>
     </t>
-
 </templates>
