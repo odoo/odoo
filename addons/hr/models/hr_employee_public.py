@@ -28,6 +28,7 @@ class HrEmployeePublic(models.Model):
     user_id = fields.Many2one(readonly=True)
     resource_id = fields.Many2one(readonly=True)
     resource_calendar_id = fields.Many2one(readonly=True)
+    tz = fields.Selection(readonly=True)
     color = fields.Integer(readonly=True)
 
     # hr.employee.public specific fields

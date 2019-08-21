@@ -1432,10 +1432,10 @@ QUnit.module('Views', {
     QUnit.test('width of some of the fields should be hardcoded', async function (assert) {
         const assertions = [
             { field: 'bar', expected: 40, type: 'Boolean' },
-            { field: 'int_field', expected: 80, type: 'Integer' },
-            { field: 'qux', expected: 100, type: 'Float' },
-            { field: 'date', expected: 100, type: 'Date' },
-            { field: 'datetime', expected: 150, type: 'Datetime' },
+            { field: 'int_field', expected: 74, type: 'Integer' },
+            { field: 'qux', expected: 92, type: 'Float' },
+            { field: 'date', expected: 92, type: 'Date' },
+            { field: 'datetime', expected: 146, type: 'Datetime' },
         ];
         assert.expect(assertions.length + 1);
 
@@ -1497,9 +1497,8 @@ QUnit.module('Views', {
         });
 
         // the width is hardcoded to make sure we have the same condition
-        // between debug mode and non debug mode (#qunit-fixture is limited to
-        // 1000px)
-        list.$el.width('1000px');
+        // between debug mode and non debug mode
+        list.$el.width('1200px');
         var startHeight = list.$('.o_data_row:first').height();
 
         // start edition of first row

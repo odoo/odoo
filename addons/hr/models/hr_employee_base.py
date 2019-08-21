@@ -26,6 +26,9 @@ class HrEmployeeBase(models.AbstractModel):
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    tz = fields.Selection(
+        string='Timezone', related='resource_id.tz', readonly=False,
+        help="This field is used in order to define in which timezone the resources will work.")
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),

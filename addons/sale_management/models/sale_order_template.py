@@ -50,7 +50,7 @@ class SaleOrderTemplate(models.Model):
             template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
             for template in self:
                 if template_id and template_id == template.id:
-                    raise UserError('Before archiving "%s" please select another default template in the settings.' % template.name)
+                    raise UserError(_('Before archiving "%s" please select another default template in the settings.') % template.name)
         return super(SaleOrderTemplate, self).write(vals)
 
 
@@ -99,7 +99,7 @@ class SaleOrderTemplateLine(models.Model):
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")
+            raise UserError(_("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
         return super(SaleOrderTemplateLine, self).write(values)
 
     _sql_constraints = [
