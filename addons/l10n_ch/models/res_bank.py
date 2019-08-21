@@ -5,22 +5,14 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.tools.misc import mod10r
+from odoo.exceptions import ValidationError
 
 import werkzeug.urls
 
-def _is_l10n_ch_postal(account_ref):
-    """ Returns True iff the string account_ref is a valid postal account number,
-    i.e. it only contains ciphers and is last cipher is the result of a recursive
-    modulo 10 operation ran over the rest of it. Shorten form with - is also accepted.
-    """
-    if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', account_ref or ''):
-        ref_subparts = account_ref.split('-')
-        account_ref = ref_subparts[0] + ref_subparts[1].rjust(6,'0') + ref_subparts[2]
+from ..tools.postfinance import is_postal_num, is_postfinance_iban, iban_to_postal
 
-    if re.match('\d+$', account_ref or ''):
-        account_ref_without_check = account_ref[:-1]
-        return mod10r(account_ref_without_check) == account_ref
-    return False
+# backward compatibility
+_is_l10n_ch_postal = is_postal_num
 
 
 class ResPartnerBank(models.Model):
@@ -64,12 +56,7 @@ class ResPartnerBank(models.Model):
         """ Overridden method enabling the recognition of swiss postal bank
         account numbers.
         """
-        acc_number_split = ""
-        # acc_number_split is needed to continue to recognize the account
-        # as a postal account even if the difference
-        if acc_number and " " in acc_number:
-            acc_number_split = acc_number.split(" ")[0]
-        if _is_l10n_ch_postal(acc_number) or (acc_number_split and _is_l10n_ch_postal(acc_number_split)):
+        if is_postal_num(acc_number) and not acc_number[:2] in ["01", "03"]:
             return 'postal'
         else:
             return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
@@ -77,26 +64,19 @@ class ResPartnerBank(models.Model):
     @api.onchange('acc_number', 'partner_id', 'acc_type')
     def _onchange_set_l10n_ch_postal(self):
         if self.acc_type == 'iban':
-            self.l10n_ch_postal = self._retrieve_l10n_ch_postal(self.sanitized_acc_number)
-        elif self.acc_type == 'postal':
-            if self.acc_number and " " in self.acc_number:
-                self.l10n_ch_postal = self.acc_number.split(" ")[0]
-            else:
-                self.l10n_ch_postal = self.acc_number
-                if self.partner_id:
-                    self.acc_number = self.acc_number + '  ' + self.partner_id.name
+            self.l10n_ch_postal = iban_to_postal(self.sanitized_acc_number)
+        elif is_postal_num(self.acc_number):
+            self.l10n_ch_postal = self.acc_number
+            # In case of ISR issuer, this number is not
+            # unique and we fill acc_number with partner
+            # name to give proper information to the user
+            if self.acc_number[:2] in ["01", "03"]:
+                self.acc_number = _("ISR {} {}").format(self.acc_number, self.partner_id.name)
 
     @api.model
     def _retrieve_l10n_ch_postal(self, iban):
-        """ Reads a swiss postal account number from a an IBAN and returns it as
-        a string. Returns None if no valid postal account number was found, or
-        the given iban was not from Switzerland.
-        """
-        if iban[:2] == 'CH':
-            #the IBAN corresponds to a swiss account
-            if _is_l10n_ch_postal(iban[-12:]):
-                return iban[-12:]
-        return None
+        # Deprecated
+        return iban_to_postal(iban)
 
     def find_number(self, s):
         # DEPRECATED FUNCTION: not used anymore. QR-bills don't use structured addresses
