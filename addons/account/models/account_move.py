@@ -433,22 +433,40 @@ class AccountMove(models.Model):
             :param base_line:   The account.move.line owning the taxes.
             :return:            The result of the compute_all method.
             '''
+            move = base_line.move_id
+
+            if move.is_invoice():
+                sign = -1 if move.is_inbound() else 1
+                quantity = base_line.quantity
+                if base_line.currency_id:
+                    price_unit_foreign_curr = sign * base_line.price_unit * (1 - (base_line.discount / 100.0))
+                    price_unit_comp_curr = base_line.currency_id._convert(price_unit_foreign_curr, move.company_id.currency_id, move.company_id, move.date)
+                else:
+                    price_unit_foreign_curr = 0.0
+                    price_unit_comp_curr = sign * base_line.price_unit * (1 - (base_line.discount / 100.0))
+            else:
+                quantity = 1.0
+                price_unit_foreign_curr = base_line.amount_currency
+                price_unit_comp_curr = base_line.balance
+
             balance_taxes_res = base_line.tax_ids._origin.compute_all(
-                base_line.balance,
+                price_unit_comp_curr,
                 currency=base_line.company_currency_id,
+                quantity=quantity,
+                product=base_line.product_id,
                 partner=base_line.partner_id,
                 is_refund=self.type in ('out_refund', 'in_refund'),
-                handle_price_include=False,
             )
 
             if base_line.currency_id:
                 # Multi-currencies mode: Taxes are computed both in company's currency / foreign currency.
                 amount_currency_taxes_res = base_line.tax_ids._origin.compute_all(
-                    base_line.amount_currency,
+                    price_unit_foreign_curr,
                     currency=base_line.currency_id,
+                    quantity=quantity,
+                    product=base_line.product_id,
                     partner=base_line.partner_id,
                     is_refund=self.type in ('out_refund', 'in_refund'),
-                    handle_price_include=False,
                 )
                 for b_tax_res, ac_tax_res in zip(balance_taxes_res['taxes'], amount_currency_taxes_res['taxes']):
                     b_tax_res['amount_currency'] = ac_tax_res['amount']
