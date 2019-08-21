@@ -18,21 +18,13 @@
                     <group>
                         <group name="activity_details">
                             <field name="category"/>
+                            <field name="default_user_id" widget="selection"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
                             <field name="res_model_change" invisible="1"/>
                             <field name="initial_res_model_id" invisible="1"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
-                            <label for="delay_count"/>
-                            <div>
-                                <div class="o_row">
-                                    <field name="delay_count"/>
-                                    <field name="delay_unit"/>
-                                </div>
-                                <field name="delay_from"/>
-                            </div>
-                            <field name="default_user_id" widget="selection"/>
                         </group>
                         <group name="activity_planning">
                             <field name="force_next"/>
@@ -46,6 +38,14 @@
                         </group>
                         <group>
                             <field name="default_description"/>
+                            <label for="delay_count"/>
+                            <div>
+                                <div class="o_row">
+                                    <field name="delay_count"/>
+                                    <field name="delay_unit"/>
+                                </div>
+                                <field name="delay_from"/>
+                            </div>
                         </group>
                     </group>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
