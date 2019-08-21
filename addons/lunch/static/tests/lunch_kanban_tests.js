@@ -177,6 +177,56 @@ QUnit.module('LunchKanbanView', {
 
     QUnit.module('LunchKanbanWidget', function () {
 
+        QUnit.test('search panel domain location', function (assert) {
+            assert.expect(10);
+            const locationId = this.data['lunch.location'].records[0].id;
+            const regularInfos = _.extend({}, this.regularInfos);
+
+            const kanban = createLunchKanbanView({
+                View: LunchKanbanView,
+                model: 'product',
+                data: this.data,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><field name="name"/></div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                mockRPC: function (route, args) {
+                    assert.step(route);
+
+                    if (route.startsWith('/lunch')) {
+                        return mockLunchRPC({
+                            infos: regularInfos,
+                            userLocation: locationId,
+                        }).apply(this, arguments);
+                    }
+                    if (args.method === 'search_panel_select_multi_range') {
+                        assert.deepEqual(args.kwargs.search_domain, [["is_available_at", "in", [locationId]]],
+                            'The initial domain of the search panel must contain the user location');
+                    }
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain, [["is_available_at", "in", [locationId]]],
+                            'The domain for fetching actual data should be correct');
+                    }
+                    return this._super.apply(this, arguments);
+                }
+            });
+            assert.verifySteps([
+                '/lunch/user_location_get',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/search_read',
+                '/lunch/infos',
+                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
+            ])
+
+            kanban.destroy();
+        });
+
         QUnit.test('empty cart', function (assert) {
             assert.expect(3);
 

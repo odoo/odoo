@@ -141,7 +141,7 @@ var KanbanView = BasicView.extend({
      * @param {Widget} parent
      * @returns {$.Promise} resolved when the searchPanel is ready
      */
-    _createSearchPanel: function (parent) {
+    _createSearchPanel: function (parent, params) {
         var self = this;
         var defaultValues = {};
         Object.keys(this.loadParams.context).forEach(function (key) {
@@ -150,7 +150,7 @@ var KanbanView = BasicView.extend({
                 defaultValues[match[1]] = self.loadParams.context[key];
             }
         });
-        var controlPanelDomain = this.loadParams.domain;
+        var controlPanelDomain = params && params.loadDomain ? params.loadDomain : this.loadParams.domain;
         var searchPanel = new this.config.SearchPanel(parent, {
             defaultValues: defaultValues,
             fields: this.fields,

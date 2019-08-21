@@ -18,6 +18,21 @@ var LunchKanbanView = KanbanView.extend({
         Renderer: LunchKanbanRenderer,
     }),
     display_name: _lt('Lunch Kanban'),
+
+    /**
+     * Injects an additional domain in the search panel
+     *
+     * @override
+     */
+    _createSearchPanel: function (parent, params) {
+        var self = this;
+        var model = this.getModel(parent);
+        var _super = this._super.bind(this);
+        return model._getAdditionalSearchPanelDomain().then(function (domain) {
+            domain = domain.concat(self.loadParams.domain);
+            return _super(parent, {loadDomain: domain});
+        });
+    },
 });
 
 view_registry.add('lunch_kanban', LunchKanbanView);

@@ -117,8 +117,8 @@ var LunchKanbanController = KanbanController.extend({
      * @private
      */
     _updateSearchPanel: function () {
-        var locationId = this.model.getCurrentLocationId();
-        var domain = this.controlPanelDomain.concat([['is_available_at', 'in', [locationId]]]);
+        var locationLeaf = this.model._buildLocationDomainLeaf();
+        var domain = this.controlPanelDomain.concat([locationLeaf]);
         return this._searchPanel.update({searchDomain: domain});
     },
 
