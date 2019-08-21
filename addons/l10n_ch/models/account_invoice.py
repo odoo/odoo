@@ -7,6 +7,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
+from .res_bank import pretty_l10n_ch_postal
 
 
 l10n_ch_ISR_NUMBER_LENGTH = 27
@@ -31,13 +32,6 @@ class AccountMove(models.Model):
     @api.depends('invoice_partner_bank_id.l10n_ch_isr_subscription_eur', 'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):
         """ Computes the ISR subscription identifying your company or the bank that allows to generate ISR. And formats it accordingly"""
-        def _format_isr_subscription(isr_subscription):
-            #format the isr as per specifications
-            currency_code = isr_subscription[:2]
-            middle_part = isr_subscription[2:-1]
-            trailing_cipher = isr_subscription[-1]
-            middle_part = re.sub('^0*', '', middle_part)
-            return currency_code + '-' + middle_part + '-' + trailing_cipher
 
         def _format_isr_subscription_scanline(isr_subscription):
             # format the isr for scanline
@@ -46,19 +40,21 @@ class AccountMove(models.Model):
         for record in self:
             record.l10n_ch_isr_subscription = False
             record.l10n_ch_isr_subscription_formatted = False
+            isr_subscription = False
+            isr_subscription_formatted = False
             if record.invoice_partner_bank_id:
                 if record.currency_id.name == 'EUR':
                     isr_subscription = record.invoice_partner_bank_id.l10n_ch_isr_subscription_eur
                 elif record.currency_id.name == 'CHF':
                     isr_subscription = record.invoice_partner_bank_id.l10n_ch_isr_subscription_chf
-                else:
-                    #we don't format if in another currency as EUR or CHF
-                    continue
+                # else we don't format if in another currency as EUR or CHF
 
                 if isr_subscription:
                     isr_subscription = isr_subscription.replace("-", "")  # In case the user put the -
-                    record.l10n_ch_isr_subscription = _format_isr_subscription_scanline(isr_subscription)
-                    record.l10n_ch_isr_subscription_formatted = _format_isr_subscription(isr_subscription)
+                    isr_subscription = _format_isr_subscription_scanline(isr_subscription)
+
+            record.l10n_ch_isr_subscription = isr_subscription
+            record.l10n_ch_isr_subscription_formatted = isr_subscription_formatted
 
     @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal')
     def _compute_l10n_ch_isr_number(self):
@@ -95,10 +91,20 @@ class AccountMove(models.Model):
             return res
 
         for record in self:
-            if record.name and record.invoice_partner_bank_id and record.invoice_partner_bank_id.l10n_ch_postal:
-                record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
-            else:
-                record.l10n_ch_isr_number_spaced = False
+            isr_number = False
+            isr_number_spaced = False
+            if record.name and record.l10n_ch_isr_subscription:
+                invoice_issuer_ref = re.sub('^0*', '', record.l10n_ch_isr_subscription)
+                invoice_issuer_ref = invoice_issuer_ref.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
+                invoice_ref = re.sub('[^\d]', '', record.name)
+                #We only keep the last digits of the sequence number if it is too long
+                invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
+                internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH - 1) # -1 for mod10r check character
+
+                isr_number = mod10r(invoice_issuer_ref + internal_ref)
+                isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
+            record.l10n_ch_isr_number = isr_number
+            record.l10n_ch_isr_number_spaced = isr_number_spaced
 
 
     @api.depends(
@@ -142,7 +148,6 @@ class AccountMove(models.Model):
 
     @api.depends(
         'type', 'name', 'currency_id.name',
-        'invoice_partner_bank_id.l10n_ch_postal',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_valid(self):
@@ -151,7 +156,6 @@ class AccountMove(models.Model):
             record.l10n_ch_isr_valid = record.type == 'out_invoice' and\
                 record.name and \
                 record.l10n_ch_isr_subscription and \
-                record.invoice_partner_bank_id.l10n_ch_postal and \
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
     def split_total_amount(self):

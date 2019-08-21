@@ -5,22 +5,52 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.tools.misc import mod10r
+from odoo.exceptions import ValidationError
 
 import werkzeug.urls
 
-def _is_l10n_ch_postal(account_ref):
-    """ Returns True iff the string account_ref is a valid postal account number,
+CH_POSTFINANCE_CLEARING = "09000"
+
+
+def validate_l10n_ch_postal(postal_acc_number):
+    """Check if the string postal_acc_number is a valid postal account number,
     i.e. it only contains ciphers and is last cipher is the result of a recursive
     modulo 10 operation ran over the rest of it. Shorten form with - is also accepted.
+    Raise a ValidationError if check fails
     """
-    if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', account_ref or ''):
-        ref_subparts = account_ref.split('-')
-        account_ref = ref_subparts[0] + ref_subparts[1].rjust(6,'0') + ref_subparts[2]
+    if not postal_acc_number:
+        raise ValidationError(_("There is no postal account number."))
+    if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', postal_acc_number or ''):
+        ref_subparts = postal_acc_number.split('-')
+        postal_acc_number = ref_subparts[0] + ref_subparts[1].rjust(6,'0') + ref_subparts[2]
 
-    if re.match('\d+$', account_ref or ''):
-        account_ref_without_check = account_ref[:-1]
-        return mod10r(account_ref_without_check) == account_ref
-    return False
+    if not re.match('\d{9}$', postal_acc_number or ''):
+        raise ValidationError(_("The postal does not match 9 digits position."))
+
+    acc_number_without_check = postal_acc_number[:-1]
+    if not mod10r(acc_number_without_check) == postal_acc_number:
+        raise ValidationError(_("The postal account number is not valid."))
+
+def pretty_l10n_ch_postal(number):
+    """format a postal account number or an ISR subscription number
+    as per specifications with '-' separators.
+    eg. 010000628 -> 01-162-8
+    """
+    if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', number or ''):
+        return number
+    currency_code = number[:2]
+    middle_part = number[2:-1]
+    trailing_cipher = number[-1]
+    middle_part = re.sub('^0*', '', middle_part)
+    return currency_code + '-' + middle_part + '-' + trailing_cipher
+
+def _is_l10n_ch_postfinance_iban(iban):
+    """Postfinance IBAN have format
+    CHXX 0900 0XXX XXXX XXXX K
+    Where 09000 is the clearing number
+    """
+    return (iban.startswith('CH')
+            and iban[4:9] == CH_POSTFINANCE_CLEARING)
 
 
 class ResPartnerBank(models.Model):
@@ -69,9 +99,10 @@ class ResPartnerBank(models.Model):
         # as a postal account even if the difference
         if acc_number and " " in acc_number:
             acc_number_split = acc_number.split(" ")[0]
-        if _is_l10n_ch_postal(acc_number) or (acc_number_split and _is_l10n_ch_postal(acc_number_split)):
-            return 'postal'
-        else:
+        try:
+            if validate_l10n_ch_postal(acc_number) or (acc_number_split and validate_l10n_ch_postal(acc_number_split)):
+                return 'postal'
+        except ValidationError:
             return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
 
     @api.onchange('acc_number', 'partner_id', 'acc_type')
@@ -88,15 +119,41 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def _retrieve_l10n_ch_postal(self, iban):
-        """ Reads a swiss postal account number from a an IBAN and returns it as
+        """Reads a swiss postal account number from a an IBAN and returns it as
         a string. Returns None if no valid postal account number was found, or
-        the given iban was not from Switzerland.
+        the given iban was not from Swiss Postfinance.
+
+        CH09 0900 0000 1000 8060 7 -> 10-8060-7
         """
-        if iban[:2] == 'CH':
+        # We can deduce postal account number only if
+        # the financial institution is PostFinance
+        if _is_l10n_ch_postfinance_iban(iban):
             #the IBAN corresponds to a swiss account
-            if _is_l10n_ch_postal(iban[-12:]):
-                return iban[-12:]
+            try:
+                validate_l10n_ch_postal(iban[-9:])
+                return pretty_l10n_ch_postal(iban[-9:])
+            except ValidationError:
+                pass
         return None
+
+    @api.model
+    def create(self, vals):
+        if vals.get('l10n_ch_postal'):
+            try:
+                validate_l10n_ch_postal(vals['l10n_ch_postal'])
+                vals['l10n_ch_postal'] = pretty_l10n_ch_postal(vals['l10n_ch_postal'])
+            except ValidationError:
+                pass
+        return super(ResPartnerBank, self).create(vals)
+
+    def write(self, vals):
+        if vals.get('l10n_ch_postal'):
+            try:
+                validate_l10n_ch_postal(vals['l10n_ch_postal'])
+                vals['l10n_ch_postal'] = pretty_l10n_ch_postal(vals['l10n_ch_postal'])
+            except ValidationError:
+                pass
+        return super(ResPartnerBank, self).write(vals)
 
     def find_number(self, s):
         # this regex match numbers like 1bis 1a
