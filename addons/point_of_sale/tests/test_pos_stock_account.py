@@ -190,5 +190,9 @@ class TestPoSStock(TestPoSCommon):
         invoiced_output_account_lines = invoiced_order.account_move.line_ids.filtered(lambda line: line.account_id == self.output_account)
         self.assertAlmostEqual(sum(invoiced_output_account_lines.mapped('balance')), -121.0)
 
+        # The stock output account move lines of the invoiced order should be properly reconciled
+        for move_line in invoiced_order.account_move.line_ids.filtered(lambda line: line.account_id == self.output_account):
+            self.assertTrue(move_line.full_reconcile_id)
+
         self.assertTrue(receivable_line_cash.full_reconcile_id, msg='Cash receivable line should be fully-reconciled.')
         self.assertTrue(output_line.full_reconcile_id, msg='The stock output account line should be fully-reconciled.')
