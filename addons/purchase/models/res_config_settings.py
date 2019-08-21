@@ -23,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
     group_warning_purchase = fields.Boolean("Purchase Warnings", implied_group='purchase.group_warning_purchase')
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
-    module_purchase_product_matrix = fields.Boolean("Variants Grid Entry")
+    module_purchase_product_matrix = fields.Boolean("Purchase Grid Entry")
     po_lead = fields.Float(related='company_id.po_lead', readonly=False)
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",
