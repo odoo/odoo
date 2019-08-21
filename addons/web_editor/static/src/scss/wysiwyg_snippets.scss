@@ -65,67 +65,6 @@ body.editor_enable.editor_has_snippets {
                 }
             }
         }
-
-        form.navbar-form {
-            height: $o-navbar-height;
-            z-index: 1060;
-            margin: 0;
-            padding: 0;
-            position: absolute;
-            top: -1px;
-            right: -1px;
-            transition: right 0.4s $o-we-md-ease 0s;
-            border-left: 1px solid $o-we-color-divider;
-            background-color: inherit;
-
-            .btn-group {
-                height: 100%;
-            }
-
-            .btn {
-                height: 100%;
-                margin: 0;
-                padding: 10px;
-                line-height: 1.2;
-                font-size: 13px;
-                font-family: $o-we-font-family;
-
-                transition: all 0.3s ease 0s;
-                border: none;
-                border-radius: 0;
-
-                .fa {
-                    margin-right: $grid-gutter-width/4;
-
-                    &.fa-times {
-                        color: $o-we-color-danger;
-                    }
-                }
-
-                &.btn-primary {
-                    @include button-variant($o-brand-odoo, $o-brand-odoo);
-                }
-
-                &.btn-secondary {
-                    @include button-variant($o-we-color-dark, $o-we-color-dark);
-
-                    &:hover {
-                        background: rgba(black, 0.5);
-                    }
-                }
-
-                &:focus,
-                &:active,
-                &:focus:active {
-                    outline: none;
-                }
-            }
-
-            .dropdown-menu {
-                left: auto;
-                right: 0;
-            }
-        }
     }
 }
 
