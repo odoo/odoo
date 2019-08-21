@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
 
@@ -101,35 +103,62 @@ class ProductProduct(models.Model):
          - 'outgoing_qty'
          - 'free_qty'
          """
+        kits = defaultdict(lambda: self.env['product.product'])
+        # find kit product in self
         for product in self:
             bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
             if bom_kit:
-                boms, bom_sub_lines = bom_kit.explode(product, 1)
-                ratios_virtual_available = []
-                ratios_qty_available = []
-                ratios_incoming_qty = []
-                ratios_outgoing_qty = []
-                ratios_free_qty = []
-                for bom_line, bom_line_data in bom_sub_lines:
-                    component = bom_line.product_id
-                    if component.type != 'product':
-                        # Consumable product have 0 qty_available so we exclude them
-                        continue
+                kits[product] = bom_kit
+
+        # Extract component of those kits
+        components = defaultdict(lambda: self.env['product.product'])
+        for product, bom in kits.items():
+            boms, bom_sub_lines = bom.explode(product, 1)
+            for bom_line, bom_line_data in bom_sub_lines:
+                component = bom_line.product_id
+                if component.type == 'product':
+                    # Consumable product have 0 qty_available so we exclude them
                     uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
                     qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
-                    ratios_virtual_available.append(component.virtual_available / qty_per_kit)
-                    ratios_qty_available.append(component.qty_available / qty_per_kit)
-                    ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
-                    ratios_outgoing_qty.append(component.outgoing_qty / qty_per_kit)
-                    ratios_free_qty.append(component.free_qty / qty_per_kit)
+                    components[component] = qty_per_kit
+
+        # Retrieve all quantities for components
+        product_qties = self.env['product.product'].concat(*(components.keys())).read([
+            'virtual_available',
+            'qty_available',
+            'incoming_qty',
+            'outgoing_qty',
+            'free_qty'
+        ])
+        qties_per_product = {
+            p['id']: (p['virtual_available'], p['qty_available'], p['incoming_qty'], p['outgoing_qty'], p['free_qty'])
+            for p in product_qties
+        }
+        # Compute ratios for finals kits
+        for product, bom in kits.items():
+            boms, bom_sub_lines = bom_kit.explode(product, 1)
+            ratios_virtual_available = []
+            ratios_qty_available = []
+            ratios_incoming_qty = []
+            ratios_outgoing_qty = []
+            ratios_free_qty = []
+            for bom_line, bom_line_data in bom_sub_lines:
+                if bom_line.product_id.type == 'product':
+                    qty_per_kit = components[bom_line.product_id]
+                    component_qties = qties_per_product[bom_line.product_id.id]
+                    ratios_virtual_available.append(component_qties[0] / qty_per_kit)
+                    ratios_qty_available.append(component_qties[1] / qty_per_kit)
+                    ratios_incoming_qty.append(component_qties[2] / qty_per_kit)
+                    ratios_outgoing_qty.append(component_qties[3] / qty_per_kit)
+                    ratios_free_qty.append(component_qties[4] / qty_per_kit)
                 if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                     product.virtual_available = min(ratios_virtual_available) // 1
                     product.qty_available = min(ratios_qty_available) // 1
                     product.incoming_qty = min(ratios_incoming_qty) // 1
                     product.outgoing_qty = min(ratios_incoming_qty) // 1
                     product.free_qty = min(ratios_free_qty) // 1
-            else:
-                super(ProductProduct, self)._compute_quantities()
+        kits = self.env['product.product'].concat(*(kits.keys()))
+        super(ProductProduct, self - kits)._compute_quantities()
 
     def action_view_bom(self):
         action = self.env.ref('mrp.product_open_bom').read()[0]
