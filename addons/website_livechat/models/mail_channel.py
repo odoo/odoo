@@ -50,8 +50,13 @@ class MailChannel(models.Model):
         :param visitor: website.visitor of the channel
         :return: arrow separated string containing navigation history information
         """
-        recent_history = visitor.visitor_page_ids[:3] if len(visitor.visitor_page_ids) >= 3 else visitor.visitor_page_ids
-        return ' → '.join(page.page_id.name + ' (' + page.visit_datetime.strftime('%H:%M') + ')' for page in recent_history)
+        history = []
+        for page in visitor.website_track_ids:
+            if page.page_id:
+                history += page.page_id.name + ' (' + page.visit_datetime.strftime('%H:%M') + ')'
+            if len(history) == 3:
+                break
+        return ' → '.join(history)
 
     def close_livechat_request_session(self, message):
         self.ensure_one()
@@ -75,4 +80,3 @@ class MailChannel(models.Model):
                 'last_connection_datetime': fields.datetime.now(),
             })
         return message
-
