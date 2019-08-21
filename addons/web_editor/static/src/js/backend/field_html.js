@@ -208,7 +208,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 var para = _.find(options.toolbar, function (item) {
                     return item[0] === 'para';
                 });
-                if (para[1].indexOf('checklist') === -1) {
+                if (para && para[1] && para[1].indexOf('checklist') === -1) {
                     para[1].splice(2, 0, 'checklist');
                 }
                 return options;
