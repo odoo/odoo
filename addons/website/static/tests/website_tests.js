@@ -3,8 +3,30 @@ odoo.define('website.tests', function (require) {
 
 var FormView = require('web.FormView');
 var testUtils = require("web.test_utils");
+var MockServer = require('web.MockServer');
 
 var createView = testUtils.createView;
+
+MockServer.include({
+    /**
+     * @override
+     * @private
+     * @param {Object} args
+     */
+    _mockSearchReadController: function (args) {
+        if (args.model === 'website') {
+            return {
+                length: 2,
+                records: [
+                    {'id': 1, 'name': 'My Website'},
+                    {'id': 2, 'name': 'My Website 2'},
+                ],
+            };
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+});
 
 QUnit.module('website', {
     before: function () {
