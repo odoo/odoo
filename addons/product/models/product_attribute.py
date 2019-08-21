@@ -163,11 +163,7 @@ class ProductTemplateAttributeLine(models.Model):
     attribute_id = fields.Many2one('product.attribute', string="Attribute", ondelete='restrict', required=True, index=True)
     value_ids = fields.Many2many('product.attribute.value', string="Values", domain="[('attribute_id', '=', attribute_id)]",
         relation='product_attribute_value_product_template_attribute_line_rel')
-    product_template_value_ids = fields.Many2many(
-        'product.template.attribute.value',
-        string='Product Attribute Values',
-        compute="_set_product_template_value_ids",
-        store=False)
+    product_template_value_ids = fields.One2many('product.template.attribute.value', 'attribute_line_id', string="Product Attribute Values")
 
     @api.onchange('attribute_id')
     def _onchange_attribute_id(self):
@@ -216,53 +212,36 @@ class ProductTemplateAttributeLine(models.Model):
         self._update_product_template_attribute_values()
         return res
 
-    @api.depends('value_ids')
-    def _set_product_template_value_ids(self):
-        for product_template_attribute_line in self:
-            product_template_attribute_line.product_template_value_ids = self.env['product.template.attribute.value'].search([
-                ('product_tmpl_id', 'in', product_template_attribute_line.product_tmpl_id.ids),
-                ('product_attribute_value_id', 'in', product_template_attribute_line.value_ids.ids)]
-            )
-
-    def unlink(self):
-        for product_template_attribute_line in self:
-            self.env['product.template.attribute.value'].search([
-                ('product_tmpl_id', 'in', product_template_attribute_line.product_tmpl_id.ids),
-                ('product_attribute_value_id.attribute_id', 'in', product_template_attribute_line.value_ids.mapped('attribute_id').ids)]).unlink()
-
-        return super(ProductTemplateAttributeLine, self).unlink()
-
     def _update_product_template_attribute_values(self):
-        """
-        Create or unlink product.template.attribute.value based on the attribute lines.
-        If the product.attribute.value is removed, remove the corresponding product.template.attribute.value
-        If no product.template.attribute.value exists for the newly added product.attribute.value, create it.
-        """
-        for attribute_line in self:
-            # All existing product.template.attribute.value for this template
-            product_template_attribute_values_to_remove = self.env['product.template.attribute.value'].search([
-                ('product_tmpl_id', '=', attribute_line.product_tmpl_id.id),
-                ('product_attribute_value_id.attribute_id', 'in', attribute_line.value_ids.mapped('attribute_id').ids)])
-            # All existing product.attribute.value shared by all products
-            # eg (Yellow, Red, Blue, Small, Large)
-            existing_product_attribute_values = product_template_attribute_values_to_remove.mapped('product_attribute_value_id')
+        """Create or unlink `product.template.attribute.value` for each line in
+        `self` based on `value_ids`.
 
-            # Loop on product.attribute.values for the line (eg: Yellow, Red, Blue)
-            for product_attribute_value in attribute_line.value_ids:
-                if product_attribute_value in existing_product_attribute_values:
-                    # property is already existing: don't touch, remove it from list to avoid unlinking it
-                    product_template_attribute_values_to_remove = product_template_attribute_values_to_remove.filtered(
-                        lambda value: product_attribute_value not in value.mapped('product_attribute_value_id')
-                    )
+        This is a trick for the form view and for performance in general,
+        because we don't want to generate in advance all possible values for all
+        templates, but only those that will be selected.
+        """
+        ptav_to_create = []
+        ptav_to_unlink = self.env['product.template.attribute.value']
+
+        for ptal in self:
+            existing_pav = self.env['product.attribute.value']
+            for ptav in ptal.product_template_value_ids:
+                if ptav.product_attribute_value_id not in ptal.value_ids:
+                    # remove values that existed but don't exist anymore
+                    ptav_to_unlink += ptav
                 else:
-                    # property does not exist: create it
-                    self.env['product.template.attribute.value'].create({
-                        'product_attribute_value_id': product_attribute_value.id,
-                        'product_tmpl_id': attribute_line.product_tmpl_id.id})
+                    existing_pav += ptav.product_attribute_value_id
 
-            # at this point, existing properties can be removed to reflect the modifications on value_ids
-            if product_template_attribute_values_to_remove:
-                product_template_attribute_values_to_remove.unlink()
+            for pav in (ptal.value_ids - existing_pav):
+                # create values that didn't exist yet
+                ptav_to_create.append({
+                    'product_attribute_value_id': pav.id,
+                    'attribute_line_id': ptal.id
+                })
+
+        # unlink and create in batch for performance
+        ptav_to_unlink.unlink()
+        self.env['product.template.attribute.value'].create(ptav_to_create)
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -285,22 +264,20 @@ class ProductTemplateAttributeValue(models.Model):
     and product template generated by the product.template.attribute.line"""
 
     _name = "product.template.attribute.value"
+    _description = "Product Template Attribute Value"
     _order = 'product_attribute_value_id, id'
-    _description = 'Product Attribute Value'
 
     name = fields.Char('Value', related="product_attribute_value_id.name")
+
+    # defining fields: the product template attribute line and the product attribute value
     product_attribute_value_id = fields.Many2one(
         'product.attribute.value', string='Attribute Value',
-        required=True, ondelete='cascade', index=True)
-    product_tmpl_id = fields.Many2one(
-        'product.template', string='Product Template',
-        required=True, ondelete='cascade', index=True)
-    attribute_id = fields.Many2one(
-        'product.attribute', string='Attribute',
-        related="product_attribute_value_id.attribute_id")
-    sequence = fields.Integer('Sequence', related="product_attribute_value_id.sequence")
+        required=True, ondelete='restrict', index=True)
+    attribute_line_id = fields.Many2one('product.template.attribute.line', required=True, ondelete='cascade', index=True)
+
+    # configuration fields: the price_extra and the exclusion rules
     price_extra = fields.Float(
-        string='Attribute Price Extra',
+        string="Value Price Extra",
         default=0.0,
         digits='Product Price',
         help="""Price Extra: Extra price for the variant with
@@ -312,6 +289,23 @@ class ProductTemplateAttributeValue(models.Model):
         relation="product_template_attribute_exclusion",
         help="""Make this attribute value not compatible with
         other values of the product or some attribute values of optional and accessory products.""")
+
+    # related fields: product template and product attribute
+    product_tmpl_id = fields.Many2one('product.template', string="Product Template", related='attribute_line_id.product_tmpl_id', store=True, index=True)
+    attribute_id = fields.Many2one('product.attribute', string="Attribute", related='attribute_line_id.attribute_id', store=True, index=True)
+
+    _sql_constraints = [
+        ('attribute_value_unique', 'unique(attribute_line_id, product_attribute_value_id)', "Each value should be defined only once per attribute per product."),
+    ]
+
+    @api.constrains('attribute_line_id', 'product_attribute_value_id')
+    def _check_valid_values(self):
+        for ptav in self:
+            if ptav.product_attribute_value_id not in ptav.attribute_line_id.value_ids:
+                raise ValidationError(
+                    _("The value <strong>%s</strong> is not defined for the attribute <strong>%s</strong> on the product %s.") %
+                    (ptav.product_attribute_value_id.display_name, ptav.attribute_id.display_name, ptav.product_tmpl_id.display_name)
+                )
 
     def write(self, values):
         pav_in_values = 'product_attribute_value_id' in values
