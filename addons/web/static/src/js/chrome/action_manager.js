@@ -91,13 +91,14 @@ var ActionManager = Widget.extend({
      * will be restored. It ensures that the current controller can be left (for
      * instance, that it has no unsaved changes).
      *
+     * @param {Object} options
      * @returns {Promise} resolved if the current controller can be left,
      *   rejected otherwise.
      */
-    clearUncommittedChanges: function () {
+    clearUncommittedChanges: function (options) {
         var currentController = this.getCurrentController();
         if (currentController) {
-            return currentController.widget.canBeRemoved();
+            return currentController.widget.canBeRemoved(options);
         }
         return Promise.resolve();
     },

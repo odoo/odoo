@@ -1,6 +1,7 @@
 odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var ReportClientAction = require('report.client_action');
 var NotificationService = require('web.NotificationService');
 var AbstractAction = require('web.AbstractAction');
@@ -3649,6 +3650,62 @@ QUnit.module('ActionManager', {
         ]);
 
         actionManager.destroy();
+    });
+
+    QUnit.test('explicitly call clear_uncommitted_change with noAbandon option', async function (assert) {
+        assert.expect(10);
+
+        await testUtils.mock.patch(BasicModel, {
+            discardChanges: function (id, options) {
+                assert.step('discardChanges');
+            },
+        });
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                clear_uncommitted_changes: function (ev) {
+                    actionManager.clearUncommittedChanges({noAbandon: ev.data.noAbandon});
+                },
+            },
+        });
+
+        // execute an action and edit existing record
+        await actionManager.doAction(3);
+
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
+
+        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
+
+        await testUtils.fields.editInput(actionManager.$('input[name=foo]'), 'val');
+        await actionManager.trigger_up('clear_uncommitted_changes', {noAbandon: false});
+        await testUtils.nextTick();
+        assert.containsOnce($('body'), '.modal'); // confirm discard dialog
+        // confirm discard changes
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
+        assert.strictEqual(actionManager.$('span[name=foo]').text(), 'val',
+            'changes should be discarded');
+
+        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
+
+        await testUtils.fields.editInput(actionManager.$('input[name=foo]'), 'yop');
+        await actionManager.trigger_up('clear_uncommitted_changes', {noAbandon: true});
+        await testUtils.nextTick();
+        assert.containsOnce($('body'), '.modal'); // confirm discard dialog
+        // confirm discard changes
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_editable',
+            'changes should not be discarded and form should be in edit mode');
+        assert.verifySteps(['discardChanges']); // discardChanges should called once
+
+        actionManager.destroy();
+        await testUtils.mock.unpatch(BasicModel);
     });
 
     QUnit.module('Actions in target="new"');

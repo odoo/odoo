@@ -133,12 +133,13 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * @param {Object} options
      * @override
      */
-    canBeRemoved: function () {
+    canBeRemoved: function (options) {
         // AAB: get rid of 'readonlyIfRealDiscard' option when on_hashchange mechanism is improved
         return this.discardChanges(undefined, {
-            noAbandon: true,
+            noAbandon: options && _.has(options, 'noAbandon') ? options.noAbandon : true,
             readonlyIfRealDiscard: true,
         });
     },

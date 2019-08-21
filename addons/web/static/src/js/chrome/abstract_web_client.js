@@ -218,8 +218,12 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     },
     show_application: function () {
     },
-    clear_uncommitted_changes: function () {
-        return this.action_manager.clearUncommittedChanges();
+    /**
+     *
+     * @param {Object} options
+     */
+    clear_uncommitted_changes: function (options) {
+        return this.action_manager.clearUncommittedChanges(options);
     },
     destroy_content: function () {
         _.each(_.clone(this.getChildren()), function (el) {
