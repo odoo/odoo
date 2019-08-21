@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.tools import float_round
 
 
 class TestPacking(TransactionCase):
@@ -252,3 +253,49 @@ class TestPacking(TransactionCase):
         qp1 = pack2.quant_ids[0]
         qp2 = pack2.quant_ids[1]
         self.assertEqual(qp1.quantity + qp2.quantity, 12, 'The quant has not the good quantity')
+
+    def test_move_picking_with_package(self):
+        """
+        355.4 rounded with 0.001 precision is 355.40000000000003.
+        check that nonetheless, moving a picking is accepted
+        """
+        self.assertEqual(self.productA.uom_id.rounding, 0.001)
+        self.assertEqual(
+            float_round(355.4, precision_rounding=self.productA.uom_id.rounding),
+            355.40000000000003,
+        )
+        location_dict = {
+            'location_id': self.stock_location.id,
+        }
+        quant = self.env['stock.quant'].create({
+            **location_dict,
+            **{'product_id': self.productA.id, 'quantity': 355.4},  # important number
+        })
+        package = self.env['stock.quant.package'].create({
+            **location_dict, **{'quant_ids': [(6, 0, [quant.id])]},
+        })
+        location_dict.update({
+            'state': 'draft',
+            'location_dest_id': self.ship_location.id,
+        })
+        move = self.env['stock.move'].create({
+            **location_dict,
+            **{
+                'name': "XXX",
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': 355.40000000000003,  # other number
+            }})
+        picking = self.env['stock.picking'].create({
+            **location_dict,
+            **{
+                'picking_type_id': self.warehouse.in_type_id.id,
+                'move_lines': [(6, 0, [move.id])],
+        }})
+
+        picking.action_confirm()
+        picking.action_assign()
+        move.quantity_done = move.reserved_availability
+        picking.action_done()
+        # if we managed to get there, there was not any exception
+        # complaining that 355.4 is not 355.40000000000003. Good job!
