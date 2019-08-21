@@ -988,6 +988,7 @@ class AccountJournal(models.Model):
         return self.browse(journal_ids).name_get()
 
     @api.depends('company_id')
+    @api.depends_context('force_company')
     def _belong_to_company(self):
         for journal in self:
             journal.belong_to_company = (journal.company_id.id == self.env.company.id)
