@@ -1400,7 +1400,7 @@ class AccountTax(models.Model):
                 cumulated_tax_included_amount = 0
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
-                    base, price_unit, quantity, product, partner)
+                    base, sign * price_unit, quantity, product, partner)
 
             # Round the tax_amount
             tax_amount = round(tax_amount, prec)
