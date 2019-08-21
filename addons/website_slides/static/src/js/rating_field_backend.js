@@ -10,8 +10,8 @@ var QWeb = core.qweb;
 
 var FieldFloatRating = basicFields.FieldFloat.extend({
     xmlDependencies: !basicFields.FieldFloat.prototype.xmlDependencies ?
-        ['/website_rating/static/src/xml/website_mail.xml'] : basicFields.FieldFloat.prototype.xmlDependencies.concat(
-            ['/website_rating/static/src/xml/website_mail.xml']
+        ['/website_rating/static/src/xml/portal_tools.xml'] : basicFields.FieldFloat.prototype.xmlDependencies.concat(
+            ['/website_rating/static/src/xml/portal_tools.xml']
         ),
     description: "",
     //--------------------------------------------------------------------------

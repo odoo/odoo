@@ -7,11 +7,16 @@ from odoo.http import request
 from odoo.addons.portal.controllers.mail import PortalChatter
 
 
-class WebsiteRating(PortalChatter):
+class PortalChatter(PortalChatter):
+
+    def _portal_post_filter_params(self):
+        fields = super(PortalChatter, self)._portal_post_filter_params()
+        fields.append('rating_value')
+        return fields
 
     @http.route()
     def portal_chatter_init(self, res_model, res_id, domain=False, limit=False, **kwargs):
-        result = super(WebsiteRating, self).portal_chatter_init(res_model, res_id, domain=domain, limit=limit, **kwargs)
+        result = super(PortalChatter, self).portal_chatter_init(res_model, res_id, domain=domain, limit=limit, **kwargs)
         # get the rating statistics about the record
         if kwargs.get('rating_include'):
             record = request.env[res_model].browse(res_id)
@@ -26,4 +31,4 @@ class WebsiteRating(PortalChatter):
             context = dict(request.context)
             context['rating_include'] = True
             request.context = context
-        return super(WebsiteRating, self).portal_message_fetch(res_model, res_id, domain=domain, limit=limit, offset=offset, **kw)
+        return super(PortalChatter, self).portal_message_fetch(res_model, res_id, domain=domain, limit=limit, offset=offset, **kw)
