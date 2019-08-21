@@ -516,16 +516,16 @@ ListRenderer.include({
         switch (field.type) {
             case 'binary': return 1;
             case 'boolean': return '40px';
-            case 'char': return 1;
-            case 'date': return '100px';
-            case 'datetime': return '150px';
-            case 'float': return '100px';
+            case 'char': return 2;
+            case 'date': return '92px';
+            case 'datetime': return '146px';
+            case 'float': return '92px';
             case 'html': return 3;
-            case 'integer': return '80px';
+            case 'integer': return '74px';
             case 'many2many': return 2;
             case 'many2one': return 2;
-            case 'monetary': return 1.2;
-            case 'one2many': return 2.5;
+            case 'monetary': return '104px';
+            case 'one2many': return 2;
             case 'reference': return 1.5;
             case 'selection': return 1.5;
             case 'text': return 2.5;

@@ -303,14 +303,14 @@ class SaleOrder(models.Model):
             # Check commit 6bb42904a03 for next if/else
             # Remove reward line if price or qty equal to 0
             if values['product_uom_qty'] and values['price_unit']:
-                order.write({'order_line': [(1, line.id, values) for line in lines]})
+                lines.write(values)
             else:
                 if program.reward_type != 'free_shipping':
                     # Can't remove the lines directly as we might be in a recordset loop
                     lines_to_remove += lines
                 else:
                     values.update(price_unit=0.0)
-                    order.write({'order_line': [(1, line.id, values) for line in lines]})
+                    lines.write(values)
             return lines_to_remove
 
         self.ensure_one()

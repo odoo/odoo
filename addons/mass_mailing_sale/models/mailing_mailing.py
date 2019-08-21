@@ -20,16 +20,11 @@ class MassMailing(models.Model):
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
-        has_so_access = self.env['sale.order'].check_access_rights('read', raise_exception=False)
-        has_invoice_report_access = self.env['account.invoice.report'].check_access_rights('read', raise_exception=False)
         for mass_mailing in self:
-            if has_so_access and has_invoice_report_access:
-                invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
-                res = self.env['account.invoice.report'].search_read(
-                    [('move_id', 'in', invoices.ids), ('state', 'not in', ['draft', 'cancel'])],
-                    ['price_subtotal']
-                )
-                mass_mailing.sale_invoiced_amount = sum(r['price_subtotal'] for r in res)
+            if self.user_has_groups('sales_team.group_sale_salesman') and self.user_has_groups('account.group_account_invoice'):
+                domain = self._get_sale_utm_domain() + [('state', 'not in', ['draft', 'cancel'])]
+                moves = self.env['account.move'].search_read(domain, ['amount_untaxed'])
+                mass_mailing.sale_invoiced_amount = sum(i['amount_untaxed'] for i in moves)
             else:
                 mass_mailing.sale_invoiced_amount = 0
 
@@ -40,15 +35,15 @@ class MassMailing(models.Model):
         return action
 
     def action_redirect_to_invoiced(self):
-        action = self.env.ref('account.action_move_journal_line').read()[0]
-        invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
+        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        moves = self.env['account.move'].search(self._get_sale_utm_domain())
         action['context'] = {
             'create': False,
             'edit': False,
             'view_no_maturity': True
         }
         action['domain'] = [
-            ('id', 'in', invoices.ids),
+            ('id', 'in', moves.ids),
             ('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
             ('state', 'not in', ['draft', 'cancel'])
         ]

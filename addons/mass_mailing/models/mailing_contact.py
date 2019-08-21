@@ -78,7 +78,7 @@ class MassMailingContact(models.Model):
             contacts = self.env['mailing.contact.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
         else:
-            raise UserError('Search opt out cannot be executed without a unique and valid active mailing list context.')
+            raise UserError(_('Search opt out cannot be executed without a unique and valid active mailing list context.'))
 
     @api.depends('subscription_list_ids')
     def _compute_opt_out(self):
