@@ -1166,7 +1166,6 @@ var FieldFloatTime = FieldFloat.extend({
 });
 
 var FieldFloatFactor = FieldFloat.extend({
-    description: "",
     supportedFieldTypes: ['float'],
     className: 'o_field_float_factor',
     formatType: 'float_factor',
