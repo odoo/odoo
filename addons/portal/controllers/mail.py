@@ -85,6 +85,9 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
 
 class PortalChatter(http.Controller):
 
+    def _portal_post_filter_params(self):
+        return ['token', 'hash', 'pid']
+
     @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids='', attachment_tokens='', **kw):
         """Create a new `mail.message` with the given `message` and/or
@@ -112,16 +115,15 @@ class PortalChatter(http.Controller):
             # message is received in plaintext and saved in html
             if message:
                 message = plaintext2html(message)
-            message = _message_post_helper(
-                res_model=res_model,
-                res_id=res_id,
-                token=kw.get('token'),
-                _hash=kw.get('hash'),
-                pid=kw.get('pid'),
-                message=message,
-                send_after_commit=False,
-                attachment_ids=attachment_ids
-            )
+            post_values = {
+                'res_model': res_model,
+                'res_id': res_id,
+                'message': message,
+                'send_after_commit': False,
+                'attachment_ids': attachment_ids,
+            }
+            post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
+            message = _message_post_helper(**post_values)
 
         return request.redirect(url)
 
