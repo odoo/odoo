@@ -876,7 +876,8 @@ class ChromeBrowser():
         if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
             shutil.rmtree(self.screencasts_frames_dir)
         self.screencast_frames = []
-        self._websocket_send('Page.stopLoading')
+        sl_id = self._websocket_send('Page.stopLoading')
+        self._websocket_wait_id(sl_id)
         self._logger.info('Deleting cookies and clearing local storage')
         dc_id = self._websocket_send('Network.clearBrowserCache')
         self._websocket_wait_id(dc_id)
