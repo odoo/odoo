@@ -28,67 +28,92 @@ class BaseDocumentLayout(models.TransientModel):
     primary_color = fields.Char(related='company_id.primary_color', readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
 
-    custom_colors = fields.Boolean(compute="_compute_custom_colors", readonly=False)
-    logo_primary_color = fields.Char()
-    logo_secondary_color = fields.Char()
+    custom_colors = fields.Boolean(compute="_compute_custom_colors")
+    logo_primary_color = fields.Char(compute="_compute_logo_colors")
+    logo_secondary_color = fields.Char(compute="_compute_logo_colors")
 
-    report_layout_id = fields.Many2one('report.layout', compute="_compute_report_layout_id", readonly=False)
+    report_layout_id = fields.Many2one('report.layout')
     preview = fields.Html(compute='_compute_preview')
 
-    @api.depends('company_id')
-    def _compute_report_layout_id(self):
-        default_report_layout = self.env['report.layout']
-        for wizard in self:
-            wizard_layout = wizard.env["report.layout"].search([
-                ('view_id.key', '=', wizard.company_id.external_report_layout_id.key)
-            ])
-            if not wizard_layout:
-                default_report_layout = default_report_layout or default_report_layout.search([
-                ], limit=1)
-                wizard_layout = default_report_layout
-            wizard.report_layout_id = wizard_layout
-
-            if wizard.logo:
-                wizard_for_image = wizard
-                if wizard._context.get('bin_size'):
-                    wizard_for_image = wizard.with_context(bin_size=False)
-                wizard.logo_primary_color, wizard.logo_secondary_color = wizard_for_image._parse_logo_colors()
-            if not wizard.primary_color:
-                wizard.primary_color = wizard.logo_primary_color or DEFAULT_PRIMARY
-            if not wizard.secondary_color:
-                wizard.secondary_color = wizard.logo_secondary_color or DEFAULT_SECONDARY
-
-    @api.depends('logo', 'font')
-    def _compute_preview(self):
-        """ compute a qweb based preview to display on the wizard """
-        for wizard in self:
-            ir_qweb = wizard.env['ir.qweb']
-            wizard.preview = ir_qweb.render('base.layout_preview', {
-                'company': wizard,
-            })
-
-    @api.depends('primary_color', 'secondary_color')
+    @api.depends('logo_primary_color', 'logo_secondary_color', 'primary_color', 'secondary_color')
     def _compute_custom_colors(self):
         for wizard in self:
             logo_primary = wizard.logo_primary_color or ''
             logo_secondary = wizard.logo_secondary_color or ''
             # Force lower case on color to ensure that FF01AA == ff01aa
-            wizard.custom_colors = wizard.logo and wizard.primary_color and wizard.secondary_color and not(
-                wizard.primary_color.lower() == logo_primary.lower() and
-                wizard.secondary_color.lower() == logo_secondary.lower())
+            wizard.custom_colors = (
+                wizard.logo and wizard.primary_color and wizard.secondary_color
+                and not(
+                    wizard.primary_color.lower() == logo_primary.lower()
+                    and wizard.secondary_color.lower() == logo_secondary.lower()
+                )
+            )
+
+    @api.depends('logo')
+    def _compute_logo_colors(self):
+        for wizard in self:
+            if wizard._context.get('bin_size'):
+                wizard_for_image = wizard.with_context(bin_size=False)
+            else:
+                wizard_for_image = wizard
+            wizard.logo_primary_color, wizard.logo_secondary_color = wizard_for_image._parse_logo_colors()
+
+    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color')
+    def _compute_preview(self):
+        """ compute a qweb based preview to display on the wizard """
+        for wizard in self:
+            if wizard.report_layout_id:
+                ir_qweb = wizard.env['ir.qweb']
+                wizard.preview = ir_qweb.render('base.layout_preview', {'company': wizard})
+            else:
+                wizard.preview = False
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        for wizard in self:
+            wizard.logo = wizard.company_id.logo
+            wizard.report_header = wizard.company_id.report_header
+            wizard.report_footer = wizard.company_id.report_footer
+            wizard.paperformat_id = wizard.company_id.paperformat_id
+            wizard.external_report_layout_id = wizard.company_id.external_report_layout_id
+            wizard.font = wizard.company_id.font
+            wizard.primary_color = wizard.company_id.primary_color
+            wizard.secondary_color = wizard.company_id.secondary_color
+            wizard_layout = wizard.env["report.layout"].search([
+                ('view_id.key', '=', wizard.company_id.external_report_layout_id.key)
+            ])
+            wizard.report_layout_id = wizard_layout or wizard_layout.search([], limit=1)
+
+            if not wizard.primary_color:
+                wizard.primary_color = wizard.logo_primary_color or DEFAULT_PRIMARY
+            if not wizard.secondary_color:
+                wizard.secondary_color = wizard.logo_secondary_color or DEFAULT_SECONDARY
 
     @api.onchange('custom_colors')
-    def onchange_custom_colors(self):
+    def _onchange_custom_colors(self):
         for wizard in self:
             if wizard.logo and not wizard.custom_colors:
                 wizard.primary_color = wizard.logo_primary_color or DEFAULT_PRIMARY
                 wizard.secondary_color = wizard.logo_secondary_color or DEFAULT_SECONDARY
-                
-    @api.onchange('primary_color', 'secondary_color')
-    def onchange_company_colors(self):
+
+    @api.onchange('report_layout_id')
+    def _onchange_report_layout_id(self):
         for wizard in self:
-            wizard._compute_custom_colors()
-            wizard._compute_preview()
+            wizard.external_report_layout_id = wizard.report_layout_id.view_id
+
+    @api.onchange('logo')
+    def _onchange_logo(self):
+        for wizard in self:
+            # It is admitted that if the user puts the original image back, it won't change colors
+            company = wizard.company_id
+            # at that point wizard.logo has been assigned the value present in DB
+            if wizard.logo == company.logo and company.primary_color and company.secondary_color:
+                continue
+
+            if wizard.logo_primary_color:
+                wizard.primary_color = wizard.logo_primary_color
+            if wizard.logo_secondary_color:
+                wizard.secondary_color = wizard.logo_secondary_color
 
     def _parse_logo_colors(self, logo=None, white_threshold=225):
         """
@@ -113,7 +138,7 @@ class BaseDocumentLayout(models.TransientModel):
         try:
             # Catches exceptions caused by logo not being an image
             image = tools.base64_to_image(logo)
-        except:
+        except Exception:
             return False, False
 
         base_w, base_h = image.size
@@ -152,36 +177,6 @@ class BaseDocumentLayout(models.TransientModel):
             primary, secondary = secondary, primary
 
         return tools.rgb_to_hex(primary), tools.rgb_to_hex(secondary)
-
-    @api.onchange('report_layout_id')
-    def onchange_report_layout_id(self):
-        for wizard in self:
-            wizard.external_report_layout_id = wizard.report_layout_id.view_id
-            wizard._compute_preview()
-
-    @api.onchange('logo')
-    def onchange_logo(self):
-        for wizard in self:
-            # Trick to:
-            # - test the new logo is different from company's
-            # - Avoid the cache miss on company.logo to erase the new logo
-            # It is admitted that if the user puts the original image back, it won't change colors
-            logo = wizard.logo
-            company = wizard.company_id
-            # at that point wizard.logo has been assigned the value present in DB
-            logo_same = company.logo == logo
-            wizard.logo = logo
-            if not logo:
-                wizard.logo_primary_color, wizard.logo_secondary_color = False, False
-                wizard._compute_custom_colors()
-            if logo_same and company.primary_color and company.secondary_color:
-                continue
-
-            wizard.logo_primary_color, wizard.logo_secondary_color = wizard._parse_logo_colors()
-            if wizard.logo_primary_color:
-                wizard.primary_color = wizard.logo_primary_color
-            if wizard.logo_secondary_color:
-                wizard.secondary_color = wizard.logo_secondary_color
 
     @api.model
     def action_open_base_document_layout(self, action_ref=None):
