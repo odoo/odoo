@@ -1474,12 +1474,6 @@ var BasicModel = AbstractModel.extend({
                     resolve(_.keys(changes));
                 }
             }).then(function (fieldNames) {
-                _.each(fieldNames, function (name) {
-                    if (record._changes && record._changes[name] === record.data[name]) {
-                        delete record._changes[name];
-                        record._isDirty = !_.isEmpty(record._changes);
-                    }
-                });
                 return self._fetchSpecialData(record).then(function (fieldNames2) {
                     // Return the names of the fields that changed (onchange or
                     // associated special data change)
