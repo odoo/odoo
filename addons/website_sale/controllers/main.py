@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import fields, http, tools, _
@@ -333,6 +334,9 @@ class WebsiteSale(http.Controller):
             product_context['pricelist'] = pricelist.id
             product = product.with_context(product_context)
 
+        # Needed to trigger the recently viewed product rpc
+        view_track = request.website.viewref("website_sale.product").track
+
         return {
             'search': search,
             'category': category,
@@ -344,6 +348,7 @@ class WebsiteSale(http.Controller):
             'main_object': product,
             'product': product,
             'add_qty': add_qty,
+            'view_track': view_track,
         }
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
@@ -1202,4 +1207,60 @@ class WebsiteSale(http.Controller):
                 res_product['list_price'] = FieldMonetary.value_to_html(res_product['list_price'], monetary_options)
                 res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
 
+        return res
+
+    # --------------------------------------------------------------------------
+    # Products Recently Viewed
+    # --------------------------------------------------------------------------
+    @http.route('/shop/products/recently_viewed', type='json', auth='public', website=True)
+    def products_recently_viewed(self, **kwargs):
+        """
+        Returns list of recently viewed products according to current user and product options
+        """
+        max_number_of_product_for_carousel = 12
+        visitors = request.env['website.visitor']._get_visitor_from_request(with_previous_visitors=True)
+        if visitors:
+            excluded_products = request.website.sale_get_order().mapped('order_line.product_id.id')
+            products = request.env['website.track'].sudo().read_group(
+                [('visitor_id', 'in', visitors.ids), ('product_id', '!=', False), ('product_id', 'not in', excluded_products)],
+                ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
+            products_ids = [product['product_id'][0] for product in products]
+            if products_ids:
+                viewed_products = request.env['product.product'].browse(products_ids)
+                res = {
+                    'products': viewed_products.read(['id', 'name', 'website_url']),
+                }
+
+                FieldMonetary = request.env['ir.qweb.field.monetary']
+                monetary_options = {
+                    'display_currency': request.website.get_current_pricelist().currency_id,
+                }
+                rating = request.website.viewref('website_sale.product_comment').active
+                for res_product, product in zip(res['products'], viewed_products):
+                    combination_info = product._get_combination_info_variant()
+                    res_product.update(combination_info)
+                    res_product['list_price'] = FieldMonetary.value_to_html(res_product['list_price'], monetary_options)
+                    res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
+                    if rating:
+                        res_product['rating'] = request.env["ir.ui.view"].render_template('website_rating.rating_widget_stars_static', values={
+                            'rating_avg': product.rating_avg,
+                            'rating_count': product.rating_count,
+                        })
+
+                return res
+        return {}
+
+    @http.route('/shop/products/recently_viewed_update', type='json', auth='public', website=True)
+    def products_recently_viewed_update(self, product_id, **kwargs):
+        res = {}
+        Visitor = request.env['website.visitor']
+        visitor = Visitor._get_visitor_from_request()
+        if not visitor:
+            visitor_sudo = Visitor._create_visitor({
+                'product_id': product_id,
+                'visit_datetime': datetime.now(),
+            })
+            res['visitor_id'] = visitor_sudo.access_token
+        else:
+            visitor._add_viewed_product(product_id)
         return res

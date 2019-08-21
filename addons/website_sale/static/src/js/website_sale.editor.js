@@ -392,4 +392,50 @@ options.registry.ProductsSearchBar = options.Class.extend({
         }).open();
     },
 });
+
+/**
+ * Handles the edition of products search bar snippet.
+ */
+options.registry.ProductsRecentlyViewed = options.Class.extend({
+    xmlDependencies: ['/website_sale/static/src/xml/website_sale_recently_viewed.xml'],
+
+    /**
+     * @override
+     */
+    start: function () {
+        var carouselOptions = {
+            productsGroups: [[{
+                    id: 0,
+                    website_url: '#',
+                    display_name: 'Product 1',
+                    price: '$ <span class="oe_currency_value">750.00</span>',
+                }, {
+                    id: 0,
+                    website_url: '#',
+                    display_name: 'Product 2',
+                    price: '$ <span class="oe_currency_value">750.00</span>',
+                }, {
+                    id: 0,
+                    website_url: '#',
+                    display_name: 'Product 3',
+                    price: '$ <span class="oe_currency_value">750.00</span>',
+                }, {
+                    id: 0,
+                    website_url: '#',
+                    display_name: 'Product 4',
+                    price: '$ <span class="oe_currency_value">750.00</span>',
+                }]],
+            uniqueId: 1,
+            productFrame: 4
+        };
+        this.$target.find('.slider').html($(qweb.render('website_sale.productsRecentlyViewed', carouselOptions))).fadeIn();
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    cleanForSave: function () {
+        this.$target.find('.slider').html('').css('display', 'none');
+    },
+});
 });
