@@ -184,6 +184,40 @@ Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
 SSBhbSB0aGUgQmF0TWFuCg=="""
 
 
+MAIL_MULTIPART_WEIRD_FILENAME = """X-Original-To: john@doe.com
+Delivered-To: johndoe@example.com
+Received: by mail.example.com (Postfix, from userid 10002)
+    id E8166BFACB; Fri, 23 Aug 2013 13:18:02 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Subject: test
+Message-ID: <c0c20fdd-a38e-b296-865b-d9232bf30ce5@odoo.com>
+Date: Mon, 26 Aug 2019 16:55:09 +0200
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------FACA7766210AAA981EAE01F3"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------FACA7766210AAA981EAE01F3
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+plop
+
+
+--------------FACA7766210AAA981EAE01F3
+Content-Type: text/plain; charset=UTF-8;
+ name="=?UTF-8?B?NjJfQDssXVspPS4ow4fDgMOJLnR4dA==?="
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename*0*=utf-8'en-us'%36%32%5F%40%3B%2C%5D%5B%29%3D%2E%28%C3%87%C3%80%C3%89;
+ filename*1*=%2E%74%78%74
+
+SSBhbSBhIGZpbGUgd2l0aCBhIHZhbGlkIHdpbmRvd3MgZmlsZW5hbWUK
+--------------FACA7766210AAA981EAE01F3--
+"""
+
+
 MAIL_MULTIPART_IMAGE = """X-Original-To: raoul@example.com
 Delivered-To: micheline@example.com
 Received: by mail1.example.com (Postfix, from userid 99999)

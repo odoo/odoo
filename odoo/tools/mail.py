@@ -11,7 +11,6 @@ import socket
 import threading
 import time
 
-from email.header import decode_header, Header
 from email.utils import getaddresses
 from lxml import etree
 
@@ -548,22 +547,9 @@ def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
 
-# was mail_message.decode()
-def decode_smtp_header(smtp_header):
-    """Returns unicode() string conversion of the given encoded smtp header
-    text. email.header decode_header method return a decoded string and its
-    charset for each decoded par of the header. This method unicodes the
-    decoded header and join them in a complete string. """
-    if isinstance(smtp_header, Header):
-        smtp_header = ustr(smtp_header)
-    if smtp_header:
-        text = decode_header(smtp_header.replace('\r', ''))
-        return ''.join([ustr(x[0], x[1]) for x in text])
-    return u''
-
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
-    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+    return separator.join(h for h in message.get_all(header, []) if h)
 
 def formataddr(pair):
     """Takes a 2-tuple of the form (realname, email_address) and returns

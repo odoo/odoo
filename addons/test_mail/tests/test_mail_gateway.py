@@ -15,11 +15,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
-<<<<<<< HEAD
-from odoo.tools import email_split_and_format, mute_logger, pycompat
-=======
-from odoo.tools import mute_logger, pycompat, formataddr
->>>>>>> [REF] mail: remove deprecated email formataddr
+from odoo.tools import email_split_and_format, mute_logger, pycompat, formataddr
 
 def from_string(text):
     return email.message_from_string(pycompat.to_text(text), policy=email.policy.SMTP)
@@ -59,6 +55,9 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
         res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_SINGLE_BINARY))
         self.assertEqual(res['body'], '')
         self.assertEqual(res['attachments'][0][0], 'thetruth.pdf')
+
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_MULTIPART_WEIRD_FILENAME))
+        self.assertEqual(res['attachments'][0][0], '62_@;,][)=.(ÇÀÉ.txt')
 
     def test_message_parse_eml(self):
         # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.

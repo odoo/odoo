@@ -4,7 +4,6 @@
 import datetime
 
 from odoo import api, models, fields
-from odoo.tools import decode_smtp_header
 
 BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
@@ -19,7 +18,7 @@ class MailThread(models.AbstractModel):
         by using the References header of the incoming message and looking for
         matching message_id in mailing.trace. """
         if message.get('References') and routes:
-            message_ids = [x.strip() for x in decode_smtp_header(message['References']).split()]
+            message_ids = [x.strip() for x in message['References'].split()]
             self.env['mailing.trace'].set_opened(mail_message_ids=message_ids)
             self.env['mailing.trace'].set_replied(mail_message_ids=message_ids)
         return super(MailThread, self)._message_route_process(message, message_dict, routes)

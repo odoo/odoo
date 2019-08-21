@@ -1231,7 +1231,7 @@ class MailThread(models.AbstractModel):
         #   type="text/html"
         if message.get_content_maintype() == 'text':
             encoding = message.get_content_charset()
-            body = message.get_payload(decode=True)
+            body = message.get_content()
             body = tools.ustr(body, encoding, errors='replace')
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
@@ -1247,40 +1247,29 @@ class MailThread(models.AbstractModel):
                     mixed = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
-                # part.get_filename returns decoded value if able to decode, coded otherwise.
-                # original get_filename is not able to decode iso-8859-1 (for instance).
-                # therefore, iso encoded attachements are not able to be decoded properly with get_filename
-                # code here partially copy the original get_filename method, but handle more encoding
-                filename = part.get_param('filename', None, 'content-disposition')
-                if not filename:
-                    filename = part.get_param('name', None)
-                if filename:
-                    if isinstance(filename, tuple):
-                        # RFC2231
-                        filename = email.utils.collapse_rfc2231_value(filename).strip()
-                    else:
-                        filename = tools.decode_smtp_header(filename)
+
+                filename = part.get_filename()  # I may not properly handle all charsets
                 encoding = part.get_content_charset()  # None if attachment
 
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
                     inner_cid = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, part.get_payload(decode=True), {'cid': inner_cid}))
+                    attachments.append(self._Attachment(filename, part.get_content(), {'cid': inner_cid}))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = tools.append_content_to_html(body, tools.ustr(part.get_payload(decode=True),
+                    body = tools.append_content_to_html(body, tools.ustr(part.get_content(),
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     # mutlipart/alternative have one text and a html part, keep only the second
                     # mixed allows several html parts, append html content
                     append_content = not alternative or (html and mixed)
-                    html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
+                    html = tools.ustr(part.get_content(), encoding, errors='replace')
                     if not append_content:
                         body = html
                     else:
@@ -1289,7 +1278,7 @@ class MailThread(models.AbstractModel):
                     body = tools.html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
