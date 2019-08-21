@@ -807,7 +807,7 @@ odoo.define('web.basic_model_tests', function (require) {
             model.destroy();
         });
 
-        QUnit.test('undoing a change makes the record not dirty', async function (assert) {
+        QUnit.test('undoing a change keeps the record dirty', async function (assert) {
             assert.expect(4);
 
             this.params.fieldNames = ['foo'];
@@ -824,7 +824,7 @@ odoo.define('web.basic_model_tests', function (require) {
             await model.notifyChanges(resultID, { foo: "hello" });
             assert.ok(model.isDirty(resultID), "record should be dirty");
             await model.notifyChanges(resultID, { foo: "gnap" });
-            assert.ok(!model.isDirty(resultID), "record should not be dirty");
+            assert.ok(model.isDirty(resultID), "record should be dirty");
             model.destroy();
         });
 

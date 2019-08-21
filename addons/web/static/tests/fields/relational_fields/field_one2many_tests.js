@@ -938,7 +938,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (args.method === 'write') {
-                        assert.deepEqual(args.args[1].turtles, [[4, 2, false], [1, 1, { "turtle_int": 2 }], [1, 3, { "turtle_int": 3 }]],
+                        assert.deepEqual(args.args[1].turtles, [[1, 2, { "turtle_int": 1 }], [1, 1, { "turtle_int": 2 }], [1, 3, { "turtle_int": 3 }]],
                             "should change all lines that have changed (the first one doesn't change because it has the same sequence)");
                     }
                     return this._super.apply(this, arguments);
