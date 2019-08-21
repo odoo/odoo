@@ -1,5 +1,17 @@
 // NOTE EDITOR
 
+body.editor_enable {
+    padding-top: $o-navbar-height !important;
+
+    #wrapwrap {
+        height: calc(100vh - #{$o-navbar-height});
+
+        .btn {
+            -webkit-user-select: none;
+        }
+    }
+}
+
 .note-editor.note-frame {
     background-color: inherit;
 
@@ -15,7 +27,7 @@
     }
 }
 
-.note-popover.popover {
+.note-popover .popover {
     z-index: $o-wysiwyg-zindex;
     height: auto;
     background-color: $o-wysiwyg-bg-color;

@@ -192,7 +192,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
 
-            tabSize: 0,
+            tabsize: 0,
             keyMap: {
                 pc: {
                     'TAB': null,

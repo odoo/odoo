@@ -2,22 +2,6 @@
 // Modifications applied on normal website DOM while being in the editor.
 //------------------------------------------------------------------------------
 
-body.editor_enable {
-    padding-top: $o-navbar-height !important;
-
-    &.editor_has_snippets {
-        padding-left: $o-we-sidebar-width !important;
-    }
-
-    #wrapwrap {
-        height: calc(100vh - #{$o-navbar-height});
-
-        .btn {
-            -webkit-user-select: none;
-        }
-    }
-}
-
 //------------------------------------------------------------------------------
 // Editor components style.
 //------------------------------------------------------------------------------
@@ -27,74 +11,21 @@ body.editor_enable {
     height: $o-navbar-height;
     background-color: $o-we-color-dark;
     z-index: $zindex-modal - 9;
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    left: 0px;
-    white-space: nowrap;
+}
+.note-popover .popover {
+    height: $o-navbar-height;
+    border-radius: 0;
+    border-width: 0 1px;
 
-    transition: background-color 400ms $o-we-md-ease 0s;
-    font-family: $o-we-font-family;
-
-    form.navbar-form {
+    .popover-body .btn {
         height: $o-navbar-height;
-        z-index: 1060;
-        margin: 0;
-        padding: 0;
-        position: absolute;
-        top: -1px;
-        right: -1px;
-        transition: right 0.4s $o-we-md-ease 0s;
-        border-left: 1px solid $o-we-color-divider;
-        background-color: inherit;
+    }
+}
 
-        .btn-group {
-            height: 100%;
-        }
-
-        .btn {
-            height: 100%;
-            margin: 0;
-            padding: 10px;
-            line-height: 1.2;
-            font-size: 13px;
-            font-family: $o-we-font-family;
-
-            transition: all 0.3s ease 0s;
-            border: none;
-            border-radius: 0;
-
-            .fa {
-                margin-right: $grid-gutter-width/4;
-
-                &.fa-times {
-                    color: $o-we-color-danger;
-                }
-            }
-
-            &.btn-primary {
-                @include button-variant($o-brand-odoo, $o-brand-odoo);
-            }
-
-            &.btn-secondary {
-                @include button-variant($o-we-color-dark, $o-we-color-dark);
-
-                &:hover {
-                    background: rgba(black, 0.5);
-                }
-            }
-
-            &:focus,
-            &:active,
-            &:focus:active {
-                outline: none;
-            }
-        }
-
-        .dropdown-menu {
-            left: auto;
-            right: 0;
-        }
+// SNIPPETS
+#oe_snippets {
+    #snippets_menu {
+        height: $o-wysiwyg-sidebar-height;
     }
 }
 
@@ -553,23 +484,6 @@ body .modal {
 
     &>.note-editing-area {
         overflow: visible;
-    }
-}
-
-.note-popover .popover {
-    height: $o-navbar-height;
-    top: 0 !important;
-    left: 0 !important;
-    padding: 0;
-    margin: 0 0 0 $o-we-sidebar-width;
-    border-radius: 0;
-    border-width: 0 1px;
-    width: auto;
-    text-align: center;
-    box-shadow: none;
-
-    .popover-content .btn {
-        height: $o-navbar-height;
     }
 }
 

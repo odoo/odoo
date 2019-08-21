@@ -12,8 +12,8 @@
         height: $o-wysiwyg-toolbar-height;
         line-height: $o-wysiwyg-toolbar-height;
         border-radius: 0;
-        background-color: $o-we-color-dark;
-        color: $o-we-color-text-light;
+        background-color: $o-wysiwyg-bg-color;
+        color: $o-wysiwyg-color;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -35,15 +35,21 @@
 
     .dropdown-menu {
         position: absolute;
-        bottom: -1px;
+        bottom: -2px;
         top: -3px !important;
         left: -5px !important;
-        right: 3px !important;
+        right: -2px !important;
         margin: 0;
         border-radius: 0;
         overflow: auto;
         background-color: $o-wysiwyg-bg-color;
         z-index: 1050;
+
+        &.show {
+            bottom: 31px !important;
+            top: -2px !important;
+            right: 3px !important;
+        }
 
         .dropdown-item { 
             padding: 10px 10px;
