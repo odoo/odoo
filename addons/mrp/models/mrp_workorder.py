@@ -279,11 +279,11 @@ class MrpWorkorder(models.Model):
                 # finished date of the last WO is update.
                 if workorder == workorder.production_id.workorder_ids[0] and 'date_planned_start' in values:
                     workorder.production_id.with_context(force_date=True).write({
-                        'date_planned_start': values['date_planned_start']
+                        'date_planned_start': fields.Datetime.to_datetime(values['date_planned_start'])
                     })
                 if workorder == workorder.production_id.workorder_ids[-1] and 'date_planned_finished' in values:
                     workorder.production_id.with_context(force_date=True).write({
-                        'date_planned_finished': values['date_planned_finished']
+                        'date_planned_finished': fields.Datetime.to_datetime(values['date_planned_finished'])
                     })
         return super(MrpWorkorder, self).write(values)
 

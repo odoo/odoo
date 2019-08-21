@@ -440,7 +440,7 @@ class MrpProduction(models.Model):
             moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
                 lambda r: r.state not in ['done', 'cancel'])
             moves.write({
-                'date_expected': vals['date_planned_start'],
+                'date_expected': fields.Datetime.to_datetime(vals['date_planned_start']),
             })
         for production in self:
             if 'date_planned_start' in vals:
