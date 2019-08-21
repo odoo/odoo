@@ -9,6 +9,11 @@ from odoo.addons.portal.controllers.mail import PortalChatter
 
 class PortalChatter(PortalChatter):
 
+    def _portal_post_filter_params(self):
+        fields = super(PortalChatter, self)._portal_post_filter_params()
+        fields.append('rating_value')
+        return fields
+
     @http.route()
     def portal_chatter_init(self, res_model, res_id, domain=False, limit=False, **kwargs):
         result = super(PortalChatter, self).portal_chatter_init(res_model, res_id, domain=domain, limit=limit, **kwargs)
