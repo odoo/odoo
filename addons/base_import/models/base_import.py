@@ -446,7 +446,11 @@ class Import(models.TransientModel):
             'date_format') else []
         user_date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
         if user_date_format:
-            date_patterns.append(user_date_format)
+            try:
+                to_re(user_date_format)
+                date_patterns.append(user_date_format)
+            except KeyError:
+                pass
         date_patterns.extend(DATE_PATTERNS)
         match = check_patterns(date_patterns, preview_values)
         if match:
