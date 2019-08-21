@@ -102,7 +102,7 @@ class WebsiteEventTrackController(http.Controller):
         '''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track/tag/<model("event.track.tag"):tag>'''
     ], type='http', auth="public", website=True, sitemap=False)
     def event_tracks(self, event, tag=None, **post):
-        if not event.can_access_from_current_website():
+        if not event.can_access_from_current_website() or (tag and tag.color == 0):
             raise NotFound()
 
         event = event.with_context(tz=event.date_tz or 'UTC')

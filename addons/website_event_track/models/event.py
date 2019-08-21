@@ -97,10 +97,10 @@ class Event(models.Model):
         res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
         return res
 
-    @api.depends('track_ids.tag_ids')
+    @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
     def _compute_tracks_tag_ids(self):
         for event in self:
-            event.tracks_tag_ids = event.track_ids.mapped('tag_ids').ids
+            event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
 
     @api.onchange('event_type_id')
     def _onchange_type(self):

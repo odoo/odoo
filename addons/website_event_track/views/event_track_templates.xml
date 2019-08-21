@@ -146,7 +146,7 @@
                         </li>
                     </ul>
                     <ul class="list-inline">
-                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags">
+                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags" t-if="tag_id.color != 0">
                             <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                                 <i class="fa fa-tags"/>
                                 <span t-field="tag_id.name"/>
@@ -209,7 +209,7 @@
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
-                <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item">
+                <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item" t-if="tag_id.color != 0">
                     <span class="fa fa-tags"></span>
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                         <span t-field="tag_id.name"/>
