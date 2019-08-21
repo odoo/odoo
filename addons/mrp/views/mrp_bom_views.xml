@@ -8,6 +8,24 @@
             <field name="context" eval="{'model': 'report.mrp.report_bom_structure'}" />
         </record>
 
+        <record id="mrp_bom_byproduct_form_view" model="ir.ui.view">
+            <field name="name">mrp.bom.byproduct.form</field>
+            <field name="model">mrp.bom.byproduct</field>
+            <field name="arch" type="xml">
+                <form string="Byproduct">
+                    <group>
+                        <field name="product_id"/>
+                        <label for="product_qty"/>
+                        <div class="o_row">
+                            <field name="product_qty"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
+                        </div>
+                        <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
             <field name="model">mrp.bom</field>
@@ -70,19 +88,13 @@
                             </field>
                         </page>
                         <page string="By-products" attrs="{'invisible': [('type','!=','normal')]}" groups="mrp.group_mrp_byproducts">
-                            <field name="byproduct_ids">
+                            <field name="byproduct_ids"  context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view'}">
                                 <tree string="By-products"  editable="top">
                                     <field name="product_id" context="{'default_type': 'product'}"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                 </tree>
-                                <form string="By-products">
-                                    <field name="product_id"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom_id" groups="uom.group_uom"/>
-                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                </form>
                            </field>
                        </page>
                         <page string="Miscellaneous">
