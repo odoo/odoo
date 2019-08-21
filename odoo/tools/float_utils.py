@@ -73,7 +73,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     normalized_value = value / rounding_factor # normalize
     sign = math.copysign(1.0, normalized_value)
     epsilon_magnitude = math.log(abs(normalized_value), 2)
-    epsilon = 2**(epsilon_magnitude-53)
+    epsilon = 2**(epsilon_magnitude-52)
 
     # TIE-BREAKING: UP/DOWN (for ceiling[resp. flooring] operations)
     # When rounding the value up[resp. down], we instead subtract[resp. add] the epsilon value
