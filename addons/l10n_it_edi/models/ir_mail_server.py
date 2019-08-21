@@ -99,7 +99,7 @@ class FetchmailServer(models.Model):
     def _attachment_invoice(self, msg_txt):
         parsed_values = self.env['mail.thread']._message_parse_extract_payload(msg_txt)
         body, attachments = parsed_values['body'], parsed_values['attachments']
-        from_address = tools.decode_smtp_header(msg_txt.get('from'))
+        from_address = msg_txt.get('from')
         for attachment in attachments:
             split_attachment = attachment.fname.rpartition('.')
             if len(split_attachment) < 3:
