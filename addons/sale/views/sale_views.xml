@@ -351,6 +351,7 @@
                                                 widget="many2one_barcode"
                                                />
                                             <field name="invoice_status" invisible="1"/>
+                                            <field name="display_type_invoice_status" invisible="1"/>
                                             <field name="qty_to_invoice" invisible="1"/>
                                             <field name="qty_delivered_manual" invisible="1"/>
                                             <field name="qty_delivered_method" invisible="1"/>
@@ -417,7 +418,7 @@
                                 <tree
                                     string="Sales Order Lines"
                                     editable="bottom"
-                                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                                    decoration-info="invoice_status == 'to invoice' or display_type_invoice_status == 'to invoice'"
                                 >
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
@@ -538,6 +539,7 @@
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
+                                    <field name="display_type_invoice_status" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="price_tax" invisible="1"/>
                                 </tree>

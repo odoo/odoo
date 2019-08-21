@@ -513,22 +513,14 @@ class SaleOrder(models.Model):
         # 1) Create invoices.
         invoice_vals_list = []
         for order in self:
-            pending_section = None
 
             # Invoice values.
             invoice_vals = order._prepare_invoice()
 
-            # Invoice line values (keep only necessary sections).
+            # Invoice line values.
             for line in order.order_line:
-                if line.display_type == 'line_section':
-                    pending_section = line
+                if float_is_zero(line.qty_to_invoice, precision_digits=precision) and line.display_type_invoice_status != 'to invoice':
                     continue
-                if float_is_zero(line.qty_to_invoice, precision_digits=precision):
-                    continue
-                if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
-                    if pending_section:
-                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
-                        pending_section = None
                 invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
 
             if not invoice_vals['invoice_line_ids']:
@@ -910,7 +902,7 @@ class SaleOrderLine(models.Model):
         """
         Compute the invoice status of a SO line. Possible statuses:
         - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
-          invoice. This is also hte default value if the conditions of no other status is met.
+          invoice. This is also the default value if the conditions of no other status is met.
         - to invoice: we refer to the quantity to invoice of the line. Refer to method
           `_get_to_invoice_qty()` for more information on how this quantity is calculated.
         - upselling: this is possible only for a product invoiced on ordered quantities for which
@@ -922,7 +914,7 @@ class SaleOrderLine(models.Model):
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
-            if line.state not in ('sale', 'done'):
+            if not line.product_id or line.state not in ('sale', 'done'):
                 line.invoice_status = 'no'
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
@@ -933,6 +925,41 @@ class SaleOrderLine(models.Model):
                 line.invoice_status = 'invoiced'
             else:
                 line.invoice_status = 'no'
+
+    @api.depends('invoice_status', 'sequence', 'order_id.order_line.sequence')
+    def _compute_display_type_invoice_status(self):
+        """
+        Compute the invoice status of a SO line with a display type (section or note). Possible statuses:
+        - no
+        - to invoice: For section lines, if any line of the section is to invoice.
+          For note lines, if the previous line is to invoice or if the note line
+          is the first of the quote and any other line is to invoice.
+        """
+        records = self.filtered('display_type').sorted()
+        for line in records:
+            line.display_type_invoice_status = 'no'
+            if line.state in ('sale', 'done'):
+                if line.display_type == 'line_section':
+                    order_lines = line.order_id.order_line.sorted()
+                    ind = order_lines.ids.index(line.id)
+                    # the section is to invoice if any line in the section is to invoice
+                    for i in range(ind+1, len(order_lines)):
+                        if order_lines[i].display_type == False and order_lines[i].invoice_status == 'to invoice':
+                            line.display_type_invoice_status = 'to invoice'
+                            break
+                        elif order_lines[i].display_type == 'line_section':
+                            break
+                elif line.display_type == 'line_note':
+                    order_lines = line.order_id.order_line.sorted()
+                    ind = order_lines.ids.index(line.id)
+                    # the note is to invoice if the previous line is to invoice
+                    if ind > 0 and (order_lines[ind-1].invoice_status == 'to invoice' or order_lines[ind-1].display_type_invoice_status == 'to invoice'):
+                        line.display_type_invoice_status = 'to invoice'
+                    # the note is to invoice if the note is the first line of the quote
+                    # and any other line in the quote is to invoice
+                    if ind == 0 and any(o_line.invoice_status == 'to invoice' for o_line in order_lines):
+                        line.display_type_invoice_status = 'to invoice'
+        (self-records).write({'display_type_invoice_status': 'no'})
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
@@ -1106,6 +1133,10 @@ class SaleOrderLine(models.Model):
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
+    display_type_invoice_status = fields.Selection([
+        ('to invoice', 'To Invoice'),
+        ('no', 'Nothing to Invoice')
+        ], string='Display Type Invoice Status', compute='_compute_display_type_invoice_status', readonly=True)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
