@@ -403,9 +403,9 @@ var ControlPanelModel = mvc.Model.extend({
         var self = this;
         var filter = this.filters[filterId];
         var group = this.groups[filter.groupId];
-        var index = group.activeFilterIds.findIndex(isEqualTo([filterId]));
+        this.index = group.activeFilterIds.findIndex(isEqualTo([filterId]));
         var initiaLength = group.activeFilterIds.length;
-        if (index === -1) {
+        if (this.index === -1) {
             // we need to deactivate all groups when activating a favorite
             if (filter.type === 'favorite') {
                 this.query.forEach(function (groupId) {
@@ -417,7 +417,7 @@ var ControlPanelModel = mvc.Model.extend({
                         }
                         if (filter.currentOptionIds) {
                             filter.currentOptionIds.clear();
-                        }   
+                        }
                     })
                     group.activeFilterIds = [];
                 });
@@ -432,7 +432,7 @@ var ControlPanelModel = mvc.Model.extend({
             if (filter.type === 'field' && filter.autoCompleteValues) {
                 filter.autoCompleteValues = [];
             }
-            group.activeFilterIds.splice(index, 1);
+            group.activeFilterIds.splice(this.index, 1);
             // if initiaLength is 1, the group is now inactive.
             if (initiaLength === 1) {
                 this.query.splice(this.query.indexOf(group.id), 1);
@@ -456,7 +456,7 @@ var ControlPanelModel = mvc.Model.extend({
                     acc.push(y.optionId);
                 }
                 return acc;
-            }, 
+            },
             []
         );
 
@@ -723,8 +723,8 @@ var ControlPanelModel = mvc.Model.extend({
         return pyUtils.assembleDomains(domains, 'AND');
     },
     /**
-     * Return an array containing 'facets' used to create the content of the search bar. 
-     * 
+     * Return an array containing 'facets' used to create the content of the search bar.
+     *
      * @returns {Object}
      */
     _getFacets: function () {

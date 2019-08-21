@@ -94,17 +94,16 @@ var SearchFacet = Widget.extend({
      * @returns {string}
      */
     _getIcon: function () {
-        var icon;
         if (this.facet.type === 'filter') {
-            icon = 'fa-filter';
+            this.icon = 'fa-filter';
         } else if (this.facet.type === 'groupBy') {
-            icon = 'fa-bars';
+            this.icon = 'fa-bars';
         } else if (this.facet.type === 'favorite') {
-            icon = 'fa-star';
+            this.icon = 'fa-star';
         } else if (this.facet.type === 'timeRange') {
-            icon = 'fa-calendar';
+            this.icon = 'fa-calendar';
         }
-        return icon;
+        return this.icon;
     },
     /**
      * Get the correct separator according to facet type.

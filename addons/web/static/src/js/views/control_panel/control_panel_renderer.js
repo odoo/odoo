@@ -288,14 +288,15 @@ var ControlPanelRenderer = Renderer.extend({
     _renderSearchBar: function () {
         // TODO: might need a reload instead of a destroy/instantiate
         var oldSearchBar = this.searchBar;
-        this.searchBar = new SearchBar(this, {
+        this.searchBarElements = {
             context: this.context,
             facets: this.state.facets,
             fields: this.state.fields,
             filters: this.state.filters,
             filterFields: this.state.filterFields,
             groupBys: this.state.groupBys,
-        });
+        };
+        this.searchBar = new SearchBar(this, this.searchBarElements);
         return this.searchBar.appendTo(this.$('.o_searchview')).then(function () {
             if (oldSearchBar) {
                 oldSearchBar.destroy();

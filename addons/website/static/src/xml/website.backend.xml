@@ -97,4 +97,19 @@
         </a>
     </t>
 
+    <div t-name="website.WebsiteMenu" class="btn-group o_dropdown">
+        <button class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+            aria-expanded="false" tabindex="-1">
+            <span class="fa fa-globe"/> Websites <span t-att-class="widget.symbol"/>
+        </button>
+        <div class="dropdown-menu o_dropdown_menu" role="menu">
+            <t t-foreach="widget.websites" t-as="website">
+                <a role="menuitem" class="dropdown-item o_filter_website"
+                    t-att-data-website-id="website.id">
+                    <t t-esc="website.name"/>
+                </a>
+            </t>
+        </div>
+    </div>
+
 </templates>
