@@ -3,3 +3,4 @@
 
 from . import test_l10n_ch_isr
 from . import test_l10n_ch_swissqr
+from . import test_l10n_ch_postal
