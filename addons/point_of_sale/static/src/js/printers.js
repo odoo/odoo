@@ -33,10 +33,19 @@ var PrinterMixin = {
     },
 
     /**
+     * Generate a jpeg image from a canvas
+     * @param {DOMElement} canvas 
+     */
+    process_canvas: function (canvas) {
+        return canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,','');
+    },
+
+    /**
      * Renders the html as an image to print it
      * @param {String} receipt: The receipt to be printed, in HTML
      */
-    htmlToImg: function (receipt) {;
+    htmlToImg: function (receipt) {
+        var self = this;
         $('.pos-receipts').html(receipt);
         $('.pos-receipt').addClass('pos-receipt-print');
         var promise = new Promise(function (resolve, reject) {
@@ -52,7 +61,7 @@ var PrinterMixin = {
                 }
             }).then(function (canvas) {
                 $('.pos-receipts').empty();
-                resolve(canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,',''));
+                resolve(self.process_canvas(canvas));
             });
         });
         return promise;

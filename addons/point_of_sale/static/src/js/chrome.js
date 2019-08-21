@@ -812,7 +812,7 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             'name':   'sale_details',
             'widget': SaleDetailsButton,
             'append':  '.pos-rightheader',
-            'condition': function(){ return this.pos.config.use_proxy; },
+            'condition': function(){ return this.pos.proxy.printer; },
         },{
             'name':   'proxy_status',
             'widget': ProxyStatusWidget,
