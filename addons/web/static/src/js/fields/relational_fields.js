@@ -817,7 +817,9 @@ var FieldMany2One = AbstractField.extend({
 });
 
 var Many2oneBarcode = FieldMany2One.extend({
-    description: "",
+    // We don't require this widget to be displayed in studio sidebar in
+    // non-debug mode hence just extended it from its original widget, so that
+    // description comes from parent and hasOwnProperty based condition fails
 });
 
 var ListFieldMany2One = FieldMany2One.extend({

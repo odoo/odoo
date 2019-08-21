@@ -13,7 +13,6 @@ var FieldFloatRating = basicFields.FieldFloat.extend({
         ['/website_rating/static/src/xml/portal_tools.xml'] : basicFields.FieldFloat.prototype.xmlDependencies.concat(
             ['/website_rating/static/src/xml/portal_tools.xml']
         ),
-    description: "",
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
