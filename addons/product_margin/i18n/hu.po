@@ -5,9 +5,9 @@
 # Translators:
 # Martin Trigaux, 2018
 # krnkris, 2018
-# gezza <geza.nagy@oregional.hu>, 2018
 # Kovács Tibor <kovika@gmail.com>, 2018
 # Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# gezza <geza.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,12 +26,12 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr "# számlázott a beszerzéskor"
+msgstr "# Számlázott beszerzés"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr "# Eladáskor számlázott"
+msgstr "# Számlázott értékesítés"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
@@ -46,22 +46,22 @@ msgstr "Elemzési kritérium"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr "Átl. ár a vevő számláin."
+msgstr "Átl. ár vevői számlán."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr "Átl. ár a brszállítók számláin."
+msgstr "Átl. ár szállítói számlán."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Purchase Unit Price"
-msgstr ""
+msgstr "Átl. beszerzési egységár"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Sale Unit Price"
-msgstr ""
+msgstr "Átl. eladási egységár"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -97,7 +97,7 @@ msgstr "Megjelenített név"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
-msgstr "Tervezet, nyitott és rendezett"
+msgstr "Tervezet, nyitott és kifizetett"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__expected_margin
@@ -112,22 +112,22 @@ msgstr "Elvárt árrés (%)"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_expected
 msgid "Expected Sale"
-msgstr "Elvárt árbevétel"
+msgstr "Elvárt értékesítés"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr "Elvárt árbevétel - számított beszerzési érték"
+msgstr "Elvárt értékesítés - Normál költség"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sales_gap
 msgid "Expected Sale - Turn Over"
-msgstr "Elvárt árbevétel - tényleges árbevétel"
+msgstr "Elvárt értékesítés - Forgalom"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr "Elvárt árrés * 100 / Elvárt árbevétel"
+msgstr "Elvárt árrés * 100 / Elvárt értékesítés"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__from_date
@@ -168,12 +168,12 @@ msgstr "Legutóbb frissítve "
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__date_from
 msgid "Margin Date From"
-msgstr "Árrés ettől a dátumtól"
+msgstr "Árrés dátum kezdete"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__date_to
 msgid "Margin Date To"
-msgstr "Árrés eddig a dátumig"
+msgstr "Árrés dátum vége"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -183,23 +183,23 @@ msgstr "Árrések"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__normal_cost
 msgid "Normal Cost"
-msgstr "Számított beszerzési érték"
+msgstr "Normál költség"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr "Számított beszerzési érték - tényleges beszerzési érték"
+msgstr "Normál költség - Teljes költség"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Open Margins"
-msgstr "Induló árrések"
+msgstr "Nyitó árrések"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Open and Paid"
-msgstr "Nyitott és rendezett"
+msgstr "Nyitott és kifizetett"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -215,7 +215,7 @@ msgstr "Termék"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
-msgstr "Termékárrés"
+msgstr "Termék árrés"
 
 #. module: product_margin
 #: code:addons/product_margin/wizard/product_margin.py:49
@@ -226,7 +226,7 @@ msgstr "Termékárrés"
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 #, python-format
 msgid "Product Margins"
-msgstr "Termékárrések"
+msgstr "Termék árrések"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -236,7 +236,7 @@ msgstr "Tulajdonságok kategóriái"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_gap
 msgid "Purchase Gap"
-msgstr "Beszerzési különbözet"
+msgstr "Beszerzési rés"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -246,58 +246,62 @@ msgstr "Beszerzések"
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Sales"
-msgstr "Értékesítés"
+msgstr "Értékesítések"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sales_gap
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Sales Gap"
-msgstr "Árbevétel különbözet"
+msgstr "Értékesítési rés"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Standard Price"
-msgstr "Elszámoló ár"
+msgstr "Alapár"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
-"A többszörös bekerülési ár és a beszállítói számlák összegének mennyisége"
+"Multiplikáció összesen költség ár és szállítói számlák mennyisége alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr "A többszörös számlázás összege és a vevő számlák mennyisége"
+msgstr ""
+"Multiplikáció összesen számlázási ár és vevői számlák mennyisége alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
 msgstr ""
-"A többszörös számlázási ár és a beszállítói számlák összegének mennyisége"
+"Multiplikáció összesen számlázási ár és a szállítói számlák mennyisége "
+"alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
 msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
-msgstr "A többszörös eladói katalógus ár és a vevő számlák mennyisége"
+msgstr ""
+"Multiplikáció összesen értékesítési katalógus ár és vevői számlák mennyisége"
+" alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr "Összes mennyiség a kimenő számlákban"
+msgstr "Összes mennyiség vevői számlákban"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr "Összes mennyiség a beszállítói számlákban"
+msgstr "Összes mennyiség szállítói számlákban"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
 msgid "To"
-msgstr "Címzett"
+msgstr "Eddig"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost
@@ -314,20 +318,20 @@ msgstr "Összes árrés"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr "Teljes árrés aránya(%)"
+msgstr "Összes árrés arány (%)"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr "Összes árrés * 100 / tényleges árbevétel"
+msgstr "Összes árrés * 100 / Forgalom"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__turnover
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Turnover"
-msgstr "Tényleges árbevétel"
+msgstr "Forgalom"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin
 msgid "Turnover - Standard price"
-msgstr "Tényleges árbevétel - alapár"
+msgstr "Forgalom - Alapár"
