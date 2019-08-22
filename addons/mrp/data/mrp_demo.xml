@@ -511,14 +511,14 @@
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
             <field name="prod_lot_id" ref="lot_product_27_0"/>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_drawer_lot1" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">40</field>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_product_drawer_drawer" model="stock.inventory.line">
             <field name="product_id" ref="product_product_drawer_drawer"/>
@@ -526,7 +526,7 @@
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
             <field name="prod_lot_id" ref="lot_product_product_drawer_drawer_0"/>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_product_drawer_case" model="stock.inventory.line">
             <field name="product_id" ref="product_product_drawer_case"/>
@@ -534,7 +534,7 @@
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
             <field name="prod_lot_id" ref="lot_product_product_drawer_case_0"/>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
 
         <record id="stock_inventory_line_product_wood_panel" model="stock.inventory.line">
@@ -542,28 +542,28 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_product_ply" model="stock.inventory.line">
             <field name="product_id" ref="product_product_wood_ply"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">20</field>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_product_wear" model="stock.inventory.line">
             <field name="product_id" ref="product_product_wood_wear"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">30</field>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_product_table_kit" model="stock.inventory.line">
             <field name="product_id" ref="product_product_table_kit"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">30</field>
-            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
 
         <function model="stock.inventory" name="_action_done">
