@@ -25,7 +25,6 @@ class AccountMove(models.Model):
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
 
-    # TODO make it editable, we have to change move creation method
     l10n_ar_currency_rate = fields.Float(copy=False, digits=(16, 4), readonly=True, string="Currency Rate")
 
     # Mostly used on reports
@@ -52,22 +51,20 @@ class AccountMove(models.Model):
     def _get_concept(self):
         """ Method to get the concept of the invoice considering the type of the products on the invoice """
         self.ensure_one()
-        invoice_lines = self.invoice_line_ids
+        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type)
         product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
         consumable = set(['consu', 'product'])
         service = set(['service'])
         mixed = set(['consu', 'service', 'product'])
+        # on expo invoice you can mix services and products
+        expo_invoice = self.l10n_latam_document_type_id.code in ['19', '20', '21']
+
         # Default value "product"
         afip_concept = '1'
-        if product_types.issubset(mixed):
-            afip_concept = '3'
-        if product_types.issubset(service):
+        if product_types == service:
             afip_concept = '2'
-        if product_types.issubset(consumable):
-            afip_concept = '1'
-        # on expo invoice you can mix services and products
-        if self.l10n_latam_document_type_id.code in ['19', '20', '21'] and afip_concept == '3':
-            afip_concept = '1'
+        elif product_types - consumable and product_types - service and not expo_invoice:
+            afip_concept = '3'
         return afip_concept
 
     def _get_l10n_latam_documents_domain(self):
@@ -82,7 +79,6 @@ class AccountMove(models.Model):
         return domain
 
     def _check_argentinian_invoice_taxes(self):
-        _logger.info('Running checks related to argentinian documents')
 
         # check vat on companies thats has it (Responsable inscripto)
         for inv in self.filtered(lambda x: x.company_id.l10n_ar_company_requires_vat):
@@ -105,11 +101,6 @@ class AccountMove(models.Model):
                 rec.l10n_ar_afip_service_start = rec.invoice_date + relativedelta(day=1)
             if not rec.l10n_ar_afip_service_end:
                 rec.l10n_ar_afip_service_end = rec.invoice_date + relativedelta(day=1, days=-1, months=+1)
-
-    @api.onchange('invoice_date')
-    def _onchange_invoice_date(self):
-        super()._onchange_invoice_date()
-        self._set_afip_service_dates()
 
     @api.onchange('partner_id')
     def _onchange_afip_responsibility(self):
@@ -161,18 +152,18 @@ class AccountMove(models.Model):
                     1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
             rec.l10n_ar_currency_rate = l10n_ar_currency_rate
 
-        # We make validations here and not with a constraint because we want validaiton before sending electronic
+        # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
         ar_invoices._check_argentinian_invoice_taxes()
-        return super().post()
+        res = super().post()
+        self._set_afip_service_dates()
+        return res
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         if not default_values_list:
             default_values_list = [{} for move in self]
         for move, default_values in zip(self, default_values_list):
             default_values.update({
-                # TODO enable when we make l10n_ar_currency_rate editable
-                # 'l10n_ar_currency_rate': move.l10n_ar_currency_rate,
                 'l10n_ar_afip_service_start': move.l10n_ar_afip_service_start,
                 'l10n_ar_afip_service_end': move.l10n_ar_afip_service_end,
             })

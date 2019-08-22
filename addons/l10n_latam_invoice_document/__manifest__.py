@@ -4,16 +4,25 @@
     "version": "13.0.1.0.0",
     "author": "ADHOC SA",
     "category": "Localization",
+    "summary": "LATAM Document Types",
     'description': """
-LATAM Document
-==============
+Functional
+----------
 
-This module is intended to be extended by localizations (like Argentina and
-Chile) in order to manage the document types that need to be reported to the
-government required by this countries.
+In some Latinamerica countries, including Argentina and Chile, some accounting transactions like invoices and vendor bills are classified by a document types defined by the government fiscal authorities (In Argentina case AFIP, Chile case SII).
 
-In order to do that we add a new model named Document Topes and we create
-links between this new model and another Odoo's models.
+This module is intended to be extended by localizations in order to manage these document types and is an essential information that needs to be displayed in the printed reports and that needs to be easily identified, within the set of invoices as well of account moves.
+
+Each document type have their own rules and sequence number, this last one is integrated with the invoice number and journal sequence in order to be easy for the localization user. In order to support or not this document types a Journal has a new option that lets to use document or not.
+
+Technical
+---------
+
+If your localization needs this logic will then need to add this module as dependency and in your localization module extend:
+
+* extend company's _localization_use_documents() method.
+* create the data of the document types that exists for the specific country. The document type has a country field
+
 """,
     "depends": [
         "account",
