@@ -140,6 +140,7 @@ class LandedCost(models.Model):
                         'company_id': cost.company_id.id,
                     })
                     move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
+                    linked_layer.remaining_value += cost_to_add
                 # Update the AVCO
                 product = line.move_id.product_id
                 if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
