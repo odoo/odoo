@@ -22,6 +22,7 @@
                   decoration-danger="product_qty != theoretical_qty"
                   decoration-muted="product_qty == theoretical_qty"
                   decoration-bf="is_editable">
+                <field name="company_id" invisible="1"/>
                 <field name="product_tracking" invisible="1"/>
                 <field name="is_editable" invisible="1"/>
                 <field name="outdated" invisible="1"/>
@@ -43,14 +44,12 @@
                             ('product_tracking', '=', 'none'),
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"
-                       context="{'default_product_id': product_id}" optional="show"
-                       domain="[('product_id', '=', product_id)]"/>
+                       context="{'default_product_id': product_id}" optional="show"/>
                 <field name="package_id" groups="stock.group_tracking_lot" width="0.8"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"
-                       string="Package" optional="show"
-                       domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]"/>
+                       string="Package" optional="show"/>
                 <field name="partner_id" groups="stock.group_tracking_owner"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
@@ -189,6 +188,7 @@
                     <group>
                         <field name="location_ids" options="{'no_create': True}"
                                widget="many2many_tags"
+                               force_save="1"
                                groups="stock.group_stock_multi_locations"/>
                         <field name="product_ids" options="{'no_create': True}"
                                widget="many2many_tags"/>

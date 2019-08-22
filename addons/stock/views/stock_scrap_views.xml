@@ -49,7 +49,7 @@
                                 <div class="o_row">
                                     <field name="scrap_qty"/>
                                     <field name="product_uom_category_id" invisible="1"/>
-                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="product_uom_id" groups="uom.group_uom" force_save="1"/>
                                 </div>
                             </group>
                             <group>
@@ -57,8 +57,8 @@
                                 <field name="tracking" invisible="1"/>
                                 <field name="package_id" groups="stock.group_tracking_lot"/>
                                 <field name="owner_id" groups="stock.group_tracking_owner"/>
-                                <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="scrap_location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1"/>
+                                <field name="scrap_location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1"/>
                                 <field name="origin"/>
                                 <field name="date_done" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>

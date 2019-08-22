@@ -12,20 +12,6 @@ class Inventory(models.Model):
     _description = "Inventory"
     _order = "date desc, id desc"
 
-    @api.model
-    def _default_location_ids(self):
-        # If the multilocation group is not active, default the location to the one of the main
-        # warehouse.
-        if not self.user_has_groups('stock.group_stock_multi_locations'):
-            company_user = self.env.company
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
-            if warehouse:
-                return [(4, warehouse.lot_stock_id.id)]
-
-    @api.model
-    def _domain_location_ids(self):
-        return [('company_id', '=', self.env.company.id), ('usage', 'in', ['internal', 'transit'])]
-
     name = fields.Char(
         'Inventory Reference', default="Inventory",
         readonly=True, required=True,
@@ -57,13 +43,12 @@ class Inventory(models.Model):
         default=lambda self: self.env.company)
     location_ids = fields.Many2many(
         'stock.location', string='Locations',
-        readonly=True,
+        readonly=True, check_company=True,
         states={'draft': [('readonly', False)]},
-        default=lambda self: self._default_location_ids(),
-        domain=lambda self: self._domain_location_ids())
+        domain="[('company_id', '=', company_id), ('usage', 'in', ['internal', 'transit'])]")
     product_ids = fields.Many2many(
-        'product.product', string='Products',
-        domain=[('type', '=', 'product')], readonly=True,
+        'product.product', string='Products', check_company=True,
+        domain="[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", readonly=True,
         states={'draft': [('readonly', False)]},
         help="Specify Products to focus your inventory on particular Products.")
     start_empty = fields.Boolean('Empty Inventory',
@@ -72,6 +57,15 @@ class Inventory(models.Model):
         help="Allows to start with prefill counted quantity for each lines or "
         "with all counted quantity set to zero.", default='counted',
         selection=[('counted', 'Default to stock on hand'), ('zero', 'Default to zero')])
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        # If the multilocation group is not active, default the location to the one of the main
+        # warehouse.
+        if not self.user_has_groups('stock.group_stock_multi_locations'):
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
+            if warehouse:
+                self.location_ids = warehouse.lot_stock_id
 
     def copy_data(self, default=None):
         name = _("%s (copy)") % (self.name)
@@ -108,7 +102,10 @@ class Inventory(models.Model):
                 'target': 'new',
                 'res_id': wiz.id,
             }
-        return self._action_done()
+        self._action_done()
+        self.line_ids._check_company()
+        self._check_company()
+        return True
 
     def _action_done(self):
         negative = next((line for line in self.mapped('line_ids') if line.product_qty < 0 and line.product_qty != line.theoretical_qty), False)
@@ -140,6 +137,7 @@ class Inventory(models.Model):
     def action_start(self):
         self.ensure_one()
         self._action_start()
+        self._check_company()
         return self.action_open_inventory_lines()
 
     def _action_start(self):
@@ -170,6 +168,7 @@ class Inventory(models.Model):
         context = {
             'default_is_editable': True,
             'default_inventory_id': self.id,
+            'default_company_id': self.company_id.id,
         }
         # Define domains and context
         domain = [
@@ -209,7 +208,7 @@ class Inventory(models.Model):
         if self.location_ids:
             locations = self.env['stock.location'].search([('id', 'child_of', self.location_ids.ids)])
         else:
-            locations = self.env['stock.location'].search(self._domain_location_ids())
+            locations = self.env['stock.location'].search([('company_id', '=', self.company_id.id), ('usage', 'in', ['internal', 'transit'])])
         domain = ' location_id in %s AND quantity != 0 AND active = TRUE'
         args = (tuple(locations.ids),)
 
@@ -236,6 +235,7 @@ class Inventory(models.Model):
             GROUP BY product_id, location_id, lot_id, package_id, partner_id """ % domain, args)
 
         for product_data in self.env.cr.dictfetchall():
+            product_data['company_id'] = self.company_id.id
             product_data['inventory_id'] = self.id
             # replace the None the dictionary by False, because falsy values are tested later on
             for void_field in [item[0] for item in product_data.items() if item[1] is None]:
@@ -257,35 +257,27 @@ class InventoryLine(models.Model):
 
     @api.model
     def _domain_location_id(self):
-        domain = self.env['stock.inventory']._domain_location_ids()
         if self.env.context.get('active_model') == 'stock.inventory':
             inventory = self.env['stock.inventory'].browse(self.env.context.get('active_id'))
             if inventory.exists() and inventory.location_ids:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'child_of', inventory.location_ids.ids)]
-                ])
-        return domain
+                return "[('company_id', '=', company_id), ('usage', 'in', ['internal', 'transit']), ('id', 'child_of', %s)]" % inventory.location_ids.ids
+        return "[('company_id', '=', company_id), ('usage', 'in', ['internal', 'transit'])]"
 
     @api.model
     def _domain_product_id(self):
-        domain = [('type', '=', 'product')]
         if self.env.context.get('active_model') == 'stock.inventory':
             inventory = self.env['stock.inventory'].browse(self.env.context.get('active_id'))
             if inventory.exists() and len(inventory.product_ids) > 1:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'in', inventory.product_ids.ids)]
-                ])
-        return domain
+                return "[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('id', 'in', %s)]" % inventory.product_ids.ids
+        return "[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
 
     is_editable = fields.Boolean(help="Technical field to restrict the edition.")
     inventory_id = fields.Many2one(
-        'stock.inventory', 'Inventory',
+        'stock.inventory', 'Inventory', check_company=True,
         index=True, ondelete='cascade')
-    partner_id = fields.Many2one('res.partner', 'Owner')
+    partner_id = fields.Many2one('res.partner', 'Owner', check_company=True)
     product_id = fields.Many2one(
-        'product.product', 'Product',
+        'product.product', 'Product', check_company=True,
         domain=lambda self: self._domain_product_id(),
         index=True, required=True)
     product_uom_id = fields.Many2one(
@@ -296,14 +288,16 @@ class InventoryLine(models.Model):
         digits='Product Unit of Measure', default=0)
     categ_id = fields.Many2one(related='product_id.categ_id', store=True)
     location_id = fields.Many2one(
-        'stock.location', 'Location',
+        'stock.location', 'Location', check_company=True,
         domain=lambda self: self._domain_location_id(),
         index=True, required=True)
     package_id = fields.Many2one(
-        'stock.quant.package', 'Pack', index=True)
+        'stock.quant.package', 'Pack', index=True, check_company=True,
+        domain="[('location_id', '=', location_id)]",
+    )
     prod_lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number',
-        domain="[('product_id','=',product_id)]")
+        'stock.production.lot', 'Lot/Serial Number', check_company=True,
+        domain="[('product_id','=',product_id), ('company_id', '=', company_id)]")
     company_id = fields.Many2one(
         'res.company', 'Company', related='inventory_id.company_id',
         index=True, readonly=True, store=True)
@@ -481,9 +475,9 @@ class InventoryLine(models.Model):
             if float_is_zero(line.difference_qty, precision_rounding=rounding):
                 continue
             if line.difference_qty > 0:  # found more than expected
-                vals = line._get_move_values(line.difference_qty, line.product_id.property_stock_inventory.id, line.location_id.id, False)
+                vals = line._get_move_values(line.difference_qty, line.product_id.with_context(force_company=line.company_id.id).property_stock_inventory.id, line.location_id.id, False)
             else:
-                vals = line._get_move_values(abs(line.difference_qty), line.location_id.id, line.product_id.property_stock_inventory.id, True)
+                vals = line._get_move_values(abs(line.difference_qty), line.location_id.id, line.product_id.with_context(force_company=line.company_id.id).property_stock_inventory.id, True)
             vals_list.append(vals)
         return self.env['stock.move'].create(vals_list)
 
@@ -532,3 +526,4 @@ class InventoryLine(models.Model):
         lines = self.search([('inventory_id', '=', self.env.context.get('default_inventory_id'))])
         line_ids = lines.filtered(lambda line: line.outdated == value).ids
         return [('id', 'in', line_ids)]
+
