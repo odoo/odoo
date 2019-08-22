@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, ValidationError
 class AccountRegisterPayments(models.TransientModel):
     _inherit = "account.register.payments"
 
-    check_amount_in_words = fields.Char(string="Amount in Words")
+    check_amount_in_words = fields.Char(string="Amount in Words", default=lambda rp: rp.env['account.payment']._get_check_amount_in_words(rp.amount))
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
     # Note: a check_number == 0 means that it will be attributed when the check is printed
     check_number = fields.Integer(string="Check Number", readonly=True, copy=False, default=0,
@@ -43,7 +43,7 @@ class AccountRegisterPayments(models.TransientModel):
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    check_amount_in_words = fields.Char(string="Amount in Words")
+    check_amount_in_words = fields.Char(string="Amount in Words", default=lambda p: p._get_check_amount_in_words(p.amount))
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
     check_number = fields.Integer(string="Check Number", readonly=True, copy=False,
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
