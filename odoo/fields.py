@@ -1070,24 +1070,34 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __set__(self, records, value):
         """ set the value of field ``self`` on ``records`` """
-        protected_records = records & records.env.protected(self)
-        if protected_records:
-            # records being computed: no business logic, no recomputation
-            self.write(protected_records, value)
-            records -= protected_records
+        protected_ids = []
+        new_ids = []
+        other_ids = []
+        for record_id in records._ids:
+            if record_id in records.env._protected.get(self, ()):
+                protected_ids.append(record_id)
+            elif not record_id:
+                new_ids.append(record_id)
+            else:
+                other_ids.append(record_id)
 
-        new_records = records.filtered(lambda record: not record.id)
-        if new_records:
+        if protected_ids:
+            # records being computed: no business logic, no recomputation
+            protected_records = records.browse(protected_ids)
+            self.write(protected_records, value)
+
+        if new_ids:
             # new records: no business logic
+            new_records = records.browse(new_ids)
             with records.env.protecting(records._field_computed.get(self, [self]), records):
                 new_records.modified([self.name])
                 self.write(new_records, value)
                 if self.relational:
                     new_records.modified([self.name])
-            records -= new_records
 
-        if records:
+        if other_ids:
             # base case: full business logic
+            records = records.browse(other_ids)
             write_value = self.convert_to_write(value, records)
             records.write({self.name: write_value})
 
