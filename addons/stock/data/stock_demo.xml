@@ -5,6 +5,11 @@
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('group_stock_user'))]" name="groups_id"/>
         </record>
+         <record id="lot_product_27" model="stock.production.lot">
+            <field name="name">0000000000029</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
 
         <!-- Resource: stock.inventory -->
@@ -119,6 +124,7 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">80.0</field>
+            <field name="prod_lot_id" ref="lot_product_27"/>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_14" model="stock.inventory.line">
