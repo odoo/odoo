@@ -58,5 +58,25 @@
                 </div>
             </div>
         </template>
+        <template id="payment_feedback_page" name="Payment processing page">
+        <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container payment_feedback">
+                    <div class="o_payment_feedback" t-att-data-json-route="json_route" t-att-data-form="form_data">
+                        <div class="row">
+                            <!-- The content here is handled by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        </template>
+        <template id="assets_frontend" inherit_id="web.assets_frontend" name="Payment Ingenico Assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/payment_ingenico/static/src/js/payment_form.js"></script>
+                <script type="text/javascript" src="/payment_ingenico/static/src/js/payment_feedback.js"></script>
+                <script type="text/javascript" src="/payment_ingenico/static/src/js/payment_processing.js"></script>
+            </xpath>
+        </template>
     </data>
 </odoo>

@@ -776,8 +776,8 @@ class PaymentTransaction(models.Model):
 
     def _set_transaction_error(self, msg):
         '''Move the transaction to the error state (Third party returning error e.g. Paypal).'''
-        if any(trans.state != 'draft' for trans in self):
-            raise ValidationError(_('Only draft transaction can be processed.'))
+        if any(trans.state not in ('draft', 'pending') for trans in self):
+            raise ValidationError(_('Only draft/pending transaction can be processed.'))
 
         self.write({
             'state': 'error',

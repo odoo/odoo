@@ -93,6 +93,7 @@ class PaymentProcessing(http.Controller):
                 'amount': tx.amount,
                 'currency': tx.currency_id.name,
                 'acquirer_provider': tx.acquirer_id.provider,
+                'html_3ds': tx.html_3ds
             }
             tx_info.update(tx._get_processing_info())
             result['transactions'].append(tx_info)
