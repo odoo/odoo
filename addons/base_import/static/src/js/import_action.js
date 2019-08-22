@@ -104,6 +104,10 @@ var DataImport = AbstractAction.extend({
             e.preventDefault();
             $(e.target).parent().parent().toggleClass('oe_import_report_showmore');
         },
+        'click .oe_import_report_see_possible_value': function (e) {
+            e.preventDefault();
+            $(e.target).parent().toggleClass('oe_import_report_showmore');
+        },
         'click .oe_import_moreinfo_action a': function (e) {
             e.preventDefault();
             // #data will parse the attribute on its own, we don't like
@@ -140,7 +144,6 @@ var DataImport = AbstractAction.extend({
         this.session = session;
         this._title = _t('Import a File'); // Displayed in the breadcrumbs
         this.do_not_change_match = false;
-        this.preview = [[]];
     },
     /**
      * @override
@@ -375,8 +378,6 @@ var DataImport = AbstractAction.extend({
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
-        this.preview = result.preview;
-
         if (result.headers.length === 1) {
             this.$('.oe_import_options').show();
             this.onresults(null, null, null, {'messages': [{
@@ -457,6 +458,7 @@ var DataImport = AbstractAction.extend({
         });
     },
     generate_fields_completion: function (root, index) {
+        var self = this;
         var basic = [];
         var regulars = [];
         var o2m = [];
@@ -628,11 +630,9 @@ var DataImport = AbstractAction.extend({
         this.trigger_up('history_back');
     },
     onresults: function (event, from, to, results) {
-        var self = this;
         var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
             return $(el).select2('val') || false;
         }).get();
-        var nameIndex = _.indexOf(fields, 'name');
 
         var message = results.messages;
         var no_messages = _.isEmpty(message);
@@ -664,8 +664,8 @@ var DataImport = AbstractAction.extend({
                     var from = rows.from + offset;
                     var to = rows.to + offset;
                     var rowName = '';
-                    if (nameIndex !== -1) {
-                        rowName = _.str.sprintf(' (%s)', self.preview[rows.from][nameIndex]);
+                    if (results.name.length > rows.from && results.name[rows.from] !== '') {
+                        rowName = _.str.sprintf(' (%s)', results.name[rows.from]);
                     }
                     if (from === to) {
                         return _.str.sprintf(_t("at row %d%s"), from, rowName);
@@ -677,8 +677,8 @@ var DataImport = AbstractAction.extend({
                     var from = rows.from + offset;
                     var to = rows.to + offset;
                     var rowName = '';
-                    if (nameIndex !== -1) {
-                        rowName = _.str.sprintf(' (%s)', self.preview[rows.from][nameIndex]);
+                    if (results.name.length > rows.from && results.name[rows.from] !== '') {
+                        rowName = _.str.sprintf(' (%s)', results.name[rows.from]);
                     }
                     if (from === to) {
                         return _.str.sprintf(_t("Row %d%s"), from, rowName);
@@ -701,7 +701,7 @@ var DataImport = AbstractAction.extend({
                     }
                     if (msg instanceof Array) {
                         return _.str.sprintf(
-                            '<div class="oe_import_moreinfo oe_import_moreinfo_choices"><a href="#" class="oe_import_report_count oe_import_see_all"><i class="fa fa-arrow-right"/> %s </a><ul class="oe_import_report_more">%s</ul></div>',
+                            '<div class="oe_import_moreinfo oe_import_moreinfo_choices"><a href="#" class="oe_import_report_see_possible_value oe_import_see_all"><i class="fa fa-arrow-right"/> %s </a><ul class="oe_import_report_more">%s</ul></div>',
                             _.str.escapeHTML(_t("See possible values")),
                             _(msg).map(function (msg) {
                                 return '<li>'
