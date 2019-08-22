@@ -413,10 +413,17 @@ class Cursor(object):
     def savepoint(self):
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
+        env = next((e for e in Environment.envs if e.cr is self), None)
+        if env is not None:
+            env['base'].flush()
         self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
+            if env is not None:
+                env['base'].flush()
         except Exception:
+            if env is not None:
+                env.clear()
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
         else:
