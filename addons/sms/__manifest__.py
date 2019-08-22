@@ -33,5 +33,5 @@ The service is provided by the In App Purchase Odoo platform.
         'static/src/xml/thread.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
