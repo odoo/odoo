@@ -51,7 +51,7 @@ from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
 import odoo
-from odoo.tools import frozendict, classproperty, StackMap
+from odoo.tools import frozendict, classproperty, lazy_property, StackMap
 from odoo.exceptions import CacheMiss
 
 _logger = logging.getLogger(__name__)
@@ -518,12 +518,12 @@ class Environment(Mapping):
             superuser mode. """
         return self.su or self.user._is_system()
 
-    @property
+    @lazy_property
     def user(self):
         """ return the current user (as an instance) """
         return self(su=True)['res.users'].browse(self.uid)
 
-    @property
+    @lazy_property
     def company(self):
         """ return the company in which the user is logged in (as an instance) """
         company_ids = self.context.get('allowed_company_ids', False)
@@ -533,7 +533,7 @@ class Environment(Mapping):
                 return self['res.company'].browse(company_id)
         return self.user.company_id
 
-    @property
+    @lazy_property
     def companies(self):
         """ return a recordset of the enabled companies by the user """
         try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
