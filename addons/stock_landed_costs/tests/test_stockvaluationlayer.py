@@ -139,6 +139,44 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
         self.assertEqual(out_svl.value, -250)
         self.assertEqual(in_svl.value, 225)
 
+    def test_rounding_1(self):
+        """3@100, out 1, out 1, out 1"""
+        move1 = self._make_in_move(self.product1, 3, unit_cost=20, create_picking=True)
+        lc = self._make_lc(move1, 40)
+        move2 = self._make_out_move(self.product1, 1)
+        move3 = self._make_out_move(self.product1, 1)
+        move4 = self._make_out_move(self.product1, 1)
+
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), [60.0, 40.0, -33.33, -33.34, -33.33])
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+    def test_rounding_2(self):
+        """3@98, out 1, out 1, out 1"""
+        move1 = self._make_in_move(self.product1, 3, unit_cost=20, create_picking=True)
+        lc = self._make_lc(move1, 38)
+        move2 = self._make_out_move(self.product1, 1)
+        move3 = self._make_out_move(self.product1, 1)
+        move4 = self._make_out_move(self.product1, 1)
+
+        self.assertEqual(move2.stock_valuation_layer_ids.value, -32.67)
+        self.assertEqual(move3.stock_valuation_layer_ids.value, -32.67)
+        self.assertAlmostEqual(move4.stock_valuation_layer_ids.value, -32.66, delta=0.01)  # self.env.company.currency_id.round(-32.66) -> -32.660000000000004
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+    def test_rounding_3(self):
+        """3@4.85, out 1, out 1, out 1"""
+        move1 = self._make_in_move(self.product1, 3, unit_cost=1, create_picking=True)
+        lc = self._make_lc(move1, 1.85)
+        move2 = self._make_out_move(self.product1, 1)
+        move3 = self._make_out_move(self.product1, 1)
+        move4 = self._make_out_move(self.product1, 1)
+
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), [3.0, 1.85, -1.62, -1.62, -1.61])
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
 
 class TestStockValuationLCAVCO(TestStockValuationLC):
     def setUp(self):

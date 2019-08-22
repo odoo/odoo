@@ -102,7 +102,7 @@ class ProductProduct(models.Model):
         """Compute `value_svl` and `quantity_svl`."""
         domain = [
             ('product_id', 'in', self.ids),
-            ('company_id', '=', self.env.user.company_id.id)
+            ('company_id', '=', self.env.company.id)
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
@@ -111,7 +111,7 @@ class ProductProduct(models.Model):
         products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
-            product.value_svl = group['value']
+            product.value_svl = self.env.company.currency_id.round(group['value'])
             product.quantity_svl = group['quantity']
             products |= product
         remaining = (self - products)
@@ -138,6 +138,7 @@ class ProductProduct(models.Model):
         }
         if self.cost_method in ('average', 'fifo'):
             vals['remaining_qty'] = quantity
+            vals['remaining_value'] = vals['value']
         return vals
 
     def _prepare_out_svl_vals(self, quantity, company):
@@ -258,14 +259,16 @@ class ProductProduct(models.Model):
             new_standard_price = candidate.unit_cost
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
 
-            candidate_unit_cost = candidate.unit_cost
-            if candidate.stock_valuation_layer_ids:
-                candidate_unit_cost += sum(candidate.stock_valuation_layer_ids.mapped('value')) / candidate.remaining_qty
-
+            candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
             value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+            value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+            new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
             candidate_vals = {
                 'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                'remaining_value': new_remaining_value,
             }
+
             candidate.write(candidate_vals)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
@@ -335,9 +338,14 @@ class ProductProduct(models.Model):
                 qty_taken_on_candidate = min(candidate.remaining_qty, qty_to_take_on_candidates)
                 qty_taken_on_candidates += qty_taken_on_candidate
 
-                value_taken_on_candidate = qty_taken_on_candidate * candidate.unit_cost
+                candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+                value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+                value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+                new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
                 candidate_vals = {
                     'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                    'remaining_value': new_remaining_value
                 }
                 candidate.write(candidate_vals)
 
