@@ -446,6 +446,7 @@ class Channel(models.Model):
                 for partner in target_partners if partner.id not in existing_map[channel.id]
             ]
             slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
+            to_join.message_subscribe(partner_ids=target_partners.ids, subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id])
             return slide_partners_sudo
         return self.env['slide.channel.partner'].sudo()
 

@@ -9,7 +9,8 @@
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
                         Hello<br/><br/>
-                        A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_datetime(object.write_date, tz=user.tz)}
+                        There is something new in the course <strong>${object.channel_id.name}</strong> you are following:<br/><br/>
+                        <center><strong>${object.name}</strong></center>
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}">
                                 <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
@@ -17,8 +18,9 @@
                         </div>
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}"
-                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong>${object.name}</strong></a>
+                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>
                         </div>
+                        Enjoy this exclusive content!
                     </p>
                 </div>
             </field>
@@ -29,14 +31,14 @@
         <record id="slide_template_shared" model="mail.template">
             <field name="name">Slide Shared</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="subject">${ctx['user'].name} shared a ${object.slide_type} with you!</field>
+            <field name="subject">${user.name} shared a ${object.slide_type} with you!</field>
             <field name="email_from">${user.email_formatted | safe}</field>
-            <field name="email_to">${ctx['email']}</field>
+            <field name="email_to">${ctx.get('email', '')}</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
                         Hello<br/><br/>
-                        ${ctx['user'].name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
+                        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}">
                                 <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
