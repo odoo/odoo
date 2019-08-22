@@ -83,8 +83,13 @@ class WebsiteBlog(http.Controller):
         else:
             domain += [("post_date", "<=", fields.Datetime.now())]
 
+        show_teaser = request.website.viewref('website_blog.opt_blog_show_teaser').active
+        fullwidth_cover = request.website.viewref('website_blog.opt_blog_cover_post_fullwidth_design').active
         total = BlogPost.search_count(domain)
-        posts = BlogPost.search(domain, offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page, order="post_date, id asc")
+        if not fullwidth_cover and show_teaser:
+            posts = BlogPost.search(domain, offset=(page - 1) * self._blog_post_per_page + 1, limit=self._blog_post_per_page, order="post_date desc, id asc")
+        else:
+            posts = BlogPost.search(domain, offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page, order="post_date desc, id asc")
         pager = request.website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             total=total,
@@ -92,10 +97,7 @@ class WebsiteBlog(http.Controller):
             step=self._blog_post_per_page,
         )
 
-        first_post = next((p for p in posts if p.website_published), None)
-        first_cover = first_post and json.loads(first_post.cover_properties)
-        covers = [json.loads(b.cover_properties) for b in posts]
-
+        first_post = next((p for p in BlogPost.search(domain, limit=1, order="post_date desc, id asc") if p.website_published), None)
         all_tags = len(blogs) == 1 and blogs.all_tags()[blogs.id] or blogs.all_tags(join=True)
         tag_category = sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper())
         other_tags = sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper())
@@ -104,8 +106,6 @@ class WebsiteBlog(http.Controller):
             'date_begin': date_begin,
             'date_end': date_end,
             'first_post': first_post,
-            'first_cover': first_cover,
-            'blog_posts_cover_properties': covers,
             'other_tags': other_tags,
             'tag_category': tag_category,
             'nav_list': self.nav_list(),
@@ -238,7 +238,6 @@ class WebsiteBlog(http.Controller):
             'tag': tag,
             'blog': blog,
             'blog_post': blog_post,
-            'blog_post_cover_properties': json.loads(blog_post.cover_properties),
             'blogs': blogs,
             'main_object': blog_post,
             'nav_list': self.nav_list(blog),
@@ -287,10 +286,11 @@ class WebsiteBlog(http.Controller):
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
     @http.route('/blog/post_change_background', type='json', auth="public", website=True)
-    def change_bg(self, post_id=0, cover_properties={}, **post):
-        if not post_id:
-            return False
-        return request.env['blog.post'].browse(int(post_id)).write({'cover_properties': json.dumps(cover_properties)})
+    def change_bg(self, blog_id, post_id=0, cover_properties={}, **post):
+        if blog_id:
+            return request.env['blog.blog'].browse(int(blog_id)).write({'cover_properties': json.dumps(cover_properties)})
+        else:
+            return request.env['blog.post'].browse(int(post_id)).write({'cover_properties': json.dumps(cover_properties)})
 
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):

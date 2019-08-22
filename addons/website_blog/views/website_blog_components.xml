@@ -5,13 +5,13 @@
 <!-- ======   Template: Blogs Navbar   =========================================
 ============================================================================ -->
 <template id="blogs_nav" name="Blogs Bar Template">
-    <nav t-attf-class="navbar navbar-expand-sm navbar-light #{additionnal_classes}">
+    <nav t-attf-class="navbar navbar-expand-sm navbar-light #{additionnal_classes}" t-if="len(blogs) > 1">
         <div class="container">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <span class="nav-link disabled pl-0">Blogs:</span>
                 </li>
-                <li t-if="len(blogs) > 1" class="nav-item">
+                <li class="nav-item">
                     <a href="/blog" t-attf-class="nav-link font-weight-bold #{(not blog) and 'active'}">All</a>
                 </li>
                 <li class="nav-item" t-foreach="blogs" t-as="nav_blog">
@@ -47,6 +47,7 @@
 ============================================================================ -->
 <template id="blog_cover">
     <div
+        t-if="cover_properties"
         t-att-data-use_size="use_size"
         t-att-data-use_filters="use_filters"
         t-att-data-use_text_size="use_text_size"

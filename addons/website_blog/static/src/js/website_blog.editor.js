@@ -101,6 +101,7 @@ WysiwygMultizone.include({
             defs.push(this._rpc({
                 route: '/blog/post_change_background',
                 params: {
+                    blog_id: parseInt($el.find('[data-oe-model="blog.blog"]').first().data('oe-id')),
                     post_id: parseInt($el.closest('[name="blog_post"], .website_blog').find('[data-oe-model="blog.post"]').first().data('oe-id'), 10),
                     cover_properties: {
                         'background-image': $el.find('.o_blog_cover_image').css('background-image').replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),

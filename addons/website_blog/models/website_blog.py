@@ -21,6 +21,9 @@ class Blog(models.Model):
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
     content = fields.Html('Content', translate=html_translate, sanitize=False)
+    cover_properties = fields.Text(
+        'Cover Properties',
+        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "cover_mid"}')
 
     def write(self, vals):
         res = super(Blog, self).write(vals)

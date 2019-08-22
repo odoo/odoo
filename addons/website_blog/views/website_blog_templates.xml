@@ -57,7 +57,6 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_cards_design" t-value="request.website.viewref('website_blog.opt_blog_cards_design').active"/>
         <t t-set="opt_blog_list_view" t-value="request.website.viewref('website_blog.opt_blog_list_view').active"/>
         <t t-set="opt_blog_readable" t-value="request.website.viewref('website_blog.opt_blog_readable').active"/>
-        <t t-set="opt_blog_blogs_nav_show" t-value="request.website.viewref('website_blog.opt_blog_blogs_nav_show').active"/>
         <t t-set="opt_blog_sidebar_show" t-value="request.website.viewref('website_blog.opt_blog_sidebar_show').active"/>
 
         <div id="o_wblog_blog_top">
@@ -88,6 +87,8 @@ list of filtered posts (by date or tag).
             </t>
         </div>
 
+        <t t-call="website_blog.blogs_nav"/>
+
         <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
             <div class="container py-4">
                 <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
@@ -112,14 +113,14 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_cover_post" name="Top banner - Show Latest Post" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
-        <t t-set="opt_blog_cover_post_show_author" t-value="request.website.viewref('website_blog.opt_blog_cover_post_show_author').active"/>
+        <t t-set="show_teaser" t-value="request.website.viewref('website_blog.opt_blog_show_teaser').active"/>
         <t t-set="blog_post" t-value="first_post"/>
 
-        <div class="container">
+        <div t-if="not opt_blog_cover_post_fullwidth_design and show_teaser" class="container">
             <div class="row py-4">
                 <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
                     <t t-call="website_blog.blog_cover">
-                        <t t-set="cover_properties" t-value="first_cover"/>
+                        <t t-set="cover_properties" t-value="first_post and json.loads(first_post.cover_properties)"/>
                         <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
                     </t>
                 </div>
@@ -131,15 +132,10 @@ list of filtered posts (by date or tag).
                                t-field="blog_post.name" class="h1 d-block" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                             <div t-field="blog_post.subtitle" class="h4" placeholder="Subtitle"/>
 
-                            <div t-if="not blog or opt_blog_cover_post_show_author" class="d-flex">
+                            <div t-if="not blog" class="d-flex">
                                 <div t-if="not blog" class="small mt-2 mb-3 mr-1">
                                     in <i class="fa fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" t-field="blog_post.blog_id"/>
-                                    <t t-if="opt_blog_cover_post_show_author">, by</t>
                                 </div>
-                                <t t-if="opt_blog_cover_post_show_author" t-call="website_blog.post_author">
-                                    <t t-set="additionnal_classes" t-value="'d-inline-flex h6 w-auto'"/>
-                                    <t t-set="hide_date" t-value="True"/>
-                                </t>
                             </div>
                             <div t-field="blog_post.teaser" class="mb-4 lead"  placeholder=""/>
                             <div>
@@ -148,7 +144,7 @@ list of filtered posts (by date or tag).
                         </div>
                     </div>
                 </div>
-                <div class="col-12 mt-3" t-if="not opt_blog_blogs_nav_show"> <hr/> </div>
+                <div class="col-12 mt-3"> <hr/> </div>
             </div>
         </div>
     </xpath>
@@ -157,8 +153,9 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Show latest-post as top banner : 'Full Width' design -->
 <template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True" customize_show="True">
     <xpath expr="//div[hasclass('container')]" position="replace">
-        <t t-call="website_blog.blog_cover" t-if="first_post">
-            <t t-set="cover_properties" t-value="first_cover"/>
+        <t t-call="website_blog.blog_cover">
+            <t t-if="blog" t-set="cover_properties" t-value="json.loads(blog.cover_properties)"/>
+            <t t-if="not blog" t-set="cover_properties" t-value="first_post and json.loads(first_post.cover_properties)"/>
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_text_size" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
@@ -166,25 +163,21 @@ list of filtered posts (by date or tag).
 
             <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title o_wblog_cover_font_regular #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                    <div t-if="not date and not tag" class="h4 bg-gamma px-2 d-inline-block rounded-sm">Latest</div>
-                    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" t-att-title="blog_post.name" class="text-white text-decoration-none">
+                    <div t-if="not date and not tag and not blog" class="h4 bg-gamma px-2 d-inline-block rounded-sm">Latest</div>
+                    <a t-if="not blog and blog_post" t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" t-att-title="blog_post.name" class="text-white text-decoration-none">
                         <div t-field="blog_post.name" id="o_wblog_post_name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                         <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                     </a>
+                    <a t-elif="blog" t-attf-href="#" t-att-title="blog.name" class="text-white text-decoration-none">
+                        <div t-field="blog.name" id="o_wblog_post_name" placeholder="Blog Title"/>
+                        <div t-field="blog.subtitle" id="o_wblog_post_subtitle" placeholder="Blog Subtitle"/>
+                    </a>
 
                     <div>
-                        <span t-if="not blog" class="text-white small mt-2 mb-3">
+                        <span t-if="not blog and blog_post" class="text-white small mt-2 mb-3">
                             in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
-                            <t t-if="opt_blog_cover_post_show_author">, </t>
                         </span>
                         <span t-else="">&amp;nbsp;</span>
-                        <small t-if="opt_blog_cover_post_show_author">
-                            by
-                            <t t-if="opt_blog_cover_post_show_author" t-call="website_blog.post_author">
-                                <t t-set="additionnal_classes" t-value="'d-inline-flex w-auto text-white my-2 ml-1'"/>
-                                <t t-set="hide_date" t-value="True"/>
-                            </t>
-                        </small>
                     </div>
                 </div>
             </div>
@@ -192,17 +185,8 @@ list of filtered posts (by date or tag).
     </xpath>
 </template>
 
-<!-- (Option) Blog: Show latest-post as top banner : Show author -->
-<template id="opt_blog_cover_post_show_author" name="Show Author" inherit_id="website_blog.opt_blog_cover_post" active="False" customize_show="True"/>
-
-<!-- (Option) Blog: Blogs Nav : Show
-    Show blogs navigation bar
--->
-<template id="opt_blog_blogs_nav_show" name="Blogs Navigation" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
-    <xpath expr="//section[@id='o_wblog_index_content']" position="before">
-        <t t-call="website_blog.blogs_nav"/>
-    </xpath>
-</template>
+<!-- (Option) Blog: Show latest-post as top banner : Show Teaser -->
+<template id="opt_blog_show_teaser" name="Show Teaser" inherit_id="website_blog.opt_blog_cover_post" active="False" customize_show="True"/>
 
 <!-- (Option) Blog: Sidebar : Show -->
 <template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False" customize_show="True">
@@ -248,7 +232,7 @@ list of filtered posts (by date or tag).
         <section id="o_wblog_post_top">
             <div id="title" class="blog_header" t-ignore="True">
                 <t t-call="website_blog.blog_cover">
-                    <t t-set="cover_properties" t-value="blog_post_cover_properties"/>
+                    <t t-set="cover_properties" t-value="json.loads(blog_post.cover_properties)"/>
                     <t t-set="use_filters" t-value="True"/>
                     <t t-set="use_size" t-value="True"/>
                     <t t-set="use_text_size" t-value="True"/>
@@ -364,7 +348,7 @@ list of filtered posts (by date or tag).
 
                 <t t-call="website_blog.blog_cover">
                     <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_regular rounded shadow overflow-hidden'"/>
-                    <t t-set="cover_properties" t-value="blog_post_cover_properties"/>
+                    <t t-set="cover_properties" t-value="json.loads(blog_post.cover_properties)"/>
                     <t t-set="use_size" t-value="True"/>
                 </t>
             </div>
@@ -457,13 +441,15 @@ list of filtered posts (by date or tag).
                         <t t-set="next_cover_is_auto" t-value="'cover_auto' in cover_properties.get('resize_class')"/>
 
                         <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
-                            <div t-attf-class="o_wblog_toggle d-flex #{'mb-n5' if next_cover_is_full else ''}">
-                                <span class="bg-gamma h4 d-inline-block py-1 px-2 rounded-sm">Read Next</span>
-                            </div>
-
                             <div t-attf-class="o_wblog_post_title o_wblog_cover_font_regular">
                                 <div t-field="next_post.name" id="o_wblog_post_name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
                                 <div t-field="next_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
+                            </div>
+
+                            <div t-attf-class="o_wblog_toggle #{'mb-n5' if next_cover_is_full else ''}">
+                                <span class="h4 d-inline-block py-1 px-2 rounded-sm">
+                                    <i class="fa fa-angle-down fa-3x text-white" aria-label="To blog post" title="To blog post"/>
+                                </span>
                             </div>
 
                             <!-- Emulate the next post's cover's height. For full-screen covers,

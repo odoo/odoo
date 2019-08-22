@@ -4,10 +4,12 @@
         <record id="blog_blog_1" model="blog.blog">
             <field name="name">Travel</field>
             <field name="subtitle">Holiday tips</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.png')", "resize_class": "o_wblog_has_cover cover_mid", "background-color": "oe_black", "opacity": "0.4"}</field>
         </record>
         <record id="blog_blog_2" model="blog.blog">
             <field name="name">Astronomy</field>
             <field name="subtitle">Astronomy is “stargazing"</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.png')", "resize_class": "o_wblog_has_cover cover_mid", "background-color": "oe_black", "opacity": "0.4"}</field>
         </record>
 
         <!-- TAGS -->
@@ -68,7 +70,7 @@
             <field name="subtitle">A great way to discover hidden places</field>
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="is_published" eval="True"/>
-            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_2')])]"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_2.png')", "resize_class": "o_wblog_has_cover cover_mid", "text_size_class": "o_wblog_cover_font_big", "background-color": "oe_blue", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
@@ -116,7 +118,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="website_published" eval="True"/>
-            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_3.png')", "resize_class": "o_wblog_has_cover cover_mid", "background-color": "oe_black", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
 <p class="lead">So you’re going abroad, you’ve chosen your destination and now you have to choose a hotel.</p>
@@ -167,7 +169,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="blog_id" ref="blog_blog_2"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_5')])]"/>
             <field name="website_published" eval="True"/>
-            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.png')", "resize_class": "o_wblog_has_cover cover_mid", "text_size_class": "o_wblog_cover_font_big", "text_align_class": "text-center", "background-color": "oe_black", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
 <p class="lead">It is safe to say that at some point on our lives, each and every one of us has that moment when we are suddenly stunned when we come face to face with the enormity of the universe that we see in the night sky.</p>
@@ -207,7 +209,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="blog_id" ref="blog_blog_2"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_4'), ref('blog_tag_5')])]"/>
             <field name="website_published" eval="True"/>
-            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.png')", "resize_class": "o_wblog_has_cover cover_mid", "text_align_class": "text-center", "background-color": "oe_black", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
 <p class="lead">From the tiniest baby to the most advanced astrophysicist, there is something for anyone who wants to enjoy astronomy. In fact, it is a science that is so accessible that virtually anybody can do it virtually anywhere they are. All they have to know how to do is to look up.</p>
@@ -250,7 +252,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="blog_id" ref="blog_blog_2"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_3'), ref('blog_tag_4')])]"/>
             <field name="website_published" eval="True"/>
-            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_6.png')", "resize_class": "o_wblog_has_cover cover_full", "text_size_class": "o_wblog_cover_font_huge", "text_align_class": "text-center", "background-color": "oe_black", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
 <p class="lead">Buying the right telescope to take your love of astronomy to the next level is a big next step in the development of your passion for the stars.</p>
@@ -291,7 +293,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="blog_id" ref="blog_blog_2"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_5')])]"/>
             <field name="website_published" eval="True"/>
-            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.png')", "resize_class": "o_wblog_has_cover cover_mid", "text_size_class": "o_wblog_cover_font_big", "background-color": "oe_black", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
 <p class="lead">For many of us, our very first experience of learning about the celestial bodies begins when we saw our first full moon in the sky. It is truly a magnificent view even to the naked eye.</p>
