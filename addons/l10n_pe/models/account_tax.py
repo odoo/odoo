@@ -46,7 +46,9 @@ class AccountTaxTemplate(models.Model):
         ('G', 'Free export item, tax not charged'),
         ('O', 'Services outside scope of tax'),
         ('S', 'Standard rate'),
-        ('Z', 'Zero rated goods')], 'EDI UNECE code',
+        ('Z', 'Zero rated goods'),
+        ('VAT', 'General Sales Tax'),
+    ], 'EDI UNECE code',
         help="Follow the UN/ECE 5305 standard from the United Nations Economic Commission for Europe for more "
              "information  http://www.unece.org/trade/untdid/d08a/tred/tred5305.htm"
     )

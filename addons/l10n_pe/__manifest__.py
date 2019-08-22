@@ -11,6 +11,7 @@
         'base_address_extended',
         'base_address_city',
         'l10n_latam_base',
+        'l10n_latam_invoice_document',
     ],
     'data': [
         'security/ir.model.access.csv',

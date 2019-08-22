@@ -326,37 +326,30 @@ class ResPartner(models.Model):
     # Peruvian VAT validation, contributed by Vauxoo
     def check_vat_pe(self, vat):
 
-        vat_type, vat = vat and len(vat) >= 2 and (vat[0], vat[1:]) or (False, False)
-
-        if vat_type and vat_type.upper() == 'D':
-            # DNI
+        if len(vat) != 11:
+            # DNI or any other document in Peru
             return True
-        elif vat_type and vat_type.upper() == 'R':
-            # verify RUC
-            factor = '5432765432'
-            sum = 0
-            dig_check = False
-            if len(vat) != 11:
-                return False
-            try:
-                int(vat)
-            except ValueError:
-                return False
-
-            for f in range(0, 10):
-                sum += int(factor[f]) * int(vat[f])
-
-            subtraction = 11 - (sum % 11)
-            if subtraction == 10:
-                dig_check = 0
-            elif subtraction == 11:
-                dig_check = 1
-            else:
-                dig_check = subtraction
-
-            return int(vat[10]) == dig_check
-        else:
+        # verify RUC
+        factor = '5432765432'
+        sum = 0
+        dig_check = False
+        try:
+            int(vat)
+        except ValueError:
             return False
+
+        for f in range(0, 10):
+            sum += int(factor[f]) * int(vat[f])
+
+        subtraction = 11 - (sum % 11)
+        if subtraction == 10:
+            dig_check = 0
+        elif subtraction == 11:
+            dig_check = 1
+        else:
+            dig_check = subtraction
+
+        return int(vat[10]) == dig_check
 
     # VAT validation in Turkey, contributed by # Levent Karakas @ Eska Yazilim A.S.
     def check_vat_tr(self, vat):
