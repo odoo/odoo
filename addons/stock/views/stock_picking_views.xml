@@ -337,6 +337,24 @@
                                                 ('parent.show_reserved', '=', False),
                                                 ('parent.show_operations', '=', False)]}"/>
                                 </tree>
+                                <form string="Stock Moves">
+                                    <header>
+                                        <field name="state" widget="statusbar"/>
+                                    </header>
+                                    <group>
+                                        <field name="product_uom_category_id" invisible="1"/>
+                                        <field name="additional" invisible="1"/>
+                                        <field name="has_move_lines" invisible="1"/>
+                                        <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
+                                        <field name="is_initial_demand_editable" invisible="1"/>
+                                        <field name="is_quantity_done_editable" invisible="1"/>
+                                        <field name="product_uom_qty" string="Initial Demand" attrs="{'invisible': [('parent.immediate_transfer', '=', True)], 'readonly': [('is_initial_demand_editable', '=', False)]}"/>
+                                        <field name="reserved_availability" string="Reserved" attrs="{'invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
+                                        <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
+                                        <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                        <field name="description_picking" string="Description"/>
+                                    </group>
+                                </form>
                             </field>
                             <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id}" attrs="{'readonly': [('state', '=', 'done')], 'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', True)]}" />
                             <button class="oe_highlight" name="put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
