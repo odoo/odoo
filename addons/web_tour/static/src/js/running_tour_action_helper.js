@@ -94,7 +94,7 @@ var RunningTourActionHelper = core.Class.extend({
         } else {
             values.$element.focusIn();
             values.$element.trigger($.Event( "keydown", {key: '_', keyCode: 95}));
-            values.$element.text(text);
+            values.$element.text(text).trigger("input");
             values.$element.focusInEnd();
             values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }

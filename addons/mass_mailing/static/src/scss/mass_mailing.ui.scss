@@ -35,17 +35,23 @@
 
     .dropdown-menu {
         position: absolute;
-        bottom: -1px;
+        bottom: -2px;
         top: -3px !important;
         left: -5px !important;
-        right: 3px !important;
+        right: -2px !important;
         margin: 0;
         border-radius: 0;
         overflow: auto;
         background-color: $o-wysiwyg-bg-color;
         z-index: 1050;
 
-        .dropdown-item { 
+        &.show {
+            bottom: 31px !important;
+            top: -2px !important;
+            right: 3px !important;
+        }
+
+        .dropdown-item {
             padding: 10px 10px;
             &:first-child {
                 display: none;
@@ -180,6 +186,13 @@ body.o_force_mail_theme_choice {
 
 .note-editable .o_layout {
     overflow: initial;
+}
+
+#web_editor-toolbars .popover .note-color {
+    .note-back-color-preview .dropdown-toggle,
+    .note-fore-color-preview .dropdown-toggle {
+        height: $o-wysiwyg-toolbar-height - 1;
+    }
 }
 
 .oe_structure {

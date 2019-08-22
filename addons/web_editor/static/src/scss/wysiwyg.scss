@@ -1,5 +1,37 @@
 // NOTE EDITOR
 
+body.editor_enable {
+    padding-top: $o-wysiwyg-toolbar-height !important;
+}
+
+#wrapwrap {
+    height: calc(100vh - #{$o-wysiwyg-toolbar-height});
+    border: 1px solid $o-wysiwyg-border-color;
+    border-left: 0;
+    border-top: 0;
+
+    .btn {
+        -webkit-user-select: none;
+    }
+}
+
+// TOP BAR (EDIT)
+#web_editor-top-edit {
+    height: $o-wysiwyg-toolbar-height;
+    background-color: $o-wysiwyg-bg-color;
+    z-index: $o-wysiwyg-zindex - 2;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    white-space: nowrap;
+    border: 1px solid $o-wysiwyg-border-color;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+
+    transition: background-color 400ms $o-we-md-ease 0s;
+    font-family: $o-we-font-family;
+}
+
 .note-editor.note-frame {
     background-color: inherit;
 
@@ -15,27 +47,39 @@
     }
 }
 
-.note-popover.popover {
-    z-index: $o-wysiwyg-zindex;
-    height: auto;
+.note-editor:not(.note-frame) .note-editing-area {
+    overflow: visible;
+}
+
+#web_editor-top-edit .note-popover .popover {
+    height: $o-wysiwyg-toolbar-height - 2;
+    top: 0 !important;
+    left: 0 !important;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: auto;
+    text-align: center;
+    box-shadow: none;
     background-color: $o-wysiwyg-bg-color;
+    z-index: $o-wysiwyg-zindex;
 
-    .popover-content {
-        padding-bottom: 0;
-        max-width: 334px;
+    .popover-body {
+        height: $o-wysiwyg-toolbar-height - 2;
 
-        >note-btn-group {
-            white-space: nowrap;
+        > .btn-group {
+            height: $o-wysiwyg-toolbar-height - 2;
+            margin-top: 0;
+        }
+
+        .btn {
+            height: $o-wysiwyg-toolbar-height - 2;
+            border-top: 0;
         }
     }
 }
 
-.note-editor .note-toolbar {
-    white-space: nowrap;
-    z-index: $o-wysiwyg-zindex + 10;
-    height: $o-wysiwyg-toolbar-height;
-}
-
+#web_editor-toolbars .popover,
 .note-popover.popover .popover-content,
 .note-editor .note-toolbar {
     font-family: $o-wysiwyg-font-family;
@@ -56,12 +100,10 @@
     }
 
     .btn {
-        height: $o-wysiwyg-toolbar-height;
         border: none;
         border-radius: 0;
         background-color: inherit;
         color: inherit;
-        border-top: 2px solid transparent;
         transition: all 0.3s ease 0s;
 
         >.fa {
@@ -83,7 +125,6 @@
         }
 
         &.active {
-            border-top: 2px solid white;
             background-color: inherit;
             color: inherit;
             box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.5);
@@ -341,6 +382,11 @@ body .modal {
                         box-shadow: 0px 0px 2px 2px $o-brand-primary;
                     }
                 }
+            }
+
+            .o_we_attachment_selected {
+                border-color: $o-brand-primary;
+                box-shadow: 0px 0px 2px 2px $o-brand-primary;
             }
 
             .font-icons-icons {

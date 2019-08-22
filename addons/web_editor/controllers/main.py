@@ -147,6 +147,8 @@ class Web_Editor(http.Controller):
                     allSelected = False
 
             node = ul.getprevious()
+            if node is None:
+                node = ul.getparent().getprevious()
             if node is not None and node.tag == 'li':
                 self._update_checklist_recursive(node, allSelected, ancestors=True)
 

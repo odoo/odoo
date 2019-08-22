@@ -2,38 +2,38 @@
 // Modifications applied on normal website DOM while being in the editor.
 //------------------------------------------------------------------------------
 
-body.editor_enable {
-    overflow: hidden;
-    padding-top: 0 !important;
-
-    #wrapwrap {
-        height: calc(100vh - #{$o-navbar-height});
-        padding-top: 0px;
-
-        .btn {
-            -webkit-user-select: none;
-        }
-    }
-}
-
 //------------------------------------------------------------------------------
 // Editor components style.
 //------------------------------------------------------------------------------
+
+body.editor_enable {
+    padding-top: $o-navbar-height !important;
+}
+
+#wrapwrap {
+    height: calc(100vh - #{$o-navbar-height});
+}
 
 // TOP BAR (EDIT)
 #web_editor-top-edit {
     height: $o-navbar-height;
     background-color: $o-we-color-dark;
+    border: 0;
     z-index: $zindex-modal - 9;
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    width: auto;
-    white-space: nowrap;
 
-    background-color: rgba(0, 0, 0, 0);
-    transition: background-color 400ms $o-we-md-ease 0s;
-    font-family: $o-we-font-family;
+    .note-popover .popover {
+        width: 100%;
+        height: $o-navbar-height;
+        text-align: left;
+
+        .popover-body {
+            height: $o-navbar-height;
+
+            .btn {
+                height: $o-navbar-height;
+            }
+        }
+    }
 
     form.navbar-form {
         height: $o-navbar-height;
@@ -42,10 +42,9 @@ body.editor_enable {
         padding: 0;
         position: absolute;
         top: -1px;
-        right: 0;
+        right: -1px;
         transition: right 0.4s $o-we-md-ease 0s;
         border-left: 1px solid $o-we-color-divider;
-        background-color: inherit;
 
         .btn-group {
             height: 100%;
@@ -97,6 +96,18 @@ body.editor_enable {
     }
 }
 
+body:not(.editor_enable) form.navbar-form {
+    display: none;
+}
+
+// SNIPPETS
+#oe_snippets {
+    border: 0;
+    #snippets_menu {
+        height: $o-navbar-height;
+    }
+}
+
 // Translations
 .oe_translate_examples li {
     margin: 10px;
@@ -120,9 +131,11 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;
-    @include o-position-absolute(0, auto, 0, -$o-we-sidebar-width);
+    position: fixed;
     width: $o-we-sidebar-width;
+    z-index: 1042;
 
+    border-top: 0;
     border-right: 1px solid $o-we-color-divider;
     transition: left 400ms $o-we-md-ease 0s;
     background-image: linear-gradient(45deg, $o-we-color-normal, darken($o-we-color-normal, 10%));
@@ -535,7 +548,7 @@ body .modal {
     }
 }
 
-.wysiwyg_multizone.note-editor {
+.note-editor {
     &>.note-toolbar-wrapper .note-toolbar {
         height: $o-navbar-height;
 
@@ -553,16 +566,9 @@ body .modal {
     }
 }
 
-.wysiwyg_multizone.note-popover.popover {
-    border-width: 0 1px;
-
-    .popover-content .btn {
-        height: $o-navbar-height;
-    }
-}
-
-.wysiwyg_multizone.note-popover,
-.wysiwyg_multizone.note-editor>.note-toolbar-wrapper .note-toolbar {
+#web_editor-toolbars .popover,
+.note-popover,
+.note-editor>.note-toolbar-wrapper .note-toolbar {
     // force this because of themes
     background-color: $o-we-color-dark !important;
 

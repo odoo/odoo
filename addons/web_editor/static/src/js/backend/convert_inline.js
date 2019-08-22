@@ -396,7 +396,7 @@ FieldHtml.include({
      * @override
      */
     commitChanges: function () {
-        if (this.nodeOptions['style-inline'] && this.isRendered) {
+        if (this.nodeOptions['style-inline'] && this.mode === "edit") {
             this._toInline();
         }
         return this._super();
@@ -452,7 +452,7 @@ FieldHtml.include({
      * @override
      */
     _onLoadWysiwyg: function () {
-        if (this.nodeOptions['style-inline']) {
+        if (this.nodeOptions['style-inline'] && this.mode === "edit") {
             this._fromInline();
         }
         this._super();

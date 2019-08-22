@@ -47,7 +47,7 @@ var WysiwygRoot = Widget.extend({
             });
 
             return instance.attachTo($target).then(function () {
-                self.$editor = instance.$el;
+                self.$editor = instance.$editor || instance.$el;
             });
         });
     },

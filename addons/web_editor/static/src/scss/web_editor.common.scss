@@ -21,6 +21,17 @@ html, body {
     display: none;
 }
 
+.note-popover .popover, .note-editor {
+    .dropdown-menu .dropdown-item {
+        > i {
+            visibility: hidden;
+        }
+        &.checked > i {
+            visibility: visible;
+        }
+    }
+}
+
 /* ----- GENERIC LAYOUTING HELPERS ---- */
 /* table */
 #wrapwrap, .o_editable {

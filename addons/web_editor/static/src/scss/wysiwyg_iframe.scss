@@ -16,7 +16,7 @@ iframe.wysiwyg_iframe.o_fullscreen {
 
 body.o_in_iframe {
     background-color: $o-view-background-color;
-    overflow: hidden;
+    overflow: auto;
 
     .note-editable {
         height: calc(100vh - #{$o-wysiwyg-toolbar-height} - 2px);
@@ -24,5 +24,13 @@ body.o_in_iframe {
 
     .note-statusbar {
         display: none;
+    }
+
+    #web_editor-toolbars .popover .btn {
+        font-size: 1rem;
+    }
+
+    .o_mail_theme_selector .btn {
+        font-size: 1rem;
     }
 }
