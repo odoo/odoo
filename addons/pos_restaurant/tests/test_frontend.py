@@ -3,9 +3,8 @@
 
 import odoo.tests
 
-
+@odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(odoo.tests.HttpCase):
-
     def test_01_pos_restaurant(self):
         env = self.env(user=self.env.ref('base.user_admin'))
         account_obj = env['account.account']
@@ -56,13 +55,6 @@ class TestFrontend(odoo.tests.HttpCase):
         minute_maid.write({'taxes_id': [(6, 0, [])]})
 
         pos_config.open_session_cb()
-
-        # needed because tests are run before the module is marked as
-        # installed. In js web will only load qweb coming from modules
-        # that are returned by the backend in module_boot. Without
-        # this you end up with js, css but no qweb.
-        env['ir.module.module'].search([('name', '=', 'pos_restaurant')], limit=1).state = 'installed'
-
 
         self.start_tour("/pos/web?config_id=%d" % pos_config.id, 'pos_restaurant_sync', login="admin")
 
