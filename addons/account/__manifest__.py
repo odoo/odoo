@@ -61,7 +61,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/digest_views.xml',
         'wizard/account_invoice_send_views.xml',
         'views/account_tax_report_views.xml',
-        'views/report_statement.xml'
+        'views/report_statement.xml',
+        'report/account_hash_integrity_templates.xml'
     ],
     'demo': [
         'demo/account_demo.xml',

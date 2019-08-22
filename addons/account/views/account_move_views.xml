@@ -27,7 +27,7 @@
                                         <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="debit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="credit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                                        <field name="quantity"/>
+                                        <field name="quantity" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                     </group>
                                     <group string="Accounting Documents">
                                         <field name="move_id" attrs="{'readonly':[('parent_state','=','posted')]}"/>
@@ -68,8 +68,10 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
+                                            attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_tags"
+                                            widget="many2many_tags"/>
                                     </group>
                                 </group>
                             </page>
@@ -138,7 +140,7 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="move_id" optional="show"/>
-                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user"/>
                     <field name="partner_id" optional="show"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="ref" optional="show"/>
@@ -507,6 +509,10 @@
                         <button name="action_duplicate" string="Duplicate" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible': [('type', '!=', 'entry')]}"/>
                         <!-- Cancel -->
+                        <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                        <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible' : ['|', ('restrict_mode_hash_table', '=', True), ('state', 'not in', ('posted', 'cancel'))]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
                     <!-- Invoice outstanding credits -->
@@ -557,6 +563,7 @@
                         <field name="invoice_sequence_number_next" invisible="1"/>
                         <field name="invoice_has_matching_suspense_amount" invisible="1"/>
                         <field name="has_reconciled_entries" invisible="1"/>
+                        <field name="restrict_mode_hash_table" invisible="1"/>
 
                         <div>
                             <!-- Invoice draft header -->
@@ -642,7 +649,8 @@
                                        invisible="context.get('default_journal_id') and context.get('type', 'entry') != 'entry'"
                                        groups="account.group_account_user"
                                        options="{'no_create': True}"
-                                       domain="[('type', '=?', invoice_filter_type_domain)]"/>
+                                       domain="[('type', '=?', invoice_filter_type_domain)]"
+                                       attrs="{'readonly': [('name', '!=', '/')]}"/>
 
                                 <field name="company_id" groups="base.group_multi_company"/>
 
@@ -866,6 +874,7 @@
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                                         <field name="invoice_incoterm_id"/>
                                         <field name="fiscal_position_id"/>
+                                        <field name="inalterable_hash" groups="base.group_no_one,account.group_account_user"/>
                                         <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding"/>
                                         <field name="invoice_source_email"
                                                widget="email"
@@ -874,9 +883,10 @@
                                     <group string="Payments"
                                            name="payments_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
-                                        <field name="invoice_payment_ref"/>
+                                        <field name="invoice_payment_ref" attrs="{'readonly': [('state', '=', 'paid'), ('type', 'in', ('in_invoice', 'in_refund'))]}"/>
                                         <field name="invoice_partner_bank_id"
-                                               domain="[('partner_id', '=', bank_partner_id)]"/>
+                                               domain="[('partner_id', '=', bank_partner_id)]"
+                                               attrs="{'readonly': [('state', '=', 'paid')]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -893,6 +903,7 @@
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>
+                                        <field name="inalterable_hash" groups="base.group_no_one,account.group_account_user"/>
                                     </group>
                                 </group>
                             </page>
@@ -1276,6 +1287,16 @@
             <field name="code">
 if records:
     action = records.action_switch_invoice_into_refund_credit_note()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_check_hash_integrity">
+            <field name="name">Data Inalterability Check</field>
+            <field name="model_id" ref="account.model_res_company"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = env.company._action_check_hash_integrity()
             </field>
         </record>
 

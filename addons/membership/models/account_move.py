@@ -12,19 +12,21 @@ class AccountMove(models.Model):
     def button_draft(self):
         # OVERRIDE to update the cancel date.
         res = super(AccountMove, self).button_draft()
-        if self.type == 'out_invoice':
-            self.env['membership.membership_line'].search([
-                ('account_invoice_line', 'in', self.mapped('invoice_line_ids').ids)
-            ]).write({'date_cancel': False})
+        for move in self:
+            if move.type == 'out_invoice':
+                self.env['membership.membership_line'].search([
+                    ('account_invoice_line', 'in', move.mapped('invoice_line_ids').ids)
+                ]).write({'date_cancel': False})
         return res
 
     def button_cancel(self):
         # OVERRIDE to update the cancel date.
         res = super(AccountMove, self).button_cancel()
-        if self.type == 'out_invoice':
-            self.env['membership.membership_line'].search([
-                ('account_invoice_line', 'in', self.mapped('invoice_line_ids').ids)
-            ]).write({'date_cancel': fields.Date.today()})
+        for move in self:
+            if move.type == 'out_invoice':
+                self.env['membership.membership_line'].search([
+                    ('account_invoice_line', 'in', move.mapped('invoice_line_ids').ids)
+                ]).write({'date_cancel': fields.Date.today()})
         return res
 
     def write(self, vals):

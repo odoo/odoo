@@ -23,10 +23,10 @@ The module adds following features:
 """,
     'depends': ['l10n_fr_sale_closing', 'point_of_sale'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'application': False,
     'data': [
-        'data/pos_inalterability.xml',
+        'views/pos_inalterability_menuitem.xml',
         'views/account_views.xml',
     ],
     'post_init_hook': '_setup_inalterability',

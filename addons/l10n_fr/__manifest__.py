@@ -46,6 +46,10 @@ configuration of their taxes and fiscal positions manually.
         'data/account_fiscal_position_template_data.xml',
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_configure_data.xml',
+        'data/account_sale_closure_cron.xml',
+        'views/account_sale_closure.xml',
+        'security/ir.model.access.csv',
+        'security/account_closing_intercompany.xml',
     ],
-    'post_init_hook': '_preserve_tag_on_taxes',
+    'post_init_hook': '_l10n_fr_post_init_hook',
 }

@@ -19,12 +19,11 @@ class TestTaxBlockDate(AccountingTestCase):
         self.company = self.env.company
         company_id = self.company.id
 
-        last_day_month = date.today()
-        self.last_day_month = last_day_month.replace(day=monthrange(last_day_month.year, last_day_month.month)[1])
-        first_day_month = date.today()
-        self.first_day_month = first_day_month.replace(day=1)
-        middle_day_month = date.today()
-        middle_day_month = middle_day_month.replace(day=15)
+        last_day_previous_month = date.today()
+        last_day_previous_month = last_day_previous_month.replace(month=last_day_previous_month.month-1)
+        self.last_day_previous_month = last_day_previous_month.replace(day=monthrange(last_day_previous_month.year, last_day_previous_month.month)[1])
+        self.first_day_previous_month = self.last_day_previous_month.replace(day=1)
+        middle_day_previous_month = self.last_day_previous_month.replace(day=15)
 
         self.sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1)[0]
         self.account_id = self.env['account.account'].search([('internal_type', '=', 'receivable'), ('company_id', '=', company_id)], limit=1)[0]
@@ -34,7 +33,7 @@ class TestTaxBlockDate(AccountingTestCase):
         self.move = {
             'name': '/',
             'journal_id': self.sale_journal_id.id,
-            'date': middle_day_month,
+            'date': middle_day_previous_month,
             'line_ids': [(0, 0, {
                     'name': 'foo',
                     'debit': 10,
@@ -50,7 +49,7 @@ class TestTaxBlockDate(AccountingTestCase):
         self.move_no_tax = {
             'name': '/',
             'journal_id': self.sale_journal_id.id,
-            'date': middle_day_month,
+            'date': middle_day_previous_month,
             'line_ids': [(0, 0, {
                     'name': 'foo',
                     'debit': 10,
@@ -67,32 +66,31 @@ class TestTaxBlockDate(AccountingTestCase):
         before the tax lock date.
         """
         # Posting after the lock date is always allowed
-        self.company.tax_lock_date = self.first_day_month
+        self.company.tax_lock_date = self.first_day_previous_month
         # copy() because mail.thread modifies the dictionary given to create
         move_after_lock = self.env['account.move'].create(self.move.copy())
         move_after_lock.post()
 
         # Posting before the tax lock date is allowed only if the move doesn't contain any tax
-        self.user_id.company_id.tax_lock_date = self.last_day_month
+        self.user_id.company_id.tax_lock_date = self.last_day_previous_month
         move_before_lock_no_tax = self.env['account.move'].create(self.move_no_tax)
         move_before_lock_no_tax.post()
 
         # Posting before the tax lock date is not allowed for moves impacting the tax report
-        self.user_id.company_id.tax_lock_date = self.last_day_month
+        self.user_id.company_id.tax_lock_date = self.last_day_previous_month
         with self.assertRaises(UserError):
             self.env['account.move'].create(self.move.copy())
 
-    def test_tax_lock_date_cancel(self):
-        """ Checks that it is not possible to cancel an entry posted before the
+    def test_tax_lock_date_reset_to_draft(self):
+        """ Checks that it is not possible to reset to draft an entry posted before the
         tax lock date if it impacts the tax report. """
-        self.sale_journal_id.update_posted = True
         move = self.env['account.move'].create(self.move)
         move.post()
         move_no_tax = self.env['account.move'].create(self.move_no_tax)
         move_no_tax.post()
 
-        self.user_id.company_id.tax_lock_date = self.last_day_month
+        self.user_id.company_id.tax_lock_date = self.last_day_previous_month
 
-        move_no_tax.button_cancel()
+        move_no_tax.button_draft()
         with self.assertRaises(UserError):
-            move.button_cancel()
+            move.button_draft()
