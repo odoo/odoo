@@ -21,12 +21,6 @@
         </xpath>
     </template>
 
-   <template id="assets_tests" name="Stock Assets Tests" inherit_id="web.assets_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/stock/static/tests/tours/route.js"></script>
-        </xpath>
-    </template>
-
    <template id="message_head">
         <t t-if="move.state != 'done'">
             <strong>The initial demand has been updated.</strong>

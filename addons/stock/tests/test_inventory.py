@@ -64,6 +64,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -97,6 +98,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -125,6 +127,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,

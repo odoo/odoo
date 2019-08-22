@@ -19,7 +19,7 @@
                         <button string="Putaway Rules"
                                 class="oe_stat_button"
                                 icon="fa-random" name="%(location_open_putaway)d" type="action"
-                                groups="stock.group_stock_multi_locations"/>
+                                groups="stock.group_stock_multi_locations" context="{'default_company_id': company_id}"/>
                         <button string="Current Stock"
                                 class="oe_stat_button"
                                 icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
