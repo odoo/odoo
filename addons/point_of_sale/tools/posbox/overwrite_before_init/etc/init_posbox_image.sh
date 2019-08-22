@@ -182,8 +182,6 @@ echo "disable_overscan=1" >> /boot/config.txt
 setupcon
 
 # exclude /drivers folder from git info to be able to load specific drivers
-mkdir /home/pi/odoo/addons/hw_drivers/drivers/
-chmod 777 /home/pi/odoo/addons/hw_drivers/drivers/
 echo "addons/hw_drivers/drivers/" > /home/pi/odoo/.git/info/exclude
 
 # create dirs for ramdisks
