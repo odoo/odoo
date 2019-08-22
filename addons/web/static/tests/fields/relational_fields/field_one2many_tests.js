@@ -2,10 +2,12 @@ odoo.define('web.field_one_to_many_tests', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
+var AbstractStorageService = require('web.AbstractStorageService');
 var FormView = require('web.FormView');
 var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
 var NotificationService = require('web.NotificationService');
+var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 var fieldUtils = require('web.field_utils');
@@ -8633,6 +8635,51 @@ QUnit.module('fields', {}, function () {
             var width = form.$('th[data-name="date"]')[0].offsetWidth;
 
             await testUtils.dom.click(form.$('.o_data_row .o_list_record_remove'));
+
+            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+
+            form.destroy();
+        });
+
+        QUnit.test('column widths are correct after toggling optional fields', async function (assert) {
+            assert.expect(2);
+
+            var RamStorageService = AbstractStorageService.extend({
+                storage: new RamStorage(),
+            });
+
+            this.data.partner.records[0].p = [2];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                            '<field name="p">' +
+                                '<tree editable="top">' +
+                                    '<field name="date" required="1"/>' + // we want the list to remain empty
+                                    '<field name="foo"/>' +
+                                    '<field name="int_field" optional="1"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</form>',
+                services: {
+                    local_storage: RamStorageService,
+                },
+            });
+
+            // date fields have an hardcoded width, which apply when there is no
+            // record, and should be kept afterwards
+            let width = form.$('th[data-name="date"]')[0].offsetWidth;
+
+            // create a record to store the current widths, but discard it directly to keep
+            // the list empty (otherwise, the browser automatically computes the optimal widths)
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+
+            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+
+            await testUtils.dom.click(form.$('.o_optional_columns_dropdown_toggle'));
+            await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item input'));
 
             assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
 
