@@ -1189,7 +1189,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('required selection widget should not have blank option', async function (assert) {
-        assert.expect(3);
+        assert.expect(12);
 
         this.data.partner.fields.feedback_value = {
             type: "selection",
@@ -1210,15 +1210,38 @@ QUnit.module('relational_fields', {
         });
 
         await testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('.o_field_widget[name=color]')[0].options.length, 3,
-            "non required selection field must have 3 options 1 blank option and 2 value options");
-        assert.strictEqual(form.$('.o_field_widget[name=feedback_value]')[0].options.length, 2,
-            "should have only 2 options without blank option");
+
+        var $colorField = form.$('.o_field_widget[name=color]');
+        assert.containsN($colorField, 'option', 3, "Three options in non required field");
+
+        assert.hasAttrValue($colorField.find('option:first()'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(1)'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(2)'), 'style', "",
+            "Should not have display=none");
+
+        const $requiredSelect = form.$('.o_field_widget[name=feedback_value]');
+
+        assert.containsN($requiredSelect, 'option', 3, "Three options in required field");
+        assert.hasAttrValue($requiredSelect.find('option:first()'), 'style', "display: none",
+            "Should have display=none");
+        assert.hasAttrValue($requiredSelect.find('option:eq(1)'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($requiredSelect.find('option:eq(2)'), 'style', "",
+            "Should not have display=none");
 
         // change value to update widget modifier values
-        await testUtils.fields.editSelect(form.$('.o_field_widget[name=feedback_value]'), '"bad"');
-        assert.strictEqual(form.$('.o_field_widget[name=color]')[0].options.length, 2,
-            "should have only 2 options");
+        await testUtils.fields.editSelect($requiredSelect, '"bad"');
+        $colorField = form.$('.o_field_widget[name=color]');
+
+        assert.containsN($colorField, 'option', 3, "Three options in required field");
+        assert.hasAttrValue($colorField.find('option:first()'), 'style', "display: none",
+            "Should have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(1)'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(2)'), 'style', "",
+            "Should not have display=none");
 
         form.destroy();
     });
