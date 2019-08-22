@@ -43,6 +43,9 @@ var GraphView = AbstractView.extend({
         viewInfo.fields = _.defaults({__count__: {string: _t("Count"), type: "integer"}}, viewInfo.fields);
         viewInfo.arch.children.forEach(function (field) {
             var name = field.attrs.name;
+            if (name === "id") {
+                return;
+            }
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
             }
