@@ -319,6 +319,7 @@
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_user"/>
                                     </group>
                                     <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
@@ -640,6 +641,7 @@ action = model.setting_init_bank_account_action()
                     <field name="all_lines_reconciled" invisible="1" />
                     <button name="action_bank_reconcile_bank_statements" string="Reconcile" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="button_reopen" states="confirm" string="Reset to New" type="object"/>
                     <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
@@ -698,6 +700,8 @@ action = model.setting_init_bank_account_action()
                                     <field name="account_number" optional="hidden"/>
                                     <field name="amount_currency" optional="hidden"/>
                                     <field name="currency_id" optional="hidden"/>
+                                    <field name="state" invisible="1"/>
+                                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa-undo"/>
                                 </tree>
                             </field>
                         </page>

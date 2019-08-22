@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, format_date
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools import date_utils
 from odoo.tests.common import Form
@@ -553,3 +553,82 @@ class ResCompany(models.Model):
                 "Please go to Account Configuration and select or install a fiscal localization.")
             raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
         return account
+
+    @api.model
+    def _action_check_hash_integrity(self):
+        return self.env.ref('account.action_report_account_hash_integrity').report_action(self.id)
+
+    def _check_hash_integrity(self):
+        """Checks that all posted moves have still the same data as when they were posted
+        and raises an error with the result.
+        """
+        def build_move_info(move):
+            return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
+
+        journals = self.env['account.journal'].search([('company_id', '=', self.id)])
+        results_by_journal = {
+            'results': [],
+            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.today()))
+        }
+
+        for journal in journals:
+            rslt = {
+                'journal_name': journal.name,
+                'journal_code': journal.code,
+                'restricted_by_hash_table': journal.restrict_mode_hash_table and 'V' or 'X',
+                'msg_cover': '',
+                'first_hash': 'None',
+                'first_move_name': 'None',
+                'first_move_date': 'None',
+                'last_hash': 'None',
+                'last_move_name': 'None',
+                'last_move_date': 'None',
+            }
+            if not journal.restrict_mode_hash_table:
+                rslt.update({'msg_cover': _('This journal is not in strict mode.')})
+                results_by_journal['results'].append(rslt)
+                continue
+
+            all_moves_count = self.env['account.move'].search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
+            moves = self.env['account.move'].search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
+                                            ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
+            if not moves:
+                rslt.update({
+                    'msg_cover': _('There isn\'t any journal entry flagged for data inalterability yet for this journal.'),
+                })
+                results_by_journal['results'].append(rslt)
+                continue
+
+            previous_hash = u''
+            start_move_info = []
+            hash_corrupted = False
+            for move in moves:
+                if move.inalterable_hash != move._compute_hash(previous_hash=previous_hash):
+                    rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.') % move.id})
+                    results_by_journal['results'].append(rslt)
+                    hash_corrupted = True
+                    break
+                if not previous_hash:
+                    #save the date and sequence number of the first move hashed
+                    start_move_info = build_move_info(move)
+                previous_hash = move.inalterable_hash
+            end_move_info = build_move_info(move)
+
+            if hash_corrupted:
+                continue
+
+            rslt.update({
+                        'first_move_name': start_move_info[0],
+                        'first_hash': start_move_info[1],
+                        'first_move_date': format_date(self.env, start_move_info[2]),
+                        'last_move_name': end_move_info[0],
+                        'last_hash': end_move_info[1],
+                        'last_move_date': format_date(self.env, end_move_info[2]),
+                    })
+            if len(moves) == all_moves_count:
+                rslt.update({'msg_cover': _('All entries are hashed.')})
+            else:
+                rslt.update({'msg_cover': _('Entries are hashed from %s (%s)') % (start_move_info[0], format_date(self.env, start_move_info[2]))})
+            results_by_journal['results'].append(rslt)
+
+        return results_by_journal

@@ -45,6 +45,7 @@ class TestAccountMovePartnerCount(TransactionCase):
         with self.registry.cursor() as cr:
             env = self.env(cr=cr)
             move = self.move.with_env(env)
+            move.name = '/'
             move.state = 'draft'
             move.unlink()
             self.journal.with_env(env).unlink()
