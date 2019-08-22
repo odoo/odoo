@@ -82,7 +82,7 @@
                     <field name="stage_id"/>
                     <field name="partner_id"/>
                     <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
-                    <separator/>    
+                    <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
@@ -141,7 +141,6 @@
                             <group>
                                 <field name="company_id" invisible="1"/>
                                 <field name="user_id"/>
-                                <field name="partner_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                                 <field name="event_id"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
@@ -149,7 +148,7 @@
                         <notebook>
                             <page string="Speakers">
                                 <group>
-                                    <field name="partner_id"/>
+                                    <field name="partner_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                                     <field name="partner_name"/>
                                     <field name="partner_email"/>
                                     <field name="partner_phone"/>
