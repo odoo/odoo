@@ -933,23 +933,34 @@ ListRenderer.include({
     _renderHeader: function () {
         var $thead = this._super.apply(this, arguments);
 
-        if (this.editable && !this._hasVisibleRecords(this.state) && !this.columnWidths) {
-            // we compute the sum of the weights for each columns, excluding
-            // those with an absolute width.
-            var totalWidth = this.columns.reduce(function (acc, column) {
-                return acc + (column.attrs.relativeWidth || 0);
-            }, 0);
-            this.columns.forEach(function (column) {
-                let width;
-                if (column.attrs.absoluteWidth) {
-                    width = column.attrs.absoluteWidth;
-                } else if (column.attrs.relativeWidth) {
-                    width = ((column.attrs.relativeWidth / totalWidth * 100) + '%');
-                }
-                if (width) {
-                    $thead.find('th[data-name=' + column.attrs.name + ']').css('width', width);
-                }
-            });
+        if (this.editable && !this.columnWidths) {
+            if (!this._hasVisibleRecords(this.state)) {
+                // we compute the sum of the weights for each columns, excluding
+                // those with an absolute width.
+                var totalWidth = this.columns.reduce(function (acc, column) {
+                    return acc + (column.attrs.relativeWidth || 0);
+                }, 0);
+                this.columns.forEach(function (column) {
+                    let width;
+                    if (column.attrs.absoluteWidth) {
+                        width = column.attrs.absoluteWidth;
+                    } else if (column.attrs.relativeWidth) {
+                        width = ((column.attrs.relativeWidth / totalWidth * 100) + '%');
+                    }
+                    if (width) {
+                        $thead.find('th[data-name=' + column.attrs.name + ']').css('width', width);
+                    }
+                });
+            } else {
+                // if there are records, we force a min-width for fields with an
+                // absolute width to ensure a correct rendering in edition
+                this.columns.forEach(function (column) {
+                    if (column.attrs.absoluteWidth) {
+                        let width = column.attrs.absoluteWidth;
+                        $thead.find('th[data-name=' + column.attrs.name + ']').css('min-width', width);
+                    }
+                });
+            }
         }
 
         if (this.addTrashIcon) {
