@@ -73,7 +73,7 @@ class StockScrap(models.Model):
             if self.picking_id:
                 for move_line in self.picking_id.move_line_ids:
                     if move_line.product_id == self.product_id:
-                        self.location_id = move_line.location_id
+                        self.location_id = move_line.location_id if move_line.state != 'done' else move_line.location_dest_id
                         break
 
     def unlink(self):
