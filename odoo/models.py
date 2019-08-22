@@ -5967,7 +5967,7 @@ def convert_pgerror_unique(model, fields, info, e):
 def convert_pgerror_constraint(model, fields, info, e):
     sql_constraints = dict([(('%s_%s') % (e.diag.table_name, x[0]), x) for x in model._sql_constraints])
     if e.diag.constraint_name in sql_constraints.keys():
-        return {'message': sql_constraints[e.diag.constraint_name][2]}
+        return {'message': "'%s'" % sql_constraints[e.diag.constraint_name][2]}
     return {'message': tools.ustr(e)}
 
 PGERROR_TO_OE = defaultdict(
