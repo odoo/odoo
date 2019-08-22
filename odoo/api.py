@@ -766,6 +766,24 @@ class Cache(object):
             except KeyError:
                 pass
 
+    def get_records_different_from(self, records, field, value):
+        """ Return the subset of ``records`` that has not ``value`` for ``field``. """
+        field_cache = self._data[field]
+        key = self._get_context_key(records.env, field) if field.depends_context else None
+        ids = []
+        for record_id in records._ids:
+            try:
+                if key:
+                    val = field_cache[record_id][key]
+                else:
+                    val = field_cache[record_id]
+            except KeyError:
+                ids.append(record_id)
+            else:
+                if val != value:
+                    ids.append(record_id)
+        return records.browse(ids)
+
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
