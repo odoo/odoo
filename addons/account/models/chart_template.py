@@ -1046,8 +1046,8 @@ class AccountFiscalPositionTemplate(models.Model):
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invoicing country match the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
-    zip_from = fields.Integer(string='Zip Range From', default=0)
-    zip_to = fields.Integer(string='Zip Range To', default=0)
+    zip_from = fields.Char(string='Zip Range From')
+    zip_to = fields.Char(string='Zip Range To')
 
 
 class AccountFiscalPositionTaxTemplate(models.Model):
