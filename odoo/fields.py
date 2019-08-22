@@ -967,9 +967,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
         cache.update(records, self, [cache_value] * len(records))
@@ -1386,9 +1385,8 @@ class _String(Field):
 
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
         cache.update(records, self, [cache_value] * len(records))
@@ -1912,9 +1910,8 @@ class Binary(Field):
 
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
         cache.update(records, self, [cache_value] * len(records))
@@ -2396,9 +2393,8 @@ class Many2one(_Relational):
 
         # discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
 
