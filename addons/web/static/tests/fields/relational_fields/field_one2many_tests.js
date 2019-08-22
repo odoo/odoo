@@ -2255,7 +2255,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('one2many kanban: edition', async function (assert) {
-            assert.expect(17);
+            assert.expect(23);
 
             this.data.partner.records[0].p = [2];
             var form = await createView({
@@ -2286,6 +2286,22 @@ QUnit.module('fields', {}, function () {
                     '</field>' +
                     '</form>',
                 res_id: 1,
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/call_kw/partner/write') {
+                        var commands = args.args[1].p;
+                        assert.strictEqual(commands.length, 2,
+                            'should have generated two commands');
+                        assert.strictEqual(commands[0][0], 0,
+                            'generated command should be ADD WITH VALUES');
+                        assert.strictEqual(commands[0][2].display_name, "new subrecord 3",
+                            'value of newly created subrecord should be "new subrecord 3"');
+                        assert.strictEqual(commands[1][0], 2,
+                            'generated command should be REMOVE AND DELETE');
+                        assert.strictEqual(commands[1][1], 2,
+                            'deleted record id should be 2');
+                    }
+                    return this._super.apply(this, arguments);
+                },
             });
 
             assert.ok(!form.$('.o_kanban_view .delete_icon').length,
@@ -2341,6 +2357,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
                 'There should be a modal having Remove Button');
             await testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
+            assert.containsNone($('.o_modal'), "modal should have been closed");
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 3,
                 'should contain 3 records');
             await testUtils.dom.click(form.$('.o_kanban_view .delete_icon:first()'));
@@ -2349,6 +2366,9 @@ QUnit.module('fields', {}, function () {
                 'should contain 1 records');
             assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new subrecord 3',
                 'the remaining subrecord should be "new subrecord 3"');
+
+            // save and check that the correct command has been generated
+            await testUtils.form.clickSave(form);
             form.destroy();
         });
 
