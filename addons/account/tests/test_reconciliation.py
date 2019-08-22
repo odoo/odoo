@@ -1506,7 +1506,7 @@ class TestReconciliationExec(TestReconciliation):
         partner = self.env['res.partner'].create({'name': 'UncertainPartner'})
         currency = self.env.company.currency_id
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
-        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE', 'update_posted':True})
+        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE', 'restrict_mode_hash_table':False})
 
         statement = self.make_payment(invoice, journal, 50)
         st_line = statement.line_ids

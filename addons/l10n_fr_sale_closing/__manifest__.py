@@ -14,7 +14,7 @@ The module adds following features:
     Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)
 
 """,
-    'depends': ['l10n_fr_certification'],
+    'depends': ['l10n_fr'],
     'installable': True,
     'auto_install': True,
     'application': False,

@@ -47,13 +47,13 @@ class AccountClosing(models.Model):
 
         if first_move_sequence_number is not False and first_move_sequence_number is not None:
             params['first_move_sequence_number'] = first_move_sequence_number
-            query += '''AND m.l10n_fr_secure_sequence_number > %(first_move_sequence_number)s'''
+            query += '''AND m.secure_sequence_number > %(first_move_sequence_number)s'''
         elif date_start:
             #the first time we compute the closing, we consider only from the installation of the module
             params['date_start'] = date_start
             query += '''AND m.date >= %(date_start)s'''
 
-        query += " ORDER BY m.l10n_fr_secure_sequence_number DESC) "
+        query += " ORDER BY m.secure_sequence_number DESC) "
         query += '''SELECT array_agg(move_id) AS move_ids,
                            array_agg(line_id) AS line_ids,
                            sum(balance) AS balance
@@ -85,7 +85,7 @@ class AccountClosing(models.Model):
             date_start = previous_closing.create_date
             cumulative_total += previous_closing.cumulative_total
 
-        aml_aggregate = self._query_for_aml(company, first_move.l10n_fr_secure_sequence_number, date_start)
+        aml_aggregate = self._query_for_aml(company, first_move.secure_sequence_number, date_start)
 
         total_interval = aml_aggregate['balance'] or 0
         cumulative_total += total_interval
@@ -98,7 +98,7 @@ class AccountClosing(models.Model):
         return {'total_interval': total_interval,
                 'cumulative_total': cumulative_total,
                 'last_move_id': last_move.id,
-                'last_move_hash': last_move.l10n_fr_hash,
+                'last_move_hash': last_move.inalterable_hash,
                 'date_closing_stop': interval_dates['date_stop'],
                 'date_closing_start': date_start,
                 'name': interval_dates['name_interval'] + ' - ' + interval_dates['date_stop'][:10]}
