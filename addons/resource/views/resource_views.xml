@@ -213,6 +213,7 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="arch" type="xml">
             <form string="Working Time">
+                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="date_from"/>
@@ -225,6 +226,7 @@
                     </div>
                     <field name="day_period"/>
                 </group>
+                </sheet>
             </form>
         </field>
     </record>
