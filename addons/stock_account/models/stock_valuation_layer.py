@@ -14,7 +14,7 @@ class StockValuationLayer(models.Model):
     _rec_name = 'product_id'
 
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True)
     quantity = fields.Float('Quantity', digits=0, help='Quantity', readonly=True)
     uom_id = fields.Many2one(related='product_id.uom_id', readonly=True, required=True)
     currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)
@@ -23,8 +23,8 @@ class StockValuationLayer(models.Model):
     remaining_qty = fields.Float(digits=0, readonly=True)
     remaining_value = fields.Monetary('remaining_value Value', readonly=True)
     description = fields.Char('Description', readonly=True)
-    stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True)
+    stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
-    stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
-    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True)
+    stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True)
+    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True)
 
