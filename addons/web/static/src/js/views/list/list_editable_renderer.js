@@ -492,7 +492,6 @@ ListRenderer.include({
      * @override
      */
     updateState: function (state, params) {
-        this.oldColumns = this.columns;
         this.columnWidths = false;
         if (params.keepWidths) {
             this.columnWidths = this.$('thead th').toArray().map(function (th) {
@@ -542,24 +541,14 @@ ListRenderer.include({
      */
     _freezeColumnWidths: function () {
         if (!this._hasVisibleRecords(this.state) && !this.columnWidths) {
-            // there is no record -> don't force column's widths w.r.t. their label
+            // there is no record nor widths to restore -> don't force column's
+            // widths w.r.t. their label
             return;
-        }
-        let restoreWidths = false;
-        if (this.columnWidths) {
-            if (this.oldColumns && this.oldColumns.length === this.columns.length) {
-                for (let i = 0; i < this.oldColumns.length; i++) {
-                    if (this.oldColumns[i] !== this.columns[i]) {
-                        break;
-                    }
-                    restoreWidths = (i === this.oldColumns.length - 1); // columns are as before
-                }
-            }
         }
         var $thead = this.$('thead');
         $thead.find('th').each((index, th) => {
             var $th = $(th);
-            $th.css('width', restoreWidths ? this.columnWidths[index] : $th.outerWidth() + 'px');
+            $th.css('width', this.columnWidths ? this.columnWidths[index] : $th.outerWidth() + 'px');
         });
         this.$('table').css('table-layout', 'fixed');
     },
@@ -841,22 +830,37 @@ ListRenderer.include({
         });
     },
     /**
-     * Overridden to set weights or explicit width on columns for the fixed layout.
+     * Override to compute the (relative or absolute) width of each column.
      *
      * @override
      * @private
      */
     _processColumns: function () {
+        const oldColumns = this.columns;
         this._super.apply(this, arguments);
         if (this.editable) {
-            this.columns.forEach((column) => {
-                const width = this._getColumnWidth(column);
-                if (width.match(/[a-zA-Z]/)) { // absolute width with measure unit (e.g. 100px)
-                    column.attrs.absoluteWidth = width;
-                } else { // relative width expressed as a weight (e.g. 1.5)
-                    column.attrs.relativeWidth = parseFloat(width, 10);
+            // check if stored widths still apply
+            if (this.columnWidths && oldColumns && oldColumns.length === this.columns.length) {
+                for (let i = 0; i < oldColumns.length; i++) {
+                    if (oldColumns[i] !== this.columns[i]) {
+                        this.columnWidths = false; // columns changed, so forget stored widths
+                        break;
+                    }
                 }
-            });
+            } else {
+                this.columnWidths = false; // columns changed, so forget stored widths
+            }
+            // if we don't have widths yet, computed them
+            if (!this.columnWidths) {
+                this.columns.forEach((column) => {
+                    const width = this._getColumnWidth(column);
+                    if (width.match(/[a-zA-Z]/)) { // absolute width with measure unit (e.g. 100px)
+                        column.attrs.absoluteWidth = width;
+                    } else { // relative width expressed as a weight (e.g. 1.5)
+                        column.attrs.relativeWidth = parseFloat(width, 10);
+                    }
+                });
+            }
         }
     },
     /**
