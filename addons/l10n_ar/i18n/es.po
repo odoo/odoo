@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-03 16:16+0000\n"
-"PO-Revision-Date: 2019-08-03 16:16+0000\n"
+"POT-Creation-Date: 2019-08-22 12:59+0000\n"
+"PO-Revision-Date: 2019-08-22 12:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,69 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
-msgid "<br/><span>Incoterm: </span>"
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "01 - National Taxes"
+msgstr "01 - Impuestos nacionales"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "02 - Provincial Taxes"
+msgstr "02 - Impuestos provinciales"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "03 - Municipal Taxes"
+msgstr "03 - Impuestos Municipales"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "04 - Internal Taxes"
+msgstr "04 - Impuestos internos"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "06 - VAT perception"
+msgstr "06 - Percepción de IVA"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "07 - IIBB perception"
+msgstr "07 - Percepción de IIBB"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "08 - Municipal Taxes Perceptions"
+msgstr "08 - Percepciones por Impuestos Municipales"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "09 - Other Perceptions"
+msgstr "09 - Otras Percepciones"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_vat_afip_code:0
+msgid "10.5%"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
-msgid "<span>VAT Cond.: </span>"
-msgstr "<span>Condición de IVA.: </span>"
+#: selection:account.tax.group,l10n_ar_vat_afip_code:0
+msgid "2,5%"
+msgstr ""
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_vat_afip_code:0
+msgid "21%"
+msgstr ""
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_vat_afip_code:0
+msgid "27%"
+msgstr ""
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_tribute_afip_code:0
+msgid "99 - Others"
+msgstr "99 - Otros"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_concept
@@ -36,11 +91,11 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.ui.menu,name:l10n_ar.menu_afip_config
+#: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
 msgid "AFIP"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_afip_code
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__l10n_ar_afip_code
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_afip_code
 #: model:ir.model.fields,field_description:l10n_ar.field_res_currency__l10n_ar_afip_code
@@ -144,16 +199,6 @@ msgid "Activities Start Date:"
 msgstr "Día de Inicio de Actividades:"
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_application_code
-msgid "Application Code"
-msgstr "Código de aplicación"
-
-#. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_application
-msgid "Argentinian Application"
-msgstr "Aplicación Argentina"
-
-#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_document_type_filter
 msgid "Argentinian Documents"
 msgstr "Documentos Argentinos"
@@ -164,19 +209,15 @@ msgid "Argentinian Statements"
 msgstr "Informes Argentinos"
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_tax
-msgid "Argentinian Tax"
-msgstr "Impuesto Argentino"
-
-#. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_type
-msgid "Argentinian Type"
-msgstr "Tipo Argentino"
-
-#. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
+
+#. module: l10n_ar
+#: model:product.product,name:l10n_ar.product_product_exento
+#: model:product.template,name:l10n_ar.product_product_exento_product_template
+msgid "Book \"Development in Odoo\" (VAT Exempt)"
+msgstr "Libro \"Desarrollo en Odoo\" (IVA Exento)"
 
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CBA
@@ -184,7 +225,7 @@ msgid "CBA"
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/res_partner_bank.py:18
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
 #, python-format
 msgid "CBU"
 msgstr ""
@@ -325,7 +366,7 @@ msgid "CUIT"
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_journal.py:65
+#: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid ""
 "Can not create chart of account until you configure your company AFIP "
@@ -337,11 +378,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CdM
 msgid "CdM"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
-msgid "Cod"
 msgstr ""
 
 #. module: l10n_ar
@@ -390,7 +426,7 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/res_company.py:51
+#: code:addons/l10n_ar/models/res_company.py:0
 #, python-format
 msgid ""
 "Could not change the AFIP Responsibility of this company because there are "
@@ -435,6 +471,21 @@ msgid "DNI"
 msgstr ""
 
 #. module: l10n_ar
+#: model:res.company,overdue_msg:l10n_ar.company_exento
+#: model:res.company,overdue_msg:l10n_ar.company_mono
+#: model:res.company,overdue_msg:l10n_ar.company_ri
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_afip_responsibility_type_id
@@ -470,6 +521,7 @@ msgid "ET"
 msgstr ""
 
 #. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_vat_afip_code:0
 #: selection:res.partner,l10n_ar_gross_income_type:0
 msgid "Exempt"
 msgstr "Exento"
@@ -513,13 +565,12 @@ msgstr ""
 "este país que son personas físicas"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_journal.py:66
+#: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Go to Companies"
 msgstr "Ir a Compañías"
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_tax:0
 #: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_gross_income_type
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_company_form
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_partner_property_form
@@ -545,6 +596,12 @@ msgid "Gross Income:"
 msgstr "Ingreso Bruto:"
 
 #. module: l10n_ar
+#: model:product.product,name:l10n_ar.product_product_servicio_de_guarda
+#: model:product.template,name:l10n_ar.product_product_servicio_de_guarda_product_template
+msgid "Guard Service"
+msgstr "Servicio de Guarda"
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__id
 msgid "ID"
 msgstr ""
@@ -562,9 +619,24 @@ msgid "IIBB - Sales by jurisdiction"
 msgstr "IIBB - Ventas por Jurisdicción"
 
 #. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb
+msgid "IIBB Perceptions"
+msgstr "Percepción de IIBB"
+
+#. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_l10n_latam_identification_type
 msgid "Identification Types"
 msgstr "Tipos de Identificación"
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"If use AFIP Responsibility then the country / zip codes will be not take "
+"into account"
+msgstr ""
+"Si utiliza Responsabilidad AFIP entonces no se tomará en cuenta el pais / "
+"códigos zip "
 
 #. module: l10n_ar
 #: model:product.product,name:l10n_ar.product_product_quote_despacho
@@ -573,27 +645,15 @@ msgid "Import Clearance"
 msgstr "Despacho de importación"
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
-msgid "Indicates if this type of documents has VAT or Not"
-msgstr ""
-
-#. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_application:0
 #: model:account.tax.group,name:l10n_ar.tax_impuestos_internos
 msgid "Internal Taxes"
 msgstr "Impuestos Internos"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/res_partner.py:97
+#: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "Invalid length for \"%s\""
 msgstr "Longitud invalida para \"%s\""
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:174
-#, python-format
-msgid "Invoices"
-msgstr "Facturas"
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_invoice_report
@@ -681,14 +741,20 @@ msgid "Local"
 msgstr ""
 
 #. module: l10n_ar
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "Missing Partner Configuration"
+msgstr "Falta configuración del Contacto"
+
+#. module: l10n_ar
 #: selection:res.partner,l10n_ar_gross_income_type:0
 msgid "Multilateral"
 msgstr ""
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_application:0
-msgid "Municipal Taxes"
-msgstr "Impuestos Municipales"
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_municipal
+msgid "Municipal Taxes Perceptions"
+msgstr "Percepciones por Impuestos Municipales"
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__name
@@ -701,11 +767,6 @@ msgid "Name must be unique!"
 msgstr "El nombre debe ser único!"
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_application:0
-msgid "National Taxes"
-msgstr "Impuesto Nacional"
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_natural_vat
 msgid "Natural Person VAT"
 msgstr "IVA Persona Física"
@@ -716,10 +777,21 @@ msgid "Next Number"
 msgstr "Próximo número"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/res_partner.py:77
+#: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "No VAT configured for partner [%i] %s"
 msgstr "No hay CUIT configurado para el contacto [%i] %s"
+
+#. module: l10n_ar
+#: model:product.product,name:l10n_ar.product_product_cero
+#: model:product.template,name:l10n_ar.product_product_cero_product_template
+msgid "Non-industrialized animals and vegetables (VAT Zero)"
+msgstr "Animales y vegetales no industrializados (IVA Cero)"
+
+#. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_vat_afip_code:0
+msgid "Not Applicable"
+msgstr "No Corresponde"
 
 #. module: l10n_ar
 #: selection:l10n_latam.document.type,purchase_aliquots:0
@@ -733,16 +805,31 @@ msgid "Number..."
 msgstr "Número..."
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/res_partner.py:99
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "On invoice id \"%s\" you must use VAT Not Applicable on every line."
+msgstr "En la factura con id \"%s\" debe usar IVA NO Corresponde en cada línea."
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid ""
+"On invoice id \"%s\" you must use VAT taxes different than VAT Not "
+"Applicable."
+msgstr ""
+"En la factura con id \"%s\" debes usar impuestos de IVA diferentes de IVA No"
+" Corresponde."
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "Only numbers allowed for \"%s\""
 msgstr "Sólo números son permitidos para \"%s\""
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_tax:0
-#: selection:account.tax.group,l10n_ar_type:0
-msgid "Other"
-msgstr "Otro"
+#: model:account.tax.group,name:l10n_ar.tax_group_otras_percepciones
+msgid "Other Perceptions"
+msgstr "Otras Percepciones"
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_special_purchase_document_type_ids
@@ -751,47 +838,19 @@ msgid "Other Purchase Documents"
 msgstr "Otros Documentos de Compra"
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_tax_group__l10n_ar_application
-msgid "Other Taxes According AFIP"
-msgstr "Otros Impuestos según AFIP"
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_other_vat
 msgid "Other VAT"
 msgstr "CUIT Otros"
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_application:0
-msgid "Others"
-msgstr "Otros"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_municipal
-msgid "Percepción DREI"
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "Please configure the AFIP Responsibility for \"%s\" in order to continue"
 msgstr ""
+"Por favor configure la Responsabilidad AFIP de \"%s\" para poder continuar"
 
 #. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_ganancias
-msgid "Percepción Ganancias"
-msgstr ""
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb
-msgid "Percepción IIBB"
-msgstr ""
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iva
-msgid "Percepción IVA"
-msgstr ""
-
-#. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_type:0
-msgid "Perception"
-msgstr "Percepción"
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_journal.py:170
+#: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Please define a valid AFIP POS number"
 msgstr "Por favor defina un número de PdV AFIP válido"
@@ -802,14 +861,9 @@ msgid "Product Unit of Measure"
 msgstr "Unidad de medida del producto"
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_tax:0
-msgid "Profits"
-msgstr "Ganancias"
-
-#. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_application:0
-msgid "Provincial Taxes"
-msgstr "Impuestos Provinciales"
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_ganancias
+msgid "Profit Perceptions"
+msgstr "Percepción de Ganancias"
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
@@ -817,29 +871,20 @@ msgid "Purchase Aliquots"
 msgstr "Alícuotas de Compra"
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
+msgid ""
+"Raise an error if a vendor bill is miss encoded. \"Not Zero\" means the VAT "
+"taxes are required for the invoices related to this document type, and those"
+" with \"Zero\" means that only \"VAT Not Applicable\" tax is allowed."
+msgstr ""
+"Lanze un error si la factura de vendedor esta mal cargada. \"No Cero\" significa "
+"que los impuestos de IVA son requeridos en las facturas relacionadas a este Tipo "
+" de Documento, y aquellas con \"Cero\" significa que solo  \"IVA No Corresponde\" esta permitido."
+
+#. module: l10n_ar
 #: model:ir.ui.menu,name:l10n_ar.menu_afip_responsibility_type
 msgid "Responsibility Types"
 msgstr "Tipos de Responsabilidad"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_retencion_drei
-msgid "Retención DREI"
-msgstr ""
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_retencion_ganancias
-msgid "Retención Ganancias"
-msgstr ""
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_retencion_iibb
-msgid "Retención IIBB"
-msgstr ""
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_retencion_iva
-msgid "Retención IVA"
-msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_ir_sequence
@@ -880,14 +925,27 @@ msgid "State"
 msgstr "Estado"
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_type:0
-msgid "TAX"
-msgstr "IMPUESTO"
+#: model:product.product,name:l10n_ar.product_product_tasa_estadistica
+#: model:product.template,name:l10n_ar.product_product_tasa_estadistica_product_template
+msgid "Statistics Rate"
+msgstr "Tasa Estadística"
+
+#. module: l10n_ar
+#: model:product.product,name:l10n_ar.product_product_arancel
+#: model:product.template,name:l10n_ar.product_product_arancel_product_template
+msgid "Tariff"
+msgstr "Arancel"
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_tax_group
 msgid "Tax Group"
 msgstr "Grupo de impuestos"
+
+#. module: l10n_ar
+#: model:product.product,name:l10n_ar.product_product_telefonia
+#: model:product.template,name:l10n_ar.product_product_telefonia_product_template
+msgid "Telephone service (VAT 27)"
+msgstr "Servicio Telefónico (IVA 27)"
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_fiscal_position_template
@@ -904,7 +962,7 @@ msgstr ""
 "Puede utilizar este campo para la búsqueda rápida."
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/l10n_latam_document_type.py:88
+#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid ""
 "The document number must be entered with a dash (-) and a maximum of 5 characters for the first partand 8 for the second. The following are examples of valid numbers:\n"
@@ -918,56 +976,26 @@ msgstr ""
 "* 00001-00000001"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:144
+#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
-msgid "The following invoices has a partner without AFIP responsibility"
-msgstr ""
-"Las siguientes facturas tienen una cliente/proveedor sin responsabilidad "
-"AFIP"
+msgid "The number of import Dispatch must be 16 characters"
+msgstr "El número de Despacho de importación debe ser de 16 caracteres"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:172
-#, python-format
-msgid ""
-"The following invoices have VAT not applicable but you must select a correct"
-" rate (Not Taxed, Exempt, Zero, 10.5, etc.)"
-msgstr ""
-"Las siguientes facturas tienen IVA no corresponde pero debe seleccionar una "
-"alícuota correcta (No gravado, Exento, Cero, 10.5, etc)"
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:161
-#, python-format
-msgid ""
-"The following invoices have incorrect VAT configured. You must use VAT Not "
-"Applicable.<br/> * Invoices: %s"
-msgstr ""
-"Las siguientes facturas tienen configurados IVA incorrecto. Debe utilizar "
-"IVA no corresponde.<br/> *Facturas: %s"
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:152
-#, python-format
-msgid "The following partners do not have VAT configured"
-msgstr "Los siguientes contactos no tienen CUIT configurado"
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/res_partner.py:95
+#: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "The validation digit is not valid for \"%s\""
 msgstr "El dígito de validación no es válido para \"%s\""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:136
+#: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid ""
-"There must be one and only one VAT tax per line. Verify lines with product"
+msgid "There must be one and only one VAT tax per line. Check line \"%s\""
 msgstr ""
-"Debe haber solo un impuesto de IVA por línea. Verifique las líneas con los "
-"productos"
+"Debe haver un único y solo un impuestp de IVA por línea. Revise la línea "
+"\"%s\""
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_tax_group__l10n_ar_afip_code
 #: model:ir.model.fields,help:l10n_ar.field_res_country__l10n_ar_afip_code
 #: model:ir.model.fields,help:l10n_ar.field_res_currency__l10n_ar_afip_code
 #: model:ir.model.fields,help:l10n_ar.field_uom_uom__l10n_ar_afip_code
@@ -994,6 +1022,11 @@ msgid ""
 "invoices"
 msgstr ""
 "Este es el número de PdV asignado por la AFIP para poder generar facturas"
+
+#. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_tribute_afip_code
+msgid "Tribute AFIP Code"
+msgstr "Código AFIP Tributos"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_gross_income_type
@@ -1027,10 +1060,15 @@ msgid "Units"
 msgstr "Unidades"
 
 #. module: l10n_ar
+#: selection:account.tax.group,l10n_ar_vat_afip_code:0
+msgid "Untaxed"
+msgstr "No Gravado"
+
+#. module: l10n_ar
 #: model:product.product,name:l10n_ar.product_product_no_gravado
 #: model:product.template,name:l10n_ar.product_product_no_gravado_product_template
 msgid "Untaxed concepts (VAT NT)"
-msgstr "Conceptos no gravados (IVA NG)"
+msgstr "Conceptos No gravados"
 
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_UpApP
@@ -1043,7 +1081,6 @@ msgid "Use same sequence for documents with the same letter"
 msgstr "Usar la misma secuencia para documentos con misma letra"
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_tax:0
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_vat
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_vat
 msgid "VAT"
@@ -1080,6 +1117,11 @@ msgid "VAT 5%"
 msgstr "IVA 5%"
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_vat_afip_code
+msgid "VAT AFIP Code"
+msgstr "Código AFIP de IVA"
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.argentinian_extra_info
 msgid "VAT Cond.:"
 msgstr "Cond. IVA:"
@@ -1095,9 +1137,9 @@ msgid "VAT Not Applicable"
 msgstr "IVA No Corresponde"
 
 #. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_gravado
-msgid "VAT Taxed"
-msgstr "IVA Gravado"
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iva
+msgid "VAT Perception"
+msgstr "Percepción de IVA"
 
 #. module: l10n_ar
 #: model:account.tax.group,name:l10n_ar.tax_group_iva_no_gravado
@@ -1105,17 +1147,18 @@ msgid "VAT Untaxed"
 msgstr "IVA No Gravado"
 
 #. module: l10n_ar
+#: code:addons/l10n_ar/models/account_fiscal_position.py:0
+#, python-format
+msgid "Warning"
+msgstr "Advertencia"
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "With Document"
-msgstr ""
+msgstr "Con Documento"
 
 #. module: l10n_ar
-#: selection:account.tax.group,l10n_ar_type:0
-msgid "Withholding"
-msgstr "Retención"
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/account_chart_template.py:69
+#: code:addons/l10n_ar/models/account_chart_template.py:0
 #, python-format
 msgid ""
 "You are trying to install a chart of account for the %s responsibility but "
@@ -1125,7 +1168,7 @@ msgstr ""
 " tu compañía ha sido configurada con el tipo %s"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_journal.py:132
+#: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can not change the journal configuration for a journal that already have"
@@ -1140,7 +1183,7 @@ msgid "Zero"
 msgstr "Cero"
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/l10n_latam_document_type.py:67
+#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid "is not a valid value for"
 msgstr "no es un valor valido para"

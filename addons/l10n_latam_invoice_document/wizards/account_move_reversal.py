@@ -15,7 +15,7 @@ class AccountMoveReversal(models.TransientModel):
     l10n_latam_document_number = fields.Char(string='Document Number')
 
     @staticmethod
-    def reverse_type_map(move_type):
+    def _reverse_type_map(move_type):
         match = {
             'entry': 'entry',
             'out_invoice': 'out_refund',
@@ -29,7 +29,7 @@ class AccountMoveReversal(models.TransientModel):
     def _onchange_move_id(self):
         if self.move_id.l10n_latam_use_documents:
             refund = self.move_id.new({
-                'type': self.reverse_type_map(self.move_id.type),
+                'type': self._reverse_type_map(self.move_id.type),
                 'journal_id': self.move_id.journal_id.id,
                 'partner_id': self.move_id.partner_id.id,
                 'company_id': self.move_id.company_id.id,
@@ -48,7 +48,7 @@ class AccountMoveReversal(models.TransientModel):
     def _compute_l10n_latam_sequence(self):
         for rec in self:
             refund = rec.move_id.new({
-                'type': self.reverse_type_map(rec.move_id.type),
+                'type': self._reverse_type_map(rec.move_id.type),
                 'journal_id': rec.move_id.journal_id.id,
                 'partner_id': rec.move_id.partner_id.id,
                 'company_id': rec.move_id.company_id.id,

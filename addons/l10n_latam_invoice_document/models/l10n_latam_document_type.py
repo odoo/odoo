@@ -50,6 +50,6 @@ class L10nLatamDocumentType(models.Model):
         self.ensure_one()
         return self.env['account.tax']
 
-    def get_document_sequence_vals(self, journal):
+    def _get_document_sequence_vals(self, journal):
         self.ensure_one()
         return {'name': '%s - %s' % (journal.name, self.name), 'padding': 8, 'prefix': self.code}

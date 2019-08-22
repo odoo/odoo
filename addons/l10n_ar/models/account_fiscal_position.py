@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
+from odoo import fields, models, api, _
 
 
 class AccountFiscalPosition(models.Model):
@@ -22,5 +22,16 @@ class AccountFiscalPosition(models.Model):
             ]
             if self.env.context.get('force_company'):
                 domain.append(('company_id', '=', self.env.context.get('force_company')))
-            return self.search(domain, limit=1).id
+            fp = self.search(domain, limit=1).id
+            if fp:
+                return fp
         return super().get_fiscal_position(partner_id, delivery_id=delivery_id)
+
+    @api.onchange('l10n_ar_afip_responsibility_type_ids', 'country_group_id', 'country_id', 'zip_from', 'zip_to')
+    def _onchange_afip_responsibility(self):
+        if self.company_id.country_id == self.env.ref('base.ar'):
+            if self.l10n_ar_afip_responsibility_type_ids and any(['country_group_id', 'country_id', 'zip_from', 'zip_to']):
+                return {'warning': {
+                    'title': _("Warning"),
+                    'message': _('If use AFIP Responsibility then the country / zip codes will be not take into account'),
+                }}
