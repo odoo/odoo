@@ -918,6 +918,11 @@ class Import(models.TransientModel):
                             'column_name': column_name,
                             'field_name': fields[index]
                         })
+        if 'name' in import_fields:
+            index_of_name = import_fields.index('name')
+            import_result['name'] = [x[index_of_name] for x in data]
+        else:
+            import_result['name'] = []
 
         return import_result
 
