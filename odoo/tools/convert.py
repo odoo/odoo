@@ -563,11 +563,14 @@ form: module.record_id""" % (xml_id,)
             else:
                 f_val = _eval_xml(self, field, env)
                 if f_name in model._fields:
-                    if model._fields[f_name].type == 'integer':
+                    field_type = model._fields[f_name].type
+                    if field_type == 'many2one':
+                        f_val = int(f_val) if f_val else False
+                    elif field_type == 'integer':
                         f_val = int(f_val)
-                    elif model._fields[f_name].type in ['float', 'monetary']:
+                    elif field_type in ('float', 'monetary'):
                         f_val = float(f_val)
-                    elif model._fields[f_name].type == 'boolean' and isinstance(f_val, str):
+                    elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 

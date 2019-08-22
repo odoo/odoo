@@ -405,7 +405,7 @@ class SurveyUserInputLine(models.Model):
         old_uil.sudo().unlink()
 
         if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
+            vals.update({'answer_type': 'suggestion', 'value_suggested': int(post[answer_tag])})
         else:
             vals.update({'answer_type': None, 'skipped': True})
 
@@ -441,7 +441,8 @@ class SurveyUserInputLine(models.Model):
             for key in ca_dict:
                 # '-1' indicates 'comment count as an answer' so do not need to record it
                 if key != ('%s_%s' % (answer_tag, '-1')):
-                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca_dict[key]})
+                    val = ca_dict[key]
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': bool(val) and int(val)})
                     self.create(vals)
         if comment_answer:
             vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})

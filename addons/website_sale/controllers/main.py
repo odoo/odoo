@@ -624,7 +624,10 @@ class WebsiteSale(http.Controller):
     def values_preprocess(self, order, mode, values):
         # Convert the values for many2one fields to integer since they are used as IDs
         partner_fields = request.env['res.partner']._fields
-        return {k: int(v) if v and k in partner_fields and partner_fields[k].type == 'many2one' else v for k, v in values.items()}
+        return {
+            k: (bool(v) and int(v)) if k in partner_fields and partner_fields[k].type == 'many2one' else v
+            for k, v in values.items()
+        }
 
     def values_postprocess(self, order, mode, values, errors, error_msg):
         new_values = {}
