@@ -106,8 +106,8 @@ class AccountMove(models.Model):
         try:
             return super(AccountMove, self - vendor)._check_unique_sequence_number()
         except ValidationError:
-            raise ValidationError(_('Duplicated invoice number detected. You probably add twice the same customer'
-                                    ' invoice/debit note.'))
+            raise ValidationError(_('Duplicated invoice number detected. You probably added twice the same vendor'
+                                    ' bill/debit note.'))
 
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):
