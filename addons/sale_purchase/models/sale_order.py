@@ -235,15 +235,6 @@ class SaleOrderLine(models.Model):
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                 price_unit = supplierinfo.currency_id.compute(price_unit, purchase_order.currency_id)
 
-        # purchase line description in supplier lang
-        product_in_supplier_lang = self.product_id.with_context({
-            'lang': supplierinfo.name.lang,
-            'partner_id': supplierinfo.name.id,
-        })
-        name = '[%s] %s' % (self.product_id.default_code, product_in_supplier_lang.display_name)
-        if product_in_supplier_lang.description_purchase:
-            name += '\n' + product_in_supplier_lang.description_purchase
-
         return {
             'name': '[%s] %s' % (self.product_id.default_code, self.name) if self.product_id.default_code else self.name,
             'product_qty': purchase_qty_uom,
