@@ -185,11 +185,20 @@
             <field name="name">My Company (San Francisco)</field>
         </record>
 
+        <!-- Rename auto-created Chicago Warehouse -->
+        <function model="stock.warehouse" name="write">
+            <value model="stock.warehouse" search="[('company_id', '=', obj().env.ref('stock.res_company_1').id)]"/>
+            <value eval="{
+                'name': 'Chicago 1',
+                'code': 'CHIC1',
+            }"/>
+        </function>
+
         <record id="stock_warehouse_shop0" model="stock.warehouse">
-            <field name="name">Chicago Warehouse</field>
+            <field name="name">Chicago 2</field>
             <field name="partner_id" ref="res_partner_address_41"/>
             <field name="company_id" ref="res_company_1"/>
-            <field name="code">Chic</field>
+            <field name="code">CHIC2</field>
         </record>
 
         <record id="product.consu_delivery_03" model="product.product">

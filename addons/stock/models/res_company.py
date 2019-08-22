@@ -180,5 +180,10 @@ class Company(models.Model):
         company.sudo()._create_per_company_sequences()
         company.sudo()._create_per_company_picking_types()
         company.sudo()._create_per_company_rules()
-        self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
+        self.env['stock.warehouse'].sudo().create({
+            'name': company.name,
+            'code': self.env.context.get('default_code') or company.name[:5],
+            'company_id': company.id,
+            'partner_id': company.partner_id.id
+        })
         return company
