@@ -21,7 +21,7 @@ class StockQuant(models.Model):
     def _domain_location_id(self):
         if not self._is_inventory_mode():
             return
-        return ['&', ('company_id', '=', self.env.company.id), ('usage', 'in', ['internal', 'transit'])]
+        return [('usage', 'in', ['internal', 'transit'])]
 
     def _domain_product_id(self):
         if not self._is_inventory_mode():
@@ -34,7 +34,7 @@ class StockQuant(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
-        ondelete='restrict', readonly=True, required=True)
+        ondelete='restrict', readonly=True, required=True, check_company=True)
     # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
@@ -47,16 +47,17 @@ class StockQuant(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
-        auto_join=True, ondelete='restrict', readonly=True, required=True)
+        auto_join=True, ondelete='restrict', readonly=True, required=True, check_company=True)
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
-        ondelete='restrict', readonly=True)
+        ondelete='restrict', readonly=True, check_company=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
-        help='The package containing this quant', readonly=True, ondelete='restrict')
+        domain="[('location_id', '=', location_id)]",
+        help='The package containing this quant', readonly=True, ondelete='restrict', check_company=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
-        help='This is the owner of the quant', readonly=True)
+        help='This is the owner of the quant', readonly=True, check_company=True)
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
@@ -95,9 +96,9 @@ class StockQuant(models.Model):
             if diff_float_compared == 0:
                 continue
             elif diff_float_compared > 0:
-                move_vals = quant._get_inventory_move_values(diff, quant.product_id.property_stock_inventory, quant.location_id)
+                move_vals = quant._get_inventory_move_values(diff, quant.product_id.with_context(force_company=quant.company_id.id or self.env.company.id).property_stock_inventory, quant.location_id)
             else:
-                move_vals = quant._get_inventory_move_values(-diff, quant.location_id, quant.product_id.property_stock_inventory, out=True)
+                move_vals = quant._get_inventory_move_values(-diff, quant.location_id, quant.product_id.with_context(force_company=quant.company_id.id or self.env.company.id).property_stock_inventory, out=True)
             move = quant.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
             move._action_done()
 
@@ -126,7 +127,10 @@ class StockQuant(models.Model):
             # Set the `inventory_quantity` field to create the necessary move.
             quant.inventory_quantity = inventory_quantity
             return quant
-        return super(StockQuant, self).create(vals)
+        res = super(StockQuant, self).create(vals)
+        if self._is_inventory_mode():
+            res._check_company()
+        return res
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -631,7 +635,7 @@ class QuantPackage(models.Model):
     quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True,
         domain=['|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0)])
     packaging_id = fields.Many2one(
-        'product.packaging', 'Package Type', index=True)
+        'product.packaging', 'Package Type', index=True, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_package_info',
         index=True, readonly=True, store=True)
@@ -645,7 +649,7 @@ class QuantPackage(models.Model):
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
         for package in self:
-            values = {'location_id': False, 'company_id': self.env.company.id, 'owner_id': False}
+            values = {'location_id': False, 'owner_id': False}
             if package.quant_ids:
                 values['location_id'] = package.quant_ids[0].location_id
                 if all(q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids):
@@ -653,7 +657,7 @@ class QuantPackage(models.Model):
                 if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
                     values['company_id'] = package.quant_ids[0].company_id
             package.location_id = values['location_id']
-            package.company_id = values['company_id']
+            package.company_id = values.get('company_id')
             package.owner_id = values['owner_id']
 
     def name_get(self):
@@ -712,3 +716,4 @@ class QuantPackage(models.Model):
                 res[quant.product_id] = 0
             res[quant.product_id] += quant.quantity
         return res
+
