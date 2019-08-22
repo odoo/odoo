@@ -7,10 +7,11 @@ from odoo import api, fields, models
 class Expense(models.Model):
     _inherit = "hr.expense"
 
-    sale_order_id = fields.Many2one(
-        'sale.order', string='Reinvoice Customer', readonly=True,
+    sale_order_id = fields.Many2one('sale.order', string='Reinvoice Customer', readonly=True,
         states={'draft': [('readonly', False)], 'reported': [('readonly', False)]},
-        domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]",
+        # NOTE: only confirmed SO can be selected, but this domain in activated throught the name search with the `sale_expense_all_order`
+        # context key. So, this domain is not the one applied.
+        domain=[('state', '=', 'sale')],
         help="If the product has an expense policy, it will be reinvoiced on this sales order")
     can_be_reinvoiced = fields.Boolean("Can be reinvoiced", compute='_compute_can_be_reinvoiced')
 
