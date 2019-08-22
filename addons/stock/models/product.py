@@ -102,12 +102,13 @@ class Product(models.Model):
             product.outgoing_qty = res[product.id]['outgoing_qty']
             product.virtual_available = res[product.id]['virtual_available']
             product.free_qty = res[product.id]['free_qty']
-        for product in self - products:
-            product.qty_available = 0.0
-            product.incoming_qty = 0.0
-            product.outgoing_qty = 0.0
-            product.virtual_available = 0.0
-            product.free_qty = 0.0
+        # Services need to be set with 0.0 for all quantities
+        services = self - products
+        services.qty_available = 0.0
+        services.incoming_qty = 0.0
+        services.outgoing_qty = 0.0
+        services.virtual_available = 0.0
+        services.free_qty = 0.0
 
     def _product_available(self, field_names=None, arg=False):
         """ Compatibility method """
