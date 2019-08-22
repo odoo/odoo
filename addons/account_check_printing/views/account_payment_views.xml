@@ -8,6 +8,7 @@
                 <xpath expr="//button[@name='post']" position="before">
                     <button name="print_checks" class="oe_highlight" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'posted')]}" string="Print Check" type="object"/>
                     <button name="unmark_sent" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'sent')]}" string="Unmark Sent" type="object"/>
+                    <button name="set_check_amount_in_words" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_amount_in_words', '!=', False)]}" string="Reset Amount in Words" type="object" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//div[@name='amount_div']" position="after">
                     <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')], 'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
