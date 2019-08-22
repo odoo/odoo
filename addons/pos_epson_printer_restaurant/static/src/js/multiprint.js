@@ -4,14 +4,16 @@ odoo.define('pos_epson_printer_restaurant.multiprint', function (require) {
 var models = require('point_of_sale.models');
 var EpsonPrinter = require('pos_epson_printer.Printer');
 
-models.load_fields("restaurant.printer", ["printer_type", "epson_printer_ip"]);
+models.load_fields("restaurant.printer", ["epson_printer_ip"]);
+
+var _super_posmodel = models.PosModel.prototype;
 
 models.PosModel = models.PosModel.extend({
     create_printer: function (config) {
         if (config.printer_type === "epson_epos") {
             return new EpsonPrinter(config.epson_printer_ip , posmodel);
         } else {
-            this._super(config);
+            return _super_posmodel.create_printer.apply(this, arguments);
         }
     },
 });
