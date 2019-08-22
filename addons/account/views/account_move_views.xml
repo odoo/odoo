@@ -160,7 +160,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" expand="context.get('group_by') in ('move_id', 'account_id') and 1 or 0">
+                <tree string="Journal Items" create="false" expand="context.get('expand', False)">
                     <field name="date" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="ref" optional="hide"/>
                     <field name="move_id" optional="show" readonly="1"/>
@@ -705,7 +705,7 @@
                                     </group>
 
                                     <newline/>
-                                    
+
                                     <group class="oe_invoice_outstanding_credits_debits" style="width: 350px !important;">
                                         <field name="invoice_outstanding_credits_debits_widget"
                                             colspan="2" nolabel="1" widget="payment"
