@@ -426,7 +426,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
                 assert.step('doAction');
                 var expectedAction = {
                     context: {
-                        default_res_id: { id: 31, display_name: undefined },
+                        default_res_id: 31,
                         default_res_model: "task",
                     },
                     name: "Schedule Activity",
