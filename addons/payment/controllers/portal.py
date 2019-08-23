@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
+import hmac
 import logging
 from unicodedata import normalize
 import psycopg2
+import werkzeug
 
 from odoo import http, _
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, consteq, ustr
 from datetime import datetime, timedelta
 
 
@@ -129,10 +132,27 @@ class WebsitePayment(http.Controller):
         return request.render("payment.pay_methods", values)
 
     @http.route(['/website_payment/pay'], type='http', auth='public', website=True, sitemap=False)
-    def pay(self, reference='', order_id=None, amount=False, currency_id=None, acquirer_id=None, **kw):
+    def pay(self, reference='', order_id=None, amount=False, currency_id=None, acquirer_id=None, partner_id=False, access_token=None, **kw):
+        """
+        Generic payment page allowing public and logged in users to pay an arbitrary amount.
+
+        In the case of a public user access, we need to ensure that the payment is made anonymously - e.g. it should not be
+        possible to pay for a specific partner simply by setting the partner_id GET param to a random id. In the case where
+        a partner_id is set, we do an access_token check based on the payment.link.wizard model (since links for specific
+        partners should be created from there and there only). Also noteworthy is the filtering of s2s payment methods -
+        we don't want to create payment tokens for public users.
+
+        In the case of a logged in user, then we let access rights and security rules do their job.
+        """
         env = request.env
         user = env.user.sudo()
         reference = normalize('NFKD', reference).encode('ascii','ignore').decode('utf-8')
+        if partner_id and not access_token:
+            raise werkzeug.exceptions.NotFound
+        if partner_id and access_token:
+            token_ok = request.env['payment.link.wizard'].check_token(access_token, int(partner_id), float(amount), int(currency_id))
+            if not token_ok:
+                raise werkzeug.exceptions.NotFound
 
         # Default values
         values = {
@@ -181,7 +201,15 @@ class WebsitePayment(http.Controller):
             acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', user.company_id.id)])
 
         # Check partner
-        partner_id = user.partner_id.id if not user._is_public() else False
+        if not user._is_public():
+            # NOTE: this means that if the partner was set in the GET param, it gets overwritten here
+            # This is something we want, since security rules are based on the partner - assuming the
+            # access_token checked out at the start, this should have no impact on the payment itself
+            # existing besides making reconciliation possibly more difficult (if the payment partner is
+            # not the same as the invoice partner, for example)
+            partner_id = user.partner_id.id
+        elif partner_id:
+            partner_id = int(partner_id)
 
         values.update({
             'partner_id': partner_id,
@@ -189,15 +217,17 @@ class WebsitePayment(http.Controller):
             'error_msg': kw.get('error_msg')
         })
 
-        values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in ['form', 's2s']]
+        # s2s mode will always generate a token, which we don't want for public users
+        valid_flows = ['form', 's2s'] if not user._is_public() else ['form']
+        values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in valid_flows]
         values['pms'] = request.env['payment.token'].search([('acquirer_id', 'in', acquirers.ids)])
 
         return request.render('payment.pay', values)
 
     @http.route(['/website_payment/transaction/<string:reference>/<string:amount>/<string:currency_id>',
-                '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>',], type='json', auth='public')
-    def transaction(self, acquirer_id, reference, amount, currency_id, **kwargs):
-        partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
+                '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>',
+                '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>/<int:partner_id>'], type='json', auth='public')
+    def transaction(self, acquirer_id, reference, amount, currency_id, partner_id=False, **kwargs):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         order_id = kwargs.get('order_id')
 
@@ -220,7 +250,10 @@ class WebsitePayment(http.Controller):
         reference_values.update(acquirer_id=int(acquirer_id))
         values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
-        tx.return_url = '/website_payment/confirm?tx_id=%d' % tx.id
+        secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+        token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+        token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+        tx.return_url = '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
 
         PaymentProcessing.add_payment_transaction(tx)
 
@@ -231,36 +264,38 @@ class WebsitePayment(http.Controller):
         return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
 
     @http.route(['/website_payment/token/<string:reference>/<string:amount>/<string:currency_id>',
-                '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='http', auth='public', website=True)
-    def payment_token(self, pm_id, reference, amount, currency_id, return_url=None, **kwargs):
+                '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>',
+                '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>/<int:partner_id>'], type='http', auth='public', website=True)
+    def payment_token(self, pm_id, reference, amount, currency_id, partner_id=False, return_url=None, **kwargs):
         token = request.env['payment.token'].browse(int(pm_id))
         order_id = kwargs.get('order_id')
 
         if not token:
             return request.redirect('/website_payment/pay?error_msg=%s' % _('Cannot setup the payment.'))
 
-        partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
-
         values = {
             'acquirer_id': token.acquirer_id.id,
             'reference': reference,
             'amount': float(amount),
             'currency_id': int(currency_id),
-            'partner_id': partner_id,
-            'payment_token_id': pm_id,
+            'partner_id': int(partner_id),
+            'payment_token_id': int(pm_id),
             'type': 'server2server',
             'return_url': return_url,
         }
 
         if order_id:
-            values['sale_order_ids'] = [(6, 0, [order_id])]
+            values['sale_order_ids'] = [(6, 0, [int(order_id)])]
 
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         PaymentProcessing.add_payment_transaction(tx)
 
         try:
             tx.s2s_do_transaction()
-            tx.return_url = return_url or '/website_payment/confirm?tx_id=%d' % tx.id
+            secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+            token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+            token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+            tx.return_url = return_url or '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
         except Exception as e:
             _logger.exception(e)
         return request.redirect('/payment/process')
@@ -268,8 +303,17 @@ class WebsitePayment(http.Controller):
     @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
     def confirm(self, **kw):
         tx_id = int(kw.get('tx_id', 0))
+        access_token = kw.get('access_token')
         if tx_id:
-            tx = request.env['payment.transaction'].browse(tx_id)
+            if access_token:
+                tx = request.env['payment.transaction'].sudo().browse(tx_id)
+                secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+                valid_token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+                valid_token = hmac.new(secret.encode('utf-8'), valid_token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+                if not consteq(ustr(valid_token), access_token):
+                    raise werkzeug.exceptions.NotFound
+            else:
+                tx = request.env['payment.transaction'].browse(tx_id)
             if tx.state in ['done', 'authorized']:
                 status = 'success'
                 message = tx.acquirer_id.done_msg
