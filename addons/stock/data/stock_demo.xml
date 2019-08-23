@@ -214,6 +214,33 @@
             <field name="type">product</field>
         </record>
 
+        <!-- Inventory for Chicago Warehouse -->
+            <record id="stock_inventory_chic_0" model="stock.inventory">
+                <field name="name">Starting Inventory</field>
+                <field name="company_id" ref="stock.res_company_1"/>
+            </record>
+
+            <record id="stock_inventory_line_1" model="stock.inventory.line">
+                <field name="product_id" ref="product.product_product_6"/>
+                <field name="product_uom_id" ref="uom.product_uom_unit"/>
+                <field name="inventory_id" ref="stock_inventory_chic_0"/>
+                <field name="product_qty">100.0</field>
+                <field name="location_id" model="stock.location"
+                       eval="obj().env['stock.location'].search([
+                            ('company_id', '=', obj().env.ref('stock.res_company_1').id),
+                            ('location_id', '!=', False),
+                            ('child_ids', '=', False),
+                       ], limit=1)"
+                />
+            </record>
+
+            <function model="stock.inventory" name="_action_start">
+                <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_chic_0'))]]" model="stock.inventory" name="search"/>
+            </function>
+            <function model="stock.inventory" name="action_validate">
+                <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_chic_0'))]]" model="stock.inventory" name="search"/>
+            </function>
+
         <!-- Activate Lots options as demo data depends on it -->
         <record id="base.group_user" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('stock.group_production_lot'))]"/>
