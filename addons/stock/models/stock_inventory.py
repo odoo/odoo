@@ -343,6 +343,7 @@ class InventoryLine(models.Model):
         }
         for line in self:
             if line.state == 'done' or not line.id:
+                line.outdated = False
                 continue
             qty = quants.get((
                 line.product_id.id,
