@@ -1437,12 +1437,13 @@ class _String(Field):
         # update towrite if modifying the source
         if update_column:
             towrite = records.env.all.towrite[self.model_name]
-            for record in records.filtered('id'):
+            real_record_ids = [r.id for r in records if r.id]
+            for rid in real_record_ids:
                 # cache_value is already in database format
-                towrite[record.id][self.name] = cache_value
-            if self.translate is True:
+                towrite[rid][self.name] = cache_value
+            if self.translate is True and real_record_ids:
                 tname = "%s,%s" % (records._name, self.name)
-                records.env['ir.translation']._set_source(tname, records.ids, value)
+                records.env['ir.translation']._set_source(tname, real_record_ids, value)
 
         if update_trans:
             if callable(self.translate):
