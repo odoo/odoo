@@ -15,7 +15,9 @@ class Website(models.Model):
     _inherit = 'website'
 
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency', readonly=False)
+    currency_id = fields.Many2one('res.currency',
+        related='pricelist_id.currency_id', depends=(), related_sudo=False,
+        string='Default Currency', readonly=False)
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
 
     def _get_default_website_team(self):
