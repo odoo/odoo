@@ -952,6 +952,7 @@ class StockMove(models.Model):
                     # the reserved quantity on the quants, convert it here in
                     # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     move_lines_in = move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
+                    move_lines_in_todo = move.move_orig_ids.filtered(lambda m: m.state not in ['done', 'cancel']).mapped('move_line_ids')
                     keys_in_groupby = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
 
                     def _keys_in_sorted(ml):
@@ -1009,9 +1010,21 @@ class StockMove(models.Model):
                         taken_quantity = move._update_reserved_quantity(need, min(quantity, available_quantity), location_id, lot_id, package_id, owner_id)
                         if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
                             continue
-                        if need - taken_quantity == 0.0:
+                        need -= taken_quantity
+                        if float_is_zero(need, precision_rounding=move.product_id.uom_id.rounding):
                             assigned_moves |= move
                             break
+                        # Not everything was reserved but there is no more move lines to do.
+                        # Therefore we won't be able to reserve the whole quantity, so we try to
+                        # reserve products available in the location.
+                        if not move_lines_in_todo:
+                            available_quantity = self.env['stock.quant']._get_available_quantity(
+                                move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+                            taken_quantity = move._update_reserved_quantity(need, available_quantity, location_id, lot_id, package_id, owner_id)
+                            need -= taken_quantity
+                            if float_is_zero(need, precision_rounding=move.product_id.uom_id.rounding):
+                                assigned_moves |= move
+                                break
                         partially_available_moves |= move
         partially_available_moves.write({'state': 'partially_available'})
         assigned_moves.write({'state': 'assigned'})
