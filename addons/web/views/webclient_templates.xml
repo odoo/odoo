@@ -86,6 +86,8 @@
         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
         <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
+        <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/component_extension.js"></script>
 
         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
         <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
@@ -263,6 +265,7 @@
         <script type="text/javascript" src="/web/static/src/js/tools/test_menus_loader.js"/>
         <script type="text/javascript" src="/web/static/src/js/tools/debug_manager_backend.js"></script>
         <script type="text/javascript" src="/web/static/src/js/tools/tools.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/env.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/domain_selector_dialog.js"></script>
@@ -398,6 +401,7 @@
         <t t-call="web._assets_frontend_minimal_js"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_env.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_crash_manager.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_notification.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
@@ -602,14 +606,7 @@
         <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
         <script type="text/javascript" src="/web/static/lib/ace/mode-js.js"></script>
 
-        <script type="text/javascript">
-            // define the 'web.web_client' module because some other modules require it
-            odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.WebClient');
-                var web_client = new WebClient();
-                return web_client;
-            });
-        </script>
+        <script type="text/javascript" src="/web/static/tests/main_tests.js"></script>
 
         <style>
             body {
@@ -640,7 +637,9 @@
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_env.js"></script>
 
+        <script type="text/javascript" src="/web/static/tests/component_extension_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/boot_tests.js"></script>
     </template>
 
@@ -864,17 +863,7 @@
                     <![endif]-->
                 ]]>
 
-                <script type="text/javascript">
-                    odoo.define('web.web_client', function (require) {
-                        var WebClient = require('web.WebClient');
-                        var web_client = new WebClient();
-                        $(function() {
-                            web_client.setElement($(document.body));
-                            web_client.start();
-                        });
-                        return web_client;
-                    });
-                </script>
+                <script type="text/javascript" src="/web/static/src/js/main.js"></script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
