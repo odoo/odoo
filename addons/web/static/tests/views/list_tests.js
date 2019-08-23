@@ -969,7 +969,7 @@ QUnit.module('Views', {
             n += 1;
         });
         await testUtils.dom.click($td);
-        testUtils.fields.editInput($td.find('input'), 'abc');
+        await testUtils.fields.editInput($td.find('input'), 'abc');
         assert.strictEqual(n, 1, "field_changed should have been triggered");
         await testUtils.dom.click(list.$('td:not(.o_list_record_selector)').eq(2));
         assert.strictEqual(n, 1, "field_changed should not have been triggered");
