@@ -323,7 +323,6 @@
                     <separator/>
                     <filter string="Late" name="late" help="Production started late"
                         domain="['&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
-                    <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"

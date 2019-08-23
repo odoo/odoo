@@ -933,8 +933,6 @@
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
                     <filter name="due_date" string="Due Date" date="invoice_date_due"/>
                     <separator/>
-                    <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
