@@ -935,10 +935,9 @@ class SaleOrderLine(models.Model):
           For note lines, if the previous line is to invoice or if the note line
           is the first of the quote and any other line is to invoice.
         """
-        records = self.filtered('display_type').sorted()
-        for line in records:
-            line.display_type_invoice_status = 'no'
-            if line.state in ('sale', 'done'):
+        self.write({'display_type_invoice_status': 'no'})
+        for line in self.sorted():
+            if line.display_type and line.state in ('sale', 'done'):
                 if line.display_type == 'line_section':
                     order_lines = line.order_id.order_line.sorted()
                     ind = order_lines.ids.index(line.id)
@@ -959,7 +958,6 @@ class SaleOrderLine(models.Model):
                     # and any other line in the quote is to invoice
                     if ind == 0 and any(o_line.invoice_status == 'to invoice' for o_line in order_lines):
                         line.display_type_invoice_status = 'to invoice'
-        (self-records).write({'display_type_invoice_status': 'no'})
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
@@ -1248,6 +1246,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.qty_delivered_method == 'manual':
                 line.qty_delivered = line.qty_delivered_manual or 0.0
+            else:
+                # fix error : "something went wrong" on qty_delivered when adding a line in confirmed SO
+                line.qty_delivered = line.qty_delivered
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
         """ Compute and write the delivered quantity of current SO lines, based on their related
