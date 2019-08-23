@@ -8,7 +8,7 @@ from PIL import Image
 import psycopg2
 
 from odoo import fields
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
@@ -439,7 +439,7 @@ class TestFields(common.TransactionCase):
         # remove oneself from discussion participants: we can no longer create
         # messages in discussion
         discussion.participants -= self.env.user
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
         # make sure that assertRaises() does not leave fields to recompute
@@ -449,6 +449,12 @@ class TestFields(common.TransactionCase):
         # messages in discussion
         discussion.participants += self.env.user
         self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
+
+        # check constraint on recomputed field
+        self.assertTrue(discussion.messages)
+        with self.assertRaises(ValidationError):
+            discussion.name = "X"
+            discussion.flush()
 
     def test_20_float(self):
         """ test rounding of float fields """
