@@ -537,8 +537,6 @@
                     <separator/>
                     <filter string="Creation Date" name="creation_date" date="create_date"/>
                     <separator/>
-                    <filter string="Activities Todo" name="activities_my"
-                            domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                             domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"

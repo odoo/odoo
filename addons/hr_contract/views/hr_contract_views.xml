@@ -71,7 +71,8 @@
             <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="." position="inside">
+                    <xpath expr="//filter[@name='message_needaction']" position="after">
+                        <separator/>
                         <filter string="Contract Warning" name="with_contract_warning" domain="[('contract_warning', '=', True)]"/>
                     </xpath>
                 </data>

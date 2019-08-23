@@ -91,7 +91,9 @@
                 <field name="name"/>
                 <filter name="my_work_entries" string="My Entries" domain="[('employee_id.user_id', '=', uid)]"/>
                 <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
+                <separator/>
                 <filter name="date_filter" string="Date" date="date_start"/>
+                <separator/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
                 <separator/>
