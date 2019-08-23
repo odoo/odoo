@@ -34,7 +34,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
 
         $el.css('height', $(window).height())
            .find('.o_blog_cover_container').addClass(nexInfo.size + ' ' + nexInfo.text).end()
-           .find('.o_wblog_toggle').toggleClass('d-none d-flex');
+           .find('.o_wblog_toggle').toggleClass('d-none');
 
         // Use _.defer to calculate the 'offset()'' only after that size classes
         // have been applyed and that $el has been resized.
