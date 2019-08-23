@@ -745,10 +745,10 @@ class PosSession(models.Model):
 
     def open_frontend_cb(self):
         """Open the pos interface with config_id as an extra argument.
-            
+
         In vanilla PoS each user can only have one active session, therefore it was not needed to pass the config_id
         on opening a session. It is also possible to login to sessions created by other users.
-            
+
         :returns: dict
         """
         if not self.ids:
@@ -802,7 +802,7 @@ class PosSession(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'closing.balance.confirm.wizard',
-            'view_id': self.env.ref('point_of_sale.closing_balance_confirm').id,
+            'views': [(False, 'form')],
             'type': 'ir.actions.act_window',
             'context': context,
             'target': 'new'
