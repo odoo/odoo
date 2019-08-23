@@ -1,11 +1,12 @@
-odoo.define('website_slides.course_tour', function (require) {
-"use strict";
+odoo.define('website_slides.tours.slide.course.member', function (require) {
+'use strict';
 
 var tour = require('web_tour.tour');
 
 /**
  * Global use case:
- * - student (= demo user) checks course content
+ * - student (= demo user) goes on channel_0 (Basics of Gardening)
+ * - clicks on slide_slide_demo_0_0 (Know-How) which is free
  * - clicks on "join course"
  * - has access to all content
  * - completes the course
@@ -14,9 +15,9 @@ tour.register('course_tour', {
     url: '/slides',
     test: true
 }, [{
-    trigger: 'a:contains("Taking care of Trees")'
+    trigger: 'a:contains("Basics of Gardening")'
 }, {
-    trigger: '.o_wslides_slides_list_slide:contains("Tree Infographic")',
+    trigger: '.o_wslides_slides_list_slide:contains("Gardening: The Know-How")',
     run: function () {} // check that the previewable slide is displayed
 }, {
     trigger: 'a:contains("Join Course")'
@@ -24,9 +25,9 @@ tour.register('course_tour', {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership
 }, {
-    trigger: 'a:contains("Tree Infographic")',
+    trigger: 'a:contains("Gardening: The Know-How")',
 }, {
-    trigger: '.o_wslides_fs_sidebar_list_item div:contains("Interesting Tree Facts")'
+    trigger: '.o_wslides_fs_sidebar_list_item div:contains("Home Gardening")'
 }, {
     trigger: '.o_wslides_fs_sidebar_header',
     run: function () {
@@ -36,7 +37,7 @@ tour.register('course_tour', {
         // go back once
         $(document).trigger(event);
         // check that it selected the previous tab
-        if ($('.o_wslides_fs_sidebar_list_item.active:contains("Tree Infographic")').length === 0) {
+        if ($('.o_wslides_fs_sidebar_list_item.active:contains("Gardening: The Know-How")').length === 0) {
             return;
         }
 
@@ -45,7 +46,7 @@ tour.register('course_tour', {
         $(document).trigger(event);
         $(document).trigger(event);
         // check that it selected the next/next tab
-        if ($('.o_wslides_fs_sidebar_list_item.active:contains("Energy Efficiency Facts")').length === 0) {
+        if ($('.o_wslides_fs_sidebar_list_item.active:contains("Mighty Carrots")').length === 0) {
             return;
         }
 
@@ -56,7 +57,7 @@ tour.register('course_tour', {
     trigger: '.o_wslides_fs_sidebar_header.navigation-success',
     run: function () {} // check that previous step succeeded
 }, {
-    trigger: '.o_wslides_fs_sidebar_list_item div:contains("How to plant a potted tree")'
+    trigger: '.o_wslides_fs_sidebar_list_item div:contains("How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks")'
 }, {
     trigger: '.player',
     run: function () {
@@ -96,7 +97,7 @@ tour.register('course_tour', {
         interval = setInterval(updateTimer, 50);
     }
 }, {
-    trigger: '.o_wslides_fs_sidebar_section_slides li:contains("How to plant a potted tree") .o_wslides_slide_completed',
+    trigger: '.o_wslides_fs_sidebar_section_slides li:contains("How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks") .o_wslides_slide_completed',
     run: function () {} // check that video slide is marked as 'done'
 }, {
     trigger: '.o_wslides_progress_percentage:contains("67")',
