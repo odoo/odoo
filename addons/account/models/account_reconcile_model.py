@@ -433,14 +433,14 @@ class AccountReconcileModel(models.Model):
                 aml.amount_currency                 AS aml_amount_currency,
                 account.internal_type               AS account_internal_type,
 
-                -- Determine a matching or not with the statement line communication using the move.name or move.ref.
+                -- Determine a matching or not with the statement line communication using the move.name or move.invoice_payment_ref.
                 regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
                 && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                 OR
                 (
-                    move.ref IS NOT NULL
+                    move.invoice_payment_ref IS NOT NULL
                     AND
-                        regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                        regexp_split_to_array(TRIM(REGEXP_REPLACE(move.invoice_payment_ref, '[^0-9|^\s]', '', 'g')),'\s+')
                         && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                 )                                   AS communication_flag
             FROM account_bank_statement_line st_line
@@ -486,9 +486,9 @@ class AccountReconcileModel(models.Model):
                             && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                             OR
                             (
-                                move.ref IS NOT NULL
+                                move.invoice_payment_ref IS NOT NULL
                                 AND
-                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.invoice_payment_ref, '[^0-9|^\s]', '', 'g')),'\s+')
                                     && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                             )
                         )
