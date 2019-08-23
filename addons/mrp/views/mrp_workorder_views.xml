@@ -5,6 +5,7 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <search>
+                <field name="production_id"/>
                 <field name="workcenter_id"/>
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
