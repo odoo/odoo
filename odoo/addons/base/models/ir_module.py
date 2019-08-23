@@ -919,7 +919,8 @@ class ModuleDependency(models.Model):
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
     # the module corresponding to the dependency, and its status
-    depend_id = fields.Many2one('ir.module.module', 'Dependency', compute='_compute_depend')
+    depend_id = fields.Many2one('ir.module.module', 'Dependency',
+                                compute='_compute_depend', search='_search_depend')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
     auto_install_required = fields.Boolean(
@@ -938,6 +939,12 @@ class ModuleDependency(models.Model):
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
+    def _search_depend(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
+    @api.depends('depend_id.state')
     def _compute_state(self):
         for dependency in self:
             dependency.state = dependency.depend_id.state or 'unknown'
@@ -953,8 +960,9 @@ class ModuleExclusion(models.Model):
     # the module that excludes it
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
-    # the module corresponding to the exclusion, and its status, must be stored as it's used in a @depends
-    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module', compute='_compute_exclusion')
+    # the module corresponding to the exclusion, and its status
+    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module',
+                                   compute='_compute_exclusion', search='_search_exclusion')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
     @api.depends('name')
@@ -968,6 +976,12 @@ class ModuleExclusion(models.Model):
         for excl in self:
             excl.exclusion_id = name_mod.get(excl.name)
 
+    def _search_exclusion(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
+    @api.depends('exclusion_id.state')
     def _compute_state(self):
         for exclusion in self:
             exclusion.state = exclusion.exclusion_id.state or 'unknown'
