@@ -148,6 +148,13 @@ class Message(models.Model):
             message.name = self._context.get('compute_name',
                 "[%s] %s" % (message.discussion.name or '', message.author.name or ''))
 
+    @api.constrains('name')
+    def _check_name(self):
+        # dummy constraint to check on computed field
+        for message in self:
+            if message.name.startswith("[X]"):
+                raise ValidationError("No way!")
+
     @api.depends('author.name', 'discussion.name', 'body')
     def _compute_display_name(self):
         for message in self:
