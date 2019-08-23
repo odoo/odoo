@@ -21,7 +21,8 @@ except ImportError:
 
 from odoo import http, _
 from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
-from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices, get_odoo_server_url
+from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices
 
 _logger = logging.getLogger(__name__)
 xlib = ctypes.cdll.LoadLibrary('libX11.so.6')
@@ -74,7 +75,7 @@ class KeyboardUSBDriver(Driver):
 
     @classmethod
     def send_layouts_list(cls):
-        server = get_odoo_server_url()
+        server = helpers.get_odoo_server_url()
         if server:
             urllib3.disable_warnings()
             pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
