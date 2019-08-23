@@ -315,6 +315,9 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         this.editing = false;
     },
     _table_longpolling: function(){
+        if (this.editing) {
+            return;
+        }
         var self = this;
         rpc.query({
             model: 'pos.config',
