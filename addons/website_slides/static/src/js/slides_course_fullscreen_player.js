@@ -46,23 +46,26 @@ odoo.define('website_slides.fullscreen', function (require) {
         start: function (){
             var self = this;
             return Promise.all([this._super.apply(this, arguments), this._loadYoutubeAPI()]).then(function() {
+                console.log('i like cacaprout');
                 self._setupYoutubePlayer();
             });
         },
         _loadYoutubeAPI: function () {
             var def = new Promise(function () {});
             if ($(document).find('script[src="' + this.youtubeUrl + '"]').length === 0) {
+                console.log('cacaprout boudin');
                 var $youtubeElement = $('<script/>', {src: this.youtubeUrl});
                 $(document.head).append($youtubeElement);
 
                 // function called when the Youtube asset is loaded
                 // see https://developers.google.com/youtube/iframe_api_reference#Requirements
                 onYouTubeIframeAPIReady = function () {
-                    Promise.resolve(def);
+                    console.log('onYouTubeIframeAPIReady');
+                    return Promise.resolve(def);
                 };
 
             } else {
-                Promise.resolve(def);
+                return Promise.resolve(def);
             }
             return def;
         },
@@ -72,6 +75,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          * @private
          */
         _setupYoutubePlayer: function (){
+            console.log('_setupYoutubePlayer');
             this.player = new YT.Player('youtube-player' + this.slide.id, {
                 host: 'https://www.youtube.com',
                 playerVars: {
@@ -98,12 +102,13 @@ odoo.define('website_slides.fullscreen', function (require) {
         _onPlayerStateChange: function (event){
             var self = this;
             clearInterval(self.tid);
+            console.log('_onPlayerStateChange');
             if (event.data === YT.PlayerState.PLAYING && !self.slide.completed) {
                 self.tid = setInterval(function (){
                     if (event.target.getCurrentTime){
                         var currentTime = event.target.getCurrentTime();
                         var totalTime = event.target.getDuration();
-                        if (totalTime && currentTime > totalTime - 30){
+                        if (totalTime && (currentTime > (totalTime - 30))) {
                             clearInterval(self.tid);
                             if (!self.slide.hasQuestion && !self.slide.completed){
                                 self.trigger_up('slide_to_complete', self.slide);
@@ -570,6 +575,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          * @param {Integer} slideId: the id of slide to set as completed
          */
         _setCompleted: function (slideId){
+            console.log('completed', slideId);
             var self = this;
             var slide = findSlide(this.slides, {id: slideId});
             if (!slide.completed) {  // no useless RPC call
