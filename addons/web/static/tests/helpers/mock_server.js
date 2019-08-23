@@ -338,9 +338,9 @@ var MockServer = Class.extend({
             node._isProcessed = true;
             // postprocess simulation
             field.views.groupby = self._fieldsViewGet(node, relModel, relFields, context);
-            node.childNodes.forEach(function (child) {
-                node.removeChild(child);
-            });
+            while (node.firstChild) {
+                node.removeChild(node.firstChild);
+            }
         });
 
         var xmlSerializer = new XMLSerializer();
