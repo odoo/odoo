@@ -4,7 +4,6 @@ odoo.define('web.Session', function (require) {
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
-var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
 
@@ -239,7 +238,14 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now()) + '?mods=' + mods;
             return $.get(route).then(function (doc) {
                 if (!doc) { return; }
+                const owlTemplates = [];
+                for (let child of doc.querySelectorAll("templates > [owl]")) {
+                    child.removeAttribute('owl');
+                    owlTemplates.push(child.outerHTML);
+                    child.remove();
+                }
                 qweb.add_template(doc);
+                self.owlTemplates = `<templates> ${owlTemplates.join('\n')} </templates>`;
             });
         });
         return lock;
