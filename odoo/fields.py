@@ -2569,9 +2569,6 @@ class _RelationalMulti(_Relational):
                     cache.set(record, self, val)
                 else:
                     result = False
-            # DEEP FUCKING HACK TO FIX SOMEDAY: recs.env is different from
-            # records.env; we must trigger modifications in the original env
-            recs.env._protected = records.env._protected
             recs.modified([self.name])
 
         return result

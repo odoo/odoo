@@ -452,7 +452,7 @@ class Environment(Mapping):
         self.cr, self.uid, self.context, self.su = self.args = args
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
-        self._protected = StackMap()                # {field: ids, ...}
+        self._protected = envs.protected        # proxy to shared data structure
         self.all = envs
         envs.add(self)
         return self
@@ -668,6 +668,7 @@ class Environments(object):
     def __init__(self):
         self.envs = WeakSet()                   # weak set of environments
         self.cache = Cache()                    # cache for all records
+        self.protected = StackMap()             # fields to protect {field: ids, ...}
         self.tocompute = defaultdict(set)       # recomputations {field: ids}
         # updates {model: {id: {field: value}}}
         self.towrite = defaultdict(lambda: defaultdict(dict))
