@@ -180,8 +180,21 @@
         //--------------------------------------------------------------------------
 
         &.o_editable_list {
+            &.o_resizing tr > :not(.o_column_resizing) {
+                opacity: 0.5;
+            }
+
             &.o_empty_list {
                 table-layout: fixed;
+            }
+
+            span.o_resize {
+                bottom: 0;
+                cursor: col-resize;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 10px;
             }
 
             .o_list_record_remove_header {

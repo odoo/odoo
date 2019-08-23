@@ -1472,7 +1472,7 @@ QUnit.module('Views', {
             { field: 'datetime', expected: 146, type: 'Datetime' },
             { field: 'amount', expected: 104, type: 'Monetary' },
         ];
-        assert.expect(assertions.length + 1);
+        assert.expect(8);
 
         this.data.foo.records = [];
         var list = await createView({
@@ -1490,6 +1490,7 @@ QUnit.module('Views', {
                     '</tree>',
         });
 
+        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
@@ -1509,7 +1510,7 @@ QUnit.module('Views', {
             { field: 'datetime', expected: 146, type: 'Datetime' },
             { field: 'amount', expected: 104, type: 'Monetary' },
         ];
-        assert.expect(assertions.length + 1);
+        assert.expect(8);
 
         var list = await createView({
             View: ListView,
@@ -1527,6 +1528,7 @@ QUnit.module('Views', {
             groupBy: ['int_field'],
         });
 
+        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
@@ -6992,6 +6994,40 @@ QUnit.module('Views', {
     });
     // TODO: write test on:
     // - default_get with a field not in view
+
+    QUnit.test('editable list: resize column headers', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+        });
+
+        // Target handle
+        const th = list.el.getElementsByTagName('th')[1];
+        const optionalDropdown = list.el.getElementsByClassName('o_optional_columns')[0];
+        const optionalInitialX = optionalDropdown.getBoundingClientRect().x;
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const originalWidth = th.offsetWidth;
+        const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
+        const delta = originalWidth - expectedWidth;
+
+        await testUtils.dom.dragAndDrop(resizeHandle, th, { mousemoveTarget: window, mouseupTarget: window });
+        const optionalFinalX = Math.floor(optionalDropdown.getBoundingClientRect().x);
+
+        assert.strictEqual(th.offsetWidth, expectedWidth,
+            // 1px for the cell right border
+            "header width should be halved (plus half the width of the handle)");
+        assert.strictEqual(optionalFinalX, optionalInitialX - delta,
+            "optional columns dropdown should have moved the same amount");
+
+        list.destroy();
+    });
 });
 
 });
