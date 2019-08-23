@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <act_window
+        name="Generate a Payment Link"
+        res_model="payment.link.wizard"
+        binding_model="sale.order"
+        binding_views="form"
+        view_mode="form"
+        target="new"
+        view_id="payment.payment_link_wizard_view_form"
+        id="action_sale_order_generate_link"
+    />
+
+</odoo>
