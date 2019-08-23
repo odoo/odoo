@@ -566,7 +566,7 @@
                                         <br />
                                         <t t-if="record.partner_id.value">
                                             <span>
-                                                <field name="partner_id"/><t t-if="record.partner_city.value"> • <field name="partner_city" /></t>
+                                                <field name="partner_id"/>
                                             </span>
                                         </t>
                                         <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
@@ -603,10 +603,14 @@
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
+                                        <!-- formating of the date -->
+                                        <t t-set="date_format" t-value="'MM/DD/YY'" />
+                                        <t t-set="date" t-value=""/>
+                                        <!-- color of the span -->
                                         <t t-if="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')" t-set="deadline_class">oe_kanban_text_red</t>
                                         <t t-elif="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')" t-set="deadline_class">text-warning font-weight-bold</t>
-                                        <t t-if="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')" t-set="date" t-value="moment(record.date_deadline.raw_value.toISOString()).format('h:mm A')" />
-                                        <t t-elif="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')" t-set="date" t-value="moment(record.date_deadline.raw_value.toISOString()).format('h:mm A')" />
+                                        <!-- Date value -->
+                                        <t t-if="record.date_deadline.raw_value" t-set="date" t-value="moment(record.date_deadline.raw_value.toISOString()).format(date_format)" />
                                         <span name="date" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
