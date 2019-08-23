@@ -549,6 +549,7 @@
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
             <field name="view_id" ref="purchase_order_tree"/>
             <field name="domain">[]</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="context">{'quotation_only': True}</field>
             <field name="help" type="html">
@@ -572,6 +573,7 @@
             <field name="view_id" ref="purchase_order_view_tree"/>
             <field name="domain">[('state','in',('purchase', 'done'))]</field>
             <field name="search_view_id" ref="purchase_order_view_search"/>
+            <field name="context">{}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a quotation
