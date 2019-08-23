@@ -955,7 +955,7 @@ class HttpCase(TransactionCase):
 
         request_threads = get_http_request_threads()
         for thread in request_threads:
-            self._logger.warning("Stop waiting for thread %s handling request for url %s",
+            self._logger.info("Stop waiting for thread %s handling request for url %s",
                                     thread.name, getattr(thread, 'url', '<UNKNOWN>'))
 
         if request_threads:
