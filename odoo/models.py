@@ -5418,7 +5418,7 @@ Fields:
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self._modified_triggers(tree, modified=modified)
+            self.sudo()._modified_triggers(tree, modified=modified)
 
     def _modified_triggers(self, tree, modified=None):
         """ Process a tree of field triggers on ``self``. """
