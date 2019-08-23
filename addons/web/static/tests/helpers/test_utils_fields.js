@@ -27,6 +27,7 @@ var domUtils = require('web.test_utils_dom');
  * @param {jQuery} $el should target an input, textarea or select
  * @param {string|number} value
  * @param {string[]} events
+ * @returns {Promise}
  */
 function editAndTrigger($el, value, events) {
     if ($el.length !== 1) {
@@ -46,6 +47,7 @@ function editAndTrigger($el, value, events) {
  *
  * @param {jQuery} $el
  * @param {string|number} value
+ * @returns {Promise}
  */
 function editInput($el, value) {
     return editAndTrigger($el, value, ['input']);
@@ -61,10 +63,10 @@ function editInput($el, value) {
  *
  * @param {jQuery} $el
  * @param {string|number} value
+ * @returns {Promise}
  */
 function editSelect($el, value) {
-    editAndTrigger($el, value, ['change']);
-    return concurrency.delay(0);
+    return editAndTrigger($el, value, ['change']);
 }
 
 /**
@@ -112,6 +114,7 @@ function clickM2OHighlightedItem(fieldName, selector) {
  *
  * @param {string} fieldName
  * @param {string} searchText
+ * @returns {Promise}
  */
 function clickM2OItem(fieldName, searchText) {
     var m2oSelector = `.o_field_many2one[name=${fieldName}] input`;

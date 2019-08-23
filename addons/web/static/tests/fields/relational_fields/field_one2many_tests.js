@@ -6611,7 +6611,7 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             prom = testUtils.makeTestPromise();
-            testUtils.fields.editAndTrigger(form.$('.o_field_widget[name=int_field]'), '44',
+            await testUtils.fields.editAndTrigger(form.$('.o_field_widget[name=int_field]'), '44',
                 ['input', { type: 'keydown', which: $.ui.keyCode.TAB }]);
             prom.resolve();
             await testUtils.nextTick();

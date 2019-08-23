@@ -2967,17 +2967,17 @@ QUnit.module('basic_fields', {
         // switch to edit mode
         await testUtils.form.clickEdit(form);
         // open datepicker and select another value
-        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .year').eq(11));
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(11));
-        testUtils.dom.click($('.day:contains(31)'));
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year').eq(11));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(11));
+        await testUtils.dom.click($('.day:contains(31)'));
 
         var $warn = form.$('.o_datepicker_warning:visible');
         assert.strictEqual($warn.length, 1, "should have a warning in the form view");
 
-        testUtils.fields.editSelect(form.$('.o_field_widget[name=date] input'), '');  // remove the value
+        await testUtils.fields.editSelect(form.$('.o_field_widget[name=date] input'), '');  // remove the value
 
         $warn = form.$('.o_datepicker_warning:visible');
         assert.strictEqual($warn.length, 0, "the warning in the form view should be hidden");
@@ -3100,7 +3100,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/03/2017',
             'the date should be correct in edit mode');
 
-        testUtils.fields.editAndTrigger(form.$('.o_datepicker_input'), '', ['input', 'change', 'focusout']);
+        await testUtils.fields.editAndTrigger(form.$('.o_datepicker_input'), '', ['input', 'change', 'focusout']);
         assert.strictEqual(form.$('.o_datepicker_input').val(), '',
             'should have correctly removed the value');
 
