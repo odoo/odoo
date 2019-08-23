@@ -39,8 +39,6 @@
                                 domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                         <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                                 domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                        <filter string="Exception Activities" name="activities_exception"
-                                domain="[('activity_exception_decoration', '!=', False)]"/>
                         <separator/>
                     </filter>
             </field>

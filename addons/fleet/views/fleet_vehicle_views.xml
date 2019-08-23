@@ -188,8 +188,6 @@
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Exception Activities" name="activities_exception"
-                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="1" string="Group By">
                     <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
                     <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
