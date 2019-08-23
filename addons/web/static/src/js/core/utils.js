@@ -203,7 +203,10 @@ var diacriticsMap = {
 '\u0225': 'z','\u0240': 'z','\u2C6C': 'z','\uA763': 'z',
 };
 
+const patchMap = new WeakMap();
+
 var utils = {
+
     /**
      * Throws an error if the given condition is not true
      *
@@ -511,6 +514,51 @@ var utils = {
         return new Array(size - str.length + 1).join('0') + str;
     },
     /**
+     * Patch a class and return a function that remove the patch
+     * when called.
+     *
+     * @param {Class} C Class to patch
+     * @param {string} patchName
+     * @param {Object} patch
+     * @returns {Function}
+     */
+    patch: function(C, patchName, patch) {
+        let metadata = patchMap.get(C.prototype);
+        if (!metadata) {
+            metadata = {
+                origMethods: {},
+                patches: {},
+                current: []
+            };
+            patchMap.set(C.prototype, metadata);
+        }
+        const proto = C.prototype;
+        if (metadata.patches[patchName]) {
+            throw new Error(`Patch [${patchName}] already exists`);
+        }
+        metadata.patches[patchName] = patch;
+        applyPatch(proto, patch);
+        metadata.current.push(patchName);
+
+        function applyPatch(proto, patch) {
+            Object.keys(patch).forEach(function (methodName) {
+                const method = patch[methodName];
+                if (typeof method === "function") {
+                    const original = proto[methodName];
+                    if (!(methodName in metadata.origMethods)) {
+                        metadata.origMethods[methodName] = original;
+                    }
+                    proto[methodName] = function (...args) {
+                        this._super = original;
+                        return method.call(this, ...args);
+                    };
+                }
+            });
+        }
+
+        return this.unpatch.bind(null, C, patchName);
+    },
+    /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
      * See the corresponding float_round() in server/tools/float_utils.py for more info
      * @param {Number} value the value to be rounded
@@ -660,6 +708,33 @@ var utils = {
             return diacriticsMap[accented] || accented;
         });
         return casesensetive ? str : str.toLowerCase();
+    },
+    /**
+     * We define here an unpatch function.  This is mostly useful if we want to
+     * remove a patch.  For example, for testing purposes
+     *
+     * @param {Class} C
+     * @param {string} patchName
+     */
+    unpatch: function(C, patchName) {
+        const proto = C.prototype;
+        let metadata = patchMap.get(proto);
+        if (!metdata) {
+            return;
+        }
+        patchMap.delete(proto);
+
+        // reset to original
+        for (let k in metadata.origMethods) {
+            proto[k] = metadata.origMethods[k];
+        }
+
+        // apply other patches
+        for (let name of metadata.current) {
+            if (name !== patchName) {
+                this.patch(C, name, metadata.patches[name]);
+            }
+        }
     },
     /**
      * @param {any} node
