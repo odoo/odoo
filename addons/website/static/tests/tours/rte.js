@@ -55,7 +55,7 @@ tour.register('rte_translator', {
     run: 'drag_and_drop #wrap',
 }, {
     content: "change content",
-    trigger: '.oe_overlay_options .oe_options:visible',
+    trigger: '#wrap',
     run: function () {
         $("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
                 <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\

@@ -18,23 +18,16 @@ var _t = core._t;
 var SnippetOption = Widget.extend({
     events: {
         'mouseenter': '_onLinkEnter',
-        'mouseenter a': '_onLinkEnter',
+        'mouseenter we-button': '_onLinkEnter',
         'click': '_onLinkClick',
-        'click a': '_onLinkClick',
+        'click we-button': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave a': '_onMouseleave',
-        'mouseleave .dropdown-menu': '_onMouseleave',
+        'mouseleave we-button': '_onMouseleave',
     },
-    /**
-     * When editing a snippet, its options are shown alongside the ones of its
-     * parent snippets. The parent options are only shown if the following flag
-     * is set to false (default).
-     */
-    preventChildPropagation: false,
 
     /**
-     * The option `$el` is supposed to be the associated DOM element in the
-     * options dropdown. The option controls another DOM element: the snippet it
+     * The option `$el` is supposed to be the associated DOM UI element.
+     * The option controls another DOM element: the snippet it
      * customizes, which can be found at `$target`. Access to the whole edition
      * overlay is possible with `$overlay` (this is not recommended though).
      *
@@ -65,7 +58,7 @@ var SnippetOption = Widget.extend({
      *
      * @abstract
      */
-    onFocus : function () {},
+    onFocus: function () {},
     /**
      * Called when the parent edition overlay is covering the associated snippet
      * for the first time, when it is a new snippet dropped from the d&d snippet
@@ -80,7 +73,7 @@ var SnippetOption = Widget.extend({
      *
      * @abstract
      */
-    onBlur : function () {},
+    onBlur: function () {},
     /**
      * Called when the associated snippet is the result of the cloning of
      * another snippet (so `this.$target` is a cloned element).
@@ -120,7 +113,7 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one and only one class in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each item having a `data-select-class`
+     * case is having a sub-collapse with each item having a `data-select-class`
      * value allowing to choose the associated class.
      *
      * @param {boolean|string} previewMode
@@ -131,12 +124,14 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     selectClass: function (previewMode, value, $opt) {
-        var $group = $opt && $opt.parents('.dropdown-submenu').last();
+        var $group = $opt && $opt.parents('we-collapse-area').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
-        var $lis = $group.find('[data-select-class]').addBack('[data-select-class]');
-        var classes = $lis.map(function () {return $(this).data('selectClass');}).get().join(' ');
+        var $lis = $group.find('[data-select-class]');
+        var classes = $lis.map(function () {
+            return $(this).data('selectClass');
+        }).get().join(' ');
 
         this.$target.removeClass(classes);
         if (value) {
@@ -146,15 +141,19 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one or multiple classes in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each item having a `data-toggle-class`
+     * case is having a sub-collapse with each item having a `data-toggle-class`
      * value allowing to toggle the associated class.
      *
      * @see this.selectClass
      */
     toggleClass: function (previewMode, value, $opt) {
-        var $lis = this.$el.find('[data-toggle-class]').addBack('[data-toggle-class]');
-        var classes = $lis.map(function () {return $(this).data('toggleClass');}).get().join(' ');
-        var activeClasses = $lis.filter('.active, :has(.active)').map(function () {return $(this).data('toggleClass');}).get().join(' ');
+        var $lis = this.$el.find('[data-toggle-class]');
+        var classes = $lis.map(function () {
+            return $(this).data('toggleClass');
+        }).get().join(' ');
+        var activeClasses = $lis.filter('.active, :has(.active)').map(function () {
+            return $(this).data('toggleClass');
+        }).get().join(' ');
 
         this.$target.removeClass(classes).addClass(activeClasses);
         if (value && previewMode !== 'reset') {
@@ -168,7 +167,7 @@ var SnippetOption = Widget.extend({
 
     /**
      * Override the helper method to search inside the $target element instead
-     * of the dropdown item element.
+     * of the UI item element.
      *
      * @override
      */
@@ -211,7 +210,7 @@ var SnippetOption = Widget.extend({
      */
     _reset: function () {
         var self = this;
-        var $actives = this.$el.find('.active').addBack('.active');
+        var $actives = this.$el.find('we-button.active');
         _.each($actives, function (activeElement) {
             var $activeElement = $(activeElement);
             self.__methodNames = _.without.apply(_, [self.__methodNames].concat(_.keys($activeElement.data())));
@@ -233,8 +232,6 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     _select: function (previewMode, $opt) {
-        var self = this;
-
         // Options can say they respond to strong choice
         if (previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
             return;
@@ -244,7 +241,6 @@ var SnippetOption = Widget.extend({
         if (!previewMode) {
             this._reset();
             this.trigger_up('request_history_undo_record', {$target: this.$target});
-            this.$target.trigger('content_changed');
         }
 
         // Search for methods (data-...) (i.e. data-toggle-class) on the
@@ -257,16 +253,16 @@ var SnippetOption = Widget.extend({
         } while (this.$el.parent().has(el).length);
 
         // Call the found method in the right order (parents -> child)
-        _.each(methods.reverse(), function (data) {
+        methods.reverse().forEach(data => {
             var $el = $(data[0]);
             var methods = data[1];
 
-            _.each(methods, function (value, methodName) {
-                if (self[methodName]) {
+            Object.keys(methods).forEach(methodName => {
+                if (this[methodName]) {
                     if (previewMode === true) {
-                        self.__methodNames.push(methodName);
+                        this.__methodNames.push(methodName);
                     }
-                    self[methodName](previewMode, value, $el);
+                    this[methodName](previewMode, methods[methodName], $el);
                 }
             });
         });
@@ -275,6 +271,8 @@ var SnippetOption = Widget.extend({
         if (!previewMode) {
             this._setActive();
         }
+
+        this.$target.trigger('content_changed');
     },
     /**
      * Tweaks the option DOM elements to show the selected value according to
@@ -286,7 +284,6 @@ var SnippetOption = Widget.extend({
     _setActive: function () {
         var self = this;
         this.$el.find('[data-toggle-class]')
-            .addBack('[data-toggle-class]')
             .removeClass('active')
             .filter(function () {
                 var className = $(this).data('toggleClass');
@@ -295,25 +292,20 @@ var SnippetOption = Widget.extend({
             .addClass('active');
 
         // Get submenus which are not inside submenus
-        var $submenus = this.$el.find('.dropdown-submenu')
-            .addBack('.dropdown-submenu')
-            .not('.dropdown-submenu .dropdown-submenu');
+        var $submenus = this.$el.find('we-collapse-area')
+            .not('we-collapse-area we-collapse-area');
 
         // Add unique active class for each submenu active item
         _.each($submenus, function (submenu) {
-            var $elements = _getSelectClassElements($(submenu));
+            var $elements = $(submenu).find('[data-select-class]');
             _processSelectClassElements($elements);
         });
 
         // Add unique active class for out-of-submenu active item
-        var $externalElements = _getSelectClassElements(this.$el)
-            .not('.dropdown-submenu *, .dropdown-submenu');
+        var $externalElements = this.$el.find('[data-select-class]')
+            .not('we-collapse-area *, we-collapse-area');
         _processSelectClassElements($externalElements);
 
-        function _getSelectClassElements($el) {
-            return $el.find('[data-select-class]')
-                .addBack('[data-select-class]');
-        }
         function _processSelectClassElements($elements) {
             var maxNbClasses = -1;
             $elements.removeClass('active')
@@ -343,18 +335,9 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkEnter: function (ev) {
-        var $opt = $(ev.target).closest('.dropdown-item');
+        var $opt = $(ev.target).closest('we-button');
         if (!$opt.length) {
             return;
-        }
-
-        var $dsmenu = $opt.parent('.dropdown-submenu');
-        if ($dsmenu.length) {
-            var $menu = $dsmenu.children('.dropdown-menu'); // FIXME
-            if ($menu.length) {
-                var menuRightPosition = $dsmenu.offset().left + $dsmenu.outerWidth() + $menu.outerWidth();
-                $menu.toggleClass('o_open_to_left', menuRightPosition > $(window).outerWidth());
-            }
         }
 
         if (!$opt.is(':hasData')) {
@@ -371,7 +354,7 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkClick: function (ev) {
-        var $opt = $(ev.target).closest('.dropdown-item');
+        var $opt = $(ev.target).closest('we-button');
         if (ev.isDefaultPrevented() || !$opt.length || !$opt.is(':hasData')) {
             return;
         }
@@ -403,8 +386,6 @@ var SnippetOption = Widget.extend({
 var registry = {};
 
 registry.sizing = SnippetOption.extend({
-    preventChildPropagation: true,
-
     /**
      * @override
      */
@@ -413,11 +394,8 @@ registry.sizing = SnippetOption.extend({
         var def = this._super.apply(this, arguments);
 
         this.$handles = this.$overlay.find('.o_handle');
-        var resizeValues = this._getSize();
-        _.each(resizeValues, function (value, key) {
-            self.$handles.filter('.' + key).toggleClass('readonly', !value);
-        });
 
+        var resizeValues = this._getSize();
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
 
@@ -463,22 +441,22 @@ registry.sizing = SnippetOption.extend({
             $body.addClass(cursor);
 
             var xy = ev['page' + XY];
-            var body_mousemove = function (ev) {
+            var bodyMouseMove = function (ev) {
                 ev.preventDefault();
 
                 var dd = ev['page' + XY] - xy + resize[1][begin];
-                var next = current + (current+1 === resize[1].length ? 0 : 1);
-                var prev = current ? (current-1) : 0;
+                var next = current + (current + 1 === resize[1].length ? 0 : 1);
+                var prev = current ? (current - 1) : 0;
 
                 var change = false;
-                if (dd > (2*resize[1][next] + resize[1][current])/3) {
-                    self.$target.attr('class', (self.$target.attr('class')||'').replace(regClass, ''));
+                if (dd > (2 * resize[1][next] + resize[1][current]) / 3) {
+                    self.$target.attr('class', (self.$target.attr('class') || '').replace(regClass, ''));
                     self.$target.addClass(resize[0][next]);
                     current = next;
                     change = true;
                 }
-                if (prev !== current && dd < (2*resize[1][prev] + resize[1][current])/3) {
-                    self.$target.attr('class', (self.$target.attr('class')||'').replace(regClass, ''));
+                if (prev !== current && dd < (2 * resize[1][prev] + resize[1][current]) / 3) {
+                    self.$target.attr('class', (self.$target.attr('class') || '').replace(regClass, ''));
                     self.$target.addClass(resize[0][prev]);
                     current = prev;
                     change = true;
@@ -490,9 +468,9 @@ registry.sizing = SnippetOption.extend({
                     $handle.addClass('o_active');
                 }
             };
-            var body_mouseup = function () {
-                $body.off('mousemove', body_mousemove);
-                $body.off('mouseup', body_mouseup);
+            var bodyMouseUp = function () {
+                $body.off('mousemove', bodyMouseMove);
+                $body.off('mouseup', bodyMouseUp);
                 $body.removeClass(cursor);
                 $handle.removeClass('o_active');
 
@@ -512,8 +490,8 @@ registry.sizing = SnippetOption.extend({
                     });
                 }, 0);
             };
-            $body.on('mousemove', body_mousemove);
-            $body.on('mouseup', body_mouseup);
+            $body.on('mousemove', bodyMouseMove);
+            $body.on('mouseup', bodyMouseUp);
         });
 
         return def;
@@ -522,7 +500,18 @@ registry.sizing = SnippetOption.extend({
      * @override
      */
     onFocus: function () {
+        var resizeValues = this._getSize();
+        _.each(resizeValues, (value, key) => {
+            this.$handles.filter('.' + key).toggleClass('readonly', !value);
+        });
+
         this._onResize();
+    },
+    /**
+     * @override
+     */
+    onBlur: function () {
+        this.$handles.addClass('readonly');
     },
 
     //--------------------------------------------------------------------------
@@ -596,6 +585,9 @@ registry.sizing = SnippetOption.extend({
             width: ml,
             left: '-' + ml,
         });
+        this.$overlay.find('.o_handle.e').css({
+            width: 0,
+        });
         _.each(this.$overlay.find(".o_handle.n, .o_handle.s"), function (handle) {
             var $handle = $(handle);
             var direction = $handle.hasClass('n') ? 'top': 'bottom';
@@ -607,7 +599,7 @@ registry.sizing = SnippetOption.extend({
 /**
  * Handles the edition of padding-top and padding-bottom.
  */
-registry.sizing_y = registry.sizing.extend({
+registry['sizing_y'] = registry.sizing.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -629,13 +621,13 @@ registry.sizing_y = registry.sizing.extend({
         }
 
         var grid = [];
-        for (var i = 0 ; i <= 256/8 ; i++) {
+        for (var i = 0; i <= (256 / 8); i++) {
             grid.push(i * 8);
         }
         grid.splice(1, 0, 4);
         this.grid = {
-            n: [_.map(grid, function (v) { return nClass + v; }), grid, nProp],
-            s: [_.map(grid, function (v) { return sClass + v; }), grid, sProp],
+            n: [grid.map(v => nClass + v), grid, nProp],
+            s: [grid.map(v => sClass + v), grid, sProp],
         };
         return this.grid;
     },
@@ -705,7 +697,7 @@ registry.colorpicker = SnippetOption.extend({
             }
 
             $pt.find('.o_colorpicker_section_tabs').append($clpicker);
-            this.$el.find('.dropdown-menu').append($pt);
+            this.$el.find('we-collapse').append($pt);
         }
 
         var classes = [];
@@ -851,10 +843,10 @@ registry.background = SnippetOption.extend({
 
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
-            onlyImages: true,
-            firstFilters: ['background'],
-            res_model: $editable.data('oe-model'),
-            res_id: $editable.data('oe-id'),
+            'onlyImages': true,
+            'firstFilters': ['background'],
+            'res_model': $editable.data('oe-model'),
+            'res_id': $editable.data('oe-id'),
         }, $image[0]).open();
 
         _editor.on('save', this, function () {
@@ -881,7 +873,9 @@ registry.background = SnippetOption.extend({
         this.$target.off('.background-option')
             .on('background-color-event.background-option', (function (e, previewMode) {
                 e.stopPropagation();
-                if (e.currentTarget !== e.target) return;
+                if (e.currentTarget !== e.target) {
+                    return;
+                }
                 if (previewMode === false) {
                     this.__customImageSrc = undefined;
                 }
@@ -952,7 +946,7 @@ registry.background = SnippetOption.extend({
 /**
  * Handles the edition of snippet's background image position.
  */
-registry.background_position = SnippetOption.extend({
+registry['background_position'] = SnippetOption.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
 
     /**
@@ -984,10 +978,10 @@ registry.background_position = SnippetOption.extend({
     backgroundPosition: function (previewMode, value, $opt) {
         var self = this;
 
-        this.previous_state = [this.$target.attr('class'), this.$target.css('background-size'), this.$target.css('background-position')];
+        this.previousState = [this.$target.attr('class'), this.$target.css('background-size'), this.$target.css('background-position')];
 
-        this.bg_pos = self.$target.css('background-position').split(' ');
-        this.bg_siz = self.$target.css('background-size').split(' ');
+        this.bgPos = self.$target.css('background-position').split(' ');
+        this.bgSize = self.$target.css('background-size').split(' ');
 
         this.modal = new Dialog(null, {
             title: _t("Background Image Sizing"),
@@ -1000,7 +994,7 @@ registry.background_position = SnippetOption.extend({
 
         this.modal.opened().then(function () {
             // Fetch data form $target
-            var value = ((self.$target.hasClass('o_bg_img_opt_contain'))? 'contain' : ((self.$target.hasClass('o_bg_img_opt_custom'))? 'custom' : 'cover'));
+            var value = ((self.$target.hasClass('o_bg_img_opt_contain')) ? 'contain' : ((self.$target.hasClass('o_bg_img_opt_custom')) ? 'custom' : 'cover'));
             self.modal.$('> label > input[value=' + value + ']').prop('checked', true);
 
             if (self.$target.hasClass('o_bg_img_opt_repeat')) {
@@ -1012,26 +1006,26 @@ registry.background_position = SnippetOption.extend({
                 self.modal.$('#o_bg_img_opt_custom_repeat').val('o_bg_img_opt_repeat_y');
             }
 
-            if (self.bg_pos.length > 1) {
-                self.bg_pos = {
-                    x: self.bg_pos[0],
-                    y: self.bg_pos[1],
+            if (self.bgPos.length > 1) {
+                self.bgPos = {
+                    x: self.bgPos[0],
+                    y: self.bgPos[1],
                 };
-                self.modal.$('#o_bg_img_opt_custom_pos_x').val(self.bg_pos.x.replace('%', ''));
-                self.modal.$('#o_bg_img_opt_custom_pos_y').val(self.bg_pos.y.replace('%', ''));
+                self.modal.$('#o_bg_img_opt_custom_pos_x').val(self.bgPos.x.replace('%', ''));
+                self.modal.$('#o_bg_img_opt_custom_pos_y').val(self.bgPos.y.replace('%', ''));
             }
-            if (self.bg_siz.length > 1) {
-                self.modal.$('#o_bg_img_opt_custom_size_x').val(self.bg_siz[0].replace('%', ''));
-                self.modal.$('#o_bg_img_opt_custom_size_y').val(self.bg_siz[1].replace('%', ''));
+            if (self.bgSize.length > 1) {
+                self.modal.$('#o_bg_img_opt_custom_size_x').val(self.bgSize[0].replace('%', ''));
+                self.modal.$('#o_bg_img_opt_custom_size_y').val(self.bgSize[1].replace('%', ''));
             }
 
             // Focus Point
-            self.$focus  = self.modal.$('.o_focus_point');
+            self.$focus = self.modal.$('.o_focus_point');
             self._updatePosInformation();
 
-            var img_url = /\(['"]?([^'"]+)['"]?\)/g.exec(self.$target.css('background-image'));
-            img_url = (img_url && img_url[1]) || '';
-            var $img = $('<img/>', {class: 'img img-fluid', src: img_url});
+            var imgURL = /\(['"]?([^'"]+)['"]?\)/g.exec(self.$target.css('background-image'));
+            imgURL = (imgURL && imgURL[1]) || '';
+            var $img = $('<img/>', {class: 'img img-fluid', src: imgURL});
             $img.on('load', function () {
                 self._bindImageEvents($img);
             });
@@ -1085,9 +1079,9 @@ registry.background_position = SnippetOption.extend({
         function _update(e) {
             var posX = e.pageX - $(e.target).offset().left;
             var posY = e.pageY - $(e.target).offset().top;
-            self.bg_pos = {
-                x: clipValue(posX/$img.width()*100).toFixed(2) + '%',
-                y: clipValue(posY/$img.height()*100).toFixed(2) + '%',
+            self.bgPos = {
+                x: clipValue(posX / $img.width() * 100).toFixed(2) + '%',
+                y: clipValue(posY / $img.height() * 100).toFixed(2) + '%',
             };
             self._updatePosInformation();
             self._saveChanges();
@@ -1116,10 +1110,10 @@ registry.background_position = SnippetOption.extend({
      */
     _discardChanges: function () {
         this._clean();
-        if (this.previous_state) {
-            this.$target.addClass(this.previous_state[0]).css({
-                'background-size': this.previous_state[1],
-                'background-position': this.previous_state[2],
+        if (this.previousState) {
+            this.$target.addClass(this.previousState[0]).css({
+                'background-size': this.previousState[1],
+                'background-position': this.previousState[2],
             });
         }
     },
@@ -1129,11 +1123,11 @@ registry.background_position = SnippetOption.extend({
      * @private
      */
     _updatePosInformation: function () {
-        this.modal.$('.o_bg_img_opt_ui_info .o_x').text(this.bg_pos.x);
-        this.modal.$('.o_bg_img_opt_ui_info .o_y').text(this.bg_pos.y);
+        this.modal.$('.o_bg_img_opt_ui_info .o_x').text(this.bgPos.x);
+        this.modal.$('.o_bg_img_opt_ui_info .o_y').text(this.bgPos.y);
         this.$focus.css({
-            left: this.bg_pos.x,
-            top: this.bg_pos.y,
+            left: this.bgPos.x,
+            top: this.bgPos.y,
         });
     },
     /**
@@ -1144,10 +1138,10 @@ registry.background_position = SnippetOption.extend({
     _saveChanges: function () {
         this._clean();
 
-        var bg_img_size = this.modal.$('> :not(label):not(.o_hidden)').data('value') || 'cover';
-        switch (bg_img_size) {
+        var bgImgSize = this.modal.$('> :not(label):not(.o_hidden)').data('value') || 'cover';
+        switch (bgImgSize) {
             case 'cover':
-                this.$target.css('background-position', this.bg_pos.x + ' ' + this.bg_pos.y);
+                this.$target.css('background-position', this.bgPos.x + ' ' + this.bgPos.y);
                 break;
             case 'contain':
                 this.$target.addClass('o_bg_img_opt_contain');
@@ -1161,8 +1155,8 @@ registry.background_position = SnippetOption.extend({
                 var posY = this.modal.$('#o_bg_img_opt_custom_pos_y').val();
                 this.$target.addClass(this.modal.$('#o_bg_img_opt_custom_repeat').val())
                             .css({
-                                'background-size': ((sizeX)? sizeX + '%' : 'auto') + ' ' + ((sizeY)? sizeY + '%' : 'auto'),
-                                'background-position': ((posX)? posX + '%' : 'auto') + ' ' + ((posY)? posY + '%' : 'auto'),
+                                'background-size': (sizeX ? sizeX + '%' : 'auto') + ' ' + (sizeY ? sizeY + '%' : 'auto'),
+                                'background-position': (posX ? posX + '%' : 'auto') + ' ' + (posY ? posY + '%' : 'auto'),
                             });
                 break;
         }
@@ -1191,7 +1185,7 @@ registry.many2one = SnippetOption.extend({
 
         // create search button and bind search bar
         this.$btn = $(qweb.render('web_editor.many2one.button'))
-            .insertAfter(this.$overlay.find('.oe_options'));
+            .prependTo(this.$el);
 
         this.$ul = this.$btn.find('ul');
         this.$search = this.$ul.find('li:first');
@@ -1201,17 +1195,10 @@ registry.many2one = SnippetOption.extend({
 
         // move menu item
         setTimeout(function () {
-            if (self.$overlay.find('.oe_options').hasClass('d-none')) {
-                self.$btn.css('height', '0').find('> a').addClass('d-none');
-                self.$ul.show().css({
-                    'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
-                });
-            } else {
-                self.$btn.find('a').on('click', function (e) {
-                    self._clear();
-                });
-            }
-        },0);
+            self.$btn.find('a').on('click', function (e) {
+                self._clear();
+            });
+        }, 0);
 
         // bind search input
         this.$search.find('input')
@@ -1288,7 +1275,7 @@ registry.many2one = SnippetOption.extend({
             },
         }).then(function (result) {
             self.$search.siblings().remove();
-            self.$search.after(qweb.render('web_editor.many2one.search',{contacts:result}));
+            self.$search.after(qweb.render('web_editor.many2one.search', {contacts: result}));
         });
     },
     /**
@@ -1308,10 +1295,10 @@ registry.many2one = SnippetOption.extend({
 
         if (self.$target.data('oe-type') === 'contact') {
             $('[data-oe-contact-options]')
-                .filter('[data-oe-model="'+self.$target.data('oe-model')+'"]')
-                .filter('[data-oe-id="'+self.$target.data('oe-id')+'"]')
-                .filter('[data-oe-field="'+self.$target.data('oe-field')+'"]')
-                .filter('[data-oe-contact-options!="'+self.$target.data('oe-contact-options')+'"]')
+                .filter('[data-oe-model="' + self.$target.data('oe-model') + '"]')
+                .filter('[data-oe-id="' + self.$target.data('oe-id') + '"]')
+                .filter('[data-oe-field="' + self.$target.data('oe-field') + '"]')
+                .filter('[data-oe-contact-options!="' + self.$target.data('oe-contact-options') + '"]')
                 .add(self.$target)
                 .attr('data-oe-many2one-id', self.ID).data('oe-many2one-id', self.ID)
                 .each(function () {

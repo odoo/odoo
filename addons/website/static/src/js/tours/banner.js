@@ -24,10 +24,10 @@ tour.register("banner", {
     position: "bottom",
     run: "text",
 }, {
-    trigger: ".oe_overlay_options .oe_options",
+    trigger: ".o_we_customize_panel",
     extra_trigger: "#wrapwrap .s_cover h1:not(:containsExact(\"Catchy Headline\"))",
     content: _t("Customize any block through this menu. Try to change the background color of this block."),
-    position: "top",
+    position: "right",
 }, {
     trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
     content: _t("Drag another block in your page, below the cover."),
@@ -35,7 +35,6 @@ tour.register("banner", {
     run: "drag_and_drop #wrap",
 }, {
     trigger: "button[data-action=save]",
-    extra_trigger: ".oe_overlay_options .oe_options",
     content: _t("Click the <b>Save</b> button."),
     position: "bottom",
 }, {
@@ -69,7 +68,6 @@ tour.register("banner", {
     run: "drag_and_drop #wrap",
 }, {
     trigger: "button[data-action=save]",
-    extra_trigger: ".oe_overlay_options .oe_options",
     content: _t("Click the <b>Save</b> button."),
     position: "bottom",
 }, {
