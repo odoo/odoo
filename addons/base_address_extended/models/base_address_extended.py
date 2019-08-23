@@ -128,7 +128,7 @@ class Partner(models.Model):
         for partner in self:
             if not partner.street:
                 for field in street_fields:
-                    partner[field] = None
+                    partner[field] = False
                 continue
 
             street_format = (partner.country_id.street_format or
@@ -139,7 +139,7 @@ class Partner(models.Model):
             for k, v in vals.items():
                 partner[k] = v
             for k in set(street_fields) - set(vals):
-                partner[k] = None
+                partner[k] = False
 
     def write(self, vals):
         res = super(Partner, self).write(vals)
