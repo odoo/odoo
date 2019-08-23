@@ -3708,6 +3708,11 @@ Fields:
         else:
             field.compute(self)
 
+        if field.store and any(self._ids):
+            # check constraints of the fields that have been computed
+            fnames = [f.name for f in self._field_computed[field]]
+            self.filtered('id')._validate_fields(fnames)
+
     def _parent_store_create(self):
         """ Set the parent_path field on ``self`` after its creation. """
         if not self._parent_store:

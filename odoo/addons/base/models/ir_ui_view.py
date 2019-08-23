@@ -376,6 +376,8 @@ actual arch.
         # Any exception raised below will cause a transaction rollback.
         self = self.with_context(check_field_names=True)
         for view in self:
+            if not view.arch:
+                continue
             view_arch = etree.fromstring(view.arch.encode('utf-8'))
             view._valid_inheritance(view_arch)
             view_def = view.read_combined(['arch'])
