@@ -11,18 +11,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         }];
     }
 
-    function verify_sync() {
-        return [{
-            content: "verify that the order is being sent to the backend",
-            trigger: ".js_connecting:visible",
-            run: function () {}, // it's a check
-        }, {
-            content: "verify that the order has been succesfully sent to the backend",
-            trigger: ".js_connected:visible",
-            run: function () {}, // it's a check
-        }];
-    }
-
     function verify_orders_synced(order_count) {
         return [{
             content: "check synced",
@@ -98,7 +86,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
             content: "validate the order",
             trigger: '.button.next:visible',
         }];
-        steps = steps.concat(verify_sync());
         steps = steps.concat([{
             content: "next order",
             trigger: '.button.next:visible',
@@ -133,7 +120,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
     steps = steps.concat(generate_payment_screen_keypad_steps('6.05'));
     steps = steps.concat(finish_order());
-    steps = steps.concat(verify_sync());
     steps = steps.concat(open_table('T5', 1));
     steps = steps.concat(verify_order_total('4.40'));
     steps = steps.concat([{
@@ -148,7 +134,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         trigger: '.floor-button',
         run: 'click',
     }]);
-    steps = steps.concat(verify_sync());
     steps = steps.concat(open_table('T5', 2));
     steps = steps.concat([{
         content: 'delete order',
@@ -163,7 +148,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         trigger: '.floor-button',
         run: 'click',
     }]);
-    steps = steps.concat(verify_sync());
     steps = steps.concat(open_table('T5', 1));
 
     Tour.register('pos_restaurant_sync', { test: true, url: '/pos/web' }, steps);
@@ -192,7 +176,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         trigger: '.floor-button',
         run: 'click',
     }]);
-    steps = steps.concat(verify_sync());
 
     Tour.register('pos_restaurant_sync_second_login', { test: true, url: '/pos/web' }, steps);
 
