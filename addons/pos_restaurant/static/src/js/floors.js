@@ -216,6 +216,7 @@ var TableWidget = PosBaseWidget.extend({
                         for (var field in table) {
                             self.table[field] = table[field];
                         }
+                        self.pos.tables_by_id[table.id] = self.table;
                         self.renderElement();
                     });
             }, function(type,err) {
