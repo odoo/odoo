@@ -743,7 +743,7 @@ class Challenge(models.Model):
                     all_reached = False
                 if goal.definition_condition == 'higher':
                     # can be over 100
-                    total_completeness += 100.0 * goal.current / goal.target_goal
+                    total_completeness += (100.0 * goal.current / goal.target_goal) if goal.target_goal else 0
                 elif goal.state == 'reached':
                     # for lower goals, can not get percentage so 0 or 100
                     total_completeness += 100
