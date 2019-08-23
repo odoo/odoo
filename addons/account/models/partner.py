@@ -509,7 +509,7 @@ class ResPartner(models.Model):
                     counts = dict(self.env.cr.fetchall())
                     # Update all ranks
                     for partner in self:
-                        partner[field] = max(counts.get(partner.id, 0), current_counts[partner.id])
+                        partner[field] = max(counts.get(partner.id, 0), current_counts.get(partner.id, 0))
             except psycopg2.DatabaseError as e:
                 if e.pgcode == '55P03':
                     _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks now.')
