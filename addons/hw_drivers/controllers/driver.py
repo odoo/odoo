@@ -423,14 +423,17 @@ class SocketManager(Thread):
 
     def run(self):
         while True:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            sock.bind(('', 9000))
-            sock.listen(1)
-            dev, addr = sock.accept()
-            if addr and addr[0] not in socket_devices:
-                iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
-                socket_devices[addr[0]] = iot_device
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                sock.bind(('', 9000))
+                sock.listen(1)
+                dev, addr = sock.accept()
+                if addr and addr[0] not in socket_devices:
+                    iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
+                    socket_devices[addr[0]] = iot_device
+            except OSError as e:
+                _logger.error(_('Error in SocketManager: %s') % (e.strerror))
 
 class MPDManager(Thread):
     def __init__(self):
