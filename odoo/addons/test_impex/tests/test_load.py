@@ -925,6 +925,35 @@ class test_o2m(ImporterCase):
         self.assertEqual(set(values(b.value)), set([1, 2]))
         self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
+    def test_o2m_repeated_with_xids(self):
+        # concern: formerly this would link existing records, and fault if
+        # the records did not exist. This is more in line with other XID uses,
+        # however it does make thing work where they'd previously fail for
+        # well-defined reasons.
+        result = self.import_(['id', 'const', 'value/id', 'value/value'], [
+            ['a', '5', 'aa', '11'],
+            ['', '', 'ab', '12'],
+            ['', '', 'ac', '13'],
+            ['', '', 'ad', '14'],
+            ['b', '10', 'ba', '15'],
+            ['', '', 'bb', '16'],
+        ])
+        self.assertFalse(result['messages'])
+        result = self.import_(['id', 'const', 'value/id', 'value/value'], [
+            ['a', '5', 'aa', '11'],
+            ['', '', 'ab', '12'],
+            ['', '', 'ac', '13'],
+            ['', '', 'ad', '14'],
+            ['b', '8', 'ba', '25'],
+            ['', '', 'bb', '16'],
+        ])
+        self.assertFalse(result['messages'])
+
+        [a, b] = self.browse().sorted(lambda r: r.const)
+        self.assertEqual(len(a.value), 4)
+        self.assertEqual(len(b.value), 2)
+        self.assertEqual(b.const, 8)
+        self.assertEqual(b.value.mapped('value'), [25, 16])
 
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
