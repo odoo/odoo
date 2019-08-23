@@ -43,6 +43,9 @@ ListRenderer.include({
         var self = this;
         this._super.apply(this, arguments);
 
+        this.editable = params.editable;
+        this.columnWidths = false;
+
         // if addCreateLine (resp. addCreateLineInGroups) is true, the renderer
         // will add a 'Add a line' link at the bottom of the list view (resp.
         // at the bottom of each group)
@@ -106,6 +109,29 @@ ListRenderer.include({
             core.bus.on('click', this, this._onWindowClicked.bind(this));
         }
         return this._super();
+    },
+    /**
+     * The list renderer needs to know if it is in the DOM, and to be notified
+     * when it is attached to the DOM to properly compute column widths.
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        this.isInDOM = true;
+        if (this.editable) {
+            this._freezeColumnWidths();
+        }
+        this._super();
+    },
+    /**
+     * The list renderer needs to know if it is in the DOM to properly compute
+     * column widths.
+     *
+     * @override
+     */
+    on_detach_callback: function () {
+        this.isInDOM = false;
+        this._super();
     },
 
     //--------------------------------------------------------------------------
@@ -217,7 +243,10 @@ ListRenderer.include({
 
                 // store the selection range to restore it once the table will
                 // be re-rendered, and the current cell re-selected
-                var currentRowID, currentWidget, focusedElement, selectionRange;
+                var currentRowID;
+                var currentWidget;
+                var focusedElement;
+                var selectionRange;
                 if (self.currentRow !== null) {
                     currentRowID = self._getRecordID(self.currentRow);
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
@@ -436,8 +465,14 @@ ListRenderer.include({
         }
         var recordID = this._getRecordID(this.currentRow);
         var recordWidgets = this.allFieldWidgets[recordID];
-        toggleWidgets(true);
+        function toggleWidgets(disabled) {
+            _.each(recordWidgets, function (widget) {
+                var $el = widget.getFocusableElement();
+                $el.prop('disabled', disabled);
+            });
+        }
 
+        toggleWidgets(true);
         return new Promise((resolve, reject) => {
             this.trigger_up('save_line', {
                 recordID: recordID,
@@ -452,18 +487,17 @@ ListRenderer.include({
         }).guardedCatch(() => {
             toggleWidgets(false);
         });
-
-        function toggleWidgets(disabled) {
-            _.each(recordWidgets, function (widget) {
-                var $el = widget.getFocusableElement();
-                $el.prop('disabled', disabled);
-            });
-        }
     },
     /**
      * @override
      */
     updateState: function (state, params) {
+        this.columnWidths = false;
+        if (params.keepWidths) {
+            this.columnWidths = this.$('thead th').toArray().map(function (th) {
+                return $(th).outerWidth();
+            });
+        }
         if (params.noRender) {
             // the state changed, but we won't do a re-rendering right now, so
             // remove computed modifiers data (as they are obsolete) to force
@@ -491,46 +525,81 @@ ListRenderer.include({
         }
     },
     /**
-     * Returns the relative width according to the widget or the field type.
-     * @see _renderHeader
+     * This function freezes the column widths and forces a fixed table-layout,
+     * once the browser has computed the optimal width of each column according
+     * to the displayed records. We want to freeze widths s.t. it doesn't
+     * flicker when we switch a row in edition.
      *
-     * @param {Object} column an arch node
-     * @returns {integer | string} either a weight factor (number) or a css
-     *   width description (string)
+     * We skip this when there is no record as we don't want to fix widths
+     * according to column's labels. In this case, we fallback on the 'weight'
+     * heuristic, which assigns to each column a fixed or relative width
+     * depending on the widget or field type.
+     *
+     * Note that the list must be in the DOM when this function is called.
+     *
+     * @private
      */
-    _getColumnWidthFactor: function (column) {
-        if (!this.state.fieldsInfo.list[column.attrs.name]) {
-            // Unnamed columns get default value
-            return 1;
+    _freezeColumnWidths: function () {
+        if (!this._hasVisibleRecords(this.state) && !this.columnWidths) {
+            // there is no record nor widths to restore -> don't force column's
+            // widths w.r.t. their label
+            return;
         }
-        var field = this.state.fields[column.attrs.name];
+        var $thead = this.$('thead');
+        $thead.find('th').each((index, th) => {
+            var $th = $(th);
+            $th.css('width', this.columnWidths ? this.columnWidths[index] : $th.outerWidth() + 'px');
+        });
+        this.$('table').css('table-layout', 'fixed');
+    },
+    /**
+     * Returns the width of a column according the 'width' attribute set in the
+     * arch, the widget or the field type. A fixed width is harcoded for some
+     * field types (e.g. date and numeric fields). By default, the remaining
+     * space is evenly distributed between the other fields (with a factor '1').
+     *
+     * This is only used when there is no record in the list (i.e. when we can't
+     * let the browser compute the optimal width of each column).
+     *
+     * @see _renderHeader
+     * @private
+     * @param {Object} column an arch node
+     * @returns {string} either a weight factor (e.g. '1.5') or a css width
+     *   description (e.g. '120px')
+     */
+    _getColumnWidth: function (column) {
+        if (column.attrs.width) {
+            return column.attrs.width;
+        }
+        const fieldsInfo = this.state.fieldsInfo.list;
+        const name = column.attrs.name;
+        if (!fieldsInfo[name]) {
+            // Unnamed columns get default value
+            return '1';
+        }
+        const widget = fieldsInfo[name].Widget.prototype;
+        if ('widthInList' in widget) {
+            return widget.widthInList;
+        }
+        const field = this.state.fields[name];
         if (!field) {
             // this is not a field. Probably a button or something of unknown
             // width.
-            return 1;
+            return '1';
         }
-        var widget = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
-        if ('widthFactor' in widget) {
-            return widget.widthFactor;
+        const fixedWidths = {
+            boolean: '40px',
+            date: '92px',
+            datetime: '146px',
+            float: '92px',
+            integer: '74px',
+            monetary: '104px',
+        };
+        let type = field.type;
+        if (fieldsInfo[name].widget in fixedWidths) {
+            type = fieldsInfo[name].widget;
         }
-        switch (field.type) {
-            case 'binary': return 1;
-            case 'boolean': return '40px';
-            case 'char': return 2;
-            case 'date': return '92px';
-            case 'datetime': return '146px';
-            case 'float': return '92px';
-            case 'html': return 3;
-            case 'integer': return '74px';
-            case 'many2many': return 2;
-            case 'many2one': return 2;
-            case 'monetary': return '104px';
-            case 'one2many': return 2;
-            case 'reference': return 1.5;
-            case 'selection': return 1.5;
-            case 'text': return 2.5;
-            default: return 1;
-        }
+        return fixedWidths[type] || '1';
     },
     /**
      *
@@ -608,6 +677,26 @@ ListRenderer.include({
      */
     _getRow: function (recordId) {
         return this.$('.o_data_row[data-id="' + recordId + '"]');
+    },
+    /**
+     * This function returns true iff records are visible in the list, i.e.
+     *   if the list is ungrouped: true iff the list isn't empty;
+     *   if the list is grouped: true iff there is at least one unfolded group
+     *     containing records.
+     *
+     * @param {Object} list a datapoint
+     * @returns {boolean}
+     */
+    _hasVisibleRecords: function (list) {
+        if (!list.groupedBy.length) {
+            return !!list.data.length;
+        } else {
+            var hasVisibleRecords = false;
+            for (var i = 0; i < list.data.length; i++) {
+                hasVisibleRecords = hasVisibleRecords || this._hasVisibleRecords(list.data[i]);
+            }
+            return hasVisibleRecords;
+        }
     },
     /**
      * Move the cursor on the end of the previous line (or of the last line if
@@ -741,29 +830,37 @@ ListRenderer.include({
         });
     },
     /**
-     * Overridden to set weights or explicit width on columns for the fixed layout.
+     * Override to compute the (relative or absolute) width of each column.
      *
      * @override
      * @private
      */
     _processColumns: function () {
+        const oldColumns = this.columns;
         this._super.apply(this, arguments);
         if (this.editable) {
-            var self = this;
-            this.columns.forEach(function (column) {
-                if (column.attrs.width) {
-                    // nothing to do
-                } else if (column.attrs.width_factor) {
-                    column.attrs.widthFactor = parseFloat(column.attrs.width_factor, 10);
-                } else {
-                    var factor = self._getColumnWidthFactor(column);
-                    if (typeof factor === 'string') {
-                        column.attrs.width = factor;
-                    } else {
-                        column.attrs.widthFactor = factor;
+            // check if stored widths still apply
+            if (this.columnWidths && oldColumns && oldColumns.length === this.columns.length) {
+                for (let i = 0; i < oldColumns.length; i++) {
+                    if (oldColumns[i] !== this.columns[i]) {
+                        this.columnWidths = false; // columns changed, so forget stored widths
+                        break;
                     }
                 }
-            });
+            } else {
+                this.columnWidths = false; // columns changed, so forget stored widths
+            }
+            // if we don't have widths yet, computed them
+            if (!this.columnWidths) {
+                this.columns.forEach((column) => {
+                    const width = this._getColumnWidth(column);
+                    if (width.match(/[a-zA-Z]/)) { // absolute width with measure unit (e.g. 100px)
+                        column.attrs.absoluteWidth = width;
+                    } else { // relative width expressed as a weight (e.g. 1.5)
+                        column.attrs.relativeWidth = parseFloat(width, 10);
+                    }
+                });
+            }
         }
     },
     /**
@@ -840,21 +937,34 @@ ListRenderer.include({
     _renderHeader: function () {
         var $thead = this._super.apply(this, arguments);
 
-        if (this.editable) {
-            // we compute the sum of the weights for each columns, excluding
-            // those with a fixed width.
-            var totalWidth = this.columns.reduce(function (acc, column) {
-                return acc + (column.attrs.widthFactor || 0);
-            }, 0);
-            this.columns.forEach(function (column) {
-                if (column.attrs.width || column.attrs.widthFactor) {
-                    var width = column.attrs.width || ((column.attrs.widthFactor / totalWidth * 100) + '%');
-                    var $th = $thead.find('th[data-name=' + column.attrs.name + ']');
-                    if ($th.data('name')) {
-                        $th.css('width', width);
+        if (this.editable && !this.columnWidths) {
+            if (!this._hasVisibleRecords(this.state)) {
+                // we compute the sum of the weights for each columns, excluding
+                // those with an absolute width.
+                var totalWidth = this.columns.reduce(function (acc, column) {
+                    return acc + (column.attrs.relativeWidth || 0);
+                }, 0);
+                this.columns.forEach(function (column) {
+                    let width;
+                    if (column.attrs.absoluteWidth) {
+                        width = column.attrs.absoluteWidth;
+                    } else if (column.attrs.relativeWidth) {
+                        width = ((column.attrs.relativeWidth / totalWidth * 100) + '%');
                     }
-                }
-            });
+                    if (width) {
+                        $thead.find('th[data-name=' + column.attrs.name + ']').css('width', width);
+                    }
+                });
+            } else {
+                // if there are records, we force a min-width for fields with an
+                // absolute width to ensure a correct rendering in edition
+                this.columns.forEach(function (column) {
+                    if (column.attrs.absoluteWidth) {
+                        let width = column.attrs.absoluteWidth;
+                        $thead.find('th[data-name=' + column.attrs.name + ']').css('min-width', width);
+                    }
+                });
+            }
         }
 
         if (this.addTrashIcon) {
@@ -876,8 +986,8 @@ ListRenderer.include({
         var $row = this._super.apply(this, arguments);
         if (this.addTrashIcon) {
             var $icon = this.isMany2Many ?
-                            $('<button>', {class: 'fa fa-times', name: 'unlink', 'aria-label': _t('Unlink row ') + (index+1)}) :
-                            $('<button>', {class: 'fa fa-trash-o', name: 'delete', 'aria-label': _t('Delete row ') + (index+1)});
+                $('<button>', {'class': 'fa fa-times', 'name': 'unlink', 'aria-label': _t('Unlink row ') + (index + 1)}) :
+                $('<button>', {'class': 'fa fa-trash-o', 'name': 'delete', 'aria-label': _t('Delete row ') + (index + 1)});
             var $td = $('<td>', {class: 'o_list_record_remove'}).append($icon);
             $row.append($td);
         }
@@ -932,8 +1042,17 @@ ListRenderer.include({
         this.currentRow = null;
         this.allRecordsIds = null;
         return this._super.apply(this, arguments).then(function () {
-            if (self.editable) {
-                self.$('table').addClass('o_editable_list');
+            var table = self.el.getElementsByTagName('table')[0];
+            if (table) { // no table if no content helper displayed
+                if (!self._hasVisibleRecords(self.state)) {
+                    table.classList.add('o_empty_list');
+                }
+                if (self.editable) {
+                    table.classList.add('o_editable_list');
+                    if (self.isInDOM) {
+                        self._freezeColumnWidths();
+                    }
+                }
             }
         });
     },
@@ -1030,15 +1149,6 @@ ListRenderer.include({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Unselect the row before adding the optional column to the listview
-     *
-     * @override
-     * @private
-     */
-    _onToggleOptionalColumnDropdown: function (ev) {
-        this.unselectRow().then(this._super.bind(this, ev));
-    },
     /**
      * This method is called when we click on the 'Add a line' button in a groupby
      * list view.
@@ -1150,7 +1260,7 @@ ListRenderer.include({
      * @param {KeyDownEvent} e
      */
     _onKeyDownAddRecord: function (e) {
-        switch(e.keyCode) {
+        switch (e.keyCode) {
             case $.ui.keyCode.ENTER:
                 e.stopPropagation();
                 e.preventDefault();
@@ -1265,6 +1375,15 @@ ListRenderer.include({
         if (this.currentRow === null) {
             this._super.apply(this, arguments);
         }
+    },
+    /**
+     * Unselect the row before adding the optional column to the listview
+     *
+     * @override
+     * @private
+     */
+    _onToggleOptionalColumnDropdown: function (ev) {
+        this.unselectRow().then(this._super.bind(this, ev));
     },
     /**
      * When a click happens outside the list view, or outside a currently

@@ -247,7 +247,7 @@ var ListController = BasicController.extend({
             });
         }).then(function (recordID) {
             var state = self.model.get(self.handle);
-            self.renderer.updateState(state, {})
+            self.renderer.updateState(state, {keepWidths: true})
                 .then(function () {
                     self.renderer.editRecord(recordID);
                 }).then(self._updatePager.bind(self));
@@ -405,7 +405,7 @@ var ListController = BasicController.extend({
                             .then(() => {
                                 this._updateButtons('readonly');
                                 const state = this.model.get(this.handle);
-                                this.renderer.updateState(state, {});
+                                this.renderer.updateState(state, {keepWidths: true});
                                 resolve(Object.keys(changes));
                             })
                             .guardedCatch(rejectAndDiscard);

@@ -230,9 +230,10 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable rendering with handle', async function (assert) {
+    QUnit.test('editable rendering with handle and no data', async function (assert) {
         assert.expect(6);
 
+        this.data.foo.records = [];
         var list = await createView({
             View: ListView,
             model: 'foo',
@@ -1429,7 +1430,74 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('width of some of the fields should be hardcoded', async function (assert) {
+    QUnit.test('column widths should depend on the content when there is data', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.records[0].foo = 'Some very very long value for a char field';
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
+                    '</tree>',
+            viewOptions: {
+                limit: 2,
+            },
+        });
+
+        var widthPage1 = list.$(`th[data-name=foo]`)[0].offsetWidth;
+
+        await testUtils.dom.click(list.$('.o_pager_next'));
+
+        var widthPage2 = list.$(`th[data-name=foo]`)[0].offsetWidth;
+        assert.ok(widthPage1 > widthPage2,
+            'column widths should be computed dynamically according to the content');
+
+        list.destroy();
+    });
+
+    QUnit.test('width of some of the fields should be hardcoded if no data', async function (assert) {
+        const assertions = [
+            { field: 'bar', expected: 40, type: 'Boolean' },
+            { field: 'int_field', expected: 74, type: 'Integer' },
+            { field: 'qux', expected: 92, type: 'Float' },
+            { field: 'date', expected: 92, type: 'Date' },
+            { field: 'datetime', expected: 146, type: 'Datetime' },
+        ];
+        assert.expect(assertions.length + 1);
+
+        this.data.foo.records = [];
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
+                    '</tree>',
+        });
+
+        assertions.forEach(a => {
+            assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
+                `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
+        });
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%', "Char field should occupy the remaining space");
+
+        list.destroy();
+    });
+
+    QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
         const assertions = [
             { field: 'bar', expected: 40, type: 'Boolean' },
             { field: 'int_field', expected: 74, type: 'Integer' },
@@ -1451,13 +1519,148 @@ QUnit.module('Views', {
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
                     '</tree>',
+            groupBy: ['int_field'],
         });
 
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
         });
-        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%', "Char field should occupy the remaining space");
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%');
+
+        list.destroy();
+    });
+
+    QUnit.test('column width should depend on the widget', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.records = []; // the width heuristic only applies when there are no records
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="datetime" widget="date"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, 92,
+            "should be the optimal width to display a date, not a datetime");
+
+        list.destroy();
+    });
+
+    QUnit.test('column widths are kept when adding first record', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = []; // in this scenario, we start with no records
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="datetime"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        var width = list.$('th[data-name="datetime"]')[0].offsetWidth;
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+
+        assert.containsOnce(list, '.o_data_row');
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, width);
+
+        list.destroy();
+    });
+
+    QUnit.test('column widths are kept when editing a record', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="datetime"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        var width = list.$('th[data-name="datetime"]')[0].offsetWidth;
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        assert.containsOnce(list, '.o_selected_row');
+
+        var longVal = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, ' +
+            'justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus ' +
+            'bibendum est.';
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=text]'), longVal);
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+
+        assert.containsNone(list, '.o_selected_row');
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, width);
+
+        list.destroy();
+    });
+
+    QUnit.test('columns with an absolute width are never narrower than that width', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records[0].text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
+            'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim ' +
+            'veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo ' +
+            'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum ' +
+            'dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, ' +
+            'sunt in culpa qui officia deserunt mollit anim id est laborum';
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="datetime"/>' +
+                        '<field name="int_field" width="200px"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, 146);
+        assert.strictEqual(list.$('th[data-name="int_field"]')[0].offsetWidth, 200);
+
+        list.destroy();
+    });
+
+    QUnit.test('column widths are kept when editing multiple records', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="datetime"/>' +
+                        '<field name="text"/>' +
+                    '</tree>',
+        });
+
+        var width = list.$('th[data-name="datetime"]')[0].offsetWidth;
+
+        // select two records and edit
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+
+        assert.containsOnce(list, '.o_selected_row');
+        var longVal = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, ' +
+            'justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus ' +
+            'bibendum est.';
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=text]'), longVal);
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.containsNone(list, '.o_selected_row');
+        assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, width);
 
         list.destroy();
     });
@@ -1485,7 +1688,7 @@ QUnit.module('Views', {
                         '<field name="int_field" readonly="1"/>' +
                         '<field name="boolean"/>' +
                         '<field name="date"/>' +
-                        '<field name="text" width_factor="1"/>' +
+                        '<field name="text"/>' +
                         '<field name="amount"/>' +
                         '<field name="currency_id" invisible="1"/>' +
                         '<field name="m2o"/>' +
