@@ -22,9 +22,8 @@ class SalePaymentLink(models.TransientModel):
             })
         return res
 
-    @api.onchange('amount', 'description')
-    def _onchange_amount(self):
-        res = super(SalePaymentLink, self)._onchange_amount()
-        if self.res_model == 'sale.order':
-            self.link = "%s&order_id=%d" % (self.link, self.res_id)
-        return res
+    def _generate_link(self):
+        """ Override of the base method to add the order_id in the link. """
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for payment_link in self:
+            payment_link.link = '%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s&partner_id=%s&order_id=%s&access_token=%s' % (base_url, payment_link.description, payment_link.amount, payment_link.currency_id.id, payment_link.partner_id.id, payment_link.res_id, payment_link.access_token)
