@@ -11,7 +11,7 @@ var _t = core._t;
 var MyAttendances = Widget.extend({
     events: {
         "click .o_hr_attendance_sign_in_out_icon": function() {
-            this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
+            this.$('.o_hr_attendance_sign_in_out_icon').css('pointer-events', 'none');
             this.update_attendance();
         },
     },
