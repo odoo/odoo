@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
+import hmac
 import logging
 from unicodedata import normalize
 import psycopg2
+import werkzeug
 
 from odoo import http, _
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, consteq, ustr
 from datetime import datetime, timedelta
 
 
@@ -192,7 +195,8 @@ class WebsitePayment(http.Controller):
             'error_msg': kw.get('error_msg')
         })
 
-        values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in ['form', 's2s']]
+        valid_flows = ['form', 's2s'] if not user._is_public() else ['form']
+        values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in valid_flows]
         values['pms'] = request.env['payment.token'].search([('acquirer_id', 'in', acquirers.ids)])
 
         return request.render('payment.pay', values)
@@ -223,7 +227,10 @@ class WebsitePayment(http.Controller):
         reference_values.update(acquirer_id=int(acquirer_id))
         values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
-        tx.return_url = '/website_payment/confirm?tx_id=%d' % tx.id
+        secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+        token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+        token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+        tx.return_url = '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
 
         PaymentProcessing.add_payment_transaction(tx)
 
@@ -262,7 +269,10 @@ class WebsitePayment(http.Controller):
 
         try:
             tx.s2s_do_transaction()
-            tx.return_url = return_url or '/website_payment/confirm?tx_id=%d' % tx.id
+            secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+            token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+            token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+            tx.return_url = return_url or '/website_payment/confirm?tx_id=%d&access_token=%s' % tx.id
         except Exception as e:
             _logger.exception(e)
         return request.redirect('/payment/process')
@@ -270,8 +280,17 @@ class WebsitePayment(http.Controller):
     @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
     def confirm(self, **kw):
         tx_id = int(kw.get('tx_id', 0))
+        access_token = kw.get('access_token')
         if tx_id:
-            tx = request.env['payment.transaction'].browse(tx_id)
+            if access_token:
+                tx = request.env['payment.transaction'].sudo().browse(tx_id)
+                secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+                valid_token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+                valid_token = hmac.new(secret.encode('utf-8'), valid_token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+                if not consteq(ustr(valid_token), access_token):
+                    raise werkzeug.exceptions.NotFound
+            else:
+                tx = request.env['payment.transaction'].browse(tx_id)
             if tx.state in ['done', 'authorized']:
                 status = 'success'
                 message = tx.acquirer_id.done_msg
