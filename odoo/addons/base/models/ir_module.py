@@ -363,8 +363,11 @@ class Module(models.Model):
         # whether some modules are installed with demo data
         demo = False
         if not checked:
-            checked = self.browse()
-        for module in (self - checked):
+            checked = {}
+        for module in self:
+            if module.id in checked:
+                demo = demo or checked[module.id]
+                continue
             # determine dependency modules to update/others
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
@@ -380,14 +383,14 @@ class Module(models.Model):
                 newstate, states_to_update, level=level-1, checked=checked)
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
-            checked |= now_checked
+            checked[module.id] = module_demo
 
             # check dependencies and update module itself
             self.check_external_dependencies(module.name, newstate)
             if module.state in states_to_update:
                 module.write({'state': newstate, 'demo': module_demo})
 
-        return demo, checked | self
+        return demo, checked
 
     @assert_log_admin_access
     def button_install(self):
