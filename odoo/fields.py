@@ -723,7 +723,8 @@ class Field(MetaField('DummyField', (object,), {})):
             for node in nodes:
                 for f in reversed(path):
                     node = node.setdefault(f, {})
-                node.setdefault(None, []).append(self)
+                n = node.setdefault(None, [])
+                if self not in n: n.append(self)
 
         for dotnames in self.depends:
             field_model = model
