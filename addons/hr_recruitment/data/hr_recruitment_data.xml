@@ -26,9 +26,9 @@
                 our hiring team reviewed your application and <b>did not
                 select it for further consideration</b>.
                 <br/><br/>
-                Please note that recruiting is hard, and we can do
-                mistake. Do not hesitate to reply to this email if you
-                think we did a mistake, or if you want more information
+                Please note that recruiting is hard, and we can make
+                mistakes. Do not hesitate to reply to this email if you
+                think we made a mistake, or if you want more information
                 about our decision.
                 <br/><br/>
                 We will, however, keep your resume on record and get in
@@ -173,7 +173,7 @@
     </record>
 
     <record id="email_template_data_applicant_congratulations" model="mail.template">
-        <field name="name">Applicant: Acknowledgment</field>
+        <field name="name">Applicant: Acknowledgement</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
         <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
@@ -185,7 +185,7 @@
             <div style="font-size: 13px; margin: 0px; padding: 0px;">
                 Hello,
                 <br/><br/>
-                We confirm we successfully received your application to the job
+                We confirm we successfully received your application for the job
                 "<a href="${object.job_id.website_url or ''}" style="color:#9A6C8E;"><strong>${object.job_id.name}</strong></a>" at <strong>${object.company_id.name}</strong>.
                 <br/><br/>
                 We will come back to you shortly.
