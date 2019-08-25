@@ -119,32 +119,35 @@ msgstr "%s: Транзитне розташування"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
+"'Доставка Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "'Склад - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr ""
+msgstr "'Розташування - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr ""
+msgstr "'Партійний-серійний - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr ""
+msgstr "'Тип операції - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
+"'Операції комплектування - %s - %s' % (object.partner_id.name or '', "
+"object.name)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -173,6 +176,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Розташування постачальника: Віртуальне розташування, що представляє джерело розташування для товарів, які надходять від постачальників\n"
+"* Перегляд: Віртуальне розташування, яке використовується для створення ієрархічної структури для вашого складу, з'їднуючи його дочірні місцезнаходження; не може напряму вміщувати товари\n"
+"* Внутрішнє розташування: Фізичне місцезнаходження всередині вашого складу,\n"
+"* Розташування клієнта: Віртуальне місцезнаходження, що представляє розташування призначення для товарів, надісланих клієнтам\n"
+"* Складські витрати: Віртуальне місцезнаходження, яке виконує функції аналога для складських операцій, що використовується для коригування рівня запасу (Фізичні інвентаризації)\n"
+"* Виробництво: Віртуальний аналог місцезнаходження для виробничих операцій: це розташування споживає компоненти та виробляє готовий товар\n"
+"* Транзитне місцезнаходження: Аналог розташування, який повинен використовуватися на операціях внутрішньої компанії чи внутрішнього складу"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -214,6 +224,8 @@ msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
 " to bring products in this location."
 msgstr ""
+"<br>Якщо товарів немає в наявності в <b>%s</b>, буде запускатися правило для"
+" отримання товарів на це розташування."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
@@ -295,12 +307,12 @@ msgstr "<span class=\"o_stat_text\">В наявності</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Операції</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "<span class=\"oe_grey\">Inventory Adjustment Lines are displayed:</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\">Відображаються рядки коригування запасів:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -366,7 +378,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Counted Quantity</strong>"
-msgstr ""
+msgstr "<strong>Підрахована кількість</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -407,7 +419,7 @@ msgstr "<strong>Мін к-сть :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Кількість в наявності</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -652,12 +664,12 @@ msgstr "Усі повернені переміщення"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
-msgstr ""
+msgstr "Дозволене місцезнаходження"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "Дозволяє починати із пустим складом."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -735,7 +747,7 @@ msgstr "Призначити власника"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
-msgstr ""
+msgstr "Призначити відповідального"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
@@ -963,7 +975,7 @@ msgstr "Скасувати інвентаризацію"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_cancel
 msgid "Cancel Next Move"
-msgstr ""
+msgstr "Скасувати наступне переміщення"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1203,7 +1215,7 @@ msgstr "Вміст"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Continue Inventory"
-msgstr ""
+msgstr "Продожити інвентаризацію"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
@@ -1265,7 +1277,7 @@ msgstr "Підрахунок комплектувань очікування"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
 msgid "Counted Quantity"
-msgstr ""
+msgstr "Підрахована кількість"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1888,12 +1900,12 @@ msgstr "Товар зі знижкою"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__display_complete
 msgid "Display Complete"
-msgstr ""
+msgstr "Відобразити завершене"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
 msgid "Display Lots & Serial Numbers on Delivery Slips"
-msgstr ""
+msgstr "Відобразити партії та серійні номери на транспортній накладній"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
@@ -1996,7 +2008,7 @@ msgstr "Дата набрання чинності"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
 msgid "Empty Inventory"
-msgstr ""
+msgstr "Пустий склад"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2486,6 +2498,8 @@ msgid ""
 "In <span class=\"text-danger\">red</span> if the quantity on hand has "
 "changed, it can be recomputed via the action menu at the top."
 msgstr ""
+"<span class=\"text-danger\">Червоним</span>, якщо кількість в наявності "
+"змінена, її можна перерахувати через меню дії вгорі."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -2493,6 +2507,8 @@ msgid ""
 "In <span class=\"text-info\">blue</span> if there is a difference between "
 "the quantity on hand and the counted quantity."
 msgstr ""
+"<span class=\"text-info\">Синім</span>, якщо є різниця між кількістю в "
+"наявності та підрахованою кількістю."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -2511,6 +2527,8 @@ msgid ""
 "In black if there is no difference between the quantity on hand and the "
 "counted quantity."
 msgstr ""
+"Чорним, якщо немає різниці між кількістю в наявності та підрахованою "
+"кількістю."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
@@ -2540,6 +2558,8 @@ msgid ""
 "Indicates the gap between the product's theoretical quantity and its newest "
 "quantity."
 msgstr ""
+"Вказує на розрив між теоретичною кількістю товару та його новітньою "
+"кількістю."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2636,17 +2656,17 @@ msgstr "Невірний правий операнд домену %s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__location_ids
 msgid "Inventoried Location(s)"
-msgstr ""
+msgstr "Розташування інвентаризації"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__product_ids
 msgid "Inventoried Product(s)"
-msgstr ""
+msgstr "Інвентаризовані товари"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
-msgstr ""
+msgstr "Інвентаризовані кількості"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__line_ids
@@ -2761,7 +2781,7 @@ msgstr "Залишки на дату"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__is_editable
 msgid "Is Editable"
-msgstr ""
+msgstr "Редагується"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_is_follower
@@ -2958,7 +2978,7 @@ msgstr "Останнє оновлення"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__inventory_date
 msgid "Last date at which the On Hand Quantity has been computed."
-msgstr ""
+msgstr "Остання дата, коли було підраховано кількість в наявності."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:75
@@ -3020,7 +3040,7 @@ msgstr "Пов’язані переміщення"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "Перегляд списку операцій"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -3081,12 +3101,12 @@ msgstr "Розташування, де система буде зберігат�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: Store to"
-msgstr ""
+msgstr "Розташування: Складувати на"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: When arrives to"
-msgstr ""
+msgstr "Розташування: Коли прибуває на"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3435,7 +3455,7 @@ msgstr "Мої дії"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Transfers"
-msgstr ""
+msgstr "Мої переміщення"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
@@ -3633,7 +3653,7 @@ msgstr "Ок"
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Кількість в наявності"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -3655,7 +3675,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:84
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
-msgstr ""
+msgstr "Лише менеджер складу може підтверджувати коригування запасів."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:103
@@ -3792,12 +3812,12 @@ msgstr "Для видачі"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__outdated
 msgid "Outdated"
-msgstr ""
+msgstr "Застарілий"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Outdated Theoretical Quantities"
-msgstr ""
+msgstr "Теоретична кількість застарілого"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
@@ -4344,7 +4364,7 @@ msgstr "Пакування товару"
 #: code:addons/stock/models/stock_quant.py:487
 #, python-format
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Кількість товару на замовлення"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish

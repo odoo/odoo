@@ -37,7 +37,7 @@ msgstr "&amp;times;"
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
 msgid "'Certification - %s' % (object.survey_id.display_name)"
-msgstr ""
+msgstr "'Сертифікат - %s' % (object.survey_id.display_name)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_header
@@ -296,6 +296,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_attempts_limited', '=', False)]}\"> "
 "attempts</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_attempts_limited', '=', False)]}\"> "
+"спроби</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -567,7 +569,7 @@ msgstr "Прикріплення"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Attempts Limit"
-msgstr ""
+msgstr "Ліміт спроб"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__author_id
@@ -596,7 +598,7 @@ msgstr "Автоматичний вакуум"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Back Button"
-msgstr ""
+msgstr "Кнопка Назад"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -709,7 +711,7 @@ msgstr "Індекс кольору"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Columns of the Matrix"
-msgstr ""
+msgstr "Колонки матриці"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_comments
@@ -1234,7 +1236,7 @@ msgstr "Обмежена кількість спроб"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
 msgid "Login Required"
-msgstr ""
+msgstr "Необхідний вхід"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
@@ -1613,6 +1615,9 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
+"Переконайтеся, що у вас є принаймні одне запитання у вашому опитуванні. Вам "
+"також потрібна принаймні одна секція, якщо ви обрали шаблон \"Сторінка на "
+"секцію\".<br/>"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__question_ids
@@ -1839,7 +1844,7 @@ msgstr "Розділи та запитання"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "See results"
-msgstr ""
+msgstr "Переглянути результати"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
@@ -1865,7 +1870,7 @@ msgstr "Послідовність"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Set to draft"
-msgstr ""
+msgstr "Встановити як чернетка"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1977,7 +1982,7 @@ msgstr "Тема..."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
 msgid "Submit Survey"
-msgstr ""
+msgstr "Додати опитування"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -2154,6 +2159,8 @@ msgid ""
 "use this to give the purpose and guidelines to your candidates before they "
 "start it."
 msgstr ""
+"Опис буде відображено на головній сторінці опитування. Ви можете "
+"використовувати його для мети та вказівок вашим кандидатам перед початком."
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:85
@@ -2285,7 +2292,7 @@ msgstr "Це дослідження доступне тільки зареєст
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Time Limit"
-msgstr ""
+msgstr "Ліміт часу"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__time_limit

@@ -68,6 +68,9 @@ msgid ""
 "                                                                Non Billable Tasks\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Includes the time logged into a task which is not linked to any Sales Order.\">\n"
+"                                                                Немає завдань у рахунках\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -202,20 +205,20 @@ msgstr "Оплачуваний тип"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed at a Fixed Price"
-msgstr ""
+msgstr "Виставлено рахунок на фіксовану ціну"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "Виставлено рахунок на фіксовану ціну"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "Виставлено рахунок на табелях"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -262,17 +265,17 @@ msgstr "Компанія"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your fixed price services"
-msgstr ""
+msgstr "Налаштуйте ваші послуги фіксованої ціни"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your milestone services"
-msgstr ""
+msgstr "Налаштуйте ваші сервісні центри"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your time-based services"
-msgstr ""
+msgstr "Налаштуйте ваші послуги на основі часу"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
@@ -337,7 +340,7 @@ msgstr "Створити завдання в існуючому проекті"
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a task in sale order's project"
-msgstr ""
+msgstr "Створіть завдання у проекті замовлення на продаж"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
@@ -386,7 +389,7 @@ msgstr "Назва для відображення"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "Відобразити проект"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
@@ -446,7 +449,7 @@ msgstr "Години"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours recorded and Profitability"
-msgstr ""
+msgstr "Записані години та ефективність"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
@@ -463,6 +466,8 @@ msgid ""
 "Includes the time logged from the Timesheet module that is linked to a "
 "project, but not to a task."
 msgstr ""
+"Включає час, записаний у модулі Табелі, який пов'язаний з проектом, але не "
+"із завданням."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -470,6 +475,8 @@ msgid ""
 "Includes the time logged into a task which is linked to a cancelled Sales "
 "Order."
 msgstr ""
+"Включає час, записаний на завданні, пов’язаний із скасованим замовленням на "
+"продаж."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -477,6 +484,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on ordered "
 "quantities or on milestones."
 msgstr ""
+"Включає час, записаний на завданні, який ви виставляєте у рахунку на основі "
+"замовлених кількостей або етапах."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -484,6 +493,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on "
 "timesheets on tasks."
 msgstr ""
+"Включає час, записаний на завданні, який ви виставляєте у рахунок-фактуру на"
+" основі табелів на завданнях."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -644,7 +655,7 @@ msgstr "Завдання без оплати"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
-msgstr ""
+msgstr "Завдання, що не виставляються у рахунку"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
@@ -658,6 +669,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"Під час підтвердження замовлення на продаж цей товар може генерувати проект та/або завдання. З них ви можете відстежувати продану послугу.\n"
+"         'У проекті замовлення на продаж': Буде використовуватися налаштований проект замовлення на продаж, якщо визначено або  резервно скопійовано на створення нового проекту на основі вибраного шаблону."
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -922,6 +935,8 @@ msgstr "Замовлення на продаж, із яким пов'язане 
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
+"Виберіть проект, який не виставляється у рахунку, на якому можна створювати "
+"завдання."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
@@ -1101,6 +1116,8 @@ msgid ""
 "This cost is based on the \"Timesheet cost\" set in the HR Settings of your "
 "employees."
 msgstr ""
+"Ця вартість базується на \"Вартості табеля\", встановленої у налаштуваннях "
+"відділу кадрів ваших співробітників."
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
@@ -1258,7 +1275,7 @@ msgstr "Неоподатковувана сума для виставлення 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
 msgid "Untaxed Amount to Re-invoice"
-msgstr ""
+msgstr "Неоподаткована сума до повторного виставлення у рахунку"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
@@ -1329,7 +1346,7 @@ msgstr "billable_time"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "canceled"
-msgstr ""
+msgstr "скасовано"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan

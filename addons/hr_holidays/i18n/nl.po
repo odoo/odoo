@@ -100,7 +100,7 @@ msgstr "%s op %s : %.2f u(u)r(en)"
 #: code:addons/hr_holidays/models/hr_leave.py:509
 #, python-format
 msgid "%s on %s: %.2f day(s)"
-msgstr ""
+msgstr "%s op %s: %.2f dag(en)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -412,6 +412,9 @@ msgid ""
 "                                    Time Off\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Verlof\n"
+"                                </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
@@ -463,12 +466,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">from </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">van </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">to </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">tot </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -1119,7 +1122,7 @@ msgstr "Schermnaam"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
 msgid "Display Time Off in Calendar"
-msgstr ""
+msgstr "Toon verlof in kalender"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -1523,7 +1526,7 @@ msgstr "Verlofsoort"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Leaves Taken"
-msgstr ""
+msgstr "Opgenomen verloven"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -2395,7 +2398,7 @@ msgstr "Verlof notificatie subsoort"
 #. module: hr_holidays
 #: selection:hr.leave.type,validation_type:0
 msgid "Time Off Officer"
-msgstr ""
+msgstr "Verlof manager"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
