@@ -65,7 +65,7 @@ msgstr "# weergaven op website"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${ctx['user'].name} shared a ${object.slide_type} with you!"
-msgstr ""
+msgstr "${ctx['user'].name} heeft een ${object.slide_type} gedeeld met u!"
 
 #. module: website_slides
 #. openerp-web
@@ -495,6 +495,8 @@ msgid ""
 "<span class=\"form-text text-muted\">Use permanent link to share in social "
 "media</span>"
 msgstr ""
+"<span class=\"form-text text-muted\">Gebruik permanente link om te delen op "
+"sociale media</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -1776,7 +1778,7 @@ msgstr "Middelgrote afbeelding"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_footer
 msgid "Meet The Heros Who Transformed Their Company!"
-msgstr ""
+msgstr "Ontmoet de helden die hun bedrijf hebben getransformeerd!"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_ids
@@ -2088,6 +2090,8 @@ msgstr "Alstublieft"
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to join this course"
 msgstr ""
+"Gelieve <a href=\"/web/login?redirect=%s\">in te loggen</a>om deel te nemen "
+"aan deze opleiding"
 
 #. module: website_slides
 #. openerp-web

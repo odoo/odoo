@@ -5,6 +5,7 @@
 # Translators:
 # krnkris, 2016
 # Martin Trigaux, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +27,13 @@ msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Lejárati figyelmeztetés</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>nap</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
@@ -40,7 +43,7 @@ msgstr "Figyelmeztetés dátuma"
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "Figyelmeztetés dátuma elérve"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -53,6 +56,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"Lejárt lot-ok és szériaszámok megállapításának dátuma a \"Lejárati "
+"figyelmeztetések\" szűrő használatával."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -68,7 +73,7 @@ msgstr "Határidő lejárati vég dátum"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
-msgstr ""
+msgstr "Lejárati figyelmeztetések"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
@@ -86,6 +91,7 @@ msgstr "Szett/Széria"
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
+"Napok száma, mielőtt figyelmeztetést kell küldeni a lot/szériaszám kapcsán."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -94,6 +100,8 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Napok száma mielőtt az áruk veszélyessé válhatnak és már nem fogyaszthatók. "
+"A lot/szériaszám kapcsán kerül számításra."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -102,6 +110,8 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
+"Napok száma, mielőtt a termékeket ki kell mozgatni készletből. A "
+"lot/szériaszám alapján kerül kiszámításra."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -110,6 +120,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+"Napok száma, mielőtt a termékek romlani kezdenek, de még nem veszélyesek. A "
+"lot/szériaszám alapján kerül kiszámításra."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -125,7 +137,7 @@ msgstr "Termék riasztási idő"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Termék lejárati figyelmeztetés"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
@@ -164,13 +176,13 @@ msgstr "Eltávolítás időpontja"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr ""
+msgstr "A riasztási dátum elérve"
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/production_lot.py:81
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr ""
+msgstr "A riasztási dátum elérésre került a lot/szériaszám kapcsán"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date

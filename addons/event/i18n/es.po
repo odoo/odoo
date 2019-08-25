@@ -30,6 +30,7 @@
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Martin Trigaux, 2019
+# Jairo Llopis <yajo.sk8@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Jairo Llopis <yajo.sk8@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +66,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -73,6 +74,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        A</b>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -89,6 +92,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Estimado/a ${object.name}:<br/>\n"
+"    Gracias por su solicitud.<br/>\n"
+"    Aquí está su insignia para el evento ${object.event_id.name}.<br/>\n"
+"    Si tiene alguna pregunta, por favor háganoslo saber.\n"
+"    <br/><br/>\n"
+"    Gracias,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -103,6 +117,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        a\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -119,6 +136,9 @@ msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Advertencia: Este evento no ha alcanzado "
+"todavía su límite mínimo de asistentes. ¿Seguro que desea "
+"confirmarlo?</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -535,12 +555,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr ""
+msgstr "Añadir un nuevo asistente"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr ""
+msgstr "Añadir un nuevo evento"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1293,7 +1313,7 @@ msgstr "Programadores de Correo Electrónico"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Programación de correo en la categoría de eventos"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1624,6 +1644,8 @@ msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
+"Programe y organice sus eventos de forma eficiente:\n"
+"                haga seguimiento de registros y participaciones, automatice los correos electrónicos de confirmación, venda entradas, etc."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -1726,7 +1748,7 @@ msgstr ""
 #: code:addons/event/models/event.py:280
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr ""
+msgstr "La fecha de finalización no puede ser anterior a la de comienzo."
 
 #. module: event
 #: code:addons/event/models/event.py:324
@@ -1835,7 +1857,7 @@ msgstr "Siguientes eventos desde hoy"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "Próximos/En marcha"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_hashtag
