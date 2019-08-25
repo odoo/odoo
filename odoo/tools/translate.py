@@ -632,7 +632,7 @@ class PoFileReader:
                         'src': source,
                         'value': translation,
                         'comments': comments,
-                        'res_id': int(line_number),
+                        'res_id': int(line_number or 0),
                         'module': module,
                     }
                     continue
