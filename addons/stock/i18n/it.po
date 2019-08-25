@@ -50,7 +50,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s --> UdM prodotto è %s (%s) - UdM movimentazione è %s (%s)"
+"%s --> UdM del prodotto è %s (%s) - UdM del movimento è %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:341
@@ -235,7 +235,7 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Delivery</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Validare la "
+"<span class=\"label label-default text-center odoo_purple\">Confermare la "
 "consegna</span>"
 
 #. module: stock
@@ -244,8 +244,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Validare la "
-"ricezione merce</span>"
+"<span class=\"label label-default text-center odoo_purple\">Validare "
+"l'ordine di ricezione</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -455,7 +455,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Activate <i>Track lots or serial numbers</i></strong> in your"
 msgstr ""
-"<strong>Attivare <i>traccia lotti e numeri di serie</i></strong> nelle"
+"<strong>Attivare <i>traccia numeri di lotti o di serie</i></strong> nelle"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -967,13 +967,13 @@ msgid ""
 "Are you sure you want to confirm this operation? This may lead to "
 "inconsistencies in your inventory."
 msgstr ""
-"Si conferma questa operazione? Ciò potrebbe portare a incongruenze nelle "
-"giacenze."
+"Confermare veramente questa operazione? Potrebbe portare a incongruenze di "
+"magazzino."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 msgid "Are you sure you want to validate this picking?"
-msgstr "Si convalida questo prelievo?"
+msgstr "Validare veramente questo prelievo?"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -1007,7 +1007,7 @@ msgstr "Movimenti assegnati"
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr "Ad una data specifica"
+msgstr "A una data specifica"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
@@ -1380,7 +1380,7 @@ msgstr "Fare clic per aggiungere una ubicazione."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Click to add a lot/serial number."
-msgstr "Fare clic per aggiungere un lotto/numero di serie."
+msgstr "Fare clic per aggiungere un numero di lotto/serie."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1472,7 +1472,7 @@ msgstr "Data di completamento del trasferimento"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_compute_at_date
 msgid "Compute"
-msgstr "Calcolare"
+msgstr "Calcola"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1625,7 +1625,7 @@ msgstr "Data creazione"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "Crea nuovi lotti/numeri di serie"
+msgstr "Crea nuovi numeri di lotti/serie"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -2914,8 +2914,8 @@ msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
-"Se questo è solo controllato, si suppone che si voglia creare nuovi lotti / "
-"numeri di serie, in modo da poterli fornire in un campo di testo. "
+"Se questo è solo controllato, si suppone che si voglia creare nuovi numeri "
+"di lotti/serie, in modo da poterli fornire in un campo di testo. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_existing_lots
@@ -2924,8 +2924,8 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"Se questo è selezionato, è possibile scegliere i lotti / numeri di serie. Si"
-" può anche decidere di non mettere lotti in questo tipo di operazione. Ciò "
+"Se questo è selezionato, è possibile scegliere i numeri di lotti/serie. Si "
+"può anche decidere di non mettere lotti in questo tipo di operazione. Ciò "
 "significa che creerà una giacenza senza lotto o non imporrà una restrizione "
 "sul lotto prelevato. "
 
@@ -3074,7 +3074,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr "Includi prodotti esauriti"
+msgstr "Includere prodotti esauriti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -3204,8 +3204,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr ""
-"Numero di riferimento interno nel caso in cui differisca dal numero di lotto"
-" / numero di serie del produttore"
+"Numero di riferimento interno nel caso in cui differisca dal numero di "
+"lotto/serie del produttore"
 
 #. module: stock
 #: code:addons/stock/models/product.py:253
@@ -3238,7 +3238,7 @@ msgstr "Ubicazione inventariata"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_lot_id
 msgid "Inventoried Lot/Serial Number"
-msgstr "Lotto / numero seriale inventariati"
+msgstr "Numero di lotto/serie inventariato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_partner_id
@@ -3248,7 +3248,7 @@ msgstr "Proprietario inventariato"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_package_id
 msgid "Inventoried Pack"
-msgstr "Confezione inventariata"
+msgstr "Collo inventariato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_product_id
@@ -3282,14 +3282,14 @@ msgstr "Magazzino"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr "Rettifica dell’inventario"
+msgstr "Rettifica di inventario"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Rettifiche dell’inventario"
+msgstr "Rettifiche di inventario"
 
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
@@ -3299,7 +3299,7 @@ msgstr "Configurazione dell'inventario: guida passo-passo."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_date
 msgid "Inventory Date"
-msgstr "Data dell'inventario"
+msgstr "Data inventario"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
@@ -3347,7 +3347,7 @@ msgstr "Riferimento inventario"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 msgid "Inventory Report"
-msgstr "Resoconto inventario"
+msgstr "Resoconto di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3363,7 +3363,7 @@ msgstr "Configurazioni inventario"
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Inventory Valuation"
-msgstr "Valorizzazione inventario"
+msgstr "Valutazione di magazzino"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -3485,7 +3485,7 @@ msgstr "UBICAZIONE"
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "LOT/SERIAL NUMBER"
-msgstr "LOTTO/NUMERO DI SERIE"
+msgstr "NUMERO DI LOTTO/SERIE"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_13
@@ -3801,12 +3801,12 @@ msgstr "Lotto/Seriale:"
 #: model:ir.ui.view,arch_db:stock.report_picking
 #: model:res.request.link,name:stock.req_link_tracking
 msgid "Lot/Serial Number"
-msgstr "Lotto/Numero seriale"
+msgstr "Numero di lotto/seriale"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr "Inventario lotto/numero seriale"
+msgstr "Inventario numero lotto/seriale"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_production_lot
@@ -3838,7 +3838,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr "Lotti/Numeri seriali"
+msgstr "Numeri di lotti/seriali"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:547
@@ -3875,7 +3875,7 @@ msgstr "Gestione differenti proprietari delle giacenze"
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr "Gestione lotti / numeri seriali"
+msgstr "Gestione numeri di lotti/seriali"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
@@ -4347,7 +4347,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:120
 #, python-format
 msgid "One Lot/Serial Number"
-msgstr "Un lotto/numero di serie"
+msgstr "Un numero di lotto/serie"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:118
@@ -4365,7 +4365,7 @@ msgstr "Una categoria di prodotto"
 #: code:addons/stock/models/stock_inventory.py:118
 #, python-format
 msgid "One product for a specific owner"
-msgstr "Un prodotto per un proprietario specifico"
+msgstr "Un prodotto di un proprietario specifico"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:114
@@ -4432,7 +4432,7 @@ msgstr "Operazioni"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr "Tipi operazioni"
+msgstr "Tipi di operazioni"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partner_id
@@ -5096,7 +5096,7 @@ msgstr "Movimento prodotto"
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Product Moves"
-msgstr "Movimenti prodotto"
+msgstr "Movimenti di prodotto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_name
@@ -5146,8 +5146,8 @@ msgid ""
 "Product this lot/serial number contains. You cannot change it anymore if it "
 "has already been moved."
 msgstr ""
-"Il prodotto contiene questo lotto / numero di serie. Non si può cambiare se "
-"è già stato movimentato."
+"Il prodotto contiene questo numero di lotto/serie. Non si può cambiare se è "
+"già stato movimentato."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_has_tracking
@@ -5681,7 +5681,7 @@ msgstr "Magazzini di rifornimento"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Retrieve the Inventory Quantities"
-msgstr "Recuperare le quantità di magazzino"
+msgstr "Recupera quantità di magazzino"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5777,7 +5777,7 @@ msgstr "Regole"
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 msgid "Run Scheduler"
-msgstr "Esegui echedulatore"
+msgstr "Esegui schedulatore"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scheduler_compute
@@ -5896,7 +5896,7 @@ msgstr "Cerca i percorsi delle ubicazioni"
 #: code:addons/stock/models/stock_inventory.py:115
 #, python-format
 msgid "Select products manually"
-msgstr "Selezionare prodotti manualmente"
+msgstr "Selezione manuale dei prodotti"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -6013,7 +6013,7 @@ msgid ""
 "Set the <i>Real Quantity</i> for each Product and <i>Validate the "
 "Inventory</i>"
 msgstr ""
-"Indica la <i>quantità reale</i> per ogni prodotto e <i>convalida "
+"Imposta la <i>quantità reale</i> per ogni prodotto e <i>valida "
 "l'inventario</i>"
 
 #. module: stock
@@ -6203,7 +6203,7 @@ msgstr "L'ubicazione di origine è azione=movimento"
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr "Specifica il lotto/numero di serie su cui concentrare l'inventario."
+msgstr "Specifica il numero di lotto/serie su cui concentrare l'inventario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_partner_id
@@ -6229,7 +6229,7 @@ msgstr "Specifica il prodotto su cui concentrare l'inventario."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "Apertura inventario"
+msgstr "Avvia inventario"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_state
@@ -7093,7 +7093,7 @@ msgid ""
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
 "È possibile tracciare le seguenti date tramite i numeri di lotto e di serie: data di validità, data di ritiro, data di scadenza e data di avviso.\n"
-"Queste date vengono definite automaticamente quando si crea il numero di lotto/di serie in base ai valori impostati per ciascun prodotto (in giorni)."
+"Queste date vengono definite automaticamente quando si crea il numero di lotto/serie in base ai valori impostati per ciascun prodotto (in giorni)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7171,7 +7171,7 @@ msgstr "USPS"
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
 msgid "Unique Lot/Serial Number"
-msgstr "Lotti / numeri di serie univoci"
+msgstr "Numeri di lotto/serie univoci"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -7319,7 +7319,7 @@ msgstr "Urgente"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Utilizzare Lotti / Numeri di Serie esistenti"
+msgstr "Utilizzare numeri di lotti/serie esistenti"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7340,12 +7340,12 @@ msgstr "Utente"
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Validate"
-msgstr "Validare"
+msgstr "Valida"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Validate Inventory"
-msgstr "Convalidare inventario"
+msgstr "Valida inventario"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -8028,7 +8028,7 @@ msgstr "È nesessario definire un magazzino per l'azienda: %s. "
 #: code:addons/stock/models/stock_picking.py:721
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
-msgstr "Bisogna fornire un numero di lotto / di serie per %s."
+msgstr "Bisogna fornire un numero di lotto/serie per %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1126
@@ -8311,7 +8311,7 @@ msgstr "quando si ricevono i prodotti ordinati"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "with the <i>Validate</i> button"
-msgstr "con il bottone <i>Validare</i>"
+msgstr "con il pulsante <i>Valida</i>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
